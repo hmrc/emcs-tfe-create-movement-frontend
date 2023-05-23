@@ -1,0 +1,24 @@
+# microservice specific routes
+
+->          /hmrc-frontend                                                       hmrcfrontend.Routes
+
+GET         /assets/*file                                                        controllers.Assets.versioned(path="/public", file: Asset)
+
+GET         /language/:lang                                                      controllers.LanguageSwitchController.switchToLanguage(lang: String)
+
+GET         /refresh-session                                                     controllers.KeepAliveController.keepAlive()
+
+GET         /there-is-a-problem                                                  controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+
+GET         /account/sign-out-survey                                             controllers.auth.AuthController.signOut()
+GET         /account/sign-out                                                    controllers.auth.AuthController.signOutNoSurvey()
+GET         /account/signed-out                                                  controllers.auth.SignedOutController.onPageLoad()
+
+GET         /unauthorised                                                        controllers.UnauthorisedController.onPageLoad()
+
+GET         /:ern/:lrn                                                           controllers.IndexController.onPageLoad(ern: String, lrn: String)
+
+GET         /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String)
+POST        /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
+
+GET         /:ern/:lrn/confirmation                                              controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)

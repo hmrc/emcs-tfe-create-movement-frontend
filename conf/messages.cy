@@ -14,6 +14,11 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.opensInNewTab = (yn agor tab newydd)
 
+taskListStatus.completed = Completed
+taskListStatus.inProgress = In Progress
+taskListStatus.notStarted = Not Started
+taskListStatus.cannotStartYet = Cannot Start Yet
+
 unitOfMeasure.kilograms.short = kg
 unitOfMeasure.kilograms.long = kilograms
 unitOfMeasure.litres15.short = litres

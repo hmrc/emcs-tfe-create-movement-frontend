@@ -12,3 +12,5 @@ $hmrc-assets-path: "/emcs-tfe-create-movement/assets/lib/hmrc-frontend/hmrc/asse
 .js-enabled .js-visible {
   display: inline-block !important;
 }
+
+@import "accessible-autocomplete";

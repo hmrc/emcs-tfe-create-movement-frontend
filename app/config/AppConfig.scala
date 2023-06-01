@@ -16,15 +16,17 @@
 
 package config
 
-import javax.inject.{Inject, Singleton}
+import featureswitch.core.config.{FeatureSwitching, StubAddressLookupJourney}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import javax.inject.{Inject, Singleton}
+
 @Singleton
-class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration) {
+class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration) extends FeatureSwitching {
 
   lazy val host: String    = configuration.get[String]("host")
   lazy val appName: String = configuration.get[String]("appName")
@@ -64,4 +66,21 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def allowListEnabled: Boolean = configuration.get[Boolean]("features.allowListEnabled")
 
   def internalAuthToken: String = configuration.get[String]("internal-auth.token")
+
+  def addressLookupFrontendUrl: String = {
+    if (isEnabled(StubAddressLookupJourney)) {
+      servicesConfig.baseUrl("emcs-tfe-chris-stub")
+    } else {
+      servicesConfig.baseUrl("address-lookup-frontend")
+    }
+  }
+
+  lazy val selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
+
+  lazy val accessibilityStatementUrl: String = {
+    val baseUrl = servicesConfig.getString("accessibility-statement.host")
+    val servicePath = servicesConfig.getString("accessibility-statement.service-path")
+    baseUrl + servicePath
+  }
+
 }

@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package generators
+package models.addressLookupFrontend
 
-trait PageGenerators {
+import play.api.libs.json.{Json, OFormat}
 
+case class Country(code: String, name: String)
+
+object Country {
+  implicit val format: OFormat[Country] = Json.format[Country]
 }

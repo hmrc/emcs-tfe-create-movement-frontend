@@ -16,6 +16,7 @@
 
 package featureswitch.frontend.config
 
+import config.AppConfig
 import featureswitch.frontend.models.FeatureSwitchProvider
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -23,11 +24,11 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class FeatureSwitchProviderConfig @Inject()(configuration: Configuration) {
+class FeatureSwitchProviderConfig @Inject()(configuration: Configuration, appConfig: AppConfig) {
 
   val servicesConfig = new ServicesConfig(configuration)
 
-  lazy val selfBaseUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement")
+  lazy val selfBaseUrl: String = appConfig.selfUrl
 
   lazy val selfFeatureSwitchUrl = s"$selfBaseUrl/emcs-tfe-create-movement/test-only/api/feature-switches"
 
@@ -56,6 +57,6 @@ class FeatureSwitchProviderConfig @Inject()(configuration: Configuration) {
   )
 
   lazy val featureSwitchProviders: Seq[FeatureSwitchProvider] =
-    Seq(selfFeatureSwitchProvider, emcsTfeFeatureSwitchProvider, emcsTfeReportAReceiptFeatureSwitchProvider)
+    Seq(selfFeatureSwitchProvider)
 
 }

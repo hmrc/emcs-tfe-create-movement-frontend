@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package generators
+package utils
 
-trait PageGenerators {
+import play.api.i18n.{Lang, MessagesApi}
 
+object MessagesUtil {
+  def optionalMessage(key: String, lang: Lang, params: String*)(implicit messagesApi: MessagesApi): Option[String] = {
+    val message = messagesApi.translate(key, params.toSeq)(lang)
+    val keyNotDefined = message.exists(_.isEmpty)
+
+    if (keyNotDefined || message.isEmpty) None else message
+  }
 }

@@ -23,10 +23,12 @@ import navigation.Navigator
 import pages.CheckAnswersPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.AddressLookupFrontendService
 import viewmodels.checkAnswers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi,
                                            override val auth: AuthAction,
@@ -36,15 +38,33 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
                                            view: CheckYourAnswersView,
-                                           checkAnswersHelper: CheckAnswersHelper
+                                           checkAnswersHelper: CheckAnswersHelper,
+                                           addressLookupFrontendService: AddressLookupFrontendService
                                           ) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      Ok(view(
-        routes.CheckYourAnswersController.onSubmit(ern, lrn),
-        checkAnswersHelper.summaryList()
-      ))
+  def onPageLoad(ern: String, lrn: String, id: Option[String] = None): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+
+      id match {
+        case Some(identifier) =>
+          addressLookupFrontendService.retrieveAddress(identifier).map {
+            case Right(address) =>
+              Ok(view(
+                routes.CheckYourAnswersController.onSubmit(ern, lrn),
+                checkAnswersHelper.summaryList(),
+                address
+              ))
+            case _ => Ok(view(
+              routes.CheckYourAnswersController.onSubmit(ern, lrn),
+              checkAnswersHelper.summaryList()
+            ))
+          }
+        case None =>
+          Future.successful(Ok(view(
+            routes.CheckYourAnswersController.onSubmit(ern, lrn),
+            checkAnswersHelper.summaryList()
+          )))
+      }
     }
 
   def onSubmit(ern: String, lrn: String): Action[AnyContent] =

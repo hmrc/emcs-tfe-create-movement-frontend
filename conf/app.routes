@@ -18,7 +18,7 @@ GET         /unauthorised                                                       
 
 GET         /:ern/:lrn                                                           controllers.IndexController.onPageLoad(ern: String, lrn: String)
 
-GET         /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String)
+GET         /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
 POST        /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
 
 GET         /:ern/:lrn/confirmation                                              controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)

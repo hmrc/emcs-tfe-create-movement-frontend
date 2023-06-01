@@ -17,7 +17,6 @@
 package views
 
 import base.ViewSpecBase
-import controllers.routes
 import fixtures.messages.CheckYourAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup

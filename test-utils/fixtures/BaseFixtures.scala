@@ -17,10 +17,12 @@
 package fixtures
 
 import models.UserAnswers
+import models.addressLookupFrontend._
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
-import java.time.{Instant, LocalDate}
 import java.time.temporal.ChronoUnit
+import java.time.{Instant, LocalDate}
 
 trait BaseFixtures {
 
@@ -29,8 +31,52 @@ trait BaseFixtures {
   val testErn: String = "ern"
   val testLrn: String = "lrn"
   val testDateOfArrival: LocalDate = LocalDate.now()
-  val testConfirmationReference = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
-  val testOnwardRoute = Call("GET", "/foo")
+  val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
+  val testOnwardRoute: Call = Call("GET", "/foo")
+  val testId: String = "123"
+  val testUrl: String = "testUrl"
+
+  val testAlfJourneyConfig: AddressLookupFrontendJourneyConfig =
+    AddressLookupFrontendJourneyConfig(
+      version = 2,
+      options = JourneyOptions(
+        continueUrl = "testContinueUrl",
+        homeNavHref = None,
+        accessibilityFooterUrl = None,
+        deskProServiceName = None,
+        showPhaseBanner = None,
+        alphaPhase = None,
+        showBackButtons = None,
+        includeHMRCBranding = None,
+        selectPageConfig = None,
+        confirmPageConfig = None,
+        timeoutConfig = None,
+        disableTranslations = None
+      ),
+      labels = JourneyLabels(en = None, cy = None)
+    )
+
+  val testAlfAddressJson: JsObject =
+    Json.obj(
+      "auditRef" -> "bed4bd24-72da-42a7-9338-f43431b7ed72",
+      "id" -> "GB990091234524",
+      "address" -> Json.obj(
+        "lines" -> Json.arr("10 Other Place", "Some District", "Anytown"),
+        "postcode" -> "ZZ1 1ZZ",
+        "country" -> Json.obj(
+          "code" -> "GB",
+          "name" -> "United Kingdom"
+        )
+      )
+    )
+
+  val testAlfAddress: Address =
+    Address(
+      lines = Seq("10 Other Place", "Some District", "Anytown"),
+      postcode = Some("ZZ1 1ZZ"),
+      country = Some(Country("GB", "United Kingdom")),
+      auditRef = Some("bed4bd24-72da-42a7-9338-f43431b7ed72")
+    )
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = testInternalId,
@@ -38,4 +84,5 @@ trait BaseFixtures {
     lrn = testLrn,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
+
 }

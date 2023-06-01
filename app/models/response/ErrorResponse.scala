@@ -30,6 +30,10 @@ case object JsonValidationError extends ErrorResponse {
   val message = "JSON validation error"
 }
 
+case object NotFoundError extends ErrorResponse {
+  val message = "The requested content could not be retrieved"
+}
+
 case class BadRequestError(msg: String) extends ErrorResponse {
   val message = s"Bad Request returned from downstream service. With message: $msg"
 }
@@ -37,3 +41,4 @@ case class BadRequestError(msg: String) extends ErrorResponse {
 case class SubmitReportOfReceiptException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 case class UserAnswersException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 case class MissingMandatoryPage(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+case class MissingHeaderError(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

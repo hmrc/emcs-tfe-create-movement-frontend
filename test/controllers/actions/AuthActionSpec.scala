@@ -17,7 +17,6 @@
 package controllers.actions
 
 import base.SpecBase
-import javax.inject.Inject
 import config.{AppConfig, EnrolmentKeys}
 import fixtures.BaseFixtures
 import org.scalatest.BeforeAndAfterAll
@@ -32,6 +31,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {

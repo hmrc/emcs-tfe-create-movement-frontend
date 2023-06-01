@@ -87,3 +87,30 @@ checkYourAnswers.submit.button = Submit movement
 confirmation.title = Movement submitted
 confirmation.heading = Movement submitted
 confirmation.reference = Your reference is
+
+addressLookup.countryPicker.title = Custom title - welsh
+addressLookup.countryPicker.heading = Custom heading - welsh
+addressLookup.countryPicker.country = Custom country label - welsh
+addressLookup.countryPicker.submit = Custom submit label - welsh
+
+addressLookup.lookup.title = Find address - welsh
+addressLookup.lookup.heading = Find address - welsh
+addressLookup.lookup.filter = Property name or number (optional) - welsh
+addressLookup.lookup.submit = Find address - welsh
+addressLookup.lookup.manual = Enter the address manually - welsh
+
+addressLookup.select.title = Choose address - welsh
+addressLookup.select.heading = Choose address - welsh
+addressLookup.select.searchAgain = Search again - welsh
+addressLookup.select.editAddress = Enter address manually - welsh
+
+addressLookup.edit.title = Enter address - welsh
+addressLookup.edit.heading = Enter address - welsh
+addressLookup.edit.line1 = Address line 1 - welsh
+addressLookup.edit.line2 = Address line 2 (optional) - welsh
+addressLookup.edit.line3 = Address line 3 (optional) - welsh
+
+addressLookup.confirm.title = Confirm address - welsh
+addressLookup.confirm.heading = Review and confirm - welsh
+addressLookup.confirm.continue = Confirm address - welsh
+addressLookup.confirm.change = Edit address - welsh

@@ -17,58 +17,92 @@
 package controllers
 
 import base.SpecBase
-import mocks.services.MockUserAnswersService
-import models.NormalMode
+import mocks.services.{MockAddressLookupFrontendService, MockUserAnswersService}
+import models.response.UnexpectedDownstreamResponseError
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
+import services.{AddressLookupFrontendService, UserAnswersService}
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with MockUserAnswersService {
+class IndexControllerSpec extends SpecBase with MockUserAnswersService with MockAddressLookupFrontendService {
 
   "Index Controller" - {
-
     "when existing UserAnswers don't exist" - {
+      "must Initialise the UserAnswers and redirect to DateOfArrival" - {
+        "when the call to initialise the ALF journey fails" in {
 
-      "must Initialise the UserAnswers and redirect to DateOfArrival" in {
+          MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+          MockAddressLookupFrontendService.initialiseJourney(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn))
+            .returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+          val application = applicationBuilder(userAnswers = None).overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[AddressLookupFrontendService].toInstance(mockAddressLookupFrontendService)
+          ).build()
 
-        val application = applicationBuilder(userAnswers = None).overrides(
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        ).build()
+          running(application) {
 
-        running(application) {
-          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testLrn).url)
+            val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testLrn).url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn).url)
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn).url)
+          }
         }
-      }
-    }
+        "when the call to initialise ALF journey is successful" - {
+          "should redirect to the provided URL" in {
 
-    "when existing UserAnswers exist" - {
+            MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+            MockAddressLookupFrontendService.initialiseJourney(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn))
+              .returns(Future.successful(Right(testUrl)))
 
-      "must use the existing answers and redirect to DateOfArrival" in {
+            val application = applicationBuilder(userAnswers = None).overrides(
+              bind[UserAnswersService].toInstance(mockUserAnswersService),
+              bind[AddressLookupFrontendService].toInstance(mockAddressLookupFrontendService)
+            ).build()
 
-        MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+            running(application) {
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        ).build()
 
-        running(application) {
-          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testLrn).url)
+              val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testLrn).url)
 
-          val result = route(application, request).value
+              val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn).url)
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result) mustBe Some(testUrl)
+            }
+          }
         }
+        "when existing UserAnswers exist" - {
+          "must use the existing answers and redirect to DateOfArrival" - {
+            "when the call to initialise the ALF journey fails" in {
+
+              MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+              MockAddressLookupFrontendService.initialiseJourney(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn))
+                .returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+
+              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+                bind[UserAnswersService].toInstance(mockUserAnswersService),
+                bind[AddressLookupFrontendService].toInstance(mockAddressLookupFrontendService)
+              ).build()
+
+              running(application) {
+
+
+                val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testLrn).url)
+
+                val result = route(application, request).value
+
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad(testErn, testLrn).url)
+              }
+            }
+          }
+        }
+
       }
     }
   }

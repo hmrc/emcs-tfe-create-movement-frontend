@@ -25,8 +25,6 @@ import base.SpecBase
 import pages.QuestionPage
 import play.api.libs.json._
 
-import java.time.LocalDate
-
 
 class UserAnswersSpec extends SpecBase {
 

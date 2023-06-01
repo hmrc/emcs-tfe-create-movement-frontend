@@ -87,3 +87,30 @@ checkYourAnswers.submit.button = Submit movement
 confirmation.title = Movement submitted
 confirmation.heading = Movement submitted
 confirmation.reference = Your reference is
+
+addressLookup.countryPicker.title = Custom title
+addressLookup.countryPicker.heading = Custom heading
+addressLookup.countryPicker.country = Custom country label
+addressLookup.countryPicker.submit = Custom submit label
+
+addressLookup.lookup.title = Find address
+addressLookup.lookup.heading = Find address
+addressLookup.lookup.filter = Property name or number (optional)
+addressLookup.lookup.submit = Find address
+addressLookup.lookup.manual = Enter the address manually
+
+addressLookup.select.title = Choose address
+addressLookup.select.heading = Choose address
+addressLookup.select.searchAgain = Search again
+addressLookup.select.editAddress = Enter address manually
+
+addressLookup.edit.title = Enter address
+addressLookup.edit.heading = Enter address
+addressLookup.edit.line1 = Address line 1
+addressLookup.edit.line2 = Address line 2 (optional)
+addressLookup.edit.line3 = Address line 3 (optional)
+
+addressLookup.confirm.title = Confirm address
+addressLookup.confirm.heading = Review and confirm
+addressLookup.confirm.continue = Confirm address
+addressLookup.confirm.change = Edit address

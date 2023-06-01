@@ -20,24 +20,29 @@ import controllers.actions.{AuthAction, DataRetrievalAction}
 import models.UserAnswers
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersService
+import services.{AddressLookupFrontendService, UserAnswersService}
 
 import javax.inject.Inject
 
 class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 val userAnswersService: UserAnswersService,
-                                val controllerComponents: MessagesControllerComponents,
+                                addressLookupFrontendService: AddressLookupFrontendService,
                                 authAction: AuthAction,
-                                getData: DataRetrievalAction) extends BaseController {
+                                getData: DataRetrievalAction,
+                                val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] = (authAction(ern) andThen getData(lrn)).async { implicit request =>
     val userAnswers = request.userAnswers match {
       case Some(answers) => answers
       case _ => UserAnswers(request.internalId, request.ern, request.lrn)
     }
-    userAnswersService.set(userAnswers).map { _ =>
+    userAnswersService.set(userAnswers).flatMap { _ =>
+      addressLookupFrontendService.initialiseJourney(controllers.routes.CheckYourAnswersController.onPageLoad(ern, lrn)).map {
+        case Right(url) => SeeOther(url)
+        case _ => Redirect(routes.CheckYourAnswersController.onPageLoad(ern, lrn))
+      }
       //TODO: Update to route to first page of journey
-      Redirect(routes.CheckYourAnswersController.onPageLoad(ern, lrn))
     }
   }
+
 }

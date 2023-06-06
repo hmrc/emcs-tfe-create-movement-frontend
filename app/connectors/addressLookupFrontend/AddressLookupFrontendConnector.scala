@@ -19,7 +19,7 @@ package connectors.addressLookupFrontend
 import config.AppConfig
 import models.addressLookupFrontend.{Address, AddressLookupFrontendJourneyConfig}
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.Reads
 import uk.gov.hmrc.http._
 
 import javax.inject.{Inject, Singleton}
@@ -32,8 +32,7 @@ class AddressLookupFrontendConnector @Inject()(val http: HttpClient,
 
   override implicit val reads: Reads[Address] = Address.reads
 
-  def retrieveAddress(id: String)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Option[Address]]] = {
-    logger.info(s"Calling ALF /api/confirmed with request id: $id")
+  def retrieveAddress(id: String)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Option[Address]]] =
     http.GET[Either[ErrorResponse, Option[Address]]](
       url = s"${appConfig.addressLookupFrontendUrl}/api/confirmed?id=$id")(RetrieveAddressReads, hc, ec)
       .recover {
@@ -41,10 +40,8 @@ class AddressLookupFrontendConnector @Inject()(val http: HttpClient,
           logger.error(error.getMessage)
           Left(UnexpectedDownstreamResponseError)
       }
-  }
 
-  def initialiseJourney(config: AddressLookupFrontendJourneyConfig)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, String]] = {
-    logger.info(s"Calling ALF /api/init with request config: ${Json.toJson(config)}")
+  def initialiseJourney(config: AddressLookupFrontendJourneyConfig)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, String]] =
     http.POST[AddressLookupFrontendJourneyConfig, Either[ErrorResponse, String]](
       url = s"${appConfig.addressLookupFrontendUrl}/api/init",
       body = config
@@ -54,5 +51,4 @@ class AddressLookupFrontendConnector @Inject()(val http: HttpClient,
           logger.error(error.getMessage)
           Left(UnexpectedDownstreamResponseError)
       }
-  }
 }

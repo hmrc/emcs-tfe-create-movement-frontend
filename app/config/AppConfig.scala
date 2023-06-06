@@ -75,7 +75,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     }
   }
 
-  lazy val selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
+  def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
 
   lazy val accessibilityStatementUrl: String = {
     val baseUrl = servicesConfig.getString("accessibility-statement.host")

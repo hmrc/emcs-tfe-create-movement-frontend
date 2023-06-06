@@ -30,6 +30,13 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
   private val english = Lang("en")
   private val welsh = Lang("cy")
 
+  private def urlIsHttps(url: String): Boolean = url.startsWith("https")
+
+  private[services] def continueUrl(handbackLocation: String): String =  {
+    val selfUrl = appConfig.selfUrl
+    if (urlIsHttps(selfUrl)) handbackLocation else s"$selfUrl$handbackLocation"
+  }
+
   // scalastyle:off
   def buildConfig(handbackLocation: Call)(implicit messagesApi: MessagesApi): AddressLookupFrontendJourneyConfig = {
 
@@ -50,7 +57,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
     )
 
     val journeyOptions = JourneyOptions(
-      continueUrl = s"${appConfig.selfUrl}${handbackLocation.url}",
+      continueUrl = continueUrl(handbackLocation.url),
       homeNavHref = Some("http://www.hmrc.gov.uk/"),
       accessibilityFooterUrl = Some(appConfig.accessibilityStatementUrl),
       showPhaseBanner = Some(true),
@@ -70,7 +77,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
         phaseBannerHtml = optionalMessage("This is a new service. " +
           "Help us improve it - send your" +
           " <a href='https://www.tax.service.gov.uk/contact/beta-feedback?service=emcstfe'>feedback</a>.", lang
-      )(messagesApi))
+        )(messagesApi))
 
     def countryPickerLabels(lang: Lang) =
       CountryPickerLabels(

@@ -49,6 +49,9 @@ trait SpecBase
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
+      .configure(
+        "play.filters.csp.nonce.enabled" -> false
+      )
       .overrides(
         bind[AuthAction].to[FakeAuthAction],
         bind[UserAllowListAction].to[FakeUserAllowListAction],

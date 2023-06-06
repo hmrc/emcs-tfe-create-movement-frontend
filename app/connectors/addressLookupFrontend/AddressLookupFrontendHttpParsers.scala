@@ -52,7 +52,7 @@ trait AddressLookupFrontendHttpParsers extends BaseConnectorUtils[Address] {
               Left(MissingHeaderError("Missing location header to redirect to Address Lookup Frontend"))
           }
         case status =>
-          logger.warn(s"[read] Unexpected status from Address Lookup Frontend: $status")
+          logger.warn(s"[read] Unexpected status from Address Lookup Frontend: $status || Response body: ${response.body}")
           Left(UnexpectedDownstreamResponseError)
       }
   }

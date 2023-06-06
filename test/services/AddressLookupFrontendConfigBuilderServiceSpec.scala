@@ -19,18 +19,22 @@ package services
 import base.SpecBase
 import config.AppConfig
 import models.addressLookupFrontend._
+import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
 
-class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with GuiceOneAppPerSuite {
+class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with GuiceOneAppPerSuite with MockFactory {
 
   implicit val messages: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val mockAppConfig = app.injector.instanceOf[AppConfig]
 
-  object TestService extends AddressLookupFrontendConfigBuilderService(mockAppConfig)
+  trait Test {
+    val appConfig: AppConfig
+    object TestService extends AddressLookupFrontendConfigBuilderService(appConfig)
+  }
 
   "buildConfig" - {
-    "return a filled AlfJourneyConfig model" in {
+    "return a filled AlfJourneyConfig model" in new Test {
+      override val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
       val result: AddressLookupFrontendJourneyConfig = TestService.buildConfig(
         handbackLocation = testOnwardRoute
@@ -165,6 +169,24 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
 
       result mustBe expectedConfig
 
+    }
+  }
+
+  "continueUrl" - {
+    "must handle HTTPS" in new Test {
+      override val appConfig: AppConfig = mock[AppConfig]
+
+      (appConfig.selfUrl _).expects().returns("https://example.com:433")
+
+      TestService.continueUrl("/foo") mustBe "/foo"
+    }
+
+    "must handle HTTP" in new Test {
+      override val appConfig: AppConfig = mock[AppConfig]
+
+      (appConfig.selfUrl _).expects().returns("http://localhost:999999")
+
+      TestService.continueUrl("/foo") mustBe "http://localhost:999999/foo"
     }
   }
 

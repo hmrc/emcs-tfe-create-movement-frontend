@@ -75,7 +75,12 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     }
   }
 
-  def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
+  private def urlIsHttps(url: String): Boolean = url.startsWith("https")
+
+  lazy val  selfUrl: String = {
+    val url = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
+    if(urlIsHttps(url)) "" else url
+  }
 
   lazy val accessibilityStatementUrl: String = {
     val baseUrl = servicesConfig.getString("accessibility-statement.host")

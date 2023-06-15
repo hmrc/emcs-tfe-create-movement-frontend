@@ -19,8 +19,7 @@ package config
 import base.SpecBase
 import featureswitch.core.config.{FeatureSwitching, StubAddressLookupJourney}
 import org.scalatest.BeforeAndAfterEach
-import play.api.{Application, Configuration}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import play.api.Application
 
 class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching {
 
@@ -30,23 +29,22 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
   }
 
   lazy val app: Application = applicationBuilder().build()
-  lazy val servicesConfig: ServicesConfig = app.injector.instanceOf[ServicesConfig]
-  lazy val configuration: Configuration = app.injector.instanceOf[Configuration]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  override val config: AppConfig = appConfig
 
   "AppConfig" - {
-    object TestConfig extends AppConfig(servicesConfig, configuration)
 
     ".addressLookupFrontendUrl" - {
       "should generate the correct url" - {
         s"when the $StubAddressLookupJourney feature switch is enabled" in {
           enable(StubAddressLookupJourney)
 
-          TestConfig.addressLookupFrontendUrl mustBe "http://localhost:8308"
+          appConfig.addressLookupFrontendUrl mustBe "http://localhost:8308"
         }
         s"when the $StubAddressLookupJourney feature switch is disabled" in {
           disable(StubAddressLookupJourney)
 
-          TestConfig.addressLookupFrontendUrl mustBe "http://localhost:9028"
+          appConfig.addressLookupFrontendUrl mustBe "http://localhost:9028"
         }
       }
     }

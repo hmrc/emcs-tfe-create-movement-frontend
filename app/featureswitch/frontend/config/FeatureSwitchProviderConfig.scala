@@ -57,6 +57,6 @@ class FeatureSwitchProviderConfig @Inject()(configuration: Configuration, appCon
   )
 
   lazy val featureSwitchProviders: Seq[FeatureSwitchProvider] =
-    Seq(selfFeatureSwitchProvider)
+    Seq(selfFeatureSwitchProvider, emcsTfeFeatureSwitchProvider)
 
 }

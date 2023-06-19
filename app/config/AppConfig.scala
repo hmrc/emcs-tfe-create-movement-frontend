@@ -16,7 +16,7 @@
 
 package config
 
-import featureswitch.core.config.{FeatureSwitching, StubAddressLookupJourney}
+import featureswitch.core.config.{AllowListEnabled, FeatureSwitching, StubAddressLookupJourney, WelshTranslation}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -27,6 +27,8 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration) extends FeatureSwitching {
+
+  override val config: AppConfig = this
 
   lazy val host: String    = configuration.get[String]("host")
   lazy val appName: String = configuration.get[String]("appName")
@@ -44,8 +46,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
   lazy val feedbackFrontendSurveyUrl: String    = s"$feedbackFrontendHost/feedback/$deskproName"
 
-  lazy val languageTranslationEnabled: Boolean =
-    configuration.get[Boolean]("features.welsh-translation")
+  lazy val languageTranslationEnabled: Boolean = isEnabled(WelshTranslation)
 
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
@@ -63,7 +64,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
   def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
 
-  def allowListEnabled: Boolean = configuration.get[Boolean]("features.allowListEnabled")
+  def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
 
   def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
@@ -82,5 +83,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     val servicePath = servicesConfig.getString("accessibility-statement.service-path")
     baseUrl + servicePath
   }
+
+  def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
 
 }

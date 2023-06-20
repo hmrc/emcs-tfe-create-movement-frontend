@@ -73,7 +73,7 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
               timeoutConfig = Some(
                 TimeoutConfig(
                   timeoutAmount = 9000,
-                  timeoutUrl = "http://localhost:9025/gg/sign-out"
+                  timeoutUrl = "http://localhost:8308/gg/sign-out"
                 )
               )
             ),

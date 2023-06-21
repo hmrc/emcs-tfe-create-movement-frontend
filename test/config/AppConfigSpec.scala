@@ -34,6 +34,14 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
 
   "AppConfig" - {
 
+    ".deskproName must be emcstfe" in {
+      config.deskproName mustBe "emcstfe"
+    }
+
+    ".feedbackFrontendSurveyUrl() must handoff to feddback frontend with the correct URL" in {
+      config.feedbackFrontendSurveyUrl mustBe s"http://localhost:9514/feedback/${config.deskproName}/beta"
+    }
+
     ".addressLookupFrontendUrl" - {
       "should generate the correct url" - {
         s"when the $StubAddressLookupJourney feature switch is enabled" in {

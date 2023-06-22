@@ -44,7 +44,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val signOutUrl: String       = configuration.get[String]("urls.signOut")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
-  lazy val feedbackFrontendSurveyUrl: String    = s"$feedbackFrontendHost/feedback/$deskproName"
+  lazy val feedbackFrontendSurveyUrl: String    = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
   lazy val languageTranslationEnabled: Boolean = isEnabled(WelshTranslation)
 

@@ -70,7 +70,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def addressLookupFrontendUrl: String = {
     if (isEnabled(StubAddressLookupJourney)) {
-      servicesConfig.baseUrl("emcs-tfe-chris-stub")
+      servicesConfig.baseUrl("emcs-tfe-stub")
     } else {
       servicesConfig.baseUrl("address-lookup-frontend")
     }

@@ -79,7 +79,6 @@ trait BaseFixtures {
     )
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
-    internalId = testInternalId,
     ern = testErn,
     lrn = testLrn,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)

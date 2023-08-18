@@ -34,7 +34,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] = (authAction(ern) andThen getData(lrn)).async { implicit request =>
     val userAnswers = request.userAnswers match {
       case Some(answers) => answers
-      case _ => UserAnswers(request.internalId, request.ern, request.lrn)
+      case _ => UserAnswers(request.ern, request.lrn)
     }
     userAnswersService.set(userAnswers).flatMap { _ =>
       addressLookupFrontendService.initialiseJourney(controllers.routes.CheckYourAnswersController.onPageLoad(ern, lrn)).map {

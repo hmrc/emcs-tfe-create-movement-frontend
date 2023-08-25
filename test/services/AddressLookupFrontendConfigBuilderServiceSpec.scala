@@ -53,7 +53,7 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
               alphaPhase = Some(false),
               showBackButtons = Some(true),
               includeHMRCBranding = Some(true),
-              disableTranslations = Some(false),
+              disableTranslations = Some(true),
 
               selectPageConfig = Some(
                 SelectPageConfig(

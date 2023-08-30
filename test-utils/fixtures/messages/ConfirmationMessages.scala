@@ -18,21 +18,13 @@ package fixtures.messages
 
 object ConfirmationMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val title: String
-    val heading: String
-    val reference: String => String
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Movement submitted"
+    val title: String = titleHelper(heading)
+    val reference: String => String = "Your reference is " + _
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val title: String = title("Movement submitted")
-    override val heading = "Movement submitted"
-    override val reference: String => String = "Your reference is " + _
-  }
+  object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val title: String = title("Movement submitted")
-    override val heading = "Movement submitted"
-    override val reference: String => String = "Your reference is " + _
-  }
+  object Welsh extends ViewMessages with BaseWelsh
 }

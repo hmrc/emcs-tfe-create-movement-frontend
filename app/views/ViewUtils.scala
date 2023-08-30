@@ -23,7 +23,7 @@ object ViewUtils {
 
   def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
     titleNoForm(
-      title   = s"${errorPrefix(form)} ${messages(title)}",
+      title   = s"${errorPrefix(form)}${messages(title)}",
       section = section
     )
 
@@ -34,6 +34,6 @@ object ViewUtils {
     messages(msg + (if(count>1) ".plural" else ".singular"), count)
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") + " " else ""
   }
 }

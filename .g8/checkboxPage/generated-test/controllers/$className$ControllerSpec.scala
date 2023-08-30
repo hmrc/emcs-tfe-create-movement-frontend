@@ -68,7 +68,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

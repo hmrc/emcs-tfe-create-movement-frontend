@@ -19,23 +19,13 @@ package fixtures.messages
 object TaskListStatusMessages {
 
   sealed trait ViewMessages { _: i18n =>
-    val completed: String
-    val inProgress: String
-    val notStartedYet: String
-    val cannotStartYet: String
+    val completed: String = "Completed"
+    val inProgress: String = "In Progress"
+    val notStartedYet: String = "Not Started"
+    val cannotStartYet: String = "Cannot Start Yet"
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val completed: String = "Completed"
-    override val inProgress: String = "In Progress"
-    override val notStartedYet: String = "Not Started"
-    override val cannotStartYet: String = "Cannot Start Yet"
-  }
+  object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val completed: String = "Completed"
-    override val inProgress: String = "In Progress"
-    override val notStartedYet: String = "Not Started"
-    override val cannotStartYet: String = "Cannot Start Yet"
-  }
+  object Welsh extends ViewMessages with BaseWelsh
 }

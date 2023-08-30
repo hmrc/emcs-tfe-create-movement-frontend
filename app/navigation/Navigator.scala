@@ -27,6 +27,8 @@ import javax.inject.{Inject, Singleton}
 class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case LocalReferenceNumberPage =>
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case CheckAnswersPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.lrn)
     case _ =>

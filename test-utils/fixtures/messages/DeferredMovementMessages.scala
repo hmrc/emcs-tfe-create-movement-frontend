@@ -18,37 +18,18 @@ package fixtures.messages
 
 object DeferredMovementMessages {
 
-  sealed trait ViewMessages {
-    _: i18n =>
-    val title: String
-    val heading: String
-    val caption: String
-    val hint: String
-    val summary: String
-    val paragraph1: String
-    val paragraph2: String
-    val errorRequired: String
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val title = titleHelper("Is this a deferred movement?")
+    val heading = "Is this a deferred movement?"
+    val caption = "Movement information"
+    val hint = "A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable."
+    val summary = "Help with fallback procedures"
+    val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."
+    val paragraph2 = "Any information entered on EMCS for a deferred movement must match the information on the FAD."
+    val errorRequired = "Select yes if this is a deferred movement"
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val title = title("Is this a deferred movement?")
-    override val heading = "Is this a deferred movement?"
-    override val caption = "Movement information"
-    override val hint = "A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable."
-    override val summary = "Help with fallback procedures"
-    override val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."
-    override val paragraph2 = "Any information entered on EMCS for a deferred movement must match the information on the FAD."
-    override val errorRequired = "Select yes if this is a deferred movement"
-  }
+  object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val title = title("Is this a deferred movement?")
-    override val heading = "Is this a deferred movement?"
-    override val caption = "Movement information"
-    override val hint = "A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable."
-    override val summary = "Help with fallback procedures"
-    override val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."
-    override val paragraph2 = "Any information entered on EMCS for a deferred movement must match the information on the FAD."
-    override val errorRequired = "Select yes if this is a deferred movement"
-  }
+  object Welsh extends ViewMessages with BaseWelsh
 }

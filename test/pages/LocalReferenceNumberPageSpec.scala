@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package fixtures.messages
+package pages
 
-object CheckYourAnswersMessages {
+import pages.behaviours.PageBehaviours
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers before submitting your movement"
-    val title: String = titleHelper(heading)
-    val submitButton = "Submit movement"
+
+class LocalReferenceNumberPageSpec extends PageBehaviours {
+
+  "LocalReferenceNumberPage" - {
+
+    beRetrievable[String](LocalReferenceNumberPage)
+
+    beSettable[String](LocalReferenceNumberPage)
+
+    beRemovable[String](LocalReferenceNumberPage)
   }
-
-  object English extends ViewMessages with BaseEnglish
-  object Welsh extends ViewMessages with BaseWelsh
 }

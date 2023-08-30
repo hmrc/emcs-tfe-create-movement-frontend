@@ -40,7 +40,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     s"$contactHost/contact/beta-feedback?service=$deskproName&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
   lazy val loginUrl: String         = configuration.get[String]("urls.login")
-  lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
+  def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
   lazy val signOutUrl: String       = configuration.get[String]("urls.signOut")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")

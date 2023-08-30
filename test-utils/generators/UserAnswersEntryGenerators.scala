@@ -17,9 +17,9 @@
 package generators
 
 import org.scalacheck.Arbitrary
-import pages.DeferredMovementPage
+import org.scalacheck.Arbitrary._
+import pages._
 import play.api.libs.json.{JsValue, Json}
-import org.scalacheck.Arbitrary.arbitrary
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
@@ -28,6 +28,14 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       for {
         page  <- arbitrary[DeferredMovementPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryLocalReferenceNumberUserAnswersEntry: Arbitrary[(LocalReferenceNumberPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[LocalReferenceNumberPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 

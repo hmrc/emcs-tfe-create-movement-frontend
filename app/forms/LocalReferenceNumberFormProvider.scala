@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package fixtures.messages
+package forms
 
-object CheckYourAnswersMessages {
+import javax.inject.Inject
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers before submitting your movement"
-    val title: String = titleHelper(heading)
-    val submitButton = "Submit movement"
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class LocalReferenceNumberFormProvider @Inject() extends Mappings {
+
+  def apply(isDeferred: Boolean): Form[String] =
+    Form(
+      "value" -> text(errMsgForKey("required")(isDeferred))
+        .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
+    )
+
+  private def errMsgForKey(key: String)(isDeferred: Boolean) = {
+    val infix = if (isDeferred) "deferred" else "new"
+    s"localReferenceNumber.$infix.error.$key"
   }
-
-  object English extends ViewMessages with BaseEnglish
-  object Welsh extends ViewMessages with BaseWelsh
 }

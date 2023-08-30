@@ -75,7 +75,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
         } recover {
           case _: NoActiveSession =>
-            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern))))
           case x: AuthorisationException =>
             logger.debug(s"[invokeBlock] Authorisation Exception ${x.reason}")
             Redirect(controllers.routes.UnauthorisedController.onPageLoad())

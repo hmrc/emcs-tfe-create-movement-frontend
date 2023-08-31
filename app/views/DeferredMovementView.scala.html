@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
+@import models.requests.UserRequest
 
 @this(
     layout: templates.Layout,
@@ -23,15 +23,15 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     h1: components.h1,
-    p: component.p,
+    p: components.p,
     details: components.details
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("deferredMovement.title"))) {
 
-    @formHelper(action = routes.DeferredMovementController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = action, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -43,12 +43,15 @@
             RadiosViewModel.yesNo(
                 field = form("value"),
                 legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l")
-            )
+            ).withHint(HintViewModel(messages("deferredMovement.hint")))
         )
 
-        @details("test"){
+        @details("deferredMovement.summary"){
             @p(){
-                "Test2"
+                @messages("deferredMovement.paragraph1")
+            }
+            @p(){
+            @messages("deferredMovement.paragraph2")
             }
         }
 
@@ -59,5 +62,5 @@
 }
 
 @heading = {
-    @h1("deferredMovement.heading", Some(messages("lrn.subHeading", request.lrn)), "govuk-fieldset__heading")
+    @h1("deferredMovement.heading", Some(messages("deferredMovement.caption")), "govuk-fieldset__heading")
 }

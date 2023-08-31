@@ -22,6 +22,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages._
 import play.api.libs.json.{JsValue, Json}
+import org.scalacheck.Arbitrary.arbitrary
 
 trait UserAnswersGenerator extends TryValues with BaseFixtures {
   self: Generators =>

@@ -16,18 +16,18 @@
 
 package controllers
 
+import config.SessionKeys.DEFERRED_MOVEMENT
 import controllers.actions._
 import forms.DeferredMovementFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.requests.UserRequest
 import navigation.Navigator
-import pages.DeferredMovementPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.data.Form
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.DeferredMovementView
 
-import scala.concurrent.Future
+import javax.inject.Inject
 
 class DeferredMovementController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -38,21 +38,26 @@ class DeferredMovementController @Inject()(
                                        override val requireData: DataRequiredAction,
                                        formProvider: DeferredMovementFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: DeferredMovementView
+                                       view: DeferredMovementView,
+                                       val userAllowList: UserAllowListAction
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      Ok(view(fillForm(DeferredMovementPage, formProvider()), mode))
+  def onPageLoad(ern: String): Action[AnyContent] =
+    (auth(ern) andThen userAllowList) { implicit request =>
+      renderView(Ok, formProvider())
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String): Action[AnyContent] =
+    (auth(ern) andThen userAllowList) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          renderView(BadRequest, formWithErrors),
         value =>
-          saveAndRedirect(DeferredMovementPage, value, mode)
+          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+            .addingToSession(DEFERRED_MOVEMENT -> value.toString)
       )
     }
+
+  def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result =
+    status(view(form, routes.DeferredMovementController.onSubmit(request.ern)))
 }

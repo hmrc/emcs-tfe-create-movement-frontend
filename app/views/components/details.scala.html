@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.response.emcsTfe.MovementItem
-@import models.response.referenceData.CnCodeInformation
-@import uk.gov.hmrc.govukfrontend.views.html.components._
-@import viewmodels.ItemDetailsHelper
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
 
 @this(
 govukDetails : GovukDetails
@@ -27,7 +24,7 @@ govukDetails : GovukDetails
 
 @govukDetails(Details(
 summary = Text(messages(summary)),
-content = content
+content = HtmlContent(content)
 ))
 
 @{

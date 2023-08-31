@@ -11,12 +11,12 @@
 
 # Add all the application routes to the prod.routes file
 
-GET        /emcs-tfe-create-movement/test-only/construction                                     testOnly.controllers.UnderConstructionController.onPageLoad()
+GET        /emcs/create-movement/test-only/construction                                     testOnly.controllers.UnderConstructionController.onPageLoad()
 
-GET        /emcs-tfe-create-movement/test-only/feature-switches                                 featureswitch.frontend.controllers.FeatureSwitchFrontendController.show()
-POST       /emcs-tfe-create-movement/test-only/feature-switches                                 featureswitch.frontend.controllers.FeatureSwitchFrontendController.submit()
-GET        /emcs-tfe-create-movement/test-only/api/feature-switches                             featureswitch.api.controllers.FeatureSwitchApiController.getFeatureSwitches()
+GET        /emcs/create-movement/test-only/feature-switches                                 featureswitch.frontend.controllers.FeatureSwitchFrontendController.show()
+POST       /emcs/create-movement/test-only/feature-switches                                 featureswitch.frontend.controllers.FeatureSwitchFrontendController.submit()
+GET        /emcs/create-movement/test-only/api/feature-switches                             featureswitch.api.controllers.FeatureSwitchApiController.getFeatureSwitches()
 + nocsrf
-POST       /emcs-tfe-create-movement/test-only/api/feature-switches                             featureswitch.api.controllers.FeatureSwitchApiController.updateFeatureSwitches()
+POST       /emcs/create-movement/test-only/api/feature-switches                             featureswitch.api.controllers.FeatureSwitchApiController.updateFeatureSwitches()
 
 ->         /                                                                                    prod.Routes

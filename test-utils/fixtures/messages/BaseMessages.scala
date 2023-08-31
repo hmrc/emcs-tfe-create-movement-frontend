@@ -25,6 +25,7 @@ sealed trait BaseMessages { _: i18n =>
   def lrnSubheading(lrn: String): String
   val lang: Lang
   val saveAndContinue: String
+  val continue: String
   val saveAndReturnToMovement: String
   val day: String
   val month: String
@@ -40,6 +41,7 @@ trait BaseEnglish extends BaseMessages with EN {
   override val opensInNewTab: String = "(opens in new tab)"
   override def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   override val saveAndContinue = "Save and continue"
+  override val continue = "Continue"
   override val saveAndReturnToMovement = "Save and return to movement"
   override val day: String = "Day"
   override val month: String = "Month"
@@ -56,6 +58,7 @@ trait BaseWelsh extends BaseMessages with CY {
   override val opensInNewTab: String = "(opens in new tab)"
   override def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   override val saveAndContinue = "Save and continue"
+  override val continue = "Continue"
   override val saveAndReturnToMovement = "Save and return to movement"
   override val day: String = "Day"
   override val month: String = "Month"

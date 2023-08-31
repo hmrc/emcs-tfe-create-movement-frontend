@@ -114,3 +114,12 @@ addressLookup.confirm.title = Confirm address - welsh
 addressLookup.confirm.heading = Review and confirm - welsh
 addressLookup.confirm.continue = Confirm address - welsh
 addressLookup.confirm.change = Edit address - welsh
+
+deferredMovement.title = Is this a deferred movement?
+deferredMovement.heading = Is this a deferred movement?
+deferredMovement.caption = Movement information
+deferredMovement.hint = A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable.
+deferredMovement.summary = Help with fallback procedures
+deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
+deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
+deferredMovement.error.required = Select yes if this is a deferred movement

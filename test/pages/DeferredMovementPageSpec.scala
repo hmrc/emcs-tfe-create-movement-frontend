@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import org.scalacheck.Arbitrary
-import pages.DeferredMovementPage
-import play.api.libs.json.{JsValue, Json}
-import org.scalacheck.Arbitrary.arbitrary
+import pages.behaviours.PageBehaviours
 
-trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+class DeferredMovementPageSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryDeferredMovementUserAnswersEntry: Arbitrary[(DeferredMovementPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[DeferredMovementPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
+  "DeferredMovementPage" - {
 
+    beRetrievable[Boolean](DeferredMovementPage)
 
+    beSettable[Boolean](DeferredMovementPage)
+
+    beRemovable[Boolean](DeferredMovementPage)
+  }
 }

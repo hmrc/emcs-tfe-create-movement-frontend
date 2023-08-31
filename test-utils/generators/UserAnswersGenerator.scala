@@ -28,6 +28,7 @@ trait UserAnswersGenerator extends TryValues with BaseFixtures {
   self: Generators =>
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
+    arbitrary[(DeferredMovementPage.type, JsValue)] ::
     Nil
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {

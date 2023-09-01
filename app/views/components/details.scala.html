@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package config
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
 
-object SessionKeys {
+@this(
+govukDetails : GovukDetails
+)
 
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-  val DEFERRED_MOVEMENT = "DEFERRED_MOVEMENT"
+@(summary: String)(content: Html)(implicit messages: Messages)
 
+@govukDetails(Details(
+summary = Text(messages(summary)),
+content = HtmlContent(content)
+))
+
+@{
+//$COVERAGE-OFF$
 }

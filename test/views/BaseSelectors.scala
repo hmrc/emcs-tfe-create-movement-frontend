@@ -39,6 +39,8 @@ trait BaseSelectors {
   val tableRow: (Int, Int) => String = (x, y) => s"main table tbody tr:nth-of-type($x) > :nth-child($y)"
 
   val inputSuffix = ".govuk-input__suffix"
+
+  def summary(i: Int) = s"main details:nth-of-type($i) summary"
 }
 
 object BaseSelectors extends BaseSelectors

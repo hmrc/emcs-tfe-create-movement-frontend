@@ -30,7 +30,7 @@ class FeatureSwitchProviderConfig @Inject()(configuration: Configuration, appCon
 
   lazy val selfBaseUrl: String = appConfig.selfUrl
 
-  lazy val selfFeatureSwitchUrl = s"$selfBaseUrl/emcs-tfe-create-movement/test-only/api/feature-switches"
+  lazy val selfFeatureSwitchUrl = s"$selfBaseUrl/emcs/create-movement/test-only/api/feature-switches"
 
   lazy val emcsTfeReportAReceiptFeatureSwitchUrl =
     s"${servicesConfig.baseUrl("emcs-tfe-report-a-receipt-frontend")}/emcs-tfe-report-receipt/test-only/api/feature-switches"

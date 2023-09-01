@@ -14,11 +14,32 @@
  * limitations under the License.
  */
 
-package config
+package forms
 
-object SessionKeys {
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-  val DEFERRED_MOVEMENT = "DEFERRED_MOVEMENT"
+class DeferredMovementFormProviderSpec extends BooleanFieldBehaviours {
 
+  val requiredKey = "deferredMovement.error.required"
+  val invalidKey = "error.boolean"
+
+  val form = new DeferredMovementFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

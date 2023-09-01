@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package config
+package forms
 
-object SessionKeys {
+import javax.inject.Inject
 
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-  val DEFERRED_MOVEMENT = "DEFERRED_MOVEMENT"
+import forms.mappings.Mappings
+import play.api.data.Form
 
+class DeferredMovementFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("deferredMovement.error.required")
+    )
 }

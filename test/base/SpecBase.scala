@@ -44,6 +44,9 @@ trait SpecBase
   def messages(app: Application): Messages = messagesApi(app).preferred(FakeRequest())
   def messages(app: Application, lang: Lang): Messages = messagesApi(app).preferred(Seq(lang))
 
+  def userRequest[A](request: Request[A]): UserRequest[A] =
+    UserRequest(request, testErn, testInternalId, testCredId)
+
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers): DataRequest[A] =
     DataRequest(UserRequest(request, testErn, testInternalId, testCredId), testLrn, answers)
 

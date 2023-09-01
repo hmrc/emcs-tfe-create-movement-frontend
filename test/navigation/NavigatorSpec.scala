@@ -33,7 +33,7 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn, testLrn)
+          routes.IndexController.onPageLoad(testErn)
       }
 
       "for the CheckYourAnswers page" - {

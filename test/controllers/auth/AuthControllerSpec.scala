@@ -18,13 +18,12 @@ package controllers.auth
 
 import base.SpecBase
 import config.AppConfig
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import java.net.URLEncoder
 
-class AuthControllerSpec extends SpecBase with MockitoSugar {
+class AuthControllerSpec extends SpecBase {
 
   "signOut" - {
 

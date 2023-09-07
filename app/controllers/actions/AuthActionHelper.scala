@@ -16,8 +16,8 @@
 
 package controllers.actions
 
-import models.requests.DataRequest
-import play.api.mvc.{Action, AnyContent, Result}
+import models.requests.{DataRequest, UserRequest}
+import play.api.mvc.{Action, ActionBuilder, AnyContent, Result}
 
 import scala.concurrent.Future
 
@@ -28,10 +28,15 @@ trait AuthActionHelper {
   val requireData: DataRequiredAction
   val userAllowList: UserAllowListAction
 
+  private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
+    auth(ern) andThen userAllowList
+  private def authorisedWithData(ern: String, lrn: String): ActionBuilder[DataRequest, AnyContent] =
+    authorised(ern) andThen getData(lrn) andThen requireData
+
   def authorisedDataRequest(ern: String, lrn: String)(block: DataRequest[_] => Result): Action[AnyContent] =
-    (auth(ern) andThen userAllowList andThen getData(lrn) andThen requireData)(block)
+    authorisedWithData(ern, lrn)(block)
 
   def authorisedDataRequestAsync(ern: String, lrn: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
-    (auth(ern) andThen userAllowList andThen getData(lrn) andThen requireData).async(block)
+    authorisedWithData(ern, lrn).async(block)
 
 }

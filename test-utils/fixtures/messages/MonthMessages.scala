@@ -19,18 +19,19 @@ package fixtures.messages
 object MonthMessages {
 
   sealed trait ViewMessages { _: i18n =>
-    val jan: String
-    val feb: String
-    val mar: String
-    val apr: String
-    val may: String
-    val jun: String
-    val jul: String
-    val aug: String
-    val sep: String
-    val oct: String
-    val nov: String
-    val dec: String
+    val jan: String = "January"
+    val feb: String = "February"
+    val mar: String = "March"
+    val apr: String = "April"
+    val may: String = "May"
+    val jun: String = "June"
+    val jul: String = "July"
+    val aug: String = "August"
+    val sep: String = "September"
+    val oct: String = "October"
+    val nov: String = "November"
+    val dec: String = "December"
+    //noinspection ScalaStyle
     def month(i: Int): String = i match {
       case 1 => jan
       case 2 => feb
@@ -47,33 +48,7 @@ object MonthMessages {
     }
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val jan: String = "January"
-    override val feb: String = "February"
-    override val mar: String = "March"
-    override val apr: String = "April"
-    override val may: String = "May"
-    override val jun: String = "June"
-    override val jul: String = "July"
-    override val aug: String = "August"
-    override val sep: String = "September"
-    override val oct: String = "October"
-    override val nov: String = "November"
-    override val dec: String = "December"
-  }
+  object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val jan: String = "January"
-    override val feb: String = "February"
-    override val mar: String = "March"
-    override val apr: String = "April"
-    override val may: String = "May"
-    override val jun: String = "June"
-    override val jul: String = "July"
-    override val aug: String = "August"
-    override val sep: String = "September"
-    override val oct: String = "October"
-    override val nov: String = "November"
-    override val dec: String = "December"
-  }
+  object Welsh extends ViewMessages with BaseWelsh
 }

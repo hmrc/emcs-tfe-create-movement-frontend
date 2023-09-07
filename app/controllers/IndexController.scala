@@ -30,7 +30,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String): Action[AnyContent] = (authAction(ern) andThen userAllowed) {
-    Redirect(controllers.routes.DeferredMovementController.onPageLoad(ern))
+    Redirect(routes.DeferredMovementController.onPageLoad(ern))
   }
 
 }

@@ -16,56 +16,26 @@
 
 package fixtures.messages
 
-import play.api.i18n.Lang
 
-
-sealed trait BaseMessages { _: i18n =>
-  def title(heading: String): String
-  val opensInNewTab: String
-  def lrnSubheading(lrn: String): String
-  val lang: Lang
-  val saveAndContinue: String
-  val continue: String
-  val saveAndReturnToMovement: String
-  val day: String
-  val month: String
-  val year: String
-  val yes: String
-  val no: String
-  val change: String
-  val remove: String
+trait BaseMessages { _: i18n =>
+  def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
+  val opensInNewTab: String = "(opens in new tab)"
+  val movementInformationSection: String = "Movement information"
+  def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
+  val continue = "Continue"
+  val saveAndContinue = "Save and continue"
+  val saveAndReturnToMovement = "Save and return to movement"
+  val day: String = "Day"
+  val month: String = "Month"
+  val year: String = "Year"
+  val yes: String = "Yes"
+  val no: String = "No"
+  val change: String = "Change"
+  val remove: String = "Remove"
 }
 
-trait BaseEnglish extends BaseMessages with EN {
-  override def title(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
-  override val opensInNewTab: String = "(opens in new tab)"
-  override def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
-  override val saveAndContinue = "Save and continue"
-  override val continue = "Continue"
-  override val saveAndReturnToMovement = "Save and return to movement"
-  override val day: String = "Day"
-  override val month: String = "Month"
-  override val year: String = "Year"
-  override val yes: String = "Yes"
-  override val no: String = "No"
-  override val change: String = "Change"
-  override val remove: String = "Remove"
-}
+trait BaseEnglish extends BaseMessages with EN
 object BaseEnglish extends BaseEnglish
 
-trait BaseWelsh extends BaseMessages with CY {
-  override def title(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
-  override val opensInNewTab: String = "(opens in new tab)"
-  override def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
-  override val saveAndContinue = "Save and continue"
-  override val continue = "Continue"
-  override val saveAndReturnToMovement = "Save and return to movement"
-  override val day: String = "Day"
-  override val month: String = "Month"
-  override val year: String = "Year"
-  override val yes: String = "Yes"
-  override val no: String = "No"
-  override val change: String = "Change"
-  override val remove: String = "Remove"
-}
+trait BaseWelsh extends BaseMessages with CY
 object BaseWelsh extends BaseWelsh

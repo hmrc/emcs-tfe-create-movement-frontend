@@ -16,12 +16,15 @@ GET         /account/signed-out                                                 
 
 GET         /unauthorised                                                        controllers.UnauthorisedController.onPageLoad()
 
-GET         /trader/:ern                                                        controllers.IndexController.onPageLoad(ern: String)
+GET         /trader/:ern                                                         controllers.IndexController.onPageLoad(ern: String)
 
-GET         /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
-POST        /:ern/:lrn/check-answers                                             controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
+GET         /trader/:ern/local-reference-number                                  controllers.LocalReferenceNumberController.onPageLoad(ern: String)
+POST        /trader/:ern/local-reference-number                                  controllers.LocalReferenceNumberController.onSubmit(ern: String)
 
-GET         /:ern/:lrn/confirmation                                              controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
+GET         /trader/:ern/draft/:lrn/check-answers                                controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
+POST        /trader/:ern/draft/:lrn/check-answers                                controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
+
+GET         /trader/:ern/draft/:lrn/confirmation                                 controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
 
 GET        /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onPageLoad(ern: String)
 POST       /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onSubmit(ern: String)

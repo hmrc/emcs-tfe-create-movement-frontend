@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package fixtures.messages
+package pages
 
-object CheckYourAnswersMessages {
+import play.api.libs.json.JsPath
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers before submitting your movement"
-    val title: String = titleHelper(heading)
-    val submitButton = "Submit movement"
-  }
+case object LocalReferenceNumberPage extends QuestionPage[String] {
 
-  object English extends ViewMessages with BaseEnglish
-  object Welsh extends ViewMessages with BaseWelsh
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "localReferenceNumber"
 }

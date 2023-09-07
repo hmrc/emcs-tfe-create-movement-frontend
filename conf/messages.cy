@@ -14,6 +14,8 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.opensInNewTab = (yn agor tab newydd)
 
+section.movementInformation = Movement information
+
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
 taskListStatus.notStarted = Not Started
@@ -123,3 +125,15 @@ deferredMovement.summary = Help with fallback procedures
 deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
 deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
 deferredMovement.error.required = Select yes if this is a deferred movement
+
+localReferenceNumber.deferred.title = Enter the Local Reference Number (LRN) for the deferred movement
+localReferenceNumber.deferred.heading = Enter the Local Reference Number (LRN) for the deferred movement
+localReferenceNumber.deferred.p1 = This must match the LRN on the Fallback Accompanying Document (FAD).
+localReferenceNumber.deferred.error.required = Enter the LRN
+localReferenceNumber.deferred.error.length = LRN must be 22 characters or less
+localReferenceNumber.new.title = Create a unique reference for this movement
+localReferenceNumber.new.heading = Create a unique reference for this movement
+localReferenceNumber.new.p1 = This is also known as a Local Reference Number (LRN).
+localReferenceNumber.new.p2 = Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement.
+localReferenceNumber.new.error.required = Enter a unique reference
+localReferenceNumber.new.error.length = Unique reference must be 22 characters or less

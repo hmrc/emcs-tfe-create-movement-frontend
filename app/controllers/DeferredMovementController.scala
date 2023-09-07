@@ -53,7 +53,7 @@ class DeferredMovementController @Inject()(
         formWithErrors =>
           renderView(BadRequest, formWithErrors),
         value =>
-          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+          Redirect(routes.LocalReferenceNumberController.onPageLoad(ern))
             .addingToSession(DEFERRED_MOVEMENT -> value.toString)
       )
     }

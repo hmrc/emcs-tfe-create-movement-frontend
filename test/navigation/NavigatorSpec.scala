@@ -36,6 +36,16 @@ class NavigatorSpec extends SpecBase {
           routes.IndexController.onPageLoad(testErn)
       }
 
+      "for the LocalReferenceNumber page" - {
+
+        //TODO: Update when forward routing pages are built as part of future story
+        "must go to the UnderConstruction page" in {
+
+          navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
       "for the CheckYourAnswers page" - {
 
         "must go to the Confirmation page" in {

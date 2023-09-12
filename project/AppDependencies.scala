@@ -1,11 +1,9 @@
-import sbt._
+import sbt.*
 
 object AppDependencies {
 
-  import play.core.PlayVersion
-
   val playSuffix = "-play-28"
-  val scalatestVersion = "3.2.15"
+  val scalatestVersion = "3.2.15.0"
   val hmrcBootstrapVersion = "7.22.0"
   val hmrcMongoVersion = "1.3.0"
 
@@ -14,13 +12,14 @@ object AppDependencies {
     "uk.gov.hmrc"             %%  "play-frontend-hmrc"                % s"7.19.0$playSuffix",
     "uk.gov.hmrc"             %% s"bootstrap-frontend$playSuffix"     %  hmrcBootstrapVersion,
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo$playSuffix"             %  hmrcMongoVersion,
+
+    // overrides
     "com.google.inject"       %   "guice"                             % "5.1.0"
   )
 
   val test = Seq(
     "uk.gov.hmrc"             %% s"bootstrap-test$playSuffix"         % hmrcBootstrapVersion,
-    "org.scalatestplus"       %%  "scalacheck-1-17"                   % s"$scalatestVersion.0",
-    "org.scalatestplus.play"  %%  "scalatestplus-play"                % "5.1.0",
+    "org.scalatestplus"       %%  "scalacheck-1-17"                   % scalatestVersion,
     "org.scalamock"           %%  "scalamock"                         % "5.2.0",
     "org.jsoup"               %   "jsoup"                             % "1.15.4",
     "com.vladsch.flexmark"    %   "flexmark-all"                      % "0.62.2"

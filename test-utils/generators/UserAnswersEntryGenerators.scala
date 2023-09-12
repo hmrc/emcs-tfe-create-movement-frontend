@@ -16,12 +16,22 @@
 
 package generators
 
+import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import pages._
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+
+  implicit lazy val arbitraryHowMovementTransportedUserAnswersEntry: Arbitrary[(HowMovementTransportedPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HowMovementTransportedPage.type]
+        value <- arbitrary[HowMovementTransported].map(Json.toJson(_))
+      } yield (page, value)
+    }
 
   implicit lazy val arbitraryDeferredMovementUserAnswersEntry: Arbitrary[(DeferredMovementPage.type, JsValue)] =
     Arbitrary {

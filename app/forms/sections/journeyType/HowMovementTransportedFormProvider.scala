@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms.sections.journeyType
 
+import forms.mappings.Mappings
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.data.Form
 
-trait ModelGenerators {
+import javax.inject.Inject
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
+class HowMovementTransportedFormProvider @Inject() extends Mappings {
 
+  def apply(): Form[HowMovementTransported] =
+    Form(
+      "value" -> enumerable[HowMovementTransported]("howMovementTransported.error.required")
+    )
 }

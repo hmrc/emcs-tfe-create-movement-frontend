@@ -20,8 +20,17 @@ import models.{Mode, UserAnswers}
 import pages._
 import play.api.mvc.Call
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+object FakeNavigators {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+  class FakeNavigator(desiredRoute: Call) extends Navigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+  class FakeJourneyTypeNavigator(desiredRoute: Call) extends JourneyTypeNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+
 }

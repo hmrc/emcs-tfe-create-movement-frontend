@@ -28,3 +28,8 @@ GET         /trader/:ern/draft/:lrn/confirmation                                
 
 GET        /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onPageLoad(ern: String)
 POST       /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onSubmit(ern: String)
+
+GET        /trader/:ern/draft/:lrn/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

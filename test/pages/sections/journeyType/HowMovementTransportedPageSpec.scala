@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages.sections.journeyType
 
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class HowMovementTransportedSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
+  "HowMovementTransportedPage" - {
 
+    beRetrievable[HowMovementTransported](HowMovementTransportedPage)
+
+    beSettable[HowMovementTransported](HowMovementTransportedPage)
+
+    beRemovable[HowMovementTransported](HowMovementTransportedPage)
+  }
 }

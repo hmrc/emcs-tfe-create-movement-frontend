@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package generators
+package pages.sections.journeyType
 
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-trait ModelGenerators {
+case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
+  override def path: JsPath = JsPath \ toString
 
+  override def toString: String = "HowMovementTransported"
 }

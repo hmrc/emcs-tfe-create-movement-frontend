@@ -136,3 +136,19 @@ localReferenceNumber.new.p1 = This is also known as a Local Reference Number (LR
 localReferenceNumber.new.p2 = Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement.
 localReferenceNumber.new.error.required = Enter a unique reference
 localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
+
+journeyType.subHeading = Journey type
+
+howMovementTransported.title = How will the goods be transported?
+howMovementTransported.heading = How will the goods be transported?
+howMovementTransported.4 = Air transport
+howMovementTransported.7 = Fixed transport installations
+howMovementTransported.8 = Inland waterway transport
+howMovementTransported.5 = Postal consignment
+howMovementTransported.2 = Rail transport
+howMovementTransported.3 = Road transport
+howMovementTransported.1 = Sea transport
+howMovementTransported.0 = Other
+howMovementTransported.checkYourAnswersLabel = Mode of transport
+howMovementTransported.error.required = Select how the goods will be transported
+howMovementTransported.change.hidden = how will the goods be transported

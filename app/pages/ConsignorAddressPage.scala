@@ -19,9 +19,25 @@ package pages
 import models.UserAddress
 import play.api.libs.json.JsPath
 
+<<<<<<<< HEAD:app/pages/ConsignorAddressPage.scala
 case object ConsignorAddressPage extends QuestionPage[UserAddress] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "consignorAddress"
+========
+object FakeNavigators {
+
+  class FakeNavigator(desiredRoute: Call) extends Navigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+  class FakeJourneyTypeNavigator(desiredRoute: Call) extends JourneyTypeNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+
+>>>>>>>> 6de1d49 (ETFE-1930 CAM-JT01:how-movement-transported):test/navigation/FakeNavigators.scala
 }

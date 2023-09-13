@@ -168,3 +168,12 @@ howMovementTransported.0 = Other
 howMovementTransported.checkYourAnswersLabel = Mode of transport
 howMovementTransported.error.required = Select how the goods will be transported
 howMovementTransported.change.hidden = how will the goods be transported
+
+giveInformationOtherTransport.title = Give information about your other type of transport
+giveInformationOtherTransport.heading = Give information about your other type of transport
+giveInformationOtherTransport.checkYourAnswersLabel = Information about other transport
+giveInformationOtherTransport.error.required = Enter information about your other type of transport
+giveInformationOtherTransport.error.length = Information must be 350 characters or less
+giveInformationOtherTransport.error.character = Information must contain letters or numbers
+giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
+giveInformationOtherTransport.change.hidden = give information about your other type of transport

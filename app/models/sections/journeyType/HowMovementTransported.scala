@@ -26,12 +26,19 @@ sealed trait HowMovementTransported
 object HowMovementTransported extends Enumerable.Implicits {
 
   case object AirTransport extends WithName("4") with HowMovementTransported
+
   case object FixedTransportInstallations extends WithName("7") with HowMovementTransported
+
   case object InlandWaterwayTransport extends WithName("8") with HowMovementTransported
+
   case object PostalConsignment extends WithName("5") with HowMovementTransported
+
   case object RailTransport extends WithName("2") with HowMovementTransported
+
   case object RoadTransport extends WithName("3") with HowMovementTransported
+
   case object SeaTransport extends WithName("1") with HowMovementTransported
+
   case object Other extends WithName("0") with HowMovementTransported
 
   val values: Seq[HowMovementTransported] = Seq(

@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package pages
-
-import models.UserAddress
-import play.api.libs.json.JsPath
-
-case object ConsignorAddressPage extends QuestionPage[UserAddress] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "consignorAddress"
+package object forms {
+  private[forms] val TEXTAREA_MAX_LENGTH = 350
+  private[forms] val ALPHANUMERIC_REGEX = "^(?s)(?=.*[A-Za-z0-9]).{1,}$"
+  private[forms] val XSS_REGEX = "^(?s)(?!.*javascript)(?!.*[<>;:]).{1,}$"
 }

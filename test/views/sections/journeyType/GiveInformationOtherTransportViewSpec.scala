@@ -17,8 +17,8 @@
 package views.sections.journeyType
 
 import base.ViewSpecBase
-import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
-import forms.sections.journeyType.HowMovementTransportedFormProvider
+import fixtures.messages.sections.journeyType.GiveInformationOtherTransportMessages
+import forms.sections.journeyType.GiveInformationOtherTransportFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,24 +26,24 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.journeyType.HowMovementTransportedView
+import views.html.sections.journeyType.GiveInformationOtherTransportView
 import views.{BaseSelectors, ViewBehaviours}
 
-class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
+class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "HowMovementTransportedView" - {
+  "GiveInformationOtherTransportView" - {
 
-    Seq(HowMovementTransportedMessages.English, HowMovementTransportedMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GiveInformationOtherTransportMessages.English, GiveInformationOtherTransportMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[HowMovementTransportedView]
-        val form = app.injector.instanceOf[HowMovementTransportedFormProvider].apply()
+        val view = app.injector.instanceOf[GiveInformationOtherTransportView]
+        val form = app.injector.instanceOf[GiveInformationOtherTransportFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
 
@@ -53,16 +53,6 @@ class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           subHeadingCaptionSelector -> messagesForLanguage.subHeading,
           Selectors.h1 -> messagesForLanguage.heading,
-          // scalastyle:off magic.number
-          Selectors.radioButton(1) -> messagesForLanguage.radioOption1,
-          Selectors.radioButton(2) -> messagesForLanguage.radioOption2,
-          Selectors.radioButton(3) -> messagesForLanguage.radioOption3,
-          Selectors.radioButton(4) -> messagesForLanguage.radioOption4,
-          Selectors.radioButton(5) -> messagesForLanguage.radioOption5,
-          Selectors.radioButton(6) -> messagesForLanguage.radioOption6,
-          Selectors.radioButton(7) -> messagesForLanguage.radioOption7,
-          Selectors.radioButton(8) -> messagesForLanguage.radioOption8,
-          // scalastyle:on magic.number
           Selectors.button -> messagesForLanguage.saveAndContinue
         ))
       }

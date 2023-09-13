@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.journeyType
 
-import models.UserAddress
-import play.api.libs.json.JsPath
+import pages.behaviours.PageBehaviours
 
-case object ConsignorAddressPage extends QuestionPage[UserAddress] {
 
-  override def path: JsPath = JsPath \ toString
+class GiveInformationOtherTransportPageSpec extends PageBehaviours {
 
-  override def toString: String = "consignorAddress"
+  "GiveInformationOtherTransportPage" - {
+
+    beRetrievable[String](GiveInformationOtherTransportPage)
+
+    beSettable[String](GiveInformationOtherTransportPage)
+
+    beRemovable[String](GiveInformationOtherTransportPage)
+  }
 }

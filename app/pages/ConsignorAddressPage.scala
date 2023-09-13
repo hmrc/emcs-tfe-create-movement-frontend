@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import fixtures.UserAddressFixtures
 import models.UserAddress
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.libs.json.JsPath
 
-trait ModelGenerators extends UserAddressFixtures {
+case object ConsignorAddressPage extends QuestionPage[UserAddress] {
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "consignorAddress"
 }

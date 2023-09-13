@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package generators
+package models
 
-import fixtures.UserAddressFixtures
-import models.UserAddress
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.libs.json.{Json, OFormat}
 
-trait ModelGenerators extends UserAddressFixtures {
+case class UserAddress(property: Option[String],
+                       street: String,
+                       town: String,
+                       postcode: String)
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+object UserAddress {
+
+  implicit lazy val format: OFormat[UserAddress] = Json.format[UserAddress]
 }

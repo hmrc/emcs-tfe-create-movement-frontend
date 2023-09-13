@@ -42,6 +42,9 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val loginUrl: String         = configuration.get[String]("urls.login")
   def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
   lazy val signOutUrl: String       = configuration.get[String]("urls.signOut")
+  lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
+  lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
+  lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
   lazy val feedbackFrontendSurveyUrl: String    = s"$feedbackFrontendHost/feedback/$deskproName/beta"

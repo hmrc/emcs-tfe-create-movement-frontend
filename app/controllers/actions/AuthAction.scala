@@ -59,26 +59,26 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
           case Some(Organisation) ~ _ ~ None ~ _ =>
             logger.warn("[invokeBlock] InternalId could not be retrieved from Auth")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
 
           case Some(Organisation) ~ _ ~ _ ~ None =>
             logger.warn("[invokeBlock] Credentials could not be retrieved from Auth")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
 
           case Some(affinityGroup) ~ _ ~ _ ~ _ =>
             logger.warn(s"[invokeBlock] User has incompatible AffinityGroup of '$affinityGroup'")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.notAnOrganisation()))
 
           case _ =>
             logger.warn(s"[invokeBlock] User has no AffinityGroup")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
 
         } recover {
           case _: NoActiveSession =>
             Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern))))
           case x: AuthorisationException =>
             logger.debug(s"[invokeBlock] Authorisation Exception ${x.reason}")
-            Redirect(controllers.routes.UnauthorisedController.onPageLoad())
+            Redirect(controllers.error.routes.ErrorController.unauthorised())
         }
       }
     }
@@ -92,17 +92,17 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
     enrolments.enrolments.filter(enrolment => enrolment.key == EnrolmentKeys.EMCS_ENROLMENT) match {
       case emcsEnrolments if emcsEnrolments.isEmpty =>
         logger.debug(s"[checkOrganisationEMCSEnrolment] No ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found")
-        Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+        Future.successful(Redirect(controllers.error.routes.ErrorController.noEnrolment()))
       case emcsEnrolments =>
         emcsEnrolments.find(_.identifiers.exists(ident => ident.key == EnrolmentKeys.ERN && ident.value == ernFromUrl)) match {
           case Some(enrolment) if enrolment.isActivated =>
             block(UserRequest(request, ernFromUrl, internalId, credId))
           case Some(_) =>
             logger.debug(s"[checkOrganisationEMCSEnrolment] ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found but not activated")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.inactiveEnrolment()))
           case None =>
             logger.warn(s"[checkOrganisationEMCSEnrolment] User attempted to access ern: '$ernFromUrl' which they are not authorised to view")
-            Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+            Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
         }
     }
 }

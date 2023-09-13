@@ -93,7 +93,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
           override val authConnector = new FakeFailingAuthConnector(new InsufficientConfidenceLevel)
 
           status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+          redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
         }
       }
 
@@ -106,7 +106,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
             override val authConnector = new FakeSuccessAuthConnector(authResponse(affinityGroup = None))
 
             status(result) mustBe SEE_OTHER
-            redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+            redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
           }
         }
 
@@ -117,7 +117,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
             override val authConnector = new FakeSuccessAuthConnector(authResponse(affinityGroup = Some(Agent)))
 
             status(result) mustBe SEE_OTHER
-            redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+            redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.notAnOrganisation().url)
           }
         }
 
@@ -130,7 +130,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
               override val authConnector = new FakeSuccessAuthConnector(authResponse(internalId = None))
 
               status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+              redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
             }
           }
 
@@ -143,7 +143,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                 override val authConnector = new FakeSuccessAuthConnector(authResponse(credId = None))
 
                 status(result) mustBe SEE_OTHER
-                redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+                redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
               }
             }
 
@@ -156,7 +156,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                   override val authConnector = new FakeSuccessAuthConnector(authResponse())
 
                   status(result) mustBe SEE_OTHER
-                  redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+                  redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.noEnrolment().url)
                 }
               }
 
@@ -173,7 +173,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                   ))))
 
                   status(result) mustBe SEE_OTHER
-                  redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+                  redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.inactiveEnrolment().url)
                 }
               }
 
@@ -192,7 +192,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                     ))))
 
                     status(result) mustBe SEE_OTHER
-                    redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+                    redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
                   }
                 }
 

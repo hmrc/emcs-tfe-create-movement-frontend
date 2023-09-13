@@ -32,7 +32,8 @@ class AuthController @Inject()(val controllerComponents: MessagesControllerCompo
     Redirect(config.signOutUrl, Map("continue" -> Seq(config.feedbackFrontendSurveyUrl)))
   }
 
-  def signOutNoSurvey(): Action[AnyContent] = Action {
+  def signOutNoSurvey(): Action[AnyContent] = Action { implicit request =>
     Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad().url)))
+      .addingToSession(REFERER_SESSION_KEY -> request.headers.get(REFERER_SESSION_KEY).getOrElse(DEFAULT_SESSION_ROUTE))
   }
 }

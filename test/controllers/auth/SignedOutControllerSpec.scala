@@ -25,19 +25,55 @@ class SignedOutControllerSpec extends SpecBase {
 
   "SignedOut Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" - {
+      "When there is no referer in the session" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+        running(application) {
+          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[SignedOutView]
+          val view = application.injector.instanceOf[SignedOutView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
+          await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
+        }
+      }
+      "When there is a referer in the session which is not an INFO page" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+            .withSession("Referer" -> "my/test/url")
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[SignedOutView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
+          session(result).get(REFERER_SESSION_KEY) mustBe None
+        }
+      }
+      "When there is a referer in the session which is an INFO page" in {
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+            .withSession("Referer" -> controllers.routes.DeferredMovementController.onPageLoad(testErn).url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[SignedOutView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
+          session(result).get(REFERER_SESSION_KEY) mustBe None
+        }
       }
     }
   }

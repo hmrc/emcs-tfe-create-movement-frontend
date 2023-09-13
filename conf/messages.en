@@ -48,7 +48,7 @@ date.month.11 = November
 date.month.12 = December
 
 timeout.title = You’re about to be signed out
-timeout.message = For security reasons, you will be signed out of this service in
+timeout.message = For security reasons, you will be signed out in
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
@@ -86,16 +86,15 @@ notAnOrganisation.bullet2.link = register for a business tax account and enrol f
 
 noEnrolment.title = There is a problem
 noEnrolment.heading = There is a problem
-noEnrolment.p1 = You are not enrolled for the Excise Movement and Control System (EMCS).
-noEnrolment.p2 = To use this service you or the account administrator must either:
+noEnrolment.p1 = To use this service you or the account administrator must either:
 noEnrolment.bullet1.link = enrol for EMCS
 noEnrolment.bullet2.link = sign in to a business tax account that has an EMCS enrolment
 noEnrolment.bullet2.afterLink = if you have one of those
-noEnrolment.p3 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
+noEnrolment.p2 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
 
 inactive.title = There is a problem
 inactive.heading = There is a problem
-inactive.p1 = You do not have an active enrollment for the Excise Movement and Control System (EMCS).
+inactive.p1 = You do not have an active enrolment for the Excise Movement and Control System (EMCS).
 inactive.p2 = To use this service, you must either:
 inactive.bullet1 = activate EMCS using the activation code that was sent to you by post
 inactive.bullet2.link = re-enrol for EMCS and get a new activation code
@@ -139,10 +138,8 @@ journeyRecovery.startAgain.guidance = [Add content to explain why the user needs
 
 signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
-signedOut.guidance = We did not save your answers.
-
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+signedOut.guidance.saved = We have saved your answers.
+signedOut.guidance.notSaved = We have not saved your answers.
 
 lrn.subHeading = Create movement for {0}
 

@@ -18,9 +18,12 @@ package generators
 
 import org.scalacheck.Arbitrary
 import pages._
-import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
 
 trait PageGenerators {
+
+  implicit lazy val arbitraryGiveInformationOtherTransportPage: Arbitrary[GiveInformationOtherTransportPage.type] =
+    Arbitrary(GiveInformationOtherTransportPage)
 
   implicit lazy val arbitraryHowMovementTransportedPage: Arbitrary[HowMovementTransportedPage.type] =
     Arbitrary(HowMovementTransportedPage)

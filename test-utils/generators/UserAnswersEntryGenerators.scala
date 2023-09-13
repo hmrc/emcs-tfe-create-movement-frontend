@@ -20,10 +20,18 @@ import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import pages._
-import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+
+  implicit lazy val arbitraryGiveInformationOtherTransportUserAnswersEntry: Arbitrary[(GiveInformationOtherTransportPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[GiveInformationOtherTransportPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
 
   implicit lazy val arbitraryHowMovementTransportedUserAnswersEntry: Arbitrary[(HowMovementTransportedPage.type, JsValue)] =
     Arbitrary {

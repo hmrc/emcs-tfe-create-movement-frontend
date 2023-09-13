@@ -19,14 +19,13 @@ package controllers.actions
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.requests.{OptionalDataRequest, UserRequest}
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.ActionTransformer
 import play.api.test.FakeRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar with MockUserAnswersService {
+class DataRetrievalActionSpec extends SpecBase with MockUserAnswersService {
 
   lazy val dataRetrievalAction: ActionTransformer[UserRequest, OptionalDataRequest] = new DataRetrievalActionImpl(mockUserAnswersService).apply(testLrn)
 

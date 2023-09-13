@@ -36,7 +36,7 @@ class AutocompleteSpec extends ViewSpecBase {
 
   lazy val autocomplete = app.injector.instanceOf[views.html.components.autocomplete]
 
-  "Autcomplete" - {
+  "Autocomplete" - {
 
     val html = autocomplete(govComponents.Select(
       id = "testId",

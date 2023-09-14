@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms.sections.journeyType
 
-import fixtures.UserAddressFixtures
-import models.UserAddress
+import forms.mappings.Mappings
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.data.Form
 
-trait ModelGenerators extends UserAddressFixtures {
+import javax.inject.Inject
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+class HowMovementTransportedFormProvider @Inject() extends Mappings {
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
-
+  def apply(): Form[HowMovementTransported] =
+    Form(
+      "value" -> enumerable[HowMovementTransported]("howMovementTransported.error.required")
+    )
 }

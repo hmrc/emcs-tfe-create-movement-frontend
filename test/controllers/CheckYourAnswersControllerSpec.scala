@@ -22,7 +22,8 @@ import mocks.services.MockAddressLookupFrontendService
 import mocks.viewmodels.MockCheckAnswersHelper
 import models.UserAnswers
 import models.response.UnexpectedDownstreamResponseError
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import play.api.{Application, inject}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

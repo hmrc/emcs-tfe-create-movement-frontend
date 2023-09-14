@@ -33,3 +33,8 @@ GET        /trader/:ern/draft/:lrn/consignor-address                            
 POST       /trader/:ern/draft/:lrn/consignor-address                               controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/consignor-address/change                        controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/consignor-address/change                        controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

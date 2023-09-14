@@ -18,6 +18,7 @@ package generators
 
 import org.scalacheck.Arbitrary
 import pages._
+import pages.sections.journeyType.HowMovementTransportedPage
 
 trait PageGenerators {
 
@@ -30,4 +31,6 @@ trait PageGenerators {
   implicit lazy val arbitraryDeferredMovementPage: Arbitrary[DeferredMovementPage.type] =
     Arbitrary(DeferredMovementPage)
 
+  implicit lazy val arbitraryHowMovementTransportedPage: Arbitrary[HowMovementTransportedPage.type] =
+    Arbitrary(HowMovementTransportedPage)
 }

@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package generators
+package pages.sections.journeyType
 
-import fixtures.UserAddressFixtures
-import models.UserAddress
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-trait ModelGenerators extends UserAddressFixtures {
+case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+  override def path: JsPath = JsPath \ toString
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
-
+  override def toString: String = "HowMovementTransported"
 }

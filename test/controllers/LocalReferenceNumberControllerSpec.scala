@@ -21,7 +21,8 @@ import config.SessionKeys
 import forms.LocalReferenceNumberFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import pages.{DeferredMovementPage, LocalReferenceNumberPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest

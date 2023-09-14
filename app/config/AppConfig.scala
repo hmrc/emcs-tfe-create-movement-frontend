@@ -53,6 +53,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
+  lazy val redirectToFeedbackSurvey: Boolean = configuration.get[Boolean]("timeout-dialog.redirectToFeedbackSurvey")
+
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),
     "cy" -> Lang("cy")

@@ -28,11 +28,11 @@ class AuthController @Inject()(val controllerComponents: MessagesControllerCompo
                                config: AppConfig
                               ) extends FrontendBaseController with I18nSupport {
 
-  def signOut(): Action[AnyContent] = Action {
+  def signOutWithSurvey(): Action[AnyContent] = Action {
     Redirect(config.signOutUrl, Map("continue" -> Seq(config.feedbackFrontendSurveyUrl)))
   }
 
-  def signOutNoSurvey(): Action[AnyContent] = Action { implicit request =>
+  def signOut(): Action[AnyContent] = Action { implicit request =>
     Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad().url)))
       .addingToSession(REFERER_SESSION_KEY -> request.headers.get(REFERER_SESSION_KEY).getOrElse(DEFAULT_SESSION_ROUTE))
   }

@@ -12,8 +12,8 @@ GET         /refresh-session                                                    
 
 GET         /there-is-a-problem                                                    controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/sign-out-survey                                               controllers.auth.AuthController.signOut()
-GET         /account/sign-out                                                      controllers.auth.AuthController.signOutNoSurvey()
+GET         /account/sign-out-survey                                               controllers.auth.AuthController.signOutWithSurvey()
+GET         /account/sign-out                                                      controllers.auth.AuthController.signOut()
 GET         /account/signed-out                                                    controllers.auth.SignedOutController.onPageLoad()
 
 GET         /trader/:ern                                                           controllers.IndexController.onPageLoad(ern: String)

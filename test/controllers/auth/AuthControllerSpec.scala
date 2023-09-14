@@ -25,7 +25,7 @@ import java.net.URLEncoder
 
 class AuthControllerSpec extends SpecBase {
 
-  "signOut" - {
+  "signOutWithSurvey" - {
 
     "must redirect to sign out, specifying the exit survey as the continue URL" in {
 
@@ -35,7 +35,7 @@ class AuthControllerSpec extends SpecBase {
       running(application) {
 
         val appConfig = application.injector.instanceOf[AppConfig]
-        val request   = FakeRequest(GET, routes.AuthController.signOut.url)
+        val request   = FakeRequest(GET, routes.AuthController.signOutWithSurvey().url)
 
         val result = route(application, request).value
 
@@ -48,7 +48,7 @@ class AuthControllerSpec extends SpecBase {
     }
   }
 
-  "signOutNoSurvey" - {
+  "signOut" - {
 
     "must redirect to sign out, specifying SignedOut as the continue URL" in {
 
@@ -58,11 +58,11 @@ class AuthControllerSpec extends SpecBase {
       running(application) {
 
         val appConfig = application.injector.instanceOf[AppConfig]
-        val request   = FakeRequest(GET, routes.AuthController.signOutNoSurvey.url)
+        val request   = FakeRequest(GET, routes.AuthController.signOut().url)
 
         val result = route(application, request).value
 
-        val encodedContinueUrl  = URLEncoder.encode(routes.SignedOutController.onPageLoad.url, "UTF-8")
+        val encodedContinueUrl  = URLEncoder.encode(routes.SignedOutController.onPageLoad().url, "UTF-8")
         val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
         status(result) mustEqual SEE_OTHER

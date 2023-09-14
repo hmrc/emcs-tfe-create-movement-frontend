@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import fixtures.UserAddressFixtures
-import forms.ConsignorAddressFormProvider
+import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
@@ -29,7 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
-import views.html.ConsignorAddressView
+import views.html.AddressView
 
 import scala.concurrent.Future
 
@@ -40,7 +40,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
     def onwardRoute = Call("GET", "/foo")
 
-    val formProvider = new ConsignorAddressFormProvider()
+    val formProvider = new AddressFormProvider()
     val form = formProvider()
 
     lazy val consignorAddressRoute = routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode).url
@@ -64,7 +64,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ConsignorAddressView]
+        val view = application.injector.instanceOf[AddressView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, consignorAddressOnSubmit)(dataRequest(request), messages(application)).toString
@@ -78,7 +78,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       running(application) {
         val request = FakeRequest(GET, consignorAddressRoute)
 
-        val view = application.injector.instanceOf[ConsignorAddressView]
+        val view = application.injector.instanceOf[AddressView]
 
         val result = route(application, request).value
 
@@ -117,7 +117,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[ConsignorAddressView]
+        val view = application.injector.instanceOf[AddressView]
 
         val result = route(application, request).value
 

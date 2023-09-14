@@ -18,16 +18,16 @@ package views
 
 import base.ViewSpecBase
 import fixtures.messages.ConsignorAddressMessages
-import forms.ConsignorAddressFormProvider
+import forms.AddressFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import views.html.ConsignorAddressView
+import views.html.AddressView
 
-class ConsignorAddressViewSpec extends ViewSpecBase with ViewBehaviours {
+class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -40,8 +40,8 @@ class ConsignorAddressViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsignorAddressView]
-        val form = app.injector.instanceOf[ConsignorAddressFormProvider].apply()
+        val view = app.injector.instanceOf[AddressView]
+        val form = app.injector.instanceOf[AddressFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,

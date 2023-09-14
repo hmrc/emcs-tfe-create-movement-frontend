@@ -22,7 +22,7 @@ import models.UserAddress
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
 
-class ConsignorAddressFormProvider @Inject() extends Mappings {
+class AddressFormProvider @Inject() extends Mappings {
 
   val propertyMax = 11
   val streetMax = 65

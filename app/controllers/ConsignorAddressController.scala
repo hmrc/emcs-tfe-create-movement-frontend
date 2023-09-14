@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.actions._
-import forms.ConsignorAddressFormProvider
+import forms.AddressFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.Navigator
@@ -26,22 +26,22 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.ConsignorAddressView
+import views.html.AddressView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class ConsignorAddressController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: Navigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: ConsignorAddressFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ConsignorAddressView
+                                            override val messagesApi: MessagesApi,
+                                            override val userAnswersService: UserAnswersService,
+                                            override val navigator: Navigator,
+                                            override val auth: AuthAction,
+                                            override val getData: DataRetrievalAction,
+                                            override val requireData: DataRequiredAction,
+                                            override val userAllowList: UserAllowListAction,
+                                            formProvider: AddressFormProvider,
+                                            val controllerComponents: MessagesControllerComponents,
+                                            view: AddressView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =

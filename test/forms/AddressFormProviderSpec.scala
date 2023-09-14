@@ -19,9 +19,9 @@ package forms
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class ConsignorAddressFormProviderSpec extends StringFieldBehaviours {
+class AddressFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ConsignorAddressFormProvider()()
+  val form = new AddressFormProvider()()
 
   ".property" - {
 

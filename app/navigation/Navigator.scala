@@ -28,6 +28,9 @@ class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case LocalReferenceNumberPage =>
+      (userAnswers: UserAnswers) => controllers.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+    case ConsignorAddressPage =>
+      //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case CheckAnswersPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.lrn)

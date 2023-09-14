@@ -38,10 +38,18 @@ class NavigatorSpec extends SpecBase {
 
       "for the LocalReferenceNumber page" - {
 
-        //TODO: Update when forward routing pages are built as part of future story
-        "must go to the UnderConstruction page" in {
+        "must go to the ConsignorAddress page" in {
 
           navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
+            routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+      }
+
+      "for the ConsignorAddress page" - {
+
+        "must go to the UnderConstruction page" in {
+
+          navigator.nextPage(ConsignorAddressPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }

@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import fixtures.UserAddressFixtures
 import models.UserAddress
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators extends UserAddressFixtures {
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+class ConsignorAddressPageSpec extends PageBehaviours {
+
+  "ConsignorAddressPage" - {
+
+    beRetrievable[UserAddress](ConsignorAddressPage)
+
+    beSettable[UserAddress](ConsignorAddressPage)
+
+    beRemovable[UserAddress](ConsignorAddressPage)
+  }
 }

@@ -28,3 +28,8 @@ GET         /trader/:ern/draft/:lrn/confirmation                                
 
 GET        /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onPageLoad(ern: String)
 POST       /trader/:ern/deferred-movement                                         controllers.DeferredMovementController.onSubmit(ern: String)
+
+GET        /trader/:ern/draft/:lrn/consignor-address                               controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consignor-address                               controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/consignor-address/change                        controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/consignor-address/change                        controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

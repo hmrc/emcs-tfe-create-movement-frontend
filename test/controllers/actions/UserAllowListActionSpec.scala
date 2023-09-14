@@ -76,7 +76,7 @@ class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAll
 
         "must execute the supplied block" in new Harness(enabled = true, connectorResponse = Right(false)) {
           status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+          redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.notOnPrivateBeta().url)
         }
       }
 

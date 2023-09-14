@@ -29,6 +29,28 @@ class SignedOutController @Inject()(
                                    ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+
+    val referer: Option[String] = request.session.get(REFERER_SESSION_KEY).flatMap(_.split("/").lastOption)
+
+    val infoRoutes: Seq[String] = Seq(
+      //INFO01
+      controllers.routes.LocalReferenceNumberController.onPageLoad("ern").url,
+      //INFO03
+      //INFO04aa
+      controllers.routes.DeferredMovementController.onPageLoad("ern").url,
+      //INFO06
+      //INFO07
+      //INFO08
+      // TODO: INFO routes should not be saved. Add all INFO routes to this as they are created.
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+    ).flatMap(_.split("/").lastOption)
+
+
+    val guidance: String = referer match {
+      case Some(value) if infoRoutes.contains(value) => "signedOut.guidance.notSaved"
+      case _ => "signedOut.guidance.saved"
+    }
+
+    Ok(view(guidance)).removingFromSession(REFERER_SESSION_KEY)
   }
 }

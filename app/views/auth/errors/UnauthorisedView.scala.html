@@ -15,19 +15,34 @@
  *@
 
 @this(
-    layout: templates.Layout
+        layout: templates.Layout,
+        h1: components.h1,
+        p: components.p,
+        bullets: components.bullets
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(
-    pageTitle = titleNoForm(messages("unauthorised.title")),
-    timeout   = false
-) {
+@layout(titleNoForm(messages("unauthorised.title")), showBackLink = false) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
+    @h1("unauthorised.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-6")
 
-    <p class="govuk-body">@messages("unauthorised.guidance")</p>
+    @p() {
+        @messages("unauthorised.p1")
+    }
+
+    @p() {
+        @messages("unauthorised.p2")
+    }
+
+    @bullets(Seq(
+        Html(messages("unauthorised.bullet1")),
+        Html(messages("unauthorised.bullet2"))
+    ))
+
+    @p() {
+        @messages("unauthorised.p3")
+    }
 }
 
 @{

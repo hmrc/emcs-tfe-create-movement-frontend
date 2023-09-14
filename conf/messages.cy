@@ -153,3 +153,19 @@ consignorAddress.town.error.length = Enter a town or city name up to 50 characte
 consignorAddress.postcode = Postcode
 consignorAddress.postcode.error.required = Enter a postcode
 consignorAddress.postcode.error.length = Enter a postcode up to 10 characters
+
+journeyType.subHeading = Journey type
+
+howMovementTransported.title = How will the goods be transported?
+howMovementTransported.heading = How will the goods be transported?
+howMovementTransported.4 = Air transport
+howMovementTransported.7 = Fixed transport installations
+howMovementTransported.8 = Inland waterway transport
+howMovementTransported.5 = Postal consignment
+howMovementTransported.2 = Rail transport
+howMovementTransported.3 = Road transport
+howMovementTransported.1 = Sea transport
+howMovementTransported.0 = Other
+howMovementTransported.checkYourAnswersLabel = Mode of transport
+howMovementTransported.error.required = Select how the goods will be transported
+howMovementTransported.change.hidden = how will the goods be transported

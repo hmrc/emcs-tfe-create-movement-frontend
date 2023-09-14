@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages.sections.journeyType
 
-import fixtures.UserAddressFixtures
-import models.UserAddress
 import models.sections.journeyType.HowMovementTransported
-import org.scalacheck.{Arbitrary, Gen}
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators extends UserAddressFixtures {
+class HowMovementTransportedSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
-    Arbitrary {
-      Gen.oneOf(Set(userAddressModelMax))
-    }
+  "HowMovementTransportedPage" - {
 
-  implicit lazy val arbitraryHowMovementTransported: Arbitrary[HowMovementTransported] =
-    Arbitrary {
-      Gen.oneOf(HowMovementTransported.values)
-    }
+    beRetrievable[HowMovementTransported](HowMovementTransportedPage)
 
+    beSettable[HowMovementTransported](HowMovementTransportedPage)
+
+    beRemovable[HowMovementTransported](HowMovementTransportedPage)
+  }
 }

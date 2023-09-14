@@ -21,7 +21,8 @@ import fixtures.UserAddressFixtures
 import forms.ConsignorAddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import pages.ConsignorAddressPage
 import play.api.inject.bind
 import play.api.mvc.Call

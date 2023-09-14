@@ -19,7 +19,8 @@ package controllers
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.{BaseNavigator, FakeNavigator}
+import navigation.BaseNavigator
+import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.QuestionPage
 import play.api.libs.json.{JsPath, __}

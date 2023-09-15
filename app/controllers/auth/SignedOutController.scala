@@ -19,6 +19,7 @@ package controllers.auth
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Logging
 import views.html.auth.SignedOutView
 
 import javax.inject.Inject
@@ -26,17 +27,20 @@ import javax.inject.Inject
 class SignedOutController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
                                      view: SignedOutView
-                                   ) extends FrontendBaseController with I18nSupport {
+                                   ) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
 
     val referer: Option[String] = request.session.get(REFERER_SESSION_KEY).flatMap(_.split("/").lastOption)
 
+    logger.debug(s"referer from session: [${request.session.get(REFERER_SESSION_KEY)}]")
+    logger.debug(s"referer variable: [$referer]")
+
     val infoRoutes: Seq[String] = Seq(
       //INFO01
       controllers.routes.LocalReferenceNumberController.onPageLoad("ern").url,
       //INFO03
-      //INFO04aa
+      //INFO04
       controllers.routes.DeferredMovementController.onPageLoad("ern").url,
       //INFO06
       //INFO07

@@ -54,6 +54,15 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "for the ConsigneeAddress page" - {
+
+        "must go to the UnderConstruction page" in {
+
+          navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
       "for the CheckYourAnswers page" - {
 
         "must go to the Confirmation page" in {

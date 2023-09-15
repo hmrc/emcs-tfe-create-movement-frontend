@@ -18,17 +18,13 @@ package controllers
 
 import controllers.actions._
 import forms.AddressFormProvider
-import models.{Mode, UserAddress}
 import models.requests.DataRequest
-import navigation.Navigator
-import pages.{ConsignorAddressPage, QuestionPage}
+import models.{Mode, UserAddress}
+import pages.QuestionPage
 import play.api.data.Form
-import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import play.api.mvc._
 import views.html.AddressView
 
-import javax.inject.Inject
 import scala.concurrent.Future
 
 trait AddressControllerBase extends BaseNavigationController with AuthActionHelper {

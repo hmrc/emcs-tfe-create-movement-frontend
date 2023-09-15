@@ -139,9 +139,9 @@ localReferenceNumber.new.p2 = Use this reference to help you identify this movem
 localReferenceNumber.new.error.required = Enter a unique reference
 localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
 
-address.consignor.title = Enter the consignor’s address
-address.consignor.heading = Enter the consignor’s address
-address.consignor.subheading = Consignor information
+address.consignorAddress.title = Enter the consignor’s address
+address.consignorAddress.heading = Enter the consignor’s address
+address.consignorAddress.subheading = Consignor information
 
 address.property = Property name or number (optional)
 address.property.error.length = Enter a property name or number up to 11 characters

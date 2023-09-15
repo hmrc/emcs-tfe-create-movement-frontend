@@ -18,48 +18,32 @@ package controllers
 
 import controllers.actions._
 import forms.AddressFormProvider
-import models.Mode
 import models.requests.DataRequest
+import models.{Mode, UserAddress}
 import navigation.Navigator
-import pages.ConsignorAddressPage
-import play.api.data.Form
+import pages.{ConsignorAddressPage, QuestionPage}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Call, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.AddressView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
-class ConsignorAddressController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            override val userAnswersService: UserAnswersService,
-                                            override val navigator: Navigator,
-                                            override val auth: AuthAction,
-                                            override val getData: DataRetrievalAction,
-                                            override val requireData: DataRequiredAction,
-                                            override val userAllowList: UserAllowListAction,
-                                            formProvider: AddressFormProvider,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: AddressView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+class ConsignorAddressController @Inject()(override val messagesApi: MessagesApi,
+                                           override val userAnswersService: UserAnswersService,
+                                           override val navigator: Navigator,
+                                           override val auth: AuthAction,
+                                           override val getData: DataRetrievalAction,
+                                           override val requireData: DataRequiredAction,
+                                           override val userAllowList: UserAllowListAction,
+                                           override val formProvider: AddressFormProvider,
+                                           override val controllerComponents: MessagesControllerComponents,
+                                           override val view: AddressView
+                                          ) extends AddressControllerBase {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      renderView(Ok, fillForm(ConsignorAddressPage, formProvider()), mode)
-    }
+  override val addressPage: QuestionPage[UserAddress] = ConsignorAddressPage
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, mode)),
-        value =>
-          saveAndRedirect(ConsignorAddressPage, value, mode)
-      )
-    }
+  override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
+    controllers.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, mode)
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =  {
-    status(view(form, routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, mode)))
-  }
 }

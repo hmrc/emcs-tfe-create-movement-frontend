@@ -25,7 +25,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
   ".property" - {
 
-    val lengthKey = "consignorAddress.property.error.length"
+    val lengthKey = "address.property.error.length"
     val maxLength = 11
 
     val fieldName = "property"
@@ -46,8 +46,8 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
   ".street" - {
 
-    val requiredKey = "consignorAddress.street.error.required"
-    val lengthKey = "consignorAddress.street.error.length"
+    val requiredKey = "address.street.error.required"
+    val lengthKey = "address.street.error.length"
     val maxLength = 65
 
     val fieldName = "street"
@@ -74,8 +74,8 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
   ".town" - {
 
-    val requiredKey = "consignorAddress.town.error.required"
-    val lengthKey = "consignorAddress.town.error.length"
+    val requiredKey = "address.town.error.required"
+    val lengthKey = "address.town.error.length"
     val maxLength = 50
 
     val fieldName = "town"
@@ -102,8 +102,8 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
   ".postcode" - {
 
-    val requiredKey = "consignorAddress.postcode.error.required"
-    val lengthKey = "consignorAddress.postcode.error.length"
+    val requiredKey = "address.postcode.error.required"
+    val lengthKey = "address.postcode.error.length"
     val maxLength = 10
 
     val fieldName = "postcode"

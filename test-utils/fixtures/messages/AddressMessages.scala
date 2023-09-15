@@ -16,13 +16,25 @@
 
 package fixtures.messages
 
-object ConsignorAddressMessages {
+import models.UserAddress
+import pages.{ConsignorAddressPage, QuestionPage}
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+object AddressMessages {
 
-    val heading = "Enter the consignor’s address"
-    val title = titleHelper(heading)
-    val subheading = "Consignor information"
+  trait ViewMessages extends BaseMessages { _: i18n =>
+
+    val heading = (page: QuestionPage[UserAddress]) => page match {
+      case ConsignorAddressPage => "Enter the consignor’s address"
+      case _  => "Enter the consignee’s address"
+    }
+
+    val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
+
+    val subheading = (page: QuestionPage[UserAddress]) => page match {
+      case ConsignorAddressPage => "Consignor information"
+      case _ => "Consignee information"
+    }
+
     val property = "Property name or number (optional)"
     val propertyErrorLength = "Enter a property name or number up to 11 characters"
     val street = "Street name"
@@ -37,5 +49,6 @@ object ConsignorAddressMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
+
   object Welsh extends ViewMessages with BaseWelsh
 }

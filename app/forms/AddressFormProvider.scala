@@ -16,11 +16,12 @@
 
 package forms
 
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.UserAddress
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
+
+import javax.inject.Inject
 
 class AddressFormProvider @Inject() extends Mappings {
 
@@ -32,13 +33,13 @@ class AddressFormProvider @Inject() extends Mappings {
   def apply(): Form[UserAddress] =
     Form(mapping(
       "property" -> optional(text()
-        .verifying(maxLength(propertyMax, "consignorAddress.property.error.length"))),
-      "street" -> text("consignorAddress.street.error.required")
-        .verifying(maxLength(streetMax, "consignorAddress.street.error.length")),
-      "town" -> text("consignorAddress.town.error.required")
-        .verifying(maxLength(townMax, "consignorAddress.town.error.length")),
-      "postcode" -> text("consignorAddress.postcode.error.required")
-        .verifying(maxLength(postcodeMax, "consignorAddress.postcode.error.length"))
+        .verifying(maxLength(propertyMax, s"address.property.error.length"))),
+      "street" -> text(s"address.street.error.required")
+        .verifying(maxLength(streetMax, s"address.street.error.length")),
+      "town" -> text(s"address.town.error.required")
+        .verifying(maxLength(townMax, s"address.town.error.length")),
+      "postcode" -> text(s"address.postcode.error.required")
+        .verifying(maxLength(postcodeMax, s"address.postcode.error.length"))
     )(UserAddress.apply)(UserAddress.unapply)
   )
 }

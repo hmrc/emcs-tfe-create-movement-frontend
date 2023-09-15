@@ -67,7 +67,11 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val view = application.injector.instanceOf[AddressView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, consignorAddressOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form,
+          addressPage = ConsignorAddressPage,
+          call = consignorAddressOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -83,7 +87,11 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(userAddressModelMax), consignorAddressOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form.fill(userAddressModelMax),
+          addressPage = ConsignorAddressPage,
+          call = consignorAddressOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -122,7 +130,11 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, consignorAddressOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          addressPage = ConsignorAddressPage,
+          call = consignorAddressOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
 

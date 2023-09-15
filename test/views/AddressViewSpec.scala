@@ -17,12 +17,13 @@
 package views
 
 import base.ViewSpecBase
-import fixtures.messages.ConsignorAddressMessages
+import fixtures.messages.AddressMessages
 import forms.AddressFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.ConsignorAddressPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import views.html.AddressView
@@ -31,34 +32,38 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Consignor Address View" - {
+  Seq(ConsignorAddressPage) foreach { addressPage =>
 
-    Seq(ConsignorAddressMessages.English, ConsignorAddressMessages.Welsh).foreach { messagesForLanguage =>
+    s"$addressPage View" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      Seq(AddressMessages.English, AddressMessages.Welsh).foreach { messagesForLanguage =>
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        val view = app.injector.instanceOf[AddressView]
-        val form = app.injector.instanceOf[AddressFormProvider].apply()
+          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        implicit val doc: Document = Jsoup.parse(view(
-          form = form,
-          call = controllers.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
-        )
+          val view = app.injector.instanceOf[AddressView]
+          val form = app.injector.instanceOf[AddressFormProvider].apply()
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.subheading,
-          Selectors.label("property") -> messagesForLanguage.property,
-          Selectors.label("street") -> messagesForLanguage.street,
-          Selectors.label("town") -> messagesForLanguage.town,
-          Selectors.label("postcode") -> messagesForLanguage.postcode,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
-        ))
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form,
+            addressPage = ConsignorAddressPage,
+            call = controllers.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
+          )
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(addressPage),
+            Selectors.h1 -> messagesForLanguage.heading(addressPage),
+            Selectors.h2(1) -> messagesForLanguage.subheading(addressPage),
+            Selectors.label("property") -> messagesForLanguage.property,
+            Selectors.label("street") -> messagesForLanguage.street,
+            Selectors.label("town") -> messagesForLanguage.town,
+            Selectors.label("postcode") -> messagesForLanguage.postcode,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+          ))
+        }
       }
     }
   }

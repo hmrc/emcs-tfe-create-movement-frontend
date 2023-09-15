@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import models.NormalMode
+@import pages.QuestionPage
 
 @this(
     layout: templates.Layout,
@@ -28,9 +29,9 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], call: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], addressPage: QuestionPage[UserAddress], call: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("address.consignor.title"))) {
+@layout(pageTitle = title(form, messages(s"address.$addressPage.title"))) {
 
     @formHelper(action = call) {
 
@@ -38,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1("address.consignor.heading", Some(messages("address.consignor.subheading")), "govuk-heading-l")
+        @h1(s"address.$addressPage.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
 
         @govukInput(
             InputViewModel(

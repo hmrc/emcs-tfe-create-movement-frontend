@@ -51,7 +51,7 @@ class SignedOutController @Inject()(
 
 
     val guidance: String = referer match {
-      case Some(value) if infoRoutes.contains(value) => "signedOut.guidance.notSaved"
+      case Some(value) if infoRoutes.exists(value.contains) => "signedOut.guidance.notSaved"
       case _ => "signedOut.guidance.saved"
     }
 

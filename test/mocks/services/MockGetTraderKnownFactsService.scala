@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package mocks.viewmodels
+package mocks.services
 
-import org.scalamock.handlers.CallHandler1
+import models.TraderKnownFacts
+import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.CheckAnswersHelper
+import services.GetTraderKnownFactsService
+import uk.gov.hmrc.http.HeaderCarrier
 
-trait MockCheckAnswersHelper extends MockFactory {
+import scala.concurrent.Future
 
-  lazy val mockCheckAnswersHelper: CheckAnswersHelper = mock[CheckAnswersHelper]
+trait MockGetTraderKnownFactsService extends MockFactory {
 
-  object MockCheckAnswersHelper {
+  lazy val mockGetTraderKnownFactsService: GetTraderKnownFactsService = mock[GetTraderKnownFactsService]
 
-    def summaryList(summaryRows: Seq[SummaryListRow]): CallHandler1[Seq[SummaryListRow], SummaryList] =
-      (mockCheckAnswersHelper.summaryList(_: Seq[SummaryListRow])).expects(summaryRows)
+  object MockGetTraderKnownFactsService {
+
+    def getTraderKnownFacts(ern: String): CallHandler2[String, HeaderCarrier, Future[Option[TraderKnownFacts]]] =
+      (mockGetTraderKnownFactsService.getTraderKnownFacts(_: String)(_: HeaderCarrier)).expects(ern, *)
+
   }
 }

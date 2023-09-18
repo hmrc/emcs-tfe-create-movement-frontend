@@ -30,7 +30,9 @@ class Navigator @Inject()() extends BaseNavigator {
     case LocalReferenceNumberPage =>
       (userAnswers: UserAnswers) => controllers.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
     case ConsignorAddressPage =>
-      //TODO update to next page when finished
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+    case CheckAnswersConsignorPage =>
+      //TODO: Update when next page is ready
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case ConsigneeAddressPage =>
       //TODO update to next page when finished
@@ -42,6 +44,8 @@ class Navigator @Inject()() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case ConsignorAddressPage =>
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.lrn)
     case _ =>
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
   }

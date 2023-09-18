@@ -18,7 +18,7 @@ package base
 
 import controllers.actions._
 import fixtures.BaseFixtures
-import models.UserAnswers
+import models.{TraderKnownFacts, UserAnswers}
 import models.requests.{DataRequest, UserRequest}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -48,9 +48,10 @@ trait SpecBase
     UserRequest(request, testErn, testInternalId, testCredId)
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers): DataRequest[A] =
-    DataRequest(userRequest(request), testLrn, answers)
+    DataRequest(userRequest(request), testLrn, answers, testMinTraderKnownFacts)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
+                                   optTraderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
         "play.filters.csp.nonce.enabled" -> false
@@ -58,6 +59,6 @@ trait SpecBase
       .overrides(
         bind[AuthAction].to[FakeAuthAction],
         bind[UserAllowListAction].to[FakeUserAllowListAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts))
       )
 }

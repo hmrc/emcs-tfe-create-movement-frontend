@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.UserAnswers
+import models.{TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
@@ -84,4 +84,15 @@ trait BaseFixtures {
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 
+  val testMinTraderKnownFacts: TraderKnownFacts = TraderKnownFacts(
+    traderName = "testTraderName",
+    addressLine1 = None,
+    addressLine2 = None,
+    addressLine3 = None,
+    addressLine4 = None,
+    addressLine5 = None,
+    postcode = None
+  )
+
+  val testUserAddress = UserAddress(Some("10"), "Test Street", "Testown", "ZZ1 1ZZ")
 }

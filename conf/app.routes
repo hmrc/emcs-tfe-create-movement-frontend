@@ -26,18 +26,21 @@ POST        /trader/:ern/draft/:lrn/check-answers                               
 
 GET         /trader/:ern/draft/:lrn/confirmation                                   controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
 
-GET         /trader/:ern/deferred-movement                                        controllers.DeferredMovementController.onPageLoad(ern: String)
-POST        /trader/:ern/deferred-movement                                        controllers.DeferredMovementController.onSubmit(ern: String)
+GET         /trader/:ern/deferred-movement                                       controllers.DeferredMovementController.onPageLoad(ern: String)
+POST        /trader/:ern/deferred-movement                                       controllers.DeferredMovementController.onSubmit(ern: String)
 
-GET        /trader/:ern/draft/:lrn/consignor-address                             controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/consignor-address                             controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/consignor-address/change                      controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/consignor-address/change                      controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:lrn/consignor-address                            controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:lrn/consignor-address                            controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:lrn/consignor-address/change                     controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:lrn/consignor-address/change                     controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/draft/:lrn/how-movement-transported                      controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:lrn/how-movement-transported                      controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:lrn/how-movement-transported/change               controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:lrn/how-movement-transported/change               controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:lrn/check-answers-consignor                      controllers.CheckYourAnswersConsignorController.onPageLoad(ern: String, lrn: String)
+POST        /trader/:ern/draft/:lrn/check-answers-consignor                      controllers.CheckYourAnswersConsignorController.onSubmit(ern: String, lrn: String)
+
+GET         /trader/:ern/draft/:lrn/how-movement-transported                     controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:lrn/how-movement-transported                     controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:lrn/how-movement-transported/change              controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:lrn/how-movement-transported/change              controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
 GET         /trader/:ern/draft/:lrn/give-information-other-transport              controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:lrn/give-information-other-transport              controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)

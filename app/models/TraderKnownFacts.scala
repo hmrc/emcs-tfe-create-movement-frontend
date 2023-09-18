@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import models.{TraderKnownFacts, UserAnswers}
-import play.api.mvc.WrappedRequest
+import play.api.libs.json.{Json, OFormat}
 
-case class DataRequest[A](request: UserRequest[A],
-                          lrn: String,
-                          userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) {
+case class TraderKnownFacts(traderName: String,
+                            addressLine1: Option[String],
+                            addressLine2: Option[String],
+                            addressLine3: Option[String],
+                            addressLine4: Option[String],
+                            addressLine5: Option[String],
+                            postcode: Option[String])
 
-  val internalId: String = request.internalId
-  val ern: String = request.ern
+object TraderKnownFacts {
+  implicit val format: OFormat[TraderKnownFacts] = Json.format[TraderKnownFacts]
 }

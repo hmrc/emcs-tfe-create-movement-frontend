@@ -16,15 +16,38 @@
 
 package viewmodels.checkAnswers
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import play.api.i18n.Messages
+import play.api.mvc.Call
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Actions, Key, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryList}
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
 class CheckAnswersHelper @Inject()() {
 
-  def summaryList(): SummaryList =
+  def summaryList(summaryListRows: Seq[SummaryListRow]): SummaryList =
     SummaryListViewModel(
-      rows = Seq()
+      rows = summaryListRows
     ).withCssClass("govuk-!-margin-bottom-9")
+
+  def buildSummaryRow(key: String, value: String, optChangeLink: Option[Call] = None, id: String = "")(implicit messages: Messages): SummaryListRow =
+    SummaryListRow(
+      key = Key(content = Text(messages(key))),
+      value = Value(HtmlContent(value)),
+      actions =
+        optChangeLink match {
+          case Some(changeLink) =>
+            Some(Actions(
+              items = Seq(ActionItem(
+                href = changeLink.url,
+                content = Text(messages("site.change")),
+                visuallyHiddenText = Some(key),
+                attributes = Map("id" -> id)
+              ))
+            ))
+          case None => None
+        }
+    )
 }

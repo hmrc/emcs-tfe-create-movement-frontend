@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package models.requests
+package pages
 
-import models.{TraderKnownFacts, UserAnswers}
-import play.api.mvc.WrappedRequest
+case object CheckAnswersConsignorPage extends Page {
 
-case class DataRequest[A](request: UserRequest[A],
-                          lrn: String,
-                          userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) {
-
-  val internalId: String = request.internalId
-  val ern: String = request.ern
+  override def toString: String = "checkAnswersConsignor"
 }

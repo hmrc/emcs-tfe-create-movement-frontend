@@ -16,7 +16,7 @@
 
 package config
 
-import featureswitch.core.config.{AllowListEnabled, FeatureSwitching, StubAddressLookupJourney, WelshTranslation}
+import featureswitch.core.config._
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -30,7 +30,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   override val config: AppConfig = this
 
-  lazy val host: String    = configuration.get[String]("host")
+  lazy val host: String = configuration.get[String]("host")
   lazy val appName: String = configuration.get[String]("appName")
   lazy val deskproName: String = configuration.get[String]("deskproName")
 
@@ -39,15 +39,17 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def betaBannerFeedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$deskproName&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
-  lazy val loginUrl: String         = configuration.get[String]("urls.login")
+  lazy val loginUrl: String = configuration.get[String]("urls.login")
+
   def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
-  lazy val signOutUrl: String       = configuration.get[String]("urls.signOut")
+
+  lazy val signOutUrl: String = configuration.get[String]("urls.signOut")
   lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
   lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
-  lazy val feedbackFrontendSurveyUrl: String    = s"$feedbackFrontendHost/feedback/$deskproName/beta"
+  lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
   lazy val languageTranslationEnabled: Boolean = isEnabled(WelshTranslation)
 
@@ -60,13 +62,15 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     "cy" -> Lang("cy")
   )
 
-  lazy val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
+  lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
   private def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
+
   private def userAllowListService: String = servicesConfig.baseUrl("user-allow-list")
 
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
+
   def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
 
   def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
@@ -80,6 +84,16 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
       servicesConfig.baseUrl("address-lookup-frontend")
     }
   }
+
+  private def referenceDataService: String =
+    if (isEnabled(StubGetTraderKnownFacts)) {
+      servicesConfig.baseUrl("emcs-tfe-reference-data-stub")
+    }
+    else {
+      servicesConfig.baseUrl("emcs-tfe-reference-data")
+    }
+
+  def referenceDataBaseUrl: String = s"$referenceDataService/emcs-tfe-reference-data"
 
   def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
 

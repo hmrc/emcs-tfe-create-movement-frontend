@@ -51,18 +51,18 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
             case Right(address) =>
               Ok(view(
                 routes.CheckYourAnswersController.onSubmit(ern, lrn),
-                checkAnswersHelper.summaryList(),
+                checkAnswersHelper.summaryList(Seq.empty),
                 address
               ))
             case _ => Ok(view(
               routes.CheckYourAnswersController.onSubmit(ern, lrn),
-              checkAnswersHelper.summaryList()
+              checkAnswersHelper.summaryList(Seq.empty)
             ))
           }
         case None =>
           Future.successful(Ok(view(
             routes.CheckYourAnswersController.onSubmit(ern, lrn),
-            checkAnswersHelper.summaryList()
+            checkAnswersHelper.summaryList(Seq.empty)
           )))
       }
     }

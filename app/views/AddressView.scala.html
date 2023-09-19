@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import models.NormalMode
+@import pages.QuestionPage
 
 @this(
     layout: templates.Layout,
@@ -28,9 +29,9 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], call: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], addressPage: QuestionPage[UserAddress], call: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("consignorAddress.title"))) {
+@layout(pageTitle = title(form, messages(s"address.$addressPage.title"))) {
 
     @formHelper(action = call) {
 
@@ -38,12 +39,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1("consignorAddress.heading", Some(messages("consignorAddress.subheading")), "govuk-heading-l")
+        @h1(s"address.$addressPage.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
 
         @govukInput(
             InputViewModel(
                 field = form("property"),
-                label = LabelViewModel(Text(messages("consignorAddress.property")))
+                label = LabelViewModel(Text(messages("address.property")))
             )
             .withWidth(Full)
         )
@@ -51,7 +52,7 @@
         @govukInput(
             InputViewModel(
                 field = form("street"),
-                label = LabelViewModel(Text(messages("consignorAddress.street")))
+                label = LabelViewModel(Text(messages("address.street")))
             )
             .withWidth(Full)
         )
@@ -59,7 +60,7 @@
         @govukInput(
             InputViewModel(
                 field = form("town"),
-                label = LabelViewModel(Text(messages("consignorAddress.town")))
+                label = LabelViewModel(Text(messages("address.town")))
             )
             .withWidth(TwoThirds)
         )
@@ -67,7 +68,7 @@
         @govukInput(
             InputViewModel(
                 field = form("postcode"),
-                label = LabelViewModel(Text(messages("consignorAddress.postcode")))
+                label = LabelViewModel(Text(messages("address.postcode")))
             )
             .withWidth(OneThird)
         )

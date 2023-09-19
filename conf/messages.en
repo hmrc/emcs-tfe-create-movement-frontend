@@ -198,20 +198,29 @@ localReferenceNumber.new.p2 = Use this reference to help you identify this movem
 localReferenceNumber.new.error.required = Enter a unique reference
 localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
 
-consignorAddress.title = Enter the consignor’s address
-consignorAddress.heading = Enter the consignor’s address
-consignorAddress.subheading = Consignor information
-consignorAddress.property = Property name or number (optional)
-consignorAddress.property.error.length = Enter a property name or number up to 11 characters
-consignorAddress.street = Street name
-consignorAddress.street.error.required = Enter a street name
-consignorAddress.street.error.length = Enter a street name up to 65 characters
-consignorAddress.town = Town or city
-consignorAddress.town.error.required = Enter a town or city
-consignorAddress.town.error.length = Enter a town or city name up to 50 characters
-consignorAddress.postcode = Postcode
-consignorAddress.postcode.error.required = Enter a postcode
-consignorAddress.postcode.error.length = Enter a postcode up to 10 characters
+address.consignorAddress.title = Enter the consignor’s address
+address.consignorAddress.heading = Enter the consignor’s address
+address.consignorAddress.subheading = Consignor information
+
+address.consigneeAddress.title = Enter the consignee’s address
+address.consigneeAddress.heading = Enter the consignee’s address
+address.consigneeAddress.subheading = Consignee information
+
+address.property = Property name or number (optional)
+address.property.error.length = Enter a property name or number up to 11 characters
+address.property.error.invalid = Property name or number must not contain < and > and : and ;
+address.street = Street name
+address.street.error.required = Enter a street name
+address.street.error.length = Enter a street name up to 65 characters
+address.street.error.invalid = Street name must not contain < and > and : and ;
+address.town = Town or city
+address.town.error.required = Enter a town or city
+address.town.error.length = Enter a town or city name up to 50 characters
+address.town.error.invalid = Town or city must not contain < and > and : and ;
+address.postcode = Postcode
+address.postcode.error.required = Enter a postcode
+address.postcode.error.length = Enter a postcode up to 10 characters
+address.postcode.error.invalid = Postcode must not contain < and > and : and ;
 
 journeyType.subHeading = Journey type
 
@@ -237,3 +246,10 @@ giveInformationOtherTransport.error.length = Information must be 350 characters 
 giveInformationOtherTransport.error.character = Information must contain letters or numbers
 giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
 giveInformationOtherTransport.change.hidden = give information about your other type of transport
+
+consigneeAddress.title = StringPageH1
+consigneeAddress.heading = StringPageH1
+consigneeAddress.checkYourAnswersLabel = consigneeAddress
+consigneeAddress.error.required = Enter Enter a value
+consigneeAddress.error.length = Value must be N characters or less must be 100 characters or less
+consigneeAddress.change.hidden = ConsigneeAddress

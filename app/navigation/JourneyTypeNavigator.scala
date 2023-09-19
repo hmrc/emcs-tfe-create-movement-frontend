@@ -50,5 +50,8 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
+    //TODO update when other modes are added
+    case _ =>
+      normalRoutes(page)(userAnswers)
   }
 }

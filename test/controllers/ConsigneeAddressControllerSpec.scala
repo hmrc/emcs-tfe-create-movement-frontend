@@ -23,7 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.ConsignorAddressPage
+import pages.ConsigneeAddressPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -33,7 +33,7 @@ import views.html.AddressView
 
 import scala.concurrent.Future
 
-class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
+class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
 
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
@@ -43,8 +43,8 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val consignorAddressRoute = routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consignorAddressOnSubmit = routes.ConsignorAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val consigneeAddressRoute = routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
+    lazy val consigneeAddressOnSubmit = routes.ConsigneeAddressController.onSubmit(testErn, testLrn, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(
@@ -55,12 +55,12 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
   }
 
 
-  "ConsignorAddress Controller" - {
+  "ConsigneeAddress Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture(){
 
       running(application) {
-        val request = FakeRequest(GET, consignorAddressRoute)
+        val request = FakeRequest(GET, consigneeAddressRoute)
 
         val result = route(application, request).value
 
@@ -69,18 +69,18 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form,
-          addressPage = ConsignorAddressPage,
-          call = consignorAddressOnSubmit
+          addressPage = ConsigneeAddressPage,
+          call = consigneeAddressOnSubmit
         )(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(ConsignorAddressPage, userAddressModelMax)
+      .set(ConsigneeAddressPage, userAddressModelMax)
     )) {
 
       running(application) {
-        val request = FakeRequest(GET, consignorAddressRoute)
+        val request = FakeRequest(GET, consigneeAddressRoute)
 
         val view = application.injector.instanceOf[AddressView]
 
@@ -89,8 +89,8 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form.fill(userAddressModelMax),
-          addressPage = ConsignorAddressPage,
-          call = consignorAddressOnSubmit
+          addressPage = ConsigneeAddressPage,
+          call = consigneeAddressOnSubmit
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -101,7 +101,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consignorAddressRoute)
+          FakeRequest(POST, consigneeAddressRoute)
             .withFormUrlEncodedBody(
               ("property", userAddressModelMax.property.value),
               ("street", userAddressModelMax.street),
@@ -120,7 +120,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consignorAddressRoute)
+          FakeRequest(POST, consigneeAddressRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -132,8 +132,8 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           form = boundForm,
-          addressPage = ConsignorAddressPage,
-          call = consignorAddressOnSubmit
+          addressPage = ConsigneeAddressPage,
+          call = consigneeAddressOnSubmit
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -141,7 +141,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
       running(application) {
-        val request = FakeRequest(GET, consignorAddressRoute)
+        val request = FakeRequest(GET, consigneeAddressRoute)
 
         val result = route(application, request).value
 
@@ -154,7 +154,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consignorAddressRoute)
+          FakeRequest(POST, consigneeAddressRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

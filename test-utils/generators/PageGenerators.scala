@@ -22,6 +22,9 @@ import pages.sections.journeyType.HowMovementTransportedPage
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryConsigneeAddressPage: Arbitrary[ConsigneeAddressPage.type] =
+    Arbitrary(ConsigneeAddressPage)
+
   implicit lazy val arbitraryConsignorAddressPage: Arbitrary[ConsignorAddressPage.type] =
     Arbitrary(ConsignorAddressPage)
 

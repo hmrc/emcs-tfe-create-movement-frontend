@@ -32,6 +32,9 @@ class Navigator @Inject()() extends BaseNavigator {
     case ConsignorAddressPage =>
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ConsigneeAddressPage =>
+      //TODO update to next page when finished
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case CheckAnswersPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.lrn)
     case _ =>

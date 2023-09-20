@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.info
 
 import config.SessionKeys.DEFERRED_MOVEMENT
+import controllers.BaseNavigationController
 import controllers.actions._
 import forms.DeferredMovementFormProvider
 import models.requests.UserRequest
@@ -53,11 +54,11 @@ class DeferredMovementController @Inject()(
         formWithErrors =>
           renderView(BadRequest, formWithErrors),
         value =>
-          Redirect(routes.LocalReferenceNumberController.onPageLoad(ern))
+          Redirect(controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(ern))
             .addingToSession(DEFERRED_MOVEMENT -> value.toString)
       )
     }
 
   def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result =
-    status(view(form, routes.DeferredMovementController.onSubmit(request.ern)))
+    status(view(form, controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern)))
 }

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignee
 
+import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
 import navigation.Navigator
-import pages.{ConsignorAddressPage, QuestionPage}
+import pages.{ConsigneeAddressPage, QuestionPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Call, MessagesControllerComponents}
 import services.UserAnswersService
@@ -29,7 +30,7 @@ import views.html.AddressView
 
 import javax.inject.Inject
 
-class ConsignorAddressController @Inject()(override val messagesApi: MessagesApi,
+class ConsigneeAddressController @Inject()(override val messagesApi: MessagesApi,
                                            override val userAnswersService: UserAnswersService,
                                            override val navigator: Navigator,
                                            override val auth: AuthAction,
@@ -41,9 +42,9 @@ class ConsignorAddressController @Inject()(override val messagesApi: MessagesApi
                                            override val view: AddressView
                                           ) extends AddressControllerBase {
 
-  override val addressPage: QuestionPage[UserAddress] = ConsignorAddressPage
+  override val addressPage: QuestionPage[UserAddress] = ConsigneeAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-    controllers.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, mode)
+    controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(request.ern, request.lrn, mode)
 
 }

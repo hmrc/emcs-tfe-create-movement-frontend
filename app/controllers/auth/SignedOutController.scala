@@ -38,10 +38,10 @@ class SignedOutController @Inject()(
 
     val infoRoutes: Seq[String] = Seq(
       //INFO01
-      controllers.routes.LocalReferenceNumberController.onPageLoad("ern").url,
+      controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad("ern").url,
       //INFO03
       //INFO04
-      controllers.routes.DeferredMovementController.onPageLoad("ern").url,
+      controllers.sections.info.routes.DeferredMovementController.onPageLoad("ern").url,
       //INFO06
       //INFO07
       //INFO08

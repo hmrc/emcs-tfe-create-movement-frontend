@@ -28,7 +28,7 @@ class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case LocalReferenceNumberPage =>
-      (userAnswers: UserAnswers) => controllers.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      (userAnswers: UserAnswers) => controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
     case ConsignorAddressPage =>
       (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.lrn)
     case CheckAnswersConsignorPage =>

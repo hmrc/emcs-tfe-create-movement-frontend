@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.info
 
 import config.SessionKeys.DEFERRED_MOVEMENT
+import controllers.BaseNavigationController
 import controllers.actions._
 import forms.LocalReferenceNumberFormProvider
 import models.requests.UserRequest
@@ -71,7 +72,7 @@ class LocalReferenceNumberController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], isDeferred: Boolean)(implicit request: UserRequest[_]): Future[Result] =
-    Future.successful(status(view(isDeferred, form, routes.LocalReferenceNumberController.onSubmit(request.ern))))
+    Future.successful(status(view(isDeferred, form, controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern))))
 
   private def withDeferredMovementAnswer(f: Boolean => Future[Result])(implicit request: UserRequest[_]): Future[Result] =
     request.session.get(DEFERRED_MOVEMENT) match {

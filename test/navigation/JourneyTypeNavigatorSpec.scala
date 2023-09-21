@@ -21,7 +21,7 @@ import controllers.routes
 import models._
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
 
 class JourneyTypeNavigatorSpec extends SpecBase {
 
@@ -82,8 +82,18 @@ class JourneyTypeNavigatorSpec extends SpecBase {
       }
 
       "for the CheckYourAnswers page" - {
-      }
 
+        // TODO update once CAM-JT03 has been created
+        "must go to the construction page" - {
+          val userAnswers = emptyUserAnswers
+            .set(LocalReferenceNumberPage, "123")
+            .set(HowMovementTransportedPage, Other)
+            .set(GiveInformationOtherTransportPage, "some information text")
+
+          navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {

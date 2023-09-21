@@ -16,6 +16,7 @@
 
 package viewmodels.sections.journeyType.checkAnswers
 
+import models.requests.DataRequest
 import models.{CheckMode, UserAnswers}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
@@ -26,8 +27,8 @@ import viewmodels.implicits._
 
 object HowMovementTransportedSummary {
 
-  def row(showActionLinks: Boolean)(implicit answers: UserAnswers, messages: Messages): Option[SummaryListRow] =
-    answers.get(HowMovementTransportedPage).map {
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(HowMovementTransportedPage).map {
       answer =>
 
         val value = ValueViewModel(
@@ -37,13 +38,17 @@ object HowMovementTransportedSummary {
         )
 
         SummaryListRowViewModel(
-          key = "howMovementTransported.checkYourAnswersLabel",
+          key = "howMovementTransported.checkYourAnswers.label",
           value = value,
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
-              "site.change",
-              controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-              HowMovementTransportedPage
+              content = "site.change",
+              href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
+                ern = request.userAnswers.ern,
+                lrn = request.userAnswers.lrn,
+                mode = CheckMode
+              ).url,
+              id = HowMovementTransportedPage
             ).withVisuallyHiddenText(messages("howMovementTransported.change.hidden"))
           )
         )

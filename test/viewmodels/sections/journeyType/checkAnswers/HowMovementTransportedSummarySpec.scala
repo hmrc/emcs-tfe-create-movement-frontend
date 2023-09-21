@@ -23,6 +23,7 @@ import models.sections.journeyType.HowMovementTransported.AirTransport
 import org.scalatest.matchers.must.Matchers
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
 import viewmodels.govuk.summarylist._
@@ -44,7 +45,9 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
           "must output the expected data" in {
 
-            HowMovementTransportedSummary.row(showActionLinks = true)(emptyUserAnswers, msgs) mustBe None
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            HowMovementTransportedSummary.row(showActionLinks = true) mustBe None
           }
         }
         "when there's an answer" - {
@@ -53,7 +56,9 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              HowMovementTransportedSummary.row(showActionLinks = true)(emptyUserAnswers.set(HowMovementTransportedPage, AirTransport), msgs) mustBe Some(
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
+
+              HowMovementTransportedSummary.row(showActionLinks = true) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(messagesForLanguage.radioOption1)),
@@ -73,7 +78,9 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row without action links" in {
 
-              HowMovementTransportedSummary.row(showActionLinks = false)(emptyUserAnswers.set(HowMovementTransportedPage, AirTransport), msgs) mustBe Some(
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
+
+              HowMovementTransportedSummary.row(showActionLinks = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(messagesForLanguage.radioOption1)),

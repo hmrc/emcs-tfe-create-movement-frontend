@@ -18,24 +18,14 @@ package fixtures.messages.sections.journeyType
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 
-object HowMovementTransportedMessages {
+object CheckYourAnswersJourneyTypeMessages {
+
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val subHeading = "Journey type"
-    val heading = "How will the goods be transported?"
+    val heading = "Check your answers"
     val title: String = titleHelper(heading)
-    val radioOption1: String = "Air transport"
-    val radioOption2: String = "Fixed transport installations"
-    val radioOption3: String = "Inland waterway transport"
-    val radioOption4: String = "Postal consignment"
-    val radioOption5: String = "Rail transport"
-    val radioOption6: String = "Road transport"
-    val radioOption7: String = "Sea transport"
-    val radioOption8: String = "Other"
-    val cyaLabel: String = "Type of transport"
-    val cyaChangeHidden: String = "how will the goods be transported"
+    val sectionSubheading = "Journey type"
   }
 
   object English extends ViewMessages with BaseEnglish
-
   object Welsh extends ViewMessages with BaseWelsh
 }

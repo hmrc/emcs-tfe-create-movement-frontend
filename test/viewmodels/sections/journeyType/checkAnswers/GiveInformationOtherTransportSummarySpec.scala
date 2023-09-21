@@ -19,9 +19,12 @@ package viewmodels.sections.journeyType.checkAnswers
 import base.SpecBase
 import fixtures.messages.sections.journeyType.GiveInformationOtherTransportMessages
 import models.CheckMode
+import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
 import pages.sections.journeyType.GiveInformationOtherTransportPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
 import viewmodels.govuk.summarylist._
@@ -43,7 +46,9 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
           "must output the expected data" in {
 
-            GiveInformationOtherTransportSummary.row(showActionLinks = true)(emptyUserAnswers, msgs) mustBe None
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -53,7 +58,9 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              GiveInformationOtherTransportSummary.row(showActionLinks = true)(emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"), msgs) mustBe
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
+
+              GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
@@ -74,7 +81,9 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row without action links" in {
 
-              GiveInformationOtherTransportSummary.row(showActionLinks = false)(emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"), msgs) mustBe
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
+
+              GiveInformationOtherTransportSummary.row(showActionLinks = false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,

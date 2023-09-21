@@ -222,6 +222,14 @@ address.postcode.error.required = Enter a postcode
 address.postcode.error.length = Enter a postcode up to 10 characters
 address.postcode.error.invalid = Postcode must not contain < and > and : and ;
 
+checkYourAnswersConsignor.caption = Consignor information
+checkYourAnswersConsignor.title = Check your answers
+checkYourAnswersConsignor.heading = Check your answers
+checkYourAnswersConsignor.subHeading = Consignor
+checkYourAnswersConsignor.traderName = Trader name
+checkYourAnswersConsignor.ern = Excise registration number (ERN)
+checkYourAnswersConsignor.address = Address
+
 journeyType.subHeading = Journey type
 
 howMovementTransported.title = How will the goods be transported?

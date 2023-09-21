@@ -32,7 +32,7 @@ class CheckAnswersHelperSpec extends SpecBase {
 
     s"must return the expected SummaryList" in {
 
-      checkAnswersHelper.summaryList() mustBe
+      checkAnswersHelper.summaryList(Seq()) mustBe
         SummaryList(Seq()).withCssClass("govuk-!-margin-bottom-9")
     }
   }

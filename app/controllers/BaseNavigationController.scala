@@ -63,16 +63,11 @@ trait BaseNavigationController extends BaseController with Logging {
     save(page, answer, request.userAnswers)
 
 
-  def submitAndTrimWhitespaceFromTextarea[PageType](
-                                                     page: Option[QuestionPage[PageType]],
-                                                     formProvider: BaseFormProvider[PageType]
-                                                   )(
-                                                     formWithErrorsView: Form[PageType] => Future[Result]
-                                                   )(
-                                                     successFunction: PageType => Future[Result]
-                                                   )(
-                                                     implicit request: DataRequest[_]
-                                                   ): Future[Result] = {
+  def submitAndTrimWhitespaceFromTextarea[PageType](page: Option[QuestionPage[PageType]],
+                                                    formProvider: BaseFormProvider[PageType]
+                                                   )(formWithErrorsView: Form[PageType] => Future[Result])
+                                                   (successFunction: PageType => Future[Result])
+                                                   (implicit request: DataRequest[_]): Future[Result] = {
     Try {
       val trimmedFormValues: Map[String, Seq[String]] = request.body.asInstanceOf[AnyContentAsFormUrlEncoded].data.map {
         case (k, v) => (k, v.map(_.trim))

@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package models.requests
+package fixtures.messages
 
-import models.{TraderKnownFacts, UserAnswers}
-import play.api.mvc.WrappedRequest
+object CheckYourAnswersConsignorMessages {
 
-case class DataRequest[A](request: UserRequest[A],
-                          lrn: String,
-                          userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) {
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Check your answers"
+    val title: String = titleHelper(heading)
+    val caption: String = "Consignor information"
+    val subheading: String = "Consignor"
+    val ern: String = "Excise registration number (ERN)"
+    val traderName: String = "Trader name"
+    val address: String = "Address"
+  }
 
-  val internalId: String = request.internalId
-  val ern: String = request.ern
+  object English extends ViewMessages with BaseEnglish
+  object Welsh extends ViewMessages with BaseWelsh
 }

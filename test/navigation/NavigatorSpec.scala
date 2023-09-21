@@ -47,9 +47,18 @@ class NavigatorSpec extends SpecBase {
 
       "for the ConsignorAddress page" - {
 
-        "must go to the UnderConstruction page" in {
+        "must go to the CheckYourAnswersConsignor page" in {
 
           navigator.nextPage(ConsignorAddressPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
+        }
+      }
+
+      "for the CheckYourAnswersConsignor page" - {
+
+        "must go to the UnderConstruction page" in {
+
+          navigator.nextPage(CheckAnswersConsignorPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }

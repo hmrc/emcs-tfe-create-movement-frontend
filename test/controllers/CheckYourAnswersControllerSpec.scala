@@ -63,7 +63,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
           val list = SummaryListViewModel(Seq.empty)
 
-          MockCheckAnswersHelper.summaryList().returns(list)
+          MockCheckAnswersHelper.summaryList(Seq()).returns(list)
 
           val result = route(application, request).value
 
@@ -82,7 +82,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
             val list = SummaryListViewModel(Seq.empty)
 
-            MockCheckAnswersHelper.summaryList().returns(list)
+            MockCheckAnswersHelper.summaryList(Seq()).returns(list)
             MockAddressLookupFrontendService.retrieveAddress(testId).returns(Future.successful(Right(Some(testAlfAddress))))
 
             val result = route(application, requestWithAlfId).value
@@ -102,7 +102,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
             val list = SummaryListViewModel(Seq.empty)
 
-            MockCheckAnswersHelper.summaryList().returns(list)
+            MockCheckAnswersHelper.summaryList(Seq()).returns(list)
             MockAddressLookupFrontendService.retrieveAddress(testId).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
             val result = route(application, requestWithAlfId).value

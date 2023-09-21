@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignor
 
 import controllers.actions._
+import controllers.{BaseController, routes}
 import models.NormalMode
 import navigation.Navigator
 import pages.{CheckAnswersConsignorPage, ConsignorAddressPage}
@@ -42,14 +43,14 @@ class CheckYourAnswersConsignorController @Inject()(override val messagesApi: Me
         request.userAnswers.get(ConsignorAddressPage) match {
           case Some(consignorAddress) =>
             Ok(view(
-              routes.CheckYourAnswersConsignorController.onSubmit(ern, lrn),
+              controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, lrn),
               ern,
               lrn,
               consignorAddress,
               request.traderKnownFacts
             ))
           case None =>
-            Redirect(routes.ConsignorAddressController.onPageLoad(ern, lrn, NormalMode))
+            Redirect(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, NormalMode))
         }
     }
 

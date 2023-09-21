@@ -41,7 +41,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the ConsignorAddress page" in {
 
           navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
-            routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 
@@ -50,7 +50,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the CheckYourAnswersConsignor page" in {
 
           navigator.nextPage(ConsignorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
+            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
         }
       }
 

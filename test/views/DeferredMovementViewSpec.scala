@@ -43,7 +43,7 @@ class DeferredMovementViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[DeferredMovementView]
         val form = app.injector.instanceOf[DeferredMovementFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, controllers.routes.DeferredMovementController.onSubmit(request.ern)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,

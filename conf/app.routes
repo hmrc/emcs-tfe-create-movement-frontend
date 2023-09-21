@@ -1,53 +1,29 @@
 # microservice specific routes
 
-->          /hmrc-frontend                                                         hmrcfrontend.Routes
+->          /hmrc-frontend                               hmrcfrontend.Routes
 
-->          /error                                                                 error.Routes
+->          /error                                       error.Routes
 
-GET         /assets/*file                                                          controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                                                        controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET         /refresh-session                                                       controllers.KeepAliveController.keepAlive()
+GET         /refresh-session                             controllers.KeepAliveController.keepAlive()
 
-GET         /there-is-a-problem                                                    controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/sign-out-survey                                               controllers.auth.AuthController.signOutWithSurvey()
-GET         /account/sign-out                                                      controllers.auth.AuthController.signOut()
-GET         /account/signed-out                                                    controllers.auth.SignedOutController.onPageLoad()
+GET         /account/sign-out-survey                     controllers.auth.AuthController.signOutWithSurvey()
+GET         /account/sign-out                            controllers.auth.AuthController.signOut()
+GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
 
-GET         /trader/:ern                                                           controllers.IndexController.onPageLoad(ern: String)
+GET         /trader/:ern                                 controllers.IndexController.onPageLoad(ern: String)
 
-GET         /trader/:ern/local-reference-number                                    controllers.LocalReferenceNumberController.onPageLoad(ern: String)
-POST        /trader/:ern/local-reference-number                                    controllers.LocalReferenceNumberController.onSubmit(ern: String)
+GET         /trader/:ern/draft/:lrn/check-answers        controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
+POST        /trader/:ern/draft/:lrn/check-answers        controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
 
-GET         /trader/:ern/draft/:lrn/check-answers                                  controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
-POST        /trader/:ern/draft/:lrn/check-answers                                  controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
+GET         /trader/:ern/draft/:lrn/confirmation         controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
 
-GET         /trader/:ern/draft/:lrn/confirmation                                   controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
-
-GET         /trader/:ern/deferred-movement                                       controllers.DeferredMovementController.onPageLoad(ern: String)
-POST        /trader/:ern/deferred-movement                                       controllers.DeferredMovementController.onSubmit(ern: String)
-
-GET         /trader/:ern/draft/:lrn/consignor-address                            controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:lrn/consignor-address                            controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:lrn/consignor-address/change                     controllers.ConsignorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:lrn/consignor-address/change                     controllers.ConsignorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
-
-GET         /trader/:ern/draft/:lrn/check-answers-consignor                      controllers.CheckYourAnswersConsignorController.onPageLoad(ern: String, lrn: String)
-POST        /trader/:ern/draft/:lrn/check-answers-consignor                      controllers.CheckYourAnswersConsignorController.onSubmit(ern: String, lrn: String)
-
-GET         /trader/:ern/draft/:lrn/how-movement-transported                     controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:lrn/how-movement-transported                     controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:lrn/how-movement-transported/change              controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:lrn/how-movement-transported/change              controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
-
-GET         /trader/:ern/draft/:lrn/give-information-other-transport              controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:lrn/give-information-other-transport              controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:lrn/give-information-other-transport/change       controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:lrn/give-information-other-transport/change       controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
-
-GET        /trader/:ern/draft/:lrn/consignee-address-manual                      controllers.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/consignee-address-manual                      controllers.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/consignee-address-manual/change               controllers.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/consignee-address-manual/change               controllers.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+->          /                                            info.Routes
+->          /                                            consignor.Routes
+->          /                                            consignee.Routes
+->          /                                            journeyType.Routes

@@ -49,8 +49,8 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
   val formProvider = new LocalReferenceNumberFormProvider()
   val form = formProvider(isDeferred = false)
 
-  lazy val localReferenceNumberRoute = routes.LocalReferenceNumberController.onPageLoad(testErn).url
-  lazy val localReferenceNumberSubmitAction = routes.LocalReferenceNumberController.onSubmit(testErn)
+  lazy val localReferenceNumberRoute = controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn).url
+  lazy val localReferenceNumberSubmitAction = controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn)
 
   "LocalReferenceNumberController" - {
 

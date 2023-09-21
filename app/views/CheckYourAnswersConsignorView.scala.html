@@ -38,7 +38,7 @@
     val consignorAddressRow = checkAnswersHelper.buildSummaryRow(
         key = "checkYourAnswersConsignor.address",
         value = consignorAddress.toCheckYourAnswersFormat.toString(),
-        optChangeLink = Some(routes.ConsignorAddressController.onPageLoad(ern, lrn, CheckMode)),
+        optChangeLink = Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, CheckMode)),
         id = "change-address")
 
     checkAnswersHelper.summaryList(Seq(traderNameRow, ernRow, consignorAddressRow))

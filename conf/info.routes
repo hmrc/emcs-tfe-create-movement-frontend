@@ -1,0 +1,7 @@
+# INFO02
+GET         /trader/:ern/info/local-reference-number        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String)
+POST        /trader/:ern/info/local-reference-number        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String)
+
+# INFO05
+GET         /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onPageLoad(ern: String)
+POST        /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onSubmit(ern: String)

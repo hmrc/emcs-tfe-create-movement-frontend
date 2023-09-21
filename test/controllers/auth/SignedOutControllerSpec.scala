@@ -64,7 +64,7 @@ class SignedOutControllerSpec extends SpecBase {
 
         running(application) {
           val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
-            .withSession("Referer" -> controllers.routes.DeferredMovementController.onPageLoad(testErn).url)
+            .withSession("Referer" -> controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
 
           val result = route(application, request).value
 

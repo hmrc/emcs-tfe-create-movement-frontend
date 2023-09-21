@@ -46,7 +46,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
   val formProvider = new DeferredMovementFormProvider()
   val form = formProvider()
 
-  lazy val deferredMovementRoute = routes.DeferredMovementController.onPageLoad(testErn).url
+  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url
 
   "DeferredMovement Controller" - {
 
@@ -58,7 +58,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
       }
     }
 
@@ -72,7 +72,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.LocalReferenceNumberController.onPageLoad(testErn).url
+        redirectLocation(result).value mustEqual controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn).url
       }
     }
 
@@ -88,7 +88,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
       }
     }
   }

@@ -43,7 +43,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
   "Check Your Answers Consignor Controller" - {
     ".onPageLoad" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn).url)
 
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
 
@@ -51,7 +51,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          val viewAsString = view(routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn),
             testErn,
             testLrn,
             testUserAddress,
@@ -77,7 +77,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
     ".onSubmit" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn).url)
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
 

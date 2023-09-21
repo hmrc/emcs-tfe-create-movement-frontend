@@ -49,7 +49,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = ConsignorAddressPage,
-            call = controllers.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
           )
 
           behave like pageWithExpectedElementsAndMessages(Seq(

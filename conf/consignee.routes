@@ -1,4 +1,4 @@
-GET        /trader/:ern/draft/:lrn/consignee-address-manual                      controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/consignee-address-manual                      controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:lrn/consignee/consignee-address-manual                      controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consignee/consignee-address-manual                      controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/consignee/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/consignee/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

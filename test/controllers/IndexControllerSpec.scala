@@ -34,7 +34,7 @@ class IndexControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.routes.DeferredMovementController.onPageLoad(testErn).url)
+        redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
       }
     }
   }

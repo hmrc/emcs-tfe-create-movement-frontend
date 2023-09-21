@@ -46,7 +46,7 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
         "when movement is Deferred" - {
 
           implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = true, form(isDeferred = true), controllers.routes.LocalReferenceNumberController.onSubmit(testErn)
+            isDeferred = true, form(isDeferred = true), controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn)
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -61,7 +61,7 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
         "when movement is NOT Deferred (new)" - {
 
           implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = false, form(isDeferred = false), controllers.routes.LocalReferenceNumberController.onSubmit(testErn)
+            isDeferred = false, form(isDeferred = false), controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn)
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(

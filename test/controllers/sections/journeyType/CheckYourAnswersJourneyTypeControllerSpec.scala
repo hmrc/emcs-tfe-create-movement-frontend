@@ -21,8 +21,8 @@ import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckYourAnswersJourneyTypeHelper
 import models.UserAnswers
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeJourneyTypeNavigator
+import navigation.JourneyTypeNavigator
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -48,7 +48,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
 
     val application = applicationBuilder(userAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[JourneyTypeNavigator].toInstance(new FakeJourneyTypeNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[CheckYourAnswersJourneyTypeHelper].toInstance(MockCheckYourAnswersJourneyTypeHelper)
       )

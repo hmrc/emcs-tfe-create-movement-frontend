@@ -30,31 +30,14 @@ class SignedOutController @Inject()(
                                    ) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    def refererIsASavablePage(refererUrl: String): Boolean = refererUrl.matches(".*/trader/.*/draft/.*")
 
-    val referer: Option[String] = request.session.get(REFERER_SESSION_KEY).flatMap(_.split("/").lastOption)
-
-    logger.debug(s"referer from session: [${request.session.get(REFERER_SESSION_KEY)}]")
-    logger.debug(s"referer variable: [$referer]")
-
-    val infoRoutes: Seq[String] = Seq(
-      //INFO01
-      controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad("ern").url,
-      //INFO03
-      //INFO04
-      controllers.sections.info.routes.DeferredMovementController.onPageLoad("ern").url,
-      //INFO06
-      //INFO07
-      //INFO08
-      // TODO: INFO routes should not be saved. Add all INFO routes to this as they are created.
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
-    ).flatMap(_.split("/").lastOption)
-
-
-    val guidance: String = referer match {
-      case Some(value) if infoRoutes.exists(value.contains) => "signedOut.guidance.notSaved"
-      case _ => "signedOut.guidance.saved"
+    val guidance: String = request.session.get(REFERER_SESSION_KEY) match {
+      case Some(refererUrl) if refererIsASavablePage(refererUrl) => "signedOut.guidance.saved"
+      case _ => "signedOut.guidance.notSaved"
     }
 
     Ok(view(guidance)).removingFromSession(REFERER_SESSION_KEY)
   }
+
 }

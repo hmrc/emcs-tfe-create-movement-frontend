@@ -26,6 +26,7 @@ class SignedOutControllerSpec extends SpecBase {
   "SignedOut Controller" - {
 
     "must return OK and the correct view for a GET" - {
+
       "When there is no referer in the session" in {
 
         val application = applicationBuilder(userAnswers = None).build()
@@ -38,17 +39,17 @@ class SignedOutControllerSpec extends SpecBase {
           val view = application.injector.instanceOf[SignedOutView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
+          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
           await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
         }
       }
-      "When there is a referer in the session which is not an INFO page" in {
 
+      "When there is a referer in the session which is a DRAFT page" in {
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
           val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
-            .withSession("Referer" -> "my/test/url")
+            .withSession("Referer" -> "/emcs/trader/123/draft/123456789/section/some-page")
 
           val result = route(application, request).value
 
@@ -59,12 +60,13 @@ class SignedOutControllerSpec extends SpecBase {
           session(result).get(REFERER_SESSION_KEY) mustBe None
         }
       }
-      "When there is a referer in the session which is an INFO page" in {
+
+      "When there is a referer in the session which is not a DRAFT page" in {
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
           val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
-            .withSession("Referer" -> controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
+            .withSession("Referer" -> "/emcs/trader/123/info/some-page")
 
           val result = route(application, request).value
 
@@ -74,6 +76,7 @@ class SignedOutControllerSpec extends SpecBase {
           contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
           session(result).get(REFERER_SESSION_KEY) mustBe None
         }
+
       }
     }
   }

@@ -20,7 +20,7 @@ import controllers.routes
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -36,12 +36,16 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
             controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case _ =>
             // TODO redirect to CAM-JT03
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
         }
 
-    case GiveInformationOtherTransportPage => (_: UserAnswers) =>
+    case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
       // TODO redirect to CAM-JT03
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    case CheckYourAnswersJourneyTypePage =>
+      //TODO update when next page is created
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

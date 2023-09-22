@@ -16,6 +16,7 @@
 
 package viewmodels.sections.journeyType.checkAnswers
 
+import models.requests.DataRequest
 import models.{CheckMode, UserAnswers}
 import pages.sections.journeyType.GiveInformationOtherTransportPage
 import play.api.i18n.Messages
@@ -26,18 +27,22 @@ import viewmodels.implicits._
 
 object GiveInformationOtherTransportSummary {
 
-  def row(showActionLinks: Boolean)(implicit answers: UserAnswers, messages: Messages): Option[SummaryListRow] =
-    answers.get(GiveInformationOtherTransportPage).map {
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(GiveInformationOtherTransportPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key = "giveInformationOtherTransport.checkYourAnswersLabel",
+          key = "giveInformationOtherTransport.checkYourAnswers.label",
           value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
-              "site.change",
-              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-              GiveInformationOtherTransportPage
+              content = "site.change",
+              href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(
+                ern = request.userAnswers.ern,
+                lrn = request.userAnswers.lrn,
+                mode = CheckMode
+              ).url,
+              id = GiveInformationOtherTransportPage
             )
               .withVisuallyHiddenText(messages("giveInformationOtherTransport.change.hidden"))
           )

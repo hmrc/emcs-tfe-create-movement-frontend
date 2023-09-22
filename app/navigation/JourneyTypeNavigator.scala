@@ -36,12 +36,12 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
             controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case _ =>
             // TODO redirect to CAM-JT03
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
         }
 
-    case GiveInformationOtherTransportPage => (_: UserAnswers) =>
+    case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
       // TODO redirect to CAM-JT03
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
 
     case CheckYourAnswersJourneyTypePage =>
       //TODO update when next page is created

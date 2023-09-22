@@ -53,7 +53,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
         }
 
         // TODO update once CAM-JT03 has been created
-        "must go to the under construction page" - {
+        "must go to the Journey Type CYA page" - {
 
           "when the option selected is not `Other`" in {
             val userAnswers = emptyUserAnswers
@@ -61,7 +61,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testLrn)
           }
         }
       }
@@ -69,21 +69,21 @@ class JourneyTypeNavigatorSpec extends SpecBase {
       "for the GiveInformationOtherTransport page" - {
 
         // TODO update once CAM-JT03 has been created
-        "must go to the construction page" - {
+        "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
             .set(LocalReferenceNumberPage, "123")
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "some information text")
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testLrn)
 
         }
       }
 
       "for the CheckYourAnswers page" - {
 
-        // TODO update once CAM-JT03 has been created
+        // TODO update to confirmation page when created
         "must go to the construction page" - {
           val userAnswers = emptyUserAnswers
             .set(LocalReferenceNumberPage, "123")

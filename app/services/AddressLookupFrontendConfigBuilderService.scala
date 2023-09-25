@@ -19,7 +19,7 @@ package services
 import config.AppConfig
 import models.addressLookupFrontend._
 import play.api.i18n.{Lang, MessagesApi}
-import play.api.mvc.Call
+import play.api.mvc.{Call, RequestHeader}
 import utils.MessagesUtil.optionalMessage
 
 import javax.inject.{Inject, Singleton}
@@ -38,7 +38,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
   }
 
   // scalastyle:off
-  def buildConfig(handbackLocation: Call)(implicit messagesApi: MessagesApi): AddressLookupFrontendJourneyConfig = {
+  def buildConfig(handbackLocation: Call)(implicit messagesApi: MessagesApi, requestHeader: RequestHeader): AddressLookupFrontendJourneyConfig = {
 
     val selectPageConfig = SelectPageConfig(
       proposalListLimit = 30,
@@ -53,7 +53,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
 
     val timeoutConfig = TimeoutConfig(
       timeoutAmount = appConfig.timeout,
-      timeoutUrl = appConfig.signOutUrl
+      timeoutUrl = appConfig.signOutUrl()(requestHeader)
     )
 
     val journeyOptions = JourneyOptions(

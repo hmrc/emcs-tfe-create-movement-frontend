@@ -43,7 +43,16 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
 
-  lazy val signOutUrl: String = configuration.get[String]("urls.signOut")
+  def signOutUrl()(request: RequestHeader): String = {
+    val savablePage = request.uri.matches(".*/trader/.*/draft/.*")
+
+    (redirectToFeedbackSurvey, savablePage) match {
+      case (true, _) => controllers.auth.routes.SignedOutController.signOutWithSurvey().url
+      case (false, true) => controllers.auth.routes.SignedOutController.signOutSaved().url
+      case (false, false) => controllers.auth.routes.SignedOutController.signOutNotSaved().url
+    }
+  }
+
   lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
   lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
@@ -55,7 +64,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
-  lazy val redirectToFeedbackSurvey: Boolean = configuration.get[Boolean]("timeout-dialog.redirectToFeedbackSurvey")
+  private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),

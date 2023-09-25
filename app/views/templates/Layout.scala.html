@@ -46,13 +46,7 @@
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
                 keepAliveButtonText = Some(messages("timeout.keepAlive")),
-                signOutUrl          = Some(
-                    if(appConfig.redirectToFeedbackSurvey) {
-                        controllers.auth.routes.AuthController.signOutWithSurvey().url
-                    } else {
-                        controllers.auth.routes.AuthController.signOut().url
-                    }
-                ),
+                signOutUrl          = Some(appConfig.signOutUrl()(request)),
                 signOutButtonText   = Some(messages("timeout.signOut")),
                 title               = Some(messages("timeout.title")),
                 message             = Some(messages("timeout.message"))
@@ -90,12 +84,13 @@
     </div>
 }
 
+
 @govukLayout(
     pageTitle   = Some(pageTitle),
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(appConfig.emcsTfeHomeUrl),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+        signOutUrl  = if(showSignOut) Some(appConfig.signOutUrl()(request)) else None,
         phaseBanner = Some(betaBanner(appConfig.betaBannerFeedbackUrl))
     )),
     beforeContentBlock = Some(beforeContent),

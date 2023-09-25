@@ -25,59 +25,53 @@ class SignedOutControllerSpec extends SpecBase {
 
   "SignedOut Controller" - {
 
-    "must return OK and the correct view for a GET" - {
+    "must return OK and the correct view for a none saved signout" in {
 
-      "When there is no referer in the session" in {
+      val application = applicationBuilder(userAnswers = None).build()
 
-        val application = applicationBuilder(userAnswers = None).build()
+      running(application) {
+        val request = FakeRequest(GET, routes.SignedOutController.signOutNotSaved().url)
 
-        running(application) {
-          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+        val result = route(application, request).value
 
-          val result = route(application, request).value
+        val view = application.injector.instanceOf[SignedOutView]
 
-          val view = application.injector.instanceOf[SignedOutView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
-          await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
-        }
-      }
-
-      "When there is a referer in the session which is a DRAFT page" in {
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
-            .withSession("Referer" -> "/emcs/trader/123/draft/123456789/section/some-page")
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[SignedOutView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
-          session(result).get(REFERER_SESSION_KEY) mustBe None
-        }
-      }
-
-      "When there is a referer in the session which is not a DRAFT page" in {
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
-            .withSession("Referer" -> "/emcs/trader/123/info/some-page")
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[SignedOutView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
-          session(result).get(REFERER_SESSION_KEY) mustBe None
-        }
-
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
+        await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
       }
     }
+
+    "must return OK and the correct view for a saved signed out" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.SignedOutController.signOutSaved().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[SignedOutView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
+        await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
+      }
+    }
+
+    "must return OK and the correct view for a feedback signed out" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.SignedOutController.signOutWithSurvey().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some("http://localhost:9514/feedback/emcstfe/beta")
+      }
+    }
+
   }
 }

@@ -25,7 +25,8 @@ import org.scalatest.EitherValues
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
 import play.api.mvc.Call
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{GET, await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -70,6 +71,8 @@ class AddressLookupFrontendServiceSpec() extends SpecBase
     "return a url" in new Setup {
       val url = "testID"
       val testHandbackLocation: Call = Call("", "/testUrl")
+
+      implicit val request = FakeRequest(GET, "/foo/bar")
 
       val config: AddressLookupFrontendJourneyConfig =
         AddressLookupFrontendJourneyConfig(

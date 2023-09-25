@@ -16,6 +16,7 @@
 
 package controllers.auth
 
+import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,18 +27,20 @@ import javax.inject.Inject
 
 class SignedOutController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
+                                     appConfig: AppConfig,
                                      view: SignedOutView
                                    ) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    def refererIsASavablePage(refererUrl: String): Boolean = refererUrl.matches(".*/trader/.*/draft/.*")
+  def signOutSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.saved")).withNewSession
+  }
 
-    val guidance: String = request.session.get(REFERER_SESSION_KEY) match {
-      case Some(refererUrl) if refererIsASavablePage(refererUrl) => "signedOut.guidance.saved"
-      case _ => "signedOut.guidance.notSaved"
-    }
+  def signOutNotSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.notSaved")).withNewSession
+  }
 
-    Ok(view(guidance)).removingFromSession(REFERER_SESSION_KEY)
+  def signOutWithSurvey(): Action[AnyContent] = Action {
+    Redirect(appConfig.feedbackFrontendSurveyUrl).withNewSession
   }
 
 }

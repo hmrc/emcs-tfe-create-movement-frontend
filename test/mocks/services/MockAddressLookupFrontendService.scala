@@ -18,9 +18,9 @@ package mocks.services
 
 import models.addressLookupFrontend.Address
 import models.response.ErrorResponse
-import org.scalamock.handlers.CallHandler2
+import org.scalamock.handlers.{CallHandler2, CallHandler3}
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.Call
+import play.api.mvc.{Call, RequestHeader}
 import services.AddressLookupFrontendService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -35,9 +35,9 @@ trait MockAddressLookupFrontendService extends MockFactory {
     def retrieveAddress(id: String): CallHandler2[String, HeaderCarrier, Future[Either[ErrorResponse, Option[Address]]]] =
       (mockAddressLookupFrontendService.retrieveAddress(_: String)(_: HeaderCarrier)).expects(id, *)
 
-    def initialiseJourney(handbackLocation: Call): CallHandler2[Call, HeaderCarrier, Future[Either[ErrorResponse, String]]] =
-      (mockAddressLookupFrontendService.initialiseJourney(_: Call)(_: HeaderCarrier))
-        .expects(handbackLocation, *)
+    def initialiseJourney(handbackLocation: Call): CallHandler3[Call, HeaderCarrier, RequestHeader, Future[Either[ErrorResponse, String]]] =
+      (mockAddressLookupFrontendService.initialiseJourney(_: Call)(_: HeaderCarrier, _: RequestHeader))
+        .expects(handbackLocation, *, *)
   }
 
 }

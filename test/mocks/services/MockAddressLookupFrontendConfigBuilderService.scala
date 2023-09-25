@@ -17,10 +17,10 @@
 package mocks.services
 
 import models.addressLookupFrontend.AddressLookupFrontendJourneyConfig
-import org.scalamock.handlers.CallHandler2
+import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.MessagesApi
-import play.api.mvc.Call
+import play.api.mvc.{Call, RequestHeader}
 import services.AddressLookupFrontendConfigBuilderService
 
 trait MockAddressLookupFrontendConfigBuilderService extends MockFactory {
@@ -28,9 +28,9 @@ trait MockAddressLookupFrontendConfigBuilderService extends MockFactory {
   lazy val mockAddressLookupFrontendConfigBuilderService: AddressLookupFrontendConfigBuilderService = mock[AddressLookupFrontendConfigBuilderService]
 
   object MockAddressLookupFrontendConfigBuilderService {
-    def buildConfig(handbackLocation: Call): CallHandler2[Call, MessagesApi, AddressLookupFrontendJourneyConfig] =
-      (mockAddressLookupFrontendConfigBuilderService.buildConfig(_: Call)(_: MessagesApi))
-        .expects(handbackLocation, *)
+    def buildConfig(handbackLocation: Call): CallHandler3[Call, MessagesApi, RequestHeader, AddressLookupFrontendJourneyConfig] =
+      (mockAddressLookupFrontendConfigBuilderService.buildConfig(_: Call)(_: MessagesApi, _: RequestHeader))
+        .expects(handbackLocation, *, *)
   }
 
 }

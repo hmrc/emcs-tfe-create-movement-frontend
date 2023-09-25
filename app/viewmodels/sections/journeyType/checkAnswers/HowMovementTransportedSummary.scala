@@ -16,8 +16,8 @@
 
 package viewmodels.sections.journeyType.checkAnswers
 
+import models.CheckMode
 import models.requests.DataRequest
-import models.{CheckMode, UserAnswers}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat

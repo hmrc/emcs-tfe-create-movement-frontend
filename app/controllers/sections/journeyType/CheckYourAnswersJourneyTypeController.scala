@@ -19,7 +19,7 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
-import navigation.{JourneyTypeNavigator, Navigator}
+import navigation.JourneyTypeNavigator
 import pages.sections.journeyType.CheckYourAnswersJourneyTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

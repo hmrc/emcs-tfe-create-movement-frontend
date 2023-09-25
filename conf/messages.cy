@@ -215,3 +215,10 @@ consigneeExport.change.hidden = are the goods being exported outside of the UK a
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
+
+consigneeBusinessName.title = What is the consignee’s business name?
+consigneeBusinessName.heading = What is the consignee’s business name?
+consigneeBusinessName.checkYourAnswersLabel = consigneeBusinessName
+consigneeBusinessName.error.required = Enter Enter the consignee business name
+consigneeBusinessName.error.length = Consignee business name must be 182 characters or less must be 182 characters or less
+consigneeBusinessName.change.hidden = ConsigneeBusinessName

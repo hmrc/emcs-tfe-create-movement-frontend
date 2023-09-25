@@ -28,3 +28,8 @@ GET         /trader/:ern/draft/:lrn/confirmation         controllers.Confirmatio
 ->          /                                            consignee.Routes
 ->          /                                            journeyType.Routes
 
+
+GET        /trader/:ern/draft/:lrn/consigneeBusinessName                        controllers.ConsigneeBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consigneeBusinessName                        controllers.ConsigneeBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/ConsigneeBusinessName/change                  controllers.ConsigneeBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/ConsigneeBusinessName/change                  controllers.ConsigneeBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

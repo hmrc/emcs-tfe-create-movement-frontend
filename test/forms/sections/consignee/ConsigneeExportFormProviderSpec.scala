@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-package pages
+package forms.sections.consignee
 
-import models.UserAddress
-import pages.behaviours.PageBehaviours
-import pages.sections.consignee.ConsigneeAddressPage
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
+class ConsigneeExportFormProviderSpec extends BooleanFieldBehaviours {
 
-class ConsigneeAddressPageSpec extends PageBehaviours {
+  val requiredKey = "consigneeExport.error.required"
+  val invalidKey = "error.boolean"
 
-  "ConsigneeAddressPage" - {
+  val form = new ConsigneeExportFormProvider()()
 
-    beRetrievable[UserAddress](ConsigneeAddressPage)
+  ".value" - {
 
-    beSettable[UserAddress](ConsigneeAddressPage)
+    val fieldName = "value"
 
-    beRemovable[UserAddress](ConsigneeAddressPage)
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.consignee
 
 import models.UserAddress
-import pages.behaviours.PageBehaviours
-import pages.sections.consignee.ConsigneeAddressPage
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
+case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
 
-class ConsigneeAddressPageSpec extends PageBehaviours {
+  override def path: JsPath = JsPath \ "consignee" \ toString
 
-  "ConsigneeAddressPage" - {
-
-    beRetrievable[UserAddress](ConsigneeAddressPage)
-
-    beSettable[UserAddress](ConsigneeAddressPage)
-
-    beRemovable[UserAddress](ConsigneeAddressPage)
-  }
+  override def toString: String = "consigneeAddress"
 }

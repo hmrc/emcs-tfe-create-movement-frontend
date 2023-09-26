@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.consignee
 
-import models.UserAddress
 import pages.behaviours.PageBehaviours
-import pages.sections.consignee.ConsigneeAddressPage
 
+class ConsigneeExportPageSpec extends PageBehaviours {
 
-class ConsigneeAddressPageSpec extends PageBehaviours {
+  "ConsigneeExportPage" - {
 
-  "ConsigneeAddressPage" - {
+    beRetrievable[Boolean](ConsigneeExportPage)
 
-    beRetrievable[UserAddress](ConsigneeAddressPage)
+    beSettable[Boolean](ConsigneeExportPage)
 
-    beSettable[UserAddress](ConsigneeAddressPage)
-
-    beRemovable[UserAddress](ConsigneeAddressPage)
+    beRemovable[Boolean](ConsigneeExportPage)
   }
 }

@@ -32,5 +32,10 @@ object FakeNavigators {
       desiredRoute
   }
 
+  class FakeConsigneeNavigator(desiredRoute: Call) extends ConsigneeNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
 
 }

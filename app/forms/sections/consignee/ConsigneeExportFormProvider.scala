@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms.sections.consignee
 
-import models.UserAddress
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
+import javax.inject.Inject
 
-  override def path: JsPath = JsPath \ toString
+class ConsigneeExportFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "consigneeAddress"
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("consigneeExport.error.required")
+    )
 }

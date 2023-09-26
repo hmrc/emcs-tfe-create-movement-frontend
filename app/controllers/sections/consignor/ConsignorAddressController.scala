@@ -16,7 +16,7 @@
 
 package controllers.sections.consignor
 
-import controllers.{AddressControllerBase, BaseNavigationController}
+import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest

@@ -17,6 +17,7 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import play.api.data.FormError
 
 class ConsigneeBusinessNameFormProviderSpec extends StringFieldBehaviours {

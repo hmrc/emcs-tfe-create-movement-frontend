@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignee
 
 import base.SpecBase
-import forms.ConsigneeBusinessNameFormProvider
+import controllers.routes
+import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
-import views.html.ConsigneeBusinessNameView
+import views.html.sections.consignee.ConsigneeBusinessNameView
 
 import scala.concurrent.Future
 
@@ -39,7 +40,8 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
   val formProvider = new ConsigneeBusinessNameFormProvider()
   val form = formProvider()
 
-  lazy val consigneeBusinessNameRoute = routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testLrn, NormalMode)
 
   "ConsigneeBusinessName Controller" - {
 
@@ -55,7 +57,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
         val view = application.injector.instanceOf[ConsigneeBusinessNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -73,7 +75,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -117,7 +119,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
       }
     }
 

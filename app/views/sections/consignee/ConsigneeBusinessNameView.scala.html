@@ -18,19 +18,20 @@
 @import viewmodels.InputWidth._
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    h1: components.h1
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        h1: components.h1,
+        continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("consigneeBusinessName.title"))) {
 
-    @formHelper(action = routes.ConsigneeBusinessNameController.onSubmit(request.ern, request.lrn, mode)) {
+    @formHelper(action) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -44,12 +45,10 @@
             .withWidth(Full)
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueOrExit()
     }
 }
 
 @heading = {
-    @h1("consigneeBusinessName.heading", Some(messages("lrn.subHeading", request.lrn)), "govuk-heading-l")
+    @h1("consigneeBusinessName.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
 }

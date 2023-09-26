@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package viewmodels.sections.consignee.checkAnswers
 
 import base.SpecBase
-import fixtures.messages.sections.journeyType.GiveInformationOtherTransportMessages
+import fixtures.messages.sections.consignee.ConsigneeBusinessNameMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.journeyType.GiveInformationOtherTransportPage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
+class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
-  lazy val app = applicationBuilder().build()
+  "ConsigneeBusinessNameSummary" - {
 
-  ".row" - {
+    lazy val app = applicationBuilder().build()
 
-    Seq(GiveInformationOtherTransportMessages.English, GiveInformationOtherTransportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeBusinessNameMessages.English, ConsigneeBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -46,7 +46,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe None
+            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -56,18 +56,18 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
 
-              GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe
+              ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("some text")),
+                    value = Value(Text("testName")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = GiveInformationOtherTransportPage
+                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = "changeConsigneeBusinessName"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )
@@ -79,13 +79,13 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row without action links" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
 
-              GiveInformationOtherTransportSummary.row(showActionLinks = false) mustBe
+              ConsigneeBusinessNameSummary.row(showActionLinks = false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("some text")),
+                    value = Value(Text("testName")),
                     actions = Seq()
                   )
                 )

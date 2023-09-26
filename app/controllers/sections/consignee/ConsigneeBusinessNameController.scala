@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignee
 
+import controllers.BaseNavigationController
 import controllers.actions._
-import forms.ConsigneeBusinessNameFormProvider
+import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import models.Mode
 import navigation.Navigator
-import pages.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import views.html.ConsigneeBusinessNameView
+import views.html.sections.consignee.ConsigneeBusinessNameView
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -44,14 +45,14 @@ class ConsigneeBusinessNameController @Inject()(
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) { implicit request =>
-      Ok(view(fillForm(ConsigneeBusinessNamePage, formProvider()), mode))
+      Ok(view(fillForm(ConsigneeBusinessNamePage, formProvider()), routes.ConsigneeBusinessNameController.onSubmit(ern, lrn, mode)))
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, routes.ConsigneeBusinessNameController.onSubmit(ern, lrn, mode)))),
         value =>
           saveAndRedirect(ConsigneeBusinessNamePage, value, mode)
       )

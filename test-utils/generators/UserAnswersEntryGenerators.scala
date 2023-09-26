@@ -21,7 +21,7 @@ import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import pages._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExportPage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 

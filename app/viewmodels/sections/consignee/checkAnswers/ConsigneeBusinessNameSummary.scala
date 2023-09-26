@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.sections.consignee.checkAnswers
 
-import controllers.routes
+import models.requests.DataRequest
 import models.{CheckMode, UserAnswers}
-import pages.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,17 +27,17 @@ import viewmodels.implicits._
 
 object ConsigneeBusinessNameSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ConsigneeBusinessNamePage).map {
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(ConsigneeBusinessNamePage).map {
       answer =>
 
         SummaryListRowViewModel(
           key     = "consigneeBusinessName.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
+          actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.ConsigneeBusinessNameController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
               id = "changeConsigneeBusinessName"
             ).withVisuallyHiddenText(messages("consigneeBusinessName.change.hidden"))
           )

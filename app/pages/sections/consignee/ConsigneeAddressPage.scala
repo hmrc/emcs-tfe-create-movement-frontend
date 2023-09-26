@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.consignee
 
 import models.UserAddress
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "consignee" \ toString
 
   override def toString: String = "consigneeAddress"
 }

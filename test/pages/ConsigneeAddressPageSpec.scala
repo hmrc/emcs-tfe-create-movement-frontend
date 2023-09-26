@@ -18,6 +18,7 @@ package pages
 
 import models.UserAddress
 import pages.behaviours.PageBehaviours
+import pages.sections.consignee.ConsigneeAddressPage
 
 
 class ConsigneeAddressPageSpec extends PageBehaviours {

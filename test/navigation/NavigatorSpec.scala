@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models._
 import pages._
+import pages.sections.consignee.ConsigneeAddressPage
 
 class NavigatorSpec extends SpecBase {
 

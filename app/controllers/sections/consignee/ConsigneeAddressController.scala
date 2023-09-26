@@ -22,7 +22,8 @@ import forms.AddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
 import navigation.Navigator
-import pages.{ConsigneeAddressPage, QuestionPage}
+import pages.QuestionPage
+import pages.sections.consignee.ConsigneeAddressPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Call, MessagesControllerComponents}
 import services.UserAnswersService

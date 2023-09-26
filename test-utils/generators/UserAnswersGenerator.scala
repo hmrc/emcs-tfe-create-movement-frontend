@@ -22,7 +22,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 import org.scalatest.TryValues
 import pages._
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExportPage}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 

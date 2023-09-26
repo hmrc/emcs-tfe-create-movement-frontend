@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import models._
 import pages._
+import pages.sections.consignee.ConsigneeAddressPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}

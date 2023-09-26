@@ -12,9 +12,9 @@ GET         /refresh-session                             controllers.KeepAliveCo
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/sign-out-survey                     controllers.auth.AuthController.signOutWithSurvey()
-GET         /account/sign-out                            controllers.auth.AuthController.signOut()
-GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
+GET         /account/signed-out                          controllers.auth.SignedOutController.signOutNotSaved()
+GET         /account/signed-out-saved                    controllers.auth.SignedOutController.signOutSaved()
+GET         /account/sign-out-survey                     controllers.auth.SignedOutController.signOutWithSurvey()
 
 GET         /trader/:ern                                 controllers.IndexController.onPageLoad(ern: String)
 

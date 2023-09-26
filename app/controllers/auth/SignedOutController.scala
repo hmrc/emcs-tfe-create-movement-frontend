@@ -16,6 +16,7 @@
 
 package controllers.auth
 
+import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,35 +27,20 @@ import javax.inject.Inject
 
 class SignedOutController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
+                                     appConfig: AppConfig,
                                      view: SignedOutView
                                    ) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-
-    val referer: Option[String] = request.session.get(REFERER_SESSION_KEY).flatMap(_.split("/").lastOption)
-
-    logger.debug(s"referer from session: [${request.session.get(REFERER_SESSION_KEY)}]")
-    logger.debug(s"referer variable: [$referer]")
-
-    val infoRoutes: Seq[String] = Seq(
-      //INFO01
-      controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad("ern").url,
-      //INFO03
-      //INFO04
-      controllers.sections.info.routes.DeferredMovementController.onPageLoad("ern").url,
-      //INFO06
-      //INFO07
-      //INFO08
-      // TODO: INFO routes should not be saved. Add all INFO routes to this as they are created.
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
-    ).flatMap(_.split("/").lastOption)
-
-
-    val guidance: String = referer match {
-      case Some(value) if infoRoutes.exists(value.contains) => "signedOut.guidance.notSaved"
-      case _ => "signedOut.guidance.saved"
-    }
-
-    Ok(view(guidance)).removingFromSession(REFERER_SESSION_KEY)
+  def signOutSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.saved")).withNewSession
   }
+
+  def signOutNotSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.notSaved")).withNewSession
+  }
+
+  def signOutWithSurvey(): Action[AnyContent] = Action {
+    Redirect(appConfig.feedbackFrontendSurveyUrl).withNewSession
+  }
+
 }

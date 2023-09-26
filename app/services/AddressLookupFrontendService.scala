@@ -20,7 +20,7 @@ import connectors.addressLookupFrontend.AddressLookupFrontendConnector
 import models.addressLookupFrontend.Address
 import models.response.ErrorResponse
 import play.api.i18n.MessagesApi
-import play.api.mvc.Call
+import play.api.mvc.{Call, RequestHeader}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -31,9 +31,9 @@ class AddressLookupFrontendService @Inject()(addressLookupFrontendConnector: Add
                                              addressLookupConfigBuilderService: AddressLookupFrontendConfigBuilderService,
                                              messagesApi: MessagesApi) {
 
-  def initialiseJourney(handbackLocation: Call)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, String]] = {
+  def initialiseJourney(handbackLocation: Call)(implicit hc: HeaderCarrier, requestHeader: RequestHeader): Future[Either[ErrorResponse, String]] = {
 
-    val config = addressLookupConfigBuilderService.buildConfig(handbackLocation = handbackLocation)(messagesApi)
+    val config = addressLookupConfigBuilderService.buildConfig(handbackLocation = handbackLocation)(messagesApi, requestHeader)
 
     addressLookupFrontendConnector.initialiseJourney(config)
   }

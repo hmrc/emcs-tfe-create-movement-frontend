@@ -22,6 +22,8 @@ import models.addressLookupFrontend._
 import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
+import play.api.test.FakeRequest
+import play.api.test.Helpers.GET
 
 class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with GuiceOneAppPerSuite with MockFactory {
 
@@ -35,6 +37,7 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
   "buildConfig" - {
     "return a filled AlfJourneyConfig model" in new Test {
       override val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+      implicit val request = FakeRequest(GET, "/foo/bar")
 
       val result: AddressLookupFrontendJourneyConfig = TestService.buildConfig(
         handbackLocation = testOnwardRoute
@@ -73,7 +76,7 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
               timeoutConfig = Some(
                 TimeoutConfig(
                   timeoutAmount = 9000,
-                  timeoutUrl = "http://localhost:8308/gg/sign-out"
+                  timeoutUrl = "/emcs/create-movement/account/signed-out"
                 )
               )
             ),

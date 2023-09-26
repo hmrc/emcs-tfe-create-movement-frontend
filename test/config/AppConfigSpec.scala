@@ -17,11 +17,14 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, StubAddressLookupJourney}
+import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, StubAddressLookupJourney}
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
-import play.api.Application
+import play.api.{Application, Configuration}
+import play.api.test.FakeRequest
+import play.api.test.Helpers.GET
 
-class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching {
+class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching with MockFactory {
 
   override def afterEach(): Unit = {
     disable(StubAddressLookupJourney)
@@ -38,9 +41,32 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
       config.deskproName mustBe "emcstfe"
     }
 
-    ".feedbackFrontendSurveyUrl() must handoff to feddback frontend with the correct URL" in {
+    ".feedbackFrontendSurveyUrl() must handoff to feedback frontend with the correct URL" in {
       config.feedbackFrontendSurveyUrl mustBe s"http://localhost:9514/feedback/${config.deskproName}/beta"
     }
+
+    ".signOutUrl()" - {
+
+      ".signOutUrl() must return the survey page when enabled" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
+        enable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutWithSurvey().url
+      }
+
+      ".signOutUrl() must return the saved sign out URL when on a page that is savable" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
+        disable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutSaved().url
+      }
+
+      ".signOutUrl() must return the none saved sign out URL when on a page that is not savable" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/info/456/some/page")
+        disable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutNotSaved().url
+      }
+
+    }
+
 
     ".addressLookupFrontendUrl" - {
       "should generate the correct url" - {

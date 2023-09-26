@@ -207,5 +207,11 @@ consigneeAddress.error.required = Enter Enter a value
 consigneeAddress.error.length = Value must be N characters or less must be 100 characters or less
 consigneeAddress.change.hidden = ConsigneeAddress
 
+consigneeExport.title = Are the goods being exported outside of the UK and EU?
+consigneeExport.heading = Are the goods being exported outside of the UK and EU?
+consigneeExport.checkYourAnswers.label = Goods being exported outside of the UK and EU
+consigneeExport.error.required = Select yes if the goods are being exported outside of the UK and EU
+consigneeExport.change.hidden = are the goods being exported outside of the UK and EU
+
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers

@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     h1: components.h1,
+    h2: components.h2,
     continueOrExit: components.continueOrExit
 )
 
@@ -36,6 +37,8 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("consignee.subHeading", request.lrn),"govuk-caption-xl")
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
@@ -48,7 +51,7 @@
 }
 
 @heading = {
-    @h1("consigneeExport.heading", Some(messages("consignee.subHeading", request.lrn)), "govuk-fieldset__heading")
+    @h1("consigneeExport.heading", None, "govuk-fieldset__heading")
 }
 
 @{

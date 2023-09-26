@@ -3,7 +3,7 @@ POST       /trader/:ern/draft/:lrn/consignee/consignee-address-manual           
 GET        /trader/:ern/draft/:lrn/consignee/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/consignee/consignee-address-manual/change               controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:lrn/consignee/consignee-export                               controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/consignee/consignee-export                               controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/consignee/consignee-export/change                        controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/consignee/consignee-export/change                        controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:lrn/consignee/export-uk-eu                                   controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consignee/export-uk-eu                                   controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/consignee/export-uk-eu/change                            controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/consignee/export-uk-eu/change                            controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

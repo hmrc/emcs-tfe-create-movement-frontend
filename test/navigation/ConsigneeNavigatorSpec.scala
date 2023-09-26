@@ -37,87 +37,92 @@ class ConsigneeNavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           routes.IndexController.onPageLoad(testErn)
       }
-    }
 
-    "for the ConsigneeBusinessNamePage" - {
+      "for the ConsigneeBusinessNamePage" - {
 
-      "must go to CAM-NEE07" in {
-        val userAnswers = emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "a business name")
+        "must go to CAM-NEE07" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeBusinessNamePage, "a business name")
 
           navigator.nextPage(ConsigneeBusinessNamePage, NormalMode, userAnswers) mustBe
             controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode)
-      }
-
-    }
-
-    "for the ConsigneeExportPage" - {
-
-      "must go to CAM-NEE11" - {
-
-        "when 'YES' is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportPage, true)
-
-          navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         }
+
       }
 
-      // TODO update once CAM-NEE01 has been created
-      "must go to CAM-NEE01" - {
+      "for the ConsigneeExportPage" - {
 
-        "when 'YES' is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportPage, false)
 
-          navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        "must go to CAM-NEE11" - {
+
+          "when 'YES' is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportPage, true)
+
+            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          }
         }
-      }
 
-      "must go to the journey recovery" - {
+        // TODO update once CAM-NEE01 has been created
+        "must go to CAM-NEE01" - {
 
-        "when there is no answer'" in {
-          val userAnswers = emptyUserAnswers
+          "when 'YES' is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportPage, false)
 
-          navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            controllers.routes.JourneyRecoveryController.onPageLoad()
+            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
         }
-      }
 
-    }
+        "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
-    "for the ConsigneeExportVatPage" - {
-      "must go to CAM-NEE03 business name page" - {
-
-        "when YES - VAT Number is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
-
-          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+          navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
             controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
         }
 
-        "when YES - EORI Number is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
+        "must go to the journey recovery" - {
 
-          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+          "when there is no answer'" in {
+            val userAnswers = emptyUserAnswers
+
+            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
+              controllers.routes.JourneyRecoveryController.onPageLoad()
+          }
         }
+      }
+
+      "for the ConsigneeExportVatPage" - {
+
+        "must go to CAM-NEE03 business name page" - {
+
+          "when YES - VAT Number is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+          }
+
+          "when YES - EORI Number is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+          }
 
 
-        "when NO is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
+          "when NO is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
 
-          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+          }
         }
       }
     }
-
-
   }
 }

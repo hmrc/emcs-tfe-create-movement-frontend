@@ -94,7 +94,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     }
   }
 
-  private def referenceDataService: String =
+  private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {
       servicesConfig.baseUrl("emcs-tfe-reference-data-stub")
     }
@@ -102,7 +102,10 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
       servicesConfig.baseUrl("emcs-tfe-reference-data")
     }
 
-  def referenceDataBaseUrl: String = s"$referenceDataService/emcs-tfe-reference-data"
+  def traderKnownFactsReferenceDataBaseUrl: String = s"$traderKnownFactsReferenceDataService/emcs-tfe-reference-data"
+
+  def referenceDataBaseUrl: String = servicesConfig.baseUrl("emcs-tfe-reference-data") + "/emcs-tfe-reference-data"
+
 
   def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
 

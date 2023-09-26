@@ -14,83 +14,111 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignee
 
 import base.SpecBase
-import fixtures.UserAddressFixtures
-import forms.AddressFormProvider
-import mocks.services.MockUserAnswersService
+import controllers.routes
+import fixtures.OrganisationDetailsFixtures
+import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
+import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import pages.sections.consignee.ConsigneeAddressPage
+import navigation.FakeNavigators.{FakeConsigneeNavigator, FakeNavigator}
+import navigation.{ConsigneeNavigator, Navigator}
+import pages.sections.consignee.ConsigneeExemptOrganisationPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
-import views.html.AddressView
+import services.{GetMemberStatesService, UserAnswersService}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
+import uk.gov.hmrc.http.HeaderCarrier
+import views.html.sections.consignee.ConsigneeExemptOrganisationView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
+class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
 
 
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
+    val testSelectItems: Seq[SelectItem] = Seq(
+      SelectItem(
+        value = Some("one"),
+        text = "one"
+      ),
+      SelectItem(
+        value = Some("two"),
+        text = "two"
+      ),
+      SelectItem(
+        value = Some("three"),
+        text = "three"
+      )
+    )
+
+    implicit val hc = HeaderCarrier()
+    implicit val ec = ExecutionContext.global
+
     def onwardRoute = Call("GET", "/foo")
 
-    val formProvider = new AddressFormProvider()
+    val formProvider = new ConsigneeExemptOrganisationFormProvider()
     val form = formProvider()
 
-    lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consigneeAddressOnSubmit = controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val consigneeExemptOrganisationRoute =
+      controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
+
+    lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testLrn, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
+        bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
+        bind[GetMemberStatesService].toInstance(mockGetMemberStatesService)
       )
       .build()
+
+    val view = application.injector.instanceOf[ConsigneeExemptOrganisationView]
   }
 
 
-  "ConsigneeAddress Controller" - {
+  "ConsigneeExemptOrganisation Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(){
+    "must return OK and the correct view for a GET" in new Fixture() {
 
       running(application) {
-        val request = FakeRequest(GET, consigneeAddressRoute)
+
+        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
+
+        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
         val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AddressView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form,
-          addressPage = ConsigneeAddressPage,
-          call = consigneeAddressOnSubmit
+          items = testSelectItems,
+          call = onSubmitCall
         )(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(ConsigneeAddressPage, userAddressModelMax)
+      .set(ConsigneeExemptOrganisationPage, exemptOrganisationDetailsModel)
     )) {
 
       running(application) {
-        val request = FakeRequest(GET, consigneeAddressRoute)
 
-        val view = application.injector.instanceOf[AddressView]
+        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
+
+        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form = form.fill(userAddressModelMax),
-          addressPage = ConsigneeAddressPage,
-          call = consigneeAddressOnSubmit
+          form = form.fill(exemptOrganisationDetailsModel),
+          items = testSelectItems,
+          call = onSubmitCall
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -101,12 +129,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consigneeAddressRoute)
+          FakeRequest(POST, consigneeExemptOrganisationRoute)
             .withFormUrlEncodedBody(
-              ("property", userAddressModelMax.property.value),
-              ("street", userAddressModelMax.street),
-              ("town", userAddressModelMax.town),
-              ("postcode", userAddressModelMax.postcode)
+              ("memberState", "answer"),
+              ("certificateSerialNumber", "answer")
             )
 
         val result = route(application, request).value
@@ -120,20 +146,20 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consigneeAddressRoute)
+          FakeRequest(POST, consigneeExemptOrganisationRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[AddressView]
+        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           form = boundForm,
-          addressPage = ConsigneeAddressPage,
-          call = consigneeAddressOnSubmit
+          items = testSelectItems,
+          call = onSubmitCall
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -141,7 +167,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
       running(application) {
-        val request = FakeRequest(GET, consigneeAddressRoute)
+        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
 
         val result = route(application, request).value
 
@@ -154,7 +180,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       running(application) {
         val request =
-          FakeRequest(POST, consigneeAddressRoute)
+          FakeRequest(POST, consigneeExemptOrganisationRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

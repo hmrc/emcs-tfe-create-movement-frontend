@@ -237,6 +237,9 @@ checkYourAnswersConsignor.address = Address
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
 
+checkYourAnswersJourneyType.title = Check your answers
+checkYourAnswersJourneyType.heading = Check your answers
+
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
 howMovementTransported.4 = Air transport
@@ -260,6 +263,15 @@ giveInformationOtherTransport.error.character = Information must contain letters
 giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
 giveInformationOtherTransport.change.hidden = give information about your other type of transport
 
+
+consigneeBusinessName.title = What is the consignee’s business name?
+consigneeBusinessName.heading = What is the consignee’s business name?
+consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.error.required = Enter the consignee business name
+consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
+consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
+consigneeBusinessName.change.hidden = consignee trader name
+
 consigneeAddress.title = StringPageH1
 consigneeAddress.heading = StringPageH1
 consigneeAddress.checkYourAnswersLabel = consigneeAddress
@@ -273,13 +285,20 @@ consigneeExport.checkYourAnswers.label = Goods being exported outside of the UK 
 consigneeExport.error.required = Select yes if the goods are being exported outside of the UK and EU
 consigneeExport.change.hidden = are the goods being exported outside of the UK and EU
 
-checkYourAnswersJourneyType.title = Check your answers
-checkYourAnswersJourneyType.heading = Check your answers
+consigneeExportVat.title = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
+consigneeExportVat.heading = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
+consigneeExportVat.yesVatNumber = Yes - VAT number
+consigneeExportVat.yesEoriNumber = Yes - EORI number
+consigneeExportVat.no = No
+consigneeExportVat.checkYourAnswers.label = VAT or EORI number of the person representing the consignor
+consigneeExportVat.error.required = Select consigneeExportVat
+consigneeExportVat.change.hidden = VAT or EORI number of the person representing the consignor
+consigneeExportVat.vatNumber.label = VAT number
+consigneeExportVat.eoriNumber.label = EORI number
+consigneeExportVat.consigneeExportType.error.required = Select 'no' if you don't know the VAT or EORI number
+consigneeExportVat.vatNumber.error.required = VAT number must be between 1 and 14 characters
+consigneeExportVat.vatNumber.error.length = VAT number must be 14 characters or less
+consigneeExportVat.eoriNumber.error.required = EORI number must be between 1 and 17 characters
+consigneeExportVat.eoriNumber.error.length = EORI number must be 17 characters or less
 
-consigneeBusinessName.title = What is the consignee’s business name?
-consigneeBusinessName.heading = What is the consignee’s business name?
-consigneeBusinessName.checkYourAnswersLabel = Trader name
-consigneeBusinessName.error.required = Enter the consignee business name
-consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
-consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
-consigneeBusinessName.change.hidden = consignee trader name
+

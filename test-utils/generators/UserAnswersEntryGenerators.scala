@@ -17,15 +17,24 @@
 package generators
 
 import models.UserAddress
+import models.sections.consignee.ConsigneeExportVat
 import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import pages._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage}
+import pages.sections.consignee._
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+
+  implicit lazy val arbitraryConsigneeExportVatUserAnswersEntry: Arbitrary[(ConsigneeExportVatPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ConsigneeExportVatPage.type]
+        value <- arbitrary[ConsigneeExportVat].map(Json.toJson(_))
+      } yield (page, value)
+    }
 
   implicit lazy val arbitraryConsigneeExportUserAnswersEntry: Arbitrary[(ConsigneeExportPage.type, JsValue)] =
     Arbitrary {

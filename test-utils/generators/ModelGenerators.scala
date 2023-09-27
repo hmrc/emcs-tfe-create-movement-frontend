@@ -18,10 +18,22 @@ package generators
 
 import fixtures.UserAddressFixtures
 import models.UserAddress
+import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
 import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators extends UserAddressFixtures {
+
+  implicit lazy val arbitraryConsigneeExportVat: Arbitrary[ConsigneeExportVat] = {
+    Arbitrary {
+      Gen.oneOf(
+        ConsigneeExportVat(YesVatNumber, Some("vat123"), None),
+        ConsigneeExportVat(YesEoriNumber, None, Some("eori123")),
+        ConsigneeExportVat(No, None, None)
+      )
+    }
+  }
 
   implicit lazy val arbitraryUserAddress: Arbitrary[UserAddress] =
     Arbitrary {

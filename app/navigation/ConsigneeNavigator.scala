@@ -44,6 +44,9 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }
 
+    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }

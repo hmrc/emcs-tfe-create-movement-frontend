@@ -19,6 +19,8 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.NormalMode
+import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
 import pages.Page
 import pages.sections.consignee._
 
@@ -86,5 +88,37 @@ class ConsigneeNavigatorSpec extends SpecBase {
       }
 
     }
+
+    "for the ConsigneeExportVatPage" - {
+      "must go to CAM-NEE03 business name page" - {
+
+        "when YES - VAT Number is answered'" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
+
+          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+
+        "when YES - EORI Number is answered'" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
+
+          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+
+
+        "when NO is answered'" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
+
+          navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+      }
+    }
+
+
   }
 }

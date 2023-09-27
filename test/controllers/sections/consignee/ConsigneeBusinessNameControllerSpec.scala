@@ -21,8 +21,8 @@ import controllers.routes
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeConsigneeNavigator
+import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -86,7 +86,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()

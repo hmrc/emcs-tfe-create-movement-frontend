@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee._
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,6 +27,10 @@ import javax.inject.Inject
 class ConsigneeNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
+    case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
     case ConsigneeExportPage =>
       (userAnswers: UserAnswers) =>
         userAnswers.get(ConsigneeExportPage) match {
@@ -43,7 +47,8 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }
-        override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     //TODO update when other modes are added

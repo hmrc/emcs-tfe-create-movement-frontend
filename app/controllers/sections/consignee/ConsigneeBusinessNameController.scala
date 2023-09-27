@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import models.Mode
-import navigation.Navigator
+import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class ConsigneeBusinessNameController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        override val userAnswersService: UserAnswersService,
-                                       override val navigator: Navigator,
+                                       override val navigator: ConsigneeNavigator,
                                        override val auth: AuthAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,

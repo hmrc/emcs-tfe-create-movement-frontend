@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import pages.Page
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee._
 
 class ConsigneeNavigatorSpec extends SpecBase {
   val navigator = new ConsigneeNavigator
@@ -37,6 +37,17 @@ class ConsigneeNavigatorSpec extends SpecBase {
       }
     }
 
+    "for the ConsigneeBusinessNamePage" - {
+
+      "must go to CAM-NEE07" in {
+        val userAnswers = emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "a business name")
+
+          navigator.nextPage(ConsigneeBusinessNamePage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+
+    }
 
     "for the ConsigneeExportPage" - {
 

@@ -53,7 +53,6 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
     "for the ConsigneeExportPage" - {
 
-      // TODO update once CAM-NEE11 has been created
       "must go to CAM-NEE11" - {
 
         "when 'YES' is answered'" in {
@@ -61,7 +60,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
             .set(ConsigneeExportPage, true)
 
           navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         }
       }
 

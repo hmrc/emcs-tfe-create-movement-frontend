@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        h2: components.h2
-)
+package forms.sections.consignee
 
-@(
-        headingMsg: String,
-        captionMsg: Option[String] = None,
-        classes: String = "govuk-heading-l govuk-!-margin-bottom-2"
-)(implicit messages: Messages)
+import forms.XSS_REGEX
+import forms.mappings.Mappings
+import play.api.data.Form
 
-@captionMsg.map { caption =>
-  @h2(caption, "govuk-caption-xl")
-}
+import javax.inject.Inject
 
-<h1 class="@classes">@messages(headingMsg)</h1>
+class ConsigneeBusinessNameFormProvider @Inject() extends Mappings {
 
-@{
-    //$COVERAGE-OFF$
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("consigneeBusinessName.error.required")
+        .verifying(maxLength(182, "consigneeBusinessName.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "consigneeBusinessName.error.invalidCharacter"))
+    )
 }

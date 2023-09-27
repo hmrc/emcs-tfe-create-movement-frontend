@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        h2: components.h2
-)
+package pages.sections.consignee
 
-@(
-        headingMsg: String,
-        captionMsg: Option[String] = None,
-        classes: String = "govuk-heading-l govuk-!-margin-bottom-2"
-)(implicit messages: Messages)
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-@captionMsg.map { caption =>
-  @h2(caption, "govuk-caption-xl")
-}
+case object ConsigneeBusinessNamePage extends QuestionPage[String] {
 
-<h1 class="@classes">@messages(headingMsg)</h1>
+  override def path: JsPath = JsPath \ "consignee" \ toString
 
-@{
-    //$COVERAGE-OFF$
+  override def toString: String = "businessName"
 }

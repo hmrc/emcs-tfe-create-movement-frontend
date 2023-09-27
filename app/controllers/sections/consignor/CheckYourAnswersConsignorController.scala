@@ -16,8 +16,8 @@
 
 package controllers.sections.consignor
 
+import controllers.BaseController
 import controllers.actions._
-import controllers.{BaseController, routes}
 import models.NormalMode
 import navigation.Navigator
 import pages.{CheckAnswersConsignorPage, ConsignorAddressPage}

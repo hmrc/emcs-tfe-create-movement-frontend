@@ -22,7 +22,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 import org.scalatest.TryValues
 import pages._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExportPage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 
@@ -31,6 +31,7 @@ trait UserAnswersGenerator extends TryValues with BaseFixtures {
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
     arbitrary[(ConsigneeExportPage.type, JsValue)] ::
+    arbitrary[(ConsigneeBusinessNamePage.type, JsValue)] ::
     arbitrary[(ConsigneeAddressPage.type, JsValue)] ::
     arbitrary[(ConsignorAddressPage.type, JsValue)] ::
     arbitrary[(DeferredMovementPage.type, JsValue)] ::

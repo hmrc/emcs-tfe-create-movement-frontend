@@ -47,11 +47,9 @@ class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
 
-        val subHeadingCaptionSelector: String = "main .govuk-caption-l"
-
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
-          subHeadingCaptionSelector -> messagesForLanguage.subHeading,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.subHeading,
           Selectors.h1 -> messagesForLanguage.heading,
           // scalastyle:off magic.number
           Selectors.radioButton(1) -> messagesForLanguage.radioOption1,

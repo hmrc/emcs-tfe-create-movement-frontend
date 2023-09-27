@@ -21,7 +21,7 @@ import models.sections.journeyType.HowMovementTransported
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary._
 import pages._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExportPage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage}
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsValue, Json}
 
@@ -32,6 +32,14 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       for {
         page  <- arbitrary[ConsigneeExportPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryConsigneeBusinessNameUserAnswersEntry: Arbitrary[(ConsigneeBusinessNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ConsigneeBusinessNamePage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 

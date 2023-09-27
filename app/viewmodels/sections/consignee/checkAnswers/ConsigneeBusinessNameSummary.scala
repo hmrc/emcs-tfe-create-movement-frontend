@@ -14,37 +14,32 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package viewmodels.sections.consignee.checkAnswers
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.journeyType.GiveInformationOtherTransportPage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GiveInformationOtherTransportSummary {
+object ConsigneeBusinessNameSummary  {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(GiveInformationOtherTransportPage).map {
+    request.userAnswers.get(ConsigneeBusinessNamePage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key = "giveInformationOtherTransport.checkYourAnswers.label",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = if (!showActionLinks) Seq() else Seq(
+          key     = "consigneeBusinessName.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(
-                ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
-                mode = CheckMode
-              ).url,
-              id = GiveInformationOtherTransportPage
-            )
-              .withVisuallyHiddenText(messages("giveInformationOtherTransport.change.hidden"))
+              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              id = "changeConsigneeBusinessName"
+            ).withVisuallyHiddenText(messages("consigneeBusinessName.change.hidden"))
           )
         )
     }

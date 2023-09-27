@@ -18,13 +18,16 @@ package generators
 
 import org.scalacheck.Arbitrary
 import pages._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExportPage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage}
 import pages.sections.journeyType.HowMovementTransportedPage
 
 trait PageGenerators {
 
   implicit lazy val arbitraryConsigneeExportPage: Arbitrary[ConsigneeExportPage.type] =
     Arbitrary(ConsigneeExportPage)
+
+  implicit lazy val arbitraryConsigneeBusinessNamePage: Arbitrary[ConsigneeBusinessNamePage.type] =
+    Arbitrary(ConsigneeBusinessNamePage)
 
   implicit lazy val arbitraryConsigneeAddressPage: Arbitrary[ConsigneeAddressPage.type] =
     Arbitrary(ConsigneeAddressPage)

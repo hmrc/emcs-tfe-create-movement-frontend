@@ -203,7 +203,7 @@ giveInformationOtherTransport.change.hidden = give information about your other 
 consigneeAddress.title = StringPageH1
 consigneeAddress.heading = StringPageH1
 consigneeAddress.checkYourAnswersLabel = consigneeAddress
-consigneeAddress.error.required = Enter Enter a value
+consigneeAddress.error.required = Enter a value
 consigneeAddress.error.length = Value must be N characters or less must be 100 characters or less
 consigneeAddress.change.hidden = ConsigneeAddress
 
@@ -215,3 +215,11 @@ consigneeExport.change.hidden = are the goods being exported outside of the UK a
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
+
+consigneeBusinessName.title = What is the consignee’s business name?
+consigneeBusinessName.heading = What is the consignee’s business name?
+consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.error.required = Enter the consignee business name
+consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
+consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
+consigneeBusinessName.change.hidden = consignee trader name

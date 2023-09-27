@@ -20,7 +20,7 @@ import base.SpecBase
 import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, StubAddressLookupJourney}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
-import play.api.{Application, Configuration}
+import play.api.Application
 import play.api.test.FakeRequest
 import play.api.test.Helpers.GET
 

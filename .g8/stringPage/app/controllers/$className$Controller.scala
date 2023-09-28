@@ -6,7 +6,7 @@ import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.$className$Page
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.$className$View

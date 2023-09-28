@@ -4,7 +4,8 @@ import base.SpecBase
 import forms.$className$FormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, $className$, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import pages.$className$Page
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -26,7 +27,6 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
   lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testLrn, NormalMode).url
 
   val userAnswers = UserAnswers(
-    testInternalId,
     testErn,
     testLrn,
     Json.obj(

@@ -16,11 +16,12 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
+import fixtures.UserAddressFixtures
+import forms.behaviours.FieldBehaviours
 import models.UserAddress
 import play.api.data.FormError
 
-class AddressFormProviderSpec extends StringFieldBehaviours {
+class AddressFormProviderSpec extends FieldBehaviours with UserAddressFixtures {
 
   case class TestParameters(fieldName: String, fieldLength: Int, isMandatory: Boolean)
 
@@ -60,7 +61,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
       case (Some(testTownParameters.fieldName), Some(answer)) => userAddressModelMax.copy(town = answer)
       case (Some(testPostcodeParameters.fieldName), Some(answer)) => userAddressModelMax.copy(postcode = answer)
       case _ => userAddressModelMax
-  }
+    }
 
   "all fields must bind when maximum valid data is entered" in {
 
@@ -89,7 +90,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
       val invalidKey = s"address.$fieldName.error.invalid"
       val charactersKey = s"address.$fieldName.error.characters"
 
-      if(isMandatory) {
+      if (isMandatory) {
 
         "must error if no value is supplied" in {
 

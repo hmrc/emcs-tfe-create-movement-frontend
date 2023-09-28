@@ -30,9 +30,7 @@ trait MockGetTraderKnownFactsConnector extends MockFactory {
   lazy val mockGetTraderKnownFactsConnector: GetTraderKnownFactsConnector = mock[GetTraderKnownFactsConnector]
 
   object MockGetTraderKnownFactsConnector {
-
-    private type MockReturnType = CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Option[TraderKnownFacts]]]]
-    def getTraderKnownFacts(ern: String): MockReturnType  =
+    def getTraderKnownFacts(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Option[TraderKnownFacts]]]] =
       (mockGetTraderKnownFactsConnector.getTraderKnownFacts(_: String)(_: HeaderCarrier, _: ExecutionContext))
         .expects(ern, *, *)
   }

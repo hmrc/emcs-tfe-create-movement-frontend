@@ -63,7 +63,7 @@ class AddressLookupFrontendServiceSpec() extends SpecBase
 
       val result: Either[ErrorResponse, Option[Address]] = await(TestService.retrieveAddress(id)(hc))
 
-      result.value mustBe Some(address)
+      result.right.value mustBe Some(address)
     }
   }
 
@@ -206,7 +206,7 @@ class AddressLookupFrontendServiceSpec() extends SpecBase
 
       val res: Either[ErrorResponse, String] = await(TestService.initialiseJourney(handbackLocation = testHandbackLocation))
 
-      res.value mustBe url
+      res.right.value mustBe url
     }
   }
 

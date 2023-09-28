@@ -3,7 +3,6 @@ import sbt.*
 object AppDependencies {
 
   val playSuffix = "-play-28"
-  val scalatestVersion = "3.2.15.0"
   val hmrcBootstrapVersion = "7.22.0"
   val hmrcMongoVersion = "1.3.0"
 
@@ -17,10 +16,8 @@ object AppDependencies {
 
   private val test = Seq(
     "uk.gov.hmrc"             %% s"bootstrap-test$playSuffix"         % hmrcBootstrapVersion,
-    "org.scalatestplus"       %%  "scalacheck-1-17"                   % scalatestVersion,
     "org.scalamock"           %%  "scalamock"                         % "5.2.0",
-    "org.jsoup"               %   "jsoup"                             % "1.15.4",
-    "com.vladsch.flexmark"    %   "flexmark-all"                      % "0.62.2"
+    "org.jsoup"               %   "jsoup"                             % "1.15.4"
   ).map(_ % "test, it")
 
   private val overrides = Seq(

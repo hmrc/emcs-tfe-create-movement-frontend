@@ -18,14 +18,18 @@ package pages
 
 import pages.behaviours.PageBehaviours
 
-class CheckAnswersPageSpec extends PageBehaviours {
+import play.api.libs.json.JsPath
 
-  "CheckAnswersPage" - {
+class QuestionPageSpec extends PageBehaviours{
+  object TestPage extends QuestionPage[String] {
+    override def path: JsPath = JsPath \ toString
 
-    "toString" - {
-      "must be correct" in {
-        CheckAnswersPage.toString mustBe "checkAnswers"
-      }
-    }
+    override def toString: String = "testPage"
+  }
+
+  "QuestionPage" - {
+    beRetrievable[String].apply(TestPage, "value1")
+    beSettable[String].apply(TestPage, "value1", "value2")
+    beRemovable[String].apply(TestPage, "value1")
   }
 }

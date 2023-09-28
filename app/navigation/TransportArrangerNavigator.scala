@@ -32,9 +32,8 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
     case TransportArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportArrangerPage) match {
 
-        // TODO redirect to CAM-TA02
         case Some(GoodsOwner) | Some(Other) =>
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
         // TODO redirect to CAM-TA05
         case _ =>

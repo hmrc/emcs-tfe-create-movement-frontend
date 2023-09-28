@@ -20,8 +20,11 @@ import models.{Enumerable, WithName}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukInput, GovukLabel}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.errormessage.ErrorMessage
 import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -55,7 +58,14 @@ object ConsigneeExportVatType extends Enumerable.Implicits {
           id = fieldName,
           value = form(fieldName).value,
           name = fieldName,
-          label = Label(content = Text(messages(s"consigneeExportVat.$fieldName.label")), isPageHeading = false)
+          label = Label(content = Text(messages(s"consigneeExportVat.$fieldName.label")), isPageHeading = false),
+          errorMessage = {
+            form.error(fieldName).flatMap { error =>
+              Some(
+                ErrorMessage(content = HtmlContent(Html( messages(error.message))))
+              )
+            }
+          }
         )
       )
 

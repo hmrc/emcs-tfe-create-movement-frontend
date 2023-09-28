@@ -21,7 +21,7 @@ import controllers.routes
 import models.NormalMode
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import pages.Page
-import pages.sections.transportArranger.TransportArrangerPage
+import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 
 class TransportArrangerNavigatorSpec extends SpecBase {
   val navigator = new TransportArrangerNavigator
@@ -78,6 +78,16 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         }
       }
 
+    }
+
+    "for the TransportArrangerNamePage" - {
+
+      "must go to CAM-TA03" in {
+        val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
+
+        navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
     }
 
   }

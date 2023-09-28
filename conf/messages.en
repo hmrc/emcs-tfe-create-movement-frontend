@@ -311,3 +311,10 @@ transportArranger.4 = Other
 transportArranger.checkYourAnswersLabel = transportArranger
 transportArranger.error.required = Select who is arranging the transport for this movement
 transportArranger.change.hidden = TransportArranger
+
+transportArrangerName.3.title = What is the goods owner's business name?
+transportArrangerName.4.title = What is the consignee''s business name?
+transportArrangerName.3.heading = What is the goods owner's business name?
+transportArrangerName.4.heading = What is the consignee''s business name?
+transportArrangerName.error.required = Enter the business name
+transportArrangerName.error.length = Business name must be 182 characters or less

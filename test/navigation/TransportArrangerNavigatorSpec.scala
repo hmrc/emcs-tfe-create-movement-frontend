@@ -42,20 +42,18 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
       "must go to CAM-TA02" - {
 
-        // TODO redirect to CAM-TA02
         "when the answer is `Goods Owner`" in {
           val userAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
 
           navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
         }
 
-        // TODO redirect to CAM-TA02
         "when the answer is `Other`" in {
           val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Other)
 
           navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 

@@ -35,14 +35,16 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(ConsigneeExportPage) match {
           case Some(true) =>
-            // TODO redirect to CAM-NEE11
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case Some(false) =>
             // TODO redirect to CAM-NEE01
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ =>
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }
+
+    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

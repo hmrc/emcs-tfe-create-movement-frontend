@@ -17,8 +17,8 @@
 package views.sections.consignee
 
 import base.ViewSpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportMessages
-import forms.sections.consignee.ConsigneeExportFormProvider
+import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
+import forms.sections.consignee.ConsigneeExportVatFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,23 +26,23 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.consignee.ConsigneeExportView
+import views.html.sections.consignee.ConsigneeExportVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExportViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExportVatViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "ConsigneeExportView" - {
+  "ConsigneeExportVatView" - {
 
-    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportVatMessages.English, ConsigneeExportVatMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExportView]
-        val form = app.injector.instanceOf[ConsigneeExportFormProvider].apply()
+        val view = app.injector.instanceOf[ConsigneeExportVatView]
+        val form = app.injector.instanceOf[ConsigneeExportVatFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(
           view(
@@ -53,8 +53,9 @@ class ConsigneeExportViewSpec extends ViewSpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
+          Selectors.radioButton(1) -> messagesForLanguage.yesVatNumberRadioOption,
+          Selectors.radioButton(3) -> messagesForLanguage.yesEoriNumberRadioOption,
+          Selectors.radioButton(5) -> messagesForLanguage.noRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
         ))

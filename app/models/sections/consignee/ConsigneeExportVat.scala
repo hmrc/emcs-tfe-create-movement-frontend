@@ -20,7 +20,7 @@ import models.{Enumerable, WithName}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukInput, GovukLabel}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent

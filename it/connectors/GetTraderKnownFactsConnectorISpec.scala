@@ -3,7 +3,6 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.referenceData.GetTraderKnownFactsConnector
-import generators.ModelGenerators
 import models.TraderKnownFacts
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -24,8 +23,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
   with Matchers
   with IntegrationPatience
   with EitherValues
-  with OptionValues
-  with ModelGenerators {
+  with OptionValues {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 

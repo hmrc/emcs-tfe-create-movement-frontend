@@ -4,7 +4,8 @@ import base.SpecBase
 import forms.$className$FormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, $className$, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import pages.$className$Page
 import play.api.inject.bind
 import play.api.mvc.Call

@@ -3,7 +3,6 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.UserAnswersConnector
-import generators.ModelGenerators
 import models.UserAnswers
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -21,14 +20,13 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class UserAnswersConnectorISpec  extends AnyFreeSpec
+class UserAnswersConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
   with IntegrationPatience
   with EitherValues
-  with OptionValues
-  with ModelGenerators {
+  with OptionValues {
 
   val testErn: String = "ern"
   val testLrn: String = "lrn"

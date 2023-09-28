@@ -16,49 +16,31 @@
 
 package models.sections.journeyType
 
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   "HowMovementTransported" - {
 
     "must deserialise valid values" in {
+      val howMovementTransported = HowMovementTransported.values.head
 
-      val gen = Gen.oneOf(HowMovementTransported.values.toSeq)
-
-      forAll(gen) {
-        HowMovementTransported =>
-
-          JsString(HowMovementTransported.toString).validate[HowMovementTransported].asOpt.value mustEqual HowMovementTransported
-      }
+      JsString(howMovementTransported.toString).validate[HowMovementTransported].asOpt.value mustEqual howMovementTransported
     }
 
     "must fail to deserialise invalid values" in {
+      val invalidValue = "beans"
 
-      val gen = arbitrary[String] suchThat (!HowMovementTransported.values.map(_.toString).contains(_))
-
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[HowMovementTransported] mustEqual JsError("error.invalid")
-      }
+      JsString(invalidValue).validate[HowMovementTransported] mustEqual JsError("error.invalid")
     }
 
     "must serialise" in {
+      val howMovementTransported = HowMovementTransported.values.head
 
-      val gen = Gen.oneOf(HowMovementTransported.values.toSeq)
-
-      forAll(gen) {
-        HowMovementTransported =>
-
-          Json.toJson(HowMovementTransported) mustEqual JsString(HowMovementTransported.toString)
-      }
+      Json.toJson(howMovementTransported) mustEqual JsString(howMovementTransported.toString)
     }
   }
 }

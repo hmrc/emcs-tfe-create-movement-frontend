@@ -177,6 +177,7 @@ checkYourAnswersConsignor.address = Address
 
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
+transportArranger.subHeading = Transport arranger
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -241,3 +242,12 @@ consigneeExportVat.vatNumber.error.length = VAT number must be 14 characters or 
 consigneeExportVat.eoriNumber.error.required = EORI number must be between 1 and 17 characters
 consigneeExportVat.eoriNumber.error.length = EORI number must be 17 characters or less
 
+transportArranger.title = Who is arranging the transport for this movement?
+transportArranger.heading = Who is arranging the transport for this movement?
+transportArranger.1 = Consignor
+transportArranger.2 = Consignee
+transportArranger.3 = Goods owner
+transportArranger.4 = Other
+transportArranger.checkYourAnswersLabel = transportArranger
+transportArranger.error.required = Select who is arranging the transport for this movement
+transportArranger.change.hidden = TransportArranger

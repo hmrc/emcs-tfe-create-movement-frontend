@@ -1,0 +1,4 @@
+GET        /trader/:ern/draft/:lrn/transport-arranger/arranger                          controllers.sections.transportArranger.TransportArrangerController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/transport-arranger/arranger                          controllers.sections.transportArranger.TransportArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/transport-arranger/arranger/change                   controllers.sections.transportArranger.TransportArrangerController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/transport-arranger/arranger/change                   controllers.sections.transportArranger.TransportArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

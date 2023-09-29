@@ -57,7 +57,7 @@ class ConsigneeExportVatViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.radioButton(3) -> messagesForLanguage.yesEoriNumberRadioOption,
           Selectors.radioButton(5) -> messagesForLanguage.noRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -56,7 +56,7 @@ class ConsigneeExportViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -64,6 +64,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
+  def returnToDraft: String = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+
   private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
 
   def languageMap: Map[String, Lang] = Map(

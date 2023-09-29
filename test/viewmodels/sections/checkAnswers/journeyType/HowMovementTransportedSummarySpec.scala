@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package viewmodels.sections.checkAnswers.journeyType
 
 import base.SpecBase
 import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
+import viewmodels.checkAnswers.sections.journeyType.HowMovementTransportedSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

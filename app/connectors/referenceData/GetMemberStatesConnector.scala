@@ -17,7 +17,7 @@
 package connectors.referenceData
 
 import config.AppConfig
-import models.{CountryModel, TraderKnownFacts}
+import models.CountryModel
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}

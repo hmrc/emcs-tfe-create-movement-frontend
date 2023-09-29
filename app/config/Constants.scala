@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package pages.sections.journeyType
+package config
 
-import models.sections.journeyType.HowMovementTransported
-import pages.QuestionPage
-import play.api.libs.json.JsPath
-
-case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
-
-  override def path: JsPath = JsPath \ "journeyType" \ toString
-
-  override def toString: String = "HowMovementTransported"
+object Constants {
+  val NONGBVAT = "NONGBVAT"
 }

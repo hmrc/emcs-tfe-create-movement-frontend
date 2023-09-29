@@ -30,6 +30,7 @@ trait BaseFixtures {
   val testInternalId: String = "internalId"
   val testErn: String = "ern"
   val testLrn: String = "lrn"
+  val testVatNumber: String = "123456789"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
   val testOnwardRoute: Call = Call("GET", "/foo")

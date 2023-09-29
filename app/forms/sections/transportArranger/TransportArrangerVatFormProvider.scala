@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package forms.sections.transportArranger
 
-import models.requests.DataRequest
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.summarylist._
+import forms.ONLY_ALPHANUMERIC_REGEX
+import forms.mappings.Mappings
+import play.api.data.Form
 
 import javax.inject.Inject
 
-class CheckYourAnswersJourneyTypeHelper @Inject()() {
+class TransportArrangerVatFormProvider @Inject() extends Mappings {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
-      rows = Seq(
-        HowMovementTransportedSummary.row(true),
-        GiveInformationOtherTransportSummary.row(true)
-      ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("transportArrangerVat.error.required")
+        .verifying(maxLength(14, "transportArrangerVat.error.length"))
+        .transform[String](_.replace("-", "").replace(" ", ""), identity)
+        .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
+    )
 }

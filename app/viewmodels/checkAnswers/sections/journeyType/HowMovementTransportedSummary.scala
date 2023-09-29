@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package viewmodels.checkAnswers.sections.journeyType
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.journeyType.GiveInformationOtherTransportPage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-
-object GiveInformationOtherTransportSummary {
+object HowMovementTransportedSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(GiveInformationOtherTransportPage).map {
+    request.userAnswers.get(HowMovementTransportedPage).map {
       answer =>
 
+        val value = ValueViewModel(
+          HtmlContent(
+            HtmlFormat.escape(messages(s"howMovementTransported.$answer"))
+          )
+        )
+
         SummaryListRowViewModel(
-          key = "giveInformationOtherTransport.checkYourAnswers.label",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "howMovementTransported.checkYourAnswers.label",
+          value = value,
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(
+              href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
                 ern = request.userAnswers.ern,
                 lrn = request.userAnswers.lrn,
                 mode = CheckMode
               ).url,
-              id = GiveInformationOtherTransportPage
-            )
-              .withVisuallyHiddenText(messages("giveInformationOtherTransport.change.hidden"))
+              id = HowMovementTransportedPage
+            ).withVisuallyHiddenText(messages("howMovementTransported.change.hidden"))
           )
         )
     }

@@ -20,7 +20,7 @@ import controllers.routes
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
-import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
+import pages.sections.transportArranger._
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -40,8 +40,11 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     }
 
-    case TransportArrangerNamePage => (_: UserAnswers) =>
-      // TODO redirect to CAM-TA03
+    case TransportArrangerNamePage => (userAnswers: UserAnswers) =>
+      controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
+    case TransportArrangerVatPage => _ =>
+      //TODO: Redirect to CAM-TA04 (Transport Arranger Address)
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>

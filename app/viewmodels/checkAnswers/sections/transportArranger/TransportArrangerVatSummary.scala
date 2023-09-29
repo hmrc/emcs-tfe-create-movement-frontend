@@ -14,44 +14,38 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.journeyType.checkAnswers
+package viewmodels.checkAnswers.sections.transportArranger
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportArranger.TransportArrangerVatPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object HowMovementTransportedSummary {
+object TransportArrangerVatSummary  {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(HowMovementTransportedPage).map {
+    request.userAnswers.get(TransportArrangerVatPage).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"howMovementTransported.$answer"))
-          )
-        )
-
         SummaryListRowViewModel(
-          key = "howMovementTransported.checkYourAnswers.label",
-          value = value,
+          key = "transportArrangerVat.checkYourAnswers.label",
+          value = ValueViewModel(answer),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
+              href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(
                 ern = request.userAnswers.ern,
                 lrn = request.userAnswers.lrn,
                 mode = CheckMode
               ).url,
-              id = HowMovementTransportedPage
-            ).withVisuallyHiddenText(messages("howMovementTransported.change.hidden"))
+              id = "changeTransportArrangerVat"
+            )
+              .withVisuallyHiddenText(messages("transportArrangerVat.change.hidden"))
           )
         )
     }
-}
 
+}

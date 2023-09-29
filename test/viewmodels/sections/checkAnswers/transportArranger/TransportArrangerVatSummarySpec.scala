@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.consignee.checkAnswers
+package viewmodels.sections.checkAnswers.transportArranger
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportMessages
+import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.transportArranger.TransportArrangerVatPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.checkAnswers.sections.transportArranger.TransportArrangerVatSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeExportSummarySpec extends SpecBase with Matchers {
-  "ConsigneeExportSummary" - {
+class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
+  "TransportArrangerVatSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerVatMessages.English, TransportArrangerVatMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -45,7 +46,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+            TransportArrangerVatSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -55,37 +56,20 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerVatPage, testVatNumber))
 
-              ConsigneeExportSummary.row(showActionLinks = true) mustBe
+              TransportArrangerVatSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
+                    value = Value(Text(testVatNumber)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = ConsigneeExportPage
+                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = "changeTransportArrangerVat"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
-                  )
-                )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
-
-              ConsigneeExportSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
-                    actions = Seq()
                   )
                 )
             }

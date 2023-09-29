@@ -21,6 +21,7 @@ trait BaseMessages { _: i18n =>
   def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
   val opensInNewTab: String = "(opens in new tab)"
   val movementInformationSection: String = "Movement information"
+  val transportArrangerSection: String = "Transport arranger"
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"
   val saveAndContinue = "Save and continue"

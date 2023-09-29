@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package mocks.viewmodels
+package viewmodels.checkAnswers.sections.journeyType
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler2
-import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.journeyType.CheckYourAnswersJourneyTypeHelper
+import viewmodels.govuk.summarylist._
 
-trait MockCheckYourAnswersJourneyTypeHelper extends MockFactory {
+import javax.inject.Inject
 
-  lazy val MockCheckYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper = mock[CheckYourAnswersJourneyTypeHelper]
+class CheckYourAnswersJourneyTypeHelper @Inject()() {
 
-  object MockCheckAnswersJourneyTypeHelper {
-
-    def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (MockCheckYourAnswersJourneyTypeHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
-  }
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        HowMovementTransportedSummary.row(true),
+        GiveInformationOtherTransportSummary.row(true)
+      ).flatten
+    ).withCssClass("govuk-!-margin-bottom-9")
 }

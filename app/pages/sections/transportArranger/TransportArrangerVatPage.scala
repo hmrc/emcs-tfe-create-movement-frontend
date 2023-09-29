@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package pages.sections.journeyType
+package pages.sections.transportArranger
 
-import models.sections.journeyType.HowMovementTransported
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
+case object TransportArrangerVatPage extends QuestionPage[String] {
 
-  override def path: JsPath = JsPath \ "journeyType" \ toString
+  override def path: JsPath = JsPath \ "transportArranger" \ toString
 
-  override def toString: String = "HowMovementTransported"
+  override def toString: String = "vat"
 }

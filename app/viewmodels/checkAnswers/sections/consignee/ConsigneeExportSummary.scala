@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.consignee.checkAnswers
+package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.consignee.ConsigneeExportPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ConsigneeExportVatSummary  {
+object ConsigneeExportSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExportVatPage).map {
+    request.userAnswers.get(ConsigneeExportPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key = "consigneeExportVat.checkYourAnswers.label",
-          value = ValueViewModel(answer.exportType.toString),
+          key = "consigneeExport.checkYourAnswers.label",
+          value = ValueViewModel(answer.toString),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
+              href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(
                 ern = request.userAnswers.ern,
                 lrn = request.userAnswers.lrn,
                 mode = CheckMode
               ).url,
-              id = ConsigneeExportVatPage
+              id = ConsigneeExportPage
             )
-              .withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
+              .withVisuallyHiddenText(messages("consigneeExport.change.hidden"))
           )
         )
     }
-
 }

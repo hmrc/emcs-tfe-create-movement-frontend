@@ -31,4 +31,14 @@ trait StringFieldBehaviours extends FieldBehaviours {
       result.errors must contain only lengthError
     }
   }
+
+  def fieldWithXSSCharacters(form: Form[_],
+                             fieldName: String,
+                             requiredError: FormError): Unit = {
+
+    s"not bind strings with XSS characters" in {
+      val result = form.bind(Map(fieldName -> "<javascript>")).apply(fieldName)
+      result.errors must contain only requiredError
+    }
+  }
 }

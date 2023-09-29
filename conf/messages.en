@@ -302,6 +302,18 @@ consigneeExportVat.vatNumber.error.length = VAT number must be 14 characters or 
 consigneeExportVat.eoriNumber.error.required = EORI number must be between 1 and 17 characters
 consigneeExportVat.eoriNumber.error.length = EORI number must be 17 characters or less
 
+consigneeExemptOrganisation.title = Exempt organisation details
+consigneeExemptOrganisation.heading = Exempt organisation details
+consigneeExemptOrganisation.checkYourAnswersLabel = Exempt organisation details
+consigneeExemptOrganisation.change.hidden = ConsigneeExemptOrganisation
+consigneeExemptOrganisation.memberState.label = Select the member state of destination
+consigneeExemptOrganisation.memberState.error.required = Select the member state of destination
+consigneeExemptOrganisation.certificateSerialNumber.label = Enter the exemption certificate serial number
+consigneeExemptOrganisation.certificateSerialNumber.error.required = Enter the exemption certificate serial number
+consigneeExemptOrganisation.certificateSerialNumber.error.length = Serial number must be between 1 and 255 characters
+consigneeExemptOrganisation.certificateSerialNumber.error.character = Serial number must contain letters or numbers
+consigneeExemptOrganisation.certificateSerialNumber.error.xss = Serial number must not contain < and > and : and ;
+
 transportArranger.title = Who is arranging the transport for this movement?
 transportArranger.heading = Who is arranging the transport for this movement?
 transportArranger.1 = Consignor
@@ -312,18 +324,10 @@ transportArranger.checkYourAnswersLabel = transportArranger
 transportArranger.error.required = Select who is arranging the transport for this movement
 transportArranger.change.hidden = TransportArranger
 
-consignee.subheading = Consignee information
-
-consigneeExemptOrganisation.title = Exempt organisation details
-consigneeExemptOrganisation.heading = Exempt organisation details
-consigneeExemptOrganisation.checkYourAnswersLabel = Exempt organisation details
-consigneeExemptOrganisation.change.hidden = ConsigneeExemptOrganisation
-
-consigneeExemptOrganisation.memberState.label = Select the member state of destination
-consigneeExemptOrganisation.memberState.error.required = Select the member state of destination
-
-consigneeExemptOrganisation.certificateSerialNumber.label = Enter the exemption certificate serial number
-consigneeExemptOrganisation.certificateSerialNumber.error.required = Enter the exemption certificate serial number
-consigneeExemptOrganisation.certificateSerialNumber.error.length = Serial number must be between 1 and 255 characters
-consigneeExemptOrganisation.certificateSerialNumber.error.character = Serial number must contain letters or numbers
-consigneeExemptOrganisation.certificateSerialNumber.error.xss = Serial number must not contain < and > and : and ;
+transportArrangerName.3.title = What is the goods owner''s business name?
+transportArrangerName.4.title = What is the transport arranger''s business name?
+transportArrangerName.3.heading = What is the goods owner''s business name?
+transportArrangerName.4.heading = What is the transport arranger''s business name?
+transportArrangerName.error.required = Enter the business name
+transportArrangerName.error.length = Business name must be 182 characters or less
+transportArrangerName.error.invalidCharacter = Business name must not contain < and > and : and ;

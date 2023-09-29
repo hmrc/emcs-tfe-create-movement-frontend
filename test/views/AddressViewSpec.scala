@@ -62,7 +62,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
             Selectors.label("town") -> messagesForLanguage.town,
             Selectors.label("postcode") -> messagesForLanguage.postcode,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
           ))
         }
       }

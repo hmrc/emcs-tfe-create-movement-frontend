@@ -49,7 +49,7 @@ class ConsigneeBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }

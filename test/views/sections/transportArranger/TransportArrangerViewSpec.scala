@@ -58,7 +58,7 @@ class TransportArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.radioButton(3) -> messagesForLanguage.goodsOwnerRadioOption,
           Selectors.radioButton(4) -> messagesForLanguage.otherRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.savePreviousAnswersAndExit
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -16,6 +16,7 @@
 
 package forms.sections.transportArranger
 
+import forms.XSS_REGEX
 import forms.mappings.Mappings
 import play.api.data.Form
 
@@ -27,5 +28,6 @@ class TransportArrangerNameFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("transportArrangerName.error.required")
         .verifying(maxLength(182, "transportArrangerName.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "transportArrangerName.error.invalidCharacter"))
     )
 }

@@ -273,4 +273,5 @@ transportArrangerName.3.heading = What is the goods owner''s business name?
 transportArrangerName.4.heading = What is the transport arranger''s business name?
 transportArrangerName.error.required = Enter the business name
 transportArrangerName.error.length = Business name must be 182 characters or less
+transportArrangerName.error.invalidCharacter = Business name must only contain letters and numbers
 

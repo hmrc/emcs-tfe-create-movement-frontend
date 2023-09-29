@@ -16,6 +16,7 @@
 
 package forms.sections.transportArranger
 
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -23,6 +24,7 @@ class TransportArrangerNameFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "transportArrangerName.error.required"
   val lengthKey = "transportArrangerName.error.length"
+  val invalidCharacters = "transportArrangerName.error.invalidCharacter"
   val maxLength = 182
 
   val form = new TransportArrangerNameFormProvider()()
@@ -49,5 +51,14 @@ class TransportArrangerNameFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    behave like fieldWithXSSCharacters(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, invalidCharacters, Seq(XSS_REGEX))
+    )
+
   }
+
+
 }

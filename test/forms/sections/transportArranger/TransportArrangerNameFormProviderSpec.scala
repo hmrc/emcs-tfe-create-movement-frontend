@@ -24,6 +24,7 @@ class TransportArrangerNameFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "transportArrangerName.error.required"
   val lengthKey = "transportArrangerName.error.length"
+  val xssKey = "transportArrangerName.error.invalidCharacter"
   val invalidCharacters = "transportArrangerName.error.invalidCharacter"
   val maxLength = 182
 
@@ -55,7 +56,7 @@ class TransportArrangerNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldWithXSSCharacters(
       form,
       fieldName,
-      requiredError = FormError(fieldName, invalidCharacters, Seq(XSS_REGEX))
+      requiredError = FormError(fieldName, xssKey, Seq(XSS_REGEX))
     )
 
   }

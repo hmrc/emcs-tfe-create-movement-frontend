@@ -28,6 +28,7 @@ class TransportArrangerNameFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("transportArrangerName.error.required")
         .verifying(maxLength(182, "transportArrangerName.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "transportArrangerName.error.invalidCharacter"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, s"transportArrangerName.error.invalidCharacter"))
+
     )
 }

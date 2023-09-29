@@ -28,3 +28,5 @@ GET         /trader/:ern/draft/:lrn/confirmation         controllers.Confirmatio
 ->          /                                            consignee.Routes
 ->          /                                            journeyType.Routes
 ->          /                                            transportArranger.Routes
+->          /                                            firstTransporter.Routes
+

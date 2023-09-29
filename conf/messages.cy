@@ -178,6 +178,7 @@ checkYourAnswersConsignor.address = Address
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
 transportArranger.subHeading = Transport arranger
+firstTransporter.subHeading = First transporter
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -272,8 +273,6 @@ transportArrangerName.error.required = Enter the business name
 transportArrangerName.error.length = Business name must be 182 characters or less
 transportArrangerName.error.invalidCharacter = Business name must not contain < and > and : and ;
 
-
-
 transportArrangerVat.3.title = What is the goods owner’s UK VAT registration number?
 transportArrangerVat.3.heading = What is the goods owner’s UK VAT registration number?
 transportArrangerVat.4.title = What is the transport arranger’s UK VAT registration number?
@@ -286,3 +285,11 @@ transportArrangerVat.error.alphanumeric = VAT registration number must only cont
 transportArrangerVat.error.length = VAT registration number must be {0} characters or less
 transportArrangerVat.checkYourAnswers.label = VAT registration number
 transportArrangerVat.change.hidden = VAT registration number
+
+
+firstTransporterName.title = What is the first transporter''s business name?
+firstTransporterName.heading = What is the first transporter''s business name?
+firstTransporterName.checkYourAnswersLabel = firstTransporterName
+firstTransporterName.error.required = Enter the business name
+firstTransporterName.error.length = Business name must be 182 characters or less
+firstTransporterName.error.invalidCharacter = Business name must only contain letters and numbers

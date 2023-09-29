@@ -42,4 +42,8 @@ object FakeNavigators {
       desiredRoute
   }
 
+  class FakeFirstTransporterNavigator(desiredRoute: Call) extends FirstTransporterNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
 }

@@ -25,12 +25,12 @@ object TransportArrangerNameMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def title()(implicit transportArranger: TransportArranger) = transportArranger match {
       case GoodsOwner => titleHelper("What is the goods owner's business name?")
-      case Other => titleHelper("What is the consignee's business name?")
+      case Other => titleHelper("What is the transport arranger's business name?")
     }
 
     def heading()(implicit transportArranger: TransportArranger) = transportArranger match {
       case GoodsOwner => "What is the goods owner's business name?"
-      case Other => "What is the consignee's business name?"
+      case Other => "What is the transport arranger's business name?"
     }
   }
 

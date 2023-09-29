@@ -268,9 +268,9 @@ consigneeExemptOrganisation.certificateSerialNumber.error.length = Serial number
 consigneeExemptOrganisation.certificateSerialNumber.error.character = Serial number must contain letters or numbers
 consigneeExemptOrganisation.certificateSerialNumber.error.xss = Serial number must not contain < and > and : and ;
 transportArrangerName.3.title = What is the goods owner''s business name?
-transportArrangerName.4.title = What is the consignee''s business name?
+transportArrangerName.4.title = What is the transport arranger''s business name?
 transportArrangerName.3.heading = What is the goods owner''s business name?
-transportArrangerName.4.heading = What is the consignee''s business name?
+transportArrangerName.4.heading = What is the transport arranger''s business name?
 transportArrangerName.error.required = Enter the business name
 transportArrangerName.error.length = Business name must be 182 characters or less
 

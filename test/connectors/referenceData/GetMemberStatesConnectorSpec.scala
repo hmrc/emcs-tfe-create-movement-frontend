@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetTraderKnownFactsConnectorSpec extends SpecBase
+class GetMemberStatesConnectorSpec extends SpecBase
   with Status
   with MimeTypes
   with HeaderNames
@@ -39,29 +39,39 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new GetTraderKnownFactsConnector(mockHttpClient, appConfig)
+  lazy val connector = new GetMemberStatesConnector(mockHttpClient, appConfig)
 
-  "check" - {
+  "getMemberStates" - {
+    
     "should return a successful response" - {
+      
       "when downstream call is successful" in {
 
-        MockHttpClient.get(
-          url = s"${appConfig.traderKnownFactsReferenceDataBaseUrl}/oracle/trader-known-facts",
-          parameters = Seq("exciseRegistrationId" -> testErn)
-        ).returns(Future.successful(Right(Some(testMinTraderKnownFacts))))
+        val expectedResult = Right(Seq(memberStateJsonAT, memberStateJsonBE))
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
+        MockHttpClient.get(
+          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+        ).returns(Future.successful(expectedResult))
+
+        val actualResult = connector.getMemberStates().futureValue
+
+        actualResult mustBe expectedResult
       }
     }
 
     "should return an error response" - {
+      
       "when downstream call fails" in {
-        MockHttpClient.get(
-          url = s"${appConfig.traderKnownFactsReferenceDataBaseUrl}/oracle/trader-known-facts",
-          parameters = Seq("exciseRegistrationId" -> testErn)
-        ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+        val expectedResult = Left(UnexpectedDownstreamResponseError)
+
+        MockHttpClient.get(
+          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+        ).returns(Future.successful(expectedResult))
+
+        val actualResult = connector.getMemberStates().futureValue
+
+        actualResult mustBe expectedResult
       }
     }
   }

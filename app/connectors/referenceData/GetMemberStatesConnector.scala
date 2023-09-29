@@ -17,7 +17,7 @@
 package connectors.referenceData
 
 import config.AppConfig
-import models.TraderKnownFacts
+import models.{CountryModel, TraderKnownFacts}
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -26,21 +26,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetTraderKnownFactsConnector @Inject()(val http: HttpClient,
-                                              config: AppConfig) extends GetTraderKnownFactsHttpParser {
+class GetMemberStatesConnector @Inject()(val http: HttpClient,
+                                         config: AppConfig) extends GetMemberStatesHttpParser {
 
-  def baseUrl: String = config.traderKnownFactsReferenceDataBaseUrl
+  def baseUrl: String = config.referenceDataBaseUrl
 
-  def getTraderKnownFacts(ern: String)
-                         (implicit headerCarrier: HeaderCarrier,
-                          executionContext: ExecutionContext): Future[Either[ErrorResponse, Option[TraderKnownFacts]]] =
-    get(baseUrl + "/oracle/trader-known-facts", ern)
+  def getMemberStates()(implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]] =
+    get(baseUrl + "/oracle/member-states")
       .recover {
         case JsResultException(errors) =>
-          logger.warn(s"[getTraderKnownFacts] Bad JSON response from emcs-tfe-reference-data: " + errors)
+          logger.warn(s"[getMemberStates] Bad JSON response from emcs-tfe-reference-data: " + errors)
           Left(JsonValidationError)
         case error =>
-          logger.warn(s"[getTraderKnownFacts] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
+          logger.warn(s"[getMemberStates] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
 }

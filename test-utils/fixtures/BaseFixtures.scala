@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.{TraderKnownFacts, UserAddress, UserAnswers}
+import models.{CountryModel, TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
@@ -95,4 +95,25 @@ trait BaseFixtures {
   )
 
   val testUserAddress = UserAddress(Some("10"), "Test Street", "Testown", "ZZ1 1ZZ")
+
+
+  val countryModelAT = CountryModel(
+    countryCode = "AT",
+    country = "Austria"
+  )
+
+  val countryModelBE = CountryModel(
+    countryCode = "BE",
+    country = "Belgium"
+  )
+
+  val memberStateJsonAT = Json.obj(
+    "countryCode" -> "AT",
+    "country" -> "Austria"
+  )
+
+  val memberStateJsonBE = Json.obj(
+    "countryCode" -> "BE",
+    "country" -> "Belgium"
+  )
 }

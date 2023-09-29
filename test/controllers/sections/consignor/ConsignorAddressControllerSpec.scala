@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.consignor
 
 import base.SpecBase
+import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService

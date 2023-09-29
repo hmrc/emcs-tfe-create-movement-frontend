@@ -24,6 +24,7 @@ import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.ConsignorAddressPage
+import pages.sections.consignee.ConsigneeAddressPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import views.html.AddressView
@@ -32,7 +33,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  Seq(ConsignorAddressPage) foreach { addressPage =>
+  Seq(ConsignorAddressPage, ConsigneeAddressPage) foreach { addressPage =>
 
     s"$addressPage View" - {
 
@@ -48,7 +49,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
-            addressPage = ConsignorAddressPage,
+            addressPage = addressPage,
             call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
           )
 

@@ -13,6 +13,11 @@ POST       /trader/:ern/draft/:lrn/consignee/export-uk-eu                       
 GET        /trader/:ern/draft/:lrn/consignee/export-uk-eu/change                  controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/consignee/export-uk-eu/change                  controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:lrn/consignee/exempt-organisation                          controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consignee/exempt-organisation                          controllers.sections.consignee.ConsigneeExemptOrganisationController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/consignee/exempt-organisation/change                   controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/consignee/exempt-organisation/change                   controllers.sections.consignee.ConsigneeExemptOrganisationController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
 GET        /trader/:ern/draft/:lrn/consignee/export-vat                                     controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:lrn/consignee/export-vat                                     controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/consignee/export-vat/change                              controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)

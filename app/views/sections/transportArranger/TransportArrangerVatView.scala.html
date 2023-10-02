@@ -15,26 +15,26 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.transportArranger.TransportArranger
 @import viewmodels.InputWidth._
-@import viewmodels.helpers.TransportArrangerNameHelper
+@import models.sections.transportArranger.TransportArranger
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    h1: components.h1,
-    continueOrExit: components.continueOrExit,
-    helper: TransportArrangerNameHelper
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        h1: components.h1,
+        continueOrExit: components.continueOrExit,
+        link: components.link,
+        p: components.p
 )
 
-@(form: Form[_], transportArranger: TransportArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, arranger: TransportArranger)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, transportArranger)) {
+@layout(pageTitle = title(form, messages(s"transportArrangerVat.$arranger.title"))) {
 
-    @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerNameController.onSubmit(request.ern, request.lrn, mode)) {
+    @formHelper(action) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -46,16 +46,24 @@
                 label = LabelViewModel(HtmlContent(heading))
             )
             .withWidth(Full)
+            .withHint(HintViewModel(Text(messages(s"transportArrangerVat.hint"))))
+
         )
+
+        @p() {
+            @link(
+                controllers.sections.transportArranger.routes.TransportArrangerVatController.onNonGbVAT(request.ern, request.lrn).url,
+                s"transportArrangerVat.$arranger.notUkVatLink"
+            )
+        }
 
         @continueOrExit()
     }
 }
 
 @heading = {
-    @h1(s"transportArrangerName.$transportArranger.heading", Some(messages("transportArranger.subHeading", request.lrn)), "govuk-heading-l")
+    @h1(s"transportArrangerVat.$arranger.heading", Some(messages("transportArranger.subHeading")), "govuk-heading-l")
 }
-
 @{
     //$COVERAGE-OFF$
 }

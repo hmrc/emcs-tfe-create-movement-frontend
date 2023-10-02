@@ -14,33 +14,38 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.consignee.checkAnswers
+package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ConsigneeBusinessNameSummary  {
+object ConsigneeExportVatSummary  {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeBusinessNamePage).map {
+    request.userAnswers.get(ConsigneeExportVatPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "consigneeBusinessName.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = if(!showActionLinks) Seq() else Seq(
+          key = "consigneeExportVat.checkYourAnswers.label",
+          value = ValueViewModel(answer.exportType.toString),
+          actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
-              id = "changeConsigneeBusinessName"
-            ).withVisuallyHiddenText(messages("consigneeBusinessName.change.hidden"))
+              href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
+                ern = request.userAnswers.ern,
+                lrn = request.userAnswers.lrn,
+                mode = CheckMode
+              ).url,
+              id = ConsigneeExportVatPage
+            )
+              .withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
           )
         )
     }
+
 }

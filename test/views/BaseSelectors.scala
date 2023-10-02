@@ -29,6 +29,7 @@ trait BaseSelectors {
   val hint: String = "main .govuk-hint"
   val button = ".govuk-button"
   val secondaryButton = ".govuk-button--secondary"
+  val saveAndExitLink = "#save-and-exit"
   val label: String => String = forId => s"main label[for='$forId']"
   def radioButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > label"
   def checkboxItem(index: Int) = s".govuk-checkboxes > div:nth-child($index) > label"

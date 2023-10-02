@@ -18,4 +18,5 @@ package object forms {
   private[forms] val TEXTAREA_MAX_LENGTH = 350
   private[forms] val ALPHANUMERIC_REGEX = "^(?s)(?=.*[A-Za-z0-9]).{1,}$"
   private[forms] val XSS_REGEX = "^(?s)(?!.*javascript)(?!.*[<>;:]).{1,}$"
+  private[forms] val ONLY_ALPHANUMERIC_REGEX = "^[A-Za-z0-9]*$"
 }

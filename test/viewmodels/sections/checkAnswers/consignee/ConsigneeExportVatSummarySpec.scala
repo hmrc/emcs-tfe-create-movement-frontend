@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.consignee.checkAnswers
+package viewmodels.sections.checkAnswers.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
@@ -27,6 +27,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.checkAnswers.sections.consignee.{ConsigneeExportSummary, ConsigneeExportVatSummary}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

@@ -17,6 +17,7 @@
 package fixtures.messages
 
 import models.UserAddress
+import pages.sections.transportArranger.TransportArrangerAddressPage
 import pages.{ConsignorAddressPage, QuestionPage}
 
 object AddressMessages {
@@ -30,8 +31,14 @@ object AddressMessages {
 
     val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
 
+    val transportArrangerAddressGoodsOwnerHeading = "Enter the good owner’s business address"
+    val transportArrangerAddressGoodsOwnerTitle = titleHelper(transportArrangerAddressGoodsOwnerHeading)
+    val transportArrangerAddressOtherHeading = "Enter the transporter’s business address"
+    val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading)
+
     val subheading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Consignor information"
+      case TransportArrangerAddressPage => "Guarantor"
       case _ => "Consignee information"
     }
 

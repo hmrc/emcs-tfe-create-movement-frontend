@@ -292,4 +292,4 @@ firstTransporterName.heading = What is the first transporter''s business name?
 firstTransporterName.checkYourAnswersLabel = firstTransporterName
 firstTransporterName.error.required = Enter the business name
 firstTransporterName.error.length = Business name must be 182 characters or less
-firstTransporterName.error.invalidCharacter = Business name must only contain letters and numbers
+firstTransporterName.error.invalidCharacter = Business name must not contain < and > and : and ;

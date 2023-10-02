@@ -26,7 +26,7 @@ object FirstTransporterNameMessages {
 
     val errorRequired = "Enter the business name"
     val errorLength = "Business name must be 182 characters or less"
-    val errorInvalidCharacter = "Business name must only contain letters and numbers"
+    val errorInvalidCharacter = "Business name must not contain < and > and : and ;"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -185,6 +185,7 @@ journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
 transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
+transportUnit.subHeading = Transport units
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -311,3 +312,15 @@ consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can b
 consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.tooLong = The ERN must be 16 characters or less
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+
+transportUnitType.title = What will the goods be transported in?
+transportUnitType.heading = What will the goods be transported in?
+transportUnitType.hint = You can return to this page to select another option.
+transportUnitType.1 = Container
+transportUnitType.5 = Fixed transport installations
+transportUnitType.4 = Tractor
+transportUnitType.3 = Trailer
+transportUnitType.2 = Vehicle
+transportUnitType.checkYourAnswersLabel = Transport units
+transportUnitType.error.required = Select what the goods will be transported in
+transportUnitType.change.hidden = TransportUnitType

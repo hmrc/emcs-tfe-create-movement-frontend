@@ -21,6 +21,7 @@ import controllers.routes
 import models._
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
+import pages.sections.info.LocalReferenceNumberPage
 import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
 
 class JourneyTypeNavigatorSpec extends SpecBase {

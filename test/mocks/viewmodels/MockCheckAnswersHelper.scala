@@ -19,7 +19,7 @@ package mocks.viewmodels
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.CheckAnswersHelper
+import viewmodels.helpers.CheckAnswersHelper
 
 trait MockCheckAnswersHelper extends MockFactory {
 

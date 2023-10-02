@@ -24,7 +24,6 @@ import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.transportArranger.TransportArrangerPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

@@ -292,10 +292,22 @@ transportArrangerVat.error.length = VAT registration number must be {0} characte
 transportArrangerVat.checkYourAnswers.label = VAT registration number
 transportArrangerVat.change.hidden = VAT registration number
 
-
 firstTransporterName.title = What is the first transporter''s business name?
 firstTransporterName.heading = What is the first transporter''s business name?
 firstTransporterName.checkYourAnswersLabel = firstTransporterName
 firstTransporterName.error.required = Enter the business name
 firstTransporterName.error.length = Business name must be 182 characters or less
 firstTransporterName.error.invalidCharacter = Business name must not contain < and > and : and ;
+
+consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code.
+consigneeExcise.temporaryConsignee.error.noInput = Enter the authorisation reference
+consigneeExcise.temporaryConsignee.error.tooLong = The authorisation reference must be 16 characters or less
+consigneeExcise.temporaryConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
+consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
+consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
+consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.
+consigneeExcise.error.noInput = Enter the consignee’s ERN
+consigneeExcise.error.tooLong = The ERN must be 16 characters or less
+consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers

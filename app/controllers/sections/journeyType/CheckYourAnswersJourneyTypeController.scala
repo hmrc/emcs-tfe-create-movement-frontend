@@ -24,7 +24,7 @@ import pages.sections.journeyType.CheckYourAnswersJourneyTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import viewmodels.checkAnswers.sections.journeyType.CheckYourAnswersJourneyTypeHelper
+import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
 
 import javax.inject.Inject

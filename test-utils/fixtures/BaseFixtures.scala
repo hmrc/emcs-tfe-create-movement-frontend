@@ -28,7 +28,7 @@ trait BaseFixtures {
 
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"
-  val testErn: String = "ern"
+  val testErn: String = "XIRC1234567890"
   val testLrn: String = "lrn"
   val testVatNumber: String = "123456789"
   val testDateOfArrival: LocalDate = LocalDate.now()

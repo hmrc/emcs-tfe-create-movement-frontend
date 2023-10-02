@@ -17,8 +17,9 @@
 package fixtures.messages
 
 import models.UserAddress
+import pages.QuestionPage
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
-import pages.{ConsignorAddressPage, QuestionPage}
 
 object AddressMessages {
 

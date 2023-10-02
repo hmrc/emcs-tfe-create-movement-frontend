@@ -29,8 +29,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.journeyType.CheckYourAnswersJourneyTypeHelper
 import viewmodels.govuk.SummaryListFluency
+import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
 
 class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryListFluency

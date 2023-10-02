@@ -38,7 +38,25 @@ class ConsigneeNavigatorSpec extends SpecBase {
           routes.IndexController.onPageLoad(testErn)
       }
 
-      "for the ConsigneeBusinessNamePage" - {
+    "for the ConsigneeAddress page" - {
+
+      "must go to the UnderConstruction page" in {
+
+        navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+    }
+
+    "for the ConsigneeExcise page" - {
+
+      "must go to the ConsigneeBusinessName page" in {
+
+        navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+    }
+
+    "for the ConsigneeBusinessNamePage" - {
 
         "must go to CAM-NEE07" in {
           val userAnswers = emptyUserAnswers
@@ -64,17 +82,16 @@ class ConsigneeNavigatorSpec extends SpecBase {
           }
         }
 
-        // TODO update once CAM-NEE01 has been created
-        "must go to CAM-NEE01" - {
+      "must go to ConsigneeExcise page" - {
 
-          "when 'YES' is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportPage, false)
+        "when 'NO' is answered'" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeExportPage, false)
 
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          }
+          navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testLrn, NormalMode)
         }
+      }
 
         "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 

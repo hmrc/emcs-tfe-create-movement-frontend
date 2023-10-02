@@ -22,8 +22,8 @@ import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.ConsigneeNavigator
+import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeAddressPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -47,12 +47,9 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
     lazy val consigneeAddressOnSubmit = controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testLrn, NormalMode)
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
+    lazy val application = applicationBuilder(userAnswers).build()
+
+
   }
 
   "ConsigneeAddress Controller" - {
@@ -98,6 +95,14 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+      override lazy val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
 
       running(application) {
         val request =

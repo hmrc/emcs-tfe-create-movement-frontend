@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.DeferredMovementView
+import views.html.sections.info.DeferredMovementView
 
 import javax.inject.Inject
 

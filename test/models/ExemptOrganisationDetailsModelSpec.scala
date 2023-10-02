@@ -17,7 +17,7 @@
 package models
 
 import base.SpecBase
-import fixtures.{OrganisationDetailsFixtures, UserAddressFixtures}
+import fixtures.OrganisationDetailsFixtures
 import play.api.libs.json.{JsSuccess, Json}
 
 class ExemptOrganisationDetailsModelSpec extends SpecBase with OrganisationDetailsFixtures {

@@ -23,3 +23,7 @@ POST       /trader/:ern/draft/:lrn/consignee/export-vat                         
 GET        /trader/:ern/draft/:lrn/consignee/export-vat/change                              controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/consignee/export-vat/change                              controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:lrn/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

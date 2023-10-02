@@ -23,12 +23,12 @@ import forms.LocalReferenceNumberFormProvider
 import models.requests.UserRequest
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
-import pages.{DeferredMovementPage, LocalReferenceNumberPage}
+import pages.sections.info.{DeferredMovementPage, LocalReferenceNumberPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.LocalReferenceNumberView
+import views.html.sections.info.LocalReferenceNumberView
 
 import javax.inject.Inject
 import scala.concurrent.Future

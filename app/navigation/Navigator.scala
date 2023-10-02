@@ -19,7 +19,8 @@ package navigation
 import controllers.routes
 import models._
 import pages._
-import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.consignor._
+import pages.sections.info._
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -34,9 +35,6 @@ class Navigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.lrn)
     case CheckAnswersConsignorPage =>
       //TODO: Update when next page is ready
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case ConsigneeAddressPage =>
-      //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case CheckAnswersPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.lrn)

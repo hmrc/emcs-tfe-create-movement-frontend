@@ -28,6 +28,13 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
+    case ConsigneeAddressPage =>
+      //TODO update to next page when finished
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+    case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
+        controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
     case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
@@ -37,8 +44,7 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
           case Some(true) =>
             controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case Some(false) =>
-            // TODO redirect to CAM-NEE01
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case _ =>
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }

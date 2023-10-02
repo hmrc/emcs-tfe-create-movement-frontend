@@ -1,0 +1,4 @@
+GET        /trader/:ern/draft/:lrn/first-transporter/name                       controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/first-transporter/name                       controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/first-transporter/name/change                controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/first-transporter/name/change                controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

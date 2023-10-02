@@ -21,31 +21,35 @@ import fixtures.messages.AddressMessages
 import forms.AddressFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.transportArranger.TransportArranger.GoodsOwner
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.ConsignorAddressPage
 import pages.sections.consignee.ConsigneeAddressPage
-import play.api.i18n.Messages
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
+import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
 import views.html.AddressView
 
 class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
+  class Fixture(lang: Lang) {
+    implicit val msgs: Messages = messages(app, lang)
+    implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+    val view = app.injector.instanceOf[AddressView]
+    val form = app.injector.instanceOf[AddressFormProvider].apply()
+  }
+
   object Selectors extends BaseSelectors
 
-  Seq(ConsignorAddressPage, ConsigneeAddressPage) foreach { addressPage =>
+  Seq(AddressMessages.English, AddressMessages.Welsh).foreach { messagesForLanguage =>
 
-    s"$addressPage View" - {
+    s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - new Fixture(messagesForLanguage.lang) {
 
-      Seq(AddressMessages.English, AddressMessages.Welsh).foreach { messagesForLanguage =>
+      Seq(ConsignorAddressPage, ConsigneeAddressPage) foreach { addressPage =>
 
-        s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
-
-          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-          val view = app.injector.instanceOf[AddressView]
-          val form = app.injector.instanceOf[AddressFormProvider].apply()
+        s"$addressPage View" - {
 
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
@@ -57,6 +61,31 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title(addressPage),
             Selectors.h1 -> messagesForLanguage.heading(addressPage),
             Selectors.h2(1) -> messagesForLanguage.subheading(addressPage),
+            Selectors.label("property") -> messagesForLanguage.property,
+            Selectors.label("street") -> messagesForLanguage.street,
+            Selectors.label("town") -> messagesForLanguage.town,
+            Selectors.label("postcode") -> messagesForLanguage.postcode,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+      }
+
+      "when rendered for TransportArranger page" - {
+
+        "when the Arranger is the GoodsOwner" - new Fixture(messagesForLanguage.lang) {
+
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form,
+            addressPage = TransportArrangerAddressPage,
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+            headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.transportArrangerAddressGoodsOwnerTitle,
+            Selectors.h1 -> messagesForLanguage.transportArrangerAddressGoodsOwnerHeading,
+            Selectors.h2(1) -> messagesForLanguage.subheading(TransportArrangerAddressPage),
             Selectors.label("property") -> messagesForLanguage.property,
             Selectors.label("street") -> messagesForLanguage.street,
             Selectors.label("town") -> messagesForLanguage.town,

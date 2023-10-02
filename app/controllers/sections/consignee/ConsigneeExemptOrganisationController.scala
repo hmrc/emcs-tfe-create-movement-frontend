@@ -21,13 +21,12 @@ import controllers.actions._
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import models.Mode
 import models.requests.DataRequest
-import navigation.{ConsigneeNavigator, Navigator}
+import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{GetMemberStatesService, UserAnswersService}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 
 import javax.inject.Inject

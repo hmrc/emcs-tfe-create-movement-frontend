@@ -59,7 +59,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
       "must go to CAM-TA05" - {
 
-        // TODO redirect to CAM-TA05
+        // TODO redirect to CAM-TA05 (Check Answers)
         "when the answer is `Consignee`" in {
           val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
 
@@ -67,7 +67,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
 
-        // TODO redirect to CAM-TA05
+        // TODO redirect to CAM-TA05 (Check Answers)
         "when the answer is `Consignor`" in {
           val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
 
@@ -78,27 +78,33 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
     }
 
-    "for the TransportArrangerVatPage" - {
+    "for the TransportArrangerNamePage" - {
 
-      "must go to TransportArrangerAddress" - {
+      "must go to TransportArrangerVatPage" in {
+        val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
 
-        //TODO: Update as part of future story
-        "when the answer is `Goods Owner`" in {
-          navigator.nextPage(TransportArrangerVatPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
+        navigator.nextPage(TransportArrangerNamePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode)
       }
     }
 
-    "for the TransportArrangerNamePage" - {
+    "for the TransportArrangerVatPage" - {
 
-      "must go to CAM-TA03" in {
-        val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
+      "must go to TransportArrangerAddressPage" in {
 
-        navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+        navigator.nextPage(TransportArrangerVatPage, NormalMode, emptyUserAnswers) mustBe
+          controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+    }
+
+    "for the TransportArrangerAddressPage" - {
+
+      // TODO redirect to CAM-TA05 (Check Answers)
+      "must go to TransportArrangerCheckAnswersPage" in {
+
+        navigator.nextPage(TransportArrangerAddressPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }
-
   }
 }

@@ -35,16 +35,19 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
         case Some(GoodsOwner) | Some(Other) =>
           controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-        // TODO redirect to CAM-TA05
+        // TODO redirect to CAM-TA05 (Check Answers)
         case _ =>
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    }
+      }
 
     case TransportArrangerNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    case TransportArrangerVatPage => _ =>
-      //TODO: Redirect to CAM-TA04 (Transport Arranger Address)
+    case TransportArrangerVatPage => (userAnswers: UserAnswers) =>
+      controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
+    // TODO redirect to CAM-TA05 (Check Answers)
+    case TransportArrangerAddressPage => _ =>
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>

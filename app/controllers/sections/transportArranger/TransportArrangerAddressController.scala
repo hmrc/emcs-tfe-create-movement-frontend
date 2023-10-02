@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
-import navigation.Navigator
+import navigation.TransportArrangerNavigator
 import pages.QuestionPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
 import play.api.data.Form
@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class TransportArrangerAddressController @Inject()(override val messagesApi: MessagesApi,
                                                    override val userAnswersService: UserAnswersService,
-                                                   override val navigator: Navigator,
+                                                   override val navigator: TransportArrangerNavigator,
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,

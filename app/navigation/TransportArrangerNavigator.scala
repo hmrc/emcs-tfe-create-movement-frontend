@@ -35,9 +35,8 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
         case Some(GoodsOwner) | Some(Other) =>
           controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-        // TODO redirect to CAM-TA05 (Check Answers)
         case _ =>
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
       }
 
     case TransportArrangerNamePage => (userAnswers: UserAnswers) =>
@@ -46,20 +45,28 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
     case TransportArrangerVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    // TODO redirect to CAM-TA05 (Check Answers)
-    case TransportArrangerAddressPage => _ =>
+    case TransportArrangerAddressPage => (userAnswers: UserAnswers) =>
+      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    case TransportArrangerCheckAnswersPage => _ =>
+      //TODO: Update to route to next section when built
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }
 
+  private val checkRoutes: Page => UserAnswers => Call = {
+    case TransportArrangerPage =>
+      normalRoutes(TransportArrangerPage)
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+  }
+
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-
-    //TODO update when other modes are added
     case _ =>
-      normalRoutes(page)(userAnswers)
+      checkRoutes(page)(userAnswers)
   }
 }

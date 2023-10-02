@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package views.sections.journeyType
+package views.sections.transportArranger
 
 import base.ViewSpecBase
-import fixtures.messages.sections.journeyType.CheckYourAnswersJourneyTypeMessages
+import fixtures.messages.sections.transportArranger.TransportArrangerCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -25,27 +25,27 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
+import views.html.sections.transportArranger.TransportArrangerCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersJourneyTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "CheckYourAnswersJourneyType view" - {
+  "TransportArrangerCheckAnswers view" - {
 
-    Seq(CheckYourAnswersJourneyTypeMessages.English, CheckYourAnswersJourneyTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerCheckAnswersMessages.English, TransportArrangerCheckAnswersMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
+        val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),
-          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testLrn)
+          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testLrn)
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

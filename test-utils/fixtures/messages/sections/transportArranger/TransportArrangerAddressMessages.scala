@@ -17,24 +17,12 @@
 package fixtures.messages.sections.transportArranger
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
-import models.sections.transportArranger.TransportArranger
-import models.sections.transportArranger.TransportArranger.GoodsOwner
 
-object TransportArrangerNameMessages {
+object TransportArrangerAddressMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def title()(implicit transportArranger: TransportArranger): String = transportArranger match {
-      case GoodsOwner => titleHelper(heading())
-      case _ => titleHelper(heading())
-    }
-
-    def heading()(implicit transportArranger: TransportArranger): String = transportArranger match {
-      case GoodsOwner => "What is the goods owner's business name?"
-      case _ => "What is the transport arranger's business name?"
-    }
-
-    val cyaLabel = "Business name"
-    val cyaChangeHidden = "transport arranger name"
+    val cyaLabel: String = "Address"
+    val cyaChangeHidden: String = "transport arranger address"
   }
 
   object English extends ViewMessages with BaseEnglish

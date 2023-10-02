@@ -28,8 +28,8 @@ object TransportArrangerMessages {
     val goodsOwnerRadioOption = "Goods owner"
     val otherRadioOption = "Other"
 
-    val cyaLabel: String = "Who is arranging the transport for this movement"
-    val cyaChangeHidden: String = "who is arranging the transport for this movement"
+    val cyaLabel: String = "Transport arranger"
+    val cyaChangeHidden: String = "transport arranger"
   }
 
   object English extends ViewMessages with BaseEnglish

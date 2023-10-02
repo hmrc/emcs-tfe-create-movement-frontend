@@ -6,6 +6,8 @@ site.change = Change
 site.no = No
 site.yes = Yes
 site.continue = Continue
+site.confirmAnswers = Confirm answers
+site.notProvided = Not provided
 site.saveAndContinue = Save and continue
 site.returnToDraft = Return to draft
 site.saveAndReturnToMovement = Save and return to movement
@@ -329,9 +331,9 @@ transportArranger.1 = Consignor
 transportArranger.2 = Consignee
 transportArranger.3 = Goods owner
 transportArranger.4 = Other
-transportArranger.checkYourAnswersLabel = transportArranger
+transportArranger.checkYourAnswers.label = Transport arranger
 transportArranger.error.required = Select who is arranging the transport for this movement
-transportArranger.change.hidden = TransportArranger
+transportArranger.change.hidden = transport arranger
 
 transportArrangerName.3.title = What is the goods owner''s business name?
 transportArrangerName.4.title = What is the transport arranger''s business name?
@@ -340,6 +342,8 @@ transportArrangerName.4.heading = What is the transport arranger''s business nam
 transportArrangerName.error.required = Enter the business name
 transportArrangerName.error.length = Business name must be 182 characters or less
 transportArrangerName.error.invalidCharacter = Business name must not contain < and > and : and ;
+transportArrangerName.checkYourAnswers.label = Business name
+transportArrangerName.change.hidden = transport arranger name
 
 transportArrangerVat.3.title = What is the goods owner’s UK VAT registration number?
 transportArrangerVat.3.heading = What is the goods owner’s UK VAT registration number?
@@ -353,6 +357,12 @@ transportArrangerVat.error.alphanumeric = VAT registration number must only cont
 transportArrangerVat.error.length = VAT registration number must be {0} characters or less
 transportArrangerVat.checkYourAnswers.label = VAT registration number
 transportArrangerVat.change.hidden = VAT registration number
+
+transportArrangerAddress.checkYourAnswers.label = Address
+transportArrangerAddress.change.hidden = transport arranger address
+
+transportArrangerCheckAnswers.title = Check your answers
+transportArrangerCheckAnswers.heading = Check your answers
 
 firstTransporterName.title = What is the first transporter''s business name?
 firstTransporterName.heading = What is the first transporter''s business name?

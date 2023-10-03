@@ -310,7 +310,7 @@ consigneeExcise.heading = What is the consignee’s excise registration number (
 consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.
 consigneeExcise.error.noInput = Enter the consignee’s ERN
-consigneeExcise.error.tooLong = The ERN must be 16 characters or less
+consigneeExcise.error.tooLong = The ERN must be 13 characters or less
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
 
 transportUnitType.title = What will the goods be transported in?

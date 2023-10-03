@@ -24,7 +24,6 @@ import play.api.data.FormError
 class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
   val fieldName = "value"
-  val maxLength = 16
 
   "ConsigneeExciseFormProvider" - {
     val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)
@@ -43,10 +42,12 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
 
     "when the value is too long" - {
       "must error with the expected msg key" in {
+        val maxLength = 13
         val boundForm = form.bind(Map(fieldName -> "A" * (maxLength + 1)))
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.tooLong", Seq(maxLength)))
       }
       "must error with the expected msg key for the dynamic form" in {
+        val maxLength = 16
         val boundForm = dynamicForm.bind(Map(fieldName -> "A" * (maxLength + 1)))
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.tooLong", Seq(maxLength)))
       }

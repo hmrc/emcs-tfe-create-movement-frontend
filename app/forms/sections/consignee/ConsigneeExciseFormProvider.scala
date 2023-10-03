@@ -24,9 +24,10 @@ import javax.inject.Inject
 
 class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
-  private val maxLength = 16
 
   def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean): Form[String] = {
+    val maxLengthValue = if (isNorthernIrishTemporaryRegisteredConsignee) 16 else 13
+
     val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
       "consigneeExcise.temporaryConsignee.error.noInput"
     } else {
@@ -49,7 +50,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
     Form(
       "value" -> text(noInputErrorKey)
-        .verifying(maxLength(maxLength, tooLongErrorKey))
+        .verifying(maxLength(maxLengthValue, tooLongErrorKey))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey))
     )
   }

@@ -46,4 +46,9 @@ object FakeNavigators {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }
+
+  class FakeTransportUnitNavigator(desiredRoute: Call) extends TransportUnitNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
 }

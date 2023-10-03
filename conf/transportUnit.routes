@@ -1,0 +1,4 @@
+GET        /trader/:ern/draft/:lrn/transport-units/type                          controllers.sections.transportUnit.TransportUnitTypeController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/transport-units/type                          controllers.sections.transportUnit.TransportUnitTypeController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/transport-units/type/change                   controllers.sections.transportUnit.TransportUnitTypeController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/transport-units/type/change                   controllers.sections.transportUnit.TransportUnitTypeController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

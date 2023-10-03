@@ -20,7 +20,8 @@ import base.SpecBase
 import controllers.routes
 import models._
 import pages._
-import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.consignor._
+import pages.sections.info._
 
 class NavigatorSpec extends SpecBase {
 
@@ -64,15 +65,6 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "for the ConsigneeAddress page" - {
-
-        "must go to the UnderConstruction page" in {
-
-          navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
-      }
-
       "for the CheckYourAnswers page" - {
 
         "must go to the Confirmation page" in {
@@ -90,6 +82,12 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
           routes.CheckYourAnswersController.onPageLoad(testErn, testLrn)
+      }
+
+      "must go from the ConsignorAddressPage to CheckYourAnswersConsignor" in {
+
+        navigator.nextPage(ConsignorAddressPage, CheckMode, emptyUserAnswers) mustBe
+          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
       }
     }
 

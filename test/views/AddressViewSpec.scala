@@ -24,9 +24,9 @@ import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.GoodsOwner
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.ConsignorAddressPage
 import pages.sections.consignee.ConsigneeAddressPage
-import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.transportArranger.TransportArrangerAddressPage
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
 import views.html.AddressView

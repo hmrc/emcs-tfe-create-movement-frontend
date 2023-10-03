@@ -22,8 +22,8 @@ import fixtures.OrganisationDetailsFixtures
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.{FakeConsigneeNavigator, FakeNavigator}
-import navigation.{ConsigneeNavigator, Navigator}
+import navigation.ConsigneeNavigator
+import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
 import play.api.inject.bind
 import play.api.mvc.Call

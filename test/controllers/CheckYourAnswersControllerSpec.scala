@@ -29,8 +29,8 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AddressLookupFrontendService
-import viewmodels.checkAnswers.CheckAnswersHelper
 import viewmodels.govuk.SummaryListFluency
+import viewmodels.helpers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
 import scala.concurrent.Future

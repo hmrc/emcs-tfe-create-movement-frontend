@@ -17,7 +17,7 @@
 package viewmodels
 
 import base.SpecBase
-import fixtures.messages.LocalReferenceNumberMessages
+import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.LocalReferenceNumberFormProvider
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.twirl.api.{Html, HtmlFormat}

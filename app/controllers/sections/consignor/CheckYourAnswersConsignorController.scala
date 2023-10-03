@@ -20,10 +20,10 @@ import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
 import navigation.Navigator
-import pages.{CheckAnswersConsignorPage, ConsignorAddressPage}
+import pages.sections.consignor.{CheckAnswersConsignorPage, ConsignorAddressPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.CheckYourAnswersConsignorView
+import views.html.sections.consignor.CheckYourAnswersConsignorView
 
 import javax.inject.Inject
 

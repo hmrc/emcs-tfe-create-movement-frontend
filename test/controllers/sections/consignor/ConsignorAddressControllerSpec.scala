@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.ConsignorAddressPage
+import pages.sections.consignor.ConsignorAddressPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

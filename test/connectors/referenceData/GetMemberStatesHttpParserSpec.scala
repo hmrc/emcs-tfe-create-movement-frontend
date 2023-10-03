@@ -18,7 +18,6 @@ package connectors.referenceData
 
 import base.SpecBase
 import mocks.connectors.MockHttpClient
-import models.CountryModel
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status
 import play.api.libs.json.Json

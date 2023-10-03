@@ -24,7 +24,7 @@ import pages.CheckAnswersPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.AddressLookupFrontendService
-import viewmodels.checkAnswers.CheckAnswersHelper
+import viewmodels.helpers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
 import javax.inject.Inject

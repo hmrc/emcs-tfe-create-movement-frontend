@@ -17,10 +17,9 @@
 package pages
 
 import pages.behaviours.PageBehaviours
-
 import play.api.libs.json.JsPath
 
-class QuestionPageSpec extends PageBehaviours{
+class QuestionPageSpec extends PageBehaviours {
   object TestPage extends QuestionPage[String] {
     override def path: JsPath = JsPath \ toString
 

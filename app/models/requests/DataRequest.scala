@@ -16,7 +16,7 @@
 
 package models.requests
 
-import models.{TraderKnownFacts, UserAnswers}
+import models._
 import play.api.mvc.WrappedRequest
 
 case class DataRequest[A](request: UserRequest[A],
@@ -26,4 +26,15 @@ case class DataRequest[A](request: UserRequest[A],
 
   val internalId: String = request.internalId
   val ern: String = request.ern
+
+  val userTypeFromErn: UserType = ern.take(4).toUpperCase match {
+    case "GBRC" => GreatBritainRegisteredConsignor
+    case "XIRC" => NorthernIrelandRegisteredConsignor
+    case "GBWK" => GreatBritainWarehouseKeeper
+    case "XIWK" => NorthernIrelandWarehouseKeeper
+    case "XI00" => NorthernIrelandWarehouse
+    case "GB00" => GreatBritainWarehouse
+    case _ => Unknown
+  }
+
 }

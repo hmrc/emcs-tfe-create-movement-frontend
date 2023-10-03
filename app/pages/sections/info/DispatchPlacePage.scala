@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package config
+package pages
 
-object SessionKeys {
+import models.DispatchPlace
+import play.api.libs.json.JsPath
 
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-  val DEFERRED_MOVEMENT = "DEFERRED_MOVEMENT"
-  val DISPATCH_PLACE = "DISPATCH_PLACE"
+case object DispatchPlacePage extends QuestionPage[DispatchPlace] {
 
+  override def path: JsPath = JsPath \ "info" \ toString
+
+  override def toString: String = "dispatchPlace"
 }

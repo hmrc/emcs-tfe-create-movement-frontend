@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package config
+package forms
 
-object SessionKeys {
+import javax.inject.Inject
 
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-  val DEFERRED_MOVEMENT = "DEFERRED_MOVEMENT"
-  val DISPATCH_PLACE = "DISPATCH_PLACE"
+import forms.mappings.Mappings
+import play.api.data.Form
+import models.DispatchPlace
 
+class DispatchPlaceFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[DispatchPlace] =
+    Form(
+      "value" -> enumerable[DispatchPlace]("dispatchPlace.error.required")
+    )
 }

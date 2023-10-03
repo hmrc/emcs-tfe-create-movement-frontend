@@ -24,7 +24,7 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" - {
 
-    "must redirect to the Deferred Movement page" in {
+    "must redirect to the Dispatch place page (CAM-INFO01)" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -34,7 +34,7 @@ class IndexControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
+        redirectLocation(result) mustBe Some(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testErn).url)
       }
     }
   }

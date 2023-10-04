@@ -28,11 +28,11 @@
 
 @(list: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswersJourneyType.title"))) {
+@layout(pageTitle = titleNoForm(messages("transportArrangerCheckAnswers.title"))) {
 
     @formHelper(action = submitAction) {
 
-        @h1("checkYourAnswersJourneyType.heading", Some(messages("journeyType.subHeading")), "govuk-heading-l")
+        @h1("transportArrangerCheckAnswers.heading", Some(messages("transportArranger.subHeading")), "govuk-heading-l")
 
         @govukSummaryList(list)
 

@@ -19,8 +19,9 @@ package viewmodels.sections.checkAnswers.transportArranger
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
 import models.CheckMode
+import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner, Other}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.transportArranger.TransportArrangerVatPage
+import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -40,38 +41,54 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        "when there's no answer" - {
+        "when TransportArranger is NOT GoodsOwner or Other" - {
 
-          "must output the expected data" in {
+          "must output None" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
             TransportArrangerVatSummary.row(showActionLinks = true) mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "when TransportArranger is GoodsOwner or Other" - {
 
-          "when the show action link boolean is true" - {
+          "when there's no answer" - {
 
-            "must output the expected row" in {
+            "must output the expected data" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerVatPage, testVatNumber))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerVatSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(testVatNumber)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = "changeTransportArrangerVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              TransportArrangerVatSummary.row(showActionLinks = true) mustBe None
+            }
+          }
+
+          "when there's an answer" - {
+
+            "when the show action link boolean is true" - {
+
+              "must output the expected row" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Other)
+                  .set(TransportArrangerVatPage, testVatNumber)
+                )
+
+                TransportArrangerVatSummary.row(showActionLinks = true) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = Value(Text(testVatNumber)),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, CheckMode).url,
+                          id = "changeTransportArrangerVat"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
                     )
                   )
-                )
+              }
             }
           }
         }

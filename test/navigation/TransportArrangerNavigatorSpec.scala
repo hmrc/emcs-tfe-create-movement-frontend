@@ -18,12 +18,13 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import pages.Page
 import pages.sections.transportArranger._
 
 class TransportArrangerNavigatorSpec extends SpecBase {
+
   val navigator = new TransportArrangerNavigator
 
   "TransportArrangerNavigator" - {
@@ -36,74 +37,167 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           routes.IndexController.onPageLoad(testErn)
       }
-    }
 
-    "for the TransportArrangerPage" - {
+      "for the TransportArrangerPage" - {
 
-      "must go to TransportArrangerName page" - {
+        "must go to TransportArrangerName page" - {
 
-        "when the answer is `Goods Owner`" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
+          "when the answer is `Goods Owner`" in {
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
 
-          navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+            navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+          }
+
+          "when the answer is `Other`" in {
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Other)
+
+            navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+          }
         }
 
-        "when the answer is `Other`" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Other)
+        "must go to CAM-TA05" - {
 
-          navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+          "when the answer is `Consignee`" in {
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
+
+            navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+          }
+
+          "when the answer is `Consignor`" in {
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
+
+            navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+          }
+        }
+
+      }
+
+      "for the TransportArrangerNamePage" - {
+
+        "must go to TransportArrangerVatPage" in {
+          val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
+
+          navigator.nextPage(TransportArrangerNamePage, NormalMode, userAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 
-      "must go to CAM-TA05" - {
+      "for the TransportArrangerVatPage" - {
 
-        // TODO redirect to CAM-TA05 (Check Answers)
-        "when the answer is `Consignee`" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
+        "must go to TransportArrangerAddressPage" in {
 
-          navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
+          navigator.nextPage(TransportArrangerVatPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+      }
+
+      "for the TransportArrangerAddressPage" - {
+
+        "must go to TransportArrangerCheckAnswersPage" in {
+
+          navigator.nextPage(TransportArrangerAddressPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
+      }
+
+      "for the TransportArrangerCheckAnswersPage" - {
+
+        //TODO: Update when next section exists
+        "must go to the next Section" in {
+
+          navigator.nextPage(TransportArrangerCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
+      }
+    }
 
-        // TODO redirect to CAM-TA05 (Check Answers)
-        "when the answer is `Consignor`" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
+    "in Check mode" - {
 
-          navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "for the TransportArrangerPage" - {
+
+        "if the TransportArrange is GoodsOwner or Other" - {
+
+          "if any of the manual entry fields are empty" - {
+
+            "must go to the TransportArrangerName page" in {
+
+              val userAnswers = emptyUserAnswers
+                .set(TransportArrangerPage, GoodsOwner)
+                .set(TransportArrangerVatPage, testVatNumber)
+
+              navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
+                controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+            }
+          }
+
+          "if all of the manual entry fields are populated" - {
+
+            "must go to the CheckAnswers page" in {
+
+              val userAnswers = emptyUserAnswers
+                .set(TransportArrangerPage, Other)
+                .set(TransportArrangerNamePage, "Jeff")
+                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerAddressPage, testUserAddress)
+
+              navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
+                controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+            }
+          }
+        }
+
+        "if the answer is Consignee" - {
+
+          "must go to CheckAnswers" in {
+
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
+
+            navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+          }
+        }
+
+        "if the answer is Consignor" - {
+
+          "must go to CheckAnswers" in {
+            val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
+
+            navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+          }
         }
       }
 
-    }
+      "for the TransportArrangerNamePage" - {
 
-    "for the TransportArrangerNamePage" - {
+        "must go to TransportArrangerCheckAnswersPage" in {
+          val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
 
-      "must go to TransportArrangerVatPage" in {
-        val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
-
-        navigator.nextPage(TransportArrangerNamePage, NormalMode, userAnswers) mustBe
-          controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode)
+          navigator.nextPage(TransportArrangerNamePage, CheckMode, userAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
       }
-    }
 
-    "for the TransportArrangerVatPage" - {
+      "for the TransportArrangerVatPage" - {
 
-      "must go to TransportArrangerAddressPage" in {
+        "must go to TransportArrangerCheckAnswersPage" in {
 
-        navigator.nextPage(TransportArrangerVatPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testLrn, NormalMode)
+          navigator.nextPage(TransportArrangerVatPage, CheckMode, emptyUserAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
       }
-    }
 
-    "for the TransportArrangerAddressPage" - {
+      "for the TransportArrangerAddressPage" - {
 
-      // TODO redirect to CAM-TA05 (Check Answers)
-      "must go to TransportArrangerCheckAnswersPage" in {
+        "must go to TransportArrangerCheckAnswersPage" in {
 
-        navigator.nextPage(TransportArrangerAddressPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          navigator.nextPage(TransportArrangerAddressPage, CheckMode, emptyUserAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
       }
     }
   }

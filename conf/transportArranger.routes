@@ -18,3 +18,6 @@ GET        /trader/:ern/draft/:lrn/transport-arranger/address                   
 POST       /trader/:ern/draft/:lrn/transport-arranger/address                           controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/transport-arranger/address/change                    controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/transport-arranger/address/change                    controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/transport-arranger/check-answers                     controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/draft/:lrn/transport-arranger/check-answers                     controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onSubmit(ern: String, lrn: String)

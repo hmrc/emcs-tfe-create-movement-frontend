@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.consignor
+package pages.sections.transportArranger
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import pages.Page
 
-object CheckYourAnswersConsignorMessages {
+case object TransportArrangerCheckAnswersPage extends Page {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers"
-    val title: String = titleHelper(heading)
-    val caption: String = "Consignor information"
-    val ern: String = "Excise registration number (ERN)"
-    val traderName: String = "Trader name"
-    val address: String = "Address"
-  }
-
-  object English extends ViewMessages with BaseEnglish
-  object Welsh extends ViewMessages with BaseWelsh
+  override def toString: String = "transportArrangerCheckAnswers"
 }

@@ -23,8 +23,8 @@ import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeTransportArrangerNavigator
+import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -46,7 +46,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
 
     val application = applicationBuilder(userAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)),
+        bind[TransportArrangerNavigator].toInstance(new FakeTransportArrangerNavigator(testOnwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
       )
       .build()

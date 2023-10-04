@@ -58,11 +58,10 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.h2(2) -> messagesForLanguage.subheading,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
           Selectors.govukSummaryListKey(2) -> messagesForLanguage.ern,
           Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
-          Selectors.button -> messagesForLanguage.continue
+          Selectors.button -> messagesForLanguage.confirmAnswers
         ))
 
         "have a link to change details" in {

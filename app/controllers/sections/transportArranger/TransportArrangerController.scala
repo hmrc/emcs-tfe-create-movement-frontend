@@ -19,9 +19,12 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerFormProvider
-import models.Mode
+import models.{Mode, UserAnswers}
+import models.requests.DataRequest
+import models.sections.transportArranger.TransportArranger
+import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
 import navigation.TransportArrangerNavigator
-import pages.sections.transportArranger.TransportArrangerPage
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -41,7 +44,7 @@ class TransportArrangerController @Inject()(
                                              formProvider: TransportArrangerFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportArrangerView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) { implicit request =>
@@ -53,8 +56,22 @@ class TransportArrangerController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(TransportArrangerPage, value, mode)
+        value => {
+          val cleansedAnswers = deletionLogic(value)
+          saveAndRedirect(TransportArrangerPage, value, cleansedAnswers, mode)
+        }
       )
     }
+
+  private def deletionLogic(answer: TransportArranger)(implicit request: DataRequest[_]): UserAnswers =
+    answer match {
+      case Consignor | Consignee =>
+        request.userAnswers
+          .remove(TransportArrangerNamePage)
+          .remove(TransportArrangerVatPage)
+          .remove(TransportArrangerAddressPage)
+      case _ =>
+        request.userAnswers
+    }
+
 }

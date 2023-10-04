@@ -57,8 +57,17 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
-    case TransportArrangerPage =>
-      normalRoutes(TransportArrangerPage)
+    case TransportArrangerPage => (userAnswers: UserAnswers) =>
+      if (
+        (userAnswers.get(TransportArrangerPage).contains(GoodsOwner) || userAnswers.get(TransportArrangerPage).contains(Other)) &&
+        userAnswers.get(TransportArrangerNamePage).isEmpty ||
+        userAnswers.get(TransportArrangerVatPage).isEmpty ||
+        userAnswers.get(TransportArrangerAddressPage).isEmpty
+      ) {
+        normalRoutes(TransportArrangerPage)(userAnswers)
+      } else {
+        controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      }
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
   }

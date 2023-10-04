@@ -32,14 +32,14 @@ object AddressMessages {
 
     val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
 
-    val transportArrangerAddressGoodsOwnerHeading = "Enter the good owner’s business address"
+    val transportArrangerAddressGoodsOwnerHeading = "Enter the goods owner’s business address"
     val transportArrangerAddressGoodsOwnerTitle = titleHelper(transportArrangerAddressGoodsOwnerHeading)
     val transportArrangerAddressOtherHeading = "Enter the transporter’s business address"
     val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading)
 
     val subheading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Consignor information"
-      case TransportArrangerAddressPage => "Guarantor"
+      case TransportArrangerAddressPage => "Transport arranger"
       case _ => "Consignee information"
     }
 

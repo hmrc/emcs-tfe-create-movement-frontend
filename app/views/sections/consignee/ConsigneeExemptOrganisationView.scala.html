@@ -48,7 +48,12 @@
             name = "memberState",
             id = "memberState",
             label = LabelViewModel(Text(messages("consigneeExemptOrganisation.memberState.label"))).withCssClass(LabelSize.Medium.toString),
-            items = items
+            items = Seq(SelectItem(value = None, text = messages("consigneeExemptOrganisation.memberState.hint"))) ++ items,
+            value = form("memberState").value,
+            errorMessage = form.errors("memberState") match {
+                case Nil => None
+                case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+            }
         ))
 
         @{govukCharacterCount(CharacterCount(
@@ -66,4 +71,8 @@
         @continueOrExit()
 
     }
+}
+
+@{
+    //$COVERAGE-OFF$
 }

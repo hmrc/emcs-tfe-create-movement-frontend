@@ -314,6 +314,7 @@ consigneeExemptOrganisation.title = Exempt organisation details
 consigneeExemptOrganisation.heading = Exempt organisation details
 consigneeExemptOrganisation.checkYourAnswersLabel = Exempt organisation details
 consigneeExemptOrganisation.change.hidden = ConsigneeExemptOrganisation
+consigneeExemptOrganisation.memberState.hint = Select the destination
 consigneeExemptOrganisation.memberState.label = Select the member state of destination
 consigneeExemptOrganisation.memberState.error.required = Select the member state of destination
 consigneeExemptOrganisation.certificateSerialNumber.label = Enter the exemption certificate serial number

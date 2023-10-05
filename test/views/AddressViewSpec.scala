@@ -21,7 +21,7 @@ import fixtures.messages.AddressMessages
 import forms.AddressFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.transportArranger.TransportArranger.GoodsOwner
+import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
@@ -92,6 +92,22 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
             Selectors.label("postcode") -> messagesForLanguage.postcode,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "when the Arranger is Other" - new Fixture(messagesForLanguage.lang) {
+
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form,
+            addressPage = TransportArrangerAddressPage,
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+            headingKey = Some(s"$TransportArrangerAddressPage.$Other")
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.transportArrangerAddressOtherTitle,
+            Selectors.h1 -> messagesForLanguage.transportArrangerAddressOtherHeading,
+            Selectors.h2(1) -> messagesForLanguage.subheading(TransportArrangerAddressPage)
           ))
         }
       }

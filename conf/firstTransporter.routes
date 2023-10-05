@@ -2,3 +2,9 @@ GET        /trader/:ern/draft/:lrn/first-transporter/name                       
 POST       /trader/:ern/draft/:lrn/first-transporter/name                       controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/first-transporter/name/change                controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/first-transporter/name/change                controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/first-transporter/vat                        controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/first-transporter/vat                        controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/first-transporter/vat/change                 controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/first-transporter/vat/change                 controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:lrn/first-transporter/vat/non-gb-vat             controllers.sections.firstTransporter.FirstTransporterVatController.onNonGbVAT(ern: String, lrn: String)

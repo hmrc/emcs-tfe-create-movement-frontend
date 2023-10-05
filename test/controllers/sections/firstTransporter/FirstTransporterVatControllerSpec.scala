@@ -17,63 +17,65 @@
 package controllers
 
 import base.SpecBase
-import forms.sections.firstTransporter.FirstTransporterNameFormProvider
+import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import navigation.FirstTransporterNavigator
-import pages.sections.firstTransporter.FirstTransporterNamePage
+import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
-import views.html.sections.firstTransporter.FirstTransporterNameView
+import views.html.sections.firstTransporter.FirstTransporterVatView
 
 import scala.concurrent.Future
 
-class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersService {
+class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new FirstTransporterNameFormProvider()
+  val formProvider = new FirstTransporterVatFormProvider()
   val form = formProvider()
 
-  lazy val firstTransporterNameRoute = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val firstTransporterVatRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val firstTransporterVatSubmitAction = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testLrn, NormalMode)
+  lazy val firstTransporterVatNonGBVATRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testLrn).url
 
-  "FirstTransporterName Controller" - {
+  "FirstTransporterVat Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, firstTransporterNameRoute)
+        val request = FakeRequest(GET, firstTransporterVatRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[FirstTransporterNameView]
+        val view = application.injector.instanceOf[FirstTransporterVatView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(FirstTransporterNamePage, "answer")
+      val userAnswers = emptyUserAnswers.set(FirstTransporterVatPage, "answer")
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, firstTransporterNameRoute)
+        val request = FakeRequest(GET, firstTransporterVatRoute)
 
-        val view = application.injector.instanceOf[FirstTransporterNameView]
+        val view = application.injector.instanceOf[FirstTransporterVatView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -91,8 +93,31 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
 
       running(application) {
         val request =
-          FakeRequest(POST, firstTransporterNameRoute)
+          FakeRequest(POST, firstTransporterVatRoute)
             .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when the NONGBVAT link" in {
+
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[FirstTransporterNavigator].toInstance(new FakeFirstTransporterNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, firstTransporterVatNonGBVATRoute)
 
         val result = route(application, request).value
 
@@ -107,17 +132,17 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
 
       running(application) {
         val request =
-          FakeRequest(POST, firstTransporterNameRoute)
+          FakeRequest(POST, firstTransporterVatRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[FirstTransporterNameView]
+        val view = application.injector.instanceOf[FirstTransporterVatView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -126,7 +151,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, firstTransporterNameRoute)
+        val request = FakeRequest(GET, firstTransporterVatRoute)
 
         val result = route(application, request).value
 
@@ -141,7 +166,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
 
       running(application) {
         val request =
-          FakeRequest(POST, firstTransporterNameRoute)
+          FakeRequest(POST, firstTransporterVatRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

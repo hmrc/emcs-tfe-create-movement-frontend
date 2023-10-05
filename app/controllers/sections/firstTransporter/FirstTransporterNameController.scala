@@ -18,10 +18,10 @@ package controllers.sections.firstTransporter
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import forms.FirstTransporterNameFormProvider
+import forms.sections.firstTransporter.FirstTransporterNameFormProvider
 import models.Mode
 import navigation.FirstTransporterNavigator
-import pages.FirstTransporterNamePage
+import pages.sections.firstTransporter.FirstTransporterNamePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService

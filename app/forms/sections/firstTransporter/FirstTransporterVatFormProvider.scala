@@ -16,18 +16,19 @@
 
 package forms.sections.firstTransporter
 
-import forms.XSS_REGEX
+import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class FirstTransporterNameFormProvider @Inject() extends Mappings {
+class FirstTransporterVatFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("firstTransporterName.error.required")
-        .verifying(maxLength(182, "firstTransporterName.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "firstTransporterName.error.invalidCharacter"))
+      "value" -> text("firstTransporterVat.error.required")
+        .verifying(maxLength(12, "firstTransporterVat.error.length"))
+        .transform[String](_.replace("-", "").replace(" ", ""), identity)
+        .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "firstTransporterVat.error.alphanumeric"))
     )
 }

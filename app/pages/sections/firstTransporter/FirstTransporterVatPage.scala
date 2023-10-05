@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package forms.sections.firstTransporter
+package pages.sections.firstTransporter
 
-import forms.XSS_REGEX
-import forms.mappings.Mappings
-import play.api.data.Form
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import javax.inject.Inject
+case object FirstTransporterVatPage extends QuestionPage[String] {
 
-class FirstTransporterNameFormProvider @Inject() extends Mappings {
+  override def path: JsPath = JsPath \ "firstTransporter" \ toString
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("firstTransporterName.error.required")
-        .verifying(maxLength(182, "firstTransporterName.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "firstTransporterName.error.invalidCharacter"))
-    )
+  override def toString: String = "firstTransporterVat"
 }

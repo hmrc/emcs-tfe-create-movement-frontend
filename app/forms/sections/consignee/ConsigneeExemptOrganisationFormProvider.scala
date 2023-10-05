@@ -17,14 +17,14 @@
 package forms.sections.consignee
 
 import forms.mappings.Mappings
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
+import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, XSS_REGEX}
 import models.ExemptOrganisationDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
 
 import javax.inject.Inject
 
-class ConsigneeExemptOrganisationFormProvider @Inject() extends Mappings {
+class ConsigneeExemptOrganisationFormProvider @Inject() extends BaseTextareaFormProvider[ExemptOrganisationDetailsModel] with Mappings {
 
   val maxLength = 255
 

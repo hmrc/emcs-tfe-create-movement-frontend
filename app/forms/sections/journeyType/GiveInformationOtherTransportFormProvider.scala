@@ -17,12 +17,12 @@
 package forms.sections.journeyType
 
 import forms.mappings.Mappings
-import forms.{ALPHANUMERIC_REGEX, TEXTAREA_MAX_LENGTH, XSS_REGEX}
+import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, TEXTAREA_MAX_LENGTH, XSS_REGEX}
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class GiveInformationOtherTransportFormProvider @Inject() extends Mappings {
+class GiveInformationOtherTransportFormProvider @Inject() extends BaseTextareaFormProvider[String] with Mappings {
 
   def apply(): Form[String] =
     Form(

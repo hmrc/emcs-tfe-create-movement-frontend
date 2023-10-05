@@ -30,9 +30,7 @@ trait MockGetMemberStatesConnector extends MockFactory {
   lazy val mockGetMemberStatesConnector: GetMemberStatesConnector = mock[GetMemberStatesConnector]
 
   object MockGetMemberStatesConnector {
-
-    private type MockReturnType = CallHandler2[HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[CountryModel]]]]
-    def getMemberStates(): MockReturnType  =
+    def getMemberStates(): CallHandler2[HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[CountryModel]]]]  =
       (mockGetMemberStatesConnector.getMemberStates()(_: HeaderCarrier, _: ExecutionContext))
         .expects(*, *)
   }

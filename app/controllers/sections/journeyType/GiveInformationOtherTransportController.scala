@@ -50,11 +50,12 @@ class GiveInformationOtherTransportController @Inject()(
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
+      submitAndTrimWhitespaceFromTextarea(GiveInformationOtherTransportPage, formProvider)(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, mode)))
+      )(
         value =>
-          saveAndRedirect(GiveInformationOtherTransportPage, value, mode)
+        saveAndRedirect(GiveInformationOtherTransportPage, value, mode)
       )
     }
 }

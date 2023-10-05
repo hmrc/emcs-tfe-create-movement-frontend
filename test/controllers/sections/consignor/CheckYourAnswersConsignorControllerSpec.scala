@@ -19,7 +19,7 @@ package controllers.sections.consignor
 import base.SpecBase
 import controllers.routes
 import handlers.ErrorHandler
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import pages.sections.consignor.ConsignorAddressPage
@@ -72,6 +72,17 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "must redirect to /consignor/consignor-address if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
+
+        running(application) {
+
+          val result = route(application, request).value
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode).url
         }
       }
     }

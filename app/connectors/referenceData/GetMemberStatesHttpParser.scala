@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait GetMemberStatesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
 
-  implicit val reads: Reads[Seq[CountryModel]] = Reads.seq(CountryModel.format.reads)
+  implicit val reads: Reads[Seq[CountryModel]] = Reads.seq(CountryModel.format)
   def http: HttpClient
 
   class GetMemberStatesReads() extends HttpReads[Either[ErrorResponse, Seq[CountryModel]]] {

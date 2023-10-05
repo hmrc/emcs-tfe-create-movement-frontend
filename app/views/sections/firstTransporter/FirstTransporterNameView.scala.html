@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
+@import viewmodels.LabelSize
 
 @this(
     layout: templates.Layout,
@@ -24,6 +25,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     h1: components.h1,
+    h2: components.h2,
     continueOrExit: components.continueOrExit
 )
 
@@ -37,20 +39,17 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("firstTransporter.subHeading", request.lrn), "govuk-caption-xl")
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(HtmlContent(heading))
+                label = LabelViewModel(Text(messages("firstTransporterName.heading"))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
         )
 
         @continueOrExit()
     }
-}
-
-@heading = {
-    @h1("firstTransporterName.heading", Some(messages("firstTransporter.subHeading", request.lrn)), "govuk-heading-l")
 }
 
 @{

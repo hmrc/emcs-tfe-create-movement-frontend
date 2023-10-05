@@ -16,7 +16,7 @@
 
 package controllers
 
-import forms.BaseFormProvider
+import forms.BaseTextareaFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.BaseNavigator
@@ -63,8 +63,8 @@ trait BaseNavigationController extends BaseController with Logging {
     save(page, answer, request.userAnswers)
 
 
-  def submitAndTrimWhitespaceFromTextarea[PageType](page: Option[QuestionPage[PageType]],
-                                                    formProvider: BaseFormProvider[PageType]
+  def submitAndTrimWhitespaceFromTextarea[PageType](page: QuestionPage[PageType],
+                                                    formProvider: BaseTextareaFormProvider[PageType]
                                                    )(formWithErrorsView: Form[PageType] => Future[Result])
                                                    (successFunction: PageType => Future[Result])
                                                    (implicit request: DataRequest[_]): Future[Result] = {
@@ -73,7 +73,7 @@ trait BaseNavigationController extends BaseController with Logging {
         case (k, v) => (k, v.map(_.trim))
       }
 
-      formProvider(page).bindFromRequest(trimmedFormValues).fold(
+      formProvider().bindFromRequest(trimmedFormValues).fold(
         formWithErrors =>
           formWithErrorsView(formWithErrors),
         value =>
@@ -82,8 +82,8 @@ trait BaseNavigationController extends BaseController with Logging {
     } match {
       case Failure(exception) =>
         logger.warn(exception.getMessage)
-        val requiredText = page.map(value => s"$value.error.required").getOrElse("error.required")
-        formWithErrorsView(formProvider(page).withError(FormError("more-information", requiredText)))
+        val requiredText = s"$page.error.required"
+        formWithErrorsView(formProvider().withError(FormError("more-information", requiredText)))
       case Success(value) => value
     }
   }

@@ -52,13 +52,16 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, mode),
-        saveAndRedirect(ConsigneeExemptOrganisationPage, _, mode)
+      submitAndTrimWhitespaceFromTextarea(ConsigneeExemptOrganisationPage, formProvider)(
+        formWithErrors =>
+          renderView(BadRequest, formWithErrors, mode)
+      )(
+        value =>
+          saveAndRedirect(ConsigneeExemptOrganisationPage, value, mode)
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =  {
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     getMemberStatesService.getMemberStates().map { selectItems =>
       status(view(
         form = form,

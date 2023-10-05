@@ -42,9 +42,8 @@ class FirstTransporterNavigatorSpec extends SpecBase {
       "must go to CAM-FT02" - {
         val userAnswers = emptyUserAnswers.set(FirstTransporterNamePage, "transporter name here")
 
-        // TODO redirect to CAM-TF02
         navigator.nextPage(FirstTransporterNamePage, NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
       }
 
     }
@@ -55,7 +54,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(FirstTransporterVatPage, "123456789")
 
         // TODO redirect to CAM-TF03
-        navigator.nextPage(FirstTransporterNamePage, NormalMode, userAnswers) mustBe
+        navigator.nextPage(FirstTransporterVatPage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 

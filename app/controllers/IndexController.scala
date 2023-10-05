@@ -29,14 +29,13 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 userAllowed: UserAllowListAction,
                                 val controllerComponents: MessagesControllerComponents) extends BaseController {
 
-  def onPageLoad(ern: String): Action[AnyContent] = (authAction(ern) andThen userAllowed) {
-
-    if (ern.startsWith("XI")) {
-      Redirect(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(ern))
-    } else {
-      Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+  def onPageLoad(ern: String): Action[AnyContent] =
+    (authAction(ern) andThen userAllowed) { implicit request =>
+      if (request.isNorthernIrelandErn) {
+        Redirect(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(ern))
+      } else {
+        Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+      }
     }
-
-  }
 
 }

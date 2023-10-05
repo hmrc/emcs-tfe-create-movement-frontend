@@ -45,21 +45,36 @@ class DispatchPlaceController @Inject()(
 
   def onPageLoad(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowList) { implicit request =>
-      renderView(Ok, formProvider())
+      withNorthernIrelandErn {
+        renderView(Ok, formProvider())
+      }
     }
 
   def onSubmit(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowList) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(BadRequest, formWithErrors),
-        value =>
-          // TODO Redirect to CAM-INFO08 once built, in the meantime redirect to CAM-INFO05
-          Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
-            .addingToSession(DISPATCH_PLACE -> value.toString)
-      )
+      withNorthernIrelandErn {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            renderView(BadRequest, formWithErrors),
+          value =>
+            // TODO Redirect to CAM-INFO08 once built, in the meantime redirect to CAM-INFO05
+            Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+              .addingToSession(DISPATCH_PLACE -> value.toString)
+        )
+      }
     }
 
   def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result =
     status(view(form, controllers.sections.info.routes.DispatchPlaceController.onSubmit(request.ern)))
+
+  private def withNorthernIrelandErn(f: Result)(implicit request: UserRequest[_]): Result =
+    if (request.isNorthernIrelandErn) {
+      f
+    } else {
+      Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern))
+    }
 }
+
+
+
+

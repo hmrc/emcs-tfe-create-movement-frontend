@@ -24,17 +24,37 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" - {
 
-    "must redirect to the Dispatch place page (CAM-INFO01)" in {
+    "with a Northern Ireland ERN" - {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      "must redirect to the Dispatch place page (CAM-INFO01)" in {
 
-      running(application) {
+        val application = applicationBuilder(userAnswers = None).build()
 
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn).url)
-        val result = route(application, request).value
+        running(application) {
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testErn).url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testNorthernIrelandErn).url)
+        }
+      }
+    }
+
+    "with a Great Britain ERN" - {
+
+      "must redirect to the Deferred Movement page (CAM-INFO05)" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testGreatBritainErn).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testGreatBritainErn).url)
+        }
       }
     }
   }

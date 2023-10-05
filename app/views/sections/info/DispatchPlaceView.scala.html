@@ -22,36 +22,26 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    h1: components.h1,
-    p: components.p,
-    details: components.details
+    h1: components.h1
 )
 
 @(form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("deferredMovement.title"))) {
+@layout(pageTitle = title(form, messages("dispatchPlace.title"))) {
 
     @formHelper(action = action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
         @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l")
-            ).withHint(HintViewModel(messages("deferredMovement.hint")))
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                items  = DispatchPlace.options
+            )
         )
-
-        @details("deferredMovement.summary"){
-            @p(){
-                @messages("deferredMovement.paragraph1")
-            }
-            @p(){
-            @messages("deferredMovement.paragraph2")
-            }
-        }
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
@@ -60,5 +50,9 @@
 }
 
 @heading = {
-    @h1("deferredMovement.heading", Some(messages("deferredMovement.caption")), "govuk-fieldset__heading")
+    @h1("dispatchPlace.heading", Some(messages("deferredMovement.caption")), "govuk-fieldset__heading")
+}
+
+@{
+    //$COVERAGE-OFF$
 }

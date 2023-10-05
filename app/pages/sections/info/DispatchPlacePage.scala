@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package models.requests
+package pages
 
-import play.api.mvc.{Request, WrappedRequest}
+import models.DispatchPlace
+import play.api.libs.json.JsPath
 
-case class UserRequest[A](request: Request[A],
-                          ern: String,
-                          internalId: String,
-                          credId: String) extends WrappedRequest[A](request) {
+case object DispatchPlacePage extends QuestionPage[DispatchPlace] {
 
-  val isNorthernIrelandErn = ern.startsWith("XI")
+  override def path: JsPath = JsPath \ "info" \ toString
+
+  override def toString: String = "dispatchPlace"
 }

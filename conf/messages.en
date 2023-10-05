@@ -396,3 +396,9 @@ transportUnitType.2 = Vehicle
 transportUnitType.checkYourAnswersLabel = Transport units
 transportUnitType.error.required = Select what the goods will be transported in
 transportUnitType.change.hidden = TransportUnitType
+
+dispatchPlace.title = Where is the place of dispatch for this movement?
+dispatchPlace.heading = Where is the place of dispatch for this movement?
+dispatchPlace.GB = Great Britain
+dispatchPlace.XI = Northern Ireland
+dispatchPlace.error.required = Select the place of dispatch for this movement

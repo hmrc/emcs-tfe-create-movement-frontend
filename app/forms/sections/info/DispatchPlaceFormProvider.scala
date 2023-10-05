@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package models.requests
+package forms
 
-import play.api.mvc.{Request, WrappedRequest}
+import javax.inject.Inject
 
-case class UserRequest[A](request: Request[A],
-                          ern: String,
-                          internalId: String,
-                          credId: String) extends WrappedRequest[A](request) {
+import forms.mappings.Mappings
+import play.api.data.Form
+import models.DispatchPlace
 
-  val isNorthernIrelandErn = ern.startsWith("XI")
+class DispatchPlaceFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[DispatchPlace] =
+    Form(
+      "value" -> enumerable[DispatchPlace]("dispatchPlace.error.required")
+    )
 }

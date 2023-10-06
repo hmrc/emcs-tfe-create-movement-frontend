@@ -32,9 +32,8 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
     case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    case FirstTransporterVatPage => (_: UserAnswers) =>
-      // TODO redirect to CAM-FT03
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case FirstTransporterVatPage => (userAnswers: UserAnswers) =>
+      controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case FirstTransporterAddressPage => (_: UserAnswers) =>
       // TODO redirect to CAM-FT04

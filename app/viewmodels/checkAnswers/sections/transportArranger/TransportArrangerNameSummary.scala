@@ -18,8 +18,8 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
-import pages.QuestionPage
+import models.sections.transportArranger.TransportArranger
+import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 import play.api.i18n.Messages
@@ -30,21 +30,15 @@ import viewmodels.implicits._
 
 object TransportArrangerNameSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val transportArranger = request.userAnswers.get(TransportArrangerPage)
+    val transportArranger: Option[TransportArranger] = request.userAnswers.get(TransportArrangerPage)
 
-    val namePage: QuestionPage[String] = transportArranger match {
-      //case Some(Consignor) => ConsignorBusinessNamePage //TODO: Add when Consignor Business Name Page is built
-      case Some(Consignee) => ConsigneeBusinessNamePage
-      case _ => TransportArrangerNamePage
-    }
-
-    val showChangeLink = if (transportArranger.contains(Consignor) || transportArranger.contains(Consignee)) false else showActionLinks
+    val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
     SummaryListRowViewModel(
       key = "transportArrangerName.checkYourAnswers.label",
-      value = ValueViewModel(Text(request.userAnswers.get(namePage).getOrElse(messages("site.notProvided")))),
+      value = ValueViewModel(Text(transportArrangerNameValue(transportArranger))),
       actions = if (!showChangeLink) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",
@@ -58,5 +52,13 @@ object TransportArrangerNameSummary {
           .withVisuallyHiddenText(messages("transportArrangerName.change.hidden"))
       )
     )
+  }
+
+  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])(implicit request: DataRequest[_], messages: Messages): String = {
+    transportArranger match {
+      case Some(Consignor) => request.traderKnownFacts.traderName
+      case Some(Consignee) => request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(messages("site.notProvided"))
+      case _ => request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided"))
+    }
   }
 }

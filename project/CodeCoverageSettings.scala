@@ -16,6 +16,7 @@ object CodeCoverageSettings {
     "testOnly.*",
     "testOnlyDoNotUseInAppConf.*",
     ".*featureswitch.*",
+    ".*pages.*",
     ".*views.html.components.*",
     ".*views.html.templates.*",
     "^views$"

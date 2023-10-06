@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import viewmodels.LabelSize
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -22,55 +23,55 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         h1: components.h1,
+        h2: components.h2,
         continueOrExit: components.continueOrExit)
 
 @(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-    @heading = {
-    @if(isNorthernIrishTemporaryRegisteredConsignee) {
-        @h1("consigneeExcise.temporaryConsignee.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
+@layout(pageTitle = title(
+    form = form,
+    title = if(isNorthernIrishTemporaryRegisteredConsignee) {
+        messages("consigneeExcise.temporaryConsignee.title")
     } else {
-        @h1("consigneeExcise.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
+        messages("consigneeExcise.title")
     }
-    }
+)) {
 
-    @layout(pageTitle = title(
-        form = form,
-        title = if(isNorthernIrishTemporaryRegisteredConsignee) {
-            messages("consigneeExcise.temporaryConsignee.title")
-        } else {
-            messages("consigneeExcise.title")
+    @formHelper(action, Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-    )) {
 
-        @formHelper(action, Symbol("autoComplete") -> "off") {
-
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form))
-            }
-
-            @govukInput(
-                InputViewModel(
-                    field = form("value"),
-                    label = LabelViewModel(HtmlContent(heading))
-                ).withHint(
-                    Hint(
-                        id = Some("consignee-ern-hint"),
-                        classes = "govuk-hint",
-                        content = Text(
-                            if(isNorthernIrishTemporaryRegisteredConsignee) {
-                                messages("consigneeExcise.temporaryConsignee.hint")
-                            } else {
-                                messages("consigneeExcise.hint")
-                            }
-                        )
+        @h2(messages("consignee.subHeading"), "govuk-caption-xl")
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = LabelViewModel(HtmlContent(
+                    if(isNorthernIrishTemporaryRegisteredConsignee) {
+                        messages("consigneeExcise.temporaryConsignee.heading")
+                    } else {
+                        messages("consigneeExcise.heading")
+                    }
+                )).asPageHeading(LabelSize.Large)
+            ).withHint(
+                Hint(
+                    id = Some("consignee-ern-hint"),
+                    classes = "govuk-hint",
+                    content = Text(
+                        if(isNorthernIrishTemporaryRegisteredConsignee) {
+                            messages("consigneeExcise.temporaryConsignee.hint")
+                        } else {
+                            messages("consigneeExcise.hint")
+                        }
                     )
                 )
             )
+        )
 
-            @continueOrExit()
-        }
+        @continueOrExit()
     }
+}
 
 @{
     //$COVERAGE-OFF$

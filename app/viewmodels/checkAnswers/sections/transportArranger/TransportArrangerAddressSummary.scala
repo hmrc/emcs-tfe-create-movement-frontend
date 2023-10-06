@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.transportArranger
 
 import models.requests.DataRequest
-import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
+import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import models.{CheckMode, UserAddress}
 import pages.QuestionPage
 import pages.sections.consignee.ConsigneeAddressPage
@@ -32,7 +32,7 @@ import viewmodels.implicits._
 
 object TransportArrangerAddressSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val transportArranger = request.userAnswers.get(TransportArrangerPage)
 
@@ -42,7 +42,7 @@ object TransportArrangerAddressSummary {
       case _ => TransportArrangerAddressPage
     }
 
-    val showChangeLink = if (transportArranger.contains(Consignor) || transportArranger.contains(Consignee)) false else showActionLinks
+    val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
     val value: Content = request.userAnswers.get(addressPage).fold[Content] {
       Text(messages("site.notProvided"))

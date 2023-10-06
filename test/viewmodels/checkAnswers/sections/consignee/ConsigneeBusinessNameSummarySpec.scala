@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.consignee
+package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
+import fixtures.messages.sections.consignee.ConsigneeBusinessNameMessages
 import models.CheckMode
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.No
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeExportSummary, ConsigneeExportVatSummary}
+import viewmodels.checkAnswers.sections.consignee.ConsigneeBusinessNameSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
-  "ConsigneeExportVatSummary" - {
+class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
+
+  "ConsigneeBusinessNameSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ConsigneeExportVatMessages.English, ConsigneeExportVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeBusinessNameMessages.English, ConsigneeBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -48,7 +47,7 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -58,20 +57,37 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(No,None, None)))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
 
-              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
+              ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(No.toString)),
+                    value = Value(Text("testName")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = ConsigneeExportVatPage
+                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = "changeConsigneeBusinessName"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
+                  )
+                )
+            }
+          }
+
+          "when the show action link boolean is false" - {
+
+            "must output the expected row without action links" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
+
+              ConsigneeBusinessNameSummary.row(showActionLinks = false) mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text("testName")),
+                    actions = Seq()
                   )
                 )
             }

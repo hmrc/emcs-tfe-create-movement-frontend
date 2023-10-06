@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.consignee
+package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeBusinessNameMessages
+import fixtures.messages.sections.consignee.ConsigneeExportMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeExportPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.ConsigneeBusinessNameSummary
+import viewmodels.checkAnswers.sections.consignee.ConsigneeExportSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
-
-  "ConsigneeBusinessNameSummary" - {
+class ConsigneeExportSummarySpec extends SpecBase with Matchers {
+  "ConsigneeExportSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ConsigneeBusinessNameMessages.English, ConsigneeBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -47,7 +46,7 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
+            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -57,18 +56,18 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
 
-              ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("testName")),
+                    value = Value(Text("true")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = "changeConsigneeBusinessName"
+                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = ConsigneeExportPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )
@@ -80,13 +79,13 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row without action links" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
 
-              ConsigneeBusinessNameSummary.row(showActionLinks = false) mustBe
+              ConsigneeExportSummary.row(showActionLinks = false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("testName")),
+                    value = Value(Text("true")),
                     actions = Seq()
                   )
                 )

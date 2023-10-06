@@ -27,7 +27,7 @@ import viewmodels.implicits._
 
 object TransportArrangerVatSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     request.userAnswers.get(TransportArrangerPage) match {
       case Some(GoodsOwner | Other) =>
@@ -35,7 +35,7 @@ object TransportArrangerVatSummary {
           SummaryListRowViewModel(
             key = "transportArrangerVat.checkYourAnswers.label",
             value = ValueViewModel(answer),
-            actions = if (!showActionLinks) Seq() else Seq(
+            actions = Seq(
               ActionItemViewModel(
                 content = "site.change",
                 href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(

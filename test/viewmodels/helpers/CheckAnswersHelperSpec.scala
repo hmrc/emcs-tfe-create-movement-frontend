@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.helpers
 
 import base.SpecBase
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import viewmodels.govuk.summarylist._
-import viewmodels.helpers.CheckAnswersHelper
 
 class CheckAnswersHelperSpec extends SpecBase {
 

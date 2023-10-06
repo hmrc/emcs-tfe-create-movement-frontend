@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.transportArranger
+package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerNameMessages
 import models.CheckMode
-import models.sections.transportArranger.TransportArranger.{Consignee, GoodsOwner, Other}
+import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
@@ -27,7 +27,6 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.transportArranger.TransportArrangerNameSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -51,7 +50,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerNameSummary.row(showActionLinks = true) mustBe
+              TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.notProvided)),
@@ -68,28 +67,25 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
           "when there's an answer" - {
 
-            "when the show action link boolean is true" - {
+            "must output the expected row" in {
 
-              "must output the expected row" in {
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(TransportArrangerPage, Other)
+                .set(TransportArrangerNamePage, "Jeff")
+              )
 
-                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                  .set(TransportArrangerPage, Other)
-                  .set(TransportArrangerNamePage, "Jeff")
-                )
-
-                TransportArrangerNameSummary.row(showActionLinks = true) mustBe
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("Jeff")),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = "changeTransportArrangerName"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+              TransportArrangerNameSummary.row() mustBe
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("Jeff")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      id = "changeTransportArrangerName"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
-              }
+                )
             }
           }
         }
@@ -102,7 +98,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignee))
 
-              TransportArrangerNameSummary.row(showActionLinks = true) mustBe
+              TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.notProvided)),
@@ -120,7 +116,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 .set(ConsigneeBusinessNamePage, "Jeff")
               )
 
-              TransportArrangerNameSummary.row(showActionLinks = true) mustBe
+              TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
@@ -130,7 +126,39 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
           }
         }
 
-        //      TODO: Add tests for the ConsignorName page when it is built
+        "transportArrangerNameValue" - {
+          s"when TransportArranger is Some($Consignor)" - {
+            "must return the user's trader known facts name" in {
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+              TransportArrangerNameSummary.transportArrangerNameValue(Some(Consignor)) mustBe testMinTraderKnownFacts.traderName
+            }
+          }
+          Seq(
+            (Some(Consignee), ConsigneeBusinessNamePage),
+            (Some(GoodsOwner), TransportArrangerNamePage),
+            (Some(Other), TransportArrangerNamePage),
+            (None, TransportArrangerNamePage)
+          ).foreach {
+            case (transportArranger, page) =>
+              s"when TransportArranger is Some($transportArranger)" - {
+                s"and $page has a value" - {
+                  s"must return the $transportArranger name" in {
+                    implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(page, "Jeff"))
+
+                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe "Jeff"
+                  }
+                }
+                s"and $page has no value" - {
+                  "must return the default text" in {
+                    implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe messagesForLanguage.notProvided
+                  }
+                }
+              }
+          }
+        }
       }
     }
   }

@@ -203,6 +203,7 @@ transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
 dispatch.subHeading = Place of dispatch information
+guarantor.subHeading = Guarantor
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -379,3 +380,9 @@ dispatchBusinessName.heading = What is the business name of the place of dispatc
 dispatchBusinessName.error.noInput = Enter the business name of the place of dispatch
 dispatchBusinessName.error.tooLong = Enter a business name up to 182 characters
 dispatchBusinessName.error.invalidCharacters = Business name must not contain < and > and : and ;
+
+guarantorRequired.title = Is a guarantor required for this movement?
+guarantorRequired.heading = Is a guarantor required for this movement?
+guarantorRequired.checkYourAnswersLabel = Guarantor required
+guarantorRequired.error.required = Select yes if a guarantor is required for this movement
+guarantorRequired.change.hidden = if a guarantor is required for this movement

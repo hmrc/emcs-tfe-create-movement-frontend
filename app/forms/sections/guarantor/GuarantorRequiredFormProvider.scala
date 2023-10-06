@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.consignor
+package forms.sections.guarantor
 
-import pages.behaviours.PageBehaviours
+import javax.inject.Inject
 
-class CheckAnswersConsignorPageSpec extends PageBehaviours {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  "CheckAnswersConsignorPage" - {
+class GuarantorRequiredFormProvider @Inject() extends Mappings {
 
-    "toString" - {
-      "must be correct" in {
-        CheckAnswersConsignorPage.toString mustBe "checkAnswersConsignor"
-      }
-    }
-  }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("guarantorRequired.error.required")
+    )
 }

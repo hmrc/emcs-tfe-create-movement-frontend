@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package pages.sections.consignee
+package pages.sections.guarantor
 
-import pages.behaviours.PageBehaviours
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class ConsigneeExcisePageSpec extends PageBehaviours {
+case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
-  "ConsigneeExcisePage" - {
+  override def path: JsPath = JsPath \ toString
 
-    beRetrievable[String](ConsigneeExcisePage, testErn)
-
-    beSettable[String](ConsigneeExcisePage, testErn, "GBWK1234567890")
-
-    beRemovable[String](ConsigneeExcisePage, testErn)
-  }
+  override def toString: String = "guarantorRequired"
 }
-

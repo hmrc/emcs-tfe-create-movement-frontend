@@ -66,4 +66,9 @@ object FakeNavigators {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }
+
+  class FakeExportInformationNavigator(desiredRoute: Call) extends ExportInformationNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
 }

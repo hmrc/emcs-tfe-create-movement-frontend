@@ -108,7 +108,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
               TransportArrangerAddressSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
+                  value = Value(Text(messagesForLanguage.sectionNotComplete("Consignor"))),
                   actions = Seq()
                 )
             }
@@ -150,7 +150,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
               TransportArrangerAddressSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
+                  value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
                   actions = Seq()
                 )
             }

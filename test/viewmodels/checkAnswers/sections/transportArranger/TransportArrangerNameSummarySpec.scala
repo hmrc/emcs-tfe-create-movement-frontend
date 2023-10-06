@@ -53,7 +53,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
               TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
+                  value = Value(Text(messagesForLanguage.sectionNotComplete("Goods owner"))),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
@@ -101,7 +101,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
               TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
+                  value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
                   actions = Seq()
                 )
             }
@@ -135,13 +135,13 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
             }
           }
           Seq(
-            (Some(Consignee), ConsigneeBusinessNamePage),
-            (Some(GoodsOwner), TransportArrangerNamePage),
-            (Some(Other), TransportArrangerNamePage),
-            (None, TransportArrangerNamePage)
+            (Some(Consignee), ConsigneeBusinessNamePage, messagesForLanguage.sectionNotComplete("Consignee")),
+            (Some(GoodsOwner), TransportArrangerNamePage, messagesForLanguage.sectionNotComplete("Goods owner")),
+            (Some(Other), TransportArrangerNamePage, messagesForLanguage.sectionNotComplete("Other")),
+            (None, TransportArrangerNamePage, messagesForLanguage.notProvided)
           ).foreach {
-            case (transportArranger, page) =>
-              s"when TransportArranger is Some($transportArranger)" - {
+            case (transportArranger, page, notProvidedValue) =>
+              s"when TransportArranger is $transportArranger" - {
                 s"and $page has a value" - {
                   s"must return the $transportArranger name" in {
                     implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(page, "Jeff"))
@@ -153,7 +153,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   "must return the default text" in {
                     implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe messagesForLanguage.notProvided
+                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe notProvidedValue
                   }
                 }
               }

@@ -45,7 +45,11 @@ object TransportArrangerAddressSummary {
     val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
     val value: Content = request.userAnswers.get(addressPage).fold[Content] {
-      Text(messages("site.notProvided"))
+      transportArranger match {
+        case Some(Consignor) => Text(messages("transportArrangerAddress.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignor")))
+        case Some(Consignee) => Text(messages("transportArrangerAddress.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee")))
+        case _ => Text(messages("site.notProvided"))
+      }
     } { address =>
       HtmlContent(
         HtmlFormat.fill(Seq(

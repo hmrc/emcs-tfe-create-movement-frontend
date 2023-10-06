@@ -1,0 +1,4 @@
+GET        /trader/:ern/draft/:lrn/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

@@ -192,6 +192,7 @@ consignee.subHeading = Consignee information
 transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
+dispatch.subHeading = Place of dispatch information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -353,3 +354,9 @@ dispatchPlace.heading = Where is the place of dispatch for this movement?
 dispatchPlace.GB = Great Britain
 dispatchPlace.XI = Northern Ireland
 dispatchPlace.error.required = Select the place of dispatch for this movement
+
+dispatchBusinessName.title = What is the business name of the place of dispatch?
+dispatchBusinessName.heading = What is the business name of the place of dispatch?
+dispatchBusinessName.error.noInput = Enter the business name of the place of dispatch
+dispatchBusinessName.error.tooLong = Enter a business name up to 182 characters
+dispatchBusinessName.error.invalidCharacters = Business name must not contain < and > and : and ;

@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import pages.Page
-import pages.sections.dispatch.DispatchBusinessNamePage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage}
 
 class DispatchNavigatorSpec extends SpecBase {
   val navigator = new DispatchNavigator
@@ -34,10 +34,18 @@ class DispatchNavigatorSpec extends SpecBase {
       }
 
       "for the ConsigneeBusinessNamePage" - {
-        "must go to test Only page" in {
+        "must go to DispatchAddress page" in {
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 
           navigator.nextPage(DispatchBusinessNamePage, NormalMode, userAnswers) mustBe
+            controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn, NormalMode)
+        }
+      }
+
+      "for the DispatchAddressPage" - {
+        "must go to test Only page" in {
+
+          navigator.nextPage(DispatchAddressPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }

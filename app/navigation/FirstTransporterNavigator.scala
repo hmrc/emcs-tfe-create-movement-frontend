@@ -18,7 +18,8 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.{FirstTransporterNamePage, Page}
+import pages.Page
+import pages.sections.firstTransporter.{FirstTransporterNamePage, FirstTransporterVatPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,9 +28,11 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
-    case FirstTransporterNamePage => (_: UserAnswers) =>
+    case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
+      controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-      // TODO redirect to CAM-FT02
+    case FirstTransporterVatPage => (_: UserAnswers) =>
+      // TODO redirect to CAM-FT03
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>

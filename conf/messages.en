@@ -371,6 +371,14 @@ firstTransporterName.error.required = Enter the business name
 firstTransporterName.error.length = Business name must be 182 characters or less
 firstTransporterName.error.invalidCharacter = Business name must not contain < and > and : and ;
 
+firstTransporterVat.title = What is the first transporter''s VAT registration number?
+firstTransporterVat.heading = What is the first transporter''s VAT registration number?
+firstTransporterVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+firstTransporterVat.notUkVatLink = The first transporter is not VAT registered
+firstTransporterVat.error.required = Enter a VAT registration number
+firstTransporterVat.error.length = VAT registration number must be 12 characters or less
+firstTransporterVat.error.alphanumeric = VAT registration number number must only contain letters and numbers
+
 consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
 consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
 consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code.
@@ -402,3 +410,4 @@ dispatchPlace.heading = Where is the place of dispatch for this movement?
 dispatchPlace.GB = Great Britain
 dispatchPlace.XI = Northern Ireland
 dispatchPlace.error.required = Select the place of dispatch for this movement
+

@@ -52,6 +52,7 @@ object FakeNavigators {
       desiredRoute
   }
 
+
   class FakeDispatchNavigator(desiredRoute: Call) extends DispatchNavigator {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute

@@ -38,7 +38,7 @@ Contains the frontend journey for EMCS TFE to Create a Movement. Using hmrc-scaf
 8) **IMPORTANT:**
    1) Using the scaffolds to generate tests is not a replacement for writing good tests. Please refactor and enhance the default tests with tests which cover extra logic and business rules
    2) Scaffold are here to help us get a head start with simple pages, but do refactor the generated code to improve quality where appropriate
-   3) If you find an improvement that could be applied to the Scaffolds update the `g8` temaplte so that this can be used by future Engineers
+   3) If you find an improvement that could be applied to the Scaffolds update the `g8` template so that this can be used by future Engineers
 
 ### License
 

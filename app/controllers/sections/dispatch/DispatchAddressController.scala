@@ -22,7 +22,7 @@ import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
-import navigation.Navigator
+import navigation.DispatchNavigator
 import pages.QuestionPage
 import pages.sections.dispatch.DispatchAddressPage
 import play.api.data.Form
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 class DispatchAddressController  @Inject()(override val messagesApi: MessagesApi,
                                                      override val userAnswersService: UserAnswersService,
-                                                     override val navigator: Navigator,
+                                                     override val navigator: DispatchNavigator,
                                                      override val auth: AuthAction,
                                                      override val getData: DataRetrievalAction,
                                                      override val requireData: DataRequiredAction,

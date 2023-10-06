@@ -26,6 +26,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
@@ -111,6 +112,30 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           ))
         }
       }
+
+      "when rendered for FirstTransporterAddress page" - new Fixture(messagesForLanguage.lang) {
+
+        implicit val doc: Document = Jsoup.parse(view(
+          form = form,
+          addressPage = FirstTransporterAddressPage,
+          call = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          headingKey = Some("firstTransporterAddress")
+        ).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.firstTransporterAddressTitle,
+          Selectors.h1 -> messagesForLanguage.firstTransporterAddressHeading,
+          Selectors.h2(1) -> messagesForLanguage.subheading(FirstTransporterAddressPage),
+          Selectors.label("property") -> messagesForLanguage.property,
+          Selectors.label("street") -> messagesForLanguage.street,
+          Selectors.label("town") -> messagesForLanguage.town,
+          Selectors.label("postcode") -> messagesForLanguage.postcode,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+
     }
   }
 }

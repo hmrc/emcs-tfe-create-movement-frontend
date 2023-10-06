@@ -19,6 +19,7 @@ package fixtures.messages
 import models.UserAddress
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 
 object AddressMessages {
@@ -37,9 +38,13 @@ object AddressMessages {
     val transportArrangerAddressOtherHeading = "Enter the transporter’s business address"
     val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading)
 
+    val firstTransporterAddressHeading = "Enter the first transporter’s business address"
+    val firstTransporterAddressTitle = titleHelper(firstTransporterAddressHeading)
+
     val subheading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Consignor information"
       case TransportArrangerAddressPage => "Transport arranger"
+      case FirstTransporterAddressPage => "First transporter"
       case _ => "Consignee information"
     }
 

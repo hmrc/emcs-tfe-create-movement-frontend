@@ -19,8 +19,8 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.NormalMode
-import pages.Page
-import pages.sections.firstTransporter.{FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter._
+import pages._
 
 class FirstTransporterNavigatorSpec extends SpecBase {
   val navigator = new FirstTransporterNavigator
@@ -55,6 +55,17 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
         // TODO redirect to CAM-TF03
         navigator.nextPage(FirstTransporterVatPage, NormalMode, userAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    }
+
+    "for the FirstTransporterAddressPage (CAM-FT03)" - {
+
+      "must go to CAM-FT04" - {
+
+        // TODO redirect to CAM-TF04
+        navigator.nextPage(FirstTransporterAddressPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 

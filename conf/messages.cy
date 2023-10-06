@@ -155,6 +155,10 @@ address.transportArrangerAddress.4.title = Enter the transporter’s business ad
 address.transportArrangerAddress.4.heading = Enter the transporter’s business address
 address.transportArrangerAddress.subheading = Transport arranger
 
+address.firstTransporterAddress.title = Enter the first transporter’s business address
+address.firstTransporterAddress.heading = Enter the first transporter’s business address
+address.firstTransporterAddress.subheading = First transporter
+
 address.property = Property name or number (optional)
 address.property.error.length = Enter a property name or number up to 11 characters
 address.property.error.character = Property must contain letters or numbers

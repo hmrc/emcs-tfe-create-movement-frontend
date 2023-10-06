@@ -40,10 +40,10 @@ class NavigatorSpec extends SpecBase {
 
       "for the LocalReferenceNumber page" - {
 
-        "must go to the ConsignorAddress page" in {
+        "must go to the Invoice Details page" in {
 
           navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn, testLrn)
         }
       }
 

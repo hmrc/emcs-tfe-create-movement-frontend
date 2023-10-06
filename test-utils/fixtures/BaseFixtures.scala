@@ -19,6 +19,7 @@ package fixtures
 import models.{CountryModel, ExemptOrganisationDetailsModel, TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.info.InvoiceDetailsModel
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -134,4 +135,14 @@ trait BaseFixtures {
   val testConsigneeExemptOrganisationJson: JsObject = Json.obj("consignee" -> Json.obj("exemptOrganisation" -> testExemptedOrganisation))
   val testConsigneeVatJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testVat))
   val testConsigneeEoriJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testEori))
+
+  val invoiceDetailsModel = InvoiceDetailsModel(
+    reference = "somereference",
+    date = LocalDate.of(2020, 2, 2)
+  )
+
+  val invoiceDetailsJson = Json.obj(
+    "reference" -> "somereference",
+    "date" -> Json.toJson(LocalDate.of(2020, 2, 2))
+  )
 }

@@ -6,6 +6,10 @@ POST        /trader/:ern/info/dispatch-place                controllers.sections
 GET         /trader/:ern/info/local-reference-number        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String)
 POST        /trader/:ern/info/local-reference-number        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String)
 
+# INF004
+GET         /trader/:ern/info/invoice-details               controllers.sections.info.InvoiceDetailsController.onPageLoad(ern: String, lrn: String)
+POST        /trader/:ern/info/invoice-details               controllers.sections.info.InvoiceDetailsController.onSubmit(ern: String, lrn: String)
+
 # INFO05
 GET         /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onPageLoad(ern: String)
 POST        /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onSubmit(ern: String)

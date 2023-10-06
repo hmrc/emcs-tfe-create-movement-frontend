@@ -23,6 +23,7 @@ trait BaseMessages { _: i18n =>
   val movementInformationSection: String = "Movement information"
   val consigneeInformationSection = "Consignee information"
   val transportArrangerSection: String = "Transport arranger"
+  val dispatchSection: String = "Place of dispatch information"
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"

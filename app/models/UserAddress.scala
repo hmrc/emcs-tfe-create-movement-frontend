@@ -16,37 +16,27 @@
 
 package models
 
-import models.UserAddress.normalisedSeq
 import play.api.libs.json.{Json, OFormat}
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 case class UserAddress(property: Option[String],
                        street: String,
                        town: String,
                        postcode: String) {
-  def toCheckYourAnswersFormat: Html = Html(normalisedSeq(this).map(line => HtmlFormat.escape(line)).mkString("<br>"))
+  def toCheckYourAnswersFormat: HtmlContent = HtmlContent(
+    HtmlFormat.fill(
+      Seq(
+        Html(property.fold("")(_ + " ") + street + "<br>"),
+        Html(town + "<br>"),
+        Html(postcode)
+      )
+    )
+  )
 
 }
 
 object UserAddress {
-
-  private sealed trait AddressLineOrPostcode
-
-  private final case class AddressLine(line: String) extends AddressLineOrPostcode
-
-  private final case class Postcode(postcode: String) extends AddressLineOrPostcode
-
-  private def normalisedSeq(address: UserAddress): Seq[String] = {
-    Seq[Option[AddressLineOrPostcode]](
-      address.property.map(AddressLine),
-      Option(AddressLine(address.street)),
-      Option(AddressLine(address.town)),
-      Option(Postcode(address.postcode))
-    ).collect {
-      case Some(AddressLine(line)) => line.split("\\s").map(_.capitalize).mkString(" ")
-      case Some(Postcode(postcode)) => postcode.toUpperCase()
-    }
-  }
 
   implicit lazy val format: OFormat[UserAddress] = Json.format[UserAddress]
 }

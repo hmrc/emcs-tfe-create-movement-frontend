@@ -26,6 +26,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     govukDateInput: GovukDateInput,
+    continueOrSkip: components.continueOrSkip,
     p: components.p,
     h1: components.h1
 )
@@ -64,11 +65,7 @@
             )
         }
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
-
-        <a class="govuk-link" id="skip-question" href="@onSubmitCall.url">@messages("site.skipQuestion")</a>
+        @continueOrSkip(onSubmitCall.url)
     }
 }
 

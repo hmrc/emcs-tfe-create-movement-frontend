@@ -47,7 +47,7 @@ class InvoiceDetailsController @Inject()(
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) { implicit request =>
-      renderView(Ok, form = fillForm(InvoiceDetailsPage, formProvider()))
+      renderView(Ok, fillForm(InvoiceDetailsPage, formProvider()))
     }
 
   def onSubmit(ern: String, lrn: String): Action[AnyContent] =

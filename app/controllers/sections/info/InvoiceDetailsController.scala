@@ -53,17 +53,16 @@ class InvoiceDetailsController @Inject()(
   def onSubmit(ern: String, lrn: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors)),
-        value =>
-          saveAndRedirect(InvoiceDetailsPage, value, NormalMode)
+        formWithErrors => Future(renderView(BadRequest, formWithErrors)),
+        saveAndRedirect(InvoiceDetailsPage, _, NormalMode)
       )
     }
 
   private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Result = {
     status(view(
       form = form,
-      onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, request.lrn)
+      onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, request.lrn),
+      skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, NormalMode, request.userAnswers)
     ))
   }
 }

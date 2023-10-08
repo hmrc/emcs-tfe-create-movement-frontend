@@ -19,10 +19,12 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.sections.info.InvoiceDetailsFormProvider
+import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import views.html.sections.info.InvoiceDetailsView
 import views.{BaseSelectors, ViewBehaviours}
@@ -43,7 +45,13 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[InvoiceDetailsView]
         val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+        val skipRoute: Call = Call("GET", "/skip-url")
+
+        implicit val doc: Document = Jsoup.parse(view(
+          form = form,
+          onSubmitCall = testOnwardRoute,
+          skipQuestionCall = skipRoute
+        ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
@@ -56,7 +64,13 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.button -> messagesForLanguage.continue,
           Selectors.link(1) -> messagesForLanguage.skipThisQuestion
         ))
+
+        "have a link to the skipQuestionCall given to the view" in {
+
+          doc.select(Selectors.link(1)).attr("href") mustBe skipRoute.url
+        }
       }
     }
+
   }
 }

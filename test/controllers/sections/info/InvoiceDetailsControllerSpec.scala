@@ -68,7 +68,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
         val view = application.injector.instanceOf[InvoiceDetailsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, invoiceDetailsOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form,
+          onSubmitCall = invoiceDetailsOnSubmit,
+          skipQuestionCall = onwardRoute
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -84,7 +88,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(invoiceDetailsModel), invoiceDetailsOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form.fill(invoiceDetailsModel),
+          onSubmitCall = invoiceDetailsOnSubmit,
+          skipQuestionCall = onwardRoute
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -123,7 +131,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, invoiceDetailsOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          onSubmitCall = invoiceDetailsOnSubmit,
+          skipQuestionCall = onwardRoute
+        )(dataRequest(request), messages(application)).toString
       }
     }
 

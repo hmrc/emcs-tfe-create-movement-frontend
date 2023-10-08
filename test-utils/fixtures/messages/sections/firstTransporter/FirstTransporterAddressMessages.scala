@@ -18,18 +18,11 @@ package fixtures.messages.sections.firstTransporter
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 
-object FirstTransporterNameMessages {
+object FirstTransporterAddressMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the first transporter's business name?"
-    val title = titleHelper(heading)
-
-    val errorRequired = "Enter the business name"
-    val errorLength = "Business name must be 182 characters or less"
-    val errorInvalidCharacter = "Business name must not contain < and > and : and ;"
-
-    val cyaLabel: String = "Business name"
-    val cyaChangeHidden: String = "first transporters business name"
+    val cyaLabel: String = "Address"
+    val cyaChangeHidden: String = "first transporters address"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -18,9 +18,8 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.sections.firstTransporter.{FirstTransporterNamePage, FirstTransporterVatPage}
-import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages._
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterVatPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -35,20 +34,36 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
     case FirstTransporterVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    case FirstTransporterAddressPage => (_: UserAnswers) =>
-      // TODO redirect to CAM-FT04
+    case FirstTransporterAddressPage => (userAnswers: UserAnswers) =>
+      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    case FirstTransporterCheckAnswersPage => _ =>
+      // TODO redirect to CAM02
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }
 
+  private val checkRoutes: Page => UserAnswers => Call = {
+    case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
+      if (
+          userAnswers.get(FirstTransporterNamePage).isEmpty ||
+          userAnswers.get(FirstTransporterVatPage).isEmpty ||
+          userAnswers.get(FirstTransporterAddressPage).isEmpty
+      ) {
+        normalRoutes(FirstTransporterNamePage)(userAnswers)
+      } else {
+        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      }
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+  }
+
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-
-    //TODO update when other modes are added
     case _ =>
-      normalRoutes(page)(userAnswers)
+      checkRoutes(page)(userAnswers)
   }
 }

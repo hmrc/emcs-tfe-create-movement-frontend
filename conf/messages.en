@@ -19,6 +19,7 @@ site.opensInNewTab = (opens in new tab)
 
 section.movementInformation = Movement information
 section.exportInformation = Export information
+section.destination = Place of destination information
 
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
@@ -189,6 +190,7 @@ deferredMovement.summary = Help with fallback procedures
 deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
 deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
 deferredMovement.error.required = Select yes if this is a deferred movement
+
 localReferenceNumber.deferred.title = Enter the Local Reference Number (LRN) for the deferred movement
 localReferenceNumber.deferred.heading = Enter the Local Reference Number (LRN) for the deferred movement
 localReferenceNumber.deferred.p1 = This must match the LRN on the Fallback Accompanying Document (FAD).
@@ -486,3 +488,12 @@ exportCustomsOffice.error.invalidCharacter = Customs office code must not contai
 exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
 exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
 exportCustomsOffice.change.hidden = ExportCustomsOffice
+
+destinationBusinessName.title = What is the business name of the place of destination?
+destinationBusinessName.heading = What is the business name of the place of destination?
+destinationBusinessName.hint = Place of destination business name
+destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
+destinationBusinessName.error.required = Enter Enter the business name of the place of destination
+destinationBusinessName.error.length = Business name must be less than 182 characters
+destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;
+

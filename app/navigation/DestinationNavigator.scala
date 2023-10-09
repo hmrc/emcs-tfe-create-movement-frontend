@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
-import pages.sections.destination.{DestinationAddressPage}
+import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,6 +27,9 @@ import javax.inject.Inject
 class DestinationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
+    case DestinationBusinessNamePage => (userAnswers: UserAnswers) =>
+      controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case DestinationAddressPage =>
       //TODO update to next page when finished

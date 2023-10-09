@@ -1,7 +1,12 @@
 
+# DES04
+GET        /trader/:ern/draft/:lrn/destination/business-name                            controllers.sections.destination.DestinationBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/destination/business-name                            controllers.sections.destination.DestinationBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/destination/business-name/change                     controllers.sections.destination.DestinationBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/destination/business-name/change                     controllers.sections.destination.DestinationBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
 # DES05
-GET        /trader/:ern/draft/:lrn/destination/address                 controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/destination/address                 controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/destination/address/change          controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/destination/address/change          controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:lrn/destination/address                                  controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/destination/address                                  controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/destination/address/change                           controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/destination/address/change                           controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

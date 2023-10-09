@@ -19,6 +19,7 @@ site.opensInNewTab = (yn agor tab newydd)
 
 section.movementInformation = Movement information
 section.exportInformation = Export information
+section.destination = Place of destination information
 
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
@@ -418,3 +419,11 @@ exportCustomsOffice.error.customOfficeRegex = Customs office code must start wit
 exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
 exportCustomsOffice.change.hidden = ExportCustomsOffice
 
+
+destinationBusinessName.title = What is the business name of the place of destination?
+destinationBusinessName.heading = What is the business name of the place of destination?
+destinationBusinessName.hint = Place of destination business name
+destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
+destinationBusinessName.error.required = Enter Enter the business name of the place of destination
+destinationBusinessName.error.length = Business name must be less than 182 characters
+destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;

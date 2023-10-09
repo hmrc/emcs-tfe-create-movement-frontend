@@ -18,28 +18,54 @@ package models.sections.info.movementScenario
 
 import models.{Enumerable, WithName}
 
-sealed trait DestinationType
+sealed trait DestinationType {
+  val stringValue: String
+}
 
 object DestinationType extends Enumerable.Implicits {
-  case object TaxWarehouse extends WithName("1") with DestinationType
+  case object TaxWarehouse extends WithName("1") with DestinationType {
+    override val stringValue: String = "tax warehouse"
+  }
 
-  case object RegisteredConsignee extends WithName("2") with DestinationType
+  case object RegisteredConsignee extends WithName("2") with DestinationType {
+    override val stringValue: String = "registered consignee"
+  }
 
-  case object TemporaryRegisteredConsignee extends WithName("3") with DestinationType
+  case object TemporaryRegisteredConsignee extends WithName("3") with DestinationType {
+    override val stringValue: String = "temporary registered consignee"
+  }
 
-  case object DirectDelivery extends WithName("4") with DestinationType
+  case object DirectDelivery extends WithName("4") with DestinationType {
+    override val stringValue: String = "direct delivery"
+  }
 
-  case object ExemptedOrganisation extends WithName("5") with DestinationType
+  case object ExemptedOrganisations extends WithName("5") with DestinationType {
+    override val stringValue: String = "exempted organisations"
+  }
 
-  case object Export extends WithName("6") with DestinationType
+  //Both to be sent as `Export - 6` to backend. Differentiated for Frontend Content
+  case object ExportWithCustomsLodgedInEU extends WithName("6EU") with DestinationType {
+    override val stringValue: String = "export eu"
+  }
+  case object ExportWithCustomsLodgedInGB extends WithName("6GB") with DestinationType {
+    override val stringValue: String = "export gb"
+  }
 
-  case object UnknownDestination extends WithName("8") with DestinationType
+  case object UnknownDestination extends WithName("8") with DestinationType {
+    override val stringValue: String = "unknown destination"
+  }
 
-  case object CertifiedConsignee extends WithName("9") with DestinationType
+  case object CertifiedConsignee extends WithName("9") with DestinationType {
+    override val stringValue: String = "certified consignee"
+  }
 
-  case object TemporaryCertifiedConsignee extends WithName("10") with DestinationType
+  case object TemporaryCertifiedConsignee extends WithName("10") with DestinationType {
+    override val stringValue: String = "temporary certified consignee"
+  }
 
-  case object ReturnToThePlaceOfDispatchOfTheConsignor extends WithName("11") with DestinationType
+  case object ReturnToThePlaceOfDispatchOfTheConsignor extends WithName("11") with DestinationType {
+    override val stringValue: String = "return to the place of dispatch of the consignor"
+  }
 
   val values: Seq[DestinationType] = Seq(
     TaxWarehouse,

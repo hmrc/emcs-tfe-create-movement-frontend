@@ -22,10 +22,12 @@ import models.NormalMode
 import pages.Page
 import pages.sections.destination._
 
+
 class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator
 
   "DestinationNavigator" - {
+
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Index" in {

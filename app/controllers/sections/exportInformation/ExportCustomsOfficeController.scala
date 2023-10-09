@@ -19,9 +19,10 @@ package controllers.sections.exportInformation
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
-import models.Mode
 import models.requests.DataRequest
-import models.sections.info.DestinationType.ExportWithCustomsLodgedInEU
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu
+import models.{Enumerable, Mode}
 import navigation.ExportInformationNavigator
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.info.DestinationTypePage
@@ -61,11 +62,12 @@ class ExportCustomsOfficeController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    implicit val msReads: Enumerable[MovementScenario] = MovementScenario.enumerable(request.request)
     withAnswer(DestinationTypePage) { destinationType =>
       Future.successful(status(view(
         form = form,
         action = routes.ExportCustomsOfficeController.onSubmit(request.ern, request.lrn, mode),
-        euExport = destinationType == ExportWithCustomsLodgedInEU
+        euExport = destinationType == ExportWithCustomsDeclarationLodgedInTheEu()(request.request)
       )))
     }
   }

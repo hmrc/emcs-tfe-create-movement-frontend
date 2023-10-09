@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package models.sections.info.movementScenario
 
-import models.sections.info.movementScenario.MovementScenario
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.{Enumerable, WithName}
 
-case object DestinationTypePage extends QuestionPage[MovementScenario] {
+sealed trait OriginType
 
-  override def path: JsPath = JsPath \ "info" \ toString
+object OriginType extends Enumerable.Implicits {
+  case object TaxWarehouse extends WithName("1") with OriginType
 
-  override def toString: String = "destinationType"
+  case object Imports extends WithName("2") with OriginType
+
+  case object DutyPaid extends WithName("3") with OriginType
+
+  val values: Seq[OriginType] = Seq(TaxWarehouse, Imports, DutyPaid)
+
+
+  implicit val enumerable: Enumerable[OriginType] =
+    Enumerable(values.map(v => v.toString -> v): _*)
 }

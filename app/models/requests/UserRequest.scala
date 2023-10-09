@@ -16,12 +16,39 @@
 
 package models.requests
 
+import config.SessionKeys.DISPATCH_PLACE
+import models.DispatchPlace.{GreatBritain, NorthernIreland}
+import models._
 import play.api.mvc.{Request, WrappedRequest}
+import utils.Logging
 
 case class UserRequest[A](request: Request[A],
                           ern: String,
                           internalId: String,
-                          credId: String) extends WrappedRequest[A](request) {
+                          credId: String) extends WrappedRequest[A](request) with Logging {
 
-  val isNorthernIrelandErn = ern.startsWith("XI")
+  val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
+
+  private val ERN_PREFIX_LENGTH = 4
+
+  val userTypeFromErn: UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
+    case "GBRC" => GreatBritainRegisteredConsignor
+    case "XIRC" => NorthernIrelandRegisteredConsignor
+    case "GBWK" => GreatBritainWarehouseKeeper
+    case "XIWK" => NorthernIrelandWarehouseKeeper
+    case "XI00" => NorthernIrelandWarehouse
+    case "GB00" => GreatBritainWarehouse
+    case _ => Unknown
+  }
+
+  val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
+  val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+
+  val dispatchPlace: Option[DispatchPlace] = request.session.get(DISPATCH_PLACE) match {
+    case Some(dp) if dp == GreatBritain.toString => Some(GreatBritain)
+    case Some(dp) if dp == NorthernIreland.toString => Some(NorthernIreland)
+    case value =>
+      logger.warn(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
+      None
+  }
 }

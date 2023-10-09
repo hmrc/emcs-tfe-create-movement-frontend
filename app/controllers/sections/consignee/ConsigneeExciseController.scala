@@ -19,8 +19,8 @@ package controllers.sections.consignee
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
-import models.requests.DataRequest
-import models.sections.info.DestinationType.TemporaryRegisteredConsignee
+import models.requests.{DataRequest, UserRequest}
+import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
 import models.{Mode, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
@@ -74,8 +74,11 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
     }
 
   private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
-    val isTemporaryRegisteredConsignee = request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
-    val isNorthernIrish = request.userTypeFromErn match {
+    implicit val userRequest: UserRequest[_] = request.request
+    val isTemporaryRegisteredConsignee: Boolean =
+      request.userAnswers
+        .get(DestinationTypePage).contains(TemporaryRegisteredConsignee())
+    val isNorthernIrish = request.request.userTypeFromErn match {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandWarehouseKeeper => true
       case _ => false
     }

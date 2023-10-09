@@ -72,16 +72,16 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
         val greatBritainUserAnswers = UserAnswers(testGreatBritainErn, testLrn)
 
         lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testGreatBritainErn).url
-        lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onSubmit(testGreatBritainErn).url
+        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onSubmit(testGreatBritainErn).url
 
-        "must redirect to the deferred movement page (CAM-INFO05)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
+        "must redirect to the destination type page (CAM-INFO08)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
           running(application) {
 
             val request = FakeRequest(GET, dispatchPlaceRoute)
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(deferredMovementRoute)
+            redirectLocation(result) mustBe Some(destinationTypeRoute)
           }
         }
       }
@@ -107,7 +107,6 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
           }
         }
 
-        // TODO Redirect to CAM-INFO08 once built
         "must redirect to the next page when valid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           running(application) {
 
@@ -117,7 +116,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url
+            redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url
           }
         }
 

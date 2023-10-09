@@ -20,7 +20,8 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.DestinationType.TemporaryRegisteredConsignee
+import models.requests.UserRequest
+import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
 import models.{NormalMode, UserAnswers}
 import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -48,8 +49,10 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       .build()
   }
 
-  val userAnswersWithConsigneeExcise = emptyUserAnswers.set(ConsigneeExcisePage, testErn)
-  val userAnswersWithDestinationType = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
+  implicit val ur: UserRequest[_] = userRequest(FakeRequest())
+
+  val userAnswersWithConsigneeExcise: UserAnswers = emptyUserAnswers.set(ConsigneeExcisePage, testErn)
+  val userAnswersWithDestinationType: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee())
 
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {
@@ -68,20 +71,20 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
           contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = true)(dataRequest(request), messages(application)).toString
         }
       }
-    }
 
-    "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
-      running(application) {
-        val request = FakeRequest(GET, consigneeExciseRoute)
+      "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
+        running(application) {
+          val request = FakeRequest(GET, consigneeExciseRoute)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ConsigneeExciseView]
+          val view = application.injector.instanceOf[ConsigneeExciseView]
 
-        val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+          val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(application)).toString
+        }
       }
     }
 

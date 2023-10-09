@@ -34,7 +34,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
       if (request.isNorthernIrelandErn) {
         Redirect(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(ern))
       } else {
-        Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+        Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(ern))
       }
     }
 

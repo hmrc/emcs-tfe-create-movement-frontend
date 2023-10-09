@@ -25,6 +25,8 @@ sealed trait MovementScenario {
   def originType(implicit request: UserRequest[_]): OriginType
   def destinationType: DestinationType
   def movementType(implicit request: UserRequest[_]): MovementType
+
+  val stringValue: String
 }
 
 object MovementScenario extends Enumerable.Implicits with Logging {
@@ -53,6 +55,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "export with customs declaration lodged in the United Kingdom"
   }
 
   /**
@@ -71,6 +75,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "tax warehouse in Great Britain"
   }
 
   /**
@@ -89,6 +95,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "direct delivery"
   }
 
   /**
@@ -107,6 +115,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "tax warehouse in the European Union"
   }
 
   /**
@@ -125,6 +135,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "exempted organisation"
   }
 
   /**
@@ -143,6 +155,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "export with customs declaration lodged in the European Union"
   }
 
   /**
@@ -161,6 +175,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "registered consignee"
   }
 
   /**
@@ -179,6 +195,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "temporary registered consignee"
+
   }
 
   /**
@@ -197,6 +216,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
+
+    override val stringValue: String = "unknown destination"
   }
 
   def valuesUk: Seq[MovementScenario] = Seq(

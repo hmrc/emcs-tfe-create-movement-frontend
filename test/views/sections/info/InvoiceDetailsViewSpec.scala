@@ -26,10 +26,13 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
+import utils.DateUtils
 import views.html.sections.info.InvoiceDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
+import java.time.LocalDate
+
+class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateUtils {
 
   object Selectors extends BaseSelectors
 
@@ -47,8 +50,11 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
 
         val skipRoute: Call = Call("GET", "/skip-url")
 
+        val currentDate = LocalDate.of(2023, 1, 1).formatDateNumbersOnly()
+
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
+          currentDate = currentDate,
           onSubmitCall = testOnwardRoute,
           skipQuestionCall = skipRoute
         ).toString())
@@ -60,7 +66,7 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.p(1) -> messagesForLanguage.text,
           Selectors.label("invoice-reference") -> messagesForLanguage.referenceLabel,
           Selectors.legend-> messagesForLanguage.dateLabel,
-          Selectors.hint -> messagesForLanguage.dateHint,
+          Selectors.hint -> messagesForLanguage.dateHint(currentDate),
           Selectors.button -> messagesForLanguage.continue,
           Selectors.link(1) -> messagesForLanguage.skipThisQuestion
         ))

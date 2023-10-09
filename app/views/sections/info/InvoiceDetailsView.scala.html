@@ -31,7 +31,7 @@
     h1: components.h1
 )
 
-@(form: Form[_], onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("invoiceDetails.title"))) {
 
@@ -61,7 +61,7 @@
                     legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
                     erroredFields
                 )
-                .withHint(HintViewModel(messages("invoiceDetails.value.hint")))
+                .withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
             )
         }
 

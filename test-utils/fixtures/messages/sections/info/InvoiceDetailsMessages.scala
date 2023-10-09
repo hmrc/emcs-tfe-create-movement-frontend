@@ -29,7 +29,7 @@ object InvoiceDetailsMessages {
     val referenceErrorRequired = "Enter a reference, or skip this question for now"
     val referenceErrorLength = "Reference must be 35 characters or less"
     val dateLabel = "Invoice date of issue"
-    val dateHint = "For example, 6 10 2023."
+    val dateHint = (date: String) => s"For example, $date."
     val dateErrorRequiredAll = "Enter the date of issue, or skip this question for now"
     val dateErrorInvalid = "Date of issue must be a real date"
     val dateErrorRequiredTwo = (fieldOne: String, fieldTwo: String) => s"Date of issue must include a $fieldOne and $fieldTwo"

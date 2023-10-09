@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
+import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import javax.inject.Inject
@@ -42,8 +43,9 @@ class InvoiceDetailsController @Inject()(
                                        override val userAllowList: UserAllowListAction,
                                        formProvider: InvoiceDetailsFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: InvoiceDetailsView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                       view: InvoiceDetailsView,
+                                       timeMachine: TimeMachine
+                                     ) extends BaseNavigationController with AuthActionHelper with DateUtils {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) { implicit request =>
@@ -61,6 +63,7 @@ class InvoiceDetailsController @Inject()(
   private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Result = {
     status(view(
       form = form,
+      currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
       onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, request.lrn),
       skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, NormalMode, request.userAnswers)
     ))

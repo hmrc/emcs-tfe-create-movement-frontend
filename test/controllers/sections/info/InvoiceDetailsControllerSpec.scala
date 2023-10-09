@@ -25,17 +25,25 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import pages.sections.info.InvoiceDetailsPage
+import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
+import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
+import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.Future
 
-class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService {
+class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with DateUtils {
 
+  val testLocalDate = LocalDate.of(2023, 2, 9)
+
+  val timeMachine = new TimeMachine {
+    override def now(): LocalDateTime = testLocalDate.atStartOfDay()
+  }
 
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -50,9 +58,12 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
     val application = applicationBuilder(userAnswers = userAnswers)
       .overrides(
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
+        bind[TimeMachine].toInstance(timeMachine)
       )
       .build()
+
+    val view = application.injector.instanceOf[InvoiceDetailsView]
   }
 
   "InvoiceDetails Controller" - {
@@ -65,11 +76,10 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[InvoiceDetailsView]
-
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form,
+          currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
           skipQuestionCall = onwardRoute
         )(dataRequest(request), messages(application)).toString
@@ -83,13 +93,12 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
       running(application) {
         val request = FakeRequest(GET, invoiceDetailsRoute)
 
-        val view = application.injector.instanceOf[InvoiceDetailsView]
-
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form.fill(invoiceDetailsModel),
+          currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
           skipQuestionCall = onwardRoute
         )(dataRequest(request), messages(application)).toString
@@ -126,13 +135,12 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[InvoiceDetailsView]
-
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           form = boundForm,
+          currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
           skipQuestionCall = onwardRoute
         )(dataRequest(request), messages(application)).toString

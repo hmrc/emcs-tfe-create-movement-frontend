@@ -26,5 +26,9 @@ trait DateUtils {
       val monthMessage = messages(s"date.month.${date.getMonthValue}")
       s"${date.getDayOfMonth} $monthMessage ${date.getYear}"
     }
+
+    def formatDateNumbersOnly(): String = {
+      s"${date.getDayOfMonth} ${date.getMonthValue} ${date.getYear}"
+    }
   }
 }

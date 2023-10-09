@@ -26,10 +26,10 @@ import play.api.i18n.{Messages, MessagesApi}
 class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixtures with GuiceOneAppPerSuite {
 
   val referenceField = "invoice-reference"
-  val dateField = "invoice-date"
-  val dayField = "invoice-date.day"
-  val monthField = "invoice-date.month"
-  val yearField = "invoice-date.year"
+  val dateField = "value"
+  val dayField = "value.day"
+  val monthField = "value.month"
+  val yearField = "value.year"
 
   val form = new InvoiceDetailsFormProvider()()
 
@@ -262,19 +262,19 @@ class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixt
 
         "have the correct error message for no date" in {
 
-          messages("invoiceDetails.invoice-date.error.required.all") mustBe
+          messages("invoiceDetails.value.error.required.all") mustBe
             messagesForLanguage.dateErrorRequiredAll
         }
 
         "have the correct error message for one missing date field" in {
 
-          messages("invoiceDetails.invoice-date.error.required", "year") mustBe
+          messages("invoiceDetails.value.error.required", "year") mustBe
             messagesForLanguage.dateErrorRequired("year")
         }
 
         "have the correct error message for two missing date fields" in {
 
-          messages("invoiceDetails.invoice-date.error.required.two", "day", "month") mustBe
+          messages("invoiceDetails.value.error.required.two", "day", "month") mustBe
             messagesForLanguage.dateErrorRequiredTwo("day", "month")
         }
       }

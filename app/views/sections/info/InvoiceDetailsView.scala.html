@@ -57,11 +57,11 @@
 
             @govukDateInput(
                 DateViewModel(
-                    field  = form("invoice-date"),
-                    legend = LegendViewModel(Text(messages("invoiceDetails.invoice-date.label"))).withCssClass(LabelSize.Medium.toString),
+                    field  = form("value"),
+                    legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
                     erroredFields
                 )
-                .withHint(HintViewModel(messages("invoiceDetails.invoice-date.hint")))
+                .withHint(HintViewModel(messages("invoiceDetails.value.hint")))
             )
         }
 

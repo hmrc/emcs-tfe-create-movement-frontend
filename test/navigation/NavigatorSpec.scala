@@ -47,6 +47,16 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "for the Invoice Detailspage" - {
+
+        //TODO update when CAMINFO006 is complete
+        "must go to the Under Construction page" in {
+
+          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
       "for the ConsignorAddress page" - {
 
         "must go to the CheckYourAnswersConsignor page" in {

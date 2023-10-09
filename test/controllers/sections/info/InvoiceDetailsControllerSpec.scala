@@ -105,9 +105,9 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           FakeRequest(POST, invoiceDetailsRoute)
             .withFormUrlEncodedBody(
               ("invoice-reference", "answer"),
-              ("invoice-date.day", "1"),
-              ("invoice-date.month", "1"),
-              ("invoice-date.year", "2020")
+              ("value.day", "1"),
+              ("value.month", "1"),
+              ("value.year", "2020")
             )
 
         val result = route(application, request).value

@@ -29,11 +29,11 @@ class InvoiceDetailsFormProvider @Inject() extends Mappings {
     Form(mapping(
       "invoice-reference" -> text("invoiceDetails.invoice-reference.error.required")
         .verifying(maxLength(35, "invoiceDetails.invoice-reference.error.length")),
-      "invoice-date" -> localDate(
-        invalidKey = "invoiceDetails.invoice-date.error.invalid",
-        allRequiredKey = "invoiceDetails.invoice-date.error.required.all",
-        twoRequiredKey = "invoiceDetails.invoice-date.error.required.two",
-        requiredKey = "invoiceDetails.invoice-date.error.required"
+      "value" -> localDate(
+        invalidKey = "invoiceDetails.value.error.invalid",
+        allRequiredKey = "invoiceDetails.value.error.required.all",
+        twoRequiredKey = "invoiceDetails.value.error.required.two",
+        requiredKey = "invoiceDetails.value.error.required"
       )
     )(InvoiceDetailsModel.apply)(InvoiceDetailsModel.unapply))
 }

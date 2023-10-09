@@ -19,7 +19,7 @@ package viewmodels.helpers
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Actions, Key, SummaryListRow, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryList}
 import viewmodels.govuk.summarylist._
 
@@ -32,10 +32,14 @@ class CheckAnswersHelper @Inject()() {
       rows = summaryListRows
     ).withCssClass("govuk-!-margin-bottom-9")
 
-  def buildSummaryRow(key: String, value: String, optChangeLink: Option[Call] = None, id: String = "")(implicit messages: Messages): SummaryListRow =
+  def buildSummaryRow(key: String,
+                      value: Content,
+                      optChangeLink: Option[Call] = None,
+                      id: String = ""
+                     )(implicit messages: Messages): SummaryListRow =
     SummaryListRow(
       key = Key(content = Text(messages(key))),
-      value = Value(HtmlContent(value)),
+      value = Value(value),
       actions =
         optChangeLink match {
           case Some(changeLink) =>

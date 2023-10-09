@@ -20,6 +20,7 @@ import models.UserAddress
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
+import pages.sections.destination.DestinationAddressPage
 import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 
@@ -42,6 +43,9 @@ object AddressMessages {
     val firstTransporterAddressHeading = "Enter the first transporter’s business address"
     val firstTransporterAddressTitle = titleHelper(firstTransporterAddressHeading)
 
+    val destinationAddressHeading = "Enter the place of destination address"
+    val destinationAddressTitle = titleHelper(destinationAddressHeading)
+
     val dispatchAddressHeading = "Enter the place of dispatch address"
     val dispatchAddressTitle = titleHelper(dispatchAddressHeading)
 
@@ -50,6 +54,7 @@ object AddressMessages {
       case TransportArrangerAddressPage => "Transport arranger"
       case FirstTransporterAddressPage => "First transporter"
       case DispatchAddressPage => "Place of dispatch information"
+      case DestinationAddressPage => "Place of destination information"
       case _ => "Consignee information"
     }
 

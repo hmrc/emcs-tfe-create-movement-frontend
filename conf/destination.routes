@@ -1,0 +1,7 @@
+
+
+# DES05
+GET        /trader/:ern/draft/:lrn/destination/address                 controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/destination/address                 controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/destination/address/change          controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/destination/address/change          controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

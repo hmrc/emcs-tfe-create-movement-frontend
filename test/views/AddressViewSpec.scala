@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.DispatchAddressPage
+import pages.sections.destination.DestinationAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 import play.api.i18n.{Lang, Messages}
@@ -158,6 +159,27 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
         ))
       }
 
+      "when rendered for DestinationAddress page" - new Fixture(messagesForLanguage.lang) {
+
+        implicit val doc: Document = Jsoup.parse(view(
+          form = form,
+          addressPage = DestinationAddressPage,
+          call = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          headingKey = Some("destinationAddress")
+        ).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.destinationAddressTitle,
+          Selectors.h1 -> messagesForLanguage.destinationAddressHeading,
+          Selectors.h2(1) -> messagesForLanguage.subheading(DestinationAddressPage),
+          Selectors.label("property") -> messagesForLanguage.property,
+          Selectors.label("street") -> messagesForLanguage.street,
+          Selectors.label("town") -> messagesForLanguage.town,
+          Selectors.label("postcode") -> messagesForLanguage.postcode,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+      }
 
     }
   }

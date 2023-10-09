@@ -26,6 +26,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 import play.api.i18n.{Lang, Messages}
@@ -126,6 +127,28 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.firstTransporterAddressTitle,
           Selectors.h1 -> messagesForLanguage.firstTransporterAddressHeading,
           Selectors.h2(1) -> messagesForLanguage.subheading(FirstTransporterAddressPage),
+          Selectors.label("property") -> messagesForLanguage.property,
+          Selectors.label("street") -> messagesForLanguage.street,
+          Selectors.label("town") -> messagesForLanguage.town,
+          Selectors.label("postcode") -> messagesForLanguage.postcode,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      "when rendered for DispatchAddress page" - new Fixture(messagesForLanguage.lang) {
+
+        implicit val doc: Document = Jsoup.parse(view(
+          form = form,
+          addressPage = DispatchAddressPage,
+          call = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          headingKey = Some("dispatchAddress")
+        ).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.dispatchAddressTitle,
+          Selectors.h1 -> messagesForLanguage.dispatchAddressHeading,
+          Selectors.h2(1) -> messagesForLanguage.subheading(DispatchAddressPage),
           Selectors.label("property") -> messagesForLanguage.property,
           Selectors.label("street") -> messagesForLanguage.street,
           Selectors.label("town") -> messagesForLanguage.town,

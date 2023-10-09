@@ -396,6 +396,16 @@ guarantorRequired.checkYourAnswersLabel = Guarantor required
 guarantorRequired.error.required = Select yes if a guarantor is required for this movement
 guarantorRequired.change.hidden = if a guarantor is required for this movement
 
+guarantorArranger.title = Who is providing the guarantee for this movement?
+guarantorArranger.heading = Who is providing the guarantee for this movement?
+guarantorArranger.1 = Consignor
+guarantorArranger.2 = Consignee
+guarantorArranger.3 = Goods owner
+guarantorArranger.4 = Transporter
+guarantorArranger.checkYourAnswersLabel = Guarantor arranger
+guarantorArranger.error.required = Select who is providing the guarantee for this movement
+guarantorArranger.change.hidden = who is providing the guarantee for this movement?
+
 exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.hint = This code is also known as a customs office reference number.
@@ -407,3 +417,4 @@ exportCustomsOffice.error.invalidCharacter = Customs office code must not contai
 exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
 exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
 exportCustomsOffice.change.hidden = ExportCustomsOffice
+

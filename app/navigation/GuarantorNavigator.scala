@@ -17,9 +17,10 @@
 package navigation
 
 import controllers.routes
+import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{Mode, NormalMode, UserAnswers}
-import pages.Page
 import pages.sections.guarantor._
+import pages.{GuarantorArrangerPage, Page}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,9 +28,25 @@ import javax.inject.Inject
 class GuarantorNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case GuarantorRequiredPage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
+
+      userAnswers.get(GuarantorRequiredPage) match {
+        case Some(true) =>
+          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        case _ =>
+          // TODO redirect to CAM-GO6 once built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(GuarantorArrangerPage) match {
+        case Some(GoodsOwner) | Some(Transporter) =>
+          // TODO redirect to CAM-GO3 once built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          // TODO redirect to CAM-GO6 once built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

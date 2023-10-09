@@ -31,13 +31,13 @@
 @summaryList = @{
     val traderNameRow = checkAnswersHelper.buildSummaryRow(
         key = "checkYourAnswersConsignor.traderName",
-        value = traderKnownFacts.traderName)
+        value = Text(traderKnownFacts.traderName))
     val ernRow = checkAnswersHelper.buildSummaryRow(
         key = "checkYourAnswersConsignor.ern",
-        value = ern)
+        value = Text(ern))
     val consignorAddressRow = checkAnswersHelper.buildSummaryRow(
         key = "checkYourAnswersConsignor.address",
-        value = consignorAddress.toCheckYourAnswersFormat.toString(),
+        value = consignorAddress.toCheckYourAnswersFormat,
         optChangeLink = Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, CheckMode)),
         id = "change-address")
 

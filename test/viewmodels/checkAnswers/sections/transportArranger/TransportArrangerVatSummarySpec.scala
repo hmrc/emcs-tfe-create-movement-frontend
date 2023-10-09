@@ -14,62 +14,73 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.transportArranger
+package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
-import fixtures.messages.sections.transportArranger.TransportArrangerMessages
+import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
 import models.CheckMode
-import models.sections.transportArranger.TransportArranger.GoodsOwner
+import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner, Other}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.transportArranger.TransportArrangerPage
+import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.transportArranger.TransportArrangerSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class TransportArrangerSummarySpec extends SpecBase with Matchers {
-
-  "TransportArrangerSummary" - {
+class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
+  "TransportArrangerVatSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportArrangerMessages.English, TransportArrangerMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerVatMessages.English, TransportArrangerVatMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        "when there's no answer" - {
+        "when TransportArranger is NOT GoodsOwner or Other" - {
 
-          "must output the expected data" in {
+          "must output None" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
-            TransportArrangerSummary.row(showActionLinks = true) mustBe None
+            TransportArrangerVatSummary.row() mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "when TransportArranger is GoodsOwner or Other" - {
 
-          "when the show action link boolean is true" - {
+          "when there's no answer" - {
 
-            "must output the expected row" in {
+            "must output the expected data" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerSummary.row(showActionLinks = true) mustBe
+              TransportArrangerVatSummary.row() mustBe None
+            }
+          }
+
+          "when there's an answer" - {
+
+            "must output the expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(TransportArrangerPage, Other)
+                .set(TransportArrangerVatPage, testVatNumber)
+              )
+
+              TransportArrangerVatSummary.row() mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.goodsOwnerRadioOption)),
+                    value = Value(Text(testVatNumber)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = "changeTransportArranger"
+                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = "changeTransportArrangerVat"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )

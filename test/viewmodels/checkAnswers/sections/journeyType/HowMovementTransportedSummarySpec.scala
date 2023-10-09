@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.journeyType
+package viewmodels.checkAnswers.sections.journeyType
 
 import base.SpecBase
 import fixtures.messages.sections.journeyType.HowMovementTransportedMessages

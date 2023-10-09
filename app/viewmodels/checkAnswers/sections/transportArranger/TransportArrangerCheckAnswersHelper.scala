@@ -28,10 +28,10 @@ class TransportArrangerCheckAnswersHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        TransportArrangerSummary.row(showActionLinks = true),
-        Some(TransportArrangerNameSummary.row(showActionLinks = true)),
-        TransportArrangerVatSummary.row(showActionLinks = true),
-        Some(TransportArrangerAddressSummary.row(showActionLinks = true))
+        TransportArrangerSummary.row(),
+        Some(TransportArrangerNameSummary.row()),
+        TransportArrangerVatSummary.row(),
+        Some(TransportArrangerAddressSummary.row())
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

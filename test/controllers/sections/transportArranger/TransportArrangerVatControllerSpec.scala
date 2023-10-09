@@ -42,6 +42,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     val form = formProvider()
 
     lazy val transportArrangerVatRoute = routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode).url
+    lazy val transportArrangerNonGbVatRoute = routes.TransportArrangerVatController.onNonGbVAT(testErn, testLrn).url
     lazy val transportArrangerVatSubmitAction = routes.TransportArrangerVatController.onSubmit(testErn, testLrn, NormalMode)
 
     val application = applicationBuilder(userAnswers)
@@ -64,6 +65,19 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(application)).toString
+      }
+    }
+
+    "must redirect for a GET onNonGbVAT" in new Fixture() {
+      running(application) {
+
+        MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
+
+        val request = FakeRequest(GET, transportArrangerNonGbVatRoute)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 

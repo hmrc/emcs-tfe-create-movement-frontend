@@ -28,33 +28,33 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
-    case ConsigneeAddressPage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    // if the [destinationType] was Exempted Organisation
+    case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
-        controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
-
-    case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
-
-    case ConsigneeExportPage =>
-      (userAnswers: UserAnswers) =>
-        userAnswers.get(ConsigneeExportPage) match {
-          case Some(true) =>
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
-          case Some(false) =>
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
-          case _ =>
-            controllers.routes.JourneyRecoveryController.onPageLoad()
-        }
+    // else
+    case ConsigneeExportPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(ConsigneeExportPage) match {
+        case Some(true) =>
+          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        case Some(false) =>
+          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        case _ =>
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
 
     case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
-    case ConsigneeExemptOrganisationPage =>
-      (userAnswers: UserAnswers) =>
-        controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+    case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
+    case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
+    case ConsigneeAddressPage =>
+      //TODO update to next page when finished
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

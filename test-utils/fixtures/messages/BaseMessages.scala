@@ -38,6 +38,7 @@ trait BaseMessages { _: i18n =>
   val no: String = "No"
   val change: String = "Change"
   val remove: String = "Remove"
+  val sectionNotComplete: String => String = section => s"$section section not complete"
 }
 
 trait BaseEnglish extends BaseMessages with EN

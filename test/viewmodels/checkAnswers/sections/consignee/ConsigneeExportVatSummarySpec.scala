@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.consignee
+package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportMessages
+import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
 import models.CheckMode
+import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportVatType.No
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.ConsigneeExportSummary
+import viewmodels.checkAnswers.sections.consignee.{ConsigneeExportSummary, ConsigneeExportVatSummary}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeExportSummarySpec extends SpecBase with Matchers {
-  "ConsigneeExportSummary" - {
+class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
+  "ConsigneeExportVatSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportVatMessages.English, ConsigneeExportVatMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -56,37 +58,20 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(No,None, None)))
 
-              ConsigneeExportSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
+                    value = Value(Text(No.toString)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = ConsigneeExportPage
+                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        id = ConsigneeExportVatPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
-                  )
-                )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
-
-              ConsigneeExportSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
-                    actions = Seq()
                   )
                 )
             }

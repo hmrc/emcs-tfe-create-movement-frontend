@@ -162,6 +162,8 @@ address.transportArrangerAddress.subheading = Transport arranger
 address.firstTransporterAddress.title = Enter the first transporter’s business address
 address.firstTransporterAddress.heading = Enter the first transporter’s business address
 address.firstTransporterAddress.subheading = First transporter
+address.firstTransporterAddress.checkYourAnswers.label = Address
+address.firstTransporterAddress.change.hidden = first transporters address
 
 address.property = Property name or number (optional)
 address.property.error.length = Enter a property name or number up to 11 characters
@@ -317,10 +319,11 @@ transportArrangerCheckAnswers.heading = Check your answers
 
 firstTransporterName.title = What is the first transporter''s business name?
 firstTransporterName.heading = What is the first transporter''s business name?
-firstTransporterName.checkYourAnswersLabel = firstTransporterName
 firstTransporterName.error.required = Enter the business name
 firstTransporterName.error.length = Business name must be 182 characters or less
 firstTransporterName.error.invalidCharacter = Business name must not contain < and > and : and ;
+firstTransporterName.checkYourAnswersLabel = Business name
+firstTransporterName.change.hidden = first transporters business name
 
 firstTransporterVat.title = What is the first transporter''s VAT registration number?
 firstTransporterVat.heading = What is the first transporter''s VAT registration number?
@@ -329,6 +332,12 @@ firstTransporterVat.notUkVatLink = The first transporter is not VAT registered
 firstTransporterVat.error.required = Enter a VAT registration number
 firstTransporterVat.error.length = VAT registration number must be 12 characters or less
 firstTransporterVat.error.alphanumeric = VAT registration number number must only contain letters and numbers
+firstTransporterVat.checkYourAnswersLabel = VAT registration number
+firstTransporterVat.change.hidden = first transporters VAT registration number
+
+firstTransporterCheckAnswers.heading = Check your answers
+firstTransporterName.checkYourAnswers.label = Business name
+firstTransporterVat.checkYourAnswers.label = VAT registration number
 
 consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
 consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?

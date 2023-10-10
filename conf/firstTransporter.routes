@@ -13,3 +13,6 @@ GET        /trader/:ern/draft/:lrn/first-transporter/address                    
 POST       /trader/:ern/draft/:lrn/first-transporter/address                    controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/first-transporter/address/change             controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/first-transporter/address/change             controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/first-transporter/check-answers              controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/draft/:lrn/first-transporter/check-answers              controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onSubmit(ern: String, lrn: String)

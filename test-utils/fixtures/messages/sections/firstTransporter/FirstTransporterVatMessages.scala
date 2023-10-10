@@ -29,6 +29,9 @@ object FirstTransporterVatMessages {
     val errorRequired = "Enter a VAT registration number"
     val errorLength = "VAT registration number must be 12 characters or less"
     val errorAlphanumeric = "VAT registration number number must only contain letters and numbers"
+
+    val cyaLabel: String = "VAT registration number"
+    val cyaChangeHidden: String = "first transporters VAT registration number"
   }
 
   object English extends ViewMessages with BaseEnglish

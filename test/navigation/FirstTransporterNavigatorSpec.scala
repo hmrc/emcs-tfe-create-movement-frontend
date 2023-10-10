@@ -60,10 +60,8 @@ class FirstTransporterNavigatorSpec extends SpecBase {
     "for the FirstTransporterAddressPage (CAM-FT03)" - {
 
       "must go to CAM-FT04" in {
-
-        // TODO redirect to CAM-TF04
         navigator.nextPage(FirstTransporterAddressPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn)
       }
 
     }

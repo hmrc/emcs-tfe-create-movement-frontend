@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.consignee
+package forms.sections.guarantor
 
-import pages.behaviours.PageBehaviours
+import javax.inject.Inject
 
-class ConsigneeExcisePageSpec extends PageBehaviours {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  "ConsigneeExcisePage" - {
+class GuarantorRequiredFormProvider @Inject() extends Mappings {
 
-    beRetrievable[String](ConsigneeExcisePage, testErn)
-
-    beSettable[String](ConsigneeExcisePage, testErn, "GBWK1234567890")
-
-    beRemovable[String](ConsigneeExcisePage, testErn)
-  }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("guarantorRequired.error.required")
+    )
 }
-

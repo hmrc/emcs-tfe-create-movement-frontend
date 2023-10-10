@@ -32,3 +32,4 @@ GET         /trader/:ern/draft/:lrn/confirmation         controllers.Confirmatio
 ->          /                                            firstTransporter.Routes
 ->          /                                            dispatch.Routes
 ->          /                                            destination.Routes
+->          /                                            guarantor.Routes

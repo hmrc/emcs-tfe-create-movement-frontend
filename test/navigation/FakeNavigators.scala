@@ -61,4 +61,9 @@ object FakeNavigators {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }
+
+  class FakeGuarantorNavigator(desiredRoute: Call) extends GuarantorNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
 }

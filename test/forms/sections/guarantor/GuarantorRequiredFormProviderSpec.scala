@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package pages.sections.consignor
+package forms.sections.guarantor
 
-import pages.behaviours.PageBehaviours
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-class CheckAnswersConsignorPageSpec extends PageBehaviours {
+class GuarantorRequiredFormProviderSpec extends BooleanFieldBehaviours {
 
-  "CheckAnswersConsignorPage" - {
+  val requiredKey = "guarantorRequired.error.required"
+  val invalidKey = "error.boolean"
 
-    "toString" - {
-      "must be correct" in {
-        CheckAnswersConsignorPage.toString mustBe "checkAnswersConsignor"
-      }
-    }
+  val form = new GuarantorRequiredFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

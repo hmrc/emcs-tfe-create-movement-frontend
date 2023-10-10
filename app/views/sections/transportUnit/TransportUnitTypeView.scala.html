@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize
 @import models.requests.DataRequest
 
 @this(
@@ -42,17 +43,13 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                legend = LegendViewModel(Text(messages("transportUnitType.heading"))).asPageHeading(LegendSize.Large),
                 items  = TransportUnitType.options
             ).withHint(HintViewModel(messages("transportUnitType.hint")))
         )
 
         @continueOrExit()
     }
-}
-
-@heading = {
-    @h1("transportUnitType.heading", None, "govuk-fieldset__heading")
 }
 
 @{

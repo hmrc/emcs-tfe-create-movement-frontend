@@ -22,7 +22,7 @@ import play.api.libs.json.JsPath
 
 case object DestinationAddressPage extends QuestionPage[UserAddress] {
 
-  override def path: JsPath = JsPath \ "destinationAddress" \ toString
+  override def path: JsPath = JsPath \ "destination" \ toString
 
   override def toString: String = "destinationAddress"
 }

@@ -265,6 +265,7 @@ transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
 dispatch.subHeading = Place of dispatch information
+destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 

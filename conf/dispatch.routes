@@ -3,7 +3,7 @@ POST       /trader/:ern/draft/:lrn/dispatch/business-name                       
 GET        /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
-# DIS09
+# DIS07
 GET        /trader/:ern/draft/:lrn/dispatch/address                 controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:lrn/dispatch/address                 controllers.sections.dispatch.DispatchAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/dispatch/address/change          controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)

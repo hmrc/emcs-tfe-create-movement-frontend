@@ -149,6 +149,10 @@ address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address
 address.consigneeAddress.subheading = Consignee information
 
+address.destinationAddress.title = Enter the place of destination address
+address.destinationAddress.heading = Enter the place of destination address
+address.destinationAddress.subheading = Place of destination information
+
 address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
 address.dispatchAddress.subheading = Place of dispatch information

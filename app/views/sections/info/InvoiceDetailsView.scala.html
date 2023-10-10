@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
+@import models.requests.UserRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
 
@@ -28,22 +28,25 @@
     govukDateInput: GovukDateInput,
     continueOrSkip: components.continueOrSkip,
     p: components.p,
-    h1: components.h1
+    h1: components.h1,
+    h2: components.h2
 )
 
-@(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: UserRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("invoiceDetails.title"))) {
 
-    @formHelper(action = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, request.lrn)) {
+    @formHelper(action = onSubmitCall) {
 
         @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
-
-            @heading
 
             @if(form.errors.nonEmpty) {
                 @govukErrorSummary(ErrorSummaryViewModel(form))
             }
+
+            @h2(messages("section.movementInformation"), "govuk-caption-l")
+
+            @h1("invoiceDetails.heading")
 
             @p(){@messages("invoiceDetails.text")}
 
@@ -67,8 +70,4 @@
 
         @continueOrSkip(skipQuestionCall.url)
     }
-}
-
-@heading = {
-    @h1("invoiceDetails.heading", Some(messages("section.movementInformation")), "govuk-heading-l")
 }

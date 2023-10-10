@@ -16,22 +16,22 @@
 
 package controllers.sections.info
 
+import config.SessionKeys.{DEFERRED_MOVEMENT, INVOICE_DETAILS}
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.info.InvoiceDetailsFormProvider
-import models.{Mode, NormalMode}
-import models.requests.DataRequest
+import models.requests.UserRequest
+import models.sections.info.InvoiceDetailsModel
 import navigation.Navigator
-import pages.sections.info.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class InvoiceDetailsController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -47,25 +47,26 @@ class InvoiceDetailsController @Inject()(
                                        timeMachine: TimeMachine
                                      ) extends BaseNavigationController with AuthActionHelper with DateUtils {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      renderView(Ok, fillForm(InvoiceDetailsPage, formProvider()))
+  def onPageLoad(ern: String): Action[AnyContent] =
+    (auth(ern) andThen userAllowList) { implicit request =>
+      renderView(Ok, formProvider())
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String): Action[AnyContent] =
+    (auth(ern) andThen userAllowList) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors)),
-        saveAndRedirect(InvoiceDetailsPage, _, NormalMode)
+        formWithErrors => renderView(BadRequest, formWithErrors),
+        value => Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+          .addingToSession(INVOICE_DETAILS -> Json.toJson(value).toString())
       )
     }
 
-  private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Result = {
+  private def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result = {
     status(view(
       form = form,
       currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
-      onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, request.lrn),
-      skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, NormalMode, request.userAnswers)
+      onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern),
+      skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     ))
   }
 }

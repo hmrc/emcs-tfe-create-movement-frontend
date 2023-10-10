@@ -30,7 +30,7 @@ class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case LocalReferenceNumberPage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern)
     case InvoiceDetailsPage =>
       //TODO update when CAMINFO006 is complete
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

@@ -27,7 +27,7 @@ import navigation.Navigator
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.{Call, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -45,19 +45,16 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
     override def now(): LocalDateTime = testLocalDate.atStartOfDay()
   }
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    def onwardRoute = Call("GET", "/foo")
+  class Fixture() {
 
     val formProvider = new InvoiceDetailsFormProvider()
     val form = formProvider()
 
-    lazy val invoiceDetailsRoute = controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn, testLrn).url
-    lazy val invoiceDetailsOnSubmit= controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testLrn)
+    lazy val invoiceDetailsRoute = controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn).url
+    lazy val invoiceDetailsOnSubmit= controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn)
 
-    val application = applicationBuilder(userAnswers = userAnswers)
+    val application = applicationBuilder()
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[TimeMachine].toInstance(timeMachine)
       )
@@ -81,33 +78,12 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = form,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = onwardRoute
-        )(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(InvoiceDetailsPage, invoiceDetailsModel)
-    )){
-
-      running(application) {
-        val request = FakeRequest(GET, invoiceDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form.fill(invoiceDetailsModel),
-          currentDate = testLocalDate.formatDateNumbersOnly(),
-          onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = onwardRoute
-        )(dataRequest(request), messages(application)).toString
+          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        )(userRequest(request), messages(application)).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       running(application) {
         val request =
@@ -122,7 +98,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
       }
     }
 
@@ -142,34 +118,8 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = boundForm,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = onwardRoute
-        )(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-
-      running(application) {
-        val request = FakeRequest(GET, invoiceDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-
-      running(application) {
-        val request =
-          FakeRequest(POST, invoiceDetailsRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        )(userRequest(request), messages(application)).toString
       }
     }
   }

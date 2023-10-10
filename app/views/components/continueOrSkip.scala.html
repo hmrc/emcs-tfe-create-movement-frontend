@@ -15,14 +15,13 @@
  *@
 
 @import config.AppConfig
-@import models.requests.DataRequest
 
 @this(
         govukButton: GovukButton,
         appConfig: AppConfig
 )
 
-@(href: String, primaryKey: String = "site.continue")(implicit messages: Messages, request: DataRequest[_])
+@(href: String, primaryKey: String = "site.continue")(implicit messages: Messages)
 
     <div class="govuk-button-group">
 

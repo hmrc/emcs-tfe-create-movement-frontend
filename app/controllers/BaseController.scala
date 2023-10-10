@@ -17,12 +17,12 @@
 package controllers
 
 import models._
-import models.requests.DataRequest
+import models.requests.{DataRequest, UserRequest}
 import pages.QuestionPage
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{Format, Reads}
-import play.api.mvc.Result
+import play.api.libs.json.{Format, Json, Reads}
+import play.api.mvc.{Call, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
 

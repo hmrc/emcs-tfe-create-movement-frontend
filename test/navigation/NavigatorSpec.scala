@@ -43,7 +43,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the Invoice Details page" in {
 
           navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn, testLrn)
+            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn)
         }
       }
 

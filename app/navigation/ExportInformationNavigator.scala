@@ -17,9 +17,9 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, NormalMode, UserAnswers}
+import models.{Mode, UserAnswers}
 import pages.Page
-import pages.sections.exportInformation.ExportCustomsOfficePage
+import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -28,20 +28,17 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
-    case ExportCustomsOfficePage => (_: UserAnswers) =>
-      //TODO: Redirect to CAM-EXP02
+    case ExportCustomsOfficePage => (userAnswers: UserAnswers) =>
+      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    //TODO: Route to next section when available
+    case ExportInformationCheckAnswersPage => (_: UserAnswers) =>
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
-    case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+    case _ => (userAnswers: UserAnswers) =>
+      routes.IndexController.onPageLoad(userAnswers.ern)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-
-    //TODO: Update when other modes are added
-    case _ =>
-      normalRoutes(page)(userAnswers)
-  }
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    normalRoutes(page)(userAnswers)
 }

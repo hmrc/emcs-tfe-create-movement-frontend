@@ -16,31 +16,36 @@
 
 package viewmodels.checkAnswers.sections.exportInformation
 
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ExportCustomsOfficeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExportCustomsOfficePage).map {
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(ExportCustomsOfficePage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "exportCustomsOffice.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
+          key = "exportCustomsOffice.checkYourAnswers.label",
+          value = ValueViewModel(answer),
+          actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
-              "site.change",
-              controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-              "changeExportCustomsOffice"
+              content = "site.change",
+              href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(
+                ern = request.userAnswers.ern,
+                lrn = request.userAnswers.lrn,
+                mode = CheckMode
+              ).url,
+              id = "changeExportCustomsOffice"
             )
               .withVisuallyHiddenText(messages("exportCustomsOffice.change.hidden"))
           )
         )
     }
+
 }

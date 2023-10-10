@@ -2,3 +2,6 @@ GET        /trader/:ern/draft/:lrn/export-information/customs-office            
 POST       /trader/:ern/draft/:lrn/export-information/customs-office                        controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/draft/:lrn/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onSubmit(ern: String, lrn: String)

@@ -209,7 +209,6 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
-destination.subHeading = Place of destination information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -543,4 +542,12 @@ transportSealChoice.error.required.5 = Select yes if there is a commercial seal 
 transportSealChoice.hint = This is a seal that prevents items being removed or added.
 transportSealChoice.checkYourAnswersLabel = Commercial seal
 transportSealChoice.change.hidden = TransportSealChoice
+
+destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.checkYourAnswersLabel = destinationWarehouseVat
+destinationWarehouseVat.error.required = Enter a VAT registration number
+destinationWarehouseVat.error.invalidCharacter = VAT registration number must not contain < and > and : and ;
+destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
+destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 

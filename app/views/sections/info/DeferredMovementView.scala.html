@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.UserRequest
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -23,6 +24,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     h1: components.h1,
+    h2: components.h2,
     p: components.p,
     details: components.details
 )
@@ -37,10 +39,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("deferredMovement.caption"), "govuk-caption-xl")
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l")
+                legend = LegendViewModel(Text(messages("deferredMovement.heading"))).asPageHeading(LegendSize.Large)
             ).withHint(HintViewModel(messages("deferredMovement.hint")))
         )
 
@@ -57,10 +60,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
-}
-
-@heading = {
-    @h1("deferredMovement.heading", Some(messages("deferredMovement.caption")), "govuk-fieldset__heading")
 }
 
 @{

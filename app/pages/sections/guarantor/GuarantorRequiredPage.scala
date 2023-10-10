@@ -21,7 +21,7 @@ import play.api.libs.json.JsPath
 
 case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "guarantor" \ toString
 
   override def toString: String = "guarantorRequired"
 }

@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import models.sections.journeyType.HowMovementTransported
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -23,7 +24,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    h1: components.h1
+    h1: components.h1,
+    h2: components.h2
 )
 
 
@@ -37,10 +39,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @h2(messages("journeyType.subHeading", request.lrn), "govuk-caption-xl")
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                legend = LegendViewModel(Text(messages("howMovementTransported.heading"))).asPageHeading(LegendSize.Large),
                 items  = HowMovementTransported.options
             )
         )
@@ -51,9 +54,6 @@
     }
 }
 
-@heading = {
-    @h1("howMovementTransported.heading", Some(messages("journeyType.subHeading", request.lrn)), "govuk-fieldset__heading")
-}
 @{
     //$COVERAGE-OFF$
 }

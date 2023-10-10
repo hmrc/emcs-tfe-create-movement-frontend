@@ -15,8 +15,8 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.consignee.ConsigneeExportVat
 @import models.sections.consignee.ConsigneeExportVatType
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -28,7 +28,6 @@
     h2: components.h2,
     continueOrExit: components.continueOrExit
 )
-
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
@@ -45,17 +44,13 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("exportType"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                legend = LegendViewModel(Text(messages("consigneeExportVat.heading"))).asPageHeading(LegendSize.Large),
                 items  = ConsigneeExportVatType.options(form)
             )
         )
 
         @continueOrExit()
     }
-}
-
-@heading = {
-    @h1("consigneeExportVat.heading", None, "govuk-fieldset__heading")
 }
 
 @{

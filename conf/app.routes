@@ -33,3 +33,4 @@ GET         /trader/:ern/draft/:lrn/confirmation         controllers.Confirmatio
 ->          /                                            dispatch.Routes
 ->          /                                            destination.Routes
 ->          /                                            guarantor.Routes
+->          /                                            exportInformation.Routes

@@ -88,6 +88,14 @@ trait Constraints {
         Invalid(errorKey, regex)
     }
 
+  protected def fixedLength(length: Int, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.length == length =>
+        Valid
+      case _ =>
+        Invalid(errorKey, length)
+    }
+
   protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.length <= maximum =>

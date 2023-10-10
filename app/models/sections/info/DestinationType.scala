@@ -18,6 +18,7 @@ package models.sections.info
 
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
+import play.api.libs.json.{JsString, Writes}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
@@ -35,7 +36,9 @@ object DestinationType extends Enumerable.Implicits {
 
   case object ExemptedOrganisations extends WithName("5") with DestinationType
 
-  case object Export extends WithName("6") with DestinationType
+  //Both to be sent as `Export - 6` to backend. Differentiated for Frontend Content
+  case object ExportWithCustomsLodgedInEU extends WithName("6EU") with DestinationType
+  case object ExportWithCustomsLodgedInGB extends WithName("6GB") with DestinationType
 
   case object UnknownDestination extends WithName("8") with DestinationType
 
@@ -51,7 +54,8 @@ object DestinationType extends Enumerable.Implicits {
     TemporaryRegisteredConsignee,
     DirectDelivery,
     ExemptedOrganisations,
-    Export,
+    ExportWithCustomsLodgedInEU,
+    ExportWithCustomsLodgedInGB,
     UnknownDestination,
     CertifiedConsignee,
     TemporaryCertifiedConsignee,
@@ -65,6 +69,14 @@ object DestinationType extends Enumerable.Implicits {
         value = Some(value.toString),
         id = Some(s"value_${value.toString}")
       )
+  }
+
+  //TODO: To be used when submitting to Backend
+  val submissionWrites: Writes[DestinationType] = {
+    Writes {
+      case ExportWithCustomsLodgedInEU | ExportWithCustomsLodgedInGB => JsString("6")
+      case destination => JsString(destination.toString)
+    }
   }
 
   implicit val enumerable: Enumerable[DestinationType] =

@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package object forms {
-  private[forms] val TEXTAREA_MAX_LENGTH = 350
-  private[forms] val ALPHANUMERIC_REGEX = "^(?s)(?=.*[A-Za-z0-9]).{1,}$"
-  private[forms] val XSS_REGEX = "^(?s)(?!.*javascript)(?!.*[<>;:]).{1,}$"
-  private[forms] val ONLY_ALPHANUMERIC_REGEX = "^[A-Za-z0-9]*$"
-  private[forms] val EXPORT_CUSTOMS_OFFICE_REGEX = "^[A-Z]{2}[a-zA-Z0-9]{6}$"
+package pages.sections.exportInformation
+
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object ExportCustomsOfficePage extends QuestionPage[String] {
+
+  override def path: JsPath = JsPath \ "exportInformation" \ toString
+
+  override def toString: String = "exportCustomsOffice"
 }

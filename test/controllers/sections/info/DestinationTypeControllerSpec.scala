@@ -35,7 +35,8 @@ import views.html.sections.info.DestinationTypeView
 
 class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(dispatchPlace: Option[DispatchPlace], ern: String = testGreatBritainErn, value: String = "unknownDestination") {
+  class Fixture(dispatchPlace: Option[DispatchPlace], ern: String = testGreatBritainErn, value: String = "1") {
+
     lazy val application: Application =
       applicationBuilder(userAnswers = None)
         .overrides(
@@ -98,7 +99,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit("XIWK123"))(getRequest, messages(application)).toString
           }
         }
-        "when the request contains a XIWK ERN and dispatchPlace is NorthernIreland" in new Fixture(Some(NorthernIreland), ern = "XIWK123") {
+        "when the request contains a XI ERN and dispatchPlace is NorthernIreland" in new Fixture(Some(NorthernIreland), ern = "XIWK123") {
           running(application) {
             status(getResult) mustEqual OK
             contentAsString(getResult) mustEqual view(NorthernIreland, form, controllers.sections.info.routes.DestinationTypeController.onSubmit("XIWK123"))(getRequest, messages(application)).toString

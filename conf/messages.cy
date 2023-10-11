@@ -219,9 +219,11 @@ destinationType.heading.import = What is the destination type for this import?
 destinationType.title.movement = What is the destination type for this movement?
 destinationType.title.import = What is the destination type for this import?
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
+
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
 destinationType.directDelivery = Direct delivery
 destinationType.euTaxWarehouse = Tax warehouse in the European Union
+
 destinationType.exemptedOrganisation = Exempted organisation
 destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
 destinationType.registeredConsignee = Registered consignee

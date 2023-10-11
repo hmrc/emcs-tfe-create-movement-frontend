@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import models.sections.guarantor.GuarantorArranger
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -23,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    h1: components.h1,
+    h2: components.h2,
     continueOrExit: components.continueOrExit
 )
 
@@ -37,10 +38,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @h2(messages("guarantor.subHeading"), "govuk-caption-xl")
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                legend = LegendViewModel(Text(messages("guarantorArranger.heading"))).asPageHeading(LegendSize.Large),
                 items  = GuarantorArranger.options
             )
         )
@@ -49,6 +51,6 @@
     }
 }
 
-@heading = {
-    @h1("guarantorArranger.heading", Some(messages("guarantor.subHeading", request.lrn)), "govuk-fieldset__heading")
+@{
+    //$COVERAGE-OFF$
 }

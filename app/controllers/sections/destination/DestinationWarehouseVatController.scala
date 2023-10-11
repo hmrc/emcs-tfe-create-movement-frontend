@@ -60,7 +60,7 @@ class DestinationWarehouseVatController @Inject()(
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
- //     val destinationType = request.userAnswers.get(DestinationTypePage)
+      val destinationType = request.userAnswers.get(DestinationTypePage)()
       val destinationType = "TEST destiantion"
       formProvider().bindFromRequest().fold(
         formWithErrors =>

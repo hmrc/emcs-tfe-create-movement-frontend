@@ -39,13 +39,13 @@ class GuarantorNavigatorSpec extends SpecBase {
       "for GuarantorRequiredPage" - {
 
         "when true" - {
-          // TODO redirect to CAM-G02
+
           "must go to CAM-G02" in {
 
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode)
           }
         }
         "when false" - {

@@ -2,3 +2,8 @@ GET         /trader/:ern/draft/:lrn/guarantor/required               controllers
 POST        /trader/:ern/draft/:lrn/guarantor/required               controllers.sections.guarantor.GuarantorRequiredController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:lrn/guarantor/required/change        controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:lrn/guarantor/required/change        controllers.sections.guarantor.GuarantorRequiredController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/draft/:lrn/guarantor/arranger               controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:lrn/guarantor/arranger               controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:lrn/guarantor/arranger/change        controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:lrn/guarantor/arranger/change        controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

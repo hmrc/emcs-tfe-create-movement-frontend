@@ -15,34 +15,35 @@
  *@
 
 @import models.requests.DataRequest
+@import models.sections.guarantor.GuarantorArranger
 @import viewmodels.LegendSize
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukRadios: GovukRadios,
-        govukButton: GovukButton,
-        h1: components.h1,
-        h2: components.h2,
-        continueOrExit: components.continueOrExit
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    h2: components.h2,
+    continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("guarantorRequired.title"))) {
+@layout(pageTitle = title(form, messages("guarantorArranger.title"))) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorRequiredController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
         @h2(messages("guarantor.subHeading"), "govuk-caption-xl")
         @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(Text(messages("guarantorRequired.heading"))).asPageHeading(LegendSize.Large)
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(Text(messages("guarantorArranger.heading"))).asPageHeading(LegendSize.Large),
+                items  = GuarantorArranger.options
             )
         )
 

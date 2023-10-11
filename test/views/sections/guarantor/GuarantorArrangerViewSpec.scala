@@ -17,8 +17,8 @@
 package views.sections.guarantor
 
 import base.ViewSpecBase
-import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
-import forms.sections.guarantor.GuarantorRequiredFormProvider
+import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
+import forms.sections.guarantor.GuarantorArrangerFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,33 +26,37 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.guarantor.GuarantorRequiredView
+import views.html.sections.guarantor.GuarantorArrangerView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorRequiredViewSpec extends ViewSpecBase with ViewBehaviours {
-
+class GuarantorArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "Guarantor Required view" - {
+  "GuarantorArrangerView" - {
 
-    Seq(GuarantorRequiredMessages.English, GuarantorRequiredMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GuarantorArrangerMessages.English, GuarantorArrangerMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[GuarantorRequiredView]
-        val form = app.injector.instanceOf[GuarantorRequiredFormProvider].apply()
+        val view = app.injector.instanceOf[GuarantorArrangerView]
+        val form = app.injector.instanceOf[GuarantorArrangerFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            form = form,
+            mode = NormalMode
+          ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
+          Selectors.radioButton(1) -> messagesForLanguage.consignorRadioOption,
+          Selectors.radioButton(2) -> messagesForLanguage.consigneeRadioOption,
+          Selectors.radioButton(3) -> messagesForLanguage.goodsOwnerRadioOption,
+          Selectors.radioButton(4) -> messagesForLanguage.transporterRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -60,3 +64,4 @@ class GuarantorRequiredViewSpec extends ViewSpecBase with ViewBehaviours {
     }
   }
 }
+

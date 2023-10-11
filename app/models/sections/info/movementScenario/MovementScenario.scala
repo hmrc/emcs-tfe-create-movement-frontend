@@ -216,12 +216,12 @@ object MovementScenario extends Enumerable.Implicits with Logging {
 
   def valuesEu(implicit request: UserRequest[_]): Seq[MovementScenario] = Seq(
     DirectDelivery(),
-    EuTaxWarehouse(),
     ExemptedOrganisation(),
     ExportWithCustomsDeclarationLodgedInTheEu(),
     ExportWithCustomsDeclarationLodgedInTheUk(),
-    GbTaxWarehouse(),
     RegisteredConsignee(),
+    EuTaxWarehouse(),
+    GbTaxWarehouse(),
     TemporaryRegisteredConsignee(),
     UnknownDestination()
   )

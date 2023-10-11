@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.info
 
 import base.SpecBase
 import forms.DispatchPlaceFormProvider
@@ -116,7 +116,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url
+            redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testNorthernIrelandErn).url
           }
         }
 

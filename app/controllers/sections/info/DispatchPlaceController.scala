@@ -57,8 +57,7 @@ class DispatchPlaceController @Inject()(
           formWithErrors =>
             renderView(BadRequest, formWithErrors),
           value =>
-            // TODO Redirect to CAM-INFO08 once built, in the meantime redirect to CAM-INFO05
-            Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+            Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(ern))
               .addingToSession(DISPATCH_PLACE -> value.toString)
         )
       }
@@ -71,7 +70,7 @@ class DispatchPlaceController @Inject()(
     if (request.isNorthernIrelandErn) {
       f
     } else {
-      Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern))
+      Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(request.ern))
     }
 }
 

@@ -1,6 +1,6 @@
 # INFO01
-GET        /trader/:ern/info/dispatch-place                 controllers.sections.info.DispatchPlaceController.onPageLoad(ern: String)
-POST       /trader/:ern/info/dispatch-place                 controllers.sections.info.DispatchPlaceController.onSubmit(ern: String)
+GET         /trader/:ern/info/dispatch-place                controllers.sections.info.DispatchPlaceController.onPageLoad(ern: String)
+POST        /trader/:ern/info/dispatch-place                controllers.sections.info.DispatchPlaceController.onSubmit(ern: String)
 
 # INFO02
 GET         /trader/:ern/info/local-reference-number        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String)
@@ -9,3 +9,7 @@ POST        /trader/:ern/info/local-reference-number        controllers.sections
 # INFO05
 GET         /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onPageLoad(ern: String)
 POST        /trader/:ern/info/deferred-movement             controllers.sections.info.DeferredMovementController.onSubmit(ern: String)
+
+# INFO08
+GET         /trader/:ern/info/destination-type              controllers.sections.info.DestinationTypeController.onPageLoad(ern: String)
+POST        /trader/:ern/info/destination-type              controllers.sections.info.DestinationTypeController.onSubmit(ern: String)

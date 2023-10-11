@@ -264,9 +264,26 @@ firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
 dispatch.subHeading = Place of dispatch information
 guarantor.subHeading = Guarantor
+movementInformation.subHeading = Movement information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
+
+destinationType.heading.movement = What is the destination type for this movement?
+destinationType.heading.import = What is the destination type for this import?
+destinationType.title.movement = What is the destination type for this movement?
+destinationType.title.import = What is the destination type for this import?
+destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
+destinationType.gbTaxWarehouse = Great Britain tax warehouse
+destinationType.directDelivery = Direct delivery
+destinationType.euTaxWarehouse = European Union tax warehouse
+destinationType.exemptedOrganisation = Exempted organisation
+destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
+destinationType.registeredConsignee = Registered consignee
+destinationType.temporaryRegisteredConsignee = Temporary registered consignee
+destinationType.unknownDestination = Unknown destination
+destinationType.error.required.movement = Select the place of destination for this movement
+destinationType.error.required.import = Select the place of destination for this import
 
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
@@ -290,7 +307,6 @@ giveInformationOtherTransport.error.length = Information must be 350 characters 
 giveInformationOtherTransport.error.character = Information must contain letters or numbers
 giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
 giveInformationOtherTransport.change.hidden = give information about your other type of transport
-
 
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?

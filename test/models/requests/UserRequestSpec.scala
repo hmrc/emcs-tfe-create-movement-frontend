@@ -17,10 +17,12 @@
 package models.requests
 
 import base.SpecBase
+import config.SessionKeys.DISPATCH_PLACE
+import models.DispatchPlace.{GreatBritain, NorthernIreland}
 import models._
 import play.api.test.FakeRequest
 
-class DataRequestSpec extends SpecBase {
+class UserRequestSpec extends SpecBase {
   "userTypeFromErn" - {
     Seq(
       ("GBRC123456789", GreatBritainRegisteredConsignor),
@@ -35,11 +37,34 @@ class DataRequestSpec extends SpecBase {
         s"when provided ERN $ern" - {
           s"must return $userType" in {
             val fakeRequest = FakeRequest()
-            val request = dataRequest(fakeRequest).copy(request = userRequest(fakeRequest).copy(ern = ern))
+            val request = userRequest(fakeRequest).copy(ern = ern)
 
             request.userTypeFromErn mustBe userType
           }
         }
+    }
+  }
+
+  "dispatchPlace" - {
+    Seq(
+      ("GB", Some(GreatBritain)),
+      ("XI", Some(NorthernIreland)),
+      ("beans", None)
+    ).foreach {
+      case (dp, res) =>
+        s"when provided DISPATCH_PLACE $dp" - {
+          s"must return $res" in {
+            val request = userRequest(FakeRequest().withSession(DISPATCH_PLACE -> dp))
+            request.dispatchPlace mustBe res
+          }
+        }
+
+    }
+    "when no DISPATCH_PLACE is present" - {
+      "must return None" in {
+        val request = userRequest(FakeRequest())
+        request.dispatchPlace mustBe None
+      }
     }
   }
 }

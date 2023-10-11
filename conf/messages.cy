@@ -13,7 +13,7 @@ site.returnToDraft = Return to draft
 site.saveAndReturnToMovement = Save and return to movement
 site.start = Start now
 site.startAgain = Start again
-site.signIn = Sign in
+site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
 site.opensInNewTab = (yn agor tab newydd)
 
@@ -51,7 +51,7 @@ date.month.11 = November
 date.month.12 = December
 
 timeout.title = You’re about to be signed out
-timeout.message = For security reasons, you will be signed out of this service in
+timeout.message = For your security, we will sign you out in
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
@@ -70,19 +70,10 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-journeyRecovery.continue.title = Sorry, there is a problem with the service
-journeyRecovery.continue.heading = Sorry, there is a problem with the service
-journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
-journeyRecovery.startAgain.title = Sorry, there is a problem with the service
-journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
-journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
-
 signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
-signedOut.guidance = We did not save your answers.
-
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+signedOut.guidance.saved = We have saved your answers.
+signedOut.guidance.notSaved = We have not saved your answers.
 
 lrn.subHeading = Create movement for {0}
 
@@ -129,7 +120,6 @@ deferredMovement.summary = Help with fallback procedures
 deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
 deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
 deferredMovement.error.required = Select yes if this is a deferred movement
-
 localReferenceNumber.deferred.title = Enter the Local Reference Number (LRN) for the deferred movement
 localReferenceNumber.deferred.heading = Enter the Local Reference Number (LRN) for the deferred movement
 localReferenceNumber.deferred.p1 = This must match the LRN on the Fallback Accompanying Document (FAD).
@@ -205,9 +195,26 @@ firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
 dispatch.subHeading = Place of dispatch information
 guarantor.subHeading = Guarantor
+movementInformation.subHeading = Movement information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
+
+destinationType.heading.movement = What is the destination type for this movement?
+destinationType.heading.import = What is the destination type for this import?
+destinationType.title.movement = What is the destination type for this movement?
+destinationType.title.import = What is the destination type for this import?
+destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
+destinationType.gbTaxWarehouse = Great Britain tax warehouse
+destinationType.directDelivery = Direct delivery
+destinationType.euTaxWarehouse = European Union tax warehouse
+destinationType.exemptedOrganisation = Exempted organisation
+destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
+destinationType.registeredConsignee = Registered consignee
+destinationType.temporaryRegisteredConsignee = Temporary registered consignee
+destinationType.unknownDestination = Unknown destination
+destinationType.error.required.movement = Select the place of destination for this movement
+destinationType.error.required.import = Select the place of destination for this import
 
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
@@ -366,6 +373,7 @@ transportUnitType.5 = Fixed transport installations
 transportUnitType.4 = Tractor
 transportUnitType.3 = Trailer
 transportUnitType.2 = Vehicle
+
 transportUnitType.checkYourAnswersLabel = Transport units
 transportUnitType.error.required = Select what the goods will be transported in
 transportUnitType.change.hidden = TransportUnitType

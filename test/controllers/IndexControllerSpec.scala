@@ -43,7 +43,7 @@ class IndexControllerSpec extends SpecBase {
 
     "with a Great Britain ERN" - {
 
-      "must redirect to the Deferred Movement page (CAM-INFO05)" in {
+      "must redirect to the Destination Type page (CAM-INFO08)" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -53,7 +53,7 @@ class IndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testGreatBritainErn).url)
+          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testGreatBritainErn).url)
         }
       }
     }

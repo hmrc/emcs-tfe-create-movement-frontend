@@ -21,9 +21,12 @@ import config.SessionKeys
 import forms.LocalReferenceNumberFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
+import models.requests.UserRequest
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.sections.info.{DeferredMovementPage, LocalReferenceNumberPage}
+import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
+import play.api.Application
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -35,7 +38,10 @@ import scala.concurrent.Future
 class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val application =
+
+    implicit val ur: UserRequest[_] = userRequest(FakeRequest())
+
+    val application: Application =
       applicationBuilder(userAnswers)
         .overrides(
           bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)),
@@ -56,92 +62,189 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
     ".onPageLoad()" - {
 
-      "when the Deferred Movement answer exists in session" - {
+      "when the Destination Type Page answer exists in session" - {
 
-        "must return OK and the correct view for a GET" in new Fixture() {
-          running(application) {
+        "when the Deferred Movement answer exists in session" - {
 
-            val request = FakeRequest(GET, localReferenceNumberRoute).withSession(SessionKeys.DEFERRED_MOVEMENT -> "false")
-            val result = route(application, request).value
+          "must return OK and the correct view for a GET" in new Fixture() {
+            running(application) {
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberSubmitAction)(userRequest(request), messages(application)).toString
+              val request = FakeRequest(GET, localReferenceNumberRoute)
+                .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+              val result = route(application, request).value
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberSubmitAction)(userRequest(request), messages(application)).toString
+            }
+          }
+        }
+
+        "when the Deferred Movement answer DOES NOT exist in session" - {
+
+          "must return SEE_OTHER and redirect to the Deferred Movement page" in new Fixture() {
+            running(application) {
+
+              val request = FakeRequest(GET, localReferenceNumberRoute).withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination")
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
+            }
           }
         }
       }
 
-      "when the Deferred Movement answer DOES NOT exist in session" - {
+      "when the Destination Type Page answer does not exist in session" - {
 
-        //TODO: Update when page built to capture the Deferred Movement answer
-        "must return SEE_OTHER and redirect to the Deferred Movement page" in new Fixture() {
+        "must return SEE_OTHER and redirect to the Destination Type page" in new Fixture() {
           running(application) {
 
-            val request = FakeRequest(GET, localReferenceNumberRoute)
+            val request =
+              FakeRequest(POST, localReferenceNumberRoute)
+                .withFormUrlEncodedBody(("value", testLrn))
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+            redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url)
           }
         }
+      }
+
+      "when the Destination Type Page answer exists in session but is an invalid value" - {
+
+        "must return SEE_OTHER and redirect to the Destination Type page" in new Fixture() {
+          running(application) {
+
+            val request =
+              FakeRequest(POST, localReferenceNumberRoute)
+                .withFormUrlEncodedBody(("value", testLrn))
+                .withSession(SessionKeys.DESTINATION_TYPE -> "beans")
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url)
+          }
+        }
+
       }
     }
 
     ".onSubmit()" - {
 
-      "must redirect to the LRN already used page when valid LRN is submitted but a draft already exists" in new Fixture() {
-        running(application) {
+      "when the Destination Type Page answer exists in session" - {
 
-          MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(Some(emptyUserAnswers)))
+        "when the Deferred Movement answer exists in session" - {
 
-          val request =
-            FakeRequest(POST, localReferenceNumberRoute)
-            .withFormUrlEncodedBody(("value", testLrn))
-            .withSession(SessionKeys.DEFERRED_MOVEMENT -> "false")
+          "must redirect to the LRN already used page when valid LRN is submitted but a draft already exists" in new Fixture() {
+            running(application) {
 
-          val result = route(application, request).value
+              MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(Some(emptyUserAnswers)))
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+              val request =
+                FakeRequest(POST, localReferenceNumberRoute)
+                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+            }
+          }
+
+          "must redirect to the next page when valid data is submitted and initialise (No Existing LRN found)" in new Fixture() {
+            running(application) {
+
+              val expectedAnswers =
+                emptyUserAnswers
+                  .set(DeferredMovementPage, false)
+                  .set(LocalReferenceNumberPage, testLrn)
+                  .set(DestinationTypePage, UnknownDestination())
+
+              MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(None))
+              MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+              val request =
+                FakeRequest(POST, localReferenceNumberRoute)
+                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual testOnwardRoute.url
+            }
+          }
+
+          "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+            running(application) {
+
+              val request =
+                FakeRequest(POST, localReferenceNumberRoute)
+                  .withFormUrlEncodedBody(("value", ""))
+                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberSubmitAction)(userRequest(request), messages(application)).toString
+            }
+          }
+        }
+
+
+        "when the Deferred Movement answer DOES NOT exist in session" - {
+
+          "must return SEE_OTHER and redirect to the Deferred Movement page" in new Fixture() {
+            running(application) {
+
+              val request =
+                FakeRequest(POST, localReferenceNumberRoute)
+                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination")
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url)
+            }
+          }
+        }
+
+      }
+
+      "when the Destination Type Page answer does not exist in session" - {
+
+        "must return SEE_OTHER and redirect to the Destination Type page" in new Fixture() {
+          running(application) {
+
+            val request =
+              FakeRequest(POST, localReferenceNumberRoute)
+                .withFormUrlEncodedBody(("value", testLrn))
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url)
+          }
         }
       }
 
-      "must redirect to the next page when valid data is submitted and initialise (No Existing LRN found)" in new Fixture() {
-        running(application) {
+      "when the Destination Type Page answer exists in session but is an invalid value" - {
 
-          val expectedAnswers =
-            emptyUserAnswers
-              .set(DeferredMovementPage, false)
-              .set(LocalReferenceNumberPage, testLrn)
+        "must return SEE_OTHER and redirect to the Destination Type page" in new Fixture() {
+          running(application) {
 
-          MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(None))
-          MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+            val request =
+              FakeRequest(POST, localReferenceNumberRoute)
+                .withFormUrlEncodedBody(("value", testLrn))
+                .withSession(SessionKeys.DESTINATION_TYPE -> "beans")
+            val result = route(application, request).value
 
-          val request =
-            FakeRequest(POST, localReferenceNumberRoute)
-              .withFormUrlEncodedBody(("value", testLrn))
-              .withSession(SessionKeys.DEFERRED_MOVEMENT -> "false")
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnwardRoute.url
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url)
+          }
         }
-      }
 
-      "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-        running(application) {
-
-          val request =
-            FakeRequest(POST, localReferenceNumberRoute)
-              .withFormUrlEncodedBody(("value", ""))
-              .withSession(SessionKeys.DEFERRED_MOVEMENT -> "false")
-
-          val boundForm = form.bind(Map("value" -> ""))
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberSubmitAction)(userRequest(request), messages(application)).toString
-        }
       }
     }
   }

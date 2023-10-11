@@ -15,38 +15,39 @@
  *@
 
 @import models.requests.UserRequest
-@import viewmodels.InputWidth._
-@import viewmodels.LocalReferenceNumberHelper
+@import viewmodels.helpers.DestinationTypeHelper
+@import viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
-        govukInput: GovukInput,
+        govukRadios: GovukRadios,
         govukButton: GovukButton,
         h1: components.h1,
-        helper: LocalReferenceNumberHelper
+        h2: components.h2,
+        p: components.p,
+        details: components.details,
+        destinationTypeHelper: DestinationTypeHelper
 )
 
-@(isDeferred: Boolean, form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
+@(dispatchPlace: DispatchPlace, form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, isDeferred)) {
+@layout(pageTitle = title(form, destinationTypeHelper.title)) {
 
-    @formHelper(action) {
+    @formHelper(action = action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h1(helper.heading(isDeferred), Some(messages("movementInformation.subHeading")), "govuk-heading-l")
-
-        @helper.content(isDeferred)
-
-        @govukInput(
-            InputViewModel(
+        @h2(messages("movementInformation.subHeading"), "govuk-caption-l")
+        @govukRadios(
+            RadiosViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(helper.heading(isDeferred))).hidden
-            ).withWidth(Full)
+                legend = LegendViewModel(Text(messages(destinationTypeHelper.heading))).asPageHeading(LegendSize.Large),
+                items = destinationTypeHelper.options(dispatchPlace)
+            )
         )
 
         @govukButton(

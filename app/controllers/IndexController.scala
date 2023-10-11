@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.actions.{AuthAction, UserAllowListAction}
+import models.NorthernIrelandWarehouseKeeper
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -31,7 +32,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
 
   def onPageLoad(ern: String): Action[AnyContent] =
     (authAction(ern) andThen userAllowed) { implicit request =>
-      if (request.isNorthernIrelandErn) {
+      if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
         Redirect(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(ern))
       } else {
         Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(ern))

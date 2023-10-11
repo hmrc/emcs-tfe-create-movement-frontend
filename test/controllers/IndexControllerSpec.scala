@@ -24,7 +24,7 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" - {
 
-    "with a Northern Ireland ERN" - {
+    "with a Northern Ireland Warehouse Keeper ERN" - {
 
       "must redirect to the Dispatch place page (CAM-INFO01)" in {
 
@@ -41,7 +41,7 @@ class IndexControllerSpec extends SpecBase {
       }
     }
 
-    "with a Great Britain ERN" - {
+    "with any other ERN" - {
 
       "must redirect to the Destination Type page (CAM-INFO08)" in {
 

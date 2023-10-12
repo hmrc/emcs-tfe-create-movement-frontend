@@ -16,16 +16,24 @@
 
 package forms.sections.destination
 
-import javax.inject.Inject
+import forms.ALPHANUMERIC_REGEX
 
+import javax.inject.Inject
 import forms.mappings.Mappings
+import models.sections.info.movementScenario.DestinationType
 import play.api.data.Form
+import play.api.i18n.Messages
 
 class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("destinationWarehouseVat.error.required")
-        .verifying(maxLength(14, "destinationWarehouseVat.error.length"))
-    )
+  private val VAT_NUMBER_MAX_LENGTH = 14
+  def apply(destinationType: DestinationType)(implicit messages: Messages): Form[String] = {
+
+  Form(
+    "value" -> text("destinationWarehouseVat.error.required")
+      .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
+      .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
+      )
+  )
+ }
 }

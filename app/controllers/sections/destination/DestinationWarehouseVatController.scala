@@ -45,28 +45,37 @@ class DestinationWarehouseVatController @Inject()(
                                      ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn)  { implicit request =>
-      // andThen getData
-      val destinationType = "TEST destiantion"
-//      val destinationType = request.userAnswers.get(DestinationTypePage)
-//      withAnswer(DestinationTypePage) {
-//        case destinationType.contains()=>
-          Ok(view(fillForm(DestinationWarehouseVatPage, formProvider()), mode, destinationType))
-//        case _ => value.toEmpty
-//          saveAndRedirect(DestinationWarehouseVatPage, value, mode)
-      }
+    authorisedDataRequest(ern, lrn) {
+      implicit request =>
+        request.userAnswers.get(DestinationTypePage) match {
+          case Some(destinationType) =>
+            Ok(view(
+              form = fillForm(DestinationWarehouseVatPage, formProvider(destinationType.destinationType)),
+              action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
+              destinationType = destinationType.destinationType
+            ))
+          case None =>
+            //TODO redirect to destination type page when built
+            Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        }
+    }
 
-//    }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
-     // val destinationType = request.userAnswers.get(DestinationTypePage)()
-      val destinationType = "TEST destiantion"
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, destinationType))),
-        value =>
-          saveAndRedirect(DestinationWarehouseVatPage, value, mode)
-      )
+    authorisedDataRequestAsync(ern, lrn) {
+      implicit request =>
+        request.userAnswers.get(DestinationTypePage) match {
+          case Some(destinationType) =>
+            formProvider(destinationType.destinationType).bindFromRequest().fold(
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode), destinationType.destinationType))),
+              value =>
+                saveAndRedirect(DestinationWarehouseVatPage, value, mode)
+            )
+          case None =>
+            //TODO redirect to destination type page when built
+            Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+        }
     }
 }
+

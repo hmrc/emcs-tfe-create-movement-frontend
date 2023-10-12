@@ -17,7 +17,6 @@
 package forms.sections.destination
 
 import forms.mappings.Mappings
-
 import models.sections.info.movementScenario.MovementScenario
 import play.api.data.Form
 import play.api.i18n.Messages

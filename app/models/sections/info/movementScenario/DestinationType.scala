@@ -17,6 +17,10 @@
 package models.sections.info.movementScenario
 
 import models.{Enumerable, WithName}
+import play.api.i18n.Messages
+import play.api.libs.json.{JsString, Writes}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait DestinationType {
   val stringValue: String
@@ -72,14 +76,34 @@ object DestinationType extends Enumerable.Implicits {
     RegisteredConsignee,
     TemporaryRegisteredConsignee,
     DirectDelivery,
-    ExemptedOrganisation,
-    Export,
+    ExemptedOrganisations,
+    ExportWithCustomsLodgedInEU,
+    ExportWithCustomsLodgedInGB,
     UnknownDestination,
     CertifiedConsignee,
     TemporaryCertifiedConsignee,
     ReturnToThePlaceOfDispatchOfTheConsignor
   )
+  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
+    case (value, _) =>
+      RadioItem(
+        content = Text(messages(s"destinationType.${value.toString}")),
+        value = Some(value.toString),
+        id = Some(s"value_${value.toString}")
+      )
+  }
+
+  //TODO: To be used when submitting to Backend
+  val submissionWrites: Writes[DestinationType] = {
+    Writes {
+      case ExportWithCustomsLodgedInEU | ExportWithCustomsLodgedInGB => JsString("6")
+      case destination => JsString(destination.toString)
+    }
+  }
 
   implicit val enumerable: Enumerable[DestinationType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }
+
+
+

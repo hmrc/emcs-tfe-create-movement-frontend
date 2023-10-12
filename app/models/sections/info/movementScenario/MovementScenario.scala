@@ -46,7 +46,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
 
     def originType(implicit request: UserRequest[_]): OriginType = getOriginType()
 
-    def destinationType: DestinationType = DestinationType.Export
+    val destinationType: DestinationType = DestinationType.ExportWithCustomsLodgedInGB
 
     def movementType(implicit request: UserRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.DirectExport
@@ -126,7 +126,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
 
     def originType(implicit request: UserRequest[_]): OriginType = getOriginType()
 
-    def destinationType: DestinationType = DestinationType.ExemptedOrganisation
+    val destinationType: DestinationType = DestinationType.ExemptedOrganisations
 
     def movementType(implicit request: UserRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
@@ -146,7 +146,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
 
     def originType(implicit request: UserRequest[_]): OriginType = getOriginType()
 
-    def destinationType: DestinationType = DestinationType.Export
+    val destinationType: DestinationType = DestinationType.ExportWithCustomsLodgedInEU
 
     def movementType(implicit request: UserRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.IndirectExport

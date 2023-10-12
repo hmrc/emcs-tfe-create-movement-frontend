@@ -33,6 +33,7 @@ trait BaseFixtures {
   val testGreatBritainErn = "GBRC123456789"
   val testLrn: String = "lrn"
   val testVatNumber: String = "123456789"
+  val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
   val testOnwardRoute: Call = Call("GET", "/foo")

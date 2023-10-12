@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import pages.Page
-import pages.sections.exportInformation.ExportCustomsOfficePage
+import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
 
 class ExportInformationNavigatorSpec extends SpecBase {
 
@@ -45,6 +45,15 @@ class ExportInformationNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(ExportCustomsOfficePage, "AB123456")
 
         navigator.nextPage(ExportCustomsOfficePage, NormalMode, userAnswers) mustBe
+          controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testLrn)
+      }
+    }
+
+    "for the ExportInformationCheckAnswersPage" - {
+
+      "must go to the next section" in {
+
+        navigator.nextPage(ExportInformationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }

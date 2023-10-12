@@ -7,3 +7,8 @@ GET         /trader/:ern/draft/:lrn/guarantor/arranger               controllers
 POST        /trader/:ern/draft/:lrn/guarantor/arranger               controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:lrn/guarantor/arranger/change        controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:lrn/guarantor/arranger/change        controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/draft/:lrn/guarantor/name                   controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:lrn/guarantor/name                   controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:lrn/guarantor/name/change            controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:lrn/guarantor/name/change            controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

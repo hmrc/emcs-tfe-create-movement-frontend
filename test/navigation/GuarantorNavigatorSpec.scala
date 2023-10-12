@@ -19,8 +19,10 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.NormalMode
-import pages.Page
-import pages.sections.guarantor.GuarantorRequiredPage
+import models.sections.guarantor.GuarantorArranger
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
+import pages.{GuarantorArrangerPage, Page}
 
 class GuarantorNavigatorSpec extends SpecBase {
   val navigator = new GuarantorNavigator
@@ -58,6 +60,41 @@ class GuarantorNavigatorSpec extends SpecBase {
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
         }
+      }
+
+
+      "for GuarantorArrangerPage" - {
+
+        GuarantorArranger.values.foreach {
+          case value@(GoodsOwner | Transporter) =>
+            "must goto CAM-G03" - {
+              s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
+                val userAnswers = emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, value)
+
+                navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
+                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testLrn, NormalMode)
+              }
+            }
+          case value@(Consignee | Consignor) =>
+            "must goto CAM-G06" - {
+              s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
+                val userAnswers = emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, value)
+
+                navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
+                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              }
+            }
+        }
+      }
+
+      "for GuarantorNamePage" in {
+        // TODO redirect to CAM-GO4 once built
+        navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }
   }

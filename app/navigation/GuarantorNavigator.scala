@@ -41,12 +41,15 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(GuarantorArrangerPage) match {
         case Some(GoodsOwner) | Some(Transporter) =>
-          // TODO redirect to CAM-GO3 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
           // TODO redirect to CAM-GO6 once built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+
+    case GuarantorNamePage => (_: UserAnswers) =>
+      // TODO redirect to CAM-GO4 once built
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

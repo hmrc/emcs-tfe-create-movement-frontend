@@ -53,8 +53,11 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
       controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case ConsigneeAddressPage =>
+      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    case CheckAnswersConsigneePage =>
       //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

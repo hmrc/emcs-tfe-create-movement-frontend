@@ -16,8 +16,9 @@
 
 package fixtures
 
-import models.{CountryModel, TraderKnownFacts, UserAddress, UserAnswers}
+import models.{CountryModel, ExemptOrganisationDetailsModel, TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
+import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -39,6 +40,11 @@ trait BaseFixtures {
   val testOnwardRoute: Call = Call("GET", "/foo")
   val testId: String = "123"
   val testUrl: String = "testUrl"
+  val testBusinessName: String = "testName"
+
+  val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT","12345")
+  val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber,None, Some("1234"))
+  val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
 
   val testAlfJourneyConfig: AddressLookupFrontendJourneyConfig =
     AddressLookupFrontendJourneyConfig(
@@ -120,4 +126,12 @@ trait BaseFixtures {
     "countryCode" -> "BE",
     "country" -> "Belgium"
   )
+
+
+  val testConsigneeBusinessNameJson: JsObject = Json.obj("consignee" -> Json.obj("businessName" -> "testBusinessName"))
+  def testConsigneeExciseJson(ern: String): JsObject = Json.obj("consignee" -> Json.obj("exciseRegistrationNumber" -> ern))
+  val testConsigneeAddressJson: JsObject = Json.obj("consignee" -> Json.obj("consigneeAddress" -> testUserAddress))
+  val testConsigneeExemptOrganisationJson: JsObject = Json.obj("consignee" -> Json.obj("exemptOrganisation" -> testExemptedOrganisation))
+  val testConsigneeVatJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testVat))
+  val testConsigneeEoriJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testEori))
 }

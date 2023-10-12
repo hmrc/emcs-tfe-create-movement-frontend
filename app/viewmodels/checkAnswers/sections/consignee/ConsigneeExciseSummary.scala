@@ -18,32 +18,28 @@ package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee.ConsigneeExcisePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ConsigneeExportSummary {
+
+object ConsigneeExciseSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExportPage).map {
+    request.userAnswers.get(ConsigneeExcisePage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key = "consigneeExport.checkYourAnswers.label",
-          value = ValueViewModel(answer.toString),
-          actions = if (!showActionLinks) Seq() else Seq(
+          key     = "consigneeExcise.checkYourAnswersLabel",
+          value   = ValueViewModel(answer),
+          actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(
-                ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
-                mode = CheckMode
-              ).url,
-              id = ConsigneeExportPage
-            )
-              .withVisuallyHiddenText(messages("consigneeExport.change.hidden"))
+              href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              id = "changeConsigneeExcise"
+            ).withVisuallyHiddenText(messages("consigneeExcise.change.hidden"))
           )
         )
     }

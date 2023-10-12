@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package pages.sections.consignee
 
-import base.SpecBase
-import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import viewmodels.govuk.summarylist._
-class CheckAnswersHelperSpec extends SpecBase {
+import pages.Page
 
-  lazy val checkAnswersHelper = new CheckAnswersHelper()
+case object CheckAnswersConsigneePage extends Page {
 
-  lazy val app = applicationBuilder().build()
-  implicit lazy val msgs = messages(app)
-
-  "CheckAnswersHelper" - {
-
-    s"must return the expected SummaryList" in {
-
-      checkAnswersHelper.summaryList(Seq()) mustBe
-        SummaryList(Seq()).withCssClass("govuk-!-margin-bottom-9")
-    }
-  }
+  override def toString: String = "checkAnswersConsignee"
 }

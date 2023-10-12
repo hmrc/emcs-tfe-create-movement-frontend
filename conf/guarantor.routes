@@ -1,3 +1,5 @@
+GET         /trader/:ern/draft/:lrn/guarantor                        controllers.sections.guarantor.GuarantorIndexController.onPageLoad(ern: String, lrn: String)
+
 GET         /trader/:ern/draft/:lrn/guarantor/required               controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:lrn/guarantor/required               controllers.sections.guarantor.GuarantorRequiredController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:lrn/guarantor/required/change        controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)

@@ -19,6 +19,7 @@ site.opensInNewTab = (yn agor tab newydd)
 
 section.movementInformation = Movement information
 section.exportInformation = Export information
+section.destination = Place of destination information
 
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
@@ -194,6 +195,7 @@ transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
 dispatch.subHeading = Place of dispatch information
+destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 
@@ -418,3 +420,11 @@ exportCustomsOffice.error.customOfficeRegex = Customs office code must start wit
 exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
 exportCustomsOffice.change.hidden = ExportCustomsOffice
 
+
+destinationBusinessName.title = What is the business name of the place of destination?
+destinationBusinessName.heading = What is the business name of the place of destination?
+destinationBusinessName.hint = Place of destination business name
+destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
+destinationBusinessName.error.required = Enter Enter the business name of the place of destination
+destinationBusinessName.error.length = Business name must be less than 182 characters
+destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;

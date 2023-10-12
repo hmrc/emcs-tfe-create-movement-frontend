@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package pages.sections.destination
+package forms.sections.destination
 
-import models.UserAddress
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.XSS_REGEX
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object DestinationAddressPage extends QuestionPage[UserAddress] {
+import javax.inject.Inject
 
-  override def path: JsPath = JsPath \ "destination" \ toString
+class DestinationBusinessNameFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "destinationAddress"
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("destinationBusinessName.error.required")
+        .verifying(maxLength(182, "destinationBusinessName.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationBusinessName.error.invalid"))
+    )
 }

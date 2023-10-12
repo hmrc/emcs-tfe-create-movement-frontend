@@ -17,10 +17,6 @@ site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
 site.opensInNewTab = (yn agor tab newydd)
 
-section.movementInformation = Movement information
-section.exportInformation = Export information
-section.destination = Place of destination information
-
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
 taskListStatus.notStarted = Not Started
@@ -198,6 +194,7 @@ dispatch.subHeading = Place of dispatch information
 destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
+exportInformation.subHeading = Export information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers

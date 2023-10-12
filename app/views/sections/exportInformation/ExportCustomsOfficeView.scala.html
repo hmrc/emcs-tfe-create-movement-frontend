@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import config.AppConfig
+@import viewmodels.LabelSize
 
 @this(
         layout: templates.Layout,
@@ -24,7 +25,7 @@
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
         govukButton: GovukButton,
-        h1: components.h1,
+        h2: components.h2,
         p: components.p,
         link: components.link,
         appConfig: AppConfig,
@@ -41,10 +42,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("exportInformation.subHeading"), "govuk-caption-xl")
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(HtmlContent(heading))
+                label = LabelViewModel(Text(messages("exportCustomsOffice.heading"))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
             .withHint(HintViewModel(HtmlContent(hint)))
@@ -52,10 +54,6 @@
 
         @continueOrExit()
     }
-}
-
-@heading = {
-    @h1("exportCustomsOffice.heading", Some(messages("section.exportInformation")), "govuk-heading-l")
 }
 
 @hint = {

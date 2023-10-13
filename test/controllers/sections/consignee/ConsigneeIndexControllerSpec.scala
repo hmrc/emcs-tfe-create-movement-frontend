@@ -75,10 +75,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern: String = "GBRC123"
 
         Seq(
-          RegisteredConsignee(),
-          TemporaryRegisteredConsignee(),
-          ExportWithCustomsDeclarationLodgedInTheUk(),
-          ExportWithCustomsDeclarationLodgedInTheEu()
+          ExportWithCustomsDeclarationLodgedInTheUk()
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -155,10 +152,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern = "GBWK123"
 
         Seq(
-          RegisteredConsignee(),
-          TemporaryRegisteredConsignee(),
-          ExportWithCustomsDeclarationLodgedInTheUk(),
-          ExportWithCustomsDeclarationLodgedInTheEu()
+          ExportWithCustomsDeclarationLodgedInTheUk()
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -222,6 +216,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
+          // TODO: Change redirect location when tasklist is build
           redirectLocation(result) mustBe
             Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
         }

@@ -56,6 +56,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
             } else {
               logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
                 s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
+              // TODO: Change redirect location when tasklist is build
               Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
             }
         }
@@ -67,15 +68,8 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                                       userTypeFromErn: UserType,
                                                       destinationTypePageAnswer: MovementScenario
                                                     )(implicit ur: UserRequest[_]): Boolean = {
-    val gbwkAndSpecificDestinationTypes: Boolean = {
-      val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee(),
-        TemporaryRegisteredConsignee(),
-        ExportWithCustomsDeclarationLodgedInTheUk(),
-        ExportWithCustomsDeclarationLodgedInTheEu()
-      )
-      userTypeFromErn == GreatBritainWarehouseKeeper && validDestinationTypes.contains(destinationTypePageAnswer)
-    }
+    val gbwkAndSpecificDestinationTypes: Boolean =
+      userTypeFromErn == GreatBritainWarehouseKeeper && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk()
 
     val xiwkAndSpecificDestinationTypes: Boolean = {
       val validDestinationTypes: Seq[MovementScenario] = Seq(
@@ -93,16 +87,17 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                                   userTypeFromErn: UserType,
                                                   destinationTypePageAnswer: MovementScenario
                                                 )(implicit ur: UserRequest[_]): Boolean = {
-    val validDestinationTypesRegardlessOfUserTypes: Boolean = {
+    val validDestinationTypesRegardlessOfUserTypes: Boolean =
       Seq(
         GbTaxWarehouse(),
         EuTaxWarehouse(),
         DirectDelivery()
       ).contains(destinationTypePageAnswer)
-    }
 
-    val registeredConsignorAndValidDestinationType: Boolean = {
-      val validUserTypes: Seq[UserType] = Seq(GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor)
+    val gbrcAndValidDestinationType: Boolean =
+      userTypeFromErn == GreatBritainRegisteredConsignor && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk()
+
+    val xircAndValidDestinationType: Boolean = {
       val validDestinationTypes: Seq[MovementScenario] = Seq(
         RegisteredConsignee(),
         TemporaryRegisteredConsignee(),
@@ -110,18 +105,16 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
         ExportWithCustomsDeclarationLodgedInTheEu()
       )
 
-      validUserTypes.contains(userTypeFromErn) && validDestinationTypes.contains(destinationTypePageAnswer)
+      userTypeFromErn == NorthernIrelandRegisteredConsignor && validDestinationTypes.contains(destinationTypePageAnswer)
     }
 
-    val xiwkAndRegisteredConsignee: Boolean = {
+    val xiwkAndRegisteredConsignee: Boolean =
       (userTypeFromErn == NorthernIrelandWarehouseKeeper) && (destinationTypePageAnswer == TemporaryRegisteredConsignee())
-    }
 
-    validDestinationTypesRegardlessOfUserTypes || registeredConsignorAndValidDestinationType || xiwkAndRegisteredConsignee
+    validDestinationTypesRegardlessOfUserTypes || gbrcAndValidDestinationType || xircAndValidDestinationType || xiwkAndRegisteredConsignee
   }
 
-  private def shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer: MovementScenario)(implicit ur: UserRequest[_]): Boolean = {
+  private def shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer: MovementScenario)(implicit ur: UserRequest[_]): Boolean =
     destinationTypePageAnswer == ExemptedOrganisation()
-  }
 
 }

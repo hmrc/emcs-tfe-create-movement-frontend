@@ -16,28 +16,38 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GuarantorRequiredSummary  {
+object GuarantorRequiredSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GuarantorRequiredPage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "guarantorRequired.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(answers.ern, answers.lrn, CheckMode).url, "guarantor-required")
-              .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))
-          )
-        )
+    val value = request.userAnswers.get(GuarantorRequiredPage) match {
+      case Some(answer) => if (answer) "site.yes" else "site.no"
+      case None => "site.notProvided"
     }
+
+    Some(
+      SummaryListRowViewModel(
+        key = "guarantorRequired.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+            "guarantor-required"
+          )
+            .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))
+        )
+      )
+    )
+
+  }
+
 }

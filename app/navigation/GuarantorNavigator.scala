@@ -34,8 +34,7 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
-          // TODO redirect to CAM-GO6 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
       }
 
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
@@ -43,8 +42,7 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
         case Some(GoodsOwner) | Some(Transporter) =>
           controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
-          // TODO redirect to CAM-GO6 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
       }
 
     case GuarantorNamePage => (userAnswers: UserAnswers) =>
@@ -53,8 +51,18 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
     case GuarantorVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
+    case GuarantorAddressPage => (userAnswers: UserAnswers) =>
+      controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+  }
+
+  private val checkRoutes: Page => UserAnswers => Call = {
+
+    case _ =>
+      (userAnswers: UserAnswers) =>
+        controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -62,6 +70,6 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
       normalRoutes(page)(userAnswers)
     //TODO update when other modes are added
     case _ =>
-      normalRoutes(page)(userAnswers)
+      checkRoutes(page)(userAnswers)
   }
 }

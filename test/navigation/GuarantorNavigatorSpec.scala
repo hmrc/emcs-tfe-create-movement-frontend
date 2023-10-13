@@ -51,13 +51,12 @@ class GuarantorNavigatorSpec extends SpecBase {
           }
         }
         "when false" - {
-          // TODO redirect to CAM-G06
           "must go to CAM-G06" in {
 
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
           }
         }
       }
@@ -84,7 +83,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn,testLrn)
               }
             }
         }

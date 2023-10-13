@@ -16,8 +16,12 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.{CheckMode, UserAnswers}
-import pages.sections.guarantor.GuarantorNamePage
+import models.CheckMode
+import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger._
+import pages.GuarantorArrangerPage
+import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,20 +30,41 @@ import viewmodels.implicits._
 
 object GuarantorNameSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GuarantorNamePage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
+
+      request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
+
+        val showChangeLink: Boolean = arranger == GoodsOwner || arranger == Transporter
+
+        val businessName: String = arranger match {
+          case Consignor => request.traderKnownFacts.traderName
+          case Consignee => request.userAnswers.get(ConsigneeBusinessNamePage) match {
+            case Some(answer) => HtmlFormat.escape(answer).toString()
+            case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
+          }
+          case GoodsOwner | Transporter =>
+            request.userAnswers.get(GuarantorNamePage) match {
+              case Some(answer) => HtmlFormat.escape(answer).toString()
+              case None => messages("site.notProvided")
+            }
+        }
 
         SummaryListRowViewModel(
           key = "guarantorName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
+          value = ValueViewModel(businessName),
+          actions = if (!showChangeLink) Seq() else Seq(
             ActionItemViewModel(
               "site.change",
-              controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
               "guarantor-name"
             ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
           )
         )
+      }
     }
+
+  }
+
 }

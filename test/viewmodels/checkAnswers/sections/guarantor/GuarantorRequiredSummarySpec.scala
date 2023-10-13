@@ -18,55 +18,64 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
+import fixtures.messages.sections.guarantor.GuarantorRequiredMessages.ViewMessages
 import models.CheckMode
 import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+
 
 class GuarantorRequiredSummarySpec extends SpecBase {
 
   lazy val app = applicationBuilder().build()
-  "row" - {
-    Seq(GuarantorRequiredMessages.English, GuarantorRequiredMessages.Welsh).foreach { messagesForLanguage =>
-      s"when language is set to $messagesForLanguage" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+    Some(
+      SummaryListRowViewModel(
+        key = Key(Text(messagesForLanguage.cyaLabel)),
+        value = Value(Text(value)),
+        actions = Seq(ActionItemViewModel(
+          content = Text(messagesForLanguage.change),
+          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, CheckMode).url,
+          id = "guarantor-required"
+        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+      )
+    )
+  }
 
-        "must return Some(SummaryListRow)" - {
-          "when the GuarantorRequired page is found" - {
-            "and the answer is Yes" in {
-              GuarantorRequiredSummary.row(emptyUserAnswers.set(GuarantorRequiredPage, true)) mustBe Some(SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.yes)),
-                actions = Seq(ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, CheckMode).url,
-                  id = "guarantor-required"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
-              ))
-            }
-            "and the answer is No" in {
-              GuarantorRequiredSummary.row(emptyUserAnswers.set(GuarantorRequiredPage, false)) mustBe Some(SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.no)),
-                actions = Seq(ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, CheckMode).url,
-                  id = "guarantor-required"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
-              ))
-            }
-          }
+  Seq(GuarantorRequiredMessages.English, GuarantorRequiredMessages.Welsh).foreach { implicit messagesForLanguage =>
+
+    s"when language is set to ${messagesForLanguage.lang.code}" - {
+
+      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+
+      "and there is no answer for the GuarantorRequiredPage" - {
+        "then must return a not provided row" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
         }
-        "must return None" - {
-          "when the GuarantorRequired page is not found" in {
-            GuarantorRequiredSummary.row(emptyUserAnswers) mustBe None
-          }
+      }
+
+      "and there is a GuarantorRequiredPage answer of yes" - {
+        "then must return a row with the answer of yes " in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+
+          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.yes)
+        }
+      }
+
+      "and there is a GuarantorRequiredPage answer of no" - {
+        "then must return a row with the answer " in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+
+          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.no)
         }
       }
     }
   }
+
 }

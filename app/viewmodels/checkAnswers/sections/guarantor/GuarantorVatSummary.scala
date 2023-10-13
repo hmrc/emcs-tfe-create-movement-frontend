@@ -16,8 +16,11 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.{CheckMode, UserAnswers}
-import pages.sections.guarantor.GuarantorVatPage
+import models.CheckMode
+import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
+import pages.GuarantorArrangerPage
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,20 +29,31 @@ import viewmodels.implicits._
 
 object GuarantorVatSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GuarantorVatPage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-        SummaryListRowViewModel(
-          key = "guarantorVat.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-              "guarantor-vat"
-            ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
+    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
+      request.userAnswers.get(GuarantorArrangerPage)
+        .filter(arranger => arranger == GoodsOwner || arranger == Transporter)
+        .map { _ =>
+
+          val value: String = request.userAnswers.get(GuarantorVatPage) match {
+            case Some(answer) => HtmlFormat.escape(answer).toString()
+            case None => messages("site.notProvided")
+          }
+
+          SummaryListRowViewModel(
+            key = "guarantorVat.checkYourAnswersLabel",
+            value = ValueViewModel(value),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+                "guarantor-vat"
+              ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
+            )
           )
-        )
+        }
     }
+  }
+
 }

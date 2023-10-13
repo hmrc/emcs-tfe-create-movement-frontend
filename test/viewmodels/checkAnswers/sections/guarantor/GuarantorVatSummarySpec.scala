@@ -18,15 +18,18 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorVatMessages
+import fixtures.messages.sections.guarantor.GuarantorVatMessages.ViewMessages
 import models.CheckMode
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.guarantor.GuarantorVatPage
+import pages.GuarantorArrangerPage
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
@@ -34,45 +37,131 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(GuarantorVatMessages.English, GuarantorVatMessages.Welsh).foreach { messagesForLanguage =>
+    def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+      Some(
+        SummaryListRowViewModel(
+          key = Key(Text(messagesForLanguage.cyaLabel)),
+          value = Value(Text(value)),
+          actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
+            content = Text(messagesForLanguage.change),
+            href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, CheckMode).url,
+            id = "guarantor-vat"
+          ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+        )
+      )
+    }
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+    Seq(GuarantorVatMessages.English, GuarantorVatMessages.Welsh).foreach { implicit messagesForLanguage =>
 
+      s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        "when there's no answer" - {
-
-          "must output no row" in {
-
+        "and there is no answer for the GuarantorRequiredPage" - {
+          "then must not return a row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GuarantorVatSummary.row(request.userAnswers) mustBe None
+            GuarantorVatSummary.row mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "and there is a GuarantorRequiredPage answer of `no`" - {
+          "then must not return a row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
-          "must output the expected row" in {
+            GuarantorVatSummary.row mustBe None
+          }
+        }
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorVatPage, "vatnumber"))
+        "and there is a GuarantorRequiredPage answer of `yes`" - {
 
-            GuarantorVatSummary.row(request.userAnswers) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("vatnumber")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, CheckMode).url,
-                      id = "guarantor-vat"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
+          "and there is a GuarantorArrangerPage answer of `Consignee`" - {
+            "then must not return a row" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignee)
               )
+
+              GuarantorVatSummary.row mustBe None
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `Consignor`" - {
+            "then must not return a row" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignor)
+              )
+
+              GuarantorVatSummary.row mustBe None
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+            "and there is no answer for GuarantorVatPage" - {
+              "then must render not provided row with change link" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, GoodsOwner)
+                )
+
+                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              }
+            }
+
+            "and there is a GuarantorVatPage answer" - {
+              "then must render row with value and change link" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, GoodsOwner)
+                    .set(GuarantorVatPage,"VAT123")
+                )
+
+                GuarantorVatSummary.row mustBe expectedRow("VAT123", true)
+              }
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `Transporter`" - {
+            "and there is no answer for GuarantorVatPage" - {
+              "then must render not provided row with change link" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Transporter)
+                )
+
+                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              }
+            }
+
+            "and there is a GuarantorVatPage answer" - {
+              "then must render row with value and change link" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Transporter)
+                    .set(GuarantorVatPage, "TRAN123")
+                )
+
+                GuarantorVatSummary.row mustBe expectedRow("TRAN123", true)
+              }
+            }
           }
         }
+
       }
+
     }
+
   }
 }

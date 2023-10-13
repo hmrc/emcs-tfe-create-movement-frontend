@@ -49,7 +49,6 @@ class DestinationBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

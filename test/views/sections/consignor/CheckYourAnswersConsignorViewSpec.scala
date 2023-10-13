@@ -32,7 +32,7 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
-    val govukSummaryListChangeLink = s".govuk-summary-list__actions .govuk-link"
+    val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
   }
 
   "CheckYourAnswersConsignor view" - {

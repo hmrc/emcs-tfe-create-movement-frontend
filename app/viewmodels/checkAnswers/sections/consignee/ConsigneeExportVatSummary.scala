@@ -18,6 +18,8 @@ package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
 import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,25 +29,29 @@ import viewmodels.implicits._
 object ConsigneeExportVatSummary  {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExportVatPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key = "consigneeExportVat.checkYourAnswers.label",
-          value = ValueViewModel(answer.exportType.toString),
-          actions = if (!showActionLinks) Seq() else Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
-                ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
-                mode = CheckMode
-              ).url,
-              id = ConsigneeExportVatPage
-            )
-              .withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
-          )
-        )
+    request.userAnswers.get(ConsigneeExportVatPage).flatMap {
+      case ConsigneeExportVat(YesVatNumber, Some(vat), _) => Some(summaryRow(showActionLinks, YesVatNumber.toString, vat))
+      case ConsigneeExportVat(YesEoriNumber, _, Some(eori)) => Some(summaryRow(showActionLinks, YesEoriNumber.toString, eori))
+      case _ => None
     }
+
+  def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages) = {
+    SummaryListRowViewModel(
+      key = s"consigneeExportVat.checkYourAnswers.label.$key",
+      value = ValueViewModel(value),
+      actions = if (!showActionLinks) Seq() else Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
+            ern = request.userAnswers.ern,
+            lrn = request.userAnswers.lrn,
+            mode = CheckMode
+          ).url,
+          id = "changeConsigneeExportVat"
+        )
+          .withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
+      )
+    )
+  }
 
 }

@@ -210,6 +210,7 @@ address.consignorAddress.subheading = Consignor information
 address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address
 address.consigneeAddress.subheading = Consignee information
+address.consigneeAddress.checkYourAnswers.label = Address
 
 address.destinationAddress.title = Enter the place of destination address
 address.destinationAddress.heading = Enter the place of destination address
@@ -338,6 +339,8 @@ consigneeExportVat.yesVatNumber = Yes - VAT number
 consigneeExportVat.yesEoriNumber = Yes - EORI number
 consigneeExportVat.no = No
 consigneeExportVat.checkYourAnswers.label = VAT or EORI number of the person representing the consignor
+consigneeExportVat.checkYourAnswers.label.yesEoriNumber = EORI Number
+consigneeExportVat.checkYourAnswers.label.yesVatNumber = VAT Number
 consigneeExportVat.error.required = Select consigneeExportVat
 consigneeExportVat.change.hidden = VAT or EORI number of the person representing the consignor
 consigneeExportVat.vatNumber.label = VAT number
@@ -350,7 +353,6 @@ consigneeExportVat.eoriNumber.error.length = EORI number must be 17 characters o
 
 consigneeExemptOrganisation.title = Exempt organisation details
 consigneeExemptOrganisation.heading = Exempt organisation details
-consigneeExemptOrganisation.checkYourAnswersLabel = Exempt organisation details
 consigneeExemptOrganisation.change.hidden = ConsigneeExemptOrganisation
 consigneeExemptOrganisation.memberState.hint = Select the destination
 consigneeExemptOrganisation.memberState.label = Select the member state of destination
@@ -360,6 +362,7 @@ consigneeExemptOrganisation.certificateSerialNumber.error.required = Enter the e
 consigneeExemptOrganisation.certificateSerialNumber.error.length = Serial number must be between 1 and 255 characters
 consigneeExemptOrganisation.certificateSerialNumber.error.character = Serial number must contain letters or numbers
 consigneeExemptOrganisation.certificateSerialNumber.error.xss = Serial number must not contain < and > and : and ;
+consigneeExemptOrganisation.checkYourAnswersLabel = Exempted organisation details
 
 transportArranger.title = Who is arranging the transport for this movement?
 transportArranger.heading = Who is arranging the transport for this movement?
@@ -436,6 +439,7 @@ consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can b
 consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.tooLong = The ERN must be 13 characters or less
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?
@@ -497,7 +501,15 @@ destinationBusinessName.title = What is the business name of the place of destin
 destinationBusinessName.heading = What is the business name of the place of destination?
 destinationBusinessName.hint = Place of destination business name
 destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
-destinationBusinessName.error.required = Enter Enter the business name of the place of destination
+destinationBusinessName.error.required = Enter the business name of the place of destination
 destinationBusinessName.error.length = Business name must be less than 182 characters
 destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;
 
+checkYourAnswersConsignee.title = Check your answers
+checkYourAnswersConsignee.heading = Check your answers
+checkYourAnswersConsignee.traderName = Trader name
+checkYourAnswersConsignee.ern = Excise registration number (ERN)
+checkYourAnswersConsignee.yesEoriNumber = EORI Number
+checkYourAnswersConsignee.yesVatNumber = VAT Number
+checkYourAnswersConsignee.exemptOrganisation = Exempted organisation details
+checkYourAnswersConsignee.address = Address

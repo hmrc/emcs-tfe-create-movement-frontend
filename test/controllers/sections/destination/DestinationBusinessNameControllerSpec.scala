@@ -20,8 +20,8 @@ import base.SpecBase
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.{FakeDestinationNavigator, FakeNavigator}
-import navigation.{DestinationNavigator, Navigator}
+import navigation.DestinationNavigator
+import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
 import play.api.inject.bind
 import play.api.mvc.Call

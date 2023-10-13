@@ -18,20 +18,20 @@ package fixtures.messages.sections.consignee
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 
-object ConsigneeExportVatMessages {
+object CheckYourAnswersConsigneeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Do you know the VAT or EORI number of the person representing the consignor at the office of export?")
-    val heading = "Do you know the VAT or EORI number of the person representing the consignor at the office of export?"
-    val yesVatNumberRadioOption = "Yes - VAT number"
-    val yesEoriNumberRadioOption = "Yes - EORI number"
-    val noRadioOption = "No"
-    val cyaEoriLabel: String = "EORI Number"
-    val cyaVatLabel: String = "VAT Number"
-    val cyaChangeHidden: String = "VAT or EORI number of the person representing the consignor"
+    val heading = "Check your answers"
+    val title: String = titleHelper(heading)
+    val caption: String = "Consignee information"
+    val ern: String = "Excise registration number (ERN)"
+    val traderName: String = "Trader name"
+    val address: String = "Address"
+    val eori: String = "EORI Number"
+    val vat: String = "VAT Number"
+    val exempt: String = "Exempted organisation details"
   }
 
   object English extends ViewMessages with BaseEnglish
-
   object Welsh extends ViewMessages with BaseWelsh
 }

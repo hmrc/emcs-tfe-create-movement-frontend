@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
 import models.CheckMode
 import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.No
+import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
@@ -58,18 +58,18 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(No,None, None)))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber,None, testEori.eoriNumber)))
 
               ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(No.toString)),
+                    key = messagesForLanguage.cyaEoriLabel,
+                    value = Value(Text(testEori.eoriNumber.get)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
                         href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testLrn, CheckMode).url,
-                        id = ConsigneeExportVatPage
+                        id = "changeConsigneeExportVat"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )

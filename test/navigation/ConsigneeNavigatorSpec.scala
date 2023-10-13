@@ -40,10 +40,10 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
     "for the ConsigneeAddress page" - {
 
-      "must go to the UnderConstruction page" in {
+      "must go to the Consignee Check Your Answers page" in {
 
         navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn)
       }
     }
 

@@ -16,12 +16,11 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.{DEFERRED_MOVEMENT, INVOICE_DETAILS}
+import config.SessionKeys.INVOICE_DETAILS
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.info.InvoiceDetailsFormProvider
 import models.requests.UserRequest
-import models.sections.info.InvoiceDetailsModel
 import navigation.Navigator
 import play.api.data.Form
 import play.api.i18n.MessagesApi

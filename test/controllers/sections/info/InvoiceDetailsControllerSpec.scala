@@ -17,17 +17,9 @@
 package controllers.sections.info
 
 import base.SpecBase
-import com.ibm.icu.impl.number.AffixUtils
-import controllers.routes
 import forms.sections.info.InvoiceDetailsFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import pages.sections.info.InvoiceDetailsPage
-import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.inject.bind
-import play.api.mvc.{Call, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -35,7 +27,6 @@ import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import java.time.{LocalDate, LocalDateTime}
-import scala.concurrent.Future
 
 class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with DateUtils {
 

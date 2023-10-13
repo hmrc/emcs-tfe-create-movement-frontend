@@ -18,12 +18,12 @@ package controllers
 
 import forms.BaseTextareaFormProvider
 import models._
-import models.requests.{DataRequest, UserRequest}
+import models.requests.DataRequest
 import navigation.BaseNavigator
 import pages.QuestionPage
 import play.api.data.{Form, FormError}
-import play.api.libs.json.{Format, Json, Reads}
-import play.api.mvc.{AnyContentAsFormUrlEncoded, Call, Result}
+import play.api.libs.json.{Format, Reads}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging

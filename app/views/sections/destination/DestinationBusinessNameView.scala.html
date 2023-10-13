@@ -45,9 +45,8 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationBusinessName.heading"))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(HtmlContent(h1(messages("destinationBusinessName.heading")))).asPageHeading(LabelSize.Large)
             )
-            .withHint(HintViewModel(messages("destinationBusinessName.hint")))
             .withWidth(Full)
         )
 

@@ -430,7 +430,6 @@ guarantorArranger.change.hidden = who is providing the guarantee for this moveme
 
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.heading = What is the business name of the place of destination?
-destinationBusinessName.hint = Place of destination business name
 destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
 destinationBusinessName.error.required = Enter the business name of the place of destination
 destinationBusinessName.error.length = Business name must be less than 182 characters

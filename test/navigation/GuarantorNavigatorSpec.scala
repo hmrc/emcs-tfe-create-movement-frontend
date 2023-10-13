@@ -20,8 +20,8 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import models.sections.guarantor.GuarantorArranger
-import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
+import models.sections.guarantor.GuarantorArranger._
+import pages.sections.guarantor._
 import pages.{GuarantorArrangerPage, Page}
 
 class GuarantorNavigatorSpec extends SpecBase {
@@ -62,7 +62,6 @@ class GuarantorNavigatorSpec extends SpecBase {
         }
       }
 
-
       "for GuarantorArrangerPage" - {
 
         GuarantorArranger.values.foreach {
@@ -91,10 +90,19 @@ class GuarantorNavigatorSpec extends SpecBase {
         }
       }
 
-      "for GuarantorNamePage" in {
-        // TODO redirect to CAM-GO4 once built
-        navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "for GuarantorNamePage" - {
+        "must goto CAM-G04" in {
+          navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+      }
+
+      "for GuarantorVATPage" - {
+        "must goto CAM-G05" in {
+          // TODO redirect to CAM-GO5 once built
+          navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
     }
   }

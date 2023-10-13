@@ -24,6 +24,7 @@ import models.sections.guarantor.GuarantorArranger
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
 import pages.GuarantorArrangerPage
+import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -46,7 +47,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(GuarantorRequiredPage, true))).build()
 
       running(application) {
         val request = FakeRequest(GET, guarantorArrangerRoute)
@@ -62,7 +63,9 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(GuarantorArrangerPage, GuarantorArranger.values.head)
+      val userAnswers = emptyUserAnswers
+        .set(GuarantorRequiredPage, true)
+        .set(GuarantorArrangerPage, GuarantorArranger.values.head)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,10 +83,10 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to the next page when valid data is submitted" in {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(GuarantorRequiredPage, true)))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(GuarantorRequiredPage, true)))
           .overrides(
             bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -104,7 +107,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(GuarantorRequiredPage, true))).build()
 
       running(application) {
         val request =
@@ -119,6 +122,19 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+      }
+    }
+
+    "must redirect to guarantor required controller for a GET if no guarantor required is found" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, guarantorArrangerRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, NormalMode).url
       }
     }
 
@@ -152,5 +168,6 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
   }
 }

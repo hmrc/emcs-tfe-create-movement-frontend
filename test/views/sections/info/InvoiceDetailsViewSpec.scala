@@ -19,12 +19,11 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.sections.info.InvoiceDetailsFormProvider
-import models.NormalMode
-import models.requests.{DataRequest, UserRequest}
+import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import utils.DateUtils
 import views.html.sections.info.InvoiceDetailsView

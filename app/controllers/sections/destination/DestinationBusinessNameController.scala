@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import models.Mode
 import models.requests.DataRequest
-import navigation.{DestinationNavigator, Navigator}
+import navigation.DestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi

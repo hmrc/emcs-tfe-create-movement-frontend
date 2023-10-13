@@ -22,28 +22,31 @@ import handlers.ErrorHandler
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
 import models.UserAnswers
+import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse}
 import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.UserAnswersService
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeAddressSummary, ConsigneeBusinessNameSummary, ConsigneeExciseSummary, ConsigneeExemptOrganisationSummary, ConsigneeExportVatSummary}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+import viewmodels.checkAnswers.sections.consignee._
 import viewmodels.govuk.SummaryListFluency
 import viewmodels.helpers.CheckYourAnswersConsigneeHelper
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
-  def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+  def request: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
 
-  implicit val testDataRequest = dataRequest(request)
-  implicit val testUserRequest = userRequest(testDataRequest)
+  implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
 
   class Fixture(userAnswers: Option[UserAnswers]) {
 
@@ -55,34 +58,35 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         )
         .build()
 
-    implicit val msgs = messages(application)
-    val ernList = Seq(
-      ConsigneeBusinessNameSummary.row(true),
-      ConsigneeExciseSummary.row(true),
-      ConsigneeAddressSummary.row(true)
+    implicit val msgs: Messages = messages(application)
+
+    val ernList: Seq[SummaryListRow] = Seq(
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExciseSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
-    val exemptedList = Seq(
-      ConsigneeBusinessNameSummary.row(true),
-      ConsigneeExemptOrganisationSummary.row(true),
-      ConsigneeAddressSummary.row(true)
+    val exemptedList: Seq[SummaryListRow] = Seq(
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
-    val vatEoriList = Seq(
-      ConsigneeBusinessNameSummary.row(true),
-      ConsigneeExportVatSummary.row(true),
-      ConsigneeAddressSummary.row(true)
+    val vatEoriList: Seq[SummaryListRow] = Seq(
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExportVatSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
-    val ernSummaryList = SummaryListViewModel(
+    val ernSummaryList: SummaryList = SummaryListViewModel(
       rows = ernList
     ).withCssClass("govuk-!-margin-bottom-9")
 
-    val exemptSummaryList = SummaryListViewModel(
+    val exemptSummaryList: SummaryList = SummaryListViewModel(
       rows = exemptedList
     ).withCssClass("govuk-!-margin-bottom-9")
 
-    val vatEoriSummaryList = SummaryListViewModel(
+    val vatEoriSummaryList: SummaryList = SummaryListViewModel(
       rows = vatEoriList
     ).withCssClass("govuk-!-margin-bottom-9")
 
@@ -100,7 +104,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(DestinationTypePage, GbTaxWarehouse())
+            .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(ernSummaryList)
@@ -125,7 +129,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
-            .set(DestinationTypePage, ExemptedOrganisation())
+            .set(DestinationTypePage, ExemptedOrganisation)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(exemptSummaryList)
@@ -150,7 +154,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportVatPage, testEori)
-            .set(DestinationTypePage, EuTaxWarehouse())
+            .set(DestinationTypePage, EuTaxWarehouse)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
@@ -175,7 +179,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportVatPage, testVat)
-            .set(DestinationTypePage, GbTaxWarehouse())
+            .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
@@ -210,7 +214,8 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
-        def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn).url)
+        def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn).url)
 
         running(application) {
 

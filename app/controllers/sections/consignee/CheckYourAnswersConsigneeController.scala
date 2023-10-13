@@ -18,8 +18,7 @@ package controllers.sections.consignee
 
 import controllers.BaseController
 import controllers.actions._
-import models.sections.info.movementScenario.MovementScenario
-import models.{Enumerable, NormalMode}
+import models.NormalMode
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.{CheckAnswersConsigneePage, ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.info.DestinationTypePage
@@ -44,13 +43,12 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) {
       implicit request =>
-        implicit val msReads: Enumerable[MovementScenario] = MovementScenario.enumerable(request.request)
         request.userAnswers.get(ConsigneeBusinessNamePage) match {
           case Some(_) =>
             request.userAnswers.get(ConsigneeAddressPage) match {
               case Some(_) =>
                 request.userAnswers.get(DestinationTypePage) match {
-                  case Some(destinationType) =>
+                  case Some(_) =>
                     Ok(view(
                       controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, lrn),
                       ern,

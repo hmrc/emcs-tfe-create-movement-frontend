@@ -19,7 +19,6 @@ package controllers.sections.exportInformation
 import base.SpecBase
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import mocks.services.MockUserAnswersService
-import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu
 import models.{NormalMode, UserAnswers}
 import navigation.ExportInformationNavigator
@@ -42,9 +41,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
   lazy val exportCustomsOfficeRoute = routes.ExportCustomsOfficeController.onPageLoad(testErn, testLrn, NormalMode).url
   lazy val exportCustomsOfficeSubmitAction = routes.ExportCustomsOfficeController.onSubmit(testErn, testLrn, NormalMode)
 
-  implicit val ur: UserRequest[_] = userRequest(FakeRequest())
-
-  val defaultUserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu())
+  val defaultUserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
     val application =

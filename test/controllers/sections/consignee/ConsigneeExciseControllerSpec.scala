@@ -20,7 +20,6 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.MockUserAnswersService
-import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
 import models.{NormalMode, UserAnswers}
 import navigation.ConsigneeNavigator
@@ -49,10 +48,8 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       .build()
   }
 
-  implicit val ur: UserRequest[_] = userRequest(FakeRequest())
-
   val userAnswersWithConsigneeExcise: UserAnswers = emptyUserAnswers.set(ConsigneeExcisePage, testErn)
-  val userAnswersWithDestinationType: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee())
+  val userAnswersWithDestinationType: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
 
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {

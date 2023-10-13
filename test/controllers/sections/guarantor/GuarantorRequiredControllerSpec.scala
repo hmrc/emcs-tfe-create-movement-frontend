@@ -21,9 +21,11 @@ import controllers.routes
 import forms.sections.guarantor.GuarantorRequiredFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
+import models.sections.guarantor.GuarantorArranger.Transporter
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.GuarantorArrangerPage
+import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -151,5 +153,32 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must cleanse the guarantor section when answering no" in {
+      val expectedAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val application = applicationBuilder(
+        userAnswers = Some(
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, true)
+            .set(GuarantorArrangerPage, Transporter)
+            .set(GuarantorNamePage, "a name")
+        )
+      )
+        .overrides(
+          bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+      )
+        .build()
+
+
+      val request = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+    }
+
   }
 }

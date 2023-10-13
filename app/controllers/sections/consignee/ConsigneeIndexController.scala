@@ -43,10 +43,11 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] = {
     authorisedDataRequestAsync(ern, lrn) {
-      implicit request =>
-        implicit val ur: UserRequest[_] = request.request
+      implicit dataRequest =>
         withAnswer(DestinationTypePage) {
           destinationTypePageAnswer =>
+            val ur: UserRequest[_] = dataRequest.request
+
             if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
               Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, lrn, NormalMode)))
             } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
@@ -56,7 +57,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
             } else {
               logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
                 s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
-              // TODO: Change redirect location when tasklist is build
+              // TODO: Change redirect location when tasklist is built
               Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
             }
         }
@@ -67,15 +68,15 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
   private def shouldStartFlowFromConsigneeExportUkEu(
                                                       userTypeFromErn: UserType,
                                                       destinationTypePageAnswer: MovementScenario
-                                                    )(implicit ur: UserRequest[_]): Boolean = {
+                                                    ): Boolean = {
     val gbwkAndSpecificDestinationTypes: Boolean =
-      userTypeFromErn == GreatBritainWarehouseKeeper && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk()
+      userTypeFromErn == GreatBritainWarehouseKeeper && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk
 
     val xiwkAndSpecificDestinationTypes: Boolean = {
       val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee(),
-        ExportWithCustomsDeclarationLodgedInTheUk(),
-        ExportWithCustomsDeclarationLodgedInTheEu()
+        RegisteredConsignee,
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
       )
       userTypeFromErn == NorthernIrelandWarehouseKeeper && validDestinationTypes.contains(destinationTypePageAnswer)
     }
@@ -86,35 +87,35 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
   private def shouldStartFlowFromConsigneeExcise(
                                                   userTypeFromErn: UserType,
                                                   destinationTypePageAnswer: MovementScenario
-                                                )(implicit ur: UserRequest[_]): Boolean = {
+                                                ): Boolean = {
     val validDestinationTypesRegardlessOfUserTypes: Boolean =
       Seq(
-        GbTaxWarehouse(),
-        EuTaxWarehouse(),
-        DirectDelivery()
+        GbTaxWarehouse,
+        EuTaxWarehouse,
+        DirectDelivery
       ).contains(destinationTypePageAnswer)
 
     val gbrcAndValidDestinationType: Boolean =
-      userTypeFromErn == GreatBritainRegisteredConsignor && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk()
+      userTypeFromErn == GreatBritainRegisteredConsignor && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk
 
     val xircAndValidDestinationType: Boolean = {
       val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee(),
-        TemporaryRegisteredConsignee(),
-        ExportWithCustomsDeclarationLodgedInTheUk(),
-        ExportWithCustomsDeclarationLodgedInTheEu()
+        RegisteredConsignee,
+        TemporaryRegisteredConsignee,
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
       )
 
       userTypeFromErn == NorthernIrelandRegisteredConsignor && validDestinationTypes.contains(destinationTypePageAnswer)
     }
 
     val xiwkAndRegisteredConsignee: Boolean =
-      (userTypeFromErn == NorthernIrelandWarehouseKeeper) && (destinationTypePageAnswer == TemporaryRegisteredConsignee())
+      (userTypeFromErn == NorthernIrelandWarehouseKeeper) && (destinationTypePageAnswer == TemporaryRegisteredConsignee)
 
     validDestinationTypesRegardlessOfUserTypes || gbrcAndValidDestinationType || xircAndValidDestinationType || xiwkAndRegisteredConsignee
   }
 
-  private def shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer: MovementScenario)(implicit ur: UserRequest[_]): Boolean =
-    destinationTypePageAnswer == ExemptedOrganisation()
+  private def shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer: MovementScenario): Boolean =
+    destinationTypePageAnswer == ExemptedOrganisation
 
 }

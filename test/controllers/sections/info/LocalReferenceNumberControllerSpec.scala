@@ -21,7 +21,6 @@ import config.SessionKeys
 import forms.LocalReferenceNumberFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
-import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
@@ -38,8 +37,6 @@ import scala.concurrent.Future
 class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    implicit val ur: UserRequest[_] = userRequest(FakeRequest())
 
     val application: Application =
       applicationBuilder(userAnswers)
@@ -159,7 +156,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                 emptyUserAnswers
                   .set(DeferredMovementPage, false)
                   .set(LocalReferenceNumberPage, testLrn)
-                  .set(DestinationTypePage, UnknownDestination())
+                  .set(DestinationTypePage, UnknownDestination)
 
               MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(None))
               MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

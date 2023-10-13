@@ -29,7 +29,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeAddressSummary, ConsigneeBusinessNameSummary, ConsigneeExciseSummary, ConsigneeExemptOrganisationSummary, ConsigneeExportVatSummary}
+import viewmodels.checkAnswers.sections.consignee._
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -46,12 +46,17 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
 
     Seq(CheckYourAnswersConsigneeMessages.English, CheckYourAnswersConsigneeMessages.Welsh).foreach { messagesForLanguage =>
 
-      implicit val testUserRequest = userRequest(FakeRequest())
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for ERN'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress).set(ConsigneeBusinessNamePage, testBusinessName).set(ConsigneeExcisePage, testErn).set(DestinationTypePage, GbTaxWarehouse()))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] =
+          dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ConsigneeAddressPage, testUserAddress)
+            .set(ConsigneeBusinessNamePage, testBusinessName)
+            .set(ConsigneeExcisePage, testErn)
+            .set(DestinationTypePage, GbTaxWarehouse)
+          )
         val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
@@ -94,7 +99,14 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Exempted Organisation'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress).set(ConsigneeBusinessNamePage, testBusinessName).set(ConsigneeExcisePage, testErn).set(ConsigneeExemptOrganisationPage, testExemptedOrganisation).set(DestinationTypePage, ExemptedOrganisation()))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] =
+          dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ConsigneeAddressPage, testUserAddress)
+            .set(ConsigneeBusinessNamePage, testBusinessName)
+            .set(ConsigneeExcisePage, testErn)
+            .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
+            .set(DestinationTypePage, ExemptedOrganisation)
+          )
 
         val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
@@ -138,7 +150,14 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Vat'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress).set(ConsigneeBusinessNamePage, testBusinessName).set(ConsigneeExcisePage, testErn).set(ConsigneeExportVatPage, testVat).set(DestinationTypePage, GbTaxWarehouse()))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] =
+          dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ConsigneeAddressPage, testUserAddress)
+            .set(ConsigneeBusinessNamePage, testBusinessName)
+            .set(ConsigneeExcisePage, testErn)
+            .set(ConsigneeExportVatPage, testVat)
+            .set(DestinationTypePage, GbTaxWarehouse)
+          )
 
         val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
@@ -182,7 +201,14 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Eori'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress).set(ConsigneeBusinessNamePage, testBusinessName).set(ConsigneeExcisePage, testErn).set(ConsigneeExportVatPage, testEori).set(DestinationTypePage, GbTaxWarehouse()))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] =
+          dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ConsigneeAddressPage, testUserAddress)
+            .set(ConsigneeBusinessNamePage, testBusinessName)
+            .set(ConsigneeExcisePage, testErn)
+            .set(ConsigneeExportVatPage, testEori)
+            .set(DestinationTypePage, GbTaxWarehouse)
+          )
 
         val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 

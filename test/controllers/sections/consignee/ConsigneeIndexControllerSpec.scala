@@ -18,7 +18,6 @@ package controllers.sections.consignee
 
 import base.SpecBase
 import models.NormalMode
-import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
@@ -26,15 +25,13 @@ import play.api.test.Helpers.{GET, _}
 
 class ConsigneeIndexControllerSpec extends SpecBase {
 
-  implicit val ur: UserRequest[_] = userRequest(FakeRequest())
-
   "ConsigneeIndexController" - {
     "must redirect to ConsigneeExemptOrganisationController" - {
-      s"when destination is ${ExemptedOrganisation()}" in {
+      s"when destination is $ExemptedOrganisation" in {
         val ern: String = testErn
 
         lazy val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation()))
+          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))
         ).build()
 
         running(application) {
@@ -50,7 +47,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
     }
 
     "must redirect to ConsigneeExciseController" - {
-      Seq(GbTaxWarehouse(), EuTaxWarehouse(), DirectDelivery()).foreach(
+      Seq(GbTaxWarehouse, EuTaxWarehouse, DirectDelivery).foreach(
         movementScenario =>
           s"when destination is $movementScenario" in {
             val ern: String = testErn
@@ -75,7 +72,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern: String = "GBRC123"
 
         Seq(
-          ExportWithCustomsDeclarationLodgedInTheUk()
+          ExportWithCustomsDeclarationLodgedInTheUk
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -101,10 +98,10 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern: String = "XIRC123"
 
         Seq(
-          RegisteredConsignee(),
-          TemporaryRegisteredConsignee(),
-          ExportWithCustomsDeclarationLodgedInTheUk(),
-          ExportWithCustomsDeclarationLodgedInTheEu()
+          RegisteredConsignee,
+          TemporaryRegisteredConsignee,
+          ExportWithCustomsDeclarationLodgedInTheUk,
+          ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -128,10 +125,10 @@ class ConsigneeIndexControllerSpec extends SpecBase {
 
       "when UserType is XIWK" - {
         val ern: String = "XIWK123"
-        s"and destination is ${TemporaryRegisteredConsignee()}" in {
+        s"and destination is $TemporaryRegisteredConsignee" in {
 
           lazy val application = applicationBuilder(
-            userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee()))
+            userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))
           ).build()
 
           running(application) {
@@ -152,7 +149,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern = "GBWK123"
 
         Seq(
-          ExportWithCustomsDeclarationLodgedInTheUk()
+          ExportWithCustomsDeclarationLodgedInTheUk
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -178,9 +175,9 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         val ern = "XIWK123"
 
         Seq(
-          RegisteredConsignee(),
-          ExportWithCustomsDeclarationLodgedInTheUk(),
-          ExportWithCustomsDeclarationLodgedInTheEu()
+          RegisteredConsignee,
+          ExportWithCustomsDeclarationLodgedInTheUk,
+          ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in {
@@ -207,7 +204,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
       "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in {
         val ern = testErn
         lazy val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination()))
+          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))
         ).build()
 
         running(application) {
@@ -216,7 +213,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
-          // TODO: Change redirect location when tasklist is build
+          // TODO: Change redirect location when tasklist is built
           redirectLocation(result) mustBe
             Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
         }

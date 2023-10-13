@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package utils
+package pages.sections.info
 
-import play.api.i18n.Messages
+import models.sections.info.InvoiceDetailsModel
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.LocalDate
+case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
 
-trait DateUtils {
-  implicit class LocalDateExtensions(date: LocalDate) {
-    def formatDateForUIOutput()(implicit messages: Messages): String = {
-      val monthMessage = messages(s"date.month.${date.getMonthValue}")
-      s"${date.getDayOfMonth} $monthMessage ${date.getYear}"
-    }
+  override def path: JsPath = JsPath \ "info" \ toString
 
-    def formatDateNumbersOnly(): String = {
-      s"${date.getDayOfMonth} ${date.getMonthValue} ${date.getYear}"
-    }
-  }
+  override def toString: String = "invoiceDetails"
 }

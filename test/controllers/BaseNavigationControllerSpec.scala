@@ -26,7 +26,7 @@ import pages.QuestionPage
 import play.api.libs.json.{JsPath, __}
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation}
+import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -35,6 +35,8 @@ import scala.concurrent.Future
 class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockUserAnswersService {
   trait Test {
     implicit val hc = HeaderCarrier()
+
+    implicit val request = userRequest(FakeRequest(GET, "/foo/bar"))
 
     val page = new QuestionPage[String] { override def path: JsPath = __ \ "page1" }
     val page2 = new QuestionPage[String] { override def path: JsPath = __ \ "page2" }

@@ -40,4 +40,16 @@ class DateUtilsSpec extends SpecBase with DateUtils {
       }
     }
   }
+
+  ".formatDateNumbersOnly" - {
+
+    "must format it correctly" in {
+
+      val expectedResult = s"1 1 2023"
+
+      val actualResult = LocalDate.of(2023, 1, 1).formatDateNumbersOnly()
+
+      actualResult mustBe expectedResult
+    }
+  }
 }

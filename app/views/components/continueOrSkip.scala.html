@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package utils
+@import config.AppConfig
 
-import play.api.i18n.Messages
+@this(
+        govukButton: GovukButton,
+        appConfig: AppConfig
+)
 
-import java.time.LocalDate
+@(href: String, primaryKey: String = "site.continue")(implicit messages: Messages)
 
-trait DateUtils {
-  implicit class LocalDateExtensions(date: LocalDate) {
-    def formatDateForUIOutput()(implicit messages: Messages): String = {
-      val monthMessage = messages(s"date.month.${date.getMonthValue}")
-      s"${date.getDayOfMonth} $monthMessage ${date.getYear}"
-    }
+    <div class="govuk-button-group">
 
-    def formatDateNumbersOnly(): String = {
-      s"${date.getDayOfMonth} ${date.getMonthValue} ${date.getYear}"
-    }
-  }
+        @govukButton(ButtonViewModel(messages(primaryKey)))
+
+        <a class="govuk-link" id="skip-question" href="@href">@messages("site.skipQuestion")</a>
+
+    </div>
+
+@{
+    //$COVERAGE-OFF$
 }

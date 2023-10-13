@@ -40,10 +40,20 @@ class NavigatorSpec extends SpecBase {
 
       "for the LocalReferenceNumber page" - {
 
-        "must go to the ConsignorAddress page" in {
+        "must go to the Invoice Details page" in {
 
           navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn)
+        }
+      }
+
+      "for the Invoice Detailspage" - {
+
+        //TODO update when CAMINFO006 is complete
+        "must go to the Under Construction page" in {
+
+          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
 

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package utils
+package models.sections.info
 
-import play.api.i18n.Messages
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
-trait DateUtils {
-  implicit class LocalDateExtensions(date: LocalDate) {
-    def formatDateForUIOutput()(implicit messages: Messages): String = {
-      val monthMessage = messages(s"date.month.${date.getMonthValue}")
-      s"${date.getDayOfMonth} $monthMessage ${date.getYear}"
-    }
+case class InvoiceDetailsModel(reference: String, date: LocalDate)
 
-    def formatDateNumbersOnly(): String = {
-      s"${date.getDayOfMonth} ${date.getMonthValue} ${date.getYear}"
-    }
-  }
+object InvoiceDetailsModel {
+
+  implicit val format: OFormat[InvoiceDetailsModel] = Json.format[InvoiceDetailsModel]
 }

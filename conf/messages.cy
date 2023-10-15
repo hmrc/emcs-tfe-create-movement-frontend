@@ -426,6 +426,16 @@ guarantorArranger.checkYourAnswersLabel = Guarantor arranger
 guarantorArranger.error.required = Select who is providing the guarantee for this movement
 guarantorArranger.change.hidden = who is providing the guarantee for this movement?
 
+guarantorName.3.title = What is the goods owner''s business name?
+guarantorName.3.heading = What is the goods owner''s business name?
+guarantorName.4.title = What is the transporter''s business name?
+guarantorName.4.heading = What is the transporter''s business name?
+guarantorName.checkYourAnswersLabel = Business name
+guarantorName.error.required = Enter the business name
+guarantorName.error.length = Business name must be 182 characters or less
+guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
+guarantorName.change.hidden = business name
+
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.heading = What is the business name of the place of destination?
 destinationBusinessName.checkYourAnswersLabel = destinationBusinessName

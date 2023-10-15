@@ -19,9 +19,9 @@ package controllers.sections.guarantor
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.guarantor.GuarantorRequiredFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -53,8 +53,14 @@ class GuarantorRequiredController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(GuarantorRequiredPage, value, mode)
+        {
+          case value@true =>
+            saveAndRedirect(GuarantorRequiredPage, value, mode)
+          case value@false =>
+            val cleansedSection = request.userAnswers.remove(GuarantorSection)
+            saveAndRedirect(GuarantorRequiredPage, value, cleansedSection, NormalMode)
+        }
       )
     }
+
 }

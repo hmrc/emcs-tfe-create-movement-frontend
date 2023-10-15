@@ -21,6 +21,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsString, Writes}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import play.api.libs.json._
 
 sealed trait DestinationType {
   val stringValue: String
@@ -103,6 +104,21 @@ object DestinationType extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[DestinationType] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
+  implicit val reads: Reads[DestinationType] = Reads {
+    case JsString(TaxWarehouse.toString) => JsSuccess(TaxWarehouse)
+    case JsString(TemporaryRegisteredConsignee.toString) => JsSuccess(TemporaryRegisteredConsignee)
+    case JsString(DirectDelivery.toString) => JsSuccess(DirectDelivery)
+    case JsString(ExemptedOrganisations.toString) => JsSuccess(ExemptedOrganisations)
+    case JsString(ExportWithCustomsLodgedInEU.toString) => JsSuccess(ExportWithCustomsLodgedInEU)
+    case JsString(ExportWithCustomsLodgedInGB.toString) => JsSuccess(ExportWithCustomsLodgedInGB)
+    case JsString(RegisteredConsignee.toString) => JsSuccess(RegisteredConsignee)
+    case JsString(CertifiedConsignee.toString) => JsSuccess(CertifiedConsignee)
+    case JsString(TemporaryCertifiedConsignee.toString) => JsSuccess(TemporaryCertifiedConsignee)
+    case JsString(ReturnToThePlaceOfDispatchOfTheConsignor.toString) => JsSuccess(ReturnToThePlaceOfDispatchOfTheConsignor)
+    case JsString(UnknownDestination.toString) => JsSuccess(UnknownDestination)
+    case _ => JsError("Unknown MovementScenario")
+  }
 }
 
 

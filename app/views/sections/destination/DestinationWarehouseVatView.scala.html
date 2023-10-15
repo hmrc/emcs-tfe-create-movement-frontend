@@ -26,7 +26,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    continueOrExit: components.continueOrExit,
+    continueOrSkip: components.continueOrSkip,
     h1: components.h1,
     h2: components.h2,
     p: components.p,
@@ -52,16 +52,9 @@
             .withWidth(Full)
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+       @continueOrSkip()
 
-        @p() {
-                @link(
-                testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
-                s"destinationWarehouseVat.link.skip"
-            )
-        }
+
     }
 }
 

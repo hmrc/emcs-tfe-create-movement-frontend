@@ -61,6 +61,7 @@ class ExportCustomsOfficeController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    implicit val msReads: Enumerable[MovementScenario] = MovementScenario.enumerable
     withAnswer(DestinationTypePage) { destinationType =>
       Future.successful(status(view(
         form = form,

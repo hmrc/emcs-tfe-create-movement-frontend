@@ -14,22 +14,23 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
+@import models.requests.DataRequest
 
 @this(
-        govukButton: GovukButton,
-        appConfig: AppConfig
+        govukButton: GovukButton
 )
 
-@(href: String, primaryKey: String = "site.continue")(implicit messages: Messages)
+@(route: String = "testOnly.controllers.routes.UnderConstructionController.onPageLoad().url", primaryKey: String = "site.saveAndContinue")(implicit messages: Messages, request: DataRequest[_])
 
-    <div class="govuk-button-group">
+<div class="govuk-button-group">
 
-        @govukButton(ButtonViewModel(messages(primaryKey)))
+    @govukButton(
+        ButtonViewModel(messages(primaryKey)).preventingDoubleClick()
+    )
 
-        <a class="govuk-link" id="skip-question" href="@href">@messages("site.skipQuestion")</a>
+    <a class="govuk-link" id="skip-question-link" href="route">@messages("Skip this question")</a>
 
-    </div>
+</div>
 
 @{
     //$COVERAGE-OFF$

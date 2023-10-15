@@ -16,6 +16,7 @@
 
 package forms.sections.guarantor
 
+import forms.XSS_REGEX
 import forms.mappings.Mappings
 import play.api.data.Form
 
@@ -27,5 +28,6 @@ class GuarantorNameFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("guarantorName.error.required")
         .verifying(maxLength(182, "guarantorName.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "guarantorName.error.invalidCharacter"))
     )
 }

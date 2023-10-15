@@ -501,7 +501,8 @@ guarantorName.4.title = What is the transporter''s business name?
 guarantorName.4.heading = What is the transporter''s business name?
 guarantorName.checkYourAnswersLabel = Business name
 guarantorName.error.required = Enter the business name
-guarantorName.error.length = Business name must be 182 characters or less must be 182 characters or less
+guarantorName.error.length = Business name must be 182 characters or less
+guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
 
 destinationBusinessName.title = What is the business name of the place of destination?

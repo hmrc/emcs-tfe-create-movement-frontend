@@ -16,6 +16,7 @@
 
 package forms.sections.guarantor
 
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -23,6 +24,7 @@ class GuarantorNameFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "guarantorName.error.required"
   val lengthKey = "guarantorName.error.length"
+  val invalidCharactersKey = "guarantorName.error.invalidCharacter"
   val maxLength = 182
 
   val form = new GuarantorNameFormProvider()()
@@ -42,6 +44,12 @@ class GuarantorNameFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like fieldWithXSSCharacters(
+      form,
+      fieldName,
+      FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
     )
 
     behave like mandatoryField(

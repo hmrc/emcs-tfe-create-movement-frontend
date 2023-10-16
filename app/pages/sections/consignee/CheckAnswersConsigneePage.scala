@@ -19,6 +19,5 @@ package pages.sections.consignee
 import pages.Page
 
 case object CheckAnswersConsigneePage extends Page {
-
-  override def toString: String = "checkAnswersConsignee"
+  override val toString: String = "checkAnswersConsignee"
 }

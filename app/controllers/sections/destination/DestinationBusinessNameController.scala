@@ -44,13 +44,13 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
                                                   view: DestinationBusinessNameView
                                                  ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(DestinationBusinessNamePage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future(renderView(BadRequest, formWithErrors, mode)),

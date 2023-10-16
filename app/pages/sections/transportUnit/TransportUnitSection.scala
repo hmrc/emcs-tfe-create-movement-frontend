@@ -17,9 +17,47 @@
 package pages.sections.transportUnit
 
 import models.Index
+import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObject] {
-  override def path: JsPath = TransportUnitsSection.path \ transportUnitIndex.position
+  override val path: JsPath = TransportUnitsSection.path \ transportUnitIndex.position
+
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    val unitTypeAnswer = request.userAnswers.get(TransportUnitTypePage(transportUnitIndex))
+    val identityAnswer = request.userAnswers.get(TransportUnitIdentityPage(transportUnitIndex))
+    val sealChoiceAnswer = request.userAnswers.get(TransportSealChoicePage(transportUnitIndex))
+    val moreInformationChoiceAnswer = request.userAnswers.get(TransportUnitGiveMoreInformationChoicePage(transportUnitIndex))
+
+    (unitTypeAnswer, identityAnswer, sealChoiceAnswer, moreInformationChoiceAnswer) match {
+      case (Some(_), Some(_), Some(sca), Some(mica)) =>
+        if (sealPagesAreCompleted(sca) && moreInfoPagesAreCompleted(mica)) {
+          Completed
+        } else {
+          InProgress
+        }
+      case _ =>
+        if(Seq(unitTypeAnswer, identityAnswer, sealChoiceAnswer, moreInformationChoiceAnswer).exists(_.nonEmpty)) {
+          InProgress
+        } else {
+          NotStarted
+        }
+    }
+  }
+
+  private def sealPagesAreCompleted(sealChoiceAnswer: Boolean)(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(TransportSealTypePage(transportUnitIndex)) match {
+      case Some(_) if sealChoiceAnswer => true
+      case _ if !sealChoiceAnswer => true
+      case _ => false
+    }
+
+  private def moreInfoPagesAreCompleted(moreInfoChoiceAnswer: Boolean)(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(TransportUnitGiveMoreInformationPage(transportUnitIndex)) match {
+      case Some(_) if moreInfoChoiceAnswer => true
+      case _ if !moreInfoChoiceAnswer => true
+      case _ => false
+    }
 }

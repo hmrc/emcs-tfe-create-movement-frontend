@@ -43,13 +43,13 @@ class DispatchCheckAnswersController @Inject()(
                                                 view: DispatchCheckAnswersView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      Ok(view(dispatchCheckAnswersHelper.summaryList(), controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(ern, lrn)))
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Ok(view(dispatchCheckAnswersHelper.summaryList(), controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(ern, draftId)))
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       Future.successful(
         Redirect(navigator.nextPage(DispatchCheckAnswersPage, NormalMode, request.userAnswers))
       )

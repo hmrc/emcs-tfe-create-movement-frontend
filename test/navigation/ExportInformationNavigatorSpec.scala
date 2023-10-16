@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
 
@@ -26,16 +26,13 @@ class ExportInformationNavigatorSpec extends SpecBase {
 
   val navigator = new ExportInformationNavigator
 
-  "ExportInformationNavigator" - {
+  "in Normal mode" - {
 
-    "in Normal mode" - {
+    "must go from a page that doesn't exist in the route map to Export Information CYA" in {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
-      }
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
+        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
     }
 
     "for the ExportCustomsOfficePage" - {
@@ -56,6 +53,22 @@ class ExportInformationNavigatorSpec extends SpecBase {
         navigator.nextPage(ExportInformationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+    }
+  }
+
+  "in Check mode" - {
+    "must go to ExportInformationCheckAnswersPage" in {
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
+    }
+  }
+
+  "in Review mode" - {
+    "must go to CheckYourAnswers" in {
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
     }
   }
 }

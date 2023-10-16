@@ -18,12 +18,12 @@ package controllers.sections.info
 
 import base.SpecBase
 import config.SessionKeys
-import forms.LocalReferenceNumberFormProvider
+import forms.sections.info.LocalReferenceNumberFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeInfoNavigator
+import navigation.InfoNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
 import play.api.Application
 import play.api.inject.bind
@@ -41,7 +41,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
     val application: Application =
       applicationBuilder(userAnswers)
         .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)),
+          bind[InfoNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
           bind[UserAnswersService].toInstance(mockUserAnswersService)
         )
         .build()

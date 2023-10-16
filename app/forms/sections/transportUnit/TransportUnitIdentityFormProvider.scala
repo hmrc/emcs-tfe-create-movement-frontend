@@ -18,7 +18,7 @@ package forms.sections.transportUnit
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
 
 import javax.inject.Inject

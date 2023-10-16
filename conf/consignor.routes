@@ -1,3 +1,5 @@
+GET         /trader/:ern/draft/:draftId/consignor                                 controllers.sections.consignor.ConsignorIndexController.onPageLoad(ern: String, draftId: String)
+
 GET         /trader/:ern/draft/:draftId/consignor/consignor-address               controllers.sections.consignor.ConsignorAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/consignor/consignor-address               controllers.sections.consignor.ConsignorAddressController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/consignor/consignor-address/change        controllers.sections.consignor.ConsignorAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

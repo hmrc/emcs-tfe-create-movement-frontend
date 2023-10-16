@@ -16,7 +16,6 @@
 
 package forms.sections.info
 
-import forms.DeferredMovementFormProvider
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 

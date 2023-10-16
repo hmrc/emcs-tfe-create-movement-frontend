@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{CheckMode, NormalMode, ReviewMode}
 import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
 import pages.Page
@@ -31,32 +31,32 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
+      "must go from a page that doesn't exist in the route map to Consignee CYA" in {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
-      }
-
-    "for the ConsigneeAddress page" - {
-
-      "must go to the Consignee Check Your Answers page" in {
-
-        navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
       }
-    }
 
-    "for the ConsigneeExcise page" - {
+      "for the ConsigneeAddress page" - {
 
-      "must go to the ConsigneeBusinessName page" in {
+        "must go to the Consignee Check Your Answers page" in {
 
-        navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+        }
       }
-    }
 
-    "for the ConsigneeBusinessNamePage" - {
+      "for the ConsigneeExcise page" - {
+
+        "must go to the ConsigneeBusinessName page" in {
+
+          navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+      }
+
+      "for the ConsigneeBusinessNamePage" - {
 
         "must go to CAM-NEE07" in {
           val userAnswers = emptyUserAnswers
@@ -70,7 +70,6 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       "for the ConsigneeExportPage" - {
 
-
         "must go to CAM-NEE11" - {
 
           "when 'YES' is answered'" in {
@@ -82,16 +81,16 @@ class ConsigneeNavigatorSpec extends SpecBase {
           }
         }
 
-      "must go to ConsigneeExcise page" - {
+        "must go to ConsigneeExcise page" - {
 
-        "when 'NO' is answered'" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportPage, false)
+          "when 'NO' is answered'" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportPage, false)
 
-          navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode)
+            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
         }
-      }
 
         "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
@@ -139,6 +138,30 @@ class ConsigneeNavigatorSpec extends SpecBase {
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
+      }
+
+      "for the CheckAnswersConsignee page" - {
+        "must go to the tasklist" in {
+          // TODO: update to tasklist when built
+          navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+    }
+
+    "in Check mode" - {
+      "must go to CheckYourAnswersConsigneeController" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+      }
+    }
+
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

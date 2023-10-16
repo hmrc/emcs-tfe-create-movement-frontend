@@ -17,9 +17,10 @@
 package controllers.sections.transportUnit
 
 import controllers.actions._
-import forms.TransportUnitTypeFormProvider
+import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
@@ -45,15 +46,15 @@ class TransportUnitTypeController @Inject()(
                                              view: TransportUnitTypeView
                                            ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      validateIndex(idx){
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
         renderView(Ok, fillForm(TransportUnitTypePage(idx), formProvider()), idx, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           formWithErrors =>

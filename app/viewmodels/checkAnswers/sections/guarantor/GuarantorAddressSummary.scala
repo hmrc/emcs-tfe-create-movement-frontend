@@ -19,10 +19,10 @@ package viewmodels.checkAnswers.sections.guarantor
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.{CheckMode, UserAddress}
+import pages.QuestionPage
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorRequiredPage}
-import pages.{GuarantorArrangerPage, QuestionPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}

@@ -20,11 +20,11 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorAddressMessages
 import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import pages.GuarantorArrangerPage
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -67,7 +67,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
               "must output the expected data" in {
 
-                implicit lazy val request = dataRequest(
+                implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
@@ -82,7 +82,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
               "must output the expected row" in {
 
-                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, arranger)
                   .set(GuarantorAddressPage, testUserAddress)
@@ -110,7 +110,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
             "must output the expected data" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -125,7 +125,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignor)
                 .set(ConsignorAddressPage, testUserAddress)
@@ -150,7 +150,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
             "must output the expected data" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -165,7 +165,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignee)
                 .set(ConsigneeAddressPage, testUserAddress)

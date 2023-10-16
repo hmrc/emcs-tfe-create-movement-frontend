@@ -17,23 +17,23 @@
 package controllers.sections.info
 
 import config.SessionKeys.DISPATCH_PLACE
-import controllers.BaseNavigationController
+import controllers.BaseController
 import controllers.actions._
-import forms.DispatchPlaceFormProvider
+import forms.sections.info.DispatchPlaceFormProvider
+import models.NormalMode
 import models.requests.UserRequest
-import navigation.Navigator
+import navigation.InfoNavigator
+import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
 import views.html.sections.info.DispatchPlaceView
 
 import javax.inject.Inject
 
 class DispatchPlaceController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         override val userAnswersService: UserAnswersService,
-                                         override val navigator: Navigator,
+                                         val navigator: InfoNavigator,
                                          override val auth: AuthAction,
                                          override val getData: DataRetrievalAction,
                                          override val requireData: DataRequiredAction,
@@ -41,7 +41,7 @@ class DispatchPlaceController @Inject()(
                                          val controllerComponents: MessagesControllerComponents,
                                          view: DispatchPlaceView,
                                          val userAllowList: UserAllowListAction
-                                       ) extends BaseNavigationController with AuthActionHelper {
+                                       ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowList) { implicit request =>
@@ -57,7 +57,7 @@ class DispatchPlaceController @Inject()(
           formWithErrors =>
             renderView(BadRequest, formWithErrors),
           value =>
-            Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(ern))
+            Redirect(navigator.nextPage(DispatchPlacePage, NormalMode, ern))
               .addingToSession(DISPATCH_PLACE -> value.toString)
         )
       }

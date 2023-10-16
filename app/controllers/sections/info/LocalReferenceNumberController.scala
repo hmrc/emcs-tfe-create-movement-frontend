@@ -17,13 +17,13 @@
 package controllers.sections.info
 
 import config.SessionKeys.{DEFERRED_MOVEMENT, DESTINATION_TYPE}
-import controllers.BaseNavigationController
+import controllers.BaseController
 import controllers.actions._
-import forms.LocalReferenceNumberFormProvider
+import forms.sections.info.LocalReferenceNumberFormProvider
 import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.{NormalMode, UserAnswers}
-import navigation.Navigator
+import navigation.InfoNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -37,15 +37,15 @@ import scala.concurrent.Future
 
 class LocalReferenceNumberController @Inject()(
                                                 override val messagesApi: MessagesApi,
-                                                override val userAnswersService: UserAnswersService,
-                                                override val navigator: Navigator,
+                                                val userAnswersService: UserAnswersService,
+                                                val navigator: InfoNavigator,
                                                 val auth: AuthAction,
                                                 val userAllowed: UserAllowListAction,
                                                 val getData: DataRetrievalAction,
                                                 formProvider: LocalReferenceNumberFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: LocalReferenceNumberView
-                                              ) extends BaseNavigationController {
+                                              ) extends BaseController {
 
   def onPageLoad(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowed).async { implicit request =>
@@ -104,6 +104,7 @@ class LocalReferenceNumberController @Inject()(
         Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(request.ern)))
     }
 
+  // TODO: move "create draft" functionality to INFO CYA page once built
   private def createDraftEntryAndRedirect(lrn: String)(implicit request: UserRequest[_]): Future[Result] =
     withGuard {
       case (destinationTypePageAnswer, isDeferred) =>
@@ -112,8 +113,8 @@ class LocalReferenceNumberController @Inject()(
           .set(DeferredMovementPage, isDeferred)
           .set(LocalReferenceNumberPage, lrn)
 
-        userAnswersService.set(userAnswers).map { answers =>
-          Redirect(navigator.nextPage(LocalReferenceNumberPage, NormalMode, answers))
+        userAnswersService.set(userAnswers).map { _ =>
+          Redirect(navigator.nextPage(LocalReferenceNumberPage, NormalMode, request.ern))
         }
     }
 

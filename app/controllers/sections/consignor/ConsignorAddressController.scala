@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
-import navigation.Navigator
+import navigation.ConsignorNavigator
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.i18n.MessagesApi
@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 class ConsignorAddressController @Inject()(override val messagesApi: MessagesApi,
                                            override val userAnswersService: UserAnswersService,
-                                           override val navigator: Navigator,
+                                           override val navigator: ConsignorNavigator,
                                            override val auth: AuthAction,
                                            override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,

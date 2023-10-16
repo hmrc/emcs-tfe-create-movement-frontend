@@ -17,8 +17,9 @@
 package models.requests
 
 import config.SessionKeys.DISPATCH_PLACE
-import models.DispatchPlace.{GreatBritain, NorthernIreland}
 import models._
+import models.sections.info.DispatchPlace
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import play.api.mvc.{Request, WrappedRequest}
 import utils.Logging
 
@@ -48,7 +49,7 @@ case class UserRequest[A](request: Request[A],
     case Some(dp) if dp == GreatBritain.toString => Some(GreatBritain)
     case Some(dp) if dp == NorthernIreland.toString => Some(NorthernIreland)
     case value =>
-      logger.warn(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
+      logger.info(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       None
   }
 }

@@ -64,7 +64,7 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateU
           Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
           Selectors.p(1) -> messagesForLanguage.text,
           Selectors.label("invoice-reference") -> messagesForLanguage.referenceLabel,
-          Selectors.legend-> messagesForLanguage.dateLabel,
+          Selectors.legend -> messagesForLanguage.dateLabel,
           Selectors.hint -> messagesForLanguage.dateHint(currentDate),
           Selectors.button -> messagesForLanguage.continue,
           Selectors.link(1) -> messagesForLanguage.skipThisQuestion

@@ -23,8 +23,7 @@ import models.NormalMode
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorNamePage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

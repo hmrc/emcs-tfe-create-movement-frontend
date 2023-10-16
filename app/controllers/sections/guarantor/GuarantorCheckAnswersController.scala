@@ -42,18 +42,18 @@ class GuarantorCheckAnswersController @Inject()(
                                                  view: GuarantorCheckAnswersView
                                                ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       Future.successful(
         Ok(view(
           cyaHelper.summaryList(),
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(ern, lrn)
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(ern, draftId)
         ))
       )
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       Future.successful(
         Redirect(navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, request.userAnswers))
       )

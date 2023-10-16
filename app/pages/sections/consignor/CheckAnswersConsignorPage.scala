@@ -19,6 +19,5 @@ package pages.sections.consignor
 import pages.Page
 
 case object CheckAnswersConsignorPage extends Page {
-
-  override def toString: String = "checkAnswersConsignor"
+  override val toString: String = "checkAnswersConsignor"
 }

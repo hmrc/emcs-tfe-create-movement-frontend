@@ -20,8 +20,8 @@ import base.SpecBase
 import controllers.routes
 import handlers.ErrorHandler
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.ConsignorNavigator
+import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -34,7 +34,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
   class Fixture(userAnswers: Option[UserAnswers]) {
     val application: Application =
       applicationBuilder(userAnswers)
-        .overrides(inject.bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)))
+        .overrides(inject.bind[ConsignorNavigator].toInstance(new FakeConsignorNavigator(testOnwardRoute)))
         .build()
 
     lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]

@@ -17,7 +17,7 @@
 package forms.sections.transportUnit
 
 import forms.mappings.Mappings
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
 import play.api.i18n.Messages
 

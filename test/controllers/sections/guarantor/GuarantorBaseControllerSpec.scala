@@ -23,8 +23,7 @@ import models.sections.guarantor.GuarantorArranger._
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.mvc.Results.Ok
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest

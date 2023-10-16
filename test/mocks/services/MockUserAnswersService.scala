@@ -30,9 +30,9 @@ trait MockUserAnswersService extends MockFactory {
 
   object MockUserAnswersService {
 
-    def get(ern: String, lrn: String): CallHandler3[String, String, HeaderCarrier, Future[Option[UserAnswers]]] =
+    def get(ern: String, draftId: String): CallHandler3[String, String, HeaderCarrier, Future[Option[UserAnswers]]] =
       (mockUserAnswersService.get(_: String, _: String)(_: HeaderCarrier))
-        .expects(ern, lrn, *)
+        .expects(ern, draftId, *)
 
     def set(userAnswers: UserAnswers): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =
       (mockUserAnswersService.set(_: UserAnswers)(_: HeaderCarrier))

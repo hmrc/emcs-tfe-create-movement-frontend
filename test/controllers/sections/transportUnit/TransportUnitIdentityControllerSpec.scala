@@ -19,8 +19,9 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
 import mocks.services.MockUserAnswersService
-import models.TransportUnitType.Tractor
-import models.{NormalMode, TransportUnitType}
+import models.NormalMode
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.Tractor
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}

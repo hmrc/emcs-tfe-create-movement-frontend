@@ -45,15 +45,15 @@ class GuarantorNameController @Inject()(
                                          view: GuarantorNameView
                                        ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         renderView(Ok, fillForm(GuarantorNamePage, formProvider()), guarantorArranger, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>

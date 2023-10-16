@@ -30,12 +30,12 @@ import queries.Derivable
 class UserAnswersSpec extends SpecBase {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
-    override def path: JsPath = jsPath \ toString
+    override val path: JsPath = jsPath \ toString
     override def toString: String = "TestPage"
   }
 
   case class TestPage2(jsPath: JsPath = JsPath) extends QuestionPage[String] {
-    override def path: JsPath = jsPath \ toString
+    override val path: JsPath = jsPath \ toString
 
     override def toString: String = "TestPage2"
   }
@@ -171,7 +171,7 @@ class UserAnswersSpec extends SpecBase {
 
     "when calling .get(Derivable)" - {
       object TestDerivable extends Derivable[Seq[JsObject], Int] {
-        override def path: JsPath = JsPath \ "items"
+        override val path: JsPath = JsPath \ "items"
 
         override val derive: Seq[JsObject] => Int = _.size
       }
@@ -350,15 +350,15 @@ class UserAnswersSpec extends SpecBase {
 
       val page1 = new QuestionPage[String] {
         override def toString: String = "page1"
-        override def path: JsPath = __ \ toString
+        override val path: JsPath = __ \ toString
       }
       val page2 = new QuestionPage[String] {
         override def toString: String = "page2"
-        override def path: JsPath = __ \ toString
+        override val path: JsPath = __ \ toString
       }
       val page3 = new QuestionPage[String] {
         override def toString: String = "page3"
-        override def path: JsPath = __ \ toString
+        override val path: JsPath = __ \ toString
       }
 
       val baseUserAnswers = UserAnswers(ern = "my ern", draftId = "my draftId")

@@ -21,8 +21,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
-
-  override def path: JsPath = JsPath \ "journeyType" \ toString
-
-  override def toString: String = "HowMovementTransported"
+  override val toString: String = "howMovementTransported"
+  override val path: JsPath = JourneyTypeSection.path \ toString
 }

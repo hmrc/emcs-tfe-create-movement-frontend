@@ -32,11 +32,11 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
+      "must go from a page that doesn't exist in the route map to JourneyType CYA" in {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
       }
 
       "for the HowMovementTransported page" - {
@@ -98,6 +98,47 @@ class JourneyTypeNavigatorSpec extends SpecBase {
     }
 
     "in Check mode" - {
+
+      "for the HowMovementTransported page" - {
+
+        "must go to the GiveInformationOtherTransport page" - {
+
+          "when the option selected is 'Other'" in {
+            val userAnswers = emptyUserAnswers
+              .set(LocalReferenceNumberPage, "123")
+              .set(HowMovementTransportedPage, Other)
+
+            navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
+              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, CheckMode)
+          }
+        }
+
+        "must go to the Journey Type CYA page" - {
+
+          "when the option selected is not `Other`" in {
+            val userAnswers = emptyUserAnswers
+              .set(LocalReferenceNumberPage, "123")
+              .set(HowMovementTransportedPage, AirTransport)
+
+            navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
+              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
+      "must go to CheckYourAnswersJourneyTypeController" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+      }
+    }
+
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+      }
     }
 
 

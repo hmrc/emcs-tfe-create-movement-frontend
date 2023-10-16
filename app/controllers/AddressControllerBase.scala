@@ -36,13 +36,13 @@ trait AddressControllerBase extends BaseNavigationController with AuthActionHelp
 
   def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(addressPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, mode),
           saveAndRedirect(addressPage, _, mode)

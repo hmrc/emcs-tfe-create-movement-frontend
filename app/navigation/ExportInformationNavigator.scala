@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
 import play.api.mvc.Call
@@ -36,9 +36,25 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ => (userAnswers: UserAnswers) =>
-      routes.IndexController.onPageLoad(userAnswers.ern)
+      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    normalRoutes(page)(userAnswers)
+  private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case _ => (userAnswers: UserAnswers) =>
+        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode =>
+      checkRouteMap(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
+  }
 }

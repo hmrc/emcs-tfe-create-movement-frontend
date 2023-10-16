@@ -42,20 +42,20 @@ class DispatchBusinessNameController @Inject()(override val messagesApi: Message
                                                view: DispatchBusinessNameView
                                               ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         Ok(view(
           fillForm(DispatchBusinessNamePage, formProvider()),
-          routes.DispatchBusinessNameController.onSubmit(ern, lrn, mode)
+          routes.DispatchBusinessNameController.onSubmit(ern, draftId, mode)
         ))
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, routes.DispatchBusinessNameController.onSubmit(ern, lrn, mode)))),
+          Future.successful(BadRequest(view(formWithErrors, routes.DispatchBusinessNameController.onSubmit(ern, draftId, mode)))),
         value =>
           saveAndRedirect(DispatchBusinessNamePage, value, mode)
       )

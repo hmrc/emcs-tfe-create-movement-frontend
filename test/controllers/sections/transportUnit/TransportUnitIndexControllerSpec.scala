@@ -18,8 +18,10 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, TransportUnitType}
-import pages.sections.transportUnit.TransportUnitTypePage
+import models.NormalMode
+import models.sections.transportUnit.TransportUnitType.Container
+import pages.sections.transportUnit._
+import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -29,13 +31,34 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
   "transportUnitIndex Controller" - {
 
+    "when TransportUnitSection.isCompleted" - {
+      // TODO: update route when CYA page is built
+      "must redirect to the CYA controller" in {
+        val application = applicationBuilder(userAnswers = Some(
+          emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Container)
+            .set(TransportUnitIdentityPage(testIndex1), "")
+            .set(TransportSealChoicePage(testIndex1), false)
+            .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+        )).build()
+
+        running(application) {
+
+          val request = FakeRequest(GET, controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        }
+      }
+    }
+
     "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, transportUnitIndexRoute)
-
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
@@ -43,25 +66,5 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
           Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
       }
     }
-
-    "must redirect to the add to list page (CAM-TU07) when any answer is present" in {
-
-      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, transportUnitIndexRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        //TODO: when page implemented redirect to CAM-TU07
-        redirectLocation(result) mustBe
-          Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
-      }
-    }
-
-
   }
 }

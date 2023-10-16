@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.info
 
 import forms.behaviours.OptionFieldBehaviours
-import models.DispatchPlace
+import models.sections.info.DispatchPlace
 import play.api.data.FormError
 
 class DispatchPlaceFormProviderSpec extends OptionFieldBehaviours {

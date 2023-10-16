@@ -17,8 +17,9 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import models.NormalMode
+import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress}
 import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, _}
@@ -26,6 +27,30 @@ import play.api.test.Helpers.{GET, _}
 class ConsigneeIndexControllerSpec extends SpecBase {
 
   "ConsigneeIndexController" - {
+    "must redirect to CheckYourAnswersConsigneeController" - {
+      "when ConsigneeSection.isCompleted is true" in {
+        val ern: String = testErn
+
+        lazy val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswers
+            .set(DestinationTypePage, ExemptedOrganisation)
+            .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          )
+        ).build()
+
+        running(application) {
+          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
+            .copy(ern = ern)
+          val result = route(application, request).value
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, testDraftId).url)
+        }
+      }
+    }
     "must redirect to ConsigneeExemptOrganisationController" - {
       s"when destination is $ExemptedOrganisation" in {
         val ern: String = testErn

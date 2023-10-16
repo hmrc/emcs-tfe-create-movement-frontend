@@ -41,19 +41,19 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                                                     view: CheckYourAnswersConsigneeView
                                                    ) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        withAnswer(ConsigneeBusinessNamePage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, lrn)) {
+        withAnswer(ConsigneeBusinessNamePage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, draftId)) {
           _ =>
-            withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, lrn)) {
+            withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, draftId)) {
               _ =>
                 withAnswer(DestinationTypePage) {
                   _ =>
                     Future.successful(Ok(view(
-                      controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, lrn),
+                      controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, draftId),
                       ern,
-                      lrn,
+                      draftId,
                       checkYourAnswersConsigneeHelper.summaryList
                     )))
                 }
@@ -62,8 +62,8 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
     }
 
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         Redirect(navigator.nextPage(CheckAnswersConsigneePage, NormalMode, request.userAnswers))
     }

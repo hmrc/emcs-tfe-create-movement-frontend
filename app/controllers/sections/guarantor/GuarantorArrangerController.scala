@@ -22,8 +22,7 @@ import models.Mode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorNamePage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorNamePage, GuarantorVatPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -46,15 +45,15 @@ class GuarantorArrangerController @Inject()(
                                              view: GuarantorArrangerView
                                            ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorRequiredAnswer {
         renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorRequiredAnswer {
         formProvider().bindFromRequest().fold(
           formWithErrors =>

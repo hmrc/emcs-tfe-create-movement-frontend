@@ -24,8 +24,7 @@ import models.NormalMode
 import models.sections.guarantor.GuarantorArranger.Transporter
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -169,7 +168,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
         .overrides(
           bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
           bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
+        )
         .build()
 
 

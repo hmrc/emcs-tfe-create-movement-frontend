@@ -18,7 +18,7 @@ package views.sections.info
 
 import base.ViewSpecBase
 import fixtures.messages.sections.info.DispatchPlaceMessages
-import forms.DispatchPlaceFormProvider
+import forms.sections.info.DispatchPlaceFormProvider
 import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

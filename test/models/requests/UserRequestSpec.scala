@@ -18,8 +18,8 @@ package models.requests
 
 import base.SpecBase
 import config.SessionKeys.DISPATCH_PLACE
-import models.DispatchPlace.{GreatBritain, NorthernIreland}
 import models._
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import play.api.test.FakeRequest
 
 class UserRequestSpec extends SpecBase {

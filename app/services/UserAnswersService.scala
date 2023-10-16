@@ -27,10 +27,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class UserAnswersService @Inject()(userAnswersConnector: UserAnswersConnector)(implicit ec: ExecutionContext) {
 
-  def get(ern: String, lrn: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
-    userAnswersConnector.get(ern, lrn).map {
+  def get(ern: String, draftId: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    userAnswersConnector.get(ern, draftId).map {
       case Right(answers) => answers
-      case Left(_) => throw UserAnswersException(s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$ern' & draftId: '$lrn'")
+      case Left(_) => throw UserAnswersException(s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$ern' & draftId: '$draftId'")
     }
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[UserAnswers] = {

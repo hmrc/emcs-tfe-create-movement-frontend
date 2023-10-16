@@ -45,13 +45,13 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
                                                       getMemberStatesService: GetMemberStatesService
                                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(ConsigneeExemptOrganisationPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       submitAndTrimWhitespaceFromTextarea(ConsigneeExemptOrganisationPage, formProvider)(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, mode)

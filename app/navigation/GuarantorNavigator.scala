@@ -18,9 +18,9 @@ package navigation
 
 import controllers.routes
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
-import models.{Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import pages.Page
 import pages.sections.guarantor._
-import pages.{GuarantorArrangerPage, Page}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -59,11 +59,16 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) =>
+        controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
-
     case _ =>
       (userAnswers: UserAnswers) =>
         controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -72,8 +77,9 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    //TODO update when other modes are added
-    case _ =>
+    case CheckMode =>
       checkRoutes(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

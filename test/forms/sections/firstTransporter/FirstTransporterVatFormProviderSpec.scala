@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.firstTransporter
 
 import forms.behaviours.StringFieldBehaviours
-import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import play.api.data.FormError
 
 class FirstTransporterVatFormProviderSpec extends StringFieldBehaviours {

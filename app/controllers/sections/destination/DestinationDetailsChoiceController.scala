@@ -43,27 +43,27 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                    val userAllowList: UserAllowListAction
                                                   ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         withAnswer(DestinationTypePage) {
           movementScenario =>
             Future.successful(Ok(view(
               form = fillForm(DestinationDetailsChoicePage, formProvider(movementScenario)),
-              action = routes.DestinationDetailsChoiceController.onSubmit(ern, lrn, mode),
+              action = routes.DestinationDetailsChoiceController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario
             )))
         }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         withAnswer(DestinationTypePage) {
           movementScenario =>
             formProvider(movementScenario).bindFromRequest().fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, routes.DestinationDetailsChoiceController.onSubmit(ern, lrn, mode), movementScenario))),
+                Future.successful(BadRequest(view(formWithErrors, routes.DestinationDetailsChoiceController.onSubmit(ern, draftId, mode), movementScenario))),
               value =>
                 saveAndRedirect(DestinationDetailsChoicePage, value, mode)
             )

@@ -18,7 +18,7 @@ package views.sections.info
 
 import base.ViewSpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
-import forms.LocalReferenceNumberFormProvider
+import forms.sections.info.LocalReferenceNumberFormProvider
 import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

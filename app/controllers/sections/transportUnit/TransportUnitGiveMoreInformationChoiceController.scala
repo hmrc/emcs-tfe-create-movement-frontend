@@ -19,7 +19,8 @@ package controllers.sections.transportUnit
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
 import play.api.data.Form
@@ -32,20 +33,20 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationChoiceController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: TransportUnitNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: TransportUnitGiveMoreInformationChoiceFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TransportUnitGiveMoreInformationChoiceView
-                                     ) extends BaseTransportUnitNavigationController with AuthActionHelper {
+                                                                  override val messagesApi: MessagesApi,
+                                                                  override val userAnswersService: UserAnswersService,
+                                                                  override val userAllowList: UserAllowListAction,
+                                                                  override val navigator: TransportUnitNavigator,
+                                                                  override val auth: AuthAction,
+                                                                  override val getData: DataRetrievalAction,
+                                                                  override val requireData: DataRequiredAction,
+                                                                  formProvider: TransportUnitGiveMoreInformationChoiceFormProvider,
+                                                                  val controllerComponents: MessagesControllerComponents,
+                                                                  view: TransportUnitGiveMoreInformationChoiceView
+                                                                ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
           renderView(Ok, fillForm(TransportUnitGiveMoreInformationChoicePage(idx), formProvider(transportUnitType)), idx, mode, transportUnitType)
@@ -53,8 +54,8 @@ class TransportUnitGiveMoreInformationChoiceController @Inject()(
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(

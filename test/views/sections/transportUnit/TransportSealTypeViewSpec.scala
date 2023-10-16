@@ -19,8 +19,8 @@ package views.sections.transportUnit
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import forms.sections.transportUnit.TransportSealTypeFormProvider
-import models.TransportUnitType
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages

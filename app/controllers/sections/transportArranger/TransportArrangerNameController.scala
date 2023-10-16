@@ -47,15 +47,15 @@ class TransportArrangerNameController @Inject()(
                                                  view: TransportArrangerNameView
                                                ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit dataRequest =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit dataRequest =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         renderView(Ok, fillForm(TransportArrangerNamePage, formProvider()), transportArrangerAnswer, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>

@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
-import models.DispatchPlace.{GreatBritain, NorthernIreland}
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.{NorthernIrelandWarehouse, Unknown}
 import models.requests.UserRequest
 import models.response.InvalidUserTypeException

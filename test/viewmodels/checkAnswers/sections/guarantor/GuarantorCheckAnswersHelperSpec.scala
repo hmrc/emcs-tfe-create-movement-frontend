@@ -22,9 +22,8 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import org.scalamock.scalatest.MockFactory
-import pages.GuarantorArrangerPage
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorNamePage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 

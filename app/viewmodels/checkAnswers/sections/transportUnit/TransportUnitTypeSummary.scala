@@ -24,14 +24,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportUnitTypeSummary  {
+object TransportUnitTypeSummary {
 
   def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(TransportUnitTypePage(idx)).map {
       answer =>
         SummaryListRowViewModel(
-          key     = "transportUnitType.checkYourAnswersLabel",
-          value   = ValueViewModel(messages(s"transportUnitType.$answer")),
+          key = "transportUnitType.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"transportUnitType.$answer")),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

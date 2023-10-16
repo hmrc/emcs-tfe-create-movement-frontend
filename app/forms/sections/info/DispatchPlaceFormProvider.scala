@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package forms
-
-import javax.inject.Inject
+package forms.sections.info
 
 import forms.mappings.Mappings
+import models.sections.info.DispatchPlace
 import play.api.data.Form
-import models.DispatchPlace
+
+import javax.inject.Inject
 
 class DispatchPlaceFormProvider @Inject() extends Mappings {
 

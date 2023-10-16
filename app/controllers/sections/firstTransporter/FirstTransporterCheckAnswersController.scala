@@ -42,16 +42,16 @@ class FirstTransporterCheckAnswersController @Inject()(
                                                         view: FirstTransporterCheckAnswersView
                                                       ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       Ok(view(
         cyaHelper.summaryList(),
-        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(ern, lrn)
+        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(ern, draftId)
       ))
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       Redirect(navigator.nextPage(FirstTransporterCheckAnswersPage, NormalMode, request.userAnswers))
     }
 }

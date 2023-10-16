@@ -19,7 +19,7 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
 import forms.sections.info.DestinationTypeFormProvider
-import models.DispatchPlace.GreatBritain
+import models.sections.info.DispatchPlace.GreatBritain
 import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

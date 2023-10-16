@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.info
 
-import models.DispatchPlace
+import models.sections.info.DispatchPlace
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DispatchPlacePage extends QuestionPage[DispatchPlace] {
-
-  override def path: JsPath = JsPath \ "info" \ toString
-
-  override def toString: String = "dispatchPlace"
+  override val toString: String = "dispatchPlace"
+  override val path: JsPath = JsPath \ "info" \ toString
 }

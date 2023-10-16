@@ -20,8 +20,8 @@ import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationMessages
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import models.NormalMode
-import models.TransportUnitType._
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitType._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages

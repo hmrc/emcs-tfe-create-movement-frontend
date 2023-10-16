@@ -21,8 +21,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case class TransportUnitGiveMoreInformationPage(idx: Index) extends QuestionPage[String] {
-
-  override def path: JsPath = TransportUnitSection(idx).path \ toString
-
-  override def toString: String = "transportUnitGiveMoreInformation"
+  override val toString: String = "transportUnitGiveMoreInformation"
+  override val path: JsPath = TransportUnitSection(idx).path \ toString
 }

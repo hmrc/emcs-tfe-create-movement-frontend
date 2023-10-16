@@ -19,7 +19,7 @@ package controllers.sections.consignor
 import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
-import navigation.Navigator
+import navigation.ConsignorNavigator
 import pages.sections.consignor.{CheckAnswersConsignorPage, ConsignorAddressPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,31 +34,31 @@ class CheckYourAnswersConsignorController @Inject()(override val messagesApi: Me
                                                     override val getData: DataRetrievalAction,
                                                     override val requireData: DataRequiredAction,
                                                     val controllerComponents: MessagesControllerComponents,
-                                                    val navigator: Navigator,
+                                                    val navigator: ConsignorNavigator,
                                                     view: CheckYourAnswersConsignorView
                                                    ) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         withAnswer(
           page = ConsignorAddressPage,
           //TODO: update redirectRoute to journey index page when built
-          redirectRoute = controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, NormalMode)
+          redirectRoute = controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, draftId, NormalMode)
         ) {
           consignorAddress =>
             Future.successful(Ok(view(
-              controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, lrn),
+              controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, draftId),
               ern,
-              lrn,
+              draftId,
               consignorAddress,
               request.traderKnownFacts
             )))
         }
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         Redirect(navigator.nextPage(CheckAnswersConsignorPage, NormalMode, request.userAnswers))
     }

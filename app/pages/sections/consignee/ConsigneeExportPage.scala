@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeExportPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ "consignee" \ toString
-
-  override def toString: String = "consigneeExport"
+  override val toString: String = "consigneeExport"
+  override val path: JsPath = ConsigneeSection.path \ toString
 }

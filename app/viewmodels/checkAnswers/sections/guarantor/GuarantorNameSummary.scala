@@ -19,9 +19,8 @@ package viewmodels.checkAnswers.sections.guarantor
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger._
-import pages.GuarantorArrangerPage
 import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

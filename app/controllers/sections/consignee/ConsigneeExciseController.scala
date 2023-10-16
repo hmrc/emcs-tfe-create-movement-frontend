@@ -45,26 +45,26 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                           view: ConsigneeExciseView
                                          ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         Ok(view(
           fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)),
-          routes.ConsigneeExciseController.onSubmit(ern, lrn, mode),
+          routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
           isNorthernIrishTemporaryRegisteredConsignee
         ))
     }
 
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         formProvider(isNorthernIrishTemporaryRegisteredConsignee).bindFromRequest().fold(
           formWithErrors =>
             Future.successful(
               BadRequest(view(
                 formWithErrors,
-                routes.ConsigneeExciseController.onSubmit(ern, lrn, mode),
+                routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
                 isNorthernIrishTemporaryRegisteredConsignee
               ))
             ),

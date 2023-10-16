@@ -19,6 +19,5 @@ package pages.sections.exportInformation
 import pages.Page
 
 case object ExportInformationCheckAnswersPage extends Page {
-
-  override def toString: String = "exportInformationCheckAnswers"
+  override val toString: String = "exportInformationCheckAnswers"
 }

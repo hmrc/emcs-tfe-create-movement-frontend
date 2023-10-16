@@ -16,7 +16,13 @@
 
 package pages.sections
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsValue
+import viewmodels.taskList.{Completed, TaskListStatus}
 
-trait Section[T <: JsValue] extends QuestionPage[T]
+trait Section[T <: JsValue] extends QuestionPage[T] {
+  def status(implicit request: DataRequest[_]): TaskListStatus
+
+  final def isCompleted(implicit request: DataRequest[_]): Boolean = status == Completed
+}

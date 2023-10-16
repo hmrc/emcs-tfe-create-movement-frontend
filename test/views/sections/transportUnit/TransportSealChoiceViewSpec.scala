@@ -19,9 +19,10 @@ package views.sections.transportUnit
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportSealChoiceMessages
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
-import models.TransportUnitType._
+import models.NormalMode
 import models.requests.DataRequest
-import models.{NormalMode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.transportUnit.TransportUnitTypePage

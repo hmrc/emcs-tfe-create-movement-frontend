@@ -16,7 +16,7 @@
 
 package viewmodels.helpers
 
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import pages.Page
 import play.api.data.Form
 import play.api.i18n.Messages

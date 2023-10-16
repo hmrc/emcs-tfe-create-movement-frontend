@@ -20,8 +20,8 @@ import base.SpecBase
 import config.SessionKeys.DISPATCH_PLACE
 import forms.sections.info.DestinationTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.DispatchPlace
-import models.DispatchPlace.{GreatBritain, NorthernIreland}
+import models.sections.info.DispatchPlace
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
 import play.api.Application

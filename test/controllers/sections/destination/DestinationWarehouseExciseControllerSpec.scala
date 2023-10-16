@@ -20,14 +20,13 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
-import models.DispatchPlace.GreatBritain
-import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.{FakeDestinationNavigator, FakeNavigator}
-import navigation.{DestinationNavigator, Navigator}
+import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
-import pages.DispatchPlacePage
+import models.{NormalMode, UserAnswers}
+import navigation.DestinationNavigator
+import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationWarehouseExcisePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -62,7 +61,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
   "DestinationWarehouseExcise Controller" - {
 
-    "must return OK and the correct view for a GET"  in new Fixture(Some(emptyUserAnswers
+    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, DirectDelivery))) {
 
       running(application) {
@@ -80,7 +79,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered"  in new Fixture(Some(emptyUserAnswers
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
       .set(DestinationWarehouseExcisePage, "answer").set(DestinationTypePage, DirectDelivery))) {
 
 

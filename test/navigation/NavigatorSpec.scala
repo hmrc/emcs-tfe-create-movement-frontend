@@ -20,8 +20,6 @@ import base.SpecBase
 import controllers.routes
 import models._
 import pages._
-import pages.sections.consignor._
-import pages.sections.info._
 
 class NavigatorSpec extends SpecBase {
 
@@ -36,43 +34,6 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           routes.IndexController.onPageLoad(testErn)
-      }
-
-      "for the LocalReferenceNumber page" - {
-
-        "must go to the Invoice Details page" in {
-
-          navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn)
-        }
-      }
-
-      "for the Invoice Detailspage" - {
-
-        //TODO update when CAMINFO006 is complete
-        "must go to the Under Construction page" in {
-
-          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
-      }
-
-      "for the ConsignorAddress page" - {
-
-        "must go to the CheckYourAnswersConsignor page" in {
-
-          navigator.nextPage(ConsignorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId)
-        }
-      }
-
-      "for the CheckYourAnswersConsignor page" - {
-
-        "must go to the UnderConstruction page" in {
-
-          navigator.nextPage(CheckAnswersConsignorPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
       }
 
       "for the CheckYourAnswers page" - {
@@ -92,12 +53,6 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
           routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
-      }
-
-      "must go from the ConsignorAddressPage to CheckYourAnswersConsignor" in {
-
-        navigator.nextPage(ConsignorAddressPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId)
       }
     }
 

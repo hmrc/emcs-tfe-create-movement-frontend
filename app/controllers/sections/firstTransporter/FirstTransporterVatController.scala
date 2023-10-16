@@ -46,13 +46,13 @@ class FirstTransporterVatController @Inject()(
                                                view: FirstTransporterVatView
                                              ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(FirstTransporterVatPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         saveAndRedirect(FirstTransporterVatPage, _, mode)
@@ -66,8 +66,8 @@ class FirstTransporterVatController @Inject()(
     )))
 
 
-  def onNonGbVAT(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onNonGbVAT(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       saveAndRedirect(FirstTransporterVatPage, NONGBVAT, NormalMode)
     }
 }

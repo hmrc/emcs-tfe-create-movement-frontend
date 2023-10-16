@@ -19,6 +19,7 @@ package controllers.sections.guarantor
 import controllers.actions._
 import models.NormalMode
 import navigation.GuarantorNavigator
+import pages.sections.guarantor.GuarantorSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -35,11 +36,17 @@ class GuarantorIndexController @Inject()(
                                           val controllerComponents: MessagesControllerComponents
                                         ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { _ =>
-      Future.successful(
-        Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, lrn, NormalMode))
-      )
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      if (GuarantorSection.isCompleted) {
+        Future.successful(
+          Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern ,draftId))
+        )
+      } else {
+        Future.successful(
+          Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode))
+        )
+      }
     }
 
 }

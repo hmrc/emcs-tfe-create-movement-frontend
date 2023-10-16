@@ -21,7 +21,6 @@ import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages

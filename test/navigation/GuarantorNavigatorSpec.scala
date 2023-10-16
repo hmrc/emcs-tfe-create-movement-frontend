@@ -99,9 +99,8 @@ class GuarantorNavigatorSpec extends SpecBase {
 
       "for GuarantorVATPage" - {
         "must goto CAM-G05" in {
-          // TODO redirect to CAM-GO5 once built
           navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
     }

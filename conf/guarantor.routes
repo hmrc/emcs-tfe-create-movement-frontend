@@ -20,3 +20,8 @@ POST        /trader/:ern/draft/:lrn/guarantor/vat                    controllers
 GET         /trader/:ern/draft/:lrn/guarantor/vat/change             controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:lrn/guarantor/vat/change             controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 GET         /trader/:ern/draft/:lrn/guarantor/vat/non-gb-vat         controllers.sections.guarantor.GuarantorVatController.onNonGbVAT(ern: String, lrn: String)
+
+GET         /trader/:ern/draft/:lrn/guarantor/address                controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:lrn/guarantor/address                controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:lrn/guarantor/address/change         controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:lrn/guarantor/address/change         controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

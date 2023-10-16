@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import navigation.GuarantorNavigator
 import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorNamePage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorNamePage, GuarantorVatPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -68,8 +68,8 @@ class GuarantorArrangerController @Inject()(
                 value,
                 request.userAnswers
                   .remove(GuarantorNamePage)
-                  .remove(GuarantorVatPage),
-                  // TODO remove GuarantorAddressPage once built
+                  .remove(GuarantorVatPage)
+                  .remove(GuarantorAddressPage),
                 mode
               )
           }

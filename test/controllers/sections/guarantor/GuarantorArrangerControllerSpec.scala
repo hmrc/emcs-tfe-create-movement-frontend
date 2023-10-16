@@ -19,12 +19,13 @@ package controllers
 import base.SpecBase
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
 import models.sections.guarantor.GuarantorArranger
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, Transporter}
+import models.{NormalMode, UserAddress}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
 import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorNamePage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -169,5 +170,39 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       }
     }
 
+    Seq(Consignee, Consignor).foreach(
+      guarantorArranger =>
+
+        s"must cleanse further guarantor sections when choosing an arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" in {
+          val expectedAnswers = emptyUserAnswers
+            .set(GuarantorRequiredPage, true)
+            .set(GuarantorArrangerPage, guarantorArranger)
+
+          MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+          val application = applicationBuilder(
+            userAnswers = Some(
+              emptyUserAnswers
+                .set(GuarantorRequiredPage, true)
+                .set(GuarantorArrangerPage, Transporter)
+                .set(GuarantorNamePage, "Some name")
+                .set(GuarantorVatPage, "GB12345678")
+                .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA"))
+            )
+          )
+            .overrides(
+              bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
+              bind[UserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
+
+
+          val request = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", guarantorArranger.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+        }
+    )
   }
 }

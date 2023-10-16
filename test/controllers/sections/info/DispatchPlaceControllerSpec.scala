@@ -116,11 +116,9 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-<<<<<<< HEAD
+
             redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testNorthernIrelandErn).url
-=======
-            redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url
->>>>>>> e70f6e9 ([ETFE-2213] destination type page (#74))
+
           }
         }
 

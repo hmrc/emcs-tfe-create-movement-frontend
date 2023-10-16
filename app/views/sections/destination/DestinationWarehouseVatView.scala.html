@@ -33,7 +33,7 @@
     link: components.link
 )
 
-@(form: Form[_], action: Call, destinationType: DestinationType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, destinationType: DestinationType, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
  @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", destinationType.stringValue))) {
 
@@ -52,7 +52,7 @@
             .withWidth(Full)
         )
 
-       @continueOrSkip()
+    @continueOrSkip(skipQuestionCall.url)
 
 
     }

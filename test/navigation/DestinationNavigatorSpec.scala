@@ -19,9 +19,14 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.NormalMode
+<<<<<<< HEAD
 import pages.Page
 import pages.sections.destination._
 
+=======
+import pages.{DestinationWarehouseVatPage, Page}
+import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage}
+>>>>>>> 6f69ee0 (ETFE-2171 refactored the bits and bobs around the page, removed things that was unnesaccary)
 
 class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator
@@ -54,10 +59,10 @@ class DestinationNavigatorSpec extends SpecBase {
         }
       }
 
-      "for the DestinationDetailsChoicePage" - {
+      "for the DestinationWarehouseVatPage" - {
         "must go to test Only page" in {
 
-          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }

@@ -20,6 +20,7 @@ import models.requests.UserRequest
 import models.response.InvalidUserTypeException
 import models.{Enumerable, WithName}
 import utils.Logging
+import play.api.libs.json._
 
 sealed trait MovementScenario {
   def originType(implicit request: UserRequest[_]): OriginType

@@ -19,7 +19,9 @@ package controllers
 import base.SpecBase
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
+import pages.sections.info.DestinationTypePage
 import navigation.FakeNavigators.FakeDestinationNavigator
 import navigation.DestinationNavigator
 import pages.DestinationWarehouseVatPage
@@ -40,12 +42,12 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
   val form = formProvider()
 
   lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(testErn, testLrn, NormalMode)
 
   "DestinationWarehouseVat Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))).build()
 
       running(application) {
         val request = FakeRequest(GET, destinationWarehouseVatRoute)
@@ -55,13 +57,16 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val view = application.injector.instanceOf[DestinationWarehouseVatView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode,"foo")(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form,
+          destinationWarehouseVatOnSubmit,
+          RegisteredConsignee.destinationType,
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad())(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(DestinationWarehouseVatPage, "answer")
+      val userAnswers = emptyUserAnswers.set(DestinationWarehouseVatPage, "answer").set(DestinationTypePage, RegisteredConsignee)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +78,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode,"foo")(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), destinationWarehouseVatOnSubmit,
+          RegisteredConsignee.destinationType,testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        (dataRequest(request), messages(application)).toString
       }
     }
 
@@ -103,7 +110,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers).set(DestinationTypePage, RegisteredConsignee.destinationType)).build()
 
       running(application) {
         val request =
@@ -117,7 +124,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode,"foo")(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
+          RegisteredConsignee.destinationType,testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        )(dataRequest(request), messages(application)).toString
       }
     }
 

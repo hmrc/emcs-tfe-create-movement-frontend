@@ -75,8 +75,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
 
   private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
     val isTemporaryRegisteredConsignee: Boolean =
-      request.userAnswers
-        .get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
+      request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
     val isNorthernIrish = request.request.userTypeFromErn match {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandWarehouseKeeper => true
       case _ => false

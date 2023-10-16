@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.Page
+import pages.{DestinationWarehouseVatPage, Page}
 import pages.sections.destination._
 import play.api.mvc.Call
 
@@ -34,15 +34,9 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationAddressPage =>
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case DestinationDetailsChoicePage =>
+    case DestinationWarehouseVatPage =>
       //TODO update to next page when finished
-    (userAnswers: UserAnswers) =>
-      userAnswers.get(DestinationDetailsChoicePage) match {
-        case Some(true) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        case Some(_) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
-      }
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

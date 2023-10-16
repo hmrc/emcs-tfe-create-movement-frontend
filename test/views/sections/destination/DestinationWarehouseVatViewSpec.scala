@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationWarehouseVatView
 import views.{BaseSelectors, ViewBehaviours}
@@ -45,12 +45,18 @@ class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[DestinationWarehouseVatView]
         val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            "foo"
-          ).toString())
+        val skipRoute: Call = Call("GET", "/skip-url")
+
+//        implicit val doc: Document = Jsoup.parse(
+//          view(
+//            form = form,
+//            mode = NormalMode,
+//            "foo",
+//            skipQuestionCall = skipRoute
+//          ).toString())
+
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute,
+          skipQuestionCall = skipRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,

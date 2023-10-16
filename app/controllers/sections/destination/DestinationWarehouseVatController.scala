@@ -50,9 +50,10 @@ class DestinationWarehouseVatController @Inject()(
         request.userAnswers.get(DestinationTypePage) match {
           case Some(destinationType) =>
             Ok(view(
-              form = fillForm(DestinationWarehouseVatPage, formProvider(destinationType.destinationType)),
+              form = fillForm(DestinationWarehouseVatPage, formProvider()),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
-              destinationType = destinationType.destinationType
+              destinationType = destinationType.destinationType,
+              skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
             ))
           case None =>
             //TODO redirect to destination type page when built
@@ -66,9 +67,13 @@ class DestinationWarehouseVatController @Inject()(
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
           case Some(destinationType) =>
-            formProvider(destinationType.destinationType).bindFromRequest().fold(
+            formProvider().bindFromRequest().fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode), destinationType.destinationType))),
+                Future.successful(BadRequest(view(
+                  formWithErrors,
+                  routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
+                  destinationType = destinationType.destinationType,
+                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()))),
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )

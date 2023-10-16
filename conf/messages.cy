@@ -450,8 +450,8 @@ exportCustomsOffice.error.required = Enter the customs office code
 exportCustomsOffice.error.length = Customs office code must be {0} characters
 exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
 exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
-exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
-exportCustomsOffice.change.hidden = ExportCustomsOffice
+exportCustomsOffice.checkYourAnswers.label = Customs office code
+exportCustomsOffice.change.hidden = customs office code
 
 exportInformationCheckAnswers.title = Check your answers
 exportInformationCheckAnswers.heading = Check your answers

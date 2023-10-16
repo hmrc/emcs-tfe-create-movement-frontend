@@ -26,7 +26,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    continueOrSkip: components.continueOrSkip,
+    continueOrSaveOrSkip: components.continueOrSaveOrSkip,
     h1: components.h1,
     h2: components.h2,
     p: components.p,
@@ -35,7 +35,7 @@
 
 @(form: Form[_], action: Call, destinationType: DestinationType, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
- @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", destinationType.stringValue))) {
+ @layout(pageTitle = title(form, messages("destinationWarehouseVat.title", destinationType.stringValue))) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
@@ -52,7 +52,7 @@
             .withWidth(Full)
         )
 
-    @continueOrSkip(skipQuestionCall.url)
+    @continueOrSaveOrSkip(skipQuestionCall.url)
 
 
     }

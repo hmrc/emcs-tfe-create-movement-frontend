@@ -19,8 +19,9 @@ package views.sections.destination
 import base.ViewSpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.sections.destination.DestinationWarehouseVatFormProvider
-import models.NormalMode
+
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -47,22 +48,14 @@ class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
         val skipRoute: Call = Call("GET", "/skip-url")
 
-//        implicit val doc: Document = Jsoup.parse(
-//          view(
-//            form = form,
-//            mode = NormalMode,
-//            "foo",
-//            skipQuestionCall = skipRoute
-//          ).toString())
-
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute,
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, MovementScenario.RegisteredConsignee.destinationType,
           skipQuestionCall = skipRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.link(1) -> messagesForLanguage.skipThisQuestion
         ))
       }
     }

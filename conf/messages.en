@@ -510,7 +510,6 @@ dispatchBusinessName.error.noInput = Enter the business name of the place of dis
 dispatchBusinessName.error.tooLong = Enter a business name up to 182 characters
 dispatchBusinessName.error.invalidCharacters = Business name must not contain < and > and : and ;
 
-<<<<<<< HEAD
 guarantorRequired.title = Is a guarantor required for this movement?
 guarantorRequired.heading = Is a guarantor required for this movement?
 guarantorRequired.checkYourAnswersLabel = Guarantor required
@@ -526,19 +525,11 @@ exportCustomsOffice.error.required = Enter the customs office code
 exportCustomsOffice.error.length = Customs office code must be {0} characters
 exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
 exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
-exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
-exportCustomsOffice.change.hidden = ExportCustomsOffice
+exportCustomsOffice.checkYourAnswers.label = Customs office code
+exportCustomsOffice.change.hidden = customs office code
 
 exportInformationCheckAnswers.title = Check your answers
 exportInformationCheckAnswers.heading = Check your answers
-
-=======
->>>>>>> 9921a44 (ETFE-2171 WIP unsure how to get this working with the movementscenario.destinationtype)
-guarantorRequired.title = Is a guarantor required for this movement?
-guarantorRequired.heading = Is a guarantor required for this movement?
-guarantorRequired.checkYourAnswersLabel = Guarantor required
-guarantorRequired.error.required = Select yes if a guarantor is required for this movement
-guarantorRequired.change.hidden = if a guarantor is required for this movement
 
 guarantorArranger.title = Who is providing the guarantee for this movement?
 guarantorArranger.heading = Who is providing the guarantee for this movement?
@@ -550,7 +541,6 @@ guarantorArranger.checkYourAnswersLabel = Guarantor arranger
 guarantorArranger.error.required = Select who is providing the guarantee for this movement
 guarantorArranger.change.hidden = who is providing the guarantee for this movement?
 
-<<<<<<< HEAD
 guarantorName.3.title = What is the goods owner''s business name?
 guarantorName.3.heading = What is the goods owner''s business name?
 guarantorName.4.title = What is the transporter''s business name?
@@ -560,22 +550,6 @@ guarantorName.error.required = Enter the business name
 guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
-=======
-exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
-exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
-exportCustomsOffice.hint = This code is also known as a customs office reference number.
-exportCustomsOffice.hint.eu.link = Search for EU customs office codes here
-exportCustomsOffice.hint.gb.link = Search for UK customs office codes here
-exportCustomsOffice.error.required = Enter the customs office code
-exportCustomsOffice.error.length = Customs office code must be {0} characters
-exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
-exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
-exportCustomsOffice.checkYourAnswers.label = exportCustomsOffice
-exportCustomsOffice.change.hidden = ExportCustomsOffice
-
-exportInformationCheckAnswers.title = Check your answers
-exportInformationCheckAnswers.heading = Check your answers
->>>>>>> 9921a44 (ETFE-2171 WIP unsure how to get this working with the movementscenario.destinationtype)
 
 guarantorVat.3.title = What is the goods owner’s VAT registration number?
 guarantorVat.3.heading = What is the goods owner’s VAT registration number?
@@ -645,6 +619,4 @@ destinationWarehouseVat.error.required = Enter a VAT number or use link to skip 
 destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain special characters
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
-destinationWarehouseVat.link.skip = Skip this question
-
-
+destinationWarehouseVat.link.skip = Skip this question for now

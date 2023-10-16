@@ -601,3 +601,10 @@ destinationDetailsChoice.title = Do you want to give the address and business na
 destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.hint = This information is optional.
 destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}
+
+transportSealChoice.title = Is there a commercial seal on this {0}?
+transportSealChoice.heading = Is there a commercial seal on this {0}?
+transportSealChoice.checkYourAnswersLabel = transportSealChoice
+transportSealChoice.error.required = Select yes if there is a commercial seal on this {0}?
+transportSealChoice.change.hidden = TransportSealChoice
+transportSealChoice.hint = This is a seal that prevents items being removed or added. For example, a seal on the outermost packaging, or a seal on the transport.

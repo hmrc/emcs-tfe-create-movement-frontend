@@ -71,7 +71,6 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
             )
           case None =>
             Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern)))
-
         }
     }
 }

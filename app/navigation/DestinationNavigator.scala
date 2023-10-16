@@ -34,6 +34,15 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationAddressPage =>
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case DestinationDetailsChoicePage =>
+      //TODO update to next page when finished
+      (userAnswers: UserAnswers) =>
+        userAnswers.get(DestinationDetailsChoicePage) match {
+          case Some(true) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(_) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+        }
     case DestinationWarehouseVatPage =>
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

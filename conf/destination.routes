@@ -11,6 +11,11 @@ POST       /trader/:ern/draft/:lrn/destination/address                          
 GET        /trader/:ern/draft/:lrn/destination/address/change                           controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/destination/address/change                           controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:lrn/destination/details-choice                        controllers.sections.destination.DestinationDetailsChoiceController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/destination/details-choice                        controllers.sections.destination.DestinationDetailsChoiceController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/destination/details-choice/change                 controllers.sections.destination.DestinationDetailsChoiceController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/destination/details-choice/change                 controllers.sections.destination.DestinationDetailsChoiceController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
 GET        /trader/:ern/draft/:lrn/destination/warehouse-vat             controllers.sections.destination.DestinationWarehouseVatController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:lrn/destination/warehouse-vat             controllers.sections.destination.DestinationWarehouseVatController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/destination/warehouse-vat/change      controllers.sections.destination.DestinationWarehouseVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)

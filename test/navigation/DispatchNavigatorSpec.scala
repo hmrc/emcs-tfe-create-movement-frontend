@@ -33,7 +33,7 @@ class DispatchNavigatorSpec extends SpecBase {
           routes.IndexController.onPageLoad(testErn)
       }
 
-      "for the ConsigneeBusinessNamePage" - {
+      "for the DispatchBusinessNamePage" - {
         "must go to DispatchAddress page" in {
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 

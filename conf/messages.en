@@ -267,6 +267,7 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
+destination.subHeading = Place of destination information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -464,6 +465,12 @@ dispatchBusinessName.error.noInput = Enter the business name of the place of dis
 dispatchBusinessName.error.tooLong = Enter a business name up to 182 characters
 dispatchBusinessName.error.invalidCharacters = Business name must not contain < and > and : and ;
 
+guarantorRequired.title = Is a guarantor required for this movement?
+guarantorRequired.heading = Is a guarantor required for this movement?
+guarantorRequired.checkYourAnswersLabel = Guarantor required
+guarantorRequired.error.required = Select yes if a guarantor is required for this movement
+guarantorRequired.change.hidden = if a guarantor is required for this movement
+
 exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.hint = This code is also known as a customs office reference number.
@@ -533,3 +540,8 @@ invoiceDetails.value.error.required.all = Enter the date of issue, or skip this 
 invoiceDetails.value.error.required.two = Date of issue must include a {0} and {1}
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
+
+destinationDetailsChoice.title = Do you want to give the address and business name of the {0}
+destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}
+destinationDetailsChoice.hint = This information is optional.
+destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}

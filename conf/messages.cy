@@ -197,6 +197,7 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
+destination.subHeading = Place of destination information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -464,3 +465,8 @@ invoiceDetails.value.error.required.all = Enter the date of issue, or skip this 
 invoiceDetails.value.error.required.two = Date of issue must include a {0} and {1}
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
+
+destinationDetailsChoice.title = Do you want to give the address and business name of the {0}
+destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}
+destinationDetailsChoice.hint = This information is optional.
+destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}

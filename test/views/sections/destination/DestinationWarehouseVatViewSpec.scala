@@ -44,11 +44,11 @@ class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
         val view = app.injector.instanceOf[DestinationWarehouseVatView]
-        val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider].apply()
+        val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider].apply(movementScenario = MovementScenario.RegisteredConsignee)
 
         val skipRoute: Call = Call("GET", "/skip-url")
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, MovementScenario.RegisteredConsignee.destinationType,
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, MovementScenario.RegisteredConsignee,
           skipQuestionCall = skipRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

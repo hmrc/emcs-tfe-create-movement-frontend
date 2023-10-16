@@ -19,8 +19,10 @@ package controllers.sections.destination
 import controllers.actions._
 import controllers.BaseNavigationController
 import forms.sections.destination.DestinationWarehouseVatFormProvider
+
 import javax.inject.Inject
 import models.Mode
+import models.sections.info.movementScenario.MovementScenario
 import navigation.DestinationNavigator
 import pages.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
@@ -48,11 +50,12 @@ class DestinationWarehouseVatController @Inject()(
     authorisedDataRequest(ern, lrn) {
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
-          case Some(destinationType) =>
+          case Some(movementScenario) =>
             Ok(view(
-              form = fillForm(DestinationWarehouseVatPage, formProvider()),
+              form = fillForm(DestinationWarehouseVatPage,
+              formProvider(movementScenario)),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
-              destinationType = destinationType.destinationType,
+              movementScenario = movementScenario,
               skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
             ))
           case None =>
@@ -66,13 +69,13 @@ class DestinationWarehouseVatController @Inject()(
     authorisedDataRequestAsync(ern, lrn) {
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
-          case Some(destinationType) =>
-            formProvider().bindFromRequest().fold(
+          case Some(movementScenario) =>
+            formProvider(movementScenario).bindFromRequest().fold(
               formWithErrors =>
                 Future.successful(BadRequest(view(
                   formWithErrors,
                   routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
-                  destinationType = destinationType.destinationType,
+                  movementScenario = movementScenario,
                   testOnly.controllers.routes.UnderConstructionController.onPageLoad()))),
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)

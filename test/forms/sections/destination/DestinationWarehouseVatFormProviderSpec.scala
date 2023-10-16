@@ -16,16 +16,20 @@
 
 package forms.sections.destination
 
+import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
-import play.api.data.FormError
+import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
+import pages.sections.info.DestinationTypePage
+import play.api.data.{Form, FormError}
 
-class DestinationWarehouseVatFormProviderSpec extends StringFieldBehaviours {
+class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "destinationWarehouseVat.error.required"
   val lengthKey = "destinationWarehouseVat.error.length"
   val maxLength = 14
 
-  val form = new DestinationWarehouseVatFormProvider()()
+  val form: Form[String] = new DestinationWarehouseVatFormProvider().apply(RegisteredConsignee)(messages(
+    applicationBuilder(Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))).build()))
 
   ".value" - {
 

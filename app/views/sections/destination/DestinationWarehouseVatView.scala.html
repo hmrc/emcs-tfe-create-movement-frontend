@@ -15,7 +15,7 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.info.movementScenario.DestinationType
+@import models.sections.info.movementScenario.MovementScenario
 @import viewmodels.LegendSize
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
@@ -33,9 +33,9 @@
     link: components.link
 )
 
-@(form: Form[_], action: Call, destinationType: DestinationType, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, movementScenario: MovementScenario, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
- @layout(pageTitle = title(form, messages("destinationWarehouseVat.title", destinationType.stringValue))) {
+ @layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue))) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
@@ -47,7 +47,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , destinationType.stringValue))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
         )

@@ -20,13 +20,15 @@ import forms.ONLY_ALPHANUMERIC_REGEX
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.sections.info.movementScenario.MovementScenario
 import play.api.data.Form
+import play.api.i18n.Messages
 
 
 class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
   private val VAT_NUMBER_MAX_LENGTH = 14
-  def apply()(): Form[String] = {
+  def apply(movementScenario: MovementScenario)(implicit messages: Messages): Form[String] = {
 
   Form(
     "value" -> text("destinationWarehouseVat.error.required")

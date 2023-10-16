@@ -19,11 +19,13 @@ package controllers
 import base.SpecBase
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import navigation.DestinationNavigator
 import pages.DestinationWarehouseVatPage
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,7 +41,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     def onwardRoute = Call("GET", "/foo")
 
     val formProvider = new DestinationWarehouseVatFormProvider()
-    val form = formProvider()
+    val form = formProvider(RegisteredConsignee)(messages(application))
 
     lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testLrn, NormalMode).url
     lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testLrn, NormalMode)
@@ -69,7 +71,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form,
             destinationWarehouseVatOnSubmit,
-            RegisteredConsignee.destinationType,
+            RegisteredConsignee,
             testOnly.controllers.routes.UnderConstructionController.onPageLoad())(dataRequest(request), messages(application)).toString
         }
       }
@@ -86,7 +88,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           val expectedView = view(
             form.fill("answer"),
             destinationWarehouseVatOnSubmit,
-            RegisteredConsignee.destinationType,
+            RegisteredConsignee,
             testOnly.controllers.routes.UnderConstructionController.onPageLoad())(dataRequest(request), messages(application)).toString
 
           status(result) mustEqual OK
@@ -124,7 +126,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
-            RegisteredConsignee.destinationType, testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            RegisteredConsignee, testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           )(dataRequest(request), messages(application)).toString
         }
       }

@@ -19,13 +19,12 @@ package controllers
 import base.SpecBase
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import navigation.DestinationNavigator
 import pages.DestinationWarehouseVatPage
-import play.api.i18n.Messages
+import pages.sections.info.DestinationTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -40,9 +39,6 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     def onwardRoute = Call("GET", "/foo")
 
-    val formProvider = new DestinationWarehouseVatFormProvider()
-    val form = formProvider(RegisteredConsignee)(messages(application))
-
     lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testLrn, NormalMode).url
     lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testLrn, NormalMode)
 
@@ -53,6 +49,10 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       )
       .build()
 
+    val formProvider = new DestinationWarehouseVatFormProvider()
+
+    val form = formProvider(RegisteredConsignee)(messages(application))
+
     val view = application.injector.instanceOf[DestinationWarehouseVatView]
 
 
@@ -61,7 +61,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     "DestinationWarehouseVat Controller" - {
 
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
-        .set(DestinationWarehouseVatPage, "answer"))) {
+        .set(DestinationTypePage, RegisteredConsignee))) {
 
         running(application) {
           val request = FakeRequest(GET, destinationWarehouseVatRoute)
@@ -77,7 +77,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-        .set(DestinationWarehouseVatPage, "answer")
+        .set(DestinationWarehouseVatPage, "answer").set(DestinationTypePage, RegisteredConsignee)
       )) {
 
         running(application) {
@@ -96,7 +96,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         }
       }
 
-      "must redirect to the next page when valid data is submitted" in new Fixture() {
+      "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers
+        .set(DestinationTypePage, RegisteredConsignee)
+      )) {
 
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -113,7 +115,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         }
       }
 
-      "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
+        .set(DestinationTypePage, RegisteredConsignee)
+      )) {
 
         running(application) {
           val request =

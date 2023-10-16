@@ -21,9 +21,8 @@ import controllers.routes
 import fixtures.TransportUnitFixtures
 import models.NormalMode
 import models.TransportUnitType.Tractor
-import pages.sections.transportUnit.TransportSealChoicePage
-import pages.sections.transportUnit.TransportSealTypePage
-import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.Page
+import pages.sections.transportUnit._
 
 class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator
@@ -96,6 +95,32 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
         navigator.nextPage(TransportSealTypePage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    }
+
+    "for the TransportUnitGiveMoreInformationChoice (CAM-TU05)" - {
+
+      // TODO redirect to CAM-TU06
+      "must go to CAM-TU06" - {
+
+        "when the answer is Yes" in {
+          val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, true)
+
+          navigator.nextPage(TransportUnitGiveMoreInformationChoicePage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      // TODO redirect to CAM-TU07
+      "must go to CAM-TU07" - {
+
+        "when the answer is No" in {
+          val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, false)
+
+          navigator.nextPage(TransportUnitGiveMoreInformationChoicePage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
     }
   }

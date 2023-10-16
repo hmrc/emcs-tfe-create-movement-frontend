@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package pages.sections.transportUnit
+package forms.sections.transportUnit
 
+import javax.inject.Inject
+import forms.mappings.Mappings
 import models.TransportUnitType
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.data.Form
+import play.api.i18n.Messages
 
-case object TransportUnitTypePage extends QuestionPage[TransportUnitType] {
+class TransportUnitGiveMoreInformationChoiceFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ "transportUnit" \ toString
-
-  override def toString: String = "transportUnitType"
+  def apply(transportUnitType: TransportUnitType)(implicit messages: Messages): Form[Boolean] =
+    Form(
+      "value" -> boolean("transportUnitGiveMoreInformationChoice.error.required", args = Seq(messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
+    )
 }

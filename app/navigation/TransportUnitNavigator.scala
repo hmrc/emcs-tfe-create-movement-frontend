@@ -18,8 +18,8 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
-import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.Page
+import pages.sections.transportUnit._
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -46,6 +46,17 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
     case TransportSealTypePage => (_: UserAnswers) =>
       // TODO redirect to CAM-TU05
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+    case TransportUnitGiveMoreInformationChoicePage =>
+      (userAnswers: UserAnswers) =>
+        userAnswers.get(TransportUnitGiveMoreInformationChoicePage) match {
+          case Some(true) =>
+            //TODO redirect to CAM-TU06
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            //TODO redirect to CAM-TU07
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

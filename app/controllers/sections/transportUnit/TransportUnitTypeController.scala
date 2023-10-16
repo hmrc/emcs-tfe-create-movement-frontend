@@ -22,7 +22,7 @@ import forms.TransportUnitTypeFormProvider
 import models.requests.DataRequest
 import models.{Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
-import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

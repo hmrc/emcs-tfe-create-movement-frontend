@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.transportUnit
 
 import base.SpecBase
 import forms.TransportUnitTypeFormProvider
@@ -22,7 +22,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, TransportUnitType}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
-import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -131,7 +131,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -148,7 +148,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

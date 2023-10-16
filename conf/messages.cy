@@ -573,3 +573,14 @@ transportSealType.sealType.change.hidden = Commercial seal type
 transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
 transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
 transportSealType.moreInfo.change.hidden = Commercial seal information
+
+
+transportUnitGiveMoreInformationChoice.title = Do you know any more information about this {0}?
+transportUnitGiveMoreInformationChoice.heading = Do you know any more information about this {0}?
+transportUnitGiveMoreInformationChoice.transportUnitType.1 = container
+transportUnitGiveMoreInformationChoice.transportUnitType.2 = vehicle
+transportUnitGiveMoreInformationChoice.transportUnitType.3 = trailer
+transportUnitGiveMoreInformationChoice.transportUnitType.4 = tractor
+transportUnitGiveMoreInformationChoice.transportUnitType.5 = fixed transport installation
+transportUnitGiveMoreInformationChoice.error.required = Select yes if you know more information about this {0}
+transportUnitGiveMoreInformationChoice.hint = For example, the identity of the subsequent transporter or information about subsequent transport units.

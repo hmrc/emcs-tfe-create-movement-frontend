@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import models.TransportUnitType.Tractor
-import pages.{Page, TransportUnitTypePage}
+import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 
 class TransportUnitNavigatorSpec extends SpecBase {
   val navigator = new TransportUnitNavigator
@@ -38,13 +38,23 @@ class TransportUnitNavigatorSpec extends SpecBase {
     }
 
     "for the TransportUnitType (CAM-TU01)" - {
-
-      // TODO redirect to CAM-TU02
       "must go to CAM-TU02" in {
-
         val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, Tractor)
 
         navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+    }
+
+    "for the TransportUnitIdentity (CAM-TU02)" - {
+      // TODO redirect to CAM-TU02
+      "must go to CAM-TU03" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitIdentityPage, "weee")
+
+        navigator.nextPage(TransportUnitIdentityPage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }

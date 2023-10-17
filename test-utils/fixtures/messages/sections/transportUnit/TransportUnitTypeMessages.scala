@@ -17,6 +17,7 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import models.TransportUnitType
 
 object TransportUnitTypeMessages {
 
@@ -28,6 +29,15 @@ object TransportUnitTypeMessages {
     val tractorRadioOption = "Tractor"
     val trailerRadioOption = "Trailer"
     val vehicleRadioOption = "Vehicle"
+    val cyaLabel = "Transport type"
+    val cyaChangeHidden: String = "transport type"
+    val cyaValue: TransportUnitType => String = {
+      case TransportUnitType.Tractor        => tractorRadioOption
+      case TransportUnitType.Trailer        => trailerRadioOption
+      case TransportUnitType.Vehicle        => vehicleRadioOption
+      case TransportUnitType.FixedTransport => fixedTransportRadioOption
+      case TransportUnitType.Container      => containerRadioOption
+    }
   }
 
   object English extends ViewMessages with BaseEnglish

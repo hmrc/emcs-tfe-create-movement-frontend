@@ -449,9 +449,41 @@ transportUnitType.4 = Tractor
 transportUnitType.3 = Trailer
 transportUnitType.2 = Vehicle
 
-transportUnitType.checkYourAnswersLabel = Transport units
+transportUnitType.checkYourAnswersLabel = Transport type
 transportUnitType.error.required = Select what the goods will be transported in
-transportUnitType.change.hidden = TransportUnitType
+transportUnitType.change.hidden = transport type
+
+transportUnitIdentity.title.1 = What is the container number or unique identifier for this container?
+transportUnitIdentity.title.2 = What is the vehicle registration number or unique identifier for this vehicle?
+transportUnitIdentity.title.3 = What is the trailer number or unique identifier for this trailer?
+transportUnitIdentity.title.4 = What is the vehicle registration number or unique identifier for this tractor?
+transportUnitIdentity.title.5 = What is the unique identifier for this fixed transport installation?
+transportUnitIdentity.heading.1 = What is the container number or unique identifier for this container?
+transportUnitIdentity.heading.2 = What is the vehicle registration number or unique identifier for this vehicle?
+transportUnitIdentity.heading.3 = What is the trailer number or unique identifier for this trailer?
+transportUnitIdentity.heading.4 = What is the vehicle registration number or unique identifier for this tractor?
+transportUnitIdentity.heading.5 = What is the unique identifier for this fixed transport installation?
+
+transportUnitIdentity.checkYourAnswersLabel = Transport identifier
+transportUnitIdentity.error.required.1 = Enter the container number or unique identifier
+transportUnitIdentity.error.required.2 = Enter the vehicle registration number or unique identifier
+transportUnitIdentity.error.required.3 = Enter the trailer number or unique identifier
+transportUnitIdentity.error.required.4 = Enter the vehicle registration number or unique identifier
+transportUnitIdentity.error.required.5 = Enter the unique identifier
+
+transportUnitIdentity.error.length.1 = Container number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.2 = Vehicle registration number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.3 = Trailer number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.4 = Vehicle registration number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.5 = Unique identifier must be 35 characters or less
+
+transportUnitIdentity.error.invalidCharacters.1 = Container number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.2 = Vehicle registration number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.3 = Trailer number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.4 = Vehicle registration number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.5 = Unique identifier must only contain letters and numbers
+
+transportUnitIdentity.change.hidden = transport identifier
 
 dispatchPlace.title = Where is the place of dispatch for this movement?
 dispatchPlace.heading = Where is the place of dispatch for this movement?

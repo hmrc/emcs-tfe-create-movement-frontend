@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.{Page, TransportUnitTypePage}
+import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -26,11 +26,11 @@ import javax.inject.Inject
 class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-
-    case TransportUnitTypePage => (_: UserAnswers) =>
-      // TODO redirect to CAM-TU02
+    case TransportUnitTypePage => (userAnswers: UserAnswers) =>
+      controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+    case TransportUnitIdentityPage => (_: UserAnswers) =>
+      // TODO redirect to CAM-TU03
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }

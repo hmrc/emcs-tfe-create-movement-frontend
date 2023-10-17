@@ -19,11 +19,12 @@ package controllers
 import base.SpecBase
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
+import models.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
-import models.{NormalMode, UserAnswers}
+import models.{DispatchPlace, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import navigation.DestinationNavigator
-import pages.DestinationWarehouseVatPage
+import pages.{DestinationWarehouseVatPage, DispatchPlacePage}
 import pages.sections.info.DestinationTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -133,6 +134,33 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
             RegisteredConsignee, destinationDetailsChoiceRoute
           )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must redirect to destination type Page for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
+        .set(DispatchPlacePage, GreatBritain))) {
+
+        running(application) {
+          val request = FakeRequest(GET, destinationWarehouseVatRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+        }
+      }
+
+      "must redirect to destination type Page for a POST if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
+        .set(DispatchPlacePage, GreatBritain))) {
+
+        running(application) {
+          val request = FakeRequest(POST, destinationWarehouseVatRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
         }
       }
 

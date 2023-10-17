@@ -20,7 +20,6 @@ import models.requests.UserRequest
 import models.response.InvalidUserTypeException
 import models.{Enumerable, WithName}
 import utils.Logging
-import play.api.libs.json._
 
 sealed trait MovementScenario {
   def originType(implicit request: UserRequest[_]): OriginType
@@ -241,17 +240,4 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   val values: Seq[MovementScenario] = (valuesUk ++ valuesEu).distinct
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
-
-  implicit val reads: Reads[MovementScenario] = Reads {
-    case JsString(ExemptedOrganisation.toString) => JsSuccess(ExemptedOrganisation)
-    case JsString(ExportWithCustomsDeclarationLodgedInTheUk.toString) => JsSuccess(ExportWithCustomsDeclarationLodgedInTheUk)
-    case JsString(DirectDelivery.toString) => JsSuccess(DirectDelivery)
-    case JsString(EuTaxWarehouse.toString) => JsSuccess(EuTaxWarehouse)
-    case JsString(ExportWithCustomsDeclarationLodgedInTheEu.toString) => JsSuccess(ExportWithCustomsDeclarationLodgedInTheEu)
-    case JsString(GbTaxWarehouse.toString) => JsSuccess(GbTaxWarehouse)
-    case JsString(RegisteredConsignee.toString) => JsSuccess(RegisteredConsignee)
-    case JsString(TemporaryRegisteredConsignee.toString) => JsSuccess(TemporaryRegisteredConsignee)
-    case JsString(UnknownDestination.toString) => JsSuccess(UnknownDestination)
-    case _ => JsError("Unknown MovementScenario")
-  }
 }

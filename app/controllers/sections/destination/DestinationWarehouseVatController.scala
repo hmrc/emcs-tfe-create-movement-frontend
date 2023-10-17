@@ -19,10 +19,8 @@ package controllers.sections.destination
 import controllers.actions._
 import controllers.BaseNavigationController
 import forms.sections.destination.DestinationWarehouseVatFormProvider
-
 import javax.inject.Inject
 import models.Mode
-import models.sections.info.movementScenario.MovementScenario
 import navigation.DestinationNavigator
 import pages.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage

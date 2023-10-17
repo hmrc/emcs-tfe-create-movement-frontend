@@ -20,10 +20,12 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import mocks.services.MockUserAnswersService
+import models.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
 import models.{NormalMode, UserAnswers}
 import navigation.DestinationNavigator
 import navigation.FakeNavigators.FakeDestinationNavigator
+import pages.DispatchPlacePage
 import pages.sections.destination.DestinationDetailsChoicePage
 import pages.sections.info.DestinationTypePage
 import play.api.Application
@@ -123,6 +125,33 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual expectedView
+      }
+    }
+
+    "must redirect to destination type Page for a GET if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
+      .set(DispatchPlacePage, GreatBritain))) {
+
+      running(application) {
+        val request = FakeRequest(GET, destinationDetailsChoiceRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+      }
+    }
+
+    "must redirect to destination type Page for a POST if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
+      .set(DispatchPlacePage, GreatBritain))) {
+
+      running(application) {
+        val request = FakeRequest(POST, destinationDetailsChoiceRoute)
+          .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
       }
     }
 

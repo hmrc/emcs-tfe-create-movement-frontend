@@ -18,7 +18,7 @@ package views.sections.transportUnit
 
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportSealChoiceMessages
-import forms.TransportSealChoiceFormProvider
+import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import models.{NormalMode, TransportUnitType}
 import models.TransportUnitType._
 import models.requests.DataRequest

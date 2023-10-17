@@ -20,7 +20,8 @@ import base.SpecBase
 import controllers.routes
 import models.NormalMode
 import models.TransportUnitType.Tractor
-import pages.{Page, TransportSealChoicePage, TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.sections.transportUnit.TransportSealChoicePage
+import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 
 class TransportUnitNavigatorSpec extends SpecBase {
   val navigator = new TransportUnitNavigator

@@ -18,14 +18,14 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import controllers.routes
-import forms.TransportSealChoiceFormProvider
+import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
 import models.TransportUnitType.Container
-import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
-import navigation.{Navigator, TransportUnitNavigator}
-import pages.{TransportSealChoicePage, TransportUnitTypePage}
-import play.api.Application
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
+import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportSealChoicePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -152,6 +152,20 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
           transportUnitType = Container,
           onSubmitCall = transportSealChoiceOnSubmit
         )(dataRequest(request), messages(application)).toString
+      }
+    }
+
+    "must redirect to the journey correction controller when transport unit type has not been answered" in new Setup() {
+
+      running(application) {
+        val request =
+          FakeRequest(POST, transportSealChoiceRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

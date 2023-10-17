@@ -18,7 +18,8 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.{Page, TransportSealChoicePage, TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.sections.transportUnit.TransportSealChoicePage
+import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject

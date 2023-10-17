@@ -18,11 +18,12 @@ package controllers.sections.transportUnit
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import forms.TransportSealChoiceFormProvider
+import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import models.requests.DataRequest
-import models.{Mode, NormalMode, TransportUnitType}
+import models.{Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
-import pages.{TransportSealChoicePage, TransportUnitTypePage}
+import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportSealChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -53,13 +54,12 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      val transportUnitType = request.userAnswers.get(TransportUnitTypePage).get
-      formProvider(transportUnitType).bindFromRequest().fold(
-        formWithError => withAnswer(TransportUnitTypePage) { transportUnitType =>
-          renderView(BadRequest, formWithError, transportUnitType, mode)
-        },
-        saveAndRedirect(TransportSealChoicePage, _, mode)
-      )
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
+        formProvider(transportUnitType).bindFromRequest().fold(
+          renderView(BadRequest, _, transportUnitType, mode),
+          saveAndRedirect(TransportSealChoicePage, _, mode)
+        )
+      }
     }
 
   private def renderView(status: Status, form: Form[_], transportUnitType: TransportUnitType, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {

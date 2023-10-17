@@ -17,7 +17,6 @@
 package forms.sections.transportUnit
 
 import base.SpecBase
-import forms.TransportSealChoiceFormProvider
 import forms.behaviours.BooleanFieldBehaviours
 import models.TransportUnitType
 import models.TransportUnitType._

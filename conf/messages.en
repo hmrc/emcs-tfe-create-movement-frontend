@@ -613,5 +613,5 @@ transportSealChoice.error.required.3 = Select yes if there is a commercial seal 
 transportSealChoice.error.required.4 = Select yes if there is a commercial seal on this tractor
 transportSealChoice.error.required.5 = Select yes if there is a commercial seal on this fixed transport installation
 transportSealChoice.hint = This is a seal that prevents items being removed or added.
-transportSealChoice.checkYourAnswersLabel = transportSealChoice
+transportSealChoice.checkYourAnswersLabel = Commercial seal
 transportSealChoice.change.hidden = TransportSealChoice

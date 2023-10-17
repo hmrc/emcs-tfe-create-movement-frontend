@@ -56,11 +56,10 @@ class DestinationWarehouseVatController @Inject()(
               formProvider(movementScenario)),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
               movementScenario = movementScenario,
-              skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, lrn, mode)
             ))
           case None =>
-            //TODO redirect to destination type page when built
-            Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+            Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern))
         }
     }
 
@@ -76,13 +75,12 @@ class DestinationWarehouseVatController @Inject()(
                   formWithErrors,
                   routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
                   movementScenario = movementScenario,
-                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()))),
+                  routes.DestinationDetailsChoiceController.onPageLoad(ern, lrn, mode)))),
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )
           case None =>
-            //TODO redirect to destination type page when built
-            Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+            Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern)))
         }
     }
 }

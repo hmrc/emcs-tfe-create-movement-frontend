@@ -68,7 +68,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to test Only page" in {
 
           navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 

@@ -41,6 +41,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
     lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testLrn, NormalMode).url
     lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val destinationDetailsChoiceRoute = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode)
 
     val application = applicationBuilder(userAnswers = userAnswers)
       .overrides(
@@ -72,7 +73,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           contentAsString(result) mustEqual view(form,
             destinationWarehouseVatOnSubmit,
             RegisteredConsignee,
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad())(dataRequest(request), messages(application)).toString
+            destinationDetailsChoiceRoute)(dataRequest(request), messages(application)).toString
         }
       }
 
@@ -89,7 +90,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
             form.fill("answer"),
             destinationWarehouseVatOnSubmit,
             RegisteredConsignee,
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad())(dataRequest(request), messages(application)).toString
+            destinationDetailsChoiceRoute)(dataRequest(request), messages(application)).toString
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual expectedView
@@ -130,7 +131,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
-            RegisteredConsignee, testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            RegisteredConsignee, destinationDetailsChoiceRoute
           )(dataRequest(request), messages(application)).toString
         }
       }

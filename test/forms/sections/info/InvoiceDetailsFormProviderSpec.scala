@@ -61,7 +61,6 @@ class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixt
       actualResult.value mustBe expectedResult
     }
 
-
     "reference field" - {
 
       val characterLimit = 35

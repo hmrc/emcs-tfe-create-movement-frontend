@@ -18,12 +18,14 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import fixtures.TransportUnitFixtures
 import models.NormalMode
 import models.TransportUnitType.Tractor
 import pages.sections.transportUnit.TransportSealChoicePage
+import pages.sections.transportUnit.TransportSealTypePage
 import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 
-class TransportUnitNavigatorSpec extends SpecBase {
+class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator
 
   "TransportUnitNavigator" - {
@@ -42,6 +44,18 @@ class TransportUnitNavigatorSpec extends SpecBase {
 
       "must go to CAM-TU02" in {
         val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, Tractor)
+
+        navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      }
+    }
+
+    "for the TransportSealType (CAM-TU04)" - {
+
+      // TODO redirect to CAM-TU05
+      "must go to CAM-TU05" in {
+
+        val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
 
         navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
           controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)

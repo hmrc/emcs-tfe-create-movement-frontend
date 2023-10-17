@@ -553,3 +553,17 @@ transportSealChoice.error.required.5 = Select yes if there is a commercial seal 
 transportSealChoice.hint = This is a seal that prevents items being removed or added.
 transportSealChoice.checkYourAnswersLabel = Commercial seal
 transportSealChoice.change.hidden = TransportSealChoice
+
+transportSealType.heading.1 = What type of commercial seal is on this container?
+transportSealType.heading.2 = What type of commercial seal is on this vehicle?
+transportSealType.heading.3 = What type of commercial seal is on this trailer?
+transportSealType.heading.4 = What type of commercial seal is on this tractor?
+transportSealType.heading.5 = What type of commercial seal is on this fixed transport installation?
+transportSealType.sealType = Type of commercial seal
+transportSealType.sealType.error.required = Enter the type of commercial seal
+transportSealType.sealType.error.length = Commercial seal type must be 35 characters or less
+transportSealType.sealType.error.invalid = Commercial seal type must only contain letters and numbers
+transportSealType.moreInfo = Give more information (optional)
+transportSealType.moreInfo.hint = Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one.
+transportSealType.moreInfo.error.invalid = Information must only contain letters and numbers
+transportSealType.moreInfo.error.length = Information must be 350 characters or less

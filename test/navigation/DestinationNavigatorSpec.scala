@@ -19,14 +19,11 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.NormalMode
-<<<<<<< HEAD
 import pages.Page
 import pages.sections.destination._
+import pages.DestinationWarehouseVatPage
 
-=======
-import pages.{DestinationWarehouseVatPage, Page}
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage}
->>>>>>> 6f69ee0 (ETFE-2171 refactored the bits and bobs around the page, removed things that was unnesaccary)
+
 
 class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator

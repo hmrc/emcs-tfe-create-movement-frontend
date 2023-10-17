@@ -25,7 +25,7 @@ class GuarantorVatFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "guarantorVat.error.required"
   val lengthKey = "guarantorVat.error.length"
   val alphanumericKey = "guarantorVat.error.alphanumeric"
-  val maxLength = 12
+  val maxLength = 14
 
   val form = new GuarantorVatFormProvider()()
 

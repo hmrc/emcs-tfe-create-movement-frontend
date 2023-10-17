@@ -27,7 +27,7 @@ class GuarantorVatFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("guarantorVat.error.required")
-        .verifying(maxLength(12, "guarantorVat.error.length"))
+        .verifying(maxLength(14, "guarantorVat.error.length"))
         .transform[String](_.replace("-", "").replace(" ", ""), identity)
         .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "guarantorVat.error.alphanumeric"))
     )

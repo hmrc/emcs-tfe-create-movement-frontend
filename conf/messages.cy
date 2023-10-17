@@ -478,7 +478,7 @@ guarantorVat.3.notUkVatLink = The goods owner is not VAT registered
 guarantorVat.4.notUkVatLink = The transporter is not VAT registered
 guarantorVat.checkYourAnswersLabel = VAT registration number
 guarantorVat.error.required = Enter a VAT registration number
-guarantorVat.error.length = VAT registration number must be 12 characters or less
+guarantorVat.error.length = VAT registration number must be 14 characters or less
 guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
 guarantorVat.change.hidden = VAT registration number
 

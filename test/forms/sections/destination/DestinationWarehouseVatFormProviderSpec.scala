@@ -17,6 +17,7 @@
 package forms.sections.destination
 
 import base.SpecBase
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
 import pages.sections.info.DestinationTypePage
@@ -27,6 +28,7 @@ class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldB
   val requiredKey = "destinationWarehouseVat.error.required"
   val lengthKey = "destinationWarehouseVat.error.length"
   val maxLength = 14
+  val invalidCharactersKey = "destinationWarehouseVat.error.invalidCharacters"
 
   val form: Form[String] = new DestinationWarehouseVatFormProvider().apply(RegisteredConsignee)(messages(
     applicationBuilder(Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))).build()))
@@ -46,6 +48,12 @@ class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldB
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like fieldWithXSSCharacters(
+      form,
+      fieldName,
+      FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
     )
 
     behave like mandatoryField(

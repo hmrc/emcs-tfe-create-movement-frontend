@@ -20,10 +20,10 @@ import base.SpecBase
 import controllers.routes
 import forms.TransportSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.TransportUnitType.Container
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
+import navigation.{Navigator, TransportUnitNavigator}
 import pages.{TransportSealChoicePage, TransportUnitTypePage}
 import play.api.Application
 import play.api.inject.bind
@@ -36,70 +36,105 @@ import views.html.sections.transportUnit.TransportSealChoiceView
 import scala.concurrent.Future
 
 class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersService {
- class Setup(application: Application) {
+ class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+   val application = applicationBuilder(userAnswers)
+     .overrides(
+       bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+       bind[UserAnswersService].toInstance(mockUserAnswersService)
+     )
+     .build()
+
    val formProvider = new TransportSealChoiceFormProvider()
+
    val form = formProvider(Container)(messages(application))
 
- }
-  def onwardRoute = Call("GET", "/foo")
-  lazy val transportSealChoiceRoute = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testLrn, NormalMode).url
-  "TransportSealChoice Controller" - {
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Container))).build()
+   def onwardRoute = Call("GET", "/foo")
 
-    "must return OK and the correct view for a GET" in new Setup(application) {
+   lazy val transportSealChoiceRoute = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testLrn, NormalMode).url
+   lazy val transportSealChoiceOnSubmit = controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testLrn, NormalMode)
+
+   val view = application.injector.instanceOf[TransportSealChoiceView]
+
+ }
+
+  "TransportSealChoice Controller" - {
+
+    "must return OK and the correct view for a GET" in new Setup(Some(emptyUserAnswers
+      .set(TransportUnitTypePage, Container)
+    )) {
 
       running(application) {
+
         val request = FakeRequest(GET, transportSealChoiceRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[TransportSealChoiceView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Container)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form,
+          mode = NormalMode,
+          transportUnitType = Container,
+          onSubmitCall = transportSealChoiceOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
-    val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, Container).set(TransportSealChoicePage, true)
-    val applicationAnswers = applicationBuilder(userAnswers = Some(userAnswers)).build()
-    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(applicationAnswers)  {
 
-      running(applicationAnswers) {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(emptyUserAnswers
+      .set(TransportUnitTypePage, Container)
+      .set(TransportSealChoicePage, true)
+    )) {
+
+      running(application) {
+
         val request = FakeRequest(GET, transportSealChoiceRoute)
 
-        val view = applicationAnswers.injector.instanceOf[TransportSealChoiceView]
-
-        val result = route(applicationAnswers, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode, Container)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form.fill(true),
+          mode = NormalMode,
+          transportUnitType = Container,
+          onSubmitCall = transportSealChoiceOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    val applicationMocked =
-      applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Container)))
-        .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+    "must redirect to the Journey correction controller when missing the transport unit type answer" in new Setup() {
 
-    "must redirect to the next page when valid data is submitted" in new Setup(applicationMocked){
+      running(application) {
+
+        val request = FakeRequest(GET, transportSealChoiceRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted" in new Setup(Some(emptyUserAnswers
+      .set(TransportUnitTypePage, Container)
+    )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      running(applicationMocked) {
+      running(application) {
         val request =
           FakeRequest(POST, transportSealChoiceRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(applicationMocked, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Setup(application) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Setup(Some(emptyUserAnswers
+      .set(TransportUnitTypePage, Container)
+    )) {
 
       running(application) {
         val request =
@@ -108,37 +143,40 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[TransportSealChoiceView]
-
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Container)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          mode = NormalMode,
+          transportUnitType = Container,
+          onSubmitCall = transportSealChoiceOnSubmit
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    val applicationNone = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(applicationNone){
+      running(application) {
 
-      running(applicationNone) {
         val request = FakeRequest(GET, transportSealChoiceRoute)
 
-        val result = route(applicationNone, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(applicationNone){
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
 
-      running(applicationNone) {
+      running(application) {
+
         val request =
           FakeRequest(POST, transportSealChoiceRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(applicationNone, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

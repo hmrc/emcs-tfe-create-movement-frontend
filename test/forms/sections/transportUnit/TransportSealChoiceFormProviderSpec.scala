@@ -25,11 +25,11 @@ import play.api.data.FormError
 
 class TransportSealChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
-  val requiredKeyContainer = "Select yes if there is a commercial seal on this container?"
-  val requiredKeyTractor = "Select yes if there is a commercial seal on this tractor?"
-  val requiredKeyFixed = "Select yes if there is a commercial seal on this fixed transport installation?"
-  val requiredKeyVehicle = "Select yes if there is a commercial seal on this vehicle?"
-  val requiredKeyTrailer = "Select yes if there is a commercial seal on this trailer?"
+  val requiredKeyContainer = "Select yes if there is a commercial seal on this container"
+  val requiredKeyTractor = "Select yes if there is a commercial seal on this tractor"
+  val requiredKeyFixed = "Select yes if there is a commercial seal on this fixed transport installation"
+  val requiredKeyVehicle = "Select yes if there is a commercial seal on this vehicle"
+  val requiredKeyTrailer = "Select yes if there is a commercial seal on this trailer"
   val invalidKey = "error.boolean"
   def form(transportUnitType: TransportUnitType) = new TransportSealChoiceFormProvider()(transportUnitType)(messages(applicationBuilder().build()))
 

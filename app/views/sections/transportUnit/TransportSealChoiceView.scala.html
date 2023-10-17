@@ -22,31 +22,31 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
+    continueOrExit: components.continueOrExit,
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2
 )
 
-@(form: Form[_], mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], mode: Mode, transportUnitType: TransportUnitType, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("transportSealChoice.title", transportUnitType.stringValue))) {
+@layout(pageTitle = title(form, messages(s"transportSealChoice.heading.${transportUnitType.toString}"))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @h2(messages("transportUnit.subHeading"), "govuk-caption-xl")
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("transportSealChoice.heading", transportUnitType.stringValue))).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(Text(messages(s"transportSealChoice.heading.${transportUnitType.toString}"))).asPageHeading(LegendSize.Large)
             ).withHint(HintViewModel(Text(messages("transportSealChoice.hint"))))
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.saveAndContinue"))
-        )
+        @continueOrExit()
     }
 }

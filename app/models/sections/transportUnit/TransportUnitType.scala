@@ -21,31 +21,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 
-sealed trait TransportUnitType{
-  val stringValue: String
-}
+sealed trait TransportUnitType
 
 object TransportUnitType extends Enumerable.Implicits {
 
-  case object Container extends WithName("1") with TransportUnitType {
-    val stringValue = "container"
-  }
+  case object Container extends WithName("1") with TransportUnitType
 
-  case object Vehicle extends WithName("2") with TransportUnitType {
-    val stringValue = "vehicle"
-  }
+  case object Vehicle extends WithName("2") with TransportUnitType
 
-  case object Trailer extends WithName("3") with TransportUnitType {
-    val stringValue = "trailer"
-  }
+  case object Trailer extends WithName("3") with TransportUnitType
 
-  case object Tractor extends WithName("4") with TransportUnitType {
-    val stringValue = "tractor"
-  }
+  case object Tractor extends WithName("4") with TransportUnitType
 
-  case object FixedTransport extends WithName("5") with TransportUnitType {
-    val stringValue = "fixed transport installation"
-  }
+  case object FixedTransport extends WithName("5") with TransportUnitType
 
   val values: Seq[TransportUnitType] = Seq(
     Container, FixedTransport, Tractor, Trailer, Vehicle

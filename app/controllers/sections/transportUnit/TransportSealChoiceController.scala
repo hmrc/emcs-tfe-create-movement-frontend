@@ -19,11 +19,13 @@ package controllers.sections.transportUnit
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.TransportSealChoiceFormProvider
-import models.{Mode, NormalMode}
+import models.requests.DataRequest
+import models.{Mode, NormalMode, TransportUnitType}
 import navigation.TransportUnitNavigator
 import pages.{TransportSealChoicePage, TransportUnitTypePage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.transportUnit.TransportSealChoiceView
 
@@ -43,13 +45,9 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
                                              ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      request.userAnswers.get(TransportUnitTypePage) match {
-        case Some(answer) =>
-          Ok(view(fillForm(TransportSealChoicePage, formProvider(answer)), mode, answer))
-        case _ =>
-          Redirect(controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(ern,lrn,NormalMode))
-
+    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
+        renderView(Ok, fillForm(TransportSealChoicePage, formProvider(transportUnitType)), transportUnitType, mode)
       }
     }
 
@@ -57,10 +55,19 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       val transportUnitType = request.userAnswers.get(TransportUnitTypePage).get
       formProvider(transportUnitType).bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, transportUnitType))),
-        value =>
-          saveAndRedirect(TransportSealChoicePage, value, mode)
+        formWithError => withAnswer(TransportUnitTypePage) { transportUnitType =>
+          renderView(BadRequest, formWithError, transportUnitType, mode)
+        },
+        saveAndRedirect(TransportSealChoicePage, _, mode)
       )
     }
+
+  private def renderView(status: Status, form: Form[_], transportUnitType: TransportUnitType, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future(status(view(
+      form = form,
+      mode = mode,
+      transportUnitType = transportUnitType,
+      onSubmitCall = controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(request.ern, request.lrn, mode)
+    )))
+  }
 }

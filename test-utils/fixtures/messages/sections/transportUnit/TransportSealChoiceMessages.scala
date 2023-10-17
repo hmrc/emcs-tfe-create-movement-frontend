@@ -17,26 +17,33 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import models.TransportUnitType
+import models.TransportUnitType._
 
 object TransportSealChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val titleContainer = titleHelper("Is there a commercial seal on this container?")
-    val titleVehicle = titleHelper("Is there a commercial seal on this vehicle?")
-    val titleTrailer = titleHelper("Is there a commercial seal on this trailer?")
-    val titleTractor = titleHelper("Is there a commercial seal on this tractor?")
-    val titleFixed = titleHelper("Is there a commercial seal on this fixed transport installation?")
-    val headingContainer = "Is there a commercial seal on this container?"
-    val headingVehicle = "Is there a commercial seal on this vehicle?"
-    val headingTrailer = "Is there a commercial seal on this trailer?"
-    val headingTractor = "Is there a commercial seal on this tractor?"
-    val headingFixed = "Is there a commercial seal on this fixed transport installation?"
-    val errorRequiredContainer = "Select yes if there is a commercial seal on this container?"
-    val errorRequiredVehicle = "Select yes if there is a commercial seal on this vehicle?"
-    val errorRequiredTrailer = "Select yes if there is a commercial seal on this trailer?"
-    val errorRequiredTractor = "Select yes if there is a commercial seal on this tractor?"
-    val errorRequiredFixed = "Select yes if there is a commercial seal on this fixed transport installation?"
-    val hint = "his is a seal that prevents items being removed or added. For example, a seal on the outermost packaging, or a seal on the transport."
+
+    val title: TransportUnitType => String =
+      transportUnitType => titleHelper(heading(transportUnitType))
+
+    val heading: TransportUnitType => String = {
+      case Container => "Is there a commercial seal on this container?"
+      case Vehicle => "Is there a commercial seal on this vehicle?"
+      case Trailer => "Is there a commercial seal on this trailer?"
+      case Tractor => "Is there a commercial seal on this tractor?"
+      case FixedTransport => "Is there a commercial seal on this fixed transport installation?"
+    }
+
+    val error: TransportUnitType => String = {
+      case Container => "Select yes if there is a commercial seal on this container"
+      case Vehicle => "Select yes if there is a commercial seal on this vehicle"
+      case Trailer => "Select yes if there is a commercial seal on this trailer"
+      case Tractor => "Select yes if there is a commercial seal on this tractor"
+      case FixedTransport => "Select yes if there is a commercial seal on this fixed transport installation"
+    }
+
+    val hint = "This is a seal that prevents items being removed or added."
   }
 
   object English extends ViewMessages with BaseEnglish

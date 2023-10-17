@@ -26,6 +26,6 @@ class TransportSealChoiceFormProvider @Inject() extends Mappings {
 
   def apply(transportUnitType: TransportUnitType)(implicit messages: Messages): Form[Boolean] =
     Form(
-      "value" -> boolean(messages("transportSealChoice.error.required",transportUnitType.stringValue))
+      "value" -> boolean(messages(s"transportSealChoice.error.required.${transportUnitType.toString}"))
     )
 }

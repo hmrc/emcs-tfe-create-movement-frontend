@@ -19,7 +19,7 @@ package views.sections.transportUnit
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportSealChoiceMessages
 import forms.TransportSealChoiceFormProvider
-import models.NormalMode
+import models.{NormalMode, TransportUnitType}
 import models.TransportUnitType._
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -39,96 +39,30 @@ class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
     Seq(TransportSealChoiceMessages.English, TransportSealChoiceMessages.Welsh).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for Container" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        TransportUnitType.values foreach { transportUnitType =>
 
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Tractor))
-        val view = app.injector.instanceOf[TransportSealChoiceView]
-        val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(Container)
+          s"for $transportUnitType" - {
 
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode, Container
-        ).toString())
+            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.titleContainer,
-          Selectors.h1 -> messagesForLanguage.headingContainer,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-        ))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Tractor))
+            val view = app.injector.instanceOf[TransportSealChoiceView]
+            val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(transportUnitType)
 
+            implicit val doc: Document = Jsoup.parse(view(form, NormalMode, transportUnitType, testOnwardRoute).toString())
+
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> messagesForLanguage.title(transportUnitType),
+              Selectors.h1 -> messagesForLanguage.heading(transportUnitType),
+              Selectors.hint -> messagesForLanguage.hint,
+              Selectors.button -> messagesForLanguage.saveAndContinue,
+              Selectors.link(1) -> messagesForLanguage.returnToDraft
+            ))
+          }
+        }
       }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for Tractor" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Tractor))
-        val view = app.injector.instanceOf[TransportSealChoiceView]
-        val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(Tractor)
-
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode, Tractor
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.titleTractor,
-          Selectors.h1 -> messagesForLanguage.headingTractor,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-        ))
-      }
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for Trailer" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Trailer))
-        val view = app.injector.instanceOf[TransportSealChoiceView]
-        val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(Trailer)
-
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode, Trailer
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.titleTrailer,
-          Selectors.h1 -> messagesForLanguage.headingTrailer,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-        ))
-      }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for FixedTransport" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, FixedTransport))
-        val view = app.injector.instanceOf[TransportSealChoiceView]
-        val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(FixedTransport)
-
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode, FixedTransport
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.titleFixed,
-          Selectors.h1 -> messagesForLanguage.headingFixed,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-        ))
-      }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Vehicle'" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Vehicle))
-        val view = app.injector.instanceOf[TransportSealChoiceView]
-        val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(Vehicle)
-
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode, Vehicle
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.titleVehicle,
-          Selectors.h1 -> messagesForLanguage.headingVehicle,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-        ))
-      }
-
     }
   }
 }

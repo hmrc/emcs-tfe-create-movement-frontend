@@ -114,7 +114,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to the next page when the NONGBVAT link" in {
+    "must redirect to the next page when the NONGBVAT link is clicked" in {
       val userAnswersSoFar = emptyUserAnswers
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)

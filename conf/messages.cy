@@ -379,9 +379,9 @@ transportUnitType.4 = Tractor
 transportUnitType.3 = Trailer
 transportUnitType.2 = Vehicle
 
-transportUnitType.checkYourAnswersLabel = Transport units
+transportUnitType.checkYourAnswersLabel = Transport type
 transportUnitType.error.required = Select what the goods will be transported in
-transportUnitType.change.hidden = TransportUnitType
+transportUnitType.change.hidden = transport type
 
 transportUnitIdentity.title.1 = What is the container number or unique identifier for this container?
 transportUnitIdentity.title.2 = What is the vehicle registration number or unique identifier for this vehicle?
@@ -394,7 +394,7 @@ transportUnitIdentity.heading.3 = What is the trailer number or unique identifie
 transportUnitIdentity.heading.4 = What is the vehicle registration number or unique identifier for this tractor?
 transportUnitIdentity.heading.5 = What is the unique identifier for this fixed transport installation?
 
-transportUnitIdentity.checkYourAnswersLabel = Transport Identifier
+transportUnitIdentity.checkYourAnswersLabel = Transport identifier
 transportUnitIdentity.error.required.1 = Enter the container number or unique identifier
 transportUnitIdentity.error.required.2 = Enter the vehicle registration number or unique identifier
 transportUnitIdentity.error.required.3 = Enter the trailer number or unique identifier

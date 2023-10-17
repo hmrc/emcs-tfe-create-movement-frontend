@@ -51,7 +51,7 @@ object TransportUnitIdentityMessages {
       case TransportUnitType.Container => "Container number or unique identifier must only contain letters and numbers"
     }
 
-    val cyaLabel: String = "Transport Identifier"
+    val cyaLabel: String = "Transport identifier"
 
     val cyaChangeHidden: String = "transport identifier"
 

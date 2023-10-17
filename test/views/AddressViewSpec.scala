@@ -26,9 +26,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.destination.DestinationAddressPage
+import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
+import pages.sections.guarantor.GuarantorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
@@ -181,6 +182,35 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
         ))
       }
 
+
+      Seq(
+        models.sections.guarantor.GuarantorArranger.GoodsOwner,
+        models.sections.guarantor.GuarantorArranger.Transporter,
+      ).foreach(
+        guarantorArranger =>
+          s"when rendered for GuarantorAddress page with a guarantor arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" -
+            new Fixture(messagesForLanguage.lang) {
+
+              implicit val doc: Document = Jsoup.parse(view(
+                form = form,
+                addressPage = GuarantorAddressPage,
+                call = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+                headingKey = Some(s"guarantorAddress.$guarantorArranger")
+              ).toString())
+
+              behave like pageWithExpectedElementsAndMessages(Seq(
+                Selectors.title -> messagesForLanguage.guarantorAddressTitle(guarantorArranger),
+                Selectors.h1 -> messagesForLanguage.guarantorAddressHeading(guarantorArranger),
+                Selectors.h2(1) -> messagesForLanguage.subheading(GuarantorAddressPage),
+                Selectors.label("property") -> messagesForLanguage.property,
+                Selectors.label("street") -> messagesForLanguage.street,
+                Selectors.label("town") -> messagesForLanguage.town,
+                Selectors.label("postcode") -> messagesForLanguage.postcode,
+                Selectors.button -> messagesForLanguage.saveAndContinue,
+                Selectors.link(1) -> messagesForLanguage.returnToDraft
+              ))
+            }
+      )
     }
   }
 }

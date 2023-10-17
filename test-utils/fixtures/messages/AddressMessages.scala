@@ -17,20 +17,24 @@
 package fixtures.messages
 
 import models.UserAddress
+import models.sections.guarantor.GuarantorArranger
+import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.destination.DestinationAddressPage
 import pages.sections.dispatch.DispatchAddressPage
+import pages.sections.firstTransporter.FirstTransporterAddressPage
+import pages.sections.guarantor.GuarantorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
 
 object AddressMessages {
 
-  trait ViewMessages extends BaseMessages { _: i18n =>
+  trait ViewMessages extends BaseMessages {
+    _: i18n =>
 
     val heading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Enter the consignor’s address"
-      case _  => "Enter the consignee’s address"
+      case _ => "Enter the consignee’s address"
     }
 
     val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
@@ -49,12 +53,21 @@ object AddressMessages {
     val dispatchAddressHeading = "Enter the place of dispatch address"
     val dispatchAddressTitle = titleHelper(dispatchAddressHeading)
 
+    def guarantorAddressHeading(guarantorArranger: GuarantorArranger): String = guarantorArranger match {
+      case GoodsOwner => "Enter the good owner’s business address"
+      case Transporter => "Enter the transporter’s business address"
+      case _ => ""
+    }
+
+    def guarantorAddressTitle(guarantorArranger: GuarantorArranger): String = titleHelper(guarantorAddressHeading(guarantorArranger))
+
     val subheading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Consignor information"
       case TransportArrangerAddressPage => "Transport arranger"
       case FirstTransporterAddressPage => "First transporter"
       case DispatchAddressPage => "Place of dispatch information"
       case DestinationAddressPage => "Place of destination information"
+      case GuarantorAddressPage => "Guarantor"
       case _ => "Consignee information"
     }
 

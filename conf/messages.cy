@@ -159,6 +159,18 @@ address.firstTransporterAddress.subheading = First transporter
 address.firstTransporterAddress.checkYourAnswers.label = Address
 address.firstTransporterAddress.change.hidden = first transporters address
 
+address.guarantorAddress.subheading = Guarantor
+address.guarantorAddress.3.title = Enter the good owner’s business address
+address.guarantorAddress.3.heading = Enter the good owner’s business address
+address.guarantorAddress.3.subheading = Guarantor
+address.guarantorAddress.3.checkYourAnswers.label = Address
+address.guarantorAddress.3.change.hidden = guarantor address
+address.guarantorAddress.4.title = Enter the transporter’s business address
+address.guarantorAddress.4.heading = Enter the transporter’s business address
+address.guarantorAddress.4.subheading = Guarantor
+address.guarantorAddress.4.checkYourAnswers.label = Address
+address.guarantorAddress.4.change.hidden = transporter address
+
 address.property = Property name or number (optional)
 address.property.error.length = Enter a property name or number up to 11 characters
 address.property.error.character = Property must contain letters or numbers

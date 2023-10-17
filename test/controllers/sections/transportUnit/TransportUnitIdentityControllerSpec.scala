@@ -22,7 +22,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, TransportUnitType}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
-import pages.{TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

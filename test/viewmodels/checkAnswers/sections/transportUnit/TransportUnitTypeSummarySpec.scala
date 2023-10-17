@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
 import models.{CheckMode, TransportUnitType}
 import org.scalatest.matchers.must.Matchers
-import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value

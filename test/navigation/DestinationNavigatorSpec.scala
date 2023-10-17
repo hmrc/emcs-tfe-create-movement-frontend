@@ -56,6 +56,14 @@ class DestinationNavigatorSpec extends SpecBase {
         }
       }
 
+      "for the DestinationDetailsChoicePage" - {
+        "must go to test Only page" in {
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
       "for the DestinationWarehouseVatPage" - {
         "must go to test Only page" in {
 

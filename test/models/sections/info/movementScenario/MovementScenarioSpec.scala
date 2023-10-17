@@ -47,7 +47,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return ExportWithCustomsLodgedInGB" in {
+      "must return Export" in {
         ExportWithCustomsDeclarationLodgedInTheUk.destinationType mustBe DestinationType.Export
       }
     }
@@ -215,7 +215,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return ExemptedOrganisations" in {
+      "must return ExemptedOrganisation" in {
         ExemptedOrganisation.destinationType mustBe DestinationType.ExemptedOrganisation
       }
     }
@@ -257,7 +257,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return ExportWithCustomsLodgedInEU" in {
+      "must return Export" in {
         ExportWithCustomsDeclarationLodgedInTheEu.destinationType mustBe DestinationType.Export
       }
     }

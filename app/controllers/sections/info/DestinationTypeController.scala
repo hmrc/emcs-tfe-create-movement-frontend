@@ -22,7 +22,6 @@ import controllers.actions._
 import forms.sections.info.DestinationTypeFormProvider
 import models.DispatchPlace.GreatBritain
 import models.NorthernIrelandWarehouseKeeper
-
 import models.requests.UserRequest
 import navigation.Navigator
 import play.api.data.Form
@@ -66,11 +65,8 @@ class DestinationTypeController @Inject()(
       case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
         // GB ERN or XIRC ERN
         status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)))
-      case _ if !request.isNorthernIrelandErn =>
-        // GB ERN
-        status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)))
       case Some(dispatchPlace) =>
-        // XI ERN, dispatchPlace is known
+        // XIWK ERN, dispatchPlace is known
         status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)))
       case None =>
         // XI ERN, dispatchPlace is unknown

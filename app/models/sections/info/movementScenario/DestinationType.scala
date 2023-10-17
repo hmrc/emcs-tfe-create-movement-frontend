@@ -57,6 +57,3 @@ object DestinationType extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[DestinationType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }
-
-
-

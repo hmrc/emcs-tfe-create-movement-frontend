@@ -546,10 +546,10 @@ transportSealChoice.change.hidden = TransportSealChoice
 destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
 destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
 destinationWarehouseVat.checkYourAnswersLabel = destinationWarehouseVat
-destinationWarehouseVat.error.required = Enter a VAT registration number
+destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
 destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain special characters
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
-destinationWarehouseVat.link.skip = skip this question
+destinationWarehouseVat.link.skip = Skip this question for now
 
 

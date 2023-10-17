@@ -16,7 +16,6 @@
 
 package controllers.sections.guarantor
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.GuarantorNavigator
@@ -34,10 +33,10 @@ class GuarantorIndexController @Inject()(
                                           override val requireData: DataRequiredAction,
                                           override val userAllowList: UserAllowListAction,
                                           val controllerComponents: MessagesControllerComponents,
-                                        ) extends BaseNavigationController with AuthActionHelper {
+                                        ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+    authorisedDataRequestAsync(ern, lrn) { _ =>
       Future.successful(
         Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, lrn, NormalMode))
       )

@@ -544,6 +544,19 @@ guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
 
+guarantorVat.3.title = What is the goods owner’s VAT registration number?
+guarantorVat.3.heading = What is the goods owner’s VAT registration number?
+guarantorVat.4.title = What is the transporter’s VAT registration number?
+guarantorVat.4.heading = What is the transporter’s VAT registration number?
+guarantorVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+guarantorVat.3.notUkVatLink = The goods owner is not VAT registered
+guarantorVat.4.notUkVatLink = The transporter is not VAT registered
+guarantorVat.checkYourAnswersLabel = VAT registration number
+guarantorVat.error.required = Enter a VAT registration number
+guarantorVat.error.length = VAT registration number must be 14 characters or less
+guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
+guarantorVat.change.hidden = VAT registration number
+
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.heading = What is the business name of the place of destination?
 destinationBusinessName.checkYourAnswersLabel = destinationBusinessName

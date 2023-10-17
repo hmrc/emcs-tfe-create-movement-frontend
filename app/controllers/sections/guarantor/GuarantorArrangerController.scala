@@ -16,14 +16,17 @@
 
 package controllers.sections.guarantor
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import models.Mode
+import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import navigation.GuarantorNavigator
 import pages.GuarantorArrangerPage
+import pages.sections.guarantor.{GuarantorNamePage, GuarantorVatPage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.guarantor.GuarantorArrangerView
 
@@ -41,20 +44,45 @@ class GuarantorArrangerController @Inject()(
                                              formProvider: GuarantorArrangerFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: GuarantorArrangerView
-                                           ) extends BaseNavigationController with AuthActionHelper {
+                                           ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
-      Ok(view(fillForm(GuarantorArrangerPage, formProvider()), mode))
+    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+      withGuarantorRequiredAnswer {
+        renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
+      }
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(GuarantorArrangerPage, value, mode)
-      )
+      withGuarantorRequiredAnswer {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            renderView(BadRequest, formWithErrors, mode),
+          {
+            case value@(GoodsOwner | Transporter) =>
+              saveAndRedirect(GuarantorArrangerPage, value, mode)
+            case value =>
+              saveAndRedirect(
+                GuarantorArrangerPage,
+                value,
+                request.userAnswers
+                  .remove(GuarantorNamePage)
+                  .remove(GuarantorVatPage),
+                  // TODO remove GuarantorAddressPage once built
+                mode
+              )
+          }
+        )
+      }
     }
+
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future.successful(
+      status(view(
+        form = form,
+        mode = mode
+      ))
+    )
+  }
 }

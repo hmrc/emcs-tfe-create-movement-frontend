@@ -16,7 +16,6 @@
 
 package controllers.sections.guarantor
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.guarantor.GuarantorRequiredFormProvider
 import models.{Mode, NormalMode}
@@ -41,7 +40,7 @@ class GuarantorRequiredController @Inject()(
                                              formProvider: GuarantorRequiredFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: GuarantorRequiredView
-                                           ) extends BaseNavigationController with AuthActionHelper {
+                                           ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, lrn) { implicit request =>

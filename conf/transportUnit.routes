@@ -22,3 +22,8 @@ GET        /trader/:ern/draft/:lrn/transport-units/choose-give-more-information 
 POST       /trader/:ern/draft/:lrn/transport-units/choose-give-more-information                         controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:lrn/transport-units/choose-give-more-information/change                  controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/transport-units/choose-give-more-information/change                  controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/transport-units/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/transport-units/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/transport-units/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/transport-units/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package forms.sections.transportUnit
 
+import forms.XSS_REGEX
+import forms.mappings.Mappings
 import models.TransportUnitType
-import pages.Page
 import play.api.data.Form
 import play.api.i18n.Messages
-import views.ViewUtils
 
 import javax.inject.Inject
 
-class TransportUnitTypeHelper @Inject()() {
+class TransportUnitGiveMoreInformationFormProvider @Inject() extends Mappings {
 
-  private def messageFor(page: String, key: String, transportUnitType: TransportUnitType)(implicit messages: Messages) =
-    messages(s"$page.$key", messages(s"$page.transportUnitType.$transportUnitType"))
-
-  def title(form: Form[_], transportUnitType: TransportUnitType, page: Page)(implicit messages: Messages): String =
-    ViewUtils.title(form, messageFor(page.toString, "title", transportUnitType))
-
-  def heading(transportUnitType: TransportUnitType, page: Page)(implicit messages: Messages): String =
-    messageFor(page.toString, "heading", transportUnitType)
-
+  def apply(transportUnitType: TransportUnitType)(implicit messages: Messages): Form[String] =
+    Form(
+      "value" -> text("transportUnitGiveMoreInformation.error.required", args =
+        Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
+        .verifying(maxLength(350, "transportUnitGiveMoreInformation.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss"))
+    )
 }

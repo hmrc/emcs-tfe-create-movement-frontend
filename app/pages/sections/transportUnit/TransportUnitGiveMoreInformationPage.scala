@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package models.sections.info.movementScenario
+package pages.sections.transportUnit
 
-import models.{Enumerable, WithName}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-sealed trait OriginType
+case object TransportUnitGiveMoreInformationPage extends QuestionPage[String] {
 
-object OriginType extends Enumerable.Implicits {
-  case object TaxWarehouse extends WithName("1") with OriginType
+  override def path: JsPath = JsPath \ "transportUnit" \ toString
 
-  case object Imports extends WithName("2") with OriginType
-
-  case object DutyPaid extends WithName("3") with OriginType
-
-  val values: Seq[OriginType] = Seq(TaxWarehouse, Imports, DutyPaid)
-
-
-  implicit val enumerable: Enumerable[OriginType] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+  override def toString: String = "transportUnitGiveMoreInformation"
 }

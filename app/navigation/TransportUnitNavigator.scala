@@ -56,6 +56,10 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
 
+    case TransportUnitGiveMoreInformationPage => (_: UserAnswers) =>
+      // TODO redirect to CAM-TU07
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }

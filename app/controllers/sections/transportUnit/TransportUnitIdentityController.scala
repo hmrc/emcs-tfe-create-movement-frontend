@@ -16,7 +16,6 @@
 
 package controllers.sections.transportUnit
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
 import models.Mode
@@ -41,7 +40,7 @@ class TransportUnitIdentityController @Inject()(
                                                  formProvider: TransportUnitIdentityFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: TransportUnitIdentityView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends TransportUnitBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>

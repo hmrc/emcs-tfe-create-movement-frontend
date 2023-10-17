@@ -121,5 +121,18 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         }
       }
     }
+
+    "for the TransportUnitGiveMoreInformation (CAM-TU06)" - {
+      // TODO redirect to CAM-TU07
+      "must go to CAM-TU07" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitGiveMoreInformationPage, "answer")
+
+        navigator.nextPage(TransportUnitGiveMoreInformationPage, NormalMode, userAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+    }
   }
 }

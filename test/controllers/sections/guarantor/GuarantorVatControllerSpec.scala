@@ -42,6 +42,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
   val form = formProvider()
 
   lazy val guarantorVatRoute = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val guarantorVatSubmitRoute = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(testErn, testLrn, NormalMode).url
 
   "GuarantorVat Controller" - {
 
@@ -147,6 +148,23 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
       running(application) {
         val request = FakeRequest(GET, guarantorVatRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual
+          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+      }
+    }
+
+    "must redirect to the guarantor arranger controller for a POST if no guarantor arranger value is found" in {
+      val userAnswersSoFar = emptyUserAnswers
+        .set(GuarantorRequiredPage, true)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersSoFar)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, guarantorVatSubmitRoute)
 
         val result = route(application, request).value
 

@@ -31,8 +31,8 @@ object GuarantorVatMessages {
     }
 
     def heading()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => "What is the goods owner's VAT registration number?"
-      case _ => "What is the transporter's VAT registration number?"
+      case GoodsOwner => "What is the goods owner’s VAT registration number?"
+      case _ => "What is the transporter’s VAT registration number?"
     }
 
     def notVatRegisteredLink()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {

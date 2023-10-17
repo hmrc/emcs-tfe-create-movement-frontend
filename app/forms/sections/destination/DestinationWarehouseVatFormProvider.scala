@@ -16,7 +16,7 @@
 
 package forms.sections.destination
 
-import forms.ONLY_ALPHANUMERIC_REGEX
+import forms.XSS_REGEX
 
 import javax.inject.Inject
 import forms.mappings.Mappings
@@ -32,7 +32,7 @@ class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
   Form(
     "value" -> text("destinationWarehouseVat.error.required")
-      .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
+      .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
       .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
       )
   )

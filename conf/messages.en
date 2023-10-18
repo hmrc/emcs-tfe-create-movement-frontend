@@ -606,3 +606,17 @@ destinationWarehouseVat.error.invalidCharacters = VAT registration number must n
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 destinationWarehouseVat.link.skip = Skip this question for now
+
+transportSealChoice.heading.1 = Is there a commercial seal on this container?
+transportSealChoice.heading.2 = Is there a commercial seal on this vehicle?
+transportSealChoice.heading.3 = Is there a commercial seal on this trailer?
+transportSealChoice.heading.4 = Is there a commercial seal on this tractor?
+transportSealChoice.heading.5 = Is there a commercial seal on this fixed transport installation?
+transportSealChoice.error.required.1 = Select yes if there is a commercial seal on this container
+transportSealChoice.error.required.2 = Select yes if there is a commercial seal on this vehicle
+transportSealChoice.error.required.3 = Select yes if there is a commercial seal on this trailer
+transportSealChoice.error.required.4 = Select yes if there is a commercial seal on this tractor
+transportSealChoice.error.required.5 = Select yes if there is a commercial seal on this fixed transport installation
+transportSealChoice.hint = This is a seal that prevents items being removed or added.
+transportSealChoice.checkYourAnswersLabel = Commercial seal
+transportSealChoice.change.hidden = TransportSealChoice

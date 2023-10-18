@@ -22,7 +22,7 @@ import forms.sections.destination.DestinationWarehouseVatFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.DestinationNavigator
-import pages.DestinationWarehouseVatPage
+import pages.sections.destination.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

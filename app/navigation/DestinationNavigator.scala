@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.{DestinationWarehouseVatPage, Page}
+import pages.Page
 import pages.sections.destination._
 import play.api.mvc.Call
 

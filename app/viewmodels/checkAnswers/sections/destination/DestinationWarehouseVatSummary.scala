@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import models.requests.DataRequest
 import models.CheckMode
-import pages.DestinationWarehouseVatPage
+import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

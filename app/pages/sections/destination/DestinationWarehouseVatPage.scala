@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.destination
 
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DestinationWarehouseVatPage extends QuestionPage[String] {

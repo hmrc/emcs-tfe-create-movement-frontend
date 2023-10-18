@@ -21,11 +21,12 @@ import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
-import models.{DispatchPlace, NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import navigation.DestinationNavigator
-import pages.{DestinationWarehouseVatPage, DispatchPlacePage}
+import pages.DispatchPlacePage
 import pages.sections.info.DestinationTypePage
+import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

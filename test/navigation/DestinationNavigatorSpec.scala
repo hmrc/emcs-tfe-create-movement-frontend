@@ -21,9 +21,6 @@ import controllers.routes
 import models.NormalMode
 import pages.Page
 import pages.sections.destination._
-import pages.DestinationWarehouseVatPage
-
-
 
 class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator

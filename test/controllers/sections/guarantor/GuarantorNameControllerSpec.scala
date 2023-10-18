@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.guarantor
 
 import base.SpecBase
 import forms.sections.guarantor.GuarantorNameFormProvider
@@ -137,7 +137,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -152,7 +152,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 
@@ -166,7 +166,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -183,7 +183,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -131,7 +131,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 

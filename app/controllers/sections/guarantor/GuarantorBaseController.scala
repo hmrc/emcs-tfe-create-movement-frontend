@@ -17,7 +17,6 @@
 package controllers.sections.guarantor
 
 import controllers.BaseNavigationController
-import models.NormalMode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
@@ -29,37 +28,30 @@ import scala.concurrent.Future
 
 trait GuarantorBaseController extends BaseNavigationController {
 
-  def withGuarantorRequiredAnswer(f: Future[Result]) (implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(GuarantorRequiredPage) match {
-      case Some(true) => f
-      case _ =>
-        logger.warn(s"[withGuarantorRequiredAnswer] No answer, redirecting to get the answer")
-        Future.successful(
-          Redirect(
-            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.lrn, NormalMode)
-          )
-        )
+  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    withAnswer(
+      page = GuarantorRequiredPage,
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.lrn)
+    ) {
+      case true => f
+      case false =>
+        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
+        //TODO: Update to CYA page when built
+        Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
     }
   }
 
 
   def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(GuarantorArrangerPage) match {
-      case Some(guarantorArranger) if guarantorArranger == GoodsOwner | guarantorArranger == Transporter => f(guarantorArranger)
-      case Some(guarantorArranger) =>
+    withAnswer(
+      page = GuarantorArrangerPage,
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.lrn)
+    ) {
+      case guarantorArranger if guarantorArranger == GoodsOwner | guarantorArranger == Transporter =>
+        f(guarantorArranger)
+      case guarantorArranger =>
         logger.warn(s"[withGuarantorArrangerAnswer] Invalid answer of $guarantorArranger for this controller/page")
-        Future.successful(
-          Redirect(
-            controllers.routes.JourneyRecoveryController.onPageLoad()
-          )
-        )
-      case None =>
-        logger.warn(s"[withGuarantorArrangerAnswer] No answer, redirecting to get the answer")
-        Future.successful(
-          Redirect(
-            controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
-          )
-        )
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
 

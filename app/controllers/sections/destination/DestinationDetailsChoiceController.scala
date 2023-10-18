@@ -44,33 +44,29 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                   ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+    authorisedDataRequestAsync(ern, lrn) {
       implicit request =>
-        request.userAnswers.get(DestinationTypePage) match {
-          case Some(movementScenario) =>
-            Ok(view(
+        withAnswer(DestinationTypePage) {
+          movementScenario =>
+            Future.successful(Ok(view(
               form = fillForm(DestinationDetailsChoicePage, formProvider(movementScenario)),
               action = routes.DestinationDetailsChoiceController.onSubmit(ern, lrn, mode),
               movementScenario = movementScenario
-            ))
-          case None =>
-            Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern))
+            )))
         }
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) {
       implicit request =>
-        request.userAnswers.get(DestinationTypePage) match {
-          case Some(movementScenario) =>
+        withAnswer(DestinationTypePage) {
+          movementScenario =>
             formProvider(movementScenario).bindFromRequest().fold(
               formWithErrors =>
                 Future.successful(BadRequest(view(formWithErrors, routes.DestinationDetailsChoiceController.onSubmit(ern, lrn, mode), movementScenario))),
               value =>
                 saveAndRedirect(DestinationDetailsChoicePage, value, mode)
             )
-          case None =>
-            Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern)))
         }
     }
 }

@@ -28,6 +28,7 @@ import viewmodels.helpers.CheckYourAnswersConsigneeHelper
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: MessagesApi,
                                                     override val auth: AuthAction,
@@ -41,28 +42,22 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                                                    ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+    authorisedDataRequestAsync(ern, lrn) {
       implicit request =>
-        request.userAnswers.get(ConsigneeBusinessNamePage) match {
-          case Some(_) =>
-            request.userAnswers.get(ConsigneeAddressPage) match {
-              case Some(_) =>
-                request.userAnswers.get(DestinationTypePage) match {
-                  case Some(_) =>
-                    Ok(view(
+        withAnswer(ConsigneeBusinessNamePage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, lrn)) {
+          _ =>
+            withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, lrn)) {
+              _ =>
+                withAnswer(DestinationTypePage) {
+                  _ =>
+                    Future.successful(Ok(view(
                       controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, lrn),
                       ern,
                       lrn,
                       checkYourAnswersConsigneeHelper.summaryList
-                    ))
-                  case None =>
-                    Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern))
+                    )))
                 }
-              case None =>
-                Redirect(controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(ern, lrn, NormalMode))
             }
-          case None =>
-            Redirect(controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(ern, lrn, NormalMode))
         }
     }
 

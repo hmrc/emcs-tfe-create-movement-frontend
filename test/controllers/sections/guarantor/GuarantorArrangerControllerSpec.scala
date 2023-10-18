@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.guarantor
 
 import base.SpecBase
 import forms.sections.guarantor.GuarantorArrangerFormProvider
@@ -135,7 +135,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 
@@ -149,7 +149,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -166,7 +166,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
-import models.{CheckMode, Index, TransportUnitType}
+import models.{CheckMode, TransportUnitType}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages

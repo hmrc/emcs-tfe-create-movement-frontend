@@ -67,20 +67,17 @@ class TransportArrangerNameController @Inject()(
     }
 
   private def withTransportArrangerAnswer(f: TransportArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(TransportArrangerPage) match {
-      case Some(transportArranger) if transportArranger == GoodsOwner | transportArranger == Other => f(transportArranger)
-      case Some(transportArranger) =>
+    withAnswer(
+      page = TransportArrangerPage,
+      // TODO: update redirectRoute to journey index page when built
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
+    ) {
+      case transportArranger if transportArranger == GoodsOwner | transportArranger == Other => f(transportArranger)
+      case transportArranger =>
         logger.warn(s"[withTransportArrangerAnswer] Invalid answer of $transportArranger for this controller/page")
         Future.successful(
           Redirect(
             controllers.routes.JourneyRecoveryController.onPageLoad()
-          )
-        )
-      case None =>
-        logger.warn(s"[withTransportArrangerAnswer] No answer, redirecting to get the answer")
-        Future.successful(
-          Redirect(
-            controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
           )
         )
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.firstTransporter
 
 import base.SpecBase
 import forms.sections.firstTransporter.FirstTransporterNameFormProvider
@@ -131,7 +131,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -147,7 +147,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

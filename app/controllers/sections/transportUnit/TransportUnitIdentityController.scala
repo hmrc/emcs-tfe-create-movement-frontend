@@ -19,12 +19,11 @@ package controllers.sections.transportUnit
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
-import models.requests.DataRequest
-import models.{Mode, NormalMode, TransportUnitType}
+import models.Mode
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.sections.transportUnit.TransportUnitIdentityView
 
@@ -46,14 +45,14 @@ class TransportUnitIdentityController @Inject()(
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitType { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         Future.successful(Ok(view(fillForm(TransportUnitIdentityPage, formProvider(transportUnitType)), transportUnitType, mode)))
       }
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitType { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
           formWithErrors =>
             Future.successful(BadRequest(view(formWithErrors, transportUnitType, mode))),
@@ -62,16 +61,4 @@ class TransportUnitIdentityController @Inject()(
         )
       }
     }
-
-  private def withTransportUnitType(f: TransportUnitType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(TransportUnitTypePage) match {
-      case Some(value) => f(value)
-      case None => logger.warn(s"[withTransportUnitType] No answer, redirecting to get the answer")
-        Future.successful(
-          Redirect(
-            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.lrn, NormalMode)
-          )
-        )
-    }
-  }
 }

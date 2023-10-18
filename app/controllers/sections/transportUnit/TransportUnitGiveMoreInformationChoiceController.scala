@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormProvider
 import models.requests.DataRequest
-import models.{Mode, NormalMode, TransportUnitType}
+import models.{Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitTypePage}
 import play.api.data.Form
@@ -47,14 +47,14 @@ class TransportUnitGiveMoreInformationChoiceController @Inject()(
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitTypeAnswer { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         renderView(Ok, fillForm(TransportUnitGiveMoreInformationChoicePage, formProvider(transportUnitType)), mode, transportUnitType)
       }
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitTypeAnswer { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
           formWithErrors =>
             renderView(BadRequest, formWithErrors, mode, transportUnitType),
@@ -63,19 +63,6 @@ class TransportUnitGiveMoreInformationChoiceController @Inject()(
         )
       }
     }
-
-  private def withTransportUnitTypeAnswer(f: TransportUnitType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(TransportUnitTypePage) match {
-      case Some(transportUnitType) => f(transportUnitType)
-      case None =>
-        logger.warn(s"[withTransportUnitTypeAnswer] No answer, redirecting to get the answer")
-        Future.successful(
-          Redirect(
-            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.lrn, NormalMode)
-          )
-        )
-    }
-  }
 
   private def renderView(status: Status, form: Form[_], mode: Mode, transportUnitType: TransportUnitType)
                         (implicit request: DataRequest[_]): Future[Result] = {

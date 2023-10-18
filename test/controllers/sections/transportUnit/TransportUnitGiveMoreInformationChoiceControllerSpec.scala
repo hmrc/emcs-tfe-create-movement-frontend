@@ -86,7 +86,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       }
     }
 
-    "must redirect back to TU01 for a GET if there is not a transport unit type found in the users answers" in {
+    "must redirect to journey recovery for a GET if there is not a transport unit type found in the users answers" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -96,7 +96,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -170,7 +170,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       }
     }
 
-    "must redirect back to TU01 for a POST if there is not a transport unit type found" in {
+    "must redirect to journey recovery controller for a POST if there is not a transport unit type found" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -182,7 +182,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

@@ -552,4 +552,3 @@ destinationWarehouseVat.error.length = VAT registration number must be 14 charac
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 destinationWarehouseVat.link.skip = Skip this question for now
 
-

@@ -26,6 +26,7 @@ class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator
 
   "DestinationNavigator" - {
+
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Index" in {
@@ -57,6 +58,14 @@ class DestinationNavigatorSpec extends SpecBase {
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      "for the DestinationWarehouseVatPage" - {
+        "must go to test Only page" in {
+
+          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 

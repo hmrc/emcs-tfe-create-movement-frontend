@@ -36,6 +36,7 @@ import views.html.sections.info.DestinationTypeView
 class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(dispatchPlace: Option[DispatchPlace], ern: String = testGreatBritainErn, value: String = "unknownDestination") {
+
     lazy val application: Application =
       applicationBuilder(userAnswers = None)
         .overrides(

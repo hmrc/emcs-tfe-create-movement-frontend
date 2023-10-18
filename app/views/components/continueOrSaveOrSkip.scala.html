@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package fixtures.messages.sections.destination
+@import config.AppConfig
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+@this(
+ govukButton: GovukButton,
+ appConfig: AppConfig
+)
 
-object DestinationDetailsChoiceMessages {
+@(href: String, primaryKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+ <div class="govuk-button-group">
 
-    val heading = "Do you want to give the address and business name of the registered consignee?"
-    val title = titleHelper(heading)
-    val hint = "This information is optional."
-  }
+     @govukButton(ButtonViewModel(messages(primaryKey)))
 
-  object English extends ViewMessages with BaseEnglish
+     <a class="govuk-link" id="skip-question" href="@href">@messages("site.skipQuestion")</a>
 
-  object Welsh extends ViewMessages with BaseWelsh
+ </div>
+
+@{
+    //$COVERAGE-OFF$
 }

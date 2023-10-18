@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.destination
+package pages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-object DestinationDetailsChoiceMessages {
+case object DestinationWarehouseVatPage extends QuestionPage[String] {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+  override def path: JsPath = JsPath \ "destination" \ toString
 
-    val heading = "Do you want to give the address and business name of the registered consignee?"
-    val title = titleHelper(heading)
-    val hint = "This information is optional."
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
+  override def toString: String = "destinationWarehouseVat"
 }

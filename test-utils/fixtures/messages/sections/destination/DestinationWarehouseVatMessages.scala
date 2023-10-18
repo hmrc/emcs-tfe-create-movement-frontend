@@ -18,13 +18,16 @@ package fixtures.messages.sections.destination
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 
-object DestinationDetailsChoiceMessages {
+object DestinationWarehouseVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-
-    val heading = "Do you want to give the address and business name of the registered consignee?"
-    val title = titleHelper(heading)
-    val hint = "This information is optional."
+    val title = titleHelper("What is the VAT number for the registered consignee? (optional)")
+    val heading: String = "What is the VAT number for the registered consignee? (optional)"
+    val cyaLabel: String = "VAT or EORI number of the person representing the consignor"
+    val cyaChangeHidden: String = "VAT or EORI number of the person representing the consignor"
+    val errorRequired: String = "Enter a VAT number or use link to skip this question"
+    val errorInvalidCharacters: String = "VAT registration number must not contain special characters"
+    val errorLength: String = "VAT registration number must be 14 characters or less"
   }
 
   object English extends ViewMessages with BaseEnglish

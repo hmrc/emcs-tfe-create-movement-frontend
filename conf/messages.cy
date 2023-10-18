@@ -209,7 +209,6 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
-destination.subHeading = Place of destination information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -219,9 +218,11 @@ destinationType.heading.import = What is the destination type for this import?
 destinationType.title.movement = What is the destination type for this movement?
 destinationType.title.import = What is the destination type for this import?
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
+
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
 destinationType.directDelivery = Direct delivery
 destinationType.euTaxWarehouse = Tax warehouse in the European Union
+
 destinationType.exemptedOrganisation = Exempted organisation
 destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
 destinationType.registeredConsignee = Registered consignee
@@ -527,6 +528,15 @@ destinationDetailsChoice.title = Do you want to give the address and business na
 destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.hint = This information is optional.
 destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}
+
+destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.checkYourAnswersLabel = destinationWarehouseVat
+destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
+destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
+destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
+destinationWarehouseVat.change.hidden = DestinationWarehouseVat
+destinationWarehouseVat.link.skip = Skip this question for now
 
 transportSealChoice.heading.1 = Is there a commercial seal on this container?
 transportSealChoice.heading.2 = Is there a commercial seal on this vehicle?

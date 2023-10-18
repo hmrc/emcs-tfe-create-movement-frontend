@@ -17,19 +17,19 @@
 @import config.AppConfig
 
 @this(
-        govukButton: GovukButton,
-        appConfig: AppConfig
+govukButton: GovukButton,
+appConfig: AppConfig
 )
 
 @(href: String, primaryKey: String = "site.continue")(implicit messages: Messages)
 
-    <div class="govuk-button-group">
+<div class="govuk-button-group">
 
-        @govukButton(ButtonViewModel(messages(primaryKey)))
+    @govukButton(ButtonViewModel(messages(primaryKey)))
 
-        <a class="govuk-link" id="skip-question" href="@href">@messages("site.skipQuestion")</a>
+    <a class="govuk-link" id="skip-question" href="@href">@messages("site.skipQuestion")</a>
 
-    </div>
+</div>
 
 @{
     //$COVERAGE-OFF$

@@ -15,9 +15,10 @@
  *@
 
 @import models.requests.DataRequest
+@import models.sections.info.movementScenario.MovementScenario
+@import viewmodels.LegendSize
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
-
 
 @this(
     layout: templates.Layout,
@@ -25,17 +26,18 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    continueOrSaveOrSkip: components.continueOrSaveOrSkip,
     h1: components.h1,
     h2: components.h2,
-    continueOrExit: components.continueOrExit
+    p: components.p,
+    link: components.link
 )
 
-@(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, movementScenario: MovementScenario, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("destinationBusinessName.title"))) {
+ @layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue))) {
 
-    @formHelper(action = onSubmitCall) {
-
+    @formHelper(action, Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
@@ -45,15 +47,17 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationBusinessName.heading"))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
         )
 
-        @continueOrExit()
+    @continueOrSaveOrSkip(skipQuestionCall.url)
+
+
     }
 }
 
 @{
-//$COVERAGE-OFF$
+        //$COVERAGE-OFF$
 }

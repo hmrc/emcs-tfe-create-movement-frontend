@@ -19,8 +19,8 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import fixtures.TransportUnitFixtures
-import models.NormalMode
 import models.TransportUnitType.Tractor
+import models.{Index, NormalMode}
 import pages.Page
 import pages.sections.transportUnit._
 
@@ -42,10 +42,10 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
     "for the TransportUnitType (CAM-TU01)" - {
 
       "must go to CAM-TU02" in {
-        val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, Tractor)
+        val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(Index(0)), Tractor)
 
-        navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        navigator.nextPage(TransportUnitTypePage(Index(0)), NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, Index(0), NormalMode)
       }
     }
 
@@ -54,10 +54,10 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       "must go to CAM-TU03" in {
 
         val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
-          .set(TransportUnitIdentityPage, "weee")
+          .set(TransportUnitTypePage(Index(0)), Tractor)
+          .set(TransportUnitIdentityPage(Index(0)), "weee")
 
-        navigator.nextPage(TransportUnitIdentityPage, NormalMode, userAnswers) mustBe
+        navigator.nextPage(TransportUnitIdentityPage(Index(0)), NormalMode, userAnswers) mustBe
           controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
       }
     }
@@ -67,7 +67,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       "must go to CAM-TU04 when TransportSealChoice is true" in {
 
         val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitTypePage(Index(0)), Tractor)
           .set(TransportSealChoicePage, true)
 
         navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
@@ -77,7 +77,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       "must go to CAM-TU05 when TransportSealChoice is false" in {
 
         val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitTypePage(Index(0)), Tractor)
           .set(TransportSealChoicePage, false)
 
         navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
@@ -126,7 +126,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       "must go to CAM-TU07" in {
 
         val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitTypePage(Index(0)), Tractor)
           .set(TransportUnitGiveMoreInformationPage, "answer")
 
         navigator.nextPage(TransportUnitGiveMoreInformationPage, NormalMode, userAnswers) mustBe

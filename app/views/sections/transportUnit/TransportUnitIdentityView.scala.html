@@ -29,11 +29,11 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], transportUnitType: TransportUnitType, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], transportUnitType: TransportUnitType, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages(s"transportUnitIdentity.title.$transportUnitType"))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onSubmit(request.ern, request.lrn, mode)) {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onSubmit(request.ern, request.lrn, idx, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

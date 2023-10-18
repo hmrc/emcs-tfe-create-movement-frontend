@@ -16,7 +16,8 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import models.{CheckMode, UserAnswers}
+import controllers.sections.transportUnit.routes
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.transportUnit.TransportUnitIdentityPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,8 +27,8 @@ import viewmodels.implicits._
 
 object TransportUnitIdentitySummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportUnitIdentityPage).map {
+  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(TransportUnitIdentityPage(idx)).map {
       answer =>
 
         SummaryListRowViewModel(
@@ -36,7 +37,7 @@ object TransportUnitIdentitySummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
               "changeTransportUnitIdentity"
             ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
           )

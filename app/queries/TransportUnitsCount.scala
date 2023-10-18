@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package pages.sections.transportUnit
+package queries
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.transportUnit.TransportUnitsSection
+import play.api.libs.json.{JsPath, JsValue}
 
-case class TransportUnitIdentityPage(transportUnitIndex: Index) extends QuestionPage[String] {
-  override def path: JsPath = TransportUnitSection(transportUnitIndex).path \ toString
-
-  override def toString: String = "transportUnitIdentity"
+case object TransportUnitsCount extends Derivable[List[JsValue], Int] {
+  override val derive: List[JsValue] => Int = _.size
+  override def path: JsPath = TransportUnitsSection.path
 }

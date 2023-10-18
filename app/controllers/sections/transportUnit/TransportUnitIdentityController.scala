@@ -19,7 +19,8 @@ package controllers.sections.transportUnit
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
-import models.Mode
+import models.requests.DataRequest
+import models.{Index, Mode, NormalMode, TransportUnitType}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.i18n.MessagesApi
@@ -43,22 +44,35 @@ class TransportUnitIdentityController @Inject()(
                                                  view: TransportUnitIdentityView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withAnswer(TransportUnitTypePage) { transportUnitType =>
-        Future.successful(Ok(view(fillForm(TransportUnitIdentityPage, formProvider(transportUnitType)), transportUnitType, mode)))
+      withTransportUnitType(idx) { transportUnitType =>
+        Future.successful(Ok(view(fillForm(TransportUnitIdentityPage(idx), formProvider(transportUnitType)), transportUnitType, idx, mode)))
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withAnswer(TransportUnitTypePage) { transportUnitType =>
+      withTransportUnitType(idx) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, transportUnitType, mode))),
+            Future.successful(BadRequest(view(formWithErrors, transportUnitType, idx, mode))),
           value =>
-            saveAndRedirect(TransportUnitIdentityPage, value, mode)
+            saveAndRedirect(TransportUnitIdentityPage(idx), value, mode)
         )
       }
     }
+
+  private def withTransportUnitType(idx: Index)(f: TransportUnitType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    request.userAnswers.get(TransportUnitTypePage(idx)) match {
+      case Some(value) => f(value)
+      case None => logger.warn(s"[withTransportUnitType] No answer, redirecting to get the answer")
+        Future.successful(
+          Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.lrn, idx, NormalMode)
+          )
+        )
+    }
+  }
+
 }

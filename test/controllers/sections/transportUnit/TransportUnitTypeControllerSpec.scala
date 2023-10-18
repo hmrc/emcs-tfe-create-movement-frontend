@@ -19,7 +19,7 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import forms.TransportUnitTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, TransportUnitType}
+import models.{Index, NormalMode, TransportUnitType}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
@@ -36,7 +36,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val transportUnitTypeRoute = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val transportUnitTypeRoute = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, Index(0), NormalMode).url
 
   val formProvider = new TransportUnitTypeFormProvider()
   val form = formProvider()
@@ -55,13 +55,13 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[TransportUnitTypeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, Index(0), NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, TransportUnitType.values.head)
+      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(Index(0)), TransportUnitType.values.head)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +73,8 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TransportUnitType.values.head), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(TransportUnitType.values.head), Index(0), NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -117,7 +118,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, Index(0), NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 

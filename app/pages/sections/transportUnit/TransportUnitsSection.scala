@@ -16,12 +16,10 @@
 
 package pages.sections.transportUnit
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.Section
+import play.api.libs.json.{JsArray, JsPath}
 
-case class TransportUnitIdentityPage(transportUnitIndex: Index) extends QuestionPage[String] {
-  override def path: JsPath = TransportUnitSection(transportUnitIndex).path \ toString
-
-  override def toString: String = "transportUnitIdentity"
+case object TransportUnitsSection extends Section[JsArray] {
+  override def path: JsPath = JsPath \ toString
+  override def toString: String = "transportUnits"
 }

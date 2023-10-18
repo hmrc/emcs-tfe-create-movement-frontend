@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package pages.sections.transportUnit
+package models
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.mvc.PathBindable
 
-case class TransportUnitIdentityPage(transportUnitIndex: Index) extends QuestionPage[String] {
-  override def path: JsPath = TransportUnitSection(transportUnitIndex).path \ toString
+import scala.util.{Failure, Success, Try}
 
-  override def toString: String = "transportUnitIdentity"
+case class Index(position: Int) {
+  val displayIndex: String = s"${position + 1}"
+}
+
+object Index {
+  implicit val pathBindable: PathBindable[Index] = new PathBindable[Index] {
+    override def bind(key: String, value: String): Either[String, Index] = Try(value.toInt) match {
+      case Failure(_) => Left("could not parse index")
+      case Success(idx) => Right(Index(idx - 1))
+    }
+
+    override def unbind(key: String, value: Index): String = value.displayIndex
+  }
 }

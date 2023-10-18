@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitIdentityMessages
-import models.CheckMode
+import models.{CheckMode, Index}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.TransportUnitIdentityPage
 import play.api.i18n.Messages
@@ -46,7 +46,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitIdentitySummary.row(request.userAnswers) mustBe None
+            TransportUnitIdentitySummary.row(Index(0), request.userAnswers) mustBe None
           }
         }
 
@@ -54,9 +54,9 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
           "must output the expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage, "testName"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(Index(0)), "testName"))
 
-            TransportUnitIdentitySummary.row(request.userAnswers) mustBe
+            TransportUnitIdentitySummary.row(Index(0), request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -64,7 +64,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, Index(0), CheckMode).url,
                       id = "changeTransportUnitIdentity"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

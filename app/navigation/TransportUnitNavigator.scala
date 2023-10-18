@@ -27,11 +27,9 @@ import javax.inject.Inject
 class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-
-    case TransportUnitTypePage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
-
-    case TransportUnitIdentityPage => (userAnswers: UserAnswers) =>
+    case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
+      controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+    case TransportUnitIdentityPage(_) => (userAnswers: UserAnswers) =>
       controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case TransportSealChoicePage => (userAnswers: UserAnswers) =>

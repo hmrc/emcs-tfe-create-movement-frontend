@@ -28,11 +28,11 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[TransportUnitType], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[TransportUnitType], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("transportUnitType.title"))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitTypeController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitTypeController.onSubmit(request.ern, request.lrn, idx, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

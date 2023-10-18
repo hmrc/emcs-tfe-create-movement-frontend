@@ -21,8 +21,8 @@ import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 object DestinationDetailsChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Do you want to give the address and business name of the registered consignee")
-    val heading = "Do you want to give the address and business name of the registered consignee"
+    val heading = "Do you want to give the address and business name of the registered consignee?"
+    val title = titleHelper(heading)
     val hint = "This information is optional."
   }
 

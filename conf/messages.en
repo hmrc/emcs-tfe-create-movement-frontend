@@ -597,7 +597,7 @@ invoiceDetails.value.error.required.two = Date of issue must include a {0} and {
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
 
-destinationDetailsChoice.title = Do you want to give the address and business name of the {0}
-destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}
+destinationDetailsChoice.title = Do you want to give the address and business name of the {0}?
+destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.hint = This information is optional.
 destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}

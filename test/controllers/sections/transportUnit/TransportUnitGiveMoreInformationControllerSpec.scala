@@ -82,7 +82,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       }
     }
 
-    "must redirect back to TU01 for a GET if there is not a transport unit type found in the users answers" in {
+    "must redirect to journey recovery for a GET if there is not a transport unit type found in the users answers" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -92,7 +92,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -141,7 +141,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       }
     }
 
-    "must redirect back to TU01 for a POST if there is not a transport unit type found" in {
+    "must redirect to journey recovery for a POST if there is not a transport unit type found" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -153,7 +153,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

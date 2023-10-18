@@ -16,12 +16,13 @@
 
 package controllers.sections.transportUnit
 
+import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import models.requests.DataRequest
 import models.{Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
+import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,18 +43,18 @@ class TransportUnitGiveMoreInformationController @Inject()(
                                                             formProvider: TransportUnitGiveMoreInformationFormProvider,
                                                             val controllerComponents: MessagesControllerComponents,
                                                             view: TransportUnitGiveMoreInformationView
-                                                          ) extends TransportUnitBaseController with AuthActionHelper {
+                                                          ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitTypeAnswer { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage, formProvider(transportUnitType)), mode, transportUnitType)
       }
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      withTransportUnitTypeAnswer { transportUnitType =>
+      withAnswer(TransportUnitTypePage) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
           formWithErrors => renderView(BadRequest, formWithErrors, mode, transportUnitType),
           value =>

@@ -72,7 +72,7 @@ class TransportArrangerNameController @Inject()(
       // TODO: update redirectRoute to journey index page when built
       redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
     ) {
-      case transportArranger if transportArranger == GoodsOwner | transportArranger == Other => f(transportArranger)
+      case transportArranger@(GoodsOwner | Other) => f(transportArranger)
       case transportArranger =>
         logger.warn(s"[withTransportArrangerAnswer] Invalid answer of $transportArranger for this controller/page")
         Future.successful(

@@ -59,6 +59,7 @@ class TransportUnitGiveMoreInformationChoiceController @Inject()(
           formWithErrors =>
             renderView(BadRequest, formWithErrors, mode, transportUnitType),
           value =>
+            //TODO remove user answer if the user selected 'no' when TU06 is built
             saveAndRedirect(TransportUnitGiveMoreInformationChoicePage, value, mode)
         )
       }

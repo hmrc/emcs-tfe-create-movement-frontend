@@ -39,13 +39,11 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
-          // TODO redirect to CAM-TU05 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
       }
 
-    case TransportSealTypePage => (_: UserAnswers) =>
-      // TODO redirect to CAM-TU05
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case TransportSealTypePage => (userAnswers: UserAnswers) =>
+      controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case TransportUnitGiveMoreInformationChoicePage =>
       (userAnswers: UserAnswers) =>

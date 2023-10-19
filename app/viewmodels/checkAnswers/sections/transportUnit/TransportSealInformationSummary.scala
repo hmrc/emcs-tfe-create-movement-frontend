@@ -27,9 +27,9 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import views.html.components.link
 
-class TransportSealInformationSummary @Inject()(link: link) {
+object TransportSealInformationSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(answers: UserAnswers, link: link)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(TransportSealTypePage).map {
       answer =>
         answer.moreInfo.fold {

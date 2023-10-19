@@ -74,7 +74,6 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, NormalMode)
       }
 
-      // TODO redirect to CAM-TU05
       "must go to CAM-TU05 when TransportSealChoice is false" in {
 
         val userAnswers = emptyUserAnswers
@@ -82,19 +81,18 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportSealChoicePage, false)
 
         navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, NormalMode)
       }
     }
 
     "for the TransportSealType (CAM-TU04)" - {
 
-      // TODO redirect to CAM-TU05
       "must go to CAM-TU05" in {
 
         val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
 
         navigator.nextPage(TransportSealTypePage, NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, NormalMode)
       }
 
     }

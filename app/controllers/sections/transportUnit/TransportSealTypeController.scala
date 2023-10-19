@@ -22,8 +22,7 @@ import forms.sections.transportUnit.TransportSealTypeFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.TransportUnitNavigator
-import pages.TransportUnitTypePage
-import pages.sections.transportUnit.TransportSealTypePage
+import pages.sections.transportUnit.{TransportSealTypePage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

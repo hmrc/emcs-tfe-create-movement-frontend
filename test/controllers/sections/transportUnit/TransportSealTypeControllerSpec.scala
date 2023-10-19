@@ -24,8 +24,7 @@ import models.TransportUnitType.Container
 import models.{NormalMode, TransportUnitType, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
-import pages.TransportUnitTypePage
-import pages.sections.transportUnit.TransportSealTypePage
+import pages.sections.transportUnit._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

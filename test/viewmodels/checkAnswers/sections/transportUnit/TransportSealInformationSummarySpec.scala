@@ -17,7 +17,6 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
-import controllers.routes
 import fixtures.TransportUnitFixtures
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import models.CheckMode
@@ -37,8 +36,6 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
   lazy val app: Application = applicationBuilder().build()
   lazy val link: link = app.injector.instanceOf[link]
 
-  object TestTransportSealInformation extends TransportSealInformationSummary(link)
-
   "TransportSealInformationSummary" - {
 
     lazy val app = applicationBuilder().build()
@@ -55,7 +52,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TestTransportSealInformation.row(request.userAnswers) mustBe None
+            TransportSealInformationSummary.row(request.userAnswers, link) mustBe None
           }
         }
 
@@ -65,7 +62,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax))
 
-            TestTransportSealInformation.row(request.userAnswers) mustBe
+            TransportSealInformationSummary.row(request.userAnswers, link) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -84,11 +81,11 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
         "when there's an answer but no more information has been added" - {
 
-          s"must output no row" in {
+          s"must output a row with a link to add more information" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMin))
 
-            TestTransportSealInformation.row(request.userAnswers) mustBe
+            TransportSealInformationSummary.row(request.userAnswers, link) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,

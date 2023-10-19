@@ -19,9 +19,9 @@ package pages.sections.transportUnit
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object TransportUnitIdentityPage extends QuestionPage[String] {
+case object TransportUnitGiveMoreInformationChoicePage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "transportUnit" \ toString
 
-  override def toString: String = "transportUnitIdentity"
+  override def toString: String = "transportUnitGiveMoreInformationChoice"
 }

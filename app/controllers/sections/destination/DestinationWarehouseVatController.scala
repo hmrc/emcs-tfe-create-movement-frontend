@@ -50,8 +50,7 @@ class DestinationWarehouseVatController @Inject()(
         request.userAnswers.get(DestinationTypePage) match {
           case Some(movementScenario) =>
             Ok(view(
-              form = fillForm(DestinationWarehouseVatPage,
-              formProvider(movementScenario)),
+              form = fillForm(DestinationWarehouseVatPage, formProvider()),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
               movementScenario = movementScenario,
               skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, lrn, mode)
@@ -67,7 +66,7 @@ class DestinationWarehouseVatController @Inject()(
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
           case Some(movementScenario) =>
-            formProvider(movementScenario).bindFromRequest().fold(
+            formProvider().bindFromRequest().fold(
               formWithErrors =>
                 Future.successful(BadRequest(view(
                   formWithErrors,

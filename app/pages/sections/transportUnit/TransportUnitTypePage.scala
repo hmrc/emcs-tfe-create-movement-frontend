@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.transportUnit
 
 import models.TransportUnitType
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object TransportUnitTypePage extends QuestionPage[TransportUnitType] {

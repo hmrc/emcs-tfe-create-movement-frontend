@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{NormalMode, TransportUnitType}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.TransportUnitTypePage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

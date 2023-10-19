@@ -17,24 +17,22 @@
 package forms.sections.destination
 
 import forms.XSS_REGEX
+import forms.mappings.Mappings
+import play.api.data.Form
 
 import javax.inject.Inject
-import forms.mappings.Mappings
-import models.sections.info.movementScenario.MovementScenario
-import play.api.data.Form
-import play.api.i18n.Messages
 
 
 class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
   private val VAT_NUMBER_MAX_LENGTH = 14
-  def apply(movementScenario: MovementScenario)(implicit messages: Messages): Form[String] = {
 
-  Form(
-    "value" -> text("destinationWarehouseVat.error.required")
-      .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
-      .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
-      )
-  )
- }
+  def apply(): Form[String] = {
+    Form(
+      "value" -> text("destinationWarehouseVat.error.required")
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
+        .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
+        )
+    )
+  }
 }

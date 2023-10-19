@@ -32,7 +32,7 @@ class GuarantorIndexController @Inject()(
                                           override val getData: DataRetrievalAction,
                                           override val requireData: DataRequiredAction,
                                           override val userAllowList: UserAllowListAction,
-                                          val controllerComponents: MessagesControllerComponents,
+                                          val controllerComponents: MessagesControllerComponents
                                         ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =

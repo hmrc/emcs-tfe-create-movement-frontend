@@ -22,7 +22,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, TransportUnitType}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
-import pages.{TransportUnitIdentityPage, TransportUnitTypePage}
+import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -108,7 +108,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       }
     }
 
-    "must redirect to TransportUnitTypePage when nno TrasnportUnitType has been answered" in {
+    "must redirect to journey recover when no TransportUnitType has been answered" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -118,8 +118,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn, NormalMode).url
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

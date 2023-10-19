@@ -54,7 +54,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
     val formProvider = new DestinationWarehouseVatFormProvider()
 
-    val form = formProvider(RegisteredConsignee)(messages(application))
+    val form = formProvider()
 
     val view = application.injector.instanceOf[DestinationWarehouseVatView]
 

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.transportUnit
 
 import controllers.sections.transportUnit.routes
 import models.{CheckMode, UserAnswers}
-import pages.TransportUnitIdentityPage
+import pages.sections.transportUnit.TransportUnitIdentityPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

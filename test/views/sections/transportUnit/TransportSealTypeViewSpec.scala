@@ -18,8 +18,8 @@ package views.sections.transportUnit
 
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
-import forms.TransportSealTypeFormProvider
-import models.{NormalMode, TransportUnitType}
+import forms.sections.transportUnit.TransportSealTypeFormProvider
+import models.TransportUnitType
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -18,12 +18,12 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import fixtures.TransportUnitFixtures
-import forms.TransportSealTypeFormProvider
+import forms.sections.transportUnit.TransportSealTypeFormProvider
 import mocks.services.MockUserAnswersService
 import models.TransportUnitType.Container
 import models.{NormalMode, TransportUnitType, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.TransportUnitTypePage
 import pages.sections.transportUnit.TransportSealTypePage
 import play.api.inject.bind
@@ -48,7 +48,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     val application = applicationBuilder(userAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
       )
       .build()
@@ -96,6 +96,26 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         )(dataRequest(request), messages(application)).toString
       }
     }
+
+    "must populate the view correctly on a GET when only the seal type has previously been answered" in new Fixture(Some(emptyUserAnswers
+      .set(TransportUnitTypePage, Container)
+      .set(TransportSealTypePage, transportSealTypeModelMin)
+    )) {
+      running(application) {
+
+        val request = FakeRequest(GET, transportSealTypeRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form = form.fill(transportSealTypeModelMin),
+          transportUnitType = TransportUnitType.Container,
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, NormalMode)
+        )(dataRequest(request), messages(application)).toString
+      }
+    }
+
 
     "must redirect to journey recovery when no answer has been provided for transport unit type onPageLoad" in new Fixture() {
 

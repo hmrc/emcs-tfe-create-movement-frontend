@@ -637,4 +637,5 @@ transportSealType.sealType.error.invalid = Commercial seal type must only contai
 transportSealType.moreInfo = Give more information (optional)
 transportSealType.moreInfo.hint = Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one.
 transportSealType.moreInfo.error.invalid = Information must only contain letters and numbers
+transportSealType.moreInfo.error.invalidCharacter = Information must not include < and > and : and ;
 transportSealType.moreInfo.error.length = Information must be 350 characters or less

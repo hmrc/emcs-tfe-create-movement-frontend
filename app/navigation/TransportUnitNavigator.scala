@@ -37,13 +37,11 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
     case TransportSealChoicePage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportSealChoicePage) match {
         case Some(true) =>
-          // TODO redirect to CAM-TU04 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
           // TODO redirect to CAM-TU05 once built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
-
 
     case TransportSealTypePage => (_: UserAnswers) =>
       // TODO redirect to CAM-TU05

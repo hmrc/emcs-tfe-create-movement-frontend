@@ -18,6 +18,7 @@ package forms
 
 import fixtures.TransportUnitFixtures
 import forms.behaviours.StringFieldBehaviours
+import forms.sections.transportUnit.TransportSealTypeFormProvider
 import play.api.data.FormError
 
 class TransportSealTypeFormProviderSpec extends StringFieldBehaviours with TransportUnitFixtures {
@@ -96,7 +97,7 @@ class TransportSealTypeFormProviderSpec extends StringFieldBehaviours with Trans
           actualResult.errors mustBe expectedResult
         }
 
-        "when invalid characters" in {
+        "when invalid characters are entered" in {
 
           val data = formAnswersMap(sealType = "something >")
 
@@ -157,18 +158,18 @@ class TransportSealTypeFormProviderSpec extends StringFieldBehaviours with Trans
           actualResult.errors mustBe expectedResult
         }
 
-        "when invalid characters" in {
+        "when invalid characters are entered" in {
 
           val data = formAnswersMap(moreInfo = Some("some more information >"))
 
-          val expectedResult = Seq(FormError(moreInfoField, s"transportSealType.moreInfo.error.invalid", List(XSS_REGEX)))
+          val expectedResult = Seq(FormError(moreInfoField, s"transportSealType.moreInfo.error.invalidCharacter", List(XSS_REGEX)))
 
           val actualResult = form.bind(data)
 
           actualResult.errors mustBe expectedResult
         }
 
-        "when no alphanumeric characters" in {
+        "when no alphanumeric characters are entered" in {
 
           val data = formAnswersMap(moreInfo = Some("_)("))
 

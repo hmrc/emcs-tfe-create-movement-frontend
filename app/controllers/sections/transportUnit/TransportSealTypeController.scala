@@ -18,13 +18,11 @@ package controllers.sections.transportUnit
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import forms.TransportSealTypeFormProvider
+import forms.sections.transportUnit.TransportSealTypeFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.sections.transportUnit.TransportSealTypeModel
-import models.{Mode, TransportUnitType}
-import navigation.Navigator
+import navigation.TransportUnitNavigator
 import pages.TransportUnitTypePage
-import pages.sections.info.DestinationTypePage
 import pages.sections.transportUnit.TransportSealTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -36,16 +34,16 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class TransportSealTypeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: Navigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: TransportSealTypeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TransportSealTypeView
+                                             override val messagesApi: MessagesApi,
+                                             override val userAnswersService: UserAnswersService,
+                                             override val userAllowList: UserAllowListAction,
+                                             override val navigator: TransportUnitNavigator,
+                                             override val auth: AuthAction,
+                                             override val getData: DataRetrievalAction,
+                                             override val requireData: DataRequiredAction,
+                                             formProvider: TransportSealTypeFormProvider,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             view: TransportSealTypeView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =

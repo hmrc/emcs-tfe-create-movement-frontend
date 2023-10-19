@@ -50,18 +50,6 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       }
     }
 
-    "for the TransportSealType (CAM-TU04)" - {
-
-      // TODO redirect to CAM-TU05
-      "must go to CAM-TU05" in {
-
-        val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
-
-        navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)
-      }
-    }
-
     "for the TransportUnitIdentity (CAM-TU02)" - {
 
       "must go to CAM-TU03" in {
@@ -77,8 +65,18 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
     "for the TransportSealChoicePage (CAM-TU03)" - {
 
-      // TODO redirect to CAM-TU04
-      "must go to CAM-TU04" in {
+      "must go to CAM-TU04 when TransportSealChoice is true" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage, Tractor)
+          .set(TransportSealChoicePage, true)
+
+        navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+
+      // TODO redirect to CAM-TU05
+      "must go to CAM-TU05 when TransportSealChoice is false" in {
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage, Tractor)
@@ -87,18 +85,19 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+    }
+
+    "for the TransportSealType (CAM-TU04)" - {
 
       // TODO redirect to CAM-TU05
       "must go to CAM-TU05" in {
 
-        val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
-          .set(TransportSealChoicePage, false)
+        val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
 
-        navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)
       }
-
     }
+
   }
 }

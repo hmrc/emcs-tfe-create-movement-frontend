@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.transportUnit
 
+import forms._
 import javax.inject.Inject
 import forms.mappings.Mappings
 import models.sections.transportUnit.TransportSealTypeModel
@@ -31,8 +32,8 @@ class TransportSealTypeFormProvider @Inject() extends Mappings {
         .verifying(regexpUnlessEmpty(XSS_REGEX, s"transportSealType.sealType.error.invalid")),
       "moreInfo" -> optional(text()
         .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"transportSealType.moreInfo.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"transportSealType.moreInfo.error.invalid"))
-        .verifying(regexp(XSS_REGEX, s"transportSealType.moreInfo.error.invalid"))
+        .verifying(regexp(s"$ALPHANUMERIC_REGEX", s"transportSealType.moreInfo.error.invalid"))
+        .verifying(regexp(XSS_REGEX, s"transportSealType.moreInfo.error.invalidCharacter"))
       )
     )(TransportSealTypeModel.apply)(TransportSealTypeModel.unapply)
   )

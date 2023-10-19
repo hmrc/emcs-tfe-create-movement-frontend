@@ -28,6 +28,16 @@ class DestinationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
+    case DestinationConsigneeDetailsPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(DestinationConsigneeDetailsPage) match {
+        case Some(true) =>
+          //TODO redirect to CAM-DES06 when built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(false) =>
+          controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        case _ =>
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
     case DestinationBusinessNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 

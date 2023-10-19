@@ -642,4 +642,5 @@ transportSealType.moreInfo.error.length = Information must be 350 characters or 
 transportSealType.sealType.checkYourAnswersLabel = Commercial seal type
 transportSealType.sealType.change.hidden = Commercial seal type
 transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
+transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
 transportSealType.moreInfo.change.hidden = Commercial seal information

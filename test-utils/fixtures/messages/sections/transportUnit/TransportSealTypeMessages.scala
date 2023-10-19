@@ -46,8 +46,8 @@ object TransportSealTypeMessages {
     val moreInfoErrorCharacters = "Information must only contain letters and numbers"
     val moreInfoErrorLength = "Information must be 350 characters or less"
     val moreInfoCYA = "Commercial seal information"
-    val moreIndoCyaChangeHidden = "Commercial seal information"
-
+    val moreInfoCyaChangeHidden = "Commercial seal information"
+    val moreInfoCYAAddInfo = "Enter more information about the commercial seal (optional)"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -17,19 +17,27 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
+import controllers.routes
 import fixtures.TransportUnitFixtures
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.TransportSealTypePage
+import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.link
 
 class TransportSealInformationSummarySpec extends SpecBase with Matchers with TransportUnitFixtures {
+
+  lazy val app: Application = applicationBuilder().build()
+  lazy val link: link = app.injector.instanceOf[link]
+
+  object TestTransportSealInformation extends TransportSealInformationSummary(link)
 
   "TransportSealInformationSummary" - {
 
@@ -47,7 +55,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealInformationSummary.row(request.userAnswers) mustBe None
+            TestTransportSealInformation.row(request.userAnswers) mustBe None
           }
         }
 
@@ -57,7 +65,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax))
 
-            TransportSealInformationSummary.row(request.userAnswers) mustBe
+            TestTransportSealInformation.row(request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -67,7 +75,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                       content = messagesForLanguage.change,
                       href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, CheckMode).url,
                       id = "changeTransportSealInformation"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreIndoCyaChangeHidden)
+                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
                 )
               )
@@ -80,7 +88,16 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMin))
 
-            TransportSealInformationSummary.row(request.userAnswers) mustBe None
+            TestTransportSealInformation.row(request.userAnswers) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.moreInfoCYA,
+                  value = ValueViewModel(HtmlContent(link(
+                    link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, CheckMode).url,
+                    messageKey = messagesForLanguage.moreInfoCYAAddInfo
+                  )))
+                )
+              )
           }
         }
       }

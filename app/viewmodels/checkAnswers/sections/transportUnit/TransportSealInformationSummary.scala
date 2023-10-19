@@ -16,31 +16,43 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
+import com.google.inject.Inject
 import controllers.sections.transportUnit.routes
 import models.{CheckMode, UserAnswers}
 import pages.sections.transportUnit.TransportSealTypePage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.link
 
-object TransportSealInformationSummary  {
+class TransportSealInformationSummary @Inject()(link: link) {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealTypePage).flatMap {
+    answers.get(TransportSealTypePage).map {
       answer =>
-        answer.moreInfo.map( info =>
+        answer.moreInfo.fold {
+
           SummaryListRowViewModel(
-            key     = "transportSealType.moreInfo.checkYourAnswersLabel",
-            value   = ValueViewModel(info),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.change",
-                routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-                "changeTransportSealInformation"
-              ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
-            )
+            key = "transportSealType.moreInfo.checkYourAnswersLabel",
+            value = ValueViewModel(HtmlContent(link(
+              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
           )
-        )
+        }{ info =>
+            SummaryListRowViewModel(
+              key = "transportSealType.moreInfo.checkYourAnswersLabel",
+              value = ValueViewModel(info),
+              actions = Seq(
+                ActionItemViewModel(
+                  "site.change",
+                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+                  "changeTransportSealInformation"
+                ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
+              )
+            )
+        }
+
     }
 }

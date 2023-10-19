@@ -160,16 +160,14 @@ address.firstTransporterAddress.checkYourAnswers.label = Address
 address.firstTransporterAddress.change.hidden = first transporters address
 
 address.guarantorAddress.subheading = Guarantor
+address.guarantorAddress.checkYourAnswers.label = Address
+address.guarantorAddress.checkYourAnswers.notProvided = {0} section not complete
 address.guarantorAddress.3.title = Enter the good owner’s business address
 address.guarantorAddress.3.heading = Enter the good owner’s business address
-address.guarantorAddress.3.subheading = Guarantor
-address.guarantorAddress.3.checkYourAnswers.label = Address
-address.guarantorAddress.3.change.hidden = guarantor address
+address.guarantorAddress.3.change.hidden = good owner’s address
 address.guarantorAddress.4.title = Enter the transporter’s business address
 address.guarantorAddress.4.heading = Enter the transporter’s business address
-address.guarantorAddress.4.subheading = Guarantor
-address.guarantorAddress.4.checkYourAnswers.label = Address
-address.guarantorAddress.4.change.hidden = transporter address
+address.guarantorAddress.4.change.hidden = transporter’s address
 
 address.property = Property name or number (optional)
 address.property.error.length = Enter a property name or number up to 11 characters
@@ -477,6 +475,7 @@ guarantorName.3.heading = What is the goods owner''s business name?
 guarantorName.4.title = What is the transporter''s business name?
 guarantorName.4.heading = What is the transporter''s business name?
 guarantorName.checkYourAnswersLabel = Business name
+guarantorName.checkYourAnswers.notProvided = {0} section not complete
 guarantorName.error.required = Enter the business name
 guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
@@ -494,6 +493,9 @@ guarantorVat.error.required = Enter a VAT registration number
 guarantorVat.error.length = VAT registration number must be 14 characters or less
 guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
 guarantorVat.change.hidden = VAT registration number
+
+guarantorCheckAnswers.title = Check your answers
+guarantorCheckAnswers.heading = Check your answers
 
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.heading = What is the business name of the place of destination?

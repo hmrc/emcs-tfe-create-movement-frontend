@@ -18,15 +18,19 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
+import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.CheckMode
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.guarantor.GuarantorNamePage
+import pages.GuarantorArrangerPage
+import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
@@ -34,45 +38,137 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(GuarantorNameMessages.English, GuarantorNameMessages.Welsh).foreach { messagesForLanguage =>
+    def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+      Some(
+        SummaryListRowViewModel(
+          key = Key(Text(messagesForLanguage.cyaLabel)),
+          value = Value(Text(value)),
+          actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
+            content = Text(messagesForLanguage.change),
+            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+            id = "changeGuarantorName"
+          ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+        )
+      )
+    }
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+    Seq(GuarantorNameMessages.English, GuarantorNameMessages.Welsh).foreach { implicit messagesForLanguage =>
 
+      s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        "when there's no answer" - {
-
-          "must output no row" in {
-
+        "and there is no answer for the GuarantorRequiredPage" - {
+          "then must not return a row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GuarantorNameSummary.row(request.userAnswers) mustBe None
+            GuarantorNameSummary.row mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "and there is a GuarantorRequiredPage answer of `no`" - {
+          "then must not return a row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
-          "must output the expected row" in {
+            GuarantorNameSummary.row mustBe None
+          }
+        }
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorNamePage, "testName"))
+        "and there is a GuarantorRequiredPage answer of `yes`" - {
 
-            GuarantorNameSummary.row(request.userAnswers) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("testName")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testLrn, CheckMode).url,
-                      id = "guarantor-name"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
+          "and there is a GuarantorArrangerPage answer of `Consignee`" - {
+            "and that section hasn't been filled in yet" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignee)
               )
+
+              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+            }
+
+            "and that section has been filled in" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignee)
+                  .set(ConsigneeBusinessNamePage, "consignee name here")
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `Consignor`" - {
+            "and that section has been filled in" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignor)
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+            "and that section hasn't been filled in yet" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, GoodsOwner)
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+            }
+
+            "and that section has been filled in" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, GoodsOwner)
+                  .set(GuarantorNamePage, "guarantor name here")
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
+            }
+          }
+
+          "and there is a GuarantorArrangerPage answer of `Transporter`" - {
+            "and that section hasn't been filled in yet" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Transporter)
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+            }
+
+            "and that section has been filled in" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Transporter)
+                  .set(GuarantorNamePage, "transporter name here")
+              )
+
+              GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
+            }
           }
         }
       }
+
     }
+
   }
 }

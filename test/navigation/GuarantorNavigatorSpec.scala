@@ -51,13 +51,12 @@ class GuarantorNavigatorSpec extends SpecBase {
           }
         }
         "when false" - {
-          // TODO redirect to CAM-G06
           "must go to CAM-G06" in {
 
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
           }
         }
       }
@@ -84,7 +83,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
               }
             }
         }
@@ -101,6 +100,21 @@ class GuarantorNavigatorSpec extends SpecBase {
         "must goto CAM-G05" in {
           navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
             controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+      }
+
+      "for GuarantorAddressPage" - {
+        "must goto CAM-G06" in {
+          navigator.nextPage(GuarantorAddressPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
+      }
+
+      "for GuarantorCheckAnswersPage" - {
+        //TODO: Update to route to next section when built
+        "must goto under construction page" in {
+          navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
     }

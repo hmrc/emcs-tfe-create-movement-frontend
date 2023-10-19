@@ -25,3 +25,6 @@ GET         /trader/:ern/draft/:lrn/guarantor/address                controllers
 POST        /trader/:ern/draft/:lrn/guarantor/address                controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:lrn/guarantor/address/change         controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:lrn/guarantor/address/change         controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/guarantor/check-answers           controllers.sections.guarantor.GuarantorCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/draft/:lrn/guarantor/check-answers           controllers.sections.guarantor.GuarantorCheckAnswersController.onSubmit(ern: String, lrn: String)

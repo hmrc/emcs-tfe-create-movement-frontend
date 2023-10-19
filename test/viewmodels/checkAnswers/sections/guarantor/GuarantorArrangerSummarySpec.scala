@@ -18,45 +18,86 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
+import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
-import models.sections.guarantor.GuarantorArranger.Transporter
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import pages.GuarantorArrangerPage
+import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class GuarantorArrangerSummarySpec extends SpecBase {
 
   lazy val app = applicationBuilder().build()
 
-  "row" - {
-    Seq(GuarantorArrangerMessages.English, GuarantorArrangerMessages.Welsh).foreach { messagesForLanguage =>
-      s"when language is set to $messagesForLanguage" - {
+  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+    Some(
+      SummaryListRowViewModel(
+        key = Key(Text(messagesForLanguage.cyaLabel)),
+        value = Value(Text(value)),
+        actions = Seq(ActionItemViewModel(
+          content = Text(messagesForLanguage.change),
+          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, CheckMode).url,
+          id = "changeGuarantorArranger"
+        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+      )
+    )
+  }
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+  Seq(GuarantorArrangerMessages.English, GuarantorArrangerMessages.Welsh).foreach { implicit messagesForLanguage =>
+    s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-        "must return Some(SummaryListRow)" - {
-          "when the GuarantorArranger page is found" in {
-            GuarantorArrangerSummary.row(emptyUserAnswers.set(GuarantorArrangerPage, Transporter)) mustBe Some(SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text(messagesForLanguage.transporterRadioOption)),
-              actions = Seq(ActionItemViewModel(
-                content = messagesForLanguage.change,
-                href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, CheckMode).url,
-                id = "guarantor-arranger"
-              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
-            ))
+      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-          }
-        }
-        "must return None" - {
-          "when the GuarantorArranger page is not found" in {
-            GuarantorArrangerSummary.row(emptyUserAnswers) mustBe None
-          }
+      "and there is no answer for the GuarantorRequiredPage" - {
+        "then must not return a row" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          GuarantorArrangerSummary.row mustBe None
         }
       }
+
+      "and there is a GuarantorRequiredPage answer of `no`" - {
+        "then must not return a row" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+
+          GuarantorArrangerSummary.row mustBe None
+        }
+      }
+
+      "and there is a GuarantorRequiredPage answer of `yes`" - {
+        "and there is no answer for the GuarantorArrangerPage" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+
+          GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
+        }
+
+        Seq(
+          (Consignee, messagesForLanguage.consigneeRadioOption),
+          (Consignor, messagesForLanguage.consignorRadioOption),
+          (GoodsOwner, messagesForLanguage.goodsOwnerRadioOption),
+          (Transporter, messagesForLanguage.transporterRadioOption)
+        ).foreach {
+          case (arranger, expectedMessage) =>
+            s"and there is a GuarantorArrangerPage answer of `${arranger.getClass.getSimpleName.stripSuffix("$")}`" in {
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, arranger)
+              )
+
+              GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)
+            }
+        }
+
+      }
+
     }
   }
+
 }

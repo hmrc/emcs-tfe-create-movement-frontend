@@ -16,8 +16,10 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.GuarantorArrangerPage
+import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -25,24 +27,32 @@ import viewmodels.implicits._
 
 object GuarantorArrangerSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GuarantorArrangerPage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-        SummaryListRowViewModel(
-          key = "guarantorArranger.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"guarantorArranger.$answer")),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
-                ern = answers.ern,
-                lrn = answers.lrn,
-                mode = CheckMode
-              ).url,
-              id = "guarantor-arranger")
-              .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))
-          )
+    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).map { _ =>
+
+      val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
+        case Some(answer) => messages(s"guarantorArranger.$answer")
+        case None => messages("site.notProvided")
+      }
+
+      SummaryListRowViewModel(
+        key = "guarantorArranger.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
+              ern = request.ern,
+              lrn = request.lrn,
+              mode = CheckMode
+            ).url,
+            id = "changeGuarantorArranger")
+            .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))
         )
+      )
     }
+
+  }
+
 }

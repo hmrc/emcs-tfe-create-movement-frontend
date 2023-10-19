@@ -44,7 +44,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
         actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
           href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testLrn, CheckMode).url,
-          id = "changeGuarantorArrangerAddress"
+          id = "changeGuarantorAddress"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )
     )

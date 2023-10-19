@@ -74,7 +74,7 @@ object GuarantorAddressSummary {
                   lrn = request.userAnswers.lrn,
                   mode = CheckMode
                 ).url,
-                id = "changeGuarantorArrangerAddress"
+                id = "changeGuarantorAddress"
               )
                 .withVisuallyHiddenText(messages("address.guarantorAddress.3.change.hidden"))
             )

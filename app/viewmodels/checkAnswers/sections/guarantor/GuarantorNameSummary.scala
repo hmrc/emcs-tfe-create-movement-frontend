@@ -58,7 +58,7 @@ object GuarantorNameSummary {
             ActionItemViewModel(
               "site.change",
               controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
-              "guarantor-name"
+              "changeGuarantorName"
             ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
           )
         )

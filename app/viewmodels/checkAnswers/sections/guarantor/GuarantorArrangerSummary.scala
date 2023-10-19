@@ -47,7 +47,7 @@ object GuarantorArrangerSummary {
               lrn = request.lrn,
               mode = CheckMode
             ).url,
-            id = "guarantor-arranger")
+            id = "changeGuarantorArranger")
             .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))
         )
       )

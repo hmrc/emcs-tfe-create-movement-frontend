@@ -48,7 +48,7 @@ object GuarantorVatSummary {
               ActionItemViewModel(
                 "site.change",
                 controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.lrn, CheckMode).url,
-                "guarantor-vat"
+                "changeGuarantorVat"
               ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
             )
           )

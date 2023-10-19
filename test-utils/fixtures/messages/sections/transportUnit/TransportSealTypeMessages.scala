@@ -39,10 +39,15 @@ object TransportSealTypeMessages {
     val sealTypeErrorRequired = "Enter the type of commercial seal"
     val sealTypeErrorLength = "Commercial seal type must be 35 characters or less"
     val sealTypeErrorInvalid = "Commercial seal type must only contain letters and numbers"
+    val sealTypeCYA = "Commercial seal type"
+    val sealTypeCyaChangeHidden = "Commercial seal type"
     val moreInfo = "Give more information (optional)"
     val moreInfoHint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
     val moreInfoErrorCharacters = "Information must only contain letters and numbers"
     val moreInfoErrorLength = "Information must be 350 characters or less"
+    val moreInfoCYA = "Commercial seal information"
+    val moreIndoCyaChangeHidden = "Commercial seal information"
+
   }
 
   object English extends ViewMessages with BaseEnglish

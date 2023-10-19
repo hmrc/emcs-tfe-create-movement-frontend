@@ -94,10 +94,9 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
         val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
 
-        navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)
+        navigator.nextPage(TransportSealTypePage, NormalMode, userAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }
-
   }
 }

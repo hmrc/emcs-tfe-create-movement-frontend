@@ -19,8 +19,6 @@ package forms.sections.destination
 import base.SpecBase
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
-import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
-import pages.sections.info.DestinationTypePage
 import play.api.data.{Form, FormError}
 
 class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldBehaviours {
@@ -30,8 +28,7 @@ class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldB
   val maxLength = 14
   val invalidCharactersKey = "destinationWarehouseVat.error.invalidCharacters"
 
-  val form: Form[String] = new DestinationWarehouseVatFormProvider().apply(RegisteredConsignee)(messages(
-    applicationBuilder(Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))).build()))
+  val form: Form[String] = new DestinationWarehouseVatFormProvider()()
 
   ".value" - {
 

@@ -56,7 +56,11 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
       withAnswer(TransportUnitTypePage) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
           renderView(BadRequest, _, transportUnitType, mode),
-          saveAndRedirect(TransportSealChoicePage, _, mode)
+          isACommercialSeal => {
+            val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(TransportSealChoicePage, isACommercialSeal, request.userAnswers.remove(TransportSealTypePage))
+            saveAndRedirect(TransportSealChoicePage, isACommercialSeal, cleansedAnswers, mode)
+          }
+
         )
       }
     }

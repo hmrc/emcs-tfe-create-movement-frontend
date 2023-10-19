@@ -665,6 +665,7 @@ transportUnitGiveMoreInformation.checkYourAnswersValue = Enter more information 
 transportUnitGiveMoreInformation.error.required = Enter more information about this {0}
 transportUnitGiveMoreInformation.error.length = Information must be 350 characters or less
 transportUnitGiveMoreInformation.error.xss = Information must not contain < and > and : and ;
+transportUnitGiveMoreInformation.error.character = Information must contain letters or numbers
 transportUnitGiveMoreInformation.change.hidden = more information
 transportUnitGiveMoreInformation.transportUnitType.1 = container
 transportUnitGiveMoreInformation.transportUnitType.2 = vehicle

@@ -16,8 +16,8 @@
 
 package forms.sections.transportUnit
 
-import forms.XSS_REGEX
 import forms.mappings.Mappings
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import models.TransportUnitType
 import play.api.data.Form
 import play.api.i18n.Messages
@@ -30,7 +30,15 @@ class TransportUnitGiveMoreInformationFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("transportUnitGiveMoreInformation.error.required", args =
         Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
+        .transform[String](
+          _.replace("\n", " ")
+            .replace("\r", " ")
+            .replaceAll(" +", " ")
+            .trim,
+          identity
+        )
         .verifying(maxLength(350, "transportUnitGiveMoreInformation.error.length"))
+        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"transportUnitGiveMoreInformation.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss"))
     )
 }

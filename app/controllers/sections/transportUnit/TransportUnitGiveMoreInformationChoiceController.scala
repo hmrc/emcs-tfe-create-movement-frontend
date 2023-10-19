@@ -22,7 +22,7 @@ import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormPr
 import models.requests.DataRequest
 import models.{Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitTypePage}
+import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -58,9 +58,10 @@ class TransportUnitGiveMoreInformationChoiceController @Inject()(
         formProvider(transportUnitType).bindFromRequest().fold(
           formWithErrors =>
             renderView(BadRequest, formWithErrors, mode, transportUnitType),
-          value =>
-            //TODO remove user answer if the user selected 'no' when TU06 is built
-            saveAndRedirect(TransportUnitGiveMoreInformationChoicePage, value, mode)
+          giveMoreInformation => {
+            val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(TransportUnitGiveMoreInformationChoicePage, giveMoreInformation, request.userAnswers.remove(TransportUnitGiveMoreInformationPage))
+            saveAndRedirect(TransportUnitGiveMoreInformationChoicePage, giveMoreInformation, cleansedAnswers, mode)
+          }
         )
       }
     }

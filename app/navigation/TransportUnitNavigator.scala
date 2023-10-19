@@ -49,8 +49,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(TransportUnitGiveMoreInformationChoicePage) match {
           case Some(true) =>
-            //TODO redirect to CAM-TU06
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
           case _ =>
             //TODO redirect to CAM-TU07
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()

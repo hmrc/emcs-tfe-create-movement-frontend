@@ -16,7 +16,6 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import com.google.inject.Inject
 import controllers.sections.transportUnit.routes
 import models.{CheckMode, UserAnswers}
 import pages.sections.transportUnit.TransportSealTypePage
@@ -33,7 +32,6 @@ object TransportSealInformationSummary {
     answers.get(TransportSealTypePage).map {
       answer =>
         answer.moreInfo.fold {
-
           SummaryListRowViewModel(
             key = "transportSealType.moreInfo.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(link(

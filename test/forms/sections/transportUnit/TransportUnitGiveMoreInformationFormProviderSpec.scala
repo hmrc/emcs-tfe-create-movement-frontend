@@ -17,7 +17,7 @@
 package forms.sections.transportUnit
 
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationMessages
-import forms.XSS_REGEX
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import forms.behaviours.StringFieldBehaviours
 import models.TransportUnitType
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -27,6 +27,7 @@ import play.api.i18n.{Messages, MessagesApi}
 class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
   val requiredKey = "transportUnitGiveMoreInformation.error.required"
+  val invalidCharacterKey = "transportUnitGiveMoreInformation.error.character"
   val lengthKey = "transportUnitGiveMoreInformation.error.length"
   val invalidCharactersKey = "transportUnitGiveMoreInformation.error.xss"
   val maxLength = 350
@@ -65,6 +66,28 @@ class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehavi
               fieldName,
               requiredError = FormError(fieldName, requiredKey, Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
             )
+
+            "alphanumeric characters aren't used" in {
+              val data = Map("value" -> "..")
+              val result = form.bind(data)
+
+              result.errors must contain only FormError("value", invalidCharacterKey, Seq(ALPHANUMERIC_REGEX))
+            }
+
+            "input is only whitespace" in {
+              val data = Map("value" ->
+                """
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |""".stripMargin)
+              val result = form.bind(data)
+
+              result.errors must contain only FormError("value", requiredKey, Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
+            }
           }
         })
     }

@@ -23,6 +23,7 @@ trait BaseMessages { _: i18n =>
   val movementInformationSection: String = "Movement information"
   val consigneeInformationSection = "Consignee information"
   val transportArrangerSection: String = "Transport arranger"
+  val transportUnitsSection: String = "Transport units"
   val dispatchSection: String = "Place of dispatch information"
   val exportInformationSection: String = "Export information"
   val destinationSection: String = "Place of destination information"

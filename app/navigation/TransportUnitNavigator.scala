@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
-import pages.sections.transportUnit.TransportSealChoicePage
+import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.mvc.Call
 
@@ -27,20 +27,26 @@ import javax.inject.Inject
 class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
     case TransportUnitTypePage => (userAnswers: UserAnswers) =>
       controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
     case TransportUnitIdentityPage => (userAnswers: UserAnswers) =>
       controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case TransportSealChoicePage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportSealChoicePage) match {
         case Some(true) =>
-          // TODO redirect to CAM-TU04 once built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
         case _ =>
           // TODO redirect to CAM-TU05 once built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+
+    case TransportSealTypePage => (_: UserAnswers) =>
+      // TODO redirect to CAM-TU05
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }

@@ -18,12 +18,14 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import fixtures.TransportUnitFixtures
 import models.NormalMode
 import models.TransportUnitType.Tractor
 import pages.sections.transportUnit.TransportSealChoicePage
+import pages.sections.transportUnit.TransportSealTypePage
 import pages.{Page, TransportUnitIdentityPage, TransportUnitTypePage}
 
-class TransportUnitNavigatorSpec extends SpecBase {
+class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator
 
   "TransportUnitNavigator" - {
@@ -44,7 +46,7 @@ class TransportUnitNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, Tractor)
 
         navigator.nextPage(TransportUnitTypePage, NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, NormalMode)
+          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
       }
     }
 
@@ -63,8 +65,18 @@ class TransportUnitNavigatorSpec extends SpecBase {
 
     "for the TransportSealChoicePage (CAM-TU03)" - {
 
-      // TODO redirect to CAM-TU04
-      "must go to CAM-TU04" in {
+      "must go to CAM-TU04 when TransportSealChoice is true" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage, Tractor)
+          .set(TransportSealChoicePage, true)
+
+        navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
+          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, NormalMode)
+      }
+
+      // TODO redirect to CAM-TU05
+      "must go to CAM-TU05 when TransportSealChoice is false" in {
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage, Tractor)
@@ -73,18 +85,18 @@ class TransportUnitNavigatorSpec extends SpecBase {
         navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+    }
+
+    "for the TransportSealType (CAM-TU04)" - {
 
       // TODO redirect to CAM-TU05
       "must go to CAM-TU05" in {
 
-        val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage, Tractor)
-          .set(TransportSealChoicePage, false)
+        val userAnswers = emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax)
 
-        navigator.nextPage(TransportSealChoicePage, NormalMode, userAnswers) mustBe
+        navigator.nextPage(TransportSealTypePage, NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
-
     }
   }
 }

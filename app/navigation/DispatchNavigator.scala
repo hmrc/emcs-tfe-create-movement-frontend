@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
-import pages.sections.dispatch.{DispatchAddressPage,DispatchBusinessNamePage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -31,8 +31,11 @@ class DispatchNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case DispatchAddressPage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+
+    case DispatchCheckAnswersPage =>
+      //TODO update to route to next page when finished
+      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

@@ -25,15 +25,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.html.components.link
 
-object TransportSealInformationSummary {
+class TransportSealInformationSummary @Inject()(link: views.html.components.link) {
 
-  def row(answers: UserAnswers, link: link)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(TransportSealTypePage).map {
       answer =>
         answer.moreInfo.fold {
-
           SummaryListRowViewModel(
             key = "transportSealType.moreInfo.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(link(

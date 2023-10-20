@@ -19,11 +19,11 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.TransportUnitType.Tractor
+import models.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, TransportUnitType}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitTypePage}
+import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
+import navigation.{Navigator, TransportUnitNavigator}
+import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,8 +36,7 @@ import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
-  //TODO add correct URL for CAM-TU06
-  val onwardRouteTU06: Call = Call("GET", "/emcs/create-movement/test-only/construction")
+  val onwardRouteTU06: Call = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, NormalMode)
 
   //TODO add correct URL for CAM-TU07
   val onwardRouteTU07: Call = Call("GET", "/emcs/create-movement/test-only/construction")
@@ -146,6 +145,32 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRouteTU07.url
       }
+    }
+
+    "must cleanse the give more information page (TU06) when answering no" in {
+      val expectedAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, false).set(TransportUnitTypePage, Container)
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val application = applicationBuilder(
+        userAnswers = Some(
+          emptyUserAnswers
+            .set(TransportUnitGiveMoreInformationChoicePage, true)
+            .set(TransportUnitGiveMoreInformationPage, "blah")
+            .set(TransportUnitTypePage, Container)
+        )
+      )
+        .overrides(
+          bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRouteTU07)),
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+        )
+        .build()
+
+
+      val request = FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute).withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {

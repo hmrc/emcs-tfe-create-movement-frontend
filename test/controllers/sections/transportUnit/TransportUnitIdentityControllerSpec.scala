@@ -108,7 +108,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       }
     }
 
-    "must redirect to journey recover when no TransportUnitType has been answered" in {
+    "must redirect to journey recovery when no TrasnportUnitType has been answered" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {

@@ -16,7 +16,6 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import controllers.sections.transportUnit.routes
 import models.{CheckMode, UserAnswers}
 import pages.sections.transportUnit.TransportUnitIdentityPage
 import play.api.i18n.Messages
@@ -37,7 +36,7 @@ object TransportUnitIdentitySummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
               "changeTransportUnitIdentity"
             ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
           )

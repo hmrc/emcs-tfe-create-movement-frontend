@@ -27,7 +27,7 @@ import javax.inject.Inject
 class TransportUnitTypeHelper @Inject()() {
 
   private def messageFor(page: String, key: String, transportUnitType: TransportUnitType)(implicit messages: Messages) =
-    messages(s"$page.$key", messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType"))
+    messages(s"$page.$key", messages(s"$page.transportUnitType.$transportUnitType"))
 
   def title(form: Form[_], transportUnitType: TransportUnitType, page: Page)(implicit messages: Messages): String =
     ViewUtils.title(form, messageFor(page.toString, "title", transportUnitType))

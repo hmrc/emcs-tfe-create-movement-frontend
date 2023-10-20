@@ -21,6 +21,7 @@ import controllers.routes
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.TransportUnitType.Container
+import models.sections.transportUnit.TransportSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
@@ -128,6 +129,28 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must cleanse the transport seal type (TU04) when answering no" in new Setup(Some(
+      emptyUserAnswers
+        .set(TransportSealChoicePage, true)
+        .set(TransportSealTypePage, TransportSealTypeModel("SEAL1", Some("xyz")))
+        .set(TransportUnitTypePage, Container)
+    )) {
+
+      val expectedAnswers = emptyUserAnswers.set(TransportSealChoicePage, false).set(TransportUnitTypePage, Container)
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      running(application) {
+
+        val request = FakeRequest(POST, transportSealChoiceRoute).withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
       }
     }
 

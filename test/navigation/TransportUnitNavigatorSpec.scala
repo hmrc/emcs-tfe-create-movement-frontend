@@ -99,14 +99,13 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
     "for the TransportUnitGiveMoreInformationChoice (CAM-TU05)" - {
 
-      // TODO redirect to CAM-TU06
       "must go to CAM-TU06" - {
 
         "when the answer is Yes" in {
           val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, true)
 
           navigator.nextPage(TransportUnitGiveMoreInformationChoicePage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, NormalMode)
         }
       }
 
@@ -119,6 +118,19 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           navigator.nextPage(TransportUnitGiveMoreInformationChoicePage, NormalMode, userAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
+      }
+    }
+
+    "for the TransportUnitGiveMoreInformation (CAM-TU06)" - {
+      // TODO redirect to CAM-TU07
+      "must go to CAM-TU07" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage, Tractor)
+          .set(TransportUnitGiveMoreInformationPage, "answer")
+
+        navigator.nextPage(TransportUnitGiveMoreInformationPage, NormalMode, userAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }
   }

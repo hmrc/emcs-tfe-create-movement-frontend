@@ -36,7 +36,7 @@ class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviou
     val returnToDraftLink: String = "#save-and-exit"
   }
 
-  "Destination Business Name view" - {
+  "Destination Consignee Details view" - {
 
     Seq(DestinationConsigneeDetailsMessages.English, DestinationConsigneeDetailsMessages.Welsh).foreach { messagesForLanguage =>
 

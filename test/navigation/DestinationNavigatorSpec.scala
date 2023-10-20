@@ -84,8 +84,8 @@ class DestinationNavigatorSpec extends SpecBase {
             controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode)
         }
 
-        "must go to CAM-DES06 when user selects no" in {
-          //TODO change when CAM-DES06 check answers page built
+        "must go to CAM-02 when user selects no" in {
+          //TODO change when CAM-02 check answers page built
           val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, false)
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe

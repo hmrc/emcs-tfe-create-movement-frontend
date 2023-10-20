@@ -30,7 +30,9 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
   "TransportUnitGiveMoreInformationSummary" - {
 
     lazy val app = applicationBuilder().build()
-    val linkComponent = app.injector.instanceOf[views.html.components.link]
+    val link = app.injector.instanceOf[views.html.components.link]
+
+    object TestTransportUnitGiveMoreInformationSummary extends TransportUnitGiveMoreInformationSummary(link)
 
     Seq(TransportUnitGiveMoreInformationMessages.English, TransportUnitGiveMoreInformationMessages.Welsh).foreach { messagesForLanguage =>
 
@@ -41,10 +43,10 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's no answer" - {
 
           "must output the expected data" in {
-            TransportUnitGiveMoreInformationSummary.row(emptyUserAnswers, linkComponent) mustBe Some(
+            TestTransportUnitGiveMoreInformationSummary.row(emptyUserAnswers) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(linkComponent(controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, CheckMode).url, messagesForLanguage.valueWhenAnswerNotPresent))),
+                value = Value(HtmlContent(link(controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, CheckMode).url, messagesForLanguage.valueWhenAnswerNotPresent))),
                 actions = Seq()
               )
             )
@@ -57,7 +59,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
 
             val answers = emptyUserAnswers.set(TransportUnitGiveMoreInformationPage, "value")
 
-            TransportUnitGiveMoreInformationSummary.row(answers, linkComponent) mustBe Some(
+            TestTransportUnitGiveMoreInformationSummary.row(answers) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),

@@ -56,9 +56,8 @@ class TransportUnitGiveMoreInformationController @Inject()(
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       withAnswer(TransportUnitTypePage) { transportUnitType =>
         formProvider(transportUnitType).bindFromRequest().fold(
-          formWithErrors => renderView(BadRequest, formWithErrors, mode, transportUnitType),
-          value =>
-            saveAndRedirect(TransportUnitGiveMoreInformationPage, value, mode)
+          renderView(BadRequest, _, mode, transportUnitType),
+          saveAndRedirect(TransportUnitGiveMoreInformationPage, _, mode)
         )
       }
     }

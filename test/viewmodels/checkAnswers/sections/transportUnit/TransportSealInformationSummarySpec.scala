@@ -36,6 +36,8 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
   lazy val app: Application = applicationBuilder().build()
   lazy val link: link = app.injector.instanceOf[link]
 
+  object TestTransportSealInformationSummary extends TransportSealInformationSummary(link)
+
   "TransportSealInformationSummary" - {
 
     lazy val app = applicationBuilder().build()
@@ -52,7 +54,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealInformationSummary.row(request.userAnswers, link) mustBe None
+            TestTransportSealInformationSummary.row(request.userAnswers) mustBe None
           }
         }
 
@@ -62,7 +64,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax))
 
-            TransportSealInformationSummary.row(request.userAnswers, link) mustBe
+            TestTransportSealInformationSummary.row(request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -85,7 +87,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMin))
 
-            TransportSealInformationSummary.row(request.userAnswers, link) mustBe
+            TestTransportSealInformationSummary.row(request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,

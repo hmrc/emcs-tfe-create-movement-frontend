@@ -37,127 +37,39 @@ class TransportUnitGiveMoreInformationViewSpec extends ViewSpecBase with ViewBeh
 
     Seq(TransportUnitGiveMoreInformationMessages.English, TransportUnitGiveMoreInformationMessages.Welsh).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
+      Seq(
+        Container -> "container",
+        FixedTransport -> "fixed transport installation",
+        Tractor -> "tractor",
+        Trailer -> "trailer",
+        Vehicle -> "vehicle"
+      ).foreach { transportUnitTypeAndMessage =>
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+        s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: ${transportUnitTypeAndMessage._2}" - {
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-        val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(Container)
+          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            transportUnitType = Container
-          ).toString())
+          val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
+          val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(transportUnitTypeAndMessage._1)
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("container"),
-          Selectors.h1 -> messagesForLanguage.heading("container"),
-          Selectors.hint -> messagesForLanguage.hintText,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
+          implicit val doc: Document = Jsoup.parse(
+            view(
+              form = form,
+              mode = NormalMode,
+              transportUnitType = transportUnitTypeAndMessage._1
+            ).toString())
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Fixed transport installation" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-        val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(FixedTransport)
-
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            transportUnitType = FixedTransport
-          ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("fixed transport installation"),
-          Selectors.h1 -> messagesForLanguage.heading("fixed transport installation"),
-          Selectors.hint -> messagesForLanguage.hintText,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Tractor" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-        val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(Tractor)
-
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            transportUnitType = Tractor
-          ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("tractor"),
-          Selectors.h1 -> messagesForLanguage.heading("tractor"),
-          Selectors.hint -> messagesForLanguage.hintText,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Trailer" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-        val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(Trailer)
-
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            transportUnitType = Trailer
-          ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("trailer"),
-          Selectors.h1 -> messagesForLanguage.heading("trailer"),
-          Selectors.hint -> messagesForLanguage.hintText,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Vehicle" - {
-
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-        val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(Vehicle)
-
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            mode = NormalMode,
-            transportUnitType = Vehicle
-          ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("vehicle"),
-          Selectors.h1 -> messagesForLanguage.heading("vehicle"),
-          Selectors.hint -> messagesForLanguage.hintText,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(transportUnitTypeAndMessage._2),
+            Selectors.h1 -> messagesForLanguage.heading(transportUnitTypeAndMessage._2),
+            Selectors.hint -> messagesForLanguage.hintText,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
       }
     }
-
   }
 }
 

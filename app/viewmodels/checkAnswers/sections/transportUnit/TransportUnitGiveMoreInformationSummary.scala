@@ -26,13 +26,15 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportUnitGiveMoreInformationSummary {
+import javax.inject.Inject
 
-  def row(answers: UserAnswers, linkComponent: views.html.components.link)(implicit messages: Messages): Option[SummaryListRow] = {
+class TransportUnitGiveMoreInformationSummary @Inject()(link: views.html.components.link) {
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = {
     val optMoreInformation = answers.get(TransportUnitGiveMoreInformationPage)
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
-      value = ValueViewModel(getValue(optMoreInformation, linkComponent,
+      value = ValueViewModel(getValue(optMoreInformation,
         controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, CheckMode))),
       actions = {
         if(optMoreInformation.isEmpty) Seq() else Seq(
@@ -46,9 +48,9 @@ object TransportUnitGiveMoreInformationSummary {
     ))
   }
 
-  private def getValue(optValue: Option[String], linkComponent: views.html.components.link, redirectUrl: Call)(implicit messages: Messages): Content = {
+  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages): Content = {
     if(optValue.isEmpty) {
-      HtmlContent(linkComponent(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue")))
+      HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue")))
     } else {
       Text(optValue.get)
     }

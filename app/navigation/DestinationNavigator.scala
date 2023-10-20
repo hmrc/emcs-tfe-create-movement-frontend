@@ -48,8 +48,10 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       //TODO update to next page when finished
       (userAnswers: UserAnswers) =>
         userAnswers.get(DestinationDetailsChoicePage) match {
-          case Some(true) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          case Some(_) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(true) =>
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          case Some(_) => //TODO update to CAM-DES06 when built
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
         }

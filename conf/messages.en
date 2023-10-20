@@ -611,6 +611,12 @@ destinationWarehouseVat.error.length = VAT registration number must be 14 charac
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 destinationWarehouseVat.link.skip = Skip this question for now
 
+destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
+destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?
+destinationConsigneeDetails.checkYourAnswersLabel = Use consignee details
+destinationConsigneeDetails.error.required = Select yes if the place of destination and consignee details are the same
+destinationConsigneeDetails.change.hidden = use consignee details
+
 transportSealChoice.heading.1 = Is there a commercial seal on this container?
 transportSealChoice.heading.2 = Is there a commercial seal on this vehicle?
 transportSealChoice.heading.3 = Is there a commercial seal on this trailer?

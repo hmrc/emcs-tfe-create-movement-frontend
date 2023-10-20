@@ -35,6 +35,29 @@ class DestinationNavigatorSpec extends SpecBase {
           routes.IndexController.onPageLoad(testErn)
       }
 
+      "for the DestinationConsigneeDetailsPage" - {
+        "must go to Destination Business Name page (CAM-DES04) if answer is no" in {
+          val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
+
+          navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
+            controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+
+        }
+
+        "must go to Destination Check Answers page (CAM-DES06) if answer is yes" in {
+          //TODO change when CAM-DES06 check answers page built
+          val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, true)
+
+          navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        "must go to Journey Recovery Controller if no answer is present" in {
+          navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
+
       "for the DestinationBusinessNamePage" - {
 
         "must go to Destination Address page" in {
@@ -54,6 +77,21 @@ class DestinationNavigatorSpec extends SpecBase {
       }
 
       "for the DestinationDetailsChoicePage" - {
+        "must go to CAM-DES03 when user selects yes" in {
+          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode)
+        }
+
+        "must go to CAM-02 when user selects no" in {
+          //TODO change when CAM-02 check answers page built
+          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, false)
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
         "must go to test Only page" in {
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe

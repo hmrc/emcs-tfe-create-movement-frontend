@@ -28,6 +28,16 @@ class DestinationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
+    case DestinationConsigneeDetailsPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(DestinationConsigneeDetailsPage) match {
+        case Some(true) =>
+          //TODO redirect to CAM-DES06 when built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(false) =>
+          controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        case _ =>
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
     case DestinationBusinessNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
@@ -38,8 +48,10 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       //TODO update to next page when finished
       (userAnswers: UserAnswers) =>
         userAnswers.get(DestinationDetailsChoicePage) match {
-          case Some(true) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          case Some(_) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(true) =>
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          case Some(_) => //TODO update to CAM-02 when built
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
         }

@@ -16,7 +16,6 @@
 
 package queries
 
-import models.UserAnswers
 import play.api.libs.json.JsPath
 
 sealed trait Query {

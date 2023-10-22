@@ -53,10 +53,14 @@ final case class UserAnswers(ern: String,
     get(query.asInstanceOf[Gettable[A]]).map(query.derive)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswers =
-    page.cleanup(Some(value), handleResult(data.setObject(page.path, Json.toJson(value))))
+    handleResult {
+      data.setObject(page.path, Json.toJson(value))
+    }
 
   def remove[A](page: Settable[A]): UserAnswers =
-    page.cleanup(Option.empty[A], handleResult(data.removeObject(page.path)))
+    handleResult {
+      data.removeObject(page.path)
+    }
 
   private[models] def handleResult: JsResult[JsObject] => UserAnswers = {
     case JsSuccess(updatedAnswers, _) =>

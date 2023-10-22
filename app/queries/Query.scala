@@ -26,6 +26,4 @@ sealed trait Query {
 
 trait Gettable[+A] extends Query
 
-trait Settable[+A] extends Query {
-  def cleanup[T >: A](value: Option[T], answers: UserAnswers): UserAnswers = answers
-}
+trait Settable[+A] extends Query

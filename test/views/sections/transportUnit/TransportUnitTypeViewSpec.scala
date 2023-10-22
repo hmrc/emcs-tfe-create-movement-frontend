@@ -19,7 +19,7 @@ package views.sections.transportUnit
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
 import forms.TransportUnitTypeFormProvider
-import models.{Index, NormalMode}
+import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -47,7 +47,7 @@ class TransportUnitTypeViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
-            idx = Index(0),
+            idx = testIndex1,
             mode = NormalMode
           ).toString())
 

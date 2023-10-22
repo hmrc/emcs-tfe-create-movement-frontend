@@ -18,12 +18,11 @@ package controllers.sections.transportUnit
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models.requests.DataRequest
 import models.{Index, NormalMode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
@@ -37,7 +36,7 @@ class TransportUnitIndexController @Inject()(
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
                                               override val userAllowList: UserAllowListAction,
-                                              val controllerComponents: MessagesControllerComponents,
+                                              val controllerComponents: MessagesControllerComponents
                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, lrn: String): Action[AnyContent] =

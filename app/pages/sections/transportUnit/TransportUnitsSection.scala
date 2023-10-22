@@ -22,4 +22,5 @@ import play.api.libs.json.{JsArray, JsPath}
 case object TransportUnitsSection extends Section[JsArray] {
   override def path: JsPath = JsPath \ toString
   override def toString: String = "transportUnits"
+  val MAX: Int = 99
 }

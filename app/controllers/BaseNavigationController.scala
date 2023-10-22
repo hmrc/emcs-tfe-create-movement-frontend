@@ -24,6 +24,7 @@ import pages.QuestionPage
 import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, Reads}
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
+import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
@@ -94,6 +95,25 @@ trait BaseNavigationController extends BaseController with Logging {
     request.userAnswers.get(page) match {
       case Some(answer) if answer != newAnswer => cleansingFunction
       case _ => request.userAnswers
+    }
+  }
+
+  def validateIndexForJourneyEntry[T, A](
+                                    itemCount: Derivable[T, Int], idx: Index, max: Int = Int.MaxValue
+                                  )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
+    request.userAnswers.get(itemCount) match {
+      case Some(value) if (idx.position >= 0 && idx.position <= value) && idx.position < max  => onSuccess
+      case None if idx.position == 0 => onSuccess
+      case _ => onFailure
+    }
+  }
+
+  def validateIndex[T, A](
+                           itemCount: Derivable[T, Int], idx: Index
+                         )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
+    request.userAnswers.get(itemCount) match {
+      case Some(value) if (idx.position >= 0 && idx.position < value) => onSuccess
+      case _ => onFailure
     }
   }
 

@@ -43,10 +43,14 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's no answer" - {
 
           "must output the expected data" in {
-            TestTransportUnitGiveMoreInformationSummary.row(emptyUserAnswers) mustBe Some(
+            TestTransportUnitGiveMoreInformationSummary.row(testIndex1, emptyUserAnswers) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(link(controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, CheckMode).url, messagesForLanguage.valueWhenAnswerNotPresent))),
+                value = Value(
+                  HtmlContent(link(
+                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                    messagesForLanguage.valueWhenAnswerNotPresent))
+                ),
                 actions = Seq()
               )
             )
@@ -57,16 +61,16 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
 
           "must output the expected row" in {
 
-            val answers = emptyUserAnswers.set(TransportUnitGiveMoreInformationPage, "value")
+            val answers = emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), "value")
 
-            TestTransportUnitGiveMoreInformationSummary.row(answers) mustBe Some(
+            TestTransportUnitGiveMoreInformationSummary.row(testIndex1, answers) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, CheckMode).url,
+                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
                     id = "transportUnitMoreInformation"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

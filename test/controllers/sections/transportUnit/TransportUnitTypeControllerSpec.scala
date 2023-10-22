@@ -19,10 +19,11 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import forms.TransportUnitTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.{Index, NormalMode, TransportUnitType}
+import models.{NormalMode, TransportUnitType}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -34,12 +35,16 @@ import scala.concurrent.Future
 
 class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  lazy val transportUnitTypeRoute = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, Index(0), NormalMode).url
+  lazy val transportUnitTypeRoute: String =
+    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+
+  lazy val transportUnitTypeRouteOutOfBounds: String =
+    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
 
   val formProvider = new TransportUnitTypeFormProvider()
-  val form = formProvider()
+  val form: Form[TransportUnitType] = formProvider()
 
   "TransportUnitType Controller" - {
 
@@ -55,13 +60,13 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[TransportUnitTypeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, Index(0), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(Index(0)), TransportUnitType.values.head)
+      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.values.head)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +79,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(TransportUnitType.values.head), Index(0), NormalMode)(dataRequest(request), messages(application)).toString
+          form.fill(TransportUnitType.values.head), testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -102,6 +107,49 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       }
     }
 
+    "must redirect to the index controller if index is not next in index list for GET" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, transportUnitTypeRouteOutOfBounds)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+      }
+    }
+
+    "must redirect to the index controller if index is not next in index list for POST" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, transportUnitTypeRouteOutOfBounds)
+            .withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -118,7 +166,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, Index(0), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.transportUnit.TransportSealChoicePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -25,8 +25,8 @@ import viewmodels.implicits._
 
 object TransportSealChoiceSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealChoicePage).map {
+  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(TransportSealChoicePage(idx)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
@@ -35,7 +35,10 @@ object TransportSealChoiceSummary  {
           key     = "transportSealChoice.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(answers.ern, answers.lrn, CheckMode).url, id="changeTransportSealChoice")
+            ActionItemViewModel(
+              "site.change",
+              controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              id="changeTransportSealChoice")
               .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
           )
         )

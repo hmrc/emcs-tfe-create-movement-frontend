@@ -54,7 +54,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TestTransportSealInformationSummary.row(request.userAnswers) mustBe None
+            TestTransportSealInformationSummary.row(testIndex1, request.userAnswers) mustBe None
           }
         }
 
@@ -62,9 +62,9 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
           s"must output the expected row for TransportSealInformation" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage(testIndex1), transportSealTypeModelMax))
 
-            TestTransportSealInformationSummary.row(request.userAnswers) mustBe
+            TestTransportSealInformationSummary.row(testIndex1, request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -72,7 +72,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
                       id = "changeTransportSealInformation"
                     ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
@@ -85,14 +85,14 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
           s"must output a row with a link to add more information" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMin))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage(testIndex1), transportSealTypeModelMin))
 
-            TestTransportSealInformationSummary.row(request.userAnswers) mustBe
+            TestTransportSealInformationSummary.row(testIndex1, request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
                   value = ValueViewModel(HtmlContent(link(
-                    link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, CheckMode).url,
+                    link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
                     messageKey = messagesForLanguage.moreInfoCYAAddInfo
                   )))
                 )

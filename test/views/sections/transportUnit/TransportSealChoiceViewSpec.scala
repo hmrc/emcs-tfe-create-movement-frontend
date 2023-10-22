@@ -47,7 +47,7 @@ class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
             implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage, Tractor))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))
             val view = app.injector.instanceOf[TransportSealChoiceView]
             val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(transportUnitType)
 

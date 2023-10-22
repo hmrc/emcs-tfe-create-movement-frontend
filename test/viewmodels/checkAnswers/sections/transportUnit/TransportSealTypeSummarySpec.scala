@@ -47,7 +47,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealTypeSummary.row(request.userAnswers) mustBe None
+            TransportSealTypeSummary.row(testIndex1, request.userAnswers) mustBe None
           }
         }
 
@@ -55,9 +55,9 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
 
           s"must output the expected row for TransportSealType" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage, transportSealTypeModelMax))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage(testIndex1), transportSealTypeModelMax))
 
-            TransportSealTypeSummary.row(request.userAnswers) mustBe
+            TransportSealTypeSummary.row(testIndex1, request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.sealTypeCYA,
@@ -65,7 +65,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
                       id = "changeTransportSealType"
                     ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
                   )

@@ -20,7 +20,8 @@ import base.SpecBase
 import fixtures.TransportUnitFixtures
 import forms.sections.transportUnit.TransportSealTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.TransportUnitType.Container
+import models.TransportUnitType.{Container, Tractor}
+import models.sections.transportUnit.TransportSealTypeModel
 import models.{NormalMode, TransportUnitType, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
@@ -43,7 +44,9 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     val formProvider = new TransportSealTypeFormProvider()
     val form = formProvider()
 
-    lazy val transportSealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testLrn, NormalMode).url
+    lazy val transportUnit1SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+
+    lazy val transportUnit2SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
 
     val application = applicationBuilder(userAnswers)
       .overrides(
@@ -59,12 +62,12 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
   "TransportSealType Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage, Container)
+      .set(TransportUnitTypePage(testIndex1), Container)
     )) {
 
       running(application) {
 
-        val request = FakeRequest(GET, transportSealTypeRoute)
+        val request = FakeRequest(GET, transportUnit1SealTypeRoute)
 
         val result = route(application, request).value
 
@@ -72,18 +75,18 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form,
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage, Container)
-      .set(TransportSealTypePage, transportSealTypeModelMax)
+      .set(TransportUnitTypePage(testIndex1), Container)
+      .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
     )) {
       running(application) {
 
-        val request = FakeRequest(GET, transportSealTypeRoute)
+        val request = FakeRequest(GET, transportUnit1SealTypeRoute)
 
         val result = route(application, request).value
 
@@ -91,18 +94,18 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form.fill(transportSealTypeModelMax),
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when only the seal type has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage, Container)
-      .set(TransportSealTypePage, transportSealTypeModelMin)
+      .set(TransportUnitTypePage(testIndex1), Container)
+      .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
     )) {
       running(application) {
 
-        val request = FakeRequest(GET, transportSealTypeRoute)
+        val request = FakeRequest(GET, transportUnit1SealTypeRoute)
 
         val result = route(application, request).value
 
@@ -110,17 +113,18 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form.fill(transportSealTypeModelMin),
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
 
 
-    "must redirect to journey recovery when no answer has been provided for transport unit type onPageLoad" in new Fixture() {
+    "must redirect to journey recovery when no answer has been provided for transport unit type onPageLoad" in new Fixture(
+      Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {
 
-        val request = FakeRequest(GET, transportSealTypeRoute)
+        val request = FakeRequest(GET, transportUnit1SealTypeRoute)
 
         val result = route(application, request).value
 
@@ -130,14 +134,14 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage, Container)
+      .set(TransportUnitTypePage(testIndex1), Container)
     )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       running(application) {
         val request =
-          FakeRequest(POST, transportSealTypeRoute)
+          FakeRequest(POST, transportUnit1SealTypeRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -148,12 +152,12 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage, Container)
+      .set(TransportUnitTypePage(testIndex1), Container)
     )) {
 
       running(application) {
         val request =
-          FakeRequest(POST, transportSealTypeRoute)
+          FakeRequest(POST, transportUnit1SealTypeRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -164,16 +168,17 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = boundForm,
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to journey recovery when no answer has been provided for transport unit type onSubmit" in new Fixture() {
+    "must redirect to journey recovery when no answer has been provided for transport unit type onSubmit" in new Fixture(
+      Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {
         val request =
-          FakeRequest(POST, transportSealTypeRoute)
+          FakeRequest(POST, transportUnit1SealTypeRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val result = route(application, request).value
@@ -186,7 +191,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
       running(application) {
-        val request = FakeRequest(GET, transportSealTypeRoute)
+        val request = FakeRequest(GET, transportUnit1SealTypeRoute)
 
         val result = route(application, request).value
 
@@ -199,13 +204,42 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
       running(application) {
         val request =
-          FakeRequest(POST, transportSealTypeRoute)
+          FakeRequest(POST, transportUnit1SealTypeRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to transport unit index controller for a GET if the index in the url is not valid" in new Fixture(Some(emptyUserAnswers
+      .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("some", None))
+      .set(TransportUnitTypePage(testIndex1), Tractor))) {
+
+      running(application) {
+        val request = FakeRequest(GET, transportUnit2SealTypeRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+      }
+    }
+
+    "must redirect to transport unit index controller for a POST if the index in the url is not valid" in new Fixture(Some(emptyUserAnswers
+      .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("some", None))
+      .set(TransportUnitTypePage(testIndex1), Tractor))) {
+
+      running(application) {
+        val request = FakeRequest(POST, transportUnit2SealTypeRoute)
+          .withFormUrlEncodedBody("value" -> "true")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
       }
     }
   }

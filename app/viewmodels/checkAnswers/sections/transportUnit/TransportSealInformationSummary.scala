@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.transportUnit
 
 import com.google.inject.Inject
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.transportUnit.TransportSealTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -28,14 +28,14 @@ import viewmodels.implicits._
 
 class TransportSealInformationSummary @Inject()(link: views.html.components.link) {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealTypePage).map {
+  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(TransportSealTypePage(idx)).map {
       answer =>
         answer.moreInfo.fold {
           SummaryListRowViewModel(
             key = "transportSealType.moreInfo.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(link(
-              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
               messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
           )
         }{ info =>
@@ -45,7 +45,7 @@ class TransportSealInformationSummary @Inject()(link: views.html.components.link
               actions = Seq(
                 ActionItemViewModel(
                   "site.change",
-                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
                   "changeTransportSealInformation"
                 ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
               )

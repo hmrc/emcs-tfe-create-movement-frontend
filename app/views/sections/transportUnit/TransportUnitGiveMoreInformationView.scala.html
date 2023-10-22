@@ -32,11 +32,11 @@
         helper: TransportUnitTypeHelper
 )
 
-@(form: Form[_], mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], idx: Index, mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationPage)) {
+@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationPage(idx))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onSubmit(request.ern, request.lrn, mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onSubmit(request.ern, request.lrn, idx, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -48,7 +48,7 @@
             id = "value",
             name = "value",
             maxLength = Some(350),
-            label = LabelViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationPage))).asPageHeading(LabelSize.Large),
+            label = LabelViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationPage(idx)))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(Hint(content = HtmlContent(
                 messages("transportUnitGiveMoreInformation.hint.1") + "<br><br>" + messages("transportUnitGiveMoreInformation.hint.2")

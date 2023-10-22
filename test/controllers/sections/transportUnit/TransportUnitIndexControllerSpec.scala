@@ -18,7 +18,7 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import mocks.services.MockUserAnswersService
-import models.{Index, NormalMode, TransportUnitType}
+import models.{NormalMode, TransportUnitType}
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -40,13 +40,13 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, Index(0), NormalMode).url)
+          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url)
       }
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present" in {
 
-      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(Index(0)), TransportUnitType.Vehicle)
+      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

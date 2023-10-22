@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.{CountryModel, ExemptOrganisationDetailsModel, TraderKnownFacts, UserAddress, UserAnswers}
+import models.{CountryModel, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.InvoiceDetailsModel
@@ -42,6 +42,8 @@ trait BaseFixtures {
   val testId: String = "123"
   val testUrl: String = "testUrl"
   val testBusinessName: String = "testName"
+  val testIndex1: Index = Index(0)
+  val testIndex2: Index = Index(1)
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT","12345")
   val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber,None, Some("1234"))

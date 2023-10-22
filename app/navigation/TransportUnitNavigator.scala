@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import controllers.sections.transportUnit.{routes => trasnportUnitRoutes}
 import models.{Mode, NormalMode, UserAnswers}
 import pages.Page
 import pages.sections.transportUnit._
@@ -28,32 +29,32 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
-      controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
-    case TransportUnitIdentityPage(_) => (userAnswers: UserAnswers) =>
-      controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      trasnportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+    case TransportUnitIdentityPage(idx) => (userAnswers: UserAnswers) =>
+      trasnportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
 
-    case TransportSealChoicePage => (userAnswers: UserAnswers) =>
-      userAnswers.get(TransportSealChoicePage) match {
+    case TransportSealChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(TransportSealChoicePage(idx)) match {
         case Some(true) =>
-          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          trasnportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
         case _ =>
-          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
       }
 
-    case TransportSealTypePage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+    case TransportSealTypePage(idx) => (userAnswers: UserAnswers) =>
+      trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
 
-    case TransportUnitGiveMoreInformationChoicePage =>
+    case TransportUnitGiveMoreInformationChoicePage(idx) =>
       (userAnswers: UserAnswers) =>
-        userAnswers.get(TransportUnitGiveMoreInformationChoicePage) match {
+        userAnswers.get(TransportUnitGiveMoreInformationChoicePage(idx)) match {
           case Some(true) =>
-            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
           case _ =>
             //TODO redirect to CAM-TU07
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
 
-    case TransportUnitGiveMoreInformationPage => (_: UserAnswers) =>
+    case TransportUnitGiveMoreInformationPage(idx) => (_: UserAnswers) =>
       // TODO redirect to CAM-TU07
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 

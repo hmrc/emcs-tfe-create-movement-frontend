@@ -26,3 +26,7 @@ POST       /trader/:ern/draft/:lrn/destination/warehouse-vat             control
 GET        /trader/:ern/draft/:lrn/destination/warehouse-vat/change      controllers.sections.destination.DestinationWarehouseVatController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:lrn/destination/warehouse-vat/change      controllers.sections.destination.DestinationWarehouseVatController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:lrn/destination/warehouse-excise           controllers.sections.destination.DestinationWarehouseExciseController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:lrn/destination/warehouse-excise           controllers.sections.destination.DestinationWarehouseExciseController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:lrn/Destination/warehouse-excise/change    controllers.sections.destination.DestinationWarehouseExciseController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:lrn/Destination/warehouse-excise/change    controllers.sections.destination.DestinationWarehouseExciseController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)

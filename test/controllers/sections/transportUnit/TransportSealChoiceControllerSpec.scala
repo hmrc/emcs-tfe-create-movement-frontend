@@ -107,7 +107,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    "must redirect to the Journey correction controller when missing the transport unit type answer" in new Setup(
+    "must redirect to the transport unit index controller when missing the transport unit type answer" in new Setup(
       Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {
@@ -187,7 +187,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    "must redirect to the journey correction controller when transport unit type has not been answered" in new Setup(
+    "must redirect to the transport unit index controller when transport unit type has not been answered" in new Setup(
       Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {

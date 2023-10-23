@@ -141,7 +141,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to the guarantor arranger controller for a GET if no guarantor arranger value is found" in {
+    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

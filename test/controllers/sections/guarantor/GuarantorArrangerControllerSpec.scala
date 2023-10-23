@@ -126,7 +126,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       }
     }
 
-    "must redirect to guarantor required controller for a GET if no guarantor required is found" in {
+    "must redirect to guarantor index controller for a GET if no guarantor required is found" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {

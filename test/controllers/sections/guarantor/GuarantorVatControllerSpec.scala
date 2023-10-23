@@ -140,7 +140,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to the guarantor arranger controller for a GET if no guarantor arranger value is found" in {
+    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found" in {
       val userAnswersSoFar = emptyUserAnswers
         .set(GuarantorRequiredPage, true)
 
@@ -157,7 +157,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to the guarantor arranger controller for a POST if no guarantor arranger value is found" in {
+    "must redirect to the guarantor index controller for a POST if no guarantor arranger value is found" in {
       val userAnswersSoFar = emptyUserAnswers
         .set(GuarantorRequiredPage, true)
 

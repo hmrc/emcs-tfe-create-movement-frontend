@@ -122,7 +122,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
   )
 
-  "must redirect to the guarantor arranger if user hasn't answered that yet" in
+  "must redirect to the guarantor index if user hasn't answered that yet" in
     new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
 
       running(application) {

@@ -23,7 +23,6 @@ object DispatchCheckAnswersMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
     val title = titleHelper(heading)
-    val subheading = "Place of dispatch details"
     val traderNameLabel = "Trader name"
     val traderNameChangeHidden = "Trader name"
     val addressLabel: String = "Address"

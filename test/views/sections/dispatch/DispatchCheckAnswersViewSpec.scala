@@ -48,7 +48,6 @@ class DispatchCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.dispatchSection,
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(2) -> messagesForLanguage.subheading,
           Selectors.button -> messagesForLanguage.continue
         ))
       }

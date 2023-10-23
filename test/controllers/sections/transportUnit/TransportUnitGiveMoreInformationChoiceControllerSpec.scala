@@ -147,7 +147,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU06)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRouteTU06)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
@@ -177,7 +177,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU07)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRouteTU07)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()

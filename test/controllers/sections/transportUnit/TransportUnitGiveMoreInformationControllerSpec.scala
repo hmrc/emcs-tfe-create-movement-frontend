@@ -118,7 +118,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()

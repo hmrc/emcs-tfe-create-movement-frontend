@@ -611,6 +611,10 @@ transportUnitGiveMoreInformation.transportUnitType.3 = trailer
 transportUnitGiveMoreInformation.transportUnitType.4 = tractor
 transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installation
 
+transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?
+transportUnitRemoveUnit.heading = Are you sure you want to remove transport unit {0}?
+transportUnitRemoveUnit.error.required = Select yes if you want to remove this transport unit
+
 dispatchCheckAnswers.title = Check your answers
 dispatchCheckAnswers.heading = Check your answers
 
@@ -622,4 +626,3 @@ destinationWarehouseExcise.error.required = Enter the excise registration number
 destinationWarehouseExcise.error.length = ERN must be 16 characters or less
 destinationWarehouseExcise.change.hidden = DestinationWarehouseExcise
 destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
-

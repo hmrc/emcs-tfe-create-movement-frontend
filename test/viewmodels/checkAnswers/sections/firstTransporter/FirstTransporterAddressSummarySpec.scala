@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.firstTransporter
+package viewmodels.checkAnswers.sections.firstTransporter
 
 import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterAddressMessages

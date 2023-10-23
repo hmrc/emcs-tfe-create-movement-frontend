@@ -633,7 +633,7 @@ transportSealChoice.error.required.4 = Select yes if there is a commercial seal 
 transportSealChoice.error.required.5 = Select yes if there is a commercial seal on this fixed transport installation
 transportSealChoice.hint = This is a seal that prevents items being removed or added.
 transportSealChoice.checkYourAnswersLabel = Commercial seal
-transportSealChoice.change.hidden = TransportSealChoice
+transportSealChoice.change.hidden = commercial seal
 
 transportSealType.heading.1 = What type of commercial seal is on this container?
 transportSealType.heading.2 = What type of commercial seal is on this vehicle?

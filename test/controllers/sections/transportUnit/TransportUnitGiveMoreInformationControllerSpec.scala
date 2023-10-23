@@ -23,8 +23,8 @@ import mocks.services.MockUserAnswersService
 import models.NormalMode
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.Tractor
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind

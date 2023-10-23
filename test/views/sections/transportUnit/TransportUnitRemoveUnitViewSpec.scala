@@ -18,16 +18,14 @@ package views.sections.transportUnit
 
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitRemoveUnitMessages
-import forms.sections.transportUnit.{TransportUnitGiveMoreInformationChoiceFormProvider, TransportUnitRemoveUnitFormProvider}
-import models.NormalMode
-import models.TransportUnitType._
+import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.transportUnit.{TransportUnitGiveMoreInformationChoiceView, TransportUnitRemoveUnitView}
+import views.html.sections.transportUnit.TransportUnitRemoveUnitView
 import views.{BaseSelectors, ViewBehaviours}
 
 class TransportUnitRemoveUnitViewSpec extends ViewSpecBase with ViewBehaviours {

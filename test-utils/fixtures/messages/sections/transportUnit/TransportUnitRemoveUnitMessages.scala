@@ -17,7 +17,6 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
-import models.TransportUnitType
 
 object TransportUnitRemoveUnitMessages {
 

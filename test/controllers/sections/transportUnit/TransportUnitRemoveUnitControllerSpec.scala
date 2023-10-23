@@ -19,15 +19,11 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, TransportUnitType}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.{Navigator, TransportUnitNavigator}
+import models.sections.transportUnit.TransportUnitType
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import queries.TransportUnitsCount
 import services.UserAnswersService
 import views.html.sections.transportUnit.TransportUnitRemoveUnitView
 

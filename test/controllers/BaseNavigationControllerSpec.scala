@@ -43,6 +43,16 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     val page2 = new QuestionPage[String] { override def path: JsPath = __ \ "page2" }
     val value = "foo"
 
+    case class TestIndexPage(index: Index) extends QuestionPage[String] {
+      override def path: JsPath = TestDerivable.path \ index.position \ "test"
+    }
+
+    object TestDerivable extends Derivable[Seq[JsObject], Int] {
+      override val derive: Seq[JsObject] => Int = _.size
+
+      override def path: JsPath = JsPath \ "something"
+    }
+
     def onwardRoute = Call("GET", "/foo")
 
     val testNavigator = new FakeNavigator(onwardRoute)
@@ -143,15 +153,6 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
   }
 
   "validateIndexForJourneyEntry" - {
-    case class TestPage(index: Index) extends QuestionPage[String] {
-      override def path: JsPath = TestDerivable.path \ index.position \ "test"
-    }
-
-    object TestDerivable extends Derivable[Seq[JsObject], Int] {
-      override val derive: Seq[JsObject] => Int = _.size
-
-      override def path: JsPath = JsPath \ "something"
-    }
     "must run the onSuccess function" - {
       "when no user answers present and value is Index(0)" in new Test {
         val result: Boolean =
@@ -168,10 +169,10 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
             true, false
           )(
             dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TestPage(Index(0)), "answer")
-              .set(TestPage(Index(1)), "answer")
-              .set(TestPage(Index(2)), "answer")
-              .set(TestPage(Index(3)), "answer")
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(2)), "answer")
+              .set(TestIndexPage(Index(3)), "answer")
             ), implicitly
           )
 
@@ -185,7 +186,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           )(
             true, false
           )(
-            dataRequest(FakeRequest(), emptyUserAnswers.set(TestPage(Index(0)), "answer")), implicitly
+            dataRequest(FakeRequest(), emptyUserAnswers.set(TestIndexPage(Index(0)), "answer")), implicitly
           )
 
         result mustBe true
@@ -207,8 +208,8 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
             true, false
           )(
             dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TestPage(Index(0)), "answer")
-              .set(TestPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
             ), implicitly
           )
 
@@ -222,7 +223,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           )(
             true, false
           )(
-            dataRequest(FakeRequest(), emptyUserAnswers.set(TestPage(Index(0)), "answer")), implicitly
+            dataRequest(FakeRequest(), emptyUserAnswers.set(TestIndexPage(Index(0)), "answer")), implicitly
           )
 
         result mustBe false
@@ -231,15 +232,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
   }
 
   "validateIndex" - {
-    case class TestPage(index: Index) extends QuestionPage[String] {
-      override def path: JsPath = TestDerivable.path \ index.position \ "test"
-    }
 
-    object TestDerivable extends Derivable[Seq[JsObject], Int] {
-      override val derive: Seq[JsObject] => Int = _.size
-
-      override def path: JsPath = JsPath \ "something"
-    }
     "must run the onSuccess function" - {
       "when index is for a new page where index exists in previous items" in new Test {
         val result: Boolean =
@@ -249,10 +242,10 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
             true, false
           )(
             dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TestPage(Index(0)), "answer")
-              .set(TestPage(Index(1)), "answer")
-              .set(TestPage(Index(2)), "answer")
-              .set(TestPage(Index(3)), "answer")
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(2)), "answer")
+              .set(TestIndexPage(Index(3)), "answer")
             ), implicitly
           )
 
@@ -275,8 +268,8 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
             true, false
           )(
             dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TestPage(Index(0)), "answer")
-              .set(TestPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
             ), implicitly
           )
 

@@ -40,7 +40,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
 
         }
 
@@ -63,7 +63,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to Destination Address page" in {
 
           navigator.nextPage(DestinationBusinessNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
@@ -81,7 +81,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
         "must go to CAM-02 when user selects no" in {
@@ -103,7 +103,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to test Only page" in {
 
           navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 

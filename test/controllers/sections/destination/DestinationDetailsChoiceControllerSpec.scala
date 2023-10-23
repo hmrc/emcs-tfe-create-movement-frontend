@@ -47,10 +47,10 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
 
     lazy val destinationDetailsChoiceRoute: String =
-      controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode).url
+      controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode).url
 
     lazy val destinationDetailsChoiceSubmit: Call =
-      controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testLrn, NormalMode)
+      controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testDraftId, NormalMode)
 
     val formProvider: DestinationDetailsChoiceFormProvider = new DestinationDetailsChoiceFormProvider()
     lazy val form: Form[Boolean] = formProvider(RegisteredConsignee)(messages(application))

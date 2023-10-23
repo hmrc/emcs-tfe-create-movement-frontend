@@ -48,7 +48,7 @@ trait SpecBase
     UserRequest(request, testErn, testInternalId, testCredId)
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers): DataRequest[A] =
-    DataRequest(userRequest(request), testLrn, answers, testMinTraderKnownFacts)
+    DataRequest(userRequest(request), testDraftId, answers, testMinTraderKnownFacts)
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
                                    optTraderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): GuiceApplicationBuilder =

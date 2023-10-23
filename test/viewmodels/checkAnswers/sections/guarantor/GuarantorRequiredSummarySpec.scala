@@ -39,7 +39,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, CheckMode).url,
           id = "changeGuarantorRequired"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )

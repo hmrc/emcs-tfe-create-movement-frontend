@@ -46,14 +46,14 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
 
           "when the answer is `Other`" in {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Other)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 
@@ -63,14 +63,14 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
 
           "when the answer is `Consignor`" in {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
         }
 
@@ -82,7 +82,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
 
           navigator.nextPage(TransportArrangerNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
@@ -91,7 +91,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to TransportArrangerAddressPage" in {
 
           navigator.nextPage(TransportArrangerVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
@@ -100,7 +100,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to TransportArrangerCheckAnswersPage" in {
 
           navigator.nextPage(TransportArrangerAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -130,7 +130,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
                 .set(TransportArrangerVatPage, testVatNumber)
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
-                controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode)
+                controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
             }
           }
 
@@ -145,7 +145,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
                 .set(TransportArrangerAddressPage, testUserAddress)
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
-                controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+                controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
             }
           }
         }
@@ -157,7 +157,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignee)
 
             navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
         }
 
@@ -167,7 +167,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Consignor)
 
             navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+              controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
         }
       }
@@ -178,7 +178,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
 
           navigator.nextPage(TransportArrangerNamePage, CheckMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -187,7 +187,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to TransportArrangerCheckAnswersPage" in {
 
           navigator.nextPage(TransportArrangerVatPage, CheckMode, emptyUserAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -196,7 +196,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to TransportArrangerCheckAnswersPage" in {
 
           navigator.nextPage(TransportArrangerAddressPage, CheckMode, emptyUserAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
     }

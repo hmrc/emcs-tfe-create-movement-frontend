@@ -37,7 +37,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
 
   class Fixtures(userAnswers: Option[UserAnswers]) {
 
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn).url
+    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
     lazy val view = application.injector.instanceOf[GuarantorCheckAnswersView]
 
@@ -67,7 +67,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list = list,
-          submitAction = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(testErn, testLrn)
+          submitAction = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(testErn, testDraftId)
         )(dataRequest(request), messages(application)).toString
       }
     }

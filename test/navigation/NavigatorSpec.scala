@@ -62,7 +62,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the CheckYourAnswersConsignor page" in {
 
           navigator.nextPage(ConsignorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
+            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -80,7 +80,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the Confirmation page" in {
 
           navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.ConfirmationController.onPageLoad(testErn, testLrn)
+            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
         }
       }
     }
@@ -91,13 +91,13 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testLrn)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
 
       "must go from the ConsignorAddressPage to CheckYourAnswersConsignor" in {
 
         navigator.nextPage(ConsignorAddressPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn)
+          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId)
       }
     }
 
@@ -107,7 +107,7 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testLrn)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

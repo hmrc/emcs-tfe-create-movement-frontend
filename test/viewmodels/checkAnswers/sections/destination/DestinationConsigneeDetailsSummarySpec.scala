@@ -64,7 +64,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeDestinationConsigneeDetails"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -84,7 +84,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeDestinationConsigneeDetails"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

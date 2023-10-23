@@ -38,7 +38,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val howMovementTransportedRoute = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val howMovementTransportedRoute = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   val formProvider = new HowMovementTransportedFormProvider()
   val form = formProvider()

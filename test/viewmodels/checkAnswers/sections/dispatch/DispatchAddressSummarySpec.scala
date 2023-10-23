@@ -63,7 +63,7 @@ class DispatchAddressSummarySpec extends SpecBase with Matchers with UserAddress
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeDispatchAddress"
                     ).withVisuallyHiddenText(messagesForLanguage.addressChangeHidden)
                   )

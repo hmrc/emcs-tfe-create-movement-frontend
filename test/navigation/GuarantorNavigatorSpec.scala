@@ -47,7 +47,7 @@ class GuarantorNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
         "when false" - {
@@ -56,7 +56,7 @@ class GuarantorNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
+              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
         }
       }
@@ -72,7 +72,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testLrn, NormalMode)
+                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode)
               }
             }
           case value@(Consignee | Consignor) =>
@@ -83,7 +83,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
+                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
               }
             }
         }
@@ -92,21 +92,21 @@ class GuarantorNavigatorSpec extends SpecBase {
       "for GuarantorNamePage" - {
         "must goto CAM-G04" in {
           navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
       "for GuarantorVATPage" - {
         "must goto CAM-G05" in {
           navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
       "for GuarantorAddressPage" - {
         "must goto CAM-G06" in {
           navigator.nextPage(GuarantorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 

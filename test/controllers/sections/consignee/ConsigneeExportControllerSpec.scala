@@ -38,7 +38,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
   val formProvider = new ConsigneeExportFormProvider()
   val form = formProvider()
 
-  lazy val consigneeExportRoute = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeExportRoute = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "ConsigneeExport Controller" - {
 

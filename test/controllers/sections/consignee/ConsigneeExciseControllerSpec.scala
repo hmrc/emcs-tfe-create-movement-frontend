@@ -37,8 +37,8 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     val formProvider = new ConsigneeExciseFormProvider()
-    lazy val consigneeExciseRoute = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consigneeExciseSubmit = controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val consigneeExciseRoute = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val consigneeExciseSubmit = controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testDraftId, NormalMode)
 
     lazy val application = applicationBuilder(userAnswers)
       .overrides(

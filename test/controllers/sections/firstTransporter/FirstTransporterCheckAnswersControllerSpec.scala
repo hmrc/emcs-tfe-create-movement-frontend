@@ -37,7 +37,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
 
   class Fixtures(userAnswers: Option[UserAnswers]) {
 
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testLrn).url
+    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
     lazy val view = application.injector.instanceOf[FirstTransporterCheckAnswersView]
 
@@ -67,7 +67,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list = list,
-          submitAction = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(testErn, testLrn)
+          submitAction = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(testErn, testDraftId)
         )(dataRequest(request), messages(application)).toString
       }
     }

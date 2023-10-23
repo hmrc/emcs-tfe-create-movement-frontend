@@ -41,7 +41,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
           id = "changeGuarantorArranger"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )

@@ -41,8 +41,8 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val transportArrangerAddressRoute = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val transportArrangerAddressOnSubmit = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val transportArrangerAddressRoute = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val transportArrangerAddressOnSubmit = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

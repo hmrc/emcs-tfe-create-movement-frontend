@@ -40,8 +40,8 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val firstTransporterAddressRoute = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val firstTransporterAddressOnSubmit = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val firstTransporterAddressRoute = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val firstTransporterAddressOnSubmit = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

@@ -67,7 +67,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, CheckMode).url,
                         id = GiveInformationOtherTransportPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )

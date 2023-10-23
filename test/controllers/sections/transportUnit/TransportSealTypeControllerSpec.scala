@@ -44,9 +44,9 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     val formProvider = new TransportSealTypeFormProvider()
     val form = formProvider()
 
-    lazy val transportUnit1SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+    lazy val transportUnit1SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
-    lazy val transportUnit2SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+    lazy val transportUnit2SealTypeRoute = routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
     val application = applicationBuilder(userAnswers)
       .overrides(
@@ -75,7 +75,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form,
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -94,7 +94,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form.fill(transportSealTypeModelMax),
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -113,7 +113,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = form.fill(transportSealTypeModelMin),
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -168,7 +168,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         contentAsString(result) mustEqual view(
           form = boundForm,
           transportUnitType = TransportUnitType.Container,
-          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
+          onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -224,7 +224,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -239,7 +239,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
   }

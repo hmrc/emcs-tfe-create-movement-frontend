@@ -52,7 +52,7 @@ class DispatchNavigatorSpec extends SpecBase {
         "must go to CYA page" in {
 
           navigator.nextPage(DispatchAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -84,7 +84,7 @@ class DispatchNavigatorSpec extends SpecBase {
         "must go to CYA page" in {
 
           navigator.nextPage(DispatchAddressPage, CheckMode, emptyUserAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
     }

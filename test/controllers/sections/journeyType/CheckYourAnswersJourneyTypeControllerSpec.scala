@@ -40,7 +40,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
 
   class Fixtures(userAnswers: Option[UserAnswers]) {
 
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testLrn).url
+    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url
 
     lazy val view = application.injector.instanceOf[CheckYourAnswersJourneyTypeView]
 
@@ -70,7 +70,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list = list,
-          submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testLrn)
+          submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
         )(dataRequest(request), messages(application)).toString
       }
     }

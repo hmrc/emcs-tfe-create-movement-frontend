@@ -39,7 +39,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
   val formProvider = new DestinationConsigneeDetailsFormProvider()
   val form = formProvider()
 
-  lazy val destinationConsigneeDetailsRoute = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val destinationConsigneeDetailsRoute = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "DestinationConsigneeDetails Controller" - {
 

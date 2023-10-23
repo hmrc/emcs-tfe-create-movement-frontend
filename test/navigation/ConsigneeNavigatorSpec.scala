@@ -43,7 +43,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "must go to the Consignee Check Your Answers page" in {
 
         navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn)
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
       }
     }
 
@@ -52,7 +52,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "must go to the ConsigneeBusinessName page" in {
 
         navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
       }
     }
 
@@ -63,7 +63,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
             .set(ConsigneeBusinessNamePage, "a business name")
 
           navigator.nextPage(ConsigneeBusinessNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
       }
@@ -89,14 +89,14 @@ class ConsigneeNavigatorSpec extends SpecBase {
             .set(ConsigneeExportPage, false)
 
           navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
         "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
           navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
         "must go to the journey recovery" - {
@@ -119,7 +119,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
 
           "when YES - EORI Number is answered'" in {
@@ -127,7 +127,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
 
 
@@ -136,7 +136,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
       }

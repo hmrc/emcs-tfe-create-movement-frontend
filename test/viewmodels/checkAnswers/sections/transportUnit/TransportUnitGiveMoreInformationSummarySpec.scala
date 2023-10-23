@@ -48,7 +48,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
                   HtmlContent(link(
-                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     messagesForLanguage.valueWhenAnswerNotPresent))
                 ),
                 actions = Seq()
@@ -70,7 +70,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     id = "transportUnitMoreInformation"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

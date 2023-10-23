@@ -38,10 +38,10 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
   def onwardRoute: Call = Call("GET", "/foo")
 
   lazy val transportUnitTypeRoute: String =
-    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
   lazy val transportUnitTypeRouteOutOfBounds: String =
-    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
   val formProvider = new TransportUnitTypeFormProvider()
   val form: Form[TransportUnitType] = formProvider()
@@ -124,7 +124,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -146,7 +146,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

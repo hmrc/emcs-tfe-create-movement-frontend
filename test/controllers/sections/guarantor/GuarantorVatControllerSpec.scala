@@ -41,8 +41,8 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
   val formProvider = new GuarantorVatFormProvider()
   val form = formProvider()
 
-  lazy val guarantorVatRoute = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testLrn, NormalMode).url
-  lazy val guarantorVatSubmitRoute = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(testErn, testLrn, NormalMode).url
+  lazy val guarantorVatRoute = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val guarantorVatSubmitRoute = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(testErn, testDraftId, NormalMode).url
 
   "GuarantorVat Controller" - {
 
@@ -131,7 +131,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
           .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testLrn).url)
+        val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testDraftId).url)
 
         val result = route(application, request).value
 
@@ -153,7 +153,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
+          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -170,7 +170,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
+          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

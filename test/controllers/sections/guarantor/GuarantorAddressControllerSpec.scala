@@ -42,8 +42,8 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val addressRoute = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val addressOnSubmit = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val addressRoute = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val addressOnSubmit = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(
@@ -131,7 +131,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

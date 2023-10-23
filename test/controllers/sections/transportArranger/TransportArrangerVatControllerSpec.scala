@@ -41,9 +41,9 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     val formProvider = new TransportArrangerVatFormProvider()
     val form = formProvider()
 
-    lazy val transportArrangerVatRoute = routes.TransportArrangerVatController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val transportArrangerNonGbVatRoute = routes.TransportArrangerVatController.onNonGbVAT(testErn, testLrn).url
-    lazy val transportArrangerVatSubmitAction = routes.TransportArrangerVatController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val transportArrangerVatRoute = routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val transportArrangerNonGbVatRoute = routes.TransportArrangerVatController.onNonGbVAT(testErn, testDraftId).url
+    lazy val transportArrangerVatSubmitAction = routes.TransportArrangerVatController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

@@ -67,7 +67,7 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
                         id = "changeConsigneeBusinessName"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )

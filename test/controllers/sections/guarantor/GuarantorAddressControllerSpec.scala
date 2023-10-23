@@ -122,7 +122,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
   )
 
-  "must redirect to the guarantor arranger if user hasn't answered that yet" in
+  "must redirect to the guarantor index if user hasn't answered that yet" in
     new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
 
       running(application) {
@@ -131,7 +131,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 

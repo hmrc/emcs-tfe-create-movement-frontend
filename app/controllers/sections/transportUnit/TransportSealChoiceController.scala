@@ -46,7 +46,10 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
   def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswer(
+          page = TransportUnitTypePage(idx),
+          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+        ) { transportUnitType =>
           renderView(Ok, fillForm(TransportSealChoicePage(idx), formProvider(transportUnitType)), transportUnitType, idx, mode)
         }
       }
@@ -55,7 +58,10 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
   def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswer(
+          page = TransportUnitTypePage(idx),
+          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+        ) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(
             renderView(BadRequest, _, transportUnitType, idx, mode),
             isACommercialSeal => {

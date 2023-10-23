@@ -21,7 +21,7 @@ import controllers.routes
 import forms.sections.transportArranger.TransportArrangerNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import models.sections.transportArranger.TransportArranger.{Consignee, GoodsOwner}
+import models.sections.transportArranger.TransportArranger.{Consignee, GoodsOwner, Other}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
@@ -64,7 +64,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(TransportArrangerPage, GoodsOwner)
+        .set(TransportArrangerPage, Other)
         .set(TransportArrangerNamePage, "answer")
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -77,7 +77,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), GoodsOwner, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), Other, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 

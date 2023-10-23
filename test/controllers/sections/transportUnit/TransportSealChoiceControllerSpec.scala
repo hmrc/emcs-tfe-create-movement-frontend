@@ -107,7 +107,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    "must redirect to the Journey correction controller when missing the transport unit type answer" in new Setup(
+    "must redirect to the transport unit index controller when missing the transport unit type answer" in new Setup(
       Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {
@@ -117,7 +117,8 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 
@@ -186,7 +187,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    "must redirect to the journey correction controller when transport unit type has not been answered" in new Setup(
+    "must redirect to the transport unit index controller when transport unit type has not been answered" in new Setup(
       Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))) {
 
       running(application) {
@@ -197,7 +198,8 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 

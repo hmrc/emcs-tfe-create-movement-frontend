@@ -20,7 +20,7 @@ import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
-import models.{Mode, UserAddress}
+import models.{Mode, NormalMode, UserAddress}
 import navigation.TransportArrangerNavigator
 import pages.QuestionPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
@@ -51,7 +51,11 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
     controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(request.ern, request.lrn, mode)
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(TransportArrangerPage) { arranger =>
+    withAnswer(
+      page = TransportArrangerPage,
+      // TODO: update redirectRoute to journey index page when built
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
+    ) { arranger =>
       Future.successful(status(view(
         form = form,
         addressPage = addressPage,

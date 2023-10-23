@@ -65,7 +65,11 @@ class TransportArrangerVatController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    withAnswer(TransportArrangerPage) { arranger =>
+    withAnswer(
+      page = TransportArrangerPage,
+      // TODO: update redirectRoute to journey index page when built
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
+    ) { arranger =>
       Future.successful(status(view(
         form,
         routes.TransportArrangerVatController.onSubmit(request.ern, request.lrn, mode),

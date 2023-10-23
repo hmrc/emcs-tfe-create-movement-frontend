@@ -22,7 +22,7 @@ import pages.QuestionPage
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{Format, Reads}
-import play.api.mvc.Result
+import play.api.mvc.{Call, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
 
@@ -36,11 +36,14 @@ trait BaseController extends FrontendBaseController with I18nSupport with Enumer
                  (implicit request: DataRequest[_], format: Format[A]): Form[A] =
     request.userAnswers.get(page).fold(form)(form.fill)
 
-  def withAnswer[A](page: QuestionPage[A])(f: A => Future[Result])(implicit request: DataRequest[_], rds: Reads[A]): Future[Result] =
+  def withAnswer[A](
+                     page: QuestionPage[A],
+                     redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
+                   )(f: A => Future[Result])(implicit request: DataRequest[_], rds: Reads[A]): Future[Result] =
     request.userAnswers.get(page) match {
       case Some(value) => f(value)
       case None =>
         logger.warn(s"[withAnswer] Could not retrieved required answer for page: $page")
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        Future.successful(Redirect(redirectRoute))
     }
 }

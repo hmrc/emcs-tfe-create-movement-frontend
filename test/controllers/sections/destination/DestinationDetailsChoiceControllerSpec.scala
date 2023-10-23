@@ -128,7 +128,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       }
     }
 
-    "must redirect to destination type Page for a GET if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
+    "must redirect to journey recovery for a GET if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
       .set(DispatchPlacePage, GreatBritain))) {
 
       running(application) {
@@ -137,11 +137,11 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to destination type Page for a POST if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
+    "must redirect to journey recovery for a POST if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
       .set(DispatchPlacePage, GreatBritain))) {
 
       running(application) {
@@ -151,7 +151,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

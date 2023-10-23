@@ -114,7 +114,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       }
     }
 
-    "must redirect to journey recovery when no TrasnportUnitType has been answered" in {
+    "must redirect to index route when no TrasnportUnitType has been answered" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))).build()
 
       running(application) {
@@ -124,7 +124,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 

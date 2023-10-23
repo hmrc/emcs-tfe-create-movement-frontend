@@ -36,7 +36,7 @@ object DispatchAddressSummary {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeDispatchAddress"
             ).withVisuallyHiddenText(messages("address.dispatchAddress.change.hidden"))
           )

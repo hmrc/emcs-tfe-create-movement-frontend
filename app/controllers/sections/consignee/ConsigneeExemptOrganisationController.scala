@@ -66,7 +66,7 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
       status(view(
         form = form,
         items = selectItems,
-        call = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(request.ern, request.lrn, mode)
+        call = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(request.ern, request.draftId, mode)
       ))
     }
 

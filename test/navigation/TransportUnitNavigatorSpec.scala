@@ -58,7 +58,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportUnitIdentityPage(testIndex1), "weee")
 
         navigator.nextPage(TransportUnitIdentityPage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, testIndex1, NormalMode)
+          controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
       }
     }
 

@@ -40,7 +40,7 @@ object TransportArrangerVatSummary {
                 content = "site.change",
                 href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(
                   ern = request.userAnswers.ern,
-                  lrn = request.userAnswers.lrn,
+                  draftId = request.userAnswers.draftId,
                   mode = CheckMode
                 ).url,
                 id = "changeTransportArrangerVat"

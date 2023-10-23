@@ -57,7 +57,7 @@ class UserAnswersServiceSpec extends SpecBase with MockUserAnswersConnector {
 
         MockUserAnswersConnector.get(testErn, testLrn).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
         intercept[UserAnswersException](await(testService.get(testErn, testLrn))).getMessage mustBe
-          s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$testErn' & lrn: '$testLrn'"
+          s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$testErn' & draftId: '$testLrn'"
       }
     }
   }
@@ -79,7 +79,7 @@ class UserAnswersServiceSpec extends SpecBase with MockUserAnswersConnector {
 
         MockUserAnswersConnector.put(emptyUserAnswers).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
         intercept[UserAnswersException](await(testService.set(emptyUserAnswers))).getMessage mustBe
-          s"Failed to store UserAnswers in emcs-tfe for ern: '$testErn' & lrn: '$testLrn'"
+          s"Failed to store UserAnswers in emcs-tfe for ern: '$testErn' & draftId: '$testLrn'"
       }
     }
   }
@@ -101,7 +101,7 @@ class UserAnswersServiceSpec extends SpecBase with MockUserAnswersConnector {
 
         MockUserAnswersConnector.delete(testErn, testLrn).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
         intercept[UserAnswersException](await(testService.clear(emptyUserAnswers))).getMessage mustBe
-          s"Failed to delete UserAnswers from emcs-tfe for ern: '$testErn' & lrn: '$testLrn'"
+          s"Failed to delete UserAnswers from emcs-tfe for ern: '$testErn' & draftId: '$testLrn'"
       }
     }
   }

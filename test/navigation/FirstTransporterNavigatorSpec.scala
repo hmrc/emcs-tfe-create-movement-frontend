@@ -43,7 +43,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(FirstTransporterNamePage, "transporter name here")
 
         navigator.nextPage(FirstTransporterNamePage, NormalMode, userAnswers) mustBe
-          controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 
     }
@@ -52,7 +52,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       "must go to CAM-FT03" in {
         navigator.nextPage(FirstTransporterVatPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn, NormalMode)
+          controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
       }
 
     }
@@ -61,7 +61,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       "must go to CAM-FT04" in {
         navigator.nextPage(FirstTransporterAddressPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn)
+          controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
       }
 
     }

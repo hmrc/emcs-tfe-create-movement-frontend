@@ -34,13 +34,13 @@
 
 @layout(pageTitle = title(form, messages(s"guarantorName.$guarantorArranger.title"))) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorNameController.onSubmit(request.ern, request.lrn, mode)) {
+    @formHelper(action = controllers.sections.guarantor.routes.GuarantorNameController.onSubmit(request.ern, request.draftId, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("guarantor.subHeading", request.lrn), "govuk-caption-xl")
+        @h2(messages("guarantor.subHeading", request.draftId), "govuk-caption-xl")
 
         @govukInput(
             InputViewModel(

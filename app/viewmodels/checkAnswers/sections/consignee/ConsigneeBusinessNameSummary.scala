@@ -38,7 +38,7 @@ object ConsigneeBusinessNameSummary  {
           actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeConsigneeBusinessName"
             ).withVisuallyHiddenText(messages("consigneeBusinessName.change.hidden"))
           )

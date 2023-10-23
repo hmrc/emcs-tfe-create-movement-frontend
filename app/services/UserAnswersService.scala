@@ -30,19 +30,19 @@ class UserAnswersService @Inject()(userAnswersConnector: UserAnswersConnector)(i
   def get(ern: String, lrn: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
     userAnswersConnector.get(ern, lrn).map {
       case Right(answers) => answers
-      case Left(_) => throw UserAnswersException(s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$ern' & lrn: '$lrn'")
+      case Left(_) => throw UserAnswersException(s"Failed to retrieve UserAnswers from emcs-tfe for ern: '$ern' & draftId: '$lrn'")
     }
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[UserAnswers] = {
     userAnswersConnector.put(answers).map {
       case Right(answers) => answers
-      case Left(_) => throw UserAnswersException(s"Failed to store UserAnswers in emcs-tfe for ern: '${answers.ern}' & lrn: '${answers.lrn}'")
+      case Left(_) => throw UserAnswersException(s"Failed to store UserAnswers in emcs-tfe for ern: '${answers.ern}' & draftId: '${answers.draftId}'")
     }
   }
 
   def clear(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Boolean] =
-    userAnswersConnector.delete(answers.ern, answers.lrn).map {
+    userAnswersConnector.delete(answers.ern, answers.draftId).map {
       case Right(response) => response
-      case Left(_) => throw UserAnswersException(s"Failed to delete UserAnswers from emcs-tfe for ern: '${answers.ern}' & lrn: '${answers.lrn}'")
+      case Left(_) => throw UserAnswersException(s"Failed to delete UserAnswers from emcs-tfe for ern: '${answers.ern}' & draftId: '${answers.draftId}'")
     }
 }

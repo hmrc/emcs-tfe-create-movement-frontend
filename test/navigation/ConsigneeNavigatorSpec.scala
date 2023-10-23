@@ -78,7 +78,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportPage, true)
 
             navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           }
         }
 

@@ -68,7 +68,7 @@ object TransportArrangerAddressSummary {
           content = "site.change",
           href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(
             ern = request.userAnswers.ern,
-            lrn = request.userAnswers.lrn,
+            draftId = request.userAnswers.draftId,
             mode = CheckMode
           ).url,
           id = "changeTransportArrangerAddress"

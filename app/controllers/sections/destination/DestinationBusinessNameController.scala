@@ -62,6 +62,6 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
   def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
     status(view(
       form = form,
-      onSubmitCall = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(request.ern, request.lrn, mode)
+      onSubmitCall = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(request.ern, request.draftId, mode)
     ))
 }

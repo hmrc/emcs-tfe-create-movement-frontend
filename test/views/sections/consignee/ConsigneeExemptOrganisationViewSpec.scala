@@ -47,7 +47,7 @@ class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviou
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           items = Seq(),
-          call = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
+          call = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
         )
 
         behave like pageWithExpectedElementsAndMessages(Seq(

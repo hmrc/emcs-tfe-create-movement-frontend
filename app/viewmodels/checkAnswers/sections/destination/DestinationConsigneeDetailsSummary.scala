@@ -38,7 +38,7 @@ object DestinationConsigneeDetailsSummary  {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.DestinationConsigneeDetailsController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              href = routes.DestinationConsigneeDetailsController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
               id = "changeDestinationConsigneeDetails"
             ).withVisuallyHiddenText(messages("destinationConsigneeDetails.change.hidden"))
           )

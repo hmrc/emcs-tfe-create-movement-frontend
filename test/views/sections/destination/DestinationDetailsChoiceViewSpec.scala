@@ -49,7 +49,7 @@ class DestinationDetailsChoiceViewSpec extends ViewSpecBase with ViewBehaviours 
         implicit val doc: Document =
           Jsoup.parse(view(
             form,
-            controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(request.ern, request.lrn, NormalMode),
+            controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(request.ern, request.draftId, NormalMode),
             RegisteredConsignee
           ).toString())
 

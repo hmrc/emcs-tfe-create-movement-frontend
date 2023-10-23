@@ -29,26 +29,26 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+      trasnportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
     case TransportUnitIdentityPage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+      trasnportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case TransportSealChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportSealChoicePage(idx)) match {
         case Some(true) =>
-          trasnportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+          trasnportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+          trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
     case TransportSealTypePage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+      trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case TransportUnitGiveMoreInformationChoicePage(idx) =>
       (userAnswers: UserAnswers) =>
         userAnswers.get(TransportUnitGiveMoreInformationChoicePage(idx)) match {
           case Some(true) =>
-            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.lrn, idx, NormalMode)
+            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
             //TODO redirect to CAM-TU07
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()

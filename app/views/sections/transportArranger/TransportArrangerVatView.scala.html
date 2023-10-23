@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("transportArranger.subHeading", request.lrn), "govuk-caption-xl")
+        @h2(messages("transportArranger.subHeading", request.draftId), "govuk-caption-xl")
         @govukInput(
             InputViewModel(
                 field = form("value"),
@@ -55,7 +55,7 @@
 
         @p() {
             @link(
-                controllers.sections.transportArranger.routes.TransportArrangerVatController.onNonGbVAT(request.ern, request.lrn).url,
+                controllers.sections.transportArranger.routes.TransportArrangerVatController.onNonGbVAT(request.ern, request.draftId).url,
                 s"transportArrangerVat.$arranger.notUkVatLink"
             )
         }

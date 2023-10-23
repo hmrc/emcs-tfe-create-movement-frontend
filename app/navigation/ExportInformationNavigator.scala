@@ -29,7 +29,7 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
   private val normalRoutes: Page => UserAnswers => Call = {
 
     case ExportCustomsOfficePage => (userAnswers: UserAnswers) =>
-      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     //TODO: Route to next section when available
     case ExportInformationCheckAnswersPage => (_: UserAnswers) =>

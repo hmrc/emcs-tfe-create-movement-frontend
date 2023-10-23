@@ -32,13 +32,13 @@
 
 @layout(pageTitle = title(form, messages("consigneeExport.title"))) {
 
-    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("consignee.subHeading", request.lrn),"govuk-caption-xl")
+        @h2(messages("consignee.subHeading", request.draftId),"govuk-caption-xl")
 
         @govukRadios(
             RadiosViewModel.yesNo(

@@ -48,7 +48,7 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
   override val addressPage: QuestionPage[UserAddress] = GuarantorAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-    controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.lrn, mode)
+    controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, mode)
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     withGuarantorArrangerAnswer { guarantorArranger =>

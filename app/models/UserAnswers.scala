@@ -24,7 +24,7 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import java.time.Instant
 
 final case class UserAnswers(ern: String,
-                             lrn: String,
+                             draftId: String,
                              data: JsObject = Json.obj(),
                              lastUpdated: Instant = Instant.now) {
 
@@ -78,7 +78,7 @@ object UserAnswers {
 
     (
         (__ \ "ern").read[String] and
-        (__ \ "lrn").read[String] and
+        (__ \ "draftId").read[String] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
       )(UserAnswers.apply _)
@@ -90,7 +90,7 @@ object UserAnswers {
 
     (
         (__ \ "ern").write[String] and
-        (__ \ "lrn").write[String] and
+        (__ \ "draftId").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
       )(unlift(UserAnswers.unapply))

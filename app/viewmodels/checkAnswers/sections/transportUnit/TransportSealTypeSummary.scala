@@ -35,7 +35,7 @@ object TransportSealTypeSummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               "changeTransportSealType"
             ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
           )

@@ -34,7 +34,7 @@ object DestinationBusinessNameSummary  {
           key     = "destinationBusinessName.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(answers.ern, answers.lrn, CheckMode).url, "desitinationBusinessName")
+            ActionItemViewModel("site.change", controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(answers.ern, answers.draftId, CheckMode).url, "desitinationBusinessName")
               .withVisuallyHiddenText(messages("destinationBusinessName.change.hidden"))
           )
         )

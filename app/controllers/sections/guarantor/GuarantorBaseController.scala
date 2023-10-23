@@ -31,7 +31,7 @@ trait GuarantorBaseController extends BaseNavigationController {
   def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     withAnswer(
       page = GuarantorRequiredPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.lrn)
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
     ) {
       case true => f
       case false =>
@@ -45,7 +45,7 @@ trait GuarantorBaseController extends BaseNavigationController {
   def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     withAnswer(
       page = GuarantorArrangerPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.lrn)
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
     ) {
       case guarantorArranger if guarantorArranger == GoodsOwner | guarantorArranger == Transporter =>
         f(guarantorArranger)

@@ -18,10 +18,10 @@ GET         /account/sign-out-survey                     controllers.auth.Signed
 
 GET         /trader/:ern                                 controllers.IndexController.onPageLoad(ern: String)
 
-GET         /trader/:ern/draft/:lrn/check-answers        controllers.CheckYourAnswersController.onPageLoad(ern: String, lrn: String, id: Option[String] ?= None)
-POST        /trader/:ern/draft/:lrn/check-answers        controllers.CheckYourAnswersController.onSubmit(ern: String, lrn: String)
+GET         /trader/:ern/draft/:draftId/check-answers        controllers.CheckYourAnswersController.onPageLoad(ern: String, draftId: String, id: Option[String] ?= None)
+POST        /trader/:ern/draft/:draftId/check-answers        controllers.CheckYourAnswersController.onSubmit(ern: String, draftId: String)
 
-GET         /trader/:ern/draft/:lrn/confirmation         controllers.ConfirmationController.onPageLoad(ern: String, lrn: String)
+GET         /trader/:ern/draft/:draftId/confirmation         controllers.ConfirmationController.onPageLoad(ern: String, draftId: String)
 
 ->          /                                            info.Routes
 ->          /                                            consignor.Routes

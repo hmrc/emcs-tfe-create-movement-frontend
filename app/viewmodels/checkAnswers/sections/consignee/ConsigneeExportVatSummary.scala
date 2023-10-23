@@ -44,7 +44,7 @@ object ConsigneeExportVatSummary  {
           content = "site.change",
           href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
             ern = request.userAnswers.ern,
-            lrn = request.userAnswers.lrn,
+            draftId = request.userAnswers.draftId,
             mode = CheckMode
           ).url,
           id = "changeConsigneeExportVat"

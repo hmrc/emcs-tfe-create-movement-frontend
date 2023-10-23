@@ -36,13 +36,13 @@
 
 @layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationPage(idx))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onSubmit(request.ern, request.lrn, idx, mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onSubmit(request.ern, request.draftId, idx, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-      @h2(messages("transportUnit.subHeading", request.lrn), "govuk-caption-xl")
+      @h2(messages("transportUnit.subHeading", request.draftId), "govuk-caption-xl")
 
         @{govukCharacterCount(CharacterCount(
             id = "value",

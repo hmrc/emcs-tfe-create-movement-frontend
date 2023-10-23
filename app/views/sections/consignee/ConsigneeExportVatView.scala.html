@@ -33,13 +33,13 @@
 
 @layout(pageTitle = title(form, messages("consigneeExportVat.title"))) {
 
-    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("consignee.subHeading", request.lrn),"govuk-caption-xl")
+        @h2(messages("consignee.subHeading", request.draftId),"govuk-caption-xl")
 
         @govukRadios(
             RadiosViewModel(

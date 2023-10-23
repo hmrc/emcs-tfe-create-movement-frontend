@@ -35,7 +35,7 @@ object TransportUnitTypeSummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportUnitTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              routes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               "changeTransportUnitType"
             ).withVisuallyHiddenText(messages("transportUnitType.change.hidden"))
           )

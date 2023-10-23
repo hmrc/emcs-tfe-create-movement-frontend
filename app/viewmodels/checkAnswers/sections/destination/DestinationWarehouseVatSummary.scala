@@ -38,7 +38,7 @@ object DestinationWarehouseVatSummary  {
               content = "site.change",
               href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = DestinationWarehouseVatPage

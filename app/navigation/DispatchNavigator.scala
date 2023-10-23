@@ -28,10 +28,10 @@ class DispatchNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DispatchBusinessNamePage =>
-      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case DispatchAddressPage =>
-      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case DispatchCheckAnswersPage =>
       //TODO update to route to next page when finished
@@ -43,7 +43,7 @@ class DispatchNavigator @Inject() extends BaseNavigator {
 
   private val checkRoutes: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
 

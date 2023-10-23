@@ -35,13 +35,13 @@ class TransportUnitGiveMoreInformationSummary @Inject()(link: views.html.compone
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
-        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode))),
+        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode))),
       actions = {
         Seq(
           optMoreInformation.map(_ =>
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               id = "transportUnitMoreInformation"
             ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
           )

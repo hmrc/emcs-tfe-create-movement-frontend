@@ -34,13 +34,13 @@
 
 @layout(pageTitle = title(form, messages("transportArranger.title"))) {
 
-    @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("transportArranger.subHeading", request.lrn),"govuk-caption-xl")
+        @h2(messages("transportArranger.subHeading", request.draftId),"govuk-caption-xl")
 
         @govukRadios(
             RadiosViewModel(

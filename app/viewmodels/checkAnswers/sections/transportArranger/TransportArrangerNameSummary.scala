@@ -44,7 +44,7 @@ object TransportArrangerNameSummary {
           content = "site.change",
           href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
             ern = request.userAnswers.ern,
-            lrn = request.userAnswers.lrn,
+            draftId = request.userAnswers.draftId,
             mode = CheckMode
           ).url,
           id = "changeTransportArrangerName"

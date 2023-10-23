@@ -35,7 +35,7 @@ class TransportSealInformationSummary @Inject()(link: views.html.components.link
           SummaryListRowViewModel(
             key = "transportSealType.moreInfo.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(link(
-              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
           )
         }{ info =>
@@ -45,7 +45,7 @@ class TransportSealInformationSummary @Inject()(link: views.html.components.link
               actions = Seq(
                 ActionItemViewModel(
                   "site.change",
-                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
                   "changeTransportSealInformation"
                 ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
               )

@@ -36,7 +36,7 @@
 
 @layout(pageTitle = title(form, messages(s"guarantorVat.$guarantorArranger.title"))) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(request.ern, request.lrn, mode)) {
+    @formHelper(action = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(request.ern, request.draftId, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -54,7 +54,7 @@
 
         @p() {
             @link(
-                controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(request.ern, request.lrn).url,
+                controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(request.ern, request.draftId).url,
                 s"guarantorVat.$guarantorArranger.notUkVatLink"
             )
         }

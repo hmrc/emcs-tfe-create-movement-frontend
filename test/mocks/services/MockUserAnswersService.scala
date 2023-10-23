@@ -38,7 +38,7 @@ trait MockUserAnswersService extends MockFactory {
       (mockUserAnswersService.set(_: UserAnswers)(_: HeaderCarrier))
         .expects(where { (actualAnswers, _) =>
           actualAnswers.ern == userAnswers.ern &&
-            actualAnswers.lrn == userAnswers.lrn &&
+            actualAnswers.draftId == userAnswers.draftId &&
             actualAnswers.data == userAnswers.data
         })
 

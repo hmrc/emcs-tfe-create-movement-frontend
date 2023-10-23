@@ -1,13 +1,13 @@
-GET        /trader/:ern/draft/:lrn/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/dispatch/business-name                        controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/dispatch/business-name/change                 controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
 # DIS07
-GET        /trader/:ern/draft/:lrn/dispatch/address                              controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/dispatch/address                              controllers.sections.dispatch.DispatchAddressController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/dispatch/address/change                       controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/dispatch/address/change                       controllers.sections.dispatch.DispatchAddressController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/dispatch/address                              controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/dispatch/address                              controllers.sections.dispatch.DispatchAddressController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/dispatch/address/change                       controllers.sections.dispatch.DispatchAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/dispatch/address/change                       controllers.sections.dispatch.DispatchAddressController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:lrn/dispatch/check-answers                        controllers.sections.dispatch.DispatchCheckAnswersController.onPageLoad(ern: String, lrn: String)
-POST       /trader/:ern/draft/:lrn/dispatch/check-answers                        controllers.sections.dispatch.DispatchCheckAnswersController.onSubmit(ern: String, lrn: String)
+GET        /trader/:ern/draft/:draftId/dispatch/check-answers                        controllers.sections.dispatch.DispatchCheckAnswersController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/dispatch/check-answers                        controllers.sections.dispatch.DispatchCheckAnswersController.onSubmit(ern: String, draftId: String)

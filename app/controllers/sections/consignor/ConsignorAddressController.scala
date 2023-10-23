@@ -46,5 +46,5 @@ class ConsignorAddressController @Inject()(override val messagesApi: MessagesApi
   override val addressPage: QuestionPage[UserAddress] = ConsignorAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-    controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, mode)
+    controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, mode)
 }

@@ -37,7 +37,7 @@ object TransportSealChoiceSummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               id="changeTransportSealChoice")
               .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
           )

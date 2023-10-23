@@ -14,13 +14,13 @@
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1("$className;format="decap"$.heading", Some(messages("lrn.subHeading", request.lrn)), "govuk-heading-l")
+        @h1("$className;format="decap"$.heading", Some(messages("draftId.subHeading", request.draftId)), "govuk-heading-l")
 
         @govukInput(
             InputViewModel(

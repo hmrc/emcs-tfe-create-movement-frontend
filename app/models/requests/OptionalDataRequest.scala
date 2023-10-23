@@ -20,7 +20,7 @@ import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.WrappedRequest
 
 case class OptionalDataRequest[A](request: UserRequest[A],
-                                  lrn: String,
+                                  draftId: String,
                                   userAnswers: Option[UserAnswers],
                                   traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) {
   val internalId = request.internalId

@@ -37,7 +37,7 @@ object TransportUnitIdentitySummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               "changeTransportUnitIdentity"
             ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
           )

@@ -34,12 +34,12 @@ class DestinationNavigator @Inject() extends BaseNavigator {
           //TODO redirect to CAM-DES06 when built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case Some(false) =>
-          controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }
     case DestinationBusinessNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case DestinationAddressPage =>
       //TODO update to next page when finished
@@ -49,7 +49,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(DestinationDetailsChoicePage) match {
           case Some(true) =>
-            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           case Some(_) => //TODO update to CAM-02 when built
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -57,7 +57,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
         }
     case DestinationWarehouseVatPage =>
       (userAnswers: UserAnswers) =>
-        controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+        controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

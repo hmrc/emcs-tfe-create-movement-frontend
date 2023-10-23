@@ -38,7 +38,7 @@ object ExportCustomsOfficeSummary  {
               content = "site.change",
               href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = "changeExportCustomsOffice"

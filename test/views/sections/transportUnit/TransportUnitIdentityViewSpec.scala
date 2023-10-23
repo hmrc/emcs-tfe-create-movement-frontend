@@ -50,7 +50,7 @@ class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
 
           s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for $name" - {
 
-            val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, transportUnitType)
+            val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType)
 
             implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
@@ -62,6 +62,7 @@ class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
               view(
                 form = form,
                 transportUnitType = transportUnitType,
+                idx = testIndex1,
                 mode = NormalMode
               ).toString())
 
@@ -81,7 +82,7 @@ class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
             case (reason, input, errorMessage) =>
               s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for $name with error - $reason" - {
 
-                val userAnswers = emptyUserAnswers.set(TransportUnitTypePage, transportUnitType)
+                val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType)
 
                 implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
                 implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
@@ -96,6 +97,7 @@ class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
                   view(
                     form = form,
                     transportUnitType = transportUnitType,
+                    idx = testIndex1,
                     mode = NormalMode
                   ).toString())
 

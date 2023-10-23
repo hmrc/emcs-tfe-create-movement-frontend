@@ -31,11 +31,11 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], idx: Index, mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationChoicePage)) {
+@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationChoicePage(idx))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onSubmit(request.ern, request.lrn, idx, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -45,7 +45,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationChoicePage))).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationChoicePage(idx)))).asPageHeading(LegendSize.Large),
             ).withHint(HintViewModel(Text(messages("transportUnitGiveMoreInformationChoice.hint"))))
         )
 

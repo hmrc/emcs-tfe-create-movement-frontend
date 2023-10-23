@@ -47,6 +47,7 @@ class TransportUnitTypeViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
+            idx = testIndex1,
             mode = NormalMode
           ).toString())
 

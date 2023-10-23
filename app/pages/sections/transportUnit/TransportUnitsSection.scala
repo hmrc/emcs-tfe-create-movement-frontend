@@ -16,14 +16,11 @@
 
 package pages.sections.transportUnit
 
-import models.Index
-import models.sections.transportUnit.TransportSealTypeModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.Section
+import play.api.libs.json.{JsArray, JsPath}
 
-case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealTypeModel] {
-
-  override def path: JsPath = TransportUnitSection(idx).path \ toString
-
-  override def toString: String = "transportSealType"
+case object TransportUnitsSection extends Section[JsArray] {
+  override def path: JsPath = JsPath \ toString
+  override def toString: String = "transportUnits"
+  val MAX: Int = 99
 }

@@ -48,6 +48,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
+            idx = testIndex1,
             mode = NormalMode,
             transportUnitType = Container
           ).toString())
@@ -72,6 +73,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
+            idx = testIndex1,
             mode = NormalMode,
             transportUnitType = FixedTransport
           ).toString())
@@ -96,6 +98,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
+            idx = testIndex1,
             mode = NormalMode,
             transportUnitType = Tractor
           ).toString())
@@ -120,6 +123,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
+            idx = testIndex1,
             mode = NormalMode,
             transportUnitType = Trailer
           ).toString())
@@ -145,6 +149,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           view(
             form = form,
             mode = NormalMode,
+            idx = testIndex1,
             transportUnitType = Vehicle
           ).toString())
 

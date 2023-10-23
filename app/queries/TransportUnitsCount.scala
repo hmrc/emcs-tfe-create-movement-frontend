@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package pages.sections.transportUnit
+package queries
 
-import models.Index
-import models.sections.transportUnit.TransportSealTypeModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.transportUnit.TransportUnitsSection
+import play.api.libs.json.{JsPath, JsValue}
 
-case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealTypeModel] {
-
-  override def path: JsPath = TransportUnitSection(idx).path \ toString
-
-  override def toString: String = "transportSealType"
+case object TransportUnitsCount extends Derivable[List[JsValue], Int] {
+  override val derive: List[JsValue] => Int = _.size
+  override def path: JsPath = TransportUnitsSection.path
 }

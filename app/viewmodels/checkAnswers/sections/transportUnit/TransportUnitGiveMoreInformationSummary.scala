@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -30,30 +30,27 @@ import javax.inject.Inject
 
 class TransportUnitGiveMoreInformationSummary @Inject()(link: views.html.components.link) {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = {
-    val optMoreInformation = answers.get(TransportUnitGiveMoreInformationPage)
+  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = {
+    val optMoreInformation = answers.get(TransportUnitGiveMoreInformationPage(idx))
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
-        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, CheckMode))),
+        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode))),
       actions = {
-        if(optMoreInformation.isEmpty) Seq() else Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
-            id = "transportUnitMoreInformation"
-          ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
-        )
+        Seq(
+          optMoreInformation.map(_ =>
+            ActionItemViewModel(
+              content = "site.change",
+              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
+              id = "transportUnitMoreInformation"
+            ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
+          )
+        ).flatten
       }
     ))
   }
 
-  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages): Content = {
-    if(optValue.isEmpty) {
-      HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue")))
-    } else {
-      Text(optValue.get)
-    }
-  }
+  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages): Content =
+    optValue.fold[Content](HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue"))))(value => Text(value))
 
 }

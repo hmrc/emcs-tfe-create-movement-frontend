@@ -46,7 +46,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitIdentitySummary.row(request.userAnswers) mustBe None
+            TransportUnitIdentitySummary.row(testIndex1, request.userAnswers) mustBe None
           }
         }
 
@@ -54,9 +54,9 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
           "must output the expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage, "testName"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(request.userAnswers) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, request.userAnswers) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -64,7 +64,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
                       id = "changeTransportUnitIdentity"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

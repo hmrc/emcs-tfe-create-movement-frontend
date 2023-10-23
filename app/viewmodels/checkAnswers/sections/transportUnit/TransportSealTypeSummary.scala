@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.transportUnit.TransportSealTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,8 +26,8 @@ import viewmodels.implicits._
 
 object TransportSealTypeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealTypePage).map {
+  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(TransportSealTypePage(idx)).map {
       answer =>
         SummaryListRowViewModel(
           key     = "transportSealType.sealType.checkYourAnswersLabel",
@@ -35,7 +35,7 @@ object TransportSealTypeSummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              routes.TransportSealTypeController.onPageLoad(answers.ern, answers.lrn, idx, CheckMode).url,
               "changeTransportSealType"
             ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
           )

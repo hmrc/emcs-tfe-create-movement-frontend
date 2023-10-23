@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package pages.sections.transportUnit
+package models
 
-import models.Index
-import models.sections.transportUnit.TransportSealTypeModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.mvc.PathBindable
 
-case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealTypeModel] {
+import scala.util.{Failure, Success, Try}
 
-  override def path: JsPath = TransportUnitSection(idx).path \ toString
+case class Index(position: Int) {
+  val displayIndex: String = s"${position + 1}"
+}
 
-  override def toString: String = "transportSealType"
+object Index {
+  implicit val pathBindable: PathBindable[Index] = new PathBindable[Index] {
+    override def bind(key: String, value: String): Either[String, Index] = Try(value.toInt) match {
+      case Failure(_) => Left("could not parse index")
+      case Success(idx) => Right(Index(idx - 1))
+    }
+
+    override def unbind(key: String, value: Index): String = value.displayIndex
+  }
 }

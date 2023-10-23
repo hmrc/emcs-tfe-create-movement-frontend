@@ -24,6 +24,7 @@ package models
 import base.SpecBase
 import pages.QuestionPage
 import play.api.libs.json._
+import queries.Derivable
 
 
 class UserAnswersSpec extends SpecBase {
@@ -165,6 +166,29 @@ class UserAnswersSpec extends SpecBase {
           ))
           withData.get(TestPage(__ \ "items" \ 0 \ "subItems" \ 0)) mustBe Some("foo")
         }
+      }
+    }
+
+    "when calling .get(Derivable)" - {
+      object TestDerivable extends Derivable[Seq[JsObject], Int] {
+        override def path: JsPath = JsPath \ "items"
+
+        override val derive: Seq[JsObject] => Int = _.size
+      }
+
+      "must return None if the data for the page doesnt exist" in {
+        emptyUserAnswers.get(TestDerivable) mustBe None
+      }
+
+      "must perform the derive function if page exists" in {
+        val withData = emptyUserAnswers.copy(data = Json.obj(
+          "items" -> Json.arr(
+            Json.obj("TestPage" -> "foo"),
+            Json.obj("TestPage" -> "bar"),
+            Json.obj("TestPage" -> "wizz")
+          )
+        ))
+        withData.get(TestDerivable) mustBe Some(3)
       }
     }
 

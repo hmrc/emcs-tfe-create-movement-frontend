@@ -16,11 +16,10 @@
 
 package controllers.sections.transportUnit
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportUnit.TransportSealTypeFormProvider
-import models.Mode
 import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportSealTypePage, TransportUnitTypePage}
 import play.api.data.Form
@@ -43,27 +42,31 @@ class TransportSealTypeController @Inject()(
                                              formProvider: TransportSealTypeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportSealTypeView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      renderView(Ok, fillForm(TransportSealTypePage, formProvider()), mode)
+      validateIndex(idx) {
+        renderView(Ok, fillForm(TransportSealTypePage(idx), formProvider()), idx, mode)
+      }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, mode),
-        saveAndRedirect(TransportSealTypePage, _, mode)
-      )
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          renderView(BadRequest, _, idx, mode),
+          saveAndRedirect(TransportSealTypePage(idx), _, mode)
+        )
+      }
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(TransportUnitTypePage) { transportUnitType =>
+  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
       Future(status(view(
         form,
         transportUnitType = transportUnitType,
-        onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(request.ern, request.lrn, mode)
+        onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(request.ern, request.lrn, idx: Index, mode)
       )))
     }
   }

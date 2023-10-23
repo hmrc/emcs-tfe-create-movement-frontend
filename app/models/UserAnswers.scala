@@ -18,7 +18,7 @@ package models
 
 import pages.QuestionPage
 import play.api.libs.json._
-import queries.{Gettable, Settable}
+import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
@@ -48,6 +48,9 @@ final case class UserAnswers(ern: String,
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).asOpt.flatten
+
+  def get[A, B](query: Derivable[A, B])(implicit rds: Reads[A]): Option[B] =
+    get(query.asInstanceOf[Gettable[A]]).map(query.derive)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswers =
     handleResult {

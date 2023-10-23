@@ -16,16 +16,16 @@
 
 package controllers.sections.transportUnit
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.TransportUnitTypeFormProvider
 import models.requests.DataRequest
-import models.{Mode, TransportUnitType}
+import models.{Index, Mode, TransportUnitType}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitTypePage
+import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.TransportUnitsCount
 import services.UserAnswersService
 import views.html.sections.transportUnit.TransportUnitTypeView
 
@@ -43,28 +43,43 @@ class TransportUnitTypeController @Inject()(
                                              formProvider: TransportUnitTypeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportUnitTypeView
-                                           ) extends BaseNavigationController with AuthActionHelper {
+                                           ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      renderView(Ok, fillForm(TransportUnitTypePage, formProvider()), mode)
+      validateIndex(idx){
+        renderView(Ok, fillForm(TransportUnitTypePage(idx), formProvider()), idx, mode)
+      }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(BadRequest, formWithErrors, mode),
-        value =>
-          saveAndRedirect(TransportUnitTypePage, value, mode)
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            renderView(BadRequest, formWithErrors, idx, mode),
+          value =>
+            saveAndRedirect(TransportUnitTypePage(idx), value, mode)
+        )
+      }
+    }
+
+  override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    validateIndexForJourneyEntry(TransportUnitsCount, idx, TransportUnitsSection.MAX)(
+      onSuccess = f,
+      onFailure = Future.successful(
+        Redirect(
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+        )
       )
-    }
+    )
 
-  private def renderView(status: Status, form: Form[TransportUnitType], mode: Mode)
+  private def renderView(status: Status, form: Form[TransportUnitType], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
       status(view(
         form = form,
+        idx = idx,
         mode = mode
       ))
     )

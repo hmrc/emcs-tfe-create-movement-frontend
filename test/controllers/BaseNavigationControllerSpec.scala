@@ -18,15 +18,16 @@ package controllers
 
 import base.SpecBase
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{Index, NormalMode, UserAnswers}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.QuestionPage
-import play.api.libs.json.{JsPath, __}
+import play.api.libs.json.{JsObject, JsPath, __}
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
+import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -41,6 +42,16 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     val page = new QuestionPage[String] { override def path: JsPath = __ \ "page1" }
     val page2 = new QuestionPage[String] { override def path: JsPath = __ \ "page2" }
     val value = "foo"
+
+    case class TestIndexPage(index: Index) extends QuestionPage[String] {
+      override def path: JsPath = TestDerivable.path \ index.position \ "test"
+    }
+
+    object TestDerivable extends Derivable[Seq[JsObject], Int] {
+      override val derive: Seq[JsObject] => Int = _.size
+
+      override def path: JsPath = JsPath \ "something"
+    }
 
     def onwardRoute = Call("GET", "/foo")
 
@@ -137,6 +148,132 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           )(dataRequest(FakeRequest(), emptyUserAnswers.set(page, value)), implicitly)
 
         result mustBe emptyUserAnswers.set(page, value)
+      }
+    }
+  }
+
+  "validateIndexForJourneyEntry" - {
+    "must run the onSuccess function" - {
+      "when no user answers present and value is Index(0)" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+
+        result mustBe true
+      }
+
+      "when index is for a new page where index exists in previous items" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(
+            TestDerivable, Index(2)
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(2)), "answer")
+              .set(TestIndexPage(Index(3)), "answer")
+            ), implicitly
+          )
+
+        result mustBe true
+      }
+
+      "when index is for a new page where index is one more than previous page" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(
+            TestDerivable, Index(1)
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers.set(TestIndexPage(Index(0)), "answer")), implicitly
+          )
+
+        result mustBe true
+      }
+    }
+    "must run the onFailure function" - {
+      "when no user answers present and index position is more than 0" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(TestDerivable, Index(2))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+
+        result mustBe false
+      }
+
+      "when index larger than max value - 1" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(
+            TestDerivable, Index(2), max = 2
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+            ), implicitly
+          )
+
+        result mustBe false
+      }
+
+      "when index is for a new page where index is greater than one more than previous page" in new Test {
+        val result: Boolean =
+          controller.validateIndexForJourneyEntry(
+            TestDerivable, Index(2)
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers.set(TestIndexPage(Index(0)), "answer")), implicitly
+          )
+
+        result mustBe false
+      }
+    }
+  }
+
+  "validateIndex" - {
+
+    "must run the onSuccess function" - {
+      "when index is for a new page where index exists in previous items" in new Test {
+        val result: Boolean =
+          controller.validateIndex(
+            TestDerivable, Index(2)
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+              .set(TestIndexPage(Index(2)), "answer")
+              .set(TestIndexPage(Index(3)), "answer")
+            ), implicitly
+          )
+
+        result mustBe true
+      }
+    }
+    "must run the onFailure function" - {
+      "when no user answers present and value is Index(0)" in new Test {
+        val result: Boolean =
+          controller.validateIndex(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+
+        result mustBe false
+      }
+
+      "when index is greater than last index in user answers" in new Test {
+        val result: Boolean =
+          controller.validateIndex(
+            TestDerivable, Index(2)
+          )(
+            true, false
+          )(
+            dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TestIndexPage(Index(0)), "answer")
+              .set(TestIndexPage(Index(1)), "answer")
+            ), implicitly
+          )
+
+        result mustBe false
       }
     }
   }

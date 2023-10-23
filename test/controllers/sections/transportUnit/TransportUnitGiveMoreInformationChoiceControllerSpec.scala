@@ -20,10 +20,10 @@ import base.SpecBase
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.TransportUnitType.{Container, Tractor}
-import models.{NormalMode, TransportUnitType}
+import models.{Index, NormalMode, TransportUnitType}
 import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
 import navigation.{Navigator, TransportUnitNavigator}
-import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
+import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,61 +36,95 @@ import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val onwardRouteTU06: Call = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, NormalMode)
+  val onwardRouteTU06: Call = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, NormalMode)
 
   //TODO add correct URL for CAM-TU07
   val onwardRouteTU07: Call = Call("GET", "/emcs/create-movement/test-only/construction")
 
   val formProvider = new TransportUnitGiveMoreInformationChoiceFormProvider()
 
-  lazy val transportUnitGiveMoreInformationChoiceRoute = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val transportUnit1GiveMoreInformationChoiceRoute =
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+  lazy val transportUnit2GiveMoreInformationChoiceRoute =
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
 
   "TransportUnitGiveMoreInformationChoice Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Tractor))).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))).build()
 
       def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
 
       running(application) {
-        val request = FakeRequest(GET, transportUnitGiveMoreInformationChoiceRoute)
+        val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form(Tractor), NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form(Tractor), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, true).set(TransportUnitTypePage, Tractor)
+      val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true).set(TransportUnitTypePage(testIndex1), Tractor)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
 
       running(application) {
-        val request = FakeRequest(GET, transportUnitGiveMoreInformationChoiceRoute)
+        val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
 
         val view = application.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form(Tractor).fill(true), NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form(Tractor).fill(true), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+      }
+    }
+
+    "must redirect to transport unit index controller for a GET if the index in the url is not valid" in {
+      val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true).set(TransportUnitTypePage(testIndex1), Tractor)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, transportUnit2GiveMoreInformationChoiceRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+      }
+    }
+
+    "must redirect to transport unit index controller for a POST if the index in the url is not valid" in {
+      val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true).set(TransportUnitTypePage(testIndex1), Tractor)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, transportUnit2GiveMoreInformationChoiceRoute)
+          .withFormUrlEncodedBody("value" -> "true")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
       }
     }
 
     "must redirect to journey recovery for a GET if there is not a transport unit type found in the users answers" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer"))).build()
 
       running(application) {
-        val request = FakeRequest(GET, transportUnitGiveMoreInformationChoiceRoute)
+        val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
 
         val result = route(application, request).value
 
@@ -101,10 +135,16 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
     "must redirect to the next page (TU06) when valid data is submitted (answer is Yes)" in {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(TransportUnitTypePage, Tractor).set(TransportUnitGiveMoreInformationChoicePage, true)))
+      MockUserAnswersService
+        .set()
+        .returns(
+          Future.successful(
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Tractor)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Tractor)))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU06)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -113,7 +153,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       running(application) {
         val request =
-          FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute)
+          FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
@@ -125,10 +165,16 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
     "must redirect to the next page (TU07) when valid data is submitted (answer is No)" in {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(TransportUnitTypePage, Tractor).set(TransportUnitGiveMoreInformationChoicePage, true)))
+      MockUserAnswersService
+        .set()
+        .returns(
+          Future.successful(
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Tractor)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Tractor)))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU07)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -137,7 +183,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       running(application) {
         val request =
-          FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute)
+          FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
@@ -148,15 +194,18 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
     }
 
     "must cleanse the give more information page (TU06) when answering no" in {
-      val expectedAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage, false).set(TransportUnitTypePage, Container)
+      val expectedAnswers = emptyUserAnswers
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+        .set(TransportUnitTypePage(testIndex1), Container)
+
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
       val application = applicationBuilder(
         userAnswers = Some(
           emptyUserAnswers
-            .set(TransportUnitGiveMoreInformationChoicePage, true)
-            .set(TransportUnitGiveMoreInformationPage, "blah")
-            .set(TransportUnitTypePage, Container)
+            .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), "blah")
+            .set(TransportUnitTypePage(testIndex1), Container)
         )
       )
         .overrides(
@@ -166,7 +215,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         .build()
 
 
-      val request = FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute).withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute).withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
@@ -175,13 +224,13 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage, Tractor))).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))).build()
 
       def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
 
       running(application) {
         val request =
-          FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute)
+          FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form(Tractor).bind(Map("value" -> ""))
@@ -191,17 +240,17 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must redirect to journey recovery controller for a POST if there is not a transport unit type found" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitIdentityPage(Index(0)), "answer"))).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute)
+          FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
@@ -216,7 +265,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, transportUnitGiveMoreInformationChoiceRoute)
+        val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
 
         val result = route(application, request).value
 
@@ -231,7 +280,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       running(application) {
         val request =
-          FakeRequest(POST, transportUnitGiveMoreInformationChoiceRoute)
+          FakeRequest(POST, transportUnit1GiveMoreInformationChoiceRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value

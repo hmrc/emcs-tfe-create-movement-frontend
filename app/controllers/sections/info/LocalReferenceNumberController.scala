@@ -62,15 +62,15 @@ class LocalReferenceNumberController @Inject()(
         case (_, isDeferred) =>
           formProvider(isDeferred).bindFromRequest().fold(
             renderView(BadRequest, _, isDeferred),
-            draftId =>
-              userAnswersService.get(ern, draftId).flatMap {
+            lrn =>
+              userAnswersService.get(ern, lrn).flatMap {
                 case Some(_) =>
                   //TODO: Redirect to LRN already exists page when designed and built
                   logger.debug("[onSubmit] Draft already exists with this LRN")
                   Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
                 case _ =>
                   logger.debug("[onSubmit] No Draft exists with this LRN, creating a new draft entry in the UserAnswers repo")
-                  createDraftEntryAndRedirect(draftId)
+                  createDraftEntryAndRedirect(lrn)
               }
           )
       }

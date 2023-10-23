@@ -18,23 +18,28 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import pages.Page
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 
 class DispatchNavigatorSpec extends SpecBase {
   val navigator = new DispatchNavigator
 
   "DispatchNavigator" - {
+
     "in Normal mode" - {
+
       "must go from a page that doesn't exist in the route map to Index" in {
+
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           routes.IndexController.onPageLoad(testErn)
       }
 
       "for the DispatchBusinessNamePage" - {
+
         "must go to DispatchAddress page" in {
+
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 
           navigator.nextPage(DispatchBusinessNamePage, NormalMode, userAnswers) mustBe
@@ -43,14 +48,45 @@ class DispatchNavigatorSpec extends SpecBase {
       }
 
       "for the DispatchAddressPage" - {
-        "must go to test Only page" in {
+
+        "must go to CYA page" in {
 
           navigator.nextPage(DispatchAddressPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
         }
       }
 
+      "for the CYA page" - {
+
+        "must go to under construction page" in {
+
+          navigator.nextPage(DispatchCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+    }
+
+    "in Check mode" - {
+
+      "for the DispatchBusinessNamePage" - {
+
+        "must go to DispatchAddress page" in {
+
+          val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
+
+          navigator.nextPage(DispatchBusinessNamePage, CheckMode, userAnswers) mustBe
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn)
+        }
+      }
+
+      "for the DispatchAddressPage" - {
+
+        "must go to CYA page" in {
+
+          navigator.nextPage(DispatchAddressPage, CheckMode, emptyUserAnswers) mustBe
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
+        }
+      }
     }
   }
-
 }

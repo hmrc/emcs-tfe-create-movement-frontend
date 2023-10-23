@@ -146,6 +146,8 @@ address.destinationAddress.subheading = Place of destination information
 address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
 address.dispatchAddress.subheading = Place of dispatch information
+address.dispatchAddress.checkYourAnswersLabel = Address
+address.dispatchAddress.change.hidden = Address
 
 address.transportArrangerAddress.3.title = Enter the goods owner’s business address
 address.transportArrangerAddress.3.heading = Enter the goods owner’s business address
@@ -438,6 +440,8 @@ dispatchBusinessName.heading = What is the business name of the place of dispatc
 dispatchBusinessName.error.noInput = Enter the business name of the place of dispatch
 dispatchBusinessName.error.tooLong = Enter a business name up to 182 characters
 dispatchBusinessName.error.invalidCharacters = Business name must not contain < and > and : and ;
+dispatchBusinessName.checkYourAnswersLabel = Trader name
+dispatchBusinessName.change.hidden = Trader name
 
 exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
@@ -606,3 +610,6 @@ transportUnitGiveMoreInformation.transportUnitType.2 = vehicle
 transportUnitGiveMoreInformation.transportUnitType.3 = trailer
 transportUnitGiveMoreInformation.transportUnitType.4 = tractor
 transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installation
+
+dispatchCheckAnswers.title = Check your answers
+dispatchCheckAnswers.heading = Check your answers

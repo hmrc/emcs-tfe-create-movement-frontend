@@ -32,7 +32,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.info.LocalReferenceNumberView
 
-import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.Future
 

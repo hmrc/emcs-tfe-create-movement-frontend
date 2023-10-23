@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import pages.Page
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 import play.api.mvc.Call
@@ -35,16 +35,23 @@ class DispatchNavigator @Inject() extends BaseNavigator {
 
     case DispatchCheckAnswersPage =>
       //TODO update to route to next page when finished
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }
 
+  private val checkRoutes: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+  }
+
+
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    //TODO update when other modes are added
+    case CheckMode =>
+      checkRoutes(page)(userAnswers)
     case _ =>
       normalRoutes(page)(userAnswers)
   }

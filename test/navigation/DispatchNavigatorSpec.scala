@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import pages.Page
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 
@@ -62,6 +62,29 @@ class DispatchNavigatorSpec extends SpecBase {
 
           navigator.nextPage(DispatchCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+    }
+
+    "in Check mode" - {
+
+      "for the DispatchBusinessNamePage" - {
+
+        "must go to DispatchAddress page" in {
+
+          val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
+
+          navigator.nextPage(DispatchBusinessNamePage, CheckMode, userAnswers) mustBe
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn)
+        }
+      }
+
+      "for the DispatchAddressPage" - {
+
+        "must go to CYA page" in {
+
+          navigator.nextPage(DispatchAddressPage, CheckMode, emptyUserAnswers) mustBe
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
         }
       }
     }

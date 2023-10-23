@@ -42,8 +42,8 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case DestinationWarehouseExcisePage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) =>
+        controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
 
     case DestinationAddressPage =>
       //TODO update to next page when finished

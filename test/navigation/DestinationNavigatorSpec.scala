@@ -35,6 +35,17 @@ class DestinationNavigatorSpec extends SpecBase {
           routes.IndexController.onPageLoad(testErn)
       }
 
+      "for the DestinationWarehouseExcisePage" - {
+        "must go to Destination Consignee details page (CAM-DES04) if answer is no" in {
+          val userAnswers = emptyUserAnswers.set(DestinationWarehouseExcisePage, "Answer")
+
+          navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, userAnswers) mustBe
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode)
+
+        }
+
+      }
+
       "for the DestinationConsigneeDetailsPage" - {
         "must go to Destination Business Name page (CAM-DES04) if answer is no" in {
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)

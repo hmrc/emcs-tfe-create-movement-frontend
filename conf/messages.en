@@ -685,3 +685,13 @@ transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installat
 
 dispatchCheckAnswers.title = Check your answers
 dispatchCheckAnswers.heading = Check your answers
+
+destinationWarehouseExcise.title = What is the excise registration number (ERN) for the destination tax warehouse?
+destinationWarehouseExcise.heading = What is the excise registration number (ERN) for the destination tax warehouse?
+destinationWarehouseExcise.text = This number contains 13 alpha-numeric characters starting with GB and can be found on your approval letter.
+destinationWarehouseExcise.checkYourAnswersLabel = destinationWarehouseExcise
+destinationWarehouseExcise.error.required = Enter the excise registration number (ERN)
+destinationWarehouseExcise.error.length = ERN must be 16 characters or less
+destinationWarehouseExcise.change.hidden = DestinationWarehouseExcise
+destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
+

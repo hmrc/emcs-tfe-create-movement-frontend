@@ -41,9 +41,14 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationBusinessNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.destination.routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
+    case DestinationWarehouseExcisePage =>
+      (userAnswers: UserAnswers) =>
+        controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+
     case DestinationAddressPage =>
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case DestinationDetailsChoicePage =>
       //TODO update to next page when finished
       (userAnswers: UserAnswers) =>
@@ -55,6 +60,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
           case _ => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
         }
+
     case DestinationWarehouseVatPage =>
       (userAnswers: UserAnswers) =>
         controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)

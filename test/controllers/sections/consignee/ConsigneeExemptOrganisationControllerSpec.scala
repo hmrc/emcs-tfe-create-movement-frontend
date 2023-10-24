@@ -65,9 +65,9 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     val form = formProvider()
 
     lazy val consigneeExemptOrganisationRoute =
-      controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
+      controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url
 
-    lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

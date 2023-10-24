@@ -64,7 +64,7 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeDispatchBusinessName"
                     ).withVisuallyHiddenText(messagesForLanguage.traderNameChangeHidden)
                   )

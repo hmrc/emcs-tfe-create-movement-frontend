@@ -29,11 +29,11 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
   with OptionValues {
 
   val testErn: String = "ern"
-  val testLrn: String = "lrn"
+  val testDraftId: String = "draftId"
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
-    lrn = testLrn,
+    draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 
@@ -47,7 +47,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
       )
       .build()
 
-  val url = s"/emcs-tfe/user-answers/create-movement/ern/lrn"
+  val url = s"/emcs-tfe/user-answers/create-movement/ern/draftId"
 
   private lazy val connector: UserAnswersConnector = app.injector.instanceOf[UserAnswersConnector]
 
@@ -60,7 +60,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(response.withStatus(OK))
       )
 
-      connector.get(testErn, testLrn).futureValue mustBe Right(Some(emptyUserAnswers))
+      connector.get(testErn, testDraftId).futureValue mustBe Right(Some(emptyUserAnswers))
     }
 
     "must return false when the server responds NOT_FOUND" in {
@@ -71,7 +71,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(NOT_FOUND))
       )
 
-      connector.get(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.get(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the server responds with any other status" in {
@@ -82,7 +82,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.get(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.get(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -93,7 +93,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.get(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.get(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 
@@ -155,7 +155,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(NO_CONTENT))
       )
 
-      connector.delete(testErn, testLrn).futureValue mustBe Right(true)
+      connector.delete(testErn, testDraftId).futureValue mustBe Right(true)
     }
 
     "must return false when the server responds NOT_FOUND" in {
@@ -165,7 +165,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(NOT_FOUND))
       )
 
-      connector.delete(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.delete(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the server responds with any other status" in {
@@ -175,7 +175,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.delete(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.delete(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -186,7 +186,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.delete(testErn, testLrn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.delete(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

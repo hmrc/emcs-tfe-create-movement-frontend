@@ -70,7 +70,7 @@ class TransportArrangerNameController @Inject()(
     withAnswer(
       page = TransportArrangerPage,
       // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
     ) {
       case transportArranger@(GoodsOwner | Other) => f(transportArranger)
       case transportArranger =>

@@ -52,13 +52,13 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
    def onwardRoute = Call("GET", "/foo")
 
    lazy val transportUnit1SealChoiceRoute =
-     controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+     controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
    lazy val transportUnit2SealChoiceRoute =
-     controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+     controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
    lazy val transportSealChoiceOnSubmit =
-     controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testLrn, testIndex1, NormalMode)
+     controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
    val view = application.injector.instanceOf[TransportSealChoiceView]
 
@@ -118,7 +118,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -199,7 +199,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -241,7 +241,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -256,7 +256,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
   }

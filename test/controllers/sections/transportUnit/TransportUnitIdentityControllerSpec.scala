@@ -41,10 +41,10 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
   val form = formProvider(TransportUnitType.FixedTransport)
 
   lazy val transportUnit1TransportIdentityRoute =
-    controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
   lazy val transportUnit2TransportIdentityRoute =
-    controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
   "TransportUnitIdentity Controller" - {
 
@@ -124,7 +124,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustBe controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -163,7 +163,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -179,7 +179,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

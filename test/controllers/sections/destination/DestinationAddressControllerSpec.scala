@@ -40,8 +40,8 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val destinationAddressRoute = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val destinationAddressOnSubmit = controllers.sections.destination.routes.DestinationAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val destinationAddressRoute = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val destinationAddressOnSubmit = controllers.sections.destination.routes.DestinationAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

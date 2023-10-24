@@ -64,7 +64,7 @@ class ExportCustomsOfficeController @Inject()(
     withAnswer(DestinationTypePage) { destinationType =>
       Future.successful(status(view(
         form = form,
-        action = routes.ExportCustomsOfficeController.onSubmit(request.ern, request.lrn, mode),
+        action = routes.ExportCustomsOfficeController.onSubmit(request.ern, request.draftId, mode),
         euExport = destinationType == ExportWithCustomsDeclarationLodgedInTheEu
       )))
     }

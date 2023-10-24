@@ -42,7 +42,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
   val formProvider = new GuarantorRequiredFormProvider()
   val form = formProvider()
 
-  lazy val guarantorRequiredRoute = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val guarantorRequiredRoute = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "GuarantorRequired Controller" - {
 

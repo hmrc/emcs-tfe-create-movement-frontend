@@ -48,7 +48,7 @@ class FirstTransporterAddressController @Inject()(override val messagesApi: Mess
   override val addressPage: QuestionPage[UserAddress] = FirstTransporterAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.lrn, mode)
+    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, mode)
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(status(view(

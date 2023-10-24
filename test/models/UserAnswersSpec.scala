@@ -361,7 +361,7 @@ class UserAnswersSpec extends SpecBase {
         override def path: JsPath = __ \ toString
       }
 
-      val baseUserAnswers = UserAnswers(ern = "my ern", lrn = "my lrn")
+      val baseUserAnswers = UserAnswers(ern = "my ern", draftId = "my draftId")
 
       "must only return pages in the supplied Seq" in {
         val existingUserAnswers = baseUserAnswers

@@ -20,7 +20,7 @@ import models._
 import play.api.mvc.WrappedRequest
 
 case class DataRequest[A](request: UserRequest[A],
-                          lrn: String,
+                          draftId: String,
                           userAnswers: UserAnswers,
                           traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) {
 

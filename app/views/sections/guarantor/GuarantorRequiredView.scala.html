@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("guarantorRequired.title"))) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorRequiredController.onSubmit(request.ern, request.lrn, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.guarantor.routes.GuarantorRequiredController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -45,7 +45,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(ExportCustomsOfficePage, "AB123456")
 
         navigator.nextPage(ExportCustomsOfficePage, NormalMode, userAnswers) mustBe
-          controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testLrn)
+          controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
 

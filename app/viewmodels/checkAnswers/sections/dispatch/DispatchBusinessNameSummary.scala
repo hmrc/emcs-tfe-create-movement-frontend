@@ -36,7 +36,7 @@ object DispatchBusinessNameSummary {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeDispatchBusinessName"
             ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
           )

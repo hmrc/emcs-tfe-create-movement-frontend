@@ -40,8 +40,8 @@ class DispatchBusinessNameControllerSpec extends SpecBase with MockUserAnswersSe
   val formProvider = new DispatchBusinessNameFormProvider()
   val form = formProvider()
 
-  lazy val dispatchBusinessNameRoute = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
-  lazy val dispatchBusinessNameSubmit = controllers.sections.dispatch.routes.DispatchBusinessNameController.onSubmit(testErn, testLrn, NormalMode)
+  lazy val dispatchBusinessNameRoute = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val dispatchBusinessNameSubmit = controllers.sections.dispatch.routes.DispatchBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
 
   "DispatchBusinessName Controller" - {
 

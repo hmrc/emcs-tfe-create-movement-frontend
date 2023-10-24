@@ -41,7 +41,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
   val formProvider = new TransportArrangerNameFormProvider()
   val form = formProvider()
 
-  lazy val transportArrangerNameRoute = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val transportArrangerNameRoute = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "TransportArrangerName Controller" - {
 
@@ -152,7 +152,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+          controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
       }
     }
 

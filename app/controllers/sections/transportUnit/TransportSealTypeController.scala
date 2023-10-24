@@ -66,7 +66,7 @@ class TransportSealTypeController @Inject()(
       Future(status(view(
         form,
         transportUnitType = transportUnitType,
-        onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(request.ern, request.lrn, idx: Index, mode)
+        onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(request.ern, request.draftId, idx: Index, mode)
       )))
     }
   }

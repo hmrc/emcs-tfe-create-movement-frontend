@@ -38,7 +38,7 @@ object GiveInformationOtherTransportSummary {
               content = "site.change",
               href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = GiveInformationOtherTransportPage

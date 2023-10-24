@@ -40,8 +40,8 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val dispatchAddressRoute = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val dispatchAddressOnSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val dispatchAddressRoute = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val dispatchAddressOnSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

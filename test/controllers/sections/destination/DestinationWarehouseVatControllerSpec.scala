@@ -41,9 +41,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
   class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     def onwardRoute = Call("GET", "/foo")
 
-    lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testLrn, NormalMode)
-    lazy val destinationDetailsChoiceRoute = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testLrn, NormalMode)
+    lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testDraftId, NormalMode)
+    lazy val destinationDetailsChoiceRoute = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers = userAnswers)
       .overrides(

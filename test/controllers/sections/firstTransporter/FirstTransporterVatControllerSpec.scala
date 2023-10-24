@@ -39,9 +39,9 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
   val formProvider = new FirstTransporterVatFormProvider()
   val form = formProvider()
 
-  lazy val firstTransporterVatRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testLrn, NormalMode).url
-  lazy val firstTransporterVatSubmitAction = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testLrn, NormalMode)
-  lazy val firstTransporterVatNonGBVATRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testLrn).url
+  lazy val firstTransporterVatRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val firstTransporterVatSubmitAction = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val firstTransporterVatNonGBVATRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testDraftId).url
 
   "FirstTransporterVat Controller" - {
 

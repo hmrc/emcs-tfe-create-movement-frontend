@@ -33,20 +33,20 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       userAnswers.get(TransportArrangerPage) match {
 
         case Some(GoodsOwner) | Some(Other) =>
-          controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
         case _ =>
-          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
 
     case TransportArrangerNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case TransportArrangerVatPage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case TransportArrangerAddressPage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case TransportArrangerCheckAnswersPage => _ =>
       //TODO: Update to route to next section when built
@@ -66,10 +66,10 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       ) {
         normalRoutes(TransportArrangerPage)(userAnswers)
       } else {
-        controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+        controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

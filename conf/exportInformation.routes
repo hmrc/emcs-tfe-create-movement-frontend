@@ -1,7 +1,7 @@
-GET        /trader/:ern/draft/:lrn/export-information/customs-office                        controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, lrn: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:lrn/export-information/customs-office                        controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, lrn: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:lrn/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, lrn: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:lrn/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, lrn: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/export-information/customs-office                        controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/export-information/customs-office                        controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/export-information/customs-office/change                 controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:lrn/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onPageLoad(ern: String, lrn: String)
-POST       /trader/:ern/draft/:lrn/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onSubmit(ern: String, lrn: String)
+GET        /trader/:ern/draft/:draftId/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/export-information/check-answers                         controllers.sections.exportInformation.ExportInformationCheckAnswersController.onSubmit(ern: String, draftId: String)

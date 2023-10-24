@@ -39,7 +39,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val guarantorArrangerRoute = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val guarantorArrangerRoute = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   val formProvider = new GuarantorArrangerFormProvider()
   val form = formProvider()
@@ -135,7 +135,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

@@ -43,10 +43,10 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
   val formProvider = new TransportUnitGiveMoreInformationFormProvider()
 
   lazy val transportUnit1GiveMoreInformationRoute =
-    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
   lazy val transportUnit2GiveMoreInformationRoute =
-    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
   "TransportUnitGiveMoreInformation Controller" - {
 
@@ -182,7 +182,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -198,7 +198,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

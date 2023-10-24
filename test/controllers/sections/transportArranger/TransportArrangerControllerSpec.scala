@@ -38,7 +38,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val transportArrangerRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val transportArrangerRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   val formProvider = new TransportArrangerFormProvider()
   val form = formProvider()

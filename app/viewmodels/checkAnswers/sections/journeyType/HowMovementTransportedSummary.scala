@@ -44,7 +44,7 @@ object HowMovementTransportedSummary {
               content = "site.change",
               href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = HowMovementTransportedPage

@@ -48,13 +48,13 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
   override val addressPage: QuestionPage[UserAddress] = TransportArrangerAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-    controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(request.ern, request.lrn, mode)
+    controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(request.ern, request.draftId, mode)
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     withAnswer(
       page = TransportArrangerPage,
       // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.lrn, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
     ) { arranger =>
       Future.successful(status(view(
         form = form,

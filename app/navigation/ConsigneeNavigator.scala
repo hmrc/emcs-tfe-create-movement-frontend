@@ -30,34 +30,34 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
 
     // if the [destinationType] was Exempted Organisation
     case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     // else
     case ConsigneeExportPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportPage) match {
         case Some(true) =>
-          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case Some(false) =>
-          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }
 
     case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case ConsigneeAddressPage =>
-      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckAnswersConsigneePage =>
       //TODO update to next page when finished
-      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
       (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)

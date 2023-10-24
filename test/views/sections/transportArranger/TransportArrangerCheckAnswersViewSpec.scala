@@ -45,7 +45,7 @@ class TransportArrangerCheckAnswersViewSpec extends ViewSpecBase with ViewBehavi
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),
-          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testLrn)
+          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testDraftId)
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

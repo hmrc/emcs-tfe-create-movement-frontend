@@ -37,7 +37,7 @@ object ConsigneeExemptOrganisationSummary  {
           actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              href = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeConsigneeExemptOrganisation"
             ).withVisuallyHiddenText(messages("consigneeExemptOrganisation.change.hidden"))
           )

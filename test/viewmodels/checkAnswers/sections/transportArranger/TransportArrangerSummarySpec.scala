@@ -65,7 +65,7 @@ class TransportArrangerSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testLrn, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeTransportArranger"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

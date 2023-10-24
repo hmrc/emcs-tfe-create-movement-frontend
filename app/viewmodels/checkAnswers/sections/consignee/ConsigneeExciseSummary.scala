@@ -37,7 +37,7 @@ object ConsigneeExciseSummary {
           actions = if(!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeConsigneeExcise"
             ).withVisuallyHiddenText(messages("consigneeExcise.change.hidden"))
           )

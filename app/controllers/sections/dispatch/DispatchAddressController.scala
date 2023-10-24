@@ -49,7 +49,7 @@ class DispatchAddressController  @Inject()(override val messagesApi: MessagesApi
     override val addressPage: QuestionPage[UserAddress] = DispatchAddressPage
 
     override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-      controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.lrn, mode)
+      controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
 
     override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
       Future.successful(status(view(

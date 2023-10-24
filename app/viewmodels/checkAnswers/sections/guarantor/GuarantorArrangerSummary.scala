@@ -44,7 +44,7 @@ object GuarantorArrangerSummary {
             "site.change",
             controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
               ern = request.ern,
-              lrn = request.lrn,
+              draftId = request.draftId,
               mode = CheckMode
             ).url,
             id = "changeGuarantorArranger")

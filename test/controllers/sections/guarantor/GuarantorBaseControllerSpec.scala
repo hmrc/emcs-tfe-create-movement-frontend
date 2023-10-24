@@ -61,7 +61,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to guarantor CYA" - {
@@ -94,7 +94,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to guarantor CYA" - {

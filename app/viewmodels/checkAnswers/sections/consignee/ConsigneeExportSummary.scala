@@ -38,7 +38,7 @@ object ConsigneeExportSummary {
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = ConsigneeExportPage

@@ -69,7 +69,7 @@ class TransportUnitTypeController @Inject()(
       onSuccess = f,
       onFailure = Future.successful(
         Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+          controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
         )
       )
     )

@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val onwardRouteTU06: Call = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testLrn, testIndex1, NormalMode)
+  val onwardRouteTU06: Call = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
 
   //TODO add correct URL for CAM-TU07
   val onwardRouteTU07: Call = Call("GET", "/emcs/create-movement/test-only/construction")
@@ -44,9 +44,9 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
   val formProvider = new TransportUnitGiveMoreInformationChoiceFormProvider()
 
   lazy val transportUnit1GiveMoreInformationChoiceRoute =
-    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
   lazy val transportUnit2GiveMoreInformationChoiceRoute =
-    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testLrn, testIndex2, NormalMode).url
+    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
 
   "TransportUnitGiveMoreInformationChoice Controller" - {
 
@@ -99,7 +99,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -115,7 +115,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

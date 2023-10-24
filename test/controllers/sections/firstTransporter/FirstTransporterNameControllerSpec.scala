@@ -39,7 +39,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
   val formProvider = new FirstTransporterNameFormProvider()
   val form = formProvider()
 
-  lazy val firstTransporterNameRoute = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val firstTransporterNameRoute = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "FirstTransporterName Controller" - {
 

@@ -65,7 +65,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                       id = "changeTransportSealType"
                     ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
                   )

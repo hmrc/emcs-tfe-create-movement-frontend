@@ -48,7 +48,7 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
       validateIndex(idx) {
         withAnswer(
           page = TransportUnitTypePage(idx),
-          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
         ) { transportUnitType =>
           renderView(Ok, fillForm(TransportSealChoicePage(idx), formProvider(transportUnitType)), transportUnitType, idx, mode)
         }
@@ -60,7 +60,7 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
       validateIndex(idx) {
         withAnswer(
           page = TransportUnitTypePage(idx),
-          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.lrn)
+          redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
         ) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(
             renderView(BadRequest, _, transportUnitType, idx, mode),
@@ -81,7 +81,7 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
       form = form,
       mode = mode,
       transportUnitType = transportUnitType,
-      onSubmitCall = controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(request.ern, request.lrn, idx, mode)
+      onSubmitCall = controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(request.ern, request.draftId, idx, mode)
     )))
   }
 }

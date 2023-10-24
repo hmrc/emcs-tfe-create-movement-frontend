@@ -41,7 +41,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
   val formProvider = new GuarantorNameFormProvider()
   val form = formProvider()
 
-  lazy val GuarantorNameRoute = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val GuarantorNameRoute = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "GuarantorArrangerName Controller" - {
 
@@ -152,7 +152,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testLrn).url
+          controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

@@ -41,8 +41,8 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
     val formProvider = new DestinationBusinessNameFormProvider()
     val form = formProvider()
 
-    lazy val destinationBusinessNameRoute = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val destinationBusinessNameOnSubmit = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val destinationBusinessNameRoute = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val destinationBusinessNameOnSubmit = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
 
     val application = applicationBuilder(userAnswers)
       .overrides(

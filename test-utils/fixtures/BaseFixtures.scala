@@ -34,6 +34,7 @@ trait BaseFixtures {
   val testNorthernIrelandErn = "XIWK123456789"
   val testGreatBritainErn = "GBRC123456789"
   val testLrn: String = "lrn"
+  val testDraftId: String = "draftId"
   val testVatNumber: String = "123456789"
   val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
@@ -93,7 +94,7 @@ trait BaseFixtures {
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
-    lrn = testLrn,
+    draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 

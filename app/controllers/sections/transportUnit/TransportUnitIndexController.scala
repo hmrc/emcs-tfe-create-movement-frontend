@@ -48,7 +48,7 @@ class TransportUnitIndexController @Inject()(
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           ))
         case None => Future.successful(Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.lrn, Index(0), NormalMode)
+          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
         ))
       }
     }

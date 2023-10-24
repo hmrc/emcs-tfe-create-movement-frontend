@@ -71,7 +71,7 @@ object GuarantorAddressSummary {
                 content = "site.change",
                 href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(
                   ern = request.userAnswers.ern,
-                  lrn = request.userAnswers.lrn,
+                  draftId = request.userAnswers.draftId,
                   mode = CheckMode
                 ).url,
                 id = "changeGuarantorAddress"

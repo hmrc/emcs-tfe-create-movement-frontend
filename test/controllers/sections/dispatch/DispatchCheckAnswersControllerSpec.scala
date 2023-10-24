@@ -38,7 +38,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
 
     def onwardRoute = Call("GET", "/foo")
 
-    lazy val dispatchCheckAnswersRoute = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn).url
+    lazy val dispatchCheckAnswersRoute = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
     lazy val application =
       applicationBuilder(userAnswers = userAnswers)
@@ -65,7 +65,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list = SummaryList(Seq.empty).withCssClass("govuk-!-margin-bottom-9"),
-          onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(testErn, testLrn)
+          onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(testErn, testDraftId)
         )(dataRequest(request), messages(application)).toString
       }
     }

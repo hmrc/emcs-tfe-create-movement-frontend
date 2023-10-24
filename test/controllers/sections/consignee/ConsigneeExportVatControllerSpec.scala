@@ -39,7 +39,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   val formProvider = new ConsigneeExportVatFormProvider()
   val form = formProvider()

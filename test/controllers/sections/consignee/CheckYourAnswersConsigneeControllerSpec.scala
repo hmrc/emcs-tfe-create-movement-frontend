@@ -44,7 +44,7 @@ import views.html.sections.consignee.CheckYourAnswersConsigneeView
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
   def request: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId).url)
 
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
 
@@ -112,9 +112,9 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
           val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
             testErn,
-            testLrn,
+            testDraftId,
             ernSummaryList
           )(dataRequest(request), messages(application)).toString
 
@@ -137,9 +137,9 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
           val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
             testErn,
-            testLrn,
+            testDraftId,
             exemptSummaryList
           )(dataRequest(request), messages(application)).toString
 
@@ -162,9 +162,9 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
           val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
             testErn,
-            testLrn,
+            testDraftId,
             vatEoriSummaryList
           )(dataRequest(request), messages(application)).toString
 
@@ -187,9 +187,9 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
           val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
             testErn,
-            testLrn,
+            testDraftId,
             vatEoriSummaryList
           )(dataRequest(request), messages(application)).toString
 
@@ -215,7 +215,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
         def request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testLrn).url)
+          FakeRequest(POST, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId).url)
 
         running(application) {
 

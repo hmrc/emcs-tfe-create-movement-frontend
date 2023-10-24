@@ -57,7 +57,7 @@ object GuarantorNameSummary {
           actions = if (!showChangeLink) Seq() else Seq(
             ActionItemViewModel(
               "site.change",
-              controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+              controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               "changeGuarantorName"
             ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
           )

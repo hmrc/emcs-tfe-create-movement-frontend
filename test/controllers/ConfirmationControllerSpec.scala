@@ -30,7 +30,7 @@ class ConfirmationControllerSpec extends SpecBase {
     val application = applicationBuilder(userAnswers).build()
     val view = application.injector.instanceOf[ConfirmationView]
     val errorHandler = application.injector.instanceOf[ErrorHandler]
-    val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testLrn).url)
+    val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
   }
 
   "Confirmation Controller" - {

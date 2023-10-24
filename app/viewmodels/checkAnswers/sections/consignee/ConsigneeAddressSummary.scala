@@ -39,7 +39,7 @@ object ConsigneeAddressSummary {
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(
                 ern = request.userAnswers.ern,
-                lrn = request.userAnswers.lrn,
+                draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
               id = "changeConsigneeAddress"

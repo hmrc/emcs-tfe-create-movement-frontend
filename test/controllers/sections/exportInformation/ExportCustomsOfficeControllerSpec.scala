@@ -38,8 +38,8 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
   val formProvider = new ExportCustomsOfficeFormProvider()
   val form = formProvider()
 
-  lazy val exportCustomsOfficeRoute = routes.ExportCustomsOfficeController.onPageLoad(testErn, testLrn, NormalMode).url
-  lazy val exportCustomsOfficeSubmitAction = routes.ExportCustomsOfficeController.onSubmit(testErn, testLrn, NormalMode)
+  lazy val exportCustomsOfficeRoute = routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val exportCustomsOfficeSubmitAction = routes.ExportCustomsOfficeController.onSubmit(testErn, testDraftId, NormalMode)
 
   val defaultUserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu)
 

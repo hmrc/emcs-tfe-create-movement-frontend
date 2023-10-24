@@ -40,7 +40,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
   class Fixtures(userAnswers: Option[UserAnswers]) {
 
     lazy val checkYourAnswersExportInformationRoute =
-      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testLrn).url
+      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
     lazy val view = application.injector.instanceOf[ExportInformationCheckAnswersView]
 
@@ -70,7 +70,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list = list,
-          submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testLrn)
+          submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testDraftId)
         )(dataRequest(request), messages(application)).toString
       }
     }

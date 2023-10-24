@@ -40,8 +40,8 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
   val formProvider = new ConsigneeBusinessNameFormProvider()
   val form = formProvider()
 
-  lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
-  lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testLrn, NormalMode)
+  lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
 
   "ConsigneeBusinessName Controller" - {
 

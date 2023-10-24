@@ -42,7 +42,7 @@ class UserAnswersConnector @Inject()(val http: HttpClient,
   def put(userAnswers: UserAnswers)
          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, UserAnswers]] =
     http.PUT[UserAnswers, Either[ErrorResponse, UserAnswers]](
-      url = s"$baseUrl/user-answers/create-movement/${userAnswers.ern}/${userAnswers.lrn}",
+      url = s"$baseUrl/user-answers/create-movement/${userAnswers.ern}/${userAnswers.draftId}",
       body = userAnswers
     )(UserAnswers.writes, PutUserAnswersReads, hc, ec)
 

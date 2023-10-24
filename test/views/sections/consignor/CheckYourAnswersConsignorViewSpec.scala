@@ -47,9 +47,9 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
         val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn),
+          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
           testErn,
-          testLrn,
+          testDraftId,
           testUserAddress,
           testMinTraderKnownFacts
         ).toString())
@@ -67,7 +67,7 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
         "have a link to change details" in {
 
           doc.select(Selectors.govukSummaryListChangeLink).attr("href") mustBe
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, CheckMode).url
+            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
       }
     }

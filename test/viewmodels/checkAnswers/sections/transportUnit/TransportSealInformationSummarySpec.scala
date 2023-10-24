@@ -72,7 +72,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                       id = "changeTransportSealInformation"
                     ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
@@ -92,7 +92,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
                   value = ValueViewModel(HtmlContent(link(
-                    link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testLrn, testIndex1, CheckMode).url,
+                    link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     messageKey = messagesForLanguage.moreInfoCYAAddInfo
                   )))
                 )

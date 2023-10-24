@@ -51,7 +51,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
     ".onPageLoad()" - {
 
       "with a Northern Ireland ERN" - {
-        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testLrn)
+        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
 
         lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testNorthernIrelandErn).url
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onSubmit(testNorthernIrelandErn)
@@ -69,7 +69,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
       }
 
       "with a Great Britain ERN" - {
-        val greatBritainUserAnswers = UserAnswers(testGreatBritainErn, testLrn)
+        val greatBritainUserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
 
         lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testGreatBritainErn).url
         lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onSubmit(testGreatBritainErn).url
@@ -90,7 +90,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
     ".onSubmit()" - {
 
       "with a Northern Ireland ERN" - {
-        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testLrn)
+        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
 
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onSubmit(testNorthernIrelandErn)
 

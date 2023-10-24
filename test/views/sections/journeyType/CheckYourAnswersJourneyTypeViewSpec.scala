@@ -45,7 +45,7 @@ class CheckYourAnswersJourneyTypeViewSpec extends ViewSpecBase with ViewBehaviou
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),
-          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testLrn)
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

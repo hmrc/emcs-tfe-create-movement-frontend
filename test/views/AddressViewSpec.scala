@@ -58,7 +58,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = addressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode)).toString()
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
           )
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -82,7 +82,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
           ).toString())
 
@@ -104,7 +104,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
           ).toString())
 
@@ -121,7 +121,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = FirstTransporterAddressPage,
-          call = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          call = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("firstTransporterAddress")
         ).toString())
 
@@ -143,7 +143,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = DispatchAddressPage,
-          call = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          call = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("dispatchAddress")
         ).toString())
 
@@ -165,7 +165,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = DestinationAddressPage,
-          call = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+          call = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("destinationAddress")
         ).toString())
 
@@ -194,7 +194,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
               implicit val doc: Document = Jsoup.parse(view(
                 form = form,
                 addressPage = GuarantorAddressPage,
-                call = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.lrn, NormalMode),
+                call = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
                 headingKey = Some(s"guarantorAddress.$guarantorArranger")
               ).toString())
 

@@ -44,7 +44,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
   "Check Your Answers Consignor Controller" - {
     ".onPageLoad" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url)
 
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
 
@@ -52,9 +52,9 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn),
+          val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
             testErn,
-            testLrn,
+            testDraftId,
             testUserAddress,
             testMinTraderKnownFacts
           )(dataRequest(request), messages(application)).toString
@@ -82,14 +82,14 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testLrn, NormalMode).url
+          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
         }
       }
     }
 
     ".onSubmit" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId).url)
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
 

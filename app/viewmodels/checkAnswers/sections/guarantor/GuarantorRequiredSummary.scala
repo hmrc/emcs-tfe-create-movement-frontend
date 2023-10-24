@@ -40,7 +40,7 @@ object GuarantorRequiredSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.lrn, CheckMode).url,
+            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.draftId, CheckMode).url,
             "changeGuarantorRequired"
           )
             .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))

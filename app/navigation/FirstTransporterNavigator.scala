@@ -29,13 +29,13 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
   private val normalRoutes: Page => UserAnswers => Call = {
 
     case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case FirstTransporterVatPage => (userAnswers: UserAnswers) =>
-      controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(userAnswers.ern, userAnswers.lrn, NormalMode)
+      controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case FirstTransporterAddressPage => (userAnswers: UserAnswers) =>
-      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case FirstTransporterCheckAnswersPage => _ =>
       // TODO redirect to CAM02
@@ -54,10 +54,10 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       ) {
         normalRoutes(FirstTransporterNamePage)(userAnswers)
       } else {
-        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.lrn)
+      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

@@ -44,8 +44,8 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     val formProvider = new AddressFormProvider()
     val form = formProvider()
 
-    lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consigneeAddressOnSubmit = controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testLrn, NormalMode)
+    lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val consigneeAddressOnSubmit = controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     lazy val application = applicationBuilder(userAnswers).build()
 

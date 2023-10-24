@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-  lazy val transportUnitIndexRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+  lazy val transportUnitIndexRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
 
   "transportUnitIndex Controller" - {
 
@@ -40,7 +40,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testLrn, testIndex1, NormalMode).url)
+          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
       }
     }
 

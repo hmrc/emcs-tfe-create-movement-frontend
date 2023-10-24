@@ -55,7 +55,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
     ".onPageLoad" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId).url)
 
       "must return OK and the correct view for a GET when there is no ALF ID query parameter" in new Fixture(Some(emptyUserAnswers)) {
 
@@ -69,13 +69,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
           status(result) mustBe OK
           contentAsString(result) mustBe
-            view(routes.CheckYourAnswersController.onSubmit(testErn, testLrn), list)(dataRequest(request), messages(application)).toString
+            view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages(application)).toString
         }
       }
 
       "must return OK and the correct view for a GET when there is an ALF ID query parameter" - {
         def requestWithAlfId: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(testErn, testLrn, Some(testId)).url)
+          FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId, Some(testId)).url)
 
         "when the call to retrieve the address is successful" in new Fixture(Some(emptyUserAnswers)) {
           running(application) {
@@ -90,7 +90,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
             status(result) mustBe OK
             contentAsString(result) must contain
             view(
-              routes.CheckYourAnswersController.onSubmit(testErn, testLrn),
+              routes.CheckYourAnswersController.onSubmit(testErn, testDraftId),
               list,
               Some(testAlfAddress)
             )(dataRequest(request), messages(application)).toString
@@ -110,7 +110,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
             status(result) mustBe OK
             contentAsString(result) must contain
             view(
-              routes.CheckYourAnswersController.onSubmit(testErn, testLrn),
+              routes.CheckYourAnswersController.onSubmit(testErn, testDraftId),
               list
             )(dataRequest(request), messages(application)).toString
           }
@@ -131,7 +131,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
     ".onSubmit" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(testErn, testLrn).url)
+      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(testErn, testDraftId).url)
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
 

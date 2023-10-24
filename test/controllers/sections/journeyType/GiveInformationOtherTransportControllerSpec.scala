@@ -40,7 +40,7 @@ class GiveInformationOtherTransportControllerSpec extends SpecBase with MockUser
   val formProvider = new GiveInformationOtherTransportFormProvider()
   val form = formProvider()
 
-  lazy val giveInformationOtherTransportRoute = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val giveInformationOtherTransportRoute = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "GiveInformationOtherTransport Controller" - {
 

@@ -98,7 +98,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val request =
               FakeRequest(POST, localReferenceNumberRoute)
-                .withFormUrlEncodedBody(("value", testLrn))
+                .withFormUrlEncodedBody(("value", testDraftId))
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -114,7 +114,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val request =
               FakeRequest(POST, localReferenceNumberRoute)
-                .withFormUrlEncodedBody(("value", testLrn))
+                .withFormUrlEncodedBody(("value", testDraftId))
                 .withSession(SessionKeys.DESTINATION_TYPE -> "beans")
             val result = route(application, request).value
 
@@ -135,11 +135,11 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
           "must redirect to the LRN already used page when valid LRN is submitted but a draft already exists" in new Fixture() {
             running(application) {
 
-              MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(Some(emptyUserAnswers)))
+              MockUserAnswersService.get(testErn, testDraftId).returns(Future.successful(Some(emptyUserAnswers)))
 
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
-                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withFormUrlEncodedBody(("value", testDraftId))
                   .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
 
               val result = route(application, request).value
@@ -155,15 +155,15 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               val expectedAnswers =
                 emptyUserAnswers
                   .set(DeferredMovementPage, false)
-                  .set(LocalReferenceNumberPage, testLrn)
+                  .set(LocalReferenceNumberPage, testDraftId)
                   .set(DestinationTypePage, UnknownDestination)
 
-              MockUserAnswersService.get(testErn, testLrn).returns(Future.successful(None))
+              MockUserAnswersService.get(testErn, testDraftId).returns(Future.successful(None))
               MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
-                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withFormUrlEncodedBody(("value", testDraftId))
                   .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
 
               val result = route(application, request).value
@@ -198,7 +198,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
-                  .withFormUrlEncodedBody(("value", testLrn))
+                  .withFormUrlEncodedBody(("value", testDraftId))
                   .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination")
               val result = route(application, request).value
 
@@ -217,7 +217,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val request =
               FakeRequest(POST, localReferenceNumberRoute)
-                .withFormUrlEncodedBody(("value", testLrn))
+                .withFormUrlEncodedBody(("value", testDraftId))
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -233,7 +233,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val request =
               FakeRequest(POST, localReferenceNumberRoute)
-                .withFormUrlEncodedBody(("value", testLrn))
+                .withFormUrlEncodedBody(("value", testDraftId))
                 .withSession(SessionKeys.DESTINATION_TYPE -> "beans")
             val result = route(application, request).value
 

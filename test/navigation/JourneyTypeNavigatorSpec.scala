@@ -49,7 +49,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, Other)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testLrn, NormalMode)
+              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 
@@ -62,7 +62,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testLrn)
+              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
           }
         }
       }
@@ -77,7 +77,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
             .set(GiveInformationOtherTransportPage, "some information text")
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testLrn)
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
 
         }
       }

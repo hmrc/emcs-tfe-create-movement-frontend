@@ -43,7 +43,7 @@ class DispatchNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 
           navigator.nextPage(DispatchBusinessNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn, NormalMode)
+            controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
         }
       }
 
@@ -52,7 +52,7 @@ class DispatchNavigatorSpec extends SpecBase {
         "must go to CYA page" in {
 
           navigator.nextPage(DispatchAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
@@ -75,7 +75,7 @@ class DispatchNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 
           navigator.nextPage(DispatchBusinessNamePage, CheckMode, userAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.lrn)
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
         }
       }
 
@@ -84,7 +84,7 @@ class DispatchNavigatorSpec extends SpecBase {
         "must go to CYA page" in {
 
           navigator.nextPage(DispatchAddressPage, CheckMode, emptyUserAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testLrn)
+            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
     }

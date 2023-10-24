@@ -35,13 +35,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         ).build()
 
         running(application) {
-          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
             .copy(ern = ern)
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe
-            Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, testLrn, NormalMode).url)
+            Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, testDraftId, NormalMode).url)
         }
       }
     }
@@ -57,13 +57,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
             ).build()
 
             running(application) {
-              val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+              val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
                 .copy(ern = ern)
               val result = route(application, request).value
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testLrn, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
           }
       )
@@ -82,13 +82,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
               ).build()
 
               running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
                   .copy(ern = ern)
                 val result = route(application, request).value
 
                 status(result) mustBe SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testLrn, NormalMode).url)
+                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
               }
             }
         )
@@ -111,13 +111,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
               ).build()
 
               running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
                   .copy(ern = ern)
                 val result = route(application, request).value
 
                 status(result) mustBe SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testLrn, NormalMode).url)
+                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
               }
             }
         )
@@ -132,13 +132,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           ).build()
 
           running(application) {
-            val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+            val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
               .copy(ern = ern)
             val result = route(application, request).value
 
             status(result) mustBe SEE_OTHER
             redirectLocation(result) mustBe
-              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testLrn, NormalMode).url)
+              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
           }
         }
       }
@@ -159,13 +159,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
               ).build()
 
               running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
                   .copy(ern = ern)
                 val result = route(application, request).value
 
                 status(result) mustBe SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testLrn, NormalMode).url)
+                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
               }
             }
         )
@@ -187,13 +187,13 @@ class ConsigneeIndexControllerSpec extends SpecBase {
               ).build()
 
               running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
                   .copy(ern = ern)
                 val result = route(application, request).value
 
                 status(result) mustBe SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testLrn, NormalMode).url)
+                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
               }
             }
         )
@@ -208,7 +208,7 @@ class ConsigneeIndexControllerSpec extends SpecBase {
         ).build()
 
         running(application) {
-          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testLrn).url))
+          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
             .copy(ern = ern)
           val result = route(application, request).value
 

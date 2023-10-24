@@ -36,7 +36,7 @@ object DestinationWarehouseExciseSummary  {
           value   = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel("site.change",
-              controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(answers.ern, answers.lrn, CheckMode).url,
+              controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
               id = DestinationWarehouseExcisePage)
               .withVisuallyHiddenText(messages("destinationWarehouseExcise.change.hidden"))
           )

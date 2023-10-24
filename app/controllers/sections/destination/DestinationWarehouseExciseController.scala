@@ -47,13 +47,13 @@ class DestinationWarehouseExciseController @Inject()(
                                        view: DestinationWarehouseExciseView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         saveAndRedirect(DestinationWarehouseExcisePage, _, mode)
@@ -64,7 +64,7 @@ class DestinationWarehouseExciseController @Inject()(
     withAnswer(DestinationTypePage) { movementScenario =>
       Future(status(view(
         form,
-        onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.lrn, mode)
+        onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
       )))
     }
   }

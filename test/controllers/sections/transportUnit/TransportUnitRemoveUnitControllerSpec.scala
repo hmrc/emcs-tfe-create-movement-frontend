@@ -34,7 +34,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
   val formProvider = new TransportUnitRemoveUnitFormProvider()
   val form = formProvider()
 
-  lazy val transportUnitRemoveUnitRoute = routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testLrn, testIndex1).url
+  lazy val transportUnitRemoveUnitRoute = controllers.sections.transportUnit.routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url
 
   "TransportUnitRemoveUnit Controller" - {
 
@@ -131,7 +131,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

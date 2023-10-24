@@ -16,10 +16,9 @@
 
 package controllers.sections.destination
 
-import controllers.actions._
 import controllers.BaseNavigationController
+import controllers.actions._
 import forms.sections.destination.DestinationWarehouseVatFormProvider
-import javax.inject.Inject
 import models.Mode
 import navigation.DestinationNavigator
 import pages.sections.destination.DestinationWarehouseVatPage
@@ -29,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.sections.destination.DestinationWarehouseVatView
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 class DestinationWarehouseVatController @Inject()(
@@ -56,7 +56,7 @@ class DestinationWarehouseVatController @Inject()(
               skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)
             ))
           case None =>
-            Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern))
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
 
@@ -77,7 +77,7 @@ class DestinationWarehouseVatController @Inject()(
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )
           case None =>
-            Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern)))
+            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         }
     }
 }

@@ -34,6 +34,10 @@ object InvoiceDetailsMessages {
     val dateErrorInvalid = "Date of issue must be a real date"
     val dateErrorRequiredTwo = (fieldOne: String, fieldTwo: String) => s"Date of issue must include a $fieldOne and $fieldTwo"
     val dateErrorRequired = (field: String) => s"Date of issue must include a $field"
+    val cyaInvoiceReferenceLabel: String = "Invoice reference"
+    val cyaInvoiceDateLabel: String = "Invoice date of issue"
+    val cyaChangeInvoiceReferenceHidden: String = "Invoice reference"
+    val cyaChangeInvoiceDateHidden: String = "Invoice date of issue"
   }
 
   object English extends ViewMessages with BaseEnglish

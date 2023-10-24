@@ -29,6 +29,8 @@ object DeferredMovementMessages {
     val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."
     val paragraph2 = "Any information entered on EMCS for a deferred movement must match the information on the FAD."
     val errorRequired = "Select yes if this is a deferred movement"
+    val cyaLabel: String = "Deferred movement"
+    val cyaChangeHidden: String = "deferred movement"
   }
 
   object English extends ViewMessages with BaseEnglish

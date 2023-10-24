@@ -19,7 +19,8 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
-import models.requests.UserRequest
+import models.NormalMode
+import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -42,12 +43,12 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest())
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         "when movement is Deferred" - {
 
           implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = true, form(isDeferred = true), controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn)
+            isDeferred = true, form(isDeferred = true), controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -62,7 +63,7 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
         "when movement is NOT Deferred (new)" - {
 
           implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = false, form(isDeferred = false), controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn)
+            isDeferred = false, form(isDeferred = false), controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(

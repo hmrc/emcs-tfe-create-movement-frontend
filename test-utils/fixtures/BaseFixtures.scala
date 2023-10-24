@@ -16,10 +16,10 @@
 
 package fixtures
 
-import models.{CountryModel, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.InvoiceDetailsModel
+import models.{CountryModel, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -28,12 +28,13 @@ import java.time.{Instant, LocalDate}
 
 trait BaseFixtures {
 
+  val testSessionId: String = "1234-5678-4321"
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"
   val testErn: String = "XIRC123456789"
   val testNorthernIrelandErn = "XIWK123456789"
   val testGreatBritainErn = "GBRC123456789"
-//  val testLrn: String = "lrn"
+  val testLrn: String = "1234567890"
   val testDraftId: String = "draftId"
   val testVatNumber: String = "123456789"
   val testExportCustomsOffice: String = "AA123456"
@@ -73,7 +74,7 @@ trait BaseFixtures {
   val testAlfAddressJson: JsObject =
     Json.obj(
       "auditRef" -> "bed4bd24-72da-42a7-9338-f43431b7ed72",
-      "id" -> "GB990091234524",
+      "ern" -> "GB990091234524",
       "address" -> Json.obj(
         "lines" -> Json.arr("10 Other Place", "Some District", "Anytown"),
         "postcode" -> "ZZ1 1ZZ",

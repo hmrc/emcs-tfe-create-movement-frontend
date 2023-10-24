@@ -40,8 +40,6 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
   "TransportSealInformationSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(TransportSealTypeMessages.English, TransportSealTypeMessages.Welsh).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {

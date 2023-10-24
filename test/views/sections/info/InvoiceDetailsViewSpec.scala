@@ -19,7 +19,7 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.sections.info.InvoiceDetailsFormProvider
-import models.requests.UserRequest
+import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -42,7 +42,7 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateU
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: UserRequest[_] = userRequest(FakeRequest())
+        implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[InvoiceDetailsView]
         val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()

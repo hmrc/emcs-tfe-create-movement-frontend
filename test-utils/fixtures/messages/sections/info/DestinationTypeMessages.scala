@@ -26,6 +26,9 @@ object DestinationTypeMessages {
     val headingImport = "What is the destination type for this import?"
     val titleImport = titleHelper(headingImport)
     val caption = "Movement information"
+    val taxWarehouseInGb = "Tax warehouse in Great Britain"
+    val cyaLabel: String = "Destination type"
+    val cyaChangeHidden: String = "destination type"
   }
 
   object English extends ViewMessages with BaseEnglish

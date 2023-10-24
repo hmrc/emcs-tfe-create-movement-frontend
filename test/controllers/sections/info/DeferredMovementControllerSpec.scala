@@ -14,43 +14,61 @@
  * limitations under the License.
  */
 
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers.sections.info
 
 import base.SpecBase
 import forms.sections.info.DeferredMovementFormProvider
-import mocks.services.MockUserAnswersService
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeInfoNavigator
+import navigation.InformationNavigator
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
+import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.DeferredMovementView
 
-class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersService {
+import scala.concurrent.Future
 
-  class Fixture() {
+class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
+
+  class Fixture(userAnswers: Option[UserAnswers]) {
     val application =
-      applicationBuilder(userAnswers = None)
+      applicationBuilder(userAnswers = userAnswers)
         .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
+          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
+          bind[UserAnswersService].toInstance(mockUserAnswersService),
+          bind[PreDraftService].toInstance(mockPreDraftService)
         )
         .build()
 
     val view = application.injector.instanceOf[DeferredMovementView]
   }
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DeferredMovementFormProvider()
   val form = formProvider()
 
-  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn).url
+  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode).url
 
   "DeferredMovement Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture() {
+    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
       running(application) {
         val request = FakeRequest(GET, deferredMovementRoute)
@@ -58,25 +76,27 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode))(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture() {
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
 
       running(application) {
         val request =
           FakeRequest(POST, deferredMovementRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
+        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn).url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
 
       running(application) {
         val request =
@@ -88,7 +108,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn))(userRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode))(dataRequest(request), messages(application)).toString
       }
     }
   }

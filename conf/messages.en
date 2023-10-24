@@ -187,6 +187,8 @@ deferredMovement.summary = Help with fallback procedures
 deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
 deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
 deferredMovement.error.required = Select yes if this is a deferred movement
+deferredMovement.checkYourAnswersLabel = Deferred movement
+deferredMovement.change.hidden = deferred movement
 
 localReferenceNumber.deferred.title = Enter the Local Reference Number (LRN) for the deferred movement
 localReferenceNumber.deferred.heading = Enter the Local Reference Number (LRN) for the deferred movement
@@ -199,6 +201,8 @@ localReferenceNumber.new.p1 = This is also known as a Local Reference Number (LR
 localReferenceNumber.new.p2 = Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement.
 localReferenceNumber.new.error.required = Enter a unique reference
 localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
+localReferenceNumber.checkYourAnswersLabel = Local Reference Number (LRN)
+localReferenceNumber.change.hidden = Local Reference Number (LRN)
 
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address
@@ -303,6 +307,8 @@ destinationType.temporaryRegisteredConsignee = Temporary registered consignee
 destinationType.unknownDestination = Unknown destination
 destinationType.error.required.movement = Select the place of destination for this movement
 destinationType.error.required.import = Select the place of destination for this import
+destinationType.checkYourAnswersLabel = Destination type
+destinationType.change.hidden = destination type
 
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
@@ -518,6 +524,8 @@ dispatchPlace.heading = Where is the place of dispatch for this movement?
 dispatchPlace.GB = Great Britain
 dispatchPlace.XI = Northern Ireland
 dispatchPlace.error.required = Select the place of dispatch for this movement
+dispatchPlace.checkYourAnswersLabel = Place of dispatch
+dispatchPlace.change.hidden = where is the place of dispatch
 
 dispatchBusinessName.title = What is the business name of the place of dispatch?
 dispatchBusinessName.heading = What is the business name of the place of dispatch?
@@ -613,6 +621,10 @@ invoiceDetails.value.error.required.all = Enter the date of issue, or skip this 
 invoiceDetails.value.error.required.two = Date of issue must include a {0} and {1}
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
+invoiceDetails.invoice-reference.checkYourAnswersLabel = Invoice reference
+invoiceDetails.invoice-reference.change.hidden = Invoice reference
+invoiceDetails.invoice-date.checkYourAnswersLabel = Invoice date of issue
+invoiceDetails.invoice-date.change.hidden = Invoice date of issue
 
 destinationDetailsChoice.title = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
@@ -710,6 +722,14 @@ destinationWarehouseExcise.error.required = Enter the excise registration number
 destinationWarehouseExcise.error.length = ERN must be 16 characters or less
 destinationWarehouseExcise.change.hidden = DestinationWarehouseExcise
 destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
+
+informationCheckAnswers.title = Check your answers
+informationCheckAnswers.heading = Check your answers
+
+dispatchDetails.dateOfDispatch.checkYourAnswersLabel = Date of dispatch
+dispatchDetails.dateOfDispatch.change.hidden = date of dispatch
+dispatchDetails.timeOfDispatch.checkYourAnswersLabel = Time of dispatch
+dispatchDetails.timeOfDispatch.change.hidden = time of dispatch
 
 importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the UK
 importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the UK

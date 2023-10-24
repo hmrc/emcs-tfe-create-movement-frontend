@@ -19,7 +19,8 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.DispatchPlaceMessages
 import forms.sections.info.DispatchPlaceFormProvider
-import models.requests.UserRequest
+import models.NormalMode
+import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -39,12 +40,13 @@ class DispatchPlaceViewSpec extends ViewSpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest())
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[DispatchPlaceView]
         val form = app.injector.instanceOf[DispatchPlaceFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.DispatchPlaceController.onSubmit(request.ern)).toString())
+        implicit val doc: Document =
+          Jsoup.parse(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,

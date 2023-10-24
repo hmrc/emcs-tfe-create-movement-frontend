@@ -17,18 +17,33 @@
 package controllers
 
 import base.SpecBase
+import mocks.services.MockPreDraftService
+import navigation.FakeNavigators.FakeInfoNavigator
+import navigation.InformationNavigator
+import play.api.Application
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.PreDraftService
 
-class IndexControllerSpec extends SpecBase {
+import scala.concurrent.Future
+
+class IndexControllerSpec extends SpecBase with MockPreDraftService {
 
   "Index Controller" - {
 
+    lazy val application: Application =
+      applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
+          bind[PreDraftService].toInstance(mockPreDraftService)
+        )
+        .build()
+
     "must redirect to the info Index controller" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
       running(application) {
+
+        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
 
         val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
         val result = route(application, request).value

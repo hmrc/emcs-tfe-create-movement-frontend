@@ -42,8 +42,8 @@ object FakeNavigators {
       desiredRoute
   }
 
-  class FakeInfoNavigator(desiredRoute: Call) extends InfoNavigator {
-    override def nextPage(page: Page, mode: Mode, ern: String): Call =
+  class FakeInfoNavigator(desiredRoute: Call) extends InformationNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }
 

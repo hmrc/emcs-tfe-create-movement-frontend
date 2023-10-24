@@ -28,7 +28,6 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 
 class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
-
   trait Test {
     lazy val app = applicationBuilder().build()
     implicit lazy val msgs: Messages = messages(app, GuarantorArrangerMessages.English.lang)

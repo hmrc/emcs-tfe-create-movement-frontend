@@ -38,13 +38,13 @@ class TaskListSpec extends ViewSpecBase {
 
           val html = taskList(TaskList(Seq(
             TaskListSection("Test 1", Seq(
-              TaskListSectionRow("Row 1", "id-1", Some("link"), Completed),
-              TaskListSectionRow("Row 2", "id-2", Some("link"), InProgress),
-              TaskListSectionRow("Row 3", "id-2", Some("link"), NotStarted),
-              TaskListSectionRow("Row 4", "id-4", None, CannotStartYet)
+              TaskListSectionRow("Row 1", "ern-1", Some("link"), Completed),
+              TaskListSectionRow("Row 2", "ern-2", Some("link"), InProgress),
+              TaskListSectionRow("Row 3", "ern-2", Some("link"), NotStarted),
+              TaskListSectionRow("Row 4", "ern-4", None, CannotStartYet)
             )),
             TaskListSection("Test 2", Seq(
-              TaskListSectionRow("Row 1", "id-1", None, CannotStartYet)
+              TaskListSectionRow("Row 1", "ern-1", None, CannotStartYet)
             ))
           )))
 

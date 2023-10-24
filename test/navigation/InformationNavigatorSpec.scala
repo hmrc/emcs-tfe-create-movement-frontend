@@ -21,9 +21,9 @@ import models._
 import pages._
 import pages.sections.info._
 
-class InfoNavigatorSpec extends SpecBase {
+class InformationNavigatorSpec extends SpecBase {
 
-  val navigator = new InfoNavigator
+  val navigator = new InformationNavigator
 
   "InfoNavigator" - {
 
@@ -32,16 +32,16 @@ class InfoNavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Index" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, testErn) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
+          controllers.routes.IndexController.onPageLoad(testErn)
       }
 
       "for the DispatchPlace page" - {
 
         "must go to the Destination Type page" in {
 
-          navigator.nextPage(DispatchPlacePage, NormalMode, testErn) mustBe
-            controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn)
+          navigator.nextPage(DispatchPlacePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
 
@@ -49,8 +49,8 @@ class InfoNavigatorSpec extends SpecBase {
 
         "must go to the Deferred Movement page" in {
 
-          navigator.nextPage(DestinationTypePage, NormalMode, testErn) mustBe
-            controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn)
+          navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
 
@@ -58,8 +58,8 @@ class InfoNavigatorSpec extends SpecBase {
 
         "must go to the LocalReferenceNumber page" in {
 
-          navigator.nextPage(DeferredMovementPage, NormalMode, testErn) mustBe
-            controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn)
+          navigator.nextPage(DeferredMovementPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
 
@@ -67,18 +67,18 @@ class InfoNavigatorSpec extends SpecBase {
 
         "must go to the Invoice Details page" in {
 
-          navigator.nextPage(LocalReferenceNumberPage, NormalMode, testErn) mustBe
-            controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn)
+          navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
 
       "for the Invoice Details page" - {
 
-        //TODO update when CAMINFO006 is complete
-        "must go to the Under Construction page" in {
+        "must go to the CAM-INFO06" in {
 
-          navigator.nextPage(InvoiceDetailsPage, NormalMode, testErn) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          // TODO update when CAM-INFO006 is complete
+          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testErn)
         }
       }
     }

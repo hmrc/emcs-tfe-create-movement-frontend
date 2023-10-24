@@ -24,6 +24,8 @@ import java.time.LocalDate
 
 class DateUtilsSpec extends SpecBase with DateUtils {
 
+  lazy val app = applicationBuilder().build()
+
   ".formatDateForUIOutput()" - {
 
     Seq(MonthMessages.English, MonthMessages.Welsh).foreach { messagesForLanguage =>
@@ -32,7 +34,7 @@ class DateUtilsSpec extends SpecBase with DateUtils {
         s"for month: `$month and language: '${messagesForLanguage.lang.code}'" - {
 
           "must format it correctly" in {
-            implicit val msgs: Messages = messages(applicationBuilder().build(), messagesForLanguage.lang)
+            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
             LocalDate.of(2023, month, 1).formatDateForUIOutput() mustBe
               s"1 ${messagesForLanguage.month(month)} 2023"
           }

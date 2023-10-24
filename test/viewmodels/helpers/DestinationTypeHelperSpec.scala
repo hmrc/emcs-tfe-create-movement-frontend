@@ -18,11 +18,11 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
-import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import models.{NorthernIrelandWarehouse, Unknown}
-import models.requests.UserRequest
+import models.requests.DataRequest
 import models.response.InvalidUserTypeException
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
+import models.{NorthernIrelandWarehouse, Unknown}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -40,12 +40,12 @@ class DestinationTypeHelperSpec extends SpecBase {
           s"when ERN is a warehouse keeper and starts with $ern" - {
             "title" - {
               "must return the correct value" in {
-                helper.title(userRequest(FakeRequest()).copy(ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
+                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
               }
             }
             "heading" - {
               "must return the correct value" in {
-                helper.heading(userRequest(FakeRequest()).copy(ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
+                helper.heading(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
               }
             }
           }
@@ -55,12 +55,12 @@ class DestinationTypeHelperSpec extends SpecBase {
           s"when ERN is a registered consignor and starts with $ern" - {
             "title" - {
               "must return the correct value" in {
-                helper.title(userRequest(FakeRequest()).copy(ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
+                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
               }
             }
             "heading" - {
               "must return the correct value" in {
-                helper.heading(userRequest(FakeRequest()).copy(ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
+                helper.heading(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
               }
             }
           }
@@ -70,7 +70,7 @@ class DestinationTypeHelperSpec extends SpecBase {
         "title" - {
           "must throw an error" in {
             val result = intercept[InvalidUserTypeException] {
-              helper.title(userRequest(FakeRequest()).copy(ern = "beans123"), msgs)
+              helper.title(dataRequest(FakeRequest(), ern = "beans123"), msgs)
             }
             result.message mustBe s"[DestinationTypeHelper][title] invalid UserType for CAM journey: $Unknown"
           }
@@ -78,7 +78,7 @@ class DestinationTypeHelperSpec extends SpecBase {
         "heading" - {
           "must throw an error" in {
             val result = intercept[InvalidUserTypeException] {
-              helper.heading(userRequest(FakeRequest()).copy(ern = "beans123"), msgs)
+              helper.heading(dataRequest(FakeRequest(), ern = "beans123"), msgs)
             }
             result.message mustBe s"[DestinationTypeHelper][heading] invalid UserType for CAM journey: $Unknown"
           }
@@ -88,32 +88,32 @@ class DestinationTypeHelperSpec extends SpecBase {
       "options" - {
         "must return two options" - {
           "when ERN is a GBRC" in {
-            implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "GBRC123")
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBRC123")
             helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
           }
           "when ERN is a XIWK and dispatchPlace=GB" in {
-            implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "XIWK123")
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
             helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
           }
           "when ERN is a GBWK" in {
-            implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "GBWK123")
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBWK123")
             helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
           }
         }
         "must return more than two options" - {
           "when ERN is XIWK and dispatchPlace=XI" in {
-            implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "XIWK123")
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
             helper.options(NorthernIreland) mustBe MovementScenario.valuesEu.map(helper.radioOption)
           }
           "when ERN is XIRC and dispatchPlace=XI" in {
-            implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "XIRC123")
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIRC123")
             helper.options(NorthernIreland) mustBe MovementScenario.valuesEu.map(helper.radioOption)
           }
         }
         "must throw an exception" - {
           "when userType is unexpected" in {
             val result = intercept[InvalidUserTypeException] {
-              implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = "XI00123")
+              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XI00123")
               helper.options(NorthernIreland)
             }
             result.message mustBe s"[DestinationTypeHelper][options] invalid UserType for CAM journey: $NorthernIrelandWarehouse"

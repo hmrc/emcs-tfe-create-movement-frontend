@@ -20,7 +20,7 @@ import controllers.routes
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -44,6 +44,9 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
+      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+
+    case JourneyTimeDaysPage => (userAnswers: UserAnswers) =>
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckYourAnswersJourneyTypePage =>

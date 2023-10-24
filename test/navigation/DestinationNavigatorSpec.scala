@@ -40,7 +40,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationWarehouseExcisePage, "Answer")
 
           navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testLrn, NormalMode)
+            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
 
         }
 

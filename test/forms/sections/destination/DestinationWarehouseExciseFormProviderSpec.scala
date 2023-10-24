@@ -25,7 +25,7 @@ class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
   val maxLength = 16
-  val invalidCharactersKey = "destinationWarehouseVat.error.invalidCharacters"
+  val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacters"
 
   val form = new DestinationWarehouseExciseFormProvider()()
 

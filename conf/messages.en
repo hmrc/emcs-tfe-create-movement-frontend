@@ -327,6 +327,18 @@ giveInformationOtherTransport.error.character = Information must contain letters
 giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
 giveInformationOtherTransport.change.hidden = give information about your other type of transport
 
+journeyTimeHours.title = How many hours will the journey take?
+journeyTimeHours.heading = How many hours will the journey take?
+journeyTimeHours.input.suffix = hours
+journeyTimeHours.switchToDays = Journey time is longer than 24 hours
+journeyTimeHours.checkYourAnswersLabel = Journey time
+journeyTimeHours.checkYourAnswersValue = {0} hours
+journeyTimeHours.error.nonNumeric = Hours must only contain numbers
+journeyTimeHours.error.required = Enter how many hours the journey will take
+journeyTimeHours.error.wholeNumber = Hours must only contain numbers
+journeyTimeHours.error.outOfRange = Hours must be 23 or less
+journeyTimeHours.change.hidden = how many hours the journey will take
+
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?
 consigneeBusinessName.checkYourAnswersLabel = Trader name

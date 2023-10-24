@@ -30,7 +30,8 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
     SummaryListViewModel(
       rows = Seq(
         HowMovementTransportedSummary.row(true),
-        GiveInformationOtherTransportSummary.row(true)
+        GiveInformationOtherTransportSummary.row(true),
+        JourneyTimeHoursSummary.row()
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

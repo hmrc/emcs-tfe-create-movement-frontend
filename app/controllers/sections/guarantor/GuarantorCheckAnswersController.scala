@@ -27,7 +27,6 @@ import viewmodels.checkAnswers.sections.guarantor.GuarantorCheckAnswersHelper
 import views.html.sections.guarantor.GuarantorCheckAnswersView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class GuarantorCheckAnswersController @Inject()(
                                                  override val messagesApi: MessagesApi,
@@ -43,20 +42,16 @@ class GuarantorCheckAnswersController @Inject()(
                                                ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      Future.successful(
-        Ok(view(
-          cyaHelper.summaryList(),
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(ern, draftId)
-        ))
-      )
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Ok(view(
+        cyaHelper.summaryList(),
+        controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(ern, draftId)
+      ))
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      Future.successful(
-        Redirect(navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, request.userAnswers))
-      )
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Redirect(navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, request.userAnswers))
     }
 
 

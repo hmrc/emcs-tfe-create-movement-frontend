@@ -46,7 +46,7 @@ class GuarantorArrangerController @Inject()(
                                            ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       withGuarantorRequiredAnswer {
         renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
       }
@@ -57,7 +57,7 @@ class GuarantorArrangerController @Inject()(
       withGuarantorRequiredAnswer {
         formProvider().bindFromRequest().fold(
           formWithErrors =>
-            renderView(BadRequest, formWithErrors, mode),
+            Future.successful(renderView(BadRequest, formWithErrors, mode)),
           {
             case value@(GoodsOwner | Transporter) =>
               saveAndRedirect(GuarantorArrangerPage, value, mode)
@@ -76,12 +76,10 @@ class GuarantorArrangerController @Inject()(
       }
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    Future.successful(
-      status(view(
-        form = form,
-        mode = mode
-      ))
-    )
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+    status(view(
+      form = form,
+      mode = mode
+    ))
   }
 }

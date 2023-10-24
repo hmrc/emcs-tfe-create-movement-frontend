@@ -17,7 +17,7 @@
 package controllers.sections.destination
 
 import controllers.BaseNavigationController
-import controllers.actions.{AuthAction, AuthActionHelper, DataRequiredAction, DataRetrievalAction, UserAllowListAction}
+import controllers.actions._
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import models.Mode
 import navigation.DestinationNavigator
@@ -44,22 +44,22 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                   ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) {
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         withAnswer(DestinationTypePage) {
           movementScenario =>
-            Future.successful(Ok(view(
+            Ok(view(
               form = fillForm(DestinationDetailsChoicePage, formProvider(movementScenario)),
               action = routes.DestinationDetailsChoiceController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario
-            )))
+            ))
         }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        withAnswer(DestinationTypePage) {
+        withAnswerAsync(DestinationTypePage) {
           movementScenario =>
             formProvider(movementScenario).bindFromRequest().fold(
               formWithErrors =>

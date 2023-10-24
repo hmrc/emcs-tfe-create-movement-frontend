@@ -69,7 +69,7 @@ class TransportUnitIdentityController @Inject()(
 
 
   private def withTransportUnitType(index: Index)(f: TransportUnitType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(
+    withAnswerAsync(
       page = TransportUnitTypePage(index),
       redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
     )(f)

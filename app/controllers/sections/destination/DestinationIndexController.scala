@@ -28,7 +28,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class DestinationIndexController @Inject()(
                                             override val userAnswersService: UserAnswersService,
@@ -41,21 +40,21 @@ class DestinationIndexController @Inject()(
                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
           if(DestinationSection.isCompleted) {
             // TODO: update once CYA page is built
-            Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+            Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
           } else {
             if (shouldRedirectToDestinationWarehouseExcise) {
-              Future.successful(Redirect(controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode)))
+              Redirect(controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
             } else if (shouldRedirectToDestinationWarehouseVat) {
-              Future.successful(Redirect(controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode)))
+              Redirect(controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
               // TODO: Change redirect location when tasklist is built
-              Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+              Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
             }
           }
       }

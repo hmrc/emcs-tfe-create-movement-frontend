@@ -26,7 +26,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class CheckYourAnswersConsignorController @Inject()(override val messagesApi: MessagesApi,
                                                     override val auth: AuthAction,
@@ -39,21 +38,20 @@ class CheckYourAnswersConsignorController @Inject()(override val messagesApi: Me
                                                    ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) {
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         withAnswer(
           page = ConsignorAddressPage,
-          //TODO: update redirectRoute to journey index page when built
-          redirectRoute = controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, draftId, NormalMode)
+          redirectRoute = controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(ern, draftId)
         ) {
           consignorAddress =>
-            Future.successful(Ok(view(
+            Ok(view(
               controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, draftId),
               ern,
               draftId,
               consignorAddress,
               request.traderKnownFacts
-            )))
+            ))
         }
     }
 

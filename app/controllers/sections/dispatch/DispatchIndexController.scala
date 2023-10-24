@@ -24,7 +24,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class DispatchIndexController @Inject()(
                                          override val userAnswersService: UserAnswersService,
@@ -37,12 +36,12 @@ class DispatchIndexController @Inject()(
                                        ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       if (DispatchSection.isCompleted) {
-        Future.successful(Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId)))
+        Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
         // TODO: Change redirect location when CAM-DIS01 is built
-        Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       }
     }
 }

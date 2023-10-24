@@ -24,7 +24,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class ImportInformationIndexController @Inject()(
                                                   override val userAnswersService: UserAnswersService,
@@ -37,17 +36,13 @@ class ImportInformationIndexController @Inject()(
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       if (ImportInformationSection.isCompleted) {
-        Future.successful(
-          // TODO: change to CAM-IMP02 when built
-          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
-        )
+        // TODO: change to CAM-IMP02 when built
+        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       } else {
-        Future.successful(
-          // TODO: change to CAM-IMP01 when built
-          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
-        )
+        // TODO: change to CAM-IMP01 when built
+        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       }
     }
 

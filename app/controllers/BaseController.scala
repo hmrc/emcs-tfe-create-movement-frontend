@@ -39,11 +39,22 @@ trait BaseController extends FrontendBaseController with I18nSupport with Enumer
   def withAnswer[A](
                      page: QuestionPage[A],
                      redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
-                   )(f: A => Future[Result])(implicit request: DataRequest[_], rds: Reads[A]): Future[Result] =
+                   )(f: A => Result)(implicit request: DataRequest[_], rds: Reads[A]): Result =
     request.userAnswers.get(page) match {
       case Some(value) => f(value)
       case None =>
-        logger.warn(s"[withAnswer] Could not retrieved required answer for page: $page")
+        logger.warn(s"[withAnswerAsync] Could not retrieved required answer for page: $page")
+        Redirect(redirectRoute)
+    }
+
+  def withAnswerAsync[A](
+                          page: QuestionPage[A],
+                          redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
+                        )(f: A => Future[Result])(implicit request: DataRequest[_], rds: Reads[A]): Future[Result] =
+    request.userAnswers.get(page) match {
+      case Some(value) => f(value)
+      case None =>
+        logger.warn(s"[withAnswerAsync] Could not retrieved required answer for page: $page")
         Future.successful(Redirect(redirectRoute))
     }
 }

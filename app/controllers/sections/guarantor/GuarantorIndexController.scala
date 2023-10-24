@@ -24,7 +24,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class GuarantorIndexController @Inject()(
                                           override val userAnswersService: UserAnswersService,
@@ -37,15 +36,11 @@ class GuarantorIndexController @Inject()(
                                         ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       if (GuarantorSection.isCompleted) {
-        Future.successful(
-          Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern ,draftId))
-        )
+        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, draftId))
       } else {
-        Future.successful(
-          Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode))
-        )
+        Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 

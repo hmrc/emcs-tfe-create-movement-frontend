@@ -23,7 +23,7 @@ import play.api.mvc.Call
 
 import javax.inject.Inject
 
-class InfoNavigator @Inject() {
+class InfoNavigator @Inject()() {
 
   private val normalRoutes: Page => String => Call = {
     case DispatchPlacePage =>

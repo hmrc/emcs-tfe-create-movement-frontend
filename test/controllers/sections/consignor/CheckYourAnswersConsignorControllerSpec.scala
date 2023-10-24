@@ -75,14 +75,14 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
         }
       }
 
-      "must redirect to /consignor/consignor-address if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
+      "must redirect to /consignor if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
 
         running(application) {
 
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url
         }
       }
     }

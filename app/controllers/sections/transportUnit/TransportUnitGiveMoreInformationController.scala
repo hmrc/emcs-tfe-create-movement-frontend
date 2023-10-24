@@ -48,7 +48,7 @@ class TransportUnitGiveMoreInformationController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage(idx), formProvider(transportUnitType)), idx, mode, transportUnitType)
         }
       }
@@ -57,7 +57,7 @@ class TransportUnitGiveMoreInformationController @Inject()(
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode, transportUnitType),
             saveAndRedirect(TransportUnitGiveMoreInformationPage(idx), _, mode)

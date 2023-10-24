@@ -20,7 +20,7 @@ import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
-import models.{Mode, NormalMode, UserAddress}
+import models.{Mode, UserAddress}
 import navigation.TransportArrangerNavigator
 import pages.QuestionPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
@@ -31,7 +31,6 @@ import services.UserAnswersService
 import views.html.AddressView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class TransportArrangerAddressController @Inject()(override val messagesApi: MessagesApi,
                                                    override val userAnswersService: UserAnswersService,
@@ -43,25 +42,24 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
                                                    override val formProvider: AddressFormProvider,
                                                    override val controllerComponents: MessagesControllerComponents,
                                                    override val view: AddressView
-                                          ) extends AddressControllerBase {
+                                                  ) extends AddressControllerBase {
 
   override val addressPage: QuestionPage[UserAddress] = TransportArrangerAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(request.ern, request.draftId, mode)
 
-  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
     withAnswer(
       page = TransportArrangerPage,
-      // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
     ) { arranger =>
-      Future.successful(status(view(
+      status(view(
         form = form,
         addressPage = addressPage,
         call = onwardCall(mode),
         headingKey = Some(s"$TransportArrangerAddressPage.$arranger")
-      )))
+      ))
     }
   }
 

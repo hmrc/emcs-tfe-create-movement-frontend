@@ -32,32 +32,31 @@ import services.UserAnswersService
 import views.html.AddressView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
-class DestinationAddressController  @Inject()(override val messagesApi: MessagesApi,
-                                           override val userAnswersService: UserAnswersService,
-                                           override val navigator: DestinationNavigator,
-                                           override val auth: AuthAction,
-                                           override val getData: DataRetrievalAction,
-                                           override val requireData: DataRequiredAction,
-                                           override val userAllowList: UserAllowListAction,
-                                           override val formProvider: AddressFormProvider,
-                                           override val controllerComponents: MessagesControllerComponents,
-                                           override val view: AddressView
-                                          ) extends AddressControllerBase {
+class DestinationAddressController @Inject()(override val messagesApi: MessagesApi,
+                                             override val userAnswersService: UserAnswersService,
+                                             override val navigator: DestinationNavigator,
+                                             override val auth: AuthAction,
+                                             override val getData: DataRetrievalAction,
+                                             override val requireData: DataRequiredAction,
+                                             override val userAllowList: UserAllowListAction,
+                                             override val formProvider: AddressFormProvider,
+                                             override val controllerComponents: MessagesControllerComponents,
+                                             override val view: AddressView
+                                            ) extends AddressControllerBase {
 
   override val addressPage: QuestionPage[UserAddress] = DestinationAddressPage
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, mode)
 
-  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    Future.successful(status(view(
+  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+    status(view(
       form = form,
       addressPage = addressPage,
       call = onwardCall(mode),
       headingKey = Some("destinationAddress")
-    )))
+    ))
 
   }
 }

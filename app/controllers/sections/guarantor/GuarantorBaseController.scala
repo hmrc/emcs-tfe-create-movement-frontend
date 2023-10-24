@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 trait GuarantorBaseController extends BaseNavigationController {
 
-  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result = {
     withAnswer(
       page = GuarantorRequiredPage,
       redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
@@ -35,13 +35,24 @@ trait GuarantorBaseController extends BaseNavigationController {
       case true => f
       case false =>
         logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
-        //TODO: Update to CYA page when built
-        Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId))
+    }
+  }
+
+  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    withAnswerAsync(
+      page = GuarantorRequiredPage,
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
+    ) {
+      case true => f
+      case false =>
+        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
+        Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId)))
     }
   }
 
 
-  def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def withGuarantorArrangerAnswer(f: GuarantorArranger => Result)(implicit request: DataRequest[_]): Result = {
     withAnswer(
       page = GuarantorArrangerPage,
       redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
@@ -50,7 +61,21 @@ trait GuarantorBaseController extends BaseNavigationController {
         f(guarantorArranger)
       case guarantorArranger =>
         logger.warn(s"[withGuarantorArrangerAnswer] Invalid answer of $guarantorArranger for this controller/page")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId))
+    }
+  }
+
+
+  def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    withAnswerAsync(
+      page = GuarantorArrangerPage,
+      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
+    ) {
+      case guarantorArranger if guarantorArranger == GoodsOwner | guarantorArranger == Transporter =>
+        f(guarantorArranger)
+      case guarantorArranger =>
+        logger.warn(s"[withGuarantorArrangerAnswer] Invalid answer of $guarantorArranger for this controller/page")
+        Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId)))
     }
   }
 

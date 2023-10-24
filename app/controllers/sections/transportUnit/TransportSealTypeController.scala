@@ -62,7 +62,7 @@ class TransportSealTypeController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+    withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
       Future(status(view(
         form,
         transportUnitType = transportUnitType,

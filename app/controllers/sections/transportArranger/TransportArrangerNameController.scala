@@ -19,10 +19,10 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerNameFormProvider
+import models.Mode
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
-import models.{Mode, NormalMode}
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 import play.api.data.Form
@@ -67,10 +67,9 @@ class TransportArrangerNameController @Inject()(
     }
 
   private def withTransportArrangerAnswer(f: TransportArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(
+    withAnswerAsync(
       page = TransportArrangerPage,
-      // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
     ) {
       case transportArranger@(GoodsOwner | Other) => f(transportArranger)
       case transportArranger =>

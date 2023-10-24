@@ -47,14 +47,14 @@ class TransportArrangerVatController @Inject()(
                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(TransportArrangerVatPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, mode),
+        formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
         saveAndRedirect(TransportArrangerVatPage, _, mode)
       )
     }
@@ -64,16 +64,15 @@ class TransportArrangerVatController @Inject()(
       saveAndRedirect(TransportArrangerVatPage, NONGBVAT, NormalMode)
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
     withAnswer(
       page = TransportArrangerPage,
-      // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
     ) { arranger =>
-      Future.successful(status(view(
+      status(view(
         form,
         routes.TransportArrangerVatController.onSubmit(request.ern, request.draftId, mode),
         arranger
-      )))
+      ))
     }
 }

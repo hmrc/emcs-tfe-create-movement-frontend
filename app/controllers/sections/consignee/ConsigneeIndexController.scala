@@ -30,7 +30,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                          override val auth: AuthAction,
@@ -43,26 +42,26 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                         ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] = {
-    authorisedDataRequestAsync(ern, draftId) {
+    authorisedDataRequest(ern, draftId) {
       implicit dataRequest =>
         withAnswer(DestinationTypePage) {
           destinationTypePageAnswer =>
             val ur: UserRequest[_] = dataRequest.request
 
-            if(ConsigneeSection.isCompleted) {
-              Future.successful(Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, draftId)))
+            if (ConsigneeSection.isCompleted) {
+              Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, draftId))
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
-                Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, draftId, NormalMode)))
+                Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, draftId, NormalMode))
               } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
-                Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, draftId, NormalMode)))
+                Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, draftId, NormalMode))
               } else if (shouldStartFlowFromConsigneeExcise(ur.userTypeFromErn, destinationTypePageAnswer)) {
-                Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, draftId, NormalMode)))
+                Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, draftId, NormalMode))
               } else {
                 logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
                   s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
                 // TODO: Change redirect location when tasklist is built
-                Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+                Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
               }
             }
         }

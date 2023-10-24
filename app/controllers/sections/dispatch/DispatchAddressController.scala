@@ -32,7 +32,6 @@ import services.UserAnswersService
 import views.html.AddressView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class DispatchAddressController  @Inject()(override val messagesApi: MessagesApi,
                                                      override val userAnswersService: UserAnswersService,
@@ -51,13 +50,13 @@ class DispatchAddressController  @Inject()(override val messagesApi: MessagesApi
     override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
       controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
 
-    override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-      Future.successful(status(view(
+    override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+      status(view(
         form = form,
         addressPage = addressPage,
         call = onwardCall(mode),
         headingKey = Some("dispatchAddress")
-      )))
+      ))
 
     }
 }

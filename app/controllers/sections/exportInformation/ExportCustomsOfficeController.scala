@@ -48,25 +48,25 @@ class ExportCustomsOfficeController @Inject()(
                                              ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(ExportCustomsOfficePage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, mode),
+        formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
         saveAndRedirect(ExportCustomsOfficePage, _, mode)
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
     withAnswer(DestinationTypePage) { destinationType =>
-      Future.successful(status(view(
+      status(view(
         form = form,
         action = routes.ExportCustomsOfficeController.onSubmit(request.ern, request.draftId, mode),
         euExport = destinationType == ExportWithCustomsDeclarationLodgedInTheEu
-      )))
+      ))
     }
   }
 

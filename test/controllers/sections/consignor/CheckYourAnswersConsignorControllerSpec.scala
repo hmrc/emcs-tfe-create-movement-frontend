@@ -19,7 +19,7 @@ package controllers.sections.consignor
 import base.SpecBase
 import controllers.routes
 import handlers.ErrorHandler
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import navigation.ConsignorNavigator
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage

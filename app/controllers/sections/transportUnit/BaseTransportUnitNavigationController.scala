@@ -26,7 +26,7 @@ import scala.concurrent.Future
 
 trait BaseTransportUnitNavigationController extends BaseNavigationController {
 
-  def validateIndex(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result]  = {
+  def validateIndex(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     super.validateIndex(TransportUnitsCount, index)(
       onSuccess,
       Future.successful(Redirect(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)))

@@ -23,8 +23,8 @@ import mocks.services.MockUserAnswersService
 import models.NormalMode
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.Tractor
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind
@@ -118,7 +118,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()

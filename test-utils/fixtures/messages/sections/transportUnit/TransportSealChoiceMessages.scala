@@ -44,6 +44,10 @@ object TransportSealChoiceMessages {
     }
 
     val hint = "This is a seal that prevents items being removed or added."
+
+    val cyaLabel = "Commercial seal"
+
+    val moreInfoCyaChangeHidden = "commercial seal"
   }
 
   object English extends ViewMessages with BaseEnglish

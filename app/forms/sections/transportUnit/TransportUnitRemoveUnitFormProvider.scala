@@ -16,20 +16,15 @@
 
 package forms.sections.transportUnit
 
-import forms.ONLY_ALPHANUMERIC_REGEX
-import forms.mappings.Mappings
-import models.sections.transportUnit.TransportUnitType
-import play.api.data.Form
-
 import javax.inject.Inject
 
-class TransportUnitIdentityFormProvider @Inject() extends Mappings {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  def apply(transportUnitType: TransportUnitType): Form[String] =
+class TransportUnitRemoveUnitFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> text(s"transportUnitIdentity.error.required.${transportUnitType.toString}")
-        .verifying(maxLength(35, s"transportUnitIdentity.error.length.${transportUnitType.toString}"))
-        .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, s"transportUnitIdentity.error.invalidCharacters.${transportUnitType.toString}"))
+      "value" -> boolean("transportUnitRemoveUnit.error.required")
     )
-
 }

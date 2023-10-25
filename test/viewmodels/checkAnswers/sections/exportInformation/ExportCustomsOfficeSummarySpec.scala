@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.sections.checkAnswers.exportInformation
+package viewmodels.checkAnswers.sections.exportInformation
 
 import base.SpecBase
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages

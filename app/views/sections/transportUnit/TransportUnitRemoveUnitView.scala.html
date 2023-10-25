@@ -15,8 +15,8 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.transportUnit.TransportUnitType
 @import viewmodels.LegendSize
+@import models.Index
 
 @this(
     layout: templates.Layout,
@@ -29,24 +29,22 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[TransportUnitType], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], indexOfTransportUnit: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("transportUnitType.title"))) {
+@layout(pageTitle = title(form, messages("transportUnitRemoveUnit.title", indexOfTransportUnit.displayIndex))) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitTypeController.onSubmit(request.ern, request.draftId, idx, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitRemoveUnitController.onSubmit(request.ern, request.draftId, indexOfTransportUnit), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("transportUnit.subHeading", request.draftId),"govuk-caption-xl")
-
+        @h2(messages("transportUnit.subHeading"), "govuk-caption-xl")
         @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("transportUnitType.heading"))).asPageHeading(LegendSize.Large),
-                items  = TransportUnitType.options
-            ).withHint(HintViewModel(messages("transportUnitType.hint")))
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(Text(messages("transportUnitRemoveUnit.heading", indexOfTransportUnit.displayIndex))).asPageHeading(LegendSize.Large)
+            )
         )
 
         @continueOrExit()
@@ -54,5 +52,5 @@
 }
 
 @{
-    //$COVERAGE-OFF$
+  //$COVERAGE-OFF$
 }

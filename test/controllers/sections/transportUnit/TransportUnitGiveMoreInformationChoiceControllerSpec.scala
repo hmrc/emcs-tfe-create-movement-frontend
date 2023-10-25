@@ -22,8 +22,8 @@ import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{Index, NormalMode}
-import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
-import navigation.{Navigator, TransportUnitNavigator}
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind
@@ -147,7 +147,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU06)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRouteTU06)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
@@ -177,7 +177,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRouteTU07)),
+            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRouteTU07)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()

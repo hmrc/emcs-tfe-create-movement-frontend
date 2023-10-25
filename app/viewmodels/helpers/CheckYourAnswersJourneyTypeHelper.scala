@@ -34,7 +34,8 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
         JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
 //        ,
-//        TransportJourneyTimeDaysSummary.row(true)
+//        JourneyTimeHoursSummary.row(true),
+//        JourneyTimeDaysSummary.row(true)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

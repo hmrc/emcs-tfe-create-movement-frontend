@@ -209,6 +209,7 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
+importInformation.subHeading = Import information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
@@ -626,3 +627,16 @@ destinationWarehouseExcise.error.required = Enter the excise registration number
 destinationWarehouseExcise.error.length = ERN must be 16 characters or less
 destinationWarehouseExcise.change.hidden = DestinationWarehouseExcise
 destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
+
+importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.northernIrishRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the EU
+importCustomsOfficeCode.northernIrishRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the EU
+importCustomsOfficeCode.preLink = This code is also known as a customs office reference number.
+importCustomsOfficeCode.ukLink = Search for UK customs office codes here
+importCustomsOfficeCode.afterLink = &nbsp;or&nbsp;
+importCustomsOfficeCode.euLink = search for EU customs office codes here
+importCustomsOfficeCode.error.required = Enter the customs office code
+importCustomsOfficeCode.error.length = Customs office code must be 8 characters
+importCustomsOfficeCode.error.invalidCharacter = Customs office code must not contain < and > and : and ;
+importCustomsOfficeCode.error.customsOfficeCodeRegex = Customs office code starts with 2 letters, followed by 6 numbers or 6 mixed letters and numbers

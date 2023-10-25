@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package forms.sections.exportInformation
+package forms.sections.importInformation
 
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.FormError
 
-class ExportCustomsOfficeFormProviderSpec extends StringFieldBehaviours {
+class ImportCustomsOfficeCodeFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "exportCustomsOffice.error.required"
-  val lengthKey = "exportCustomsOffice.error.length"
-  val xssKey = "exportCustomsOffice.error.invalidCharacter"
-  val regexKey = "exportCustomsOffice.error.customOfficeRegex"
+  val requiredKey = "importCustomsOfficeCode.error.required"
+  val lengthKey = "importCustomsOfficeCode.error.length"
+  val xssKey = "importCustomsOfficeCode.error.invalidCharacter"
+  val regexKey = "importCustomsOfficeCode.error.customsOfficeCodeRegex"
   val requiredLength = 8
 
-  val form = new ExportCustomsOfficeFormProvider()()
+  val form = new ImportCustomsOfficeCodeFormProvider()()
 
   ".value" - {
 

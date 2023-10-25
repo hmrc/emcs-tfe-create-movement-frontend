@@ -17,6 +17,7 @@
 package controllers.sections.importInformation
 
 import base.SpecBase
+import models.NormalMode
 import pages.sections.importInformation._
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
@@ -43,7 +44,7 @@ class ImportInformationIndexControllerSpec extends SpecBase {
         }
       }
     }
-    "must redirect to the importInformation required controller" in {
+    "must redirect to the Import Customs Office Code controller" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -52,9 +53,7 @@ class ImportInformationIndexControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          // TODO: update to CAM-IMP01 route when built
-          Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
     }
 

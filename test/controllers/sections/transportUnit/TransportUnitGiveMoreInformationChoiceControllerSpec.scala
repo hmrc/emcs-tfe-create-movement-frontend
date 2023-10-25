@@ -22,8 +22,8 @@ import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{Index, NormalMode}
-import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
-import navigation.{Navigator, TransportUnitNavigator}
+import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.inject.bind

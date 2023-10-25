@@ -34,7 +34,7 @@ class TransportArrangerIndexController @Inject()(
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
                                                   override val userAllowList: UserAllowListAction,
-                                                  val controllerComponents: MessagesControllerComponents,
+                                                  val controllerComponents: MessagesControllerComponents
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =

@@ -33,7 +33,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
   "TransportUnitIndex Controller" - {
 
     "when TransportUnitSection.isCompleted" - {
-      // TODO: update route when CYA page is built
+      // TODO: update route when CYA page is built (CAM-TU07)
       "must redirect to the CYA controller" in {
         val application = applicationBuilder(userAnswers = Some(
           emptyUserAnswers
@@ -43,15 +43,16 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
             .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
         )).build()
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(GET, transportUnitIndexRoute)
+          val request = FakeRequest(GET, transportUnitIndexRoute)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        }
       }
     }
 
@@ -62,12 +63,10 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       running(application) {
         val request = FakeRequest(GET, transportUnitIndexRoute)
 
-          val request = FakeRequest(GET, controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
       }
     }
 
@@ -80,8 +79,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
+        redirectLocation(result).value mustBe routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
       }
     }
   }

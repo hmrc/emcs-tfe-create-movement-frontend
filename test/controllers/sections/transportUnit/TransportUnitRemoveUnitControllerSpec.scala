@@ -70,13 +70,13 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
 
       running(application) {
         val request =
-          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testLrn, testIndex2).url)
+          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -149,13 +149,13 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
 
       running(application) {
         val request =
-          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testLrn, testIndex2).url)
+          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testLrn).url
+        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

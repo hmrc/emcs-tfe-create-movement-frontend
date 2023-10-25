@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -26,6 +27,10 @@ import javax.inject.Inject
 class ImportInformationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case ImportCustomsOfficeCodePage =>
+      //TODO update to next page when finished
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }

@@ -66,8 +66,12 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
           "must return OK and the correct view for a GET" in new Fixture() {
             running(application) {
 
-              val request = FakeRequest(GET, localReferenceNumberRoute)
-                .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+              val request =
+                FakeRequest(GET, localReferenceNumberRoute)
+                  .withSession(
+                    SessionKeys.DESTINATION_TYPE -> "unknownDestination",
+                    SessionKeys.DEFERRED_MOVEMENT -> "false"
+                  )
               val result = route(application, request).value
 
               status(result) mustEqual OK
@@ -81,7 +85,9 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
           "must return SEE_OTHER and redirect to the Deferred Movement page" in new Fixture() {
             running(application) {
 
-              val request = FakeRequest(GET, localReferenceNumberRoute).withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination")
+              val request =
+                FakeRequest(GET, localReferenceNumberRoute)
+                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination")
               val result = route(application, request).value
 
               status(result) mustEqual SEE_OTHER
@@ -140,7 +146,10 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
                   .withFormUrlEncodedBody(("value", testDraftId))
-                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+                  .withSession(
+                    SessionKeys.DESTINATION_TYPE -> "unknownDestination",
+                    SessionKeys.DEFERRED_MOVEMENT -> "false"
+                  )
 
               val result = route(application, request).value
 
@@ -164,7 +173,10 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
                   .withFormUrlEncodedBody(("value", testDraftId))
-                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+                  .withSession(
+                    SessionKeys.DESTINATION_TYPE -> "unknownDestination",
+                    SessionKeys.DEFERRED_MOVEMENT -> "false"
+                  )
 
               val result = route(application, request).value
 
@@ -179,7 +191,10 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               val request =
                 FakeRequest(POST, localReferenceNumberRoute)
                   .withFormUrlEncodedBody(("value", ""))
-                  .withSession(SessionKeys.DESTINATION_TYPE -> "unknownDestination", SessionKeys.DEFERRED_MOVEMENT -> "false")
+                  .withSession(
+                    SessionKeys.DESTINATION_TYPE -> "unknownDestination",
+                    SessionKeys.DEFERRED_MOVEMENT -> "false"
+                  )
 
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
@@ -241,8 +256,8 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
             redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testErn).url)
           }
         }
-
       }
+
     }
   }
 }

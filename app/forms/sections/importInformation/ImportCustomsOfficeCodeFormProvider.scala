@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package forms.sections.exportInformation
+package forms.sections.importInformation
 
-import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
-
-import javax.inject.Inject
 import forms.mappings.Mappings
+import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.Form
 
-class ExportCustomsOfficeFormProvider @Inject() extends Mappings {
+import javax.inject.Inject
+
+class ImportCustomsOfficeCodeFormProvider @Inject() extends Mappings {
+
+  val maxLength = 8
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("exportCustomsOffice.error.required")
+      "value" -> text("importCustomsOfficeCode.error.required")
         .verifying(firstError(
-          fixedLength(8, "exportCustomsOffice.error.length"),
-          regexp(XSS_REGEX, s"exportCustomsOffice.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, s"exportCustomsOffice.error.customOfficeRegex")
+          fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
+          regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter"),
+          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex")
         ))
     )
 }

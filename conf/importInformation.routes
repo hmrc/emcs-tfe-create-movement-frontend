@@ -1,1 +1,7 @@
-GET        /trader/:ern/draft/:draftId/import-information        controllers.sections.importInformation.ImportInformationIndexController.onPageLoad(ern: String, draftId: String)
+
+GET        /trader/:ern/draft/:draftId/import-information                                       controllers.sections.importInformation.ImportInformationIndexController.onPageLoad(ern: String, draftId: String)
+
+GET        /trader/:ern/draft/:draftId/import-information/customs-office                        controllers.sections.importInformation.ImportCustomsOfficeCodeController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/import-information/customs-office                        controllers.sections.importInformation.ImportCustomsOfficeCodeController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/import-information/customs-office/change                 controllers.sections.importInformation.ImportCustomsOfficeCodeController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/import-information/customs-office/change                 controllers.sections.importInformation.ImportCustomsOfficeCodeController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)

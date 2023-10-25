@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object JourneyTimeHoursPage extends QuestionPage[Int] {
-
-  override def path: JsPath = JsPath \ "journeyType" \ toString
-
-  override def toString: String = "journeyTimeHours"
+  override val toString: String = "journeyTimeHours"
+  override val path: JsPath = JsPath \ "journeyType" \ toString
 }

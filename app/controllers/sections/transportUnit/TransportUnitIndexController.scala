@@ -20,9 +20,9 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.{Index, NormalMode}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.TransportUnitsCount
 import services.UserAnswersService
 
 import javax.inject.Inject

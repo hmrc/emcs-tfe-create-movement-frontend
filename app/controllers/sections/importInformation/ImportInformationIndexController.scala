@@ -18,6 +18,7 @@ package controllers.sections.importInformation
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.NormalMode
 import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportInformationSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,8 +42,7 @@ class ImportInformationIndexController @Inject()(
         // TODO: change to CAM-IMP02 when built
         Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       } else {
-        // TODO: change to CAM-IMP01 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 

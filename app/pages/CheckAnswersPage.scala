@@ -18,5 +18,5 @@ package pages
 
 case object CheckAnswersPage extends Page {
 
-  override def toString: String = "checkAnswers"
+  override val toString: String = "checkAnswers"
 }

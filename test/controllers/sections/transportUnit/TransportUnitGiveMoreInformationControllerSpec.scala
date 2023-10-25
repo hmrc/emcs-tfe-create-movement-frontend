@@ -20,8 +20,9 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import mocks.services.MockUserAnswersService
-import models.TransportUnitType.Tractor
-import models.{NormalMode, TransportUnitType}
+import models.NormalMode
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.Tractor
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}

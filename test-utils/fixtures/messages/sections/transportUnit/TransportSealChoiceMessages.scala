@@ -17,8 +17,8 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
-import models.TransportUnitType
-import models.TransportUnitType._
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType._
 
 object TransportSealChoiceMessages {
 

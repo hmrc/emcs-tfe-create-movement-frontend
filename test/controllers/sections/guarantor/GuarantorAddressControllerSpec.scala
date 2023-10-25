@@ -25,8 +25,7 @@ import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

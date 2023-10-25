@@ -31,16 +31,16 @@ trait MockUserAnswersConnector extends MockFactory {
 
   object MockUserAnswersConnector {
 
-    def get(ern: String, lrn: String): CallHandler4[String, String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Option[UserAnswers]]]] =
+    def get(ern: String, draftId: String): CallHandler4[String, String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Option[UserAnswers]]]] =
       (mockUserAnswersConnector.get(_: String, _: String)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(ern, lrn, *, *)
+        .expects(ern, draftId, *, *)
 
     def put(userAnswers: UserAnswers): CallHandler3[UserAnswers, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, UserAnswers]]] =
       (mockUserAnswersConnector.put(_: UserAnswers)(_: HeaderCarrier, _: ExecutionContext))
         .expects(userAnswers, *, *)
 
-    def delete(ern: String, lrn: String): CallHandler4[String, String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Boolean]]] =
+    def delete(ern: String, draftId: String): CallHandler4[String, String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Boolean]]] =
       (mockUserAnswersConnector.delete(_: String, _: String)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(ern, lrn, *, *)
+        .expects(ern, draftId, *, *)
   }
 }

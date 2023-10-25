@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.transportUnit
 
 import forms.behaviours.OptionFieldBehaviours
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.FormError
 
 class TransportUnitTypeFormProviderSpec extends OptionFieldBehaviours {
@@ -32,7 +32,7 @@ class TransportUnitTypeFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[TransportUnitType](
       form,
       fieldName,
-      validValues  = TransportUnitType.values,
+      validValues = TransportUnitType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

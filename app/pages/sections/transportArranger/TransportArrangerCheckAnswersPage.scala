@@ -20,5 +20,5 @@ import pages.Page
 
 case object TransportArrangerCheckAnswersPage extends Page {
 
-  override def toString: String = "transportArrangerCheckAnswers"
+  override val toString: String = "transportArrangerCheckAnswers"
 }

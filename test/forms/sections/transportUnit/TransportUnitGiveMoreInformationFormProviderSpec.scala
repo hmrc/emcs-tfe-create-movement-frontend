@@ -17,9 +17,9 @@
 package forms.sections.transportUnit
 
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationMessages
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import forms.behaviours.StringFieldBehaviours
-import models.TransportUnitType
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
+import models.sections.transportUnit.TransportUnitType
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}

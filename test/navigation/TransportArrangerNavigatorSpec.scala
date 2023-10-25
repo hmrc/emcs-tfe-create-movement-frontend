@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode}
+import models.{CheckMode, NormalMode, ReviewMode}
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import pages.Page
 import pages.sections.transportArranger._
@@ -31,11 +31,11 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
+      "must go from a page that doesn't exist in the route map to TransportArranger CYA" in {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
+          controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
 
       "for the TransportArrangerPage" - {
@@ -198,6 +198,14 @@ class TransportArrangerNavigatorSpec extends SpecBase {
           navigator.nextPage(TransportArrangerAddressPage, CheckMode, emptyUserAnswers) mustBe
             controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
+      }
+    }
+
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

@@ -20,9 +20,9 @@ import base.SpecBase
 import fixtures.TransportUnitFixtures
 import forms.sections.transportUnit.TransportSealTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.TransportUnitType.{Container, Tractor}
-import models.sections.transportUnit.TransportSealTypeModel
-import models.{NormalMode, TransportUnitType, UserAnswers}
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit._

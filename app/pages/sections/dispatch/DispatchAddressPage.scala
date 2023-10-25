@@ -21,9 +21,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DispatchAddressPage extends QuestionPage[UserAddress] {
-
-  override def path: JsPath = JsPath \ "dispatchAddress" \ toString
-
-  override def toString: String = "dispatchAddress"
+  override val toString: String = "dispatchAddress"
+  override val path: JsPath = DispatchSection.path \ toString
 }
 

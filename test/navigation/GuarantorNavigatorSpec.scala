@@ -18,11 +18,11 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
+import models.{CheckMode, NormalMode, ReviewMode}
+import pages.Page
 import pages.sections.guarantor._
-import pages.{GuarantorArrangerPage, Page}
 
 class GuarantorNavigatorSpec extends SpecBase {
   val navigator = new GuarantorNavigator
@@ -31,11 +31,10 @@ class GuarantorNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
-
+      "must go from a page that doesn't exist in the route map to Guarantor CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
 
       "for GuarantorRequiredPage" - {
@@ -116,6 +115,22 @@ class GuarantorNavigatorSpec extends SpecBase {
           navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
+      }
+    }
+
+    "in Check mode" - {
+      "must go to Guarantor CYA" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+      }
+    }
+
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

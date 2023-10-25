@@ -44,15 +44,15 @@ class TransportSealTypeController @Inject()(
                                              view: TransportSealTypeView
                                      ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         renderView(Ok, fillForm(TransportSealTypePage(idx), formProvider()), idx, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
@@ -62,7 +62,7 @@ class TransportSealTypeController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+    withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
       Future(status(view(
         form,
         transportUnitType = transportUnitType,

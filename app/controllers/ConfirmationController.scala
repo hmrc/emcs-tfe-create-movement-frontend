@@ -38,8 +38,8 @@ class ConfirmationController @Inject()(
                                         errorHandler: ErrorHandler
                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       request.session.get(SUBMISSION_RECEIPT_REFERENCE) match {
         case Some(reference) =>
           Ok(view(reference))

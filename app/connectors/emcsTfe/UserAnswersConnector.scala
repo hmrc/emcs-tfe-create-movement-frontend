@@ -33,10 +33,10 @@ class UserAnswersConnector @Inject()(val http: HttpClient,
 
   lazy val baseUrl: String = config.emcsTfeBaseUrl
 
-  def get(ern: String, lrn: String)
+  def get(ern: String, draftId: String)
          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Option[UserAnswers]]] =
     http.GET[Either[ErrorResponse, Option[UserAnswers]]](
-      url = s"$baseUrl/user-answers/create-movement/$ern/$lrn"
+      url = s"$baseUrl/user-answers/create-movement/$ern/$draftId"
     )(GetUserAnswersReads, hc, ec)
 
   def put(userAnswers: UserAnswers)
@@ -46,10 +46,10 @@ class UserAnswersConnector @Inject()(val http: HttpClient,
       body = userAnswers
     )(UserAnswers.writes, PutUserAnswersReads, hc, ec)
 
-  def delete(ern: String, lrn: String)
+  def delete(ern: String, draftId: String)
             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
     http.DELETE[Either[ErrorResponse, Boolean]](
-      url = s"$baseUrl/user-answers/create-movement/$ern/$lrn"
+      url = s"$baseUrl/user-answers/create-movement/$ern/$draftId"
     )(DeleteUserAnswersReads, hc, ec)
 
 }

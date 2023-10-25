@@ -1,37 +1,39 @@
 # microservice specific routes
 
-->          /hmrc-frontend                               hmrcfrontend.Routes
+->          /hmrc-frontend                                   hmrcfrontend.Routes
 
-->          /error                                       error.Routes
+->          /error                                           error.Routes
 
-GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                    controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                                  controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET         /refresh-session                             controllers.KeepAliveController.keepAlive()
+GET         /refresh-session                                 controllers.KeepAliveController.keepAlive()
 
-GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET         /there-is-a-problem                              controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/signed-out                          controllers.auth.SignedOutController.signOutNotSaved()
-GET         /account/signed-out-saved                    controllers.auth.SignedOutController.signOutSaved()
-GET         /account/sign-out-survey                     controllers.auth.SignedOutController.signOutWithSurvey()
+GET         /account/signed-out                              controllers.auth.SignedOutController.signOutNotSaved()
+GET         /account/signed-out-saved                        controllers.auth.SignedOutController.signOutSaved()
+GET         /account/sign-out-survey                         controllers.auth.SignedOutController.signOutWithSurvey()
 
-GET         /trader/:ern                                 controllers.IndexController.onPageLoad(ern: String)
+GET         /trader/:ern                                     controllers.IndexController.onPageLoad(ern: String)
 
 GET         /trader/:ern/draft/:draftId/check-answers        controllers.CheckYourAnswersController.onPageLoad(ern: String, draftId: String, id: Option[String] ?= None)
 POST        /trader/:ern/draft/:draftId/check-answers        controllers.CheckYourAnswersController.onSubmit(ern: String, draftId: String)
 
 GET         /trader/:ern/draft/:draftId/confirmation         controllers.ConfirmationController.onPageLoad(ern: String, draftId: String)
 
-->          /                                            info.Routes
-->          /                                            consignor.Routes
-->          /                                            consignee.Routes
-->          /                                            journeyType.Routes
-->          /                                            transportArranger.Routes
-->          /                                            transportUnit.Routes
-->          /                                            firstTransporter.Routes
-->          /                                            dispatch.Routes
-->          /                                            exportInformation.Routes
-->          /                                            destination.Routes
-->          /                                            guarantor.Routes
-->          /                                            exportInformation.Routes
+->          /                                                info.Routes
+->          /                                                consignor.Routes
+->          /                                                consignee.Routes
+->          /                                                journeyType.Routes
+->          /                                                transportArranger.Routes
+->          /                                                transportUnit.Routes
+->          /                                                firstTransporter.Routes
+->          /                                                dispatch.Routes
+->          /                                                exportInformation.Routes
+->          /                                                destination.Routes
+->          /                                                guarantor.Routes
+->          /                                                importInformation.Routes
+->          /                                                items.Routes
+->          /                                                documents.Routes

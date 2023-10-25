@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.destination
 
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
-import forms.sections.destination.DestinationBusinessNameFormProvider
 import play.api.data.FormError
 
 class DestinationBusinessNameFormProviderSpec extends StringFieldBehaviours {

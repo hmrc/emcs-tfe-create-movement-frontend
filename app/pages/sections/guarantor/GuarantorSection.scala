@@ -16,9 +16,42 @@
 
 package pages.sections.guarantor
 
+import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor}
 import pages.sections.Section
+import pages.sections.consignee.ConsigneeSection
+import pages.sections.consignor.ConsignorSection
 import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object GuarantorSection extends Section[JsObject] {
-  override def path: JsPath = JsPath \ "guarantor"
+  override val path: JsPath = JsPath \ "guarantor"
+
+  //noinspection ScalaStyle
+  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(GuarantorRequiredPage) match {
+    case Some(true) =>
+      // guarantor required
+      request.userAnswers.get(GuarantorArrangerPage) match {
+        case Some(Consignor) => ConsignorSection.status
+        case Some(Consignee) => ConsigneeSection.status
+        case Some(_) =>
+          if(
+            request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+              request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+              request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+            Completed
+          } else {
+            InProgress
+          }
+        case None =>
+          // answer not present yet
+          InProgress
+      }
+    case Some(false) =>
+      // guarantor not required
+      Completed
+    case None =>
+      // answer not present yet
+      NotStarted
+  }
 }

@@ -17,34 +17,34 @@
 package controllers.sections.info
 
 import config.SessionKeys.INVOICE_DETAILS
-import controllers.BaseNavigationController
+import controllers.BaseController
 import controllers.actions._
 import forms.sections.info.InvoiceDetailsFormProvider
+import models.NormalMode
 import models.requests.UserRequest
-import navigation.Navigator
+import navigation.InfoNavigator
+import pages.sections.info.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
 import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import javax.inject.Inject
 
 class InvoiceDetailsController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: Navigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: InvoiceDetailsFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: InvoiceDetailsView,
-                                       timeMachine: TimeMachine
-                                     ) extends BaseNavigationController with AuthActionHelper with DateUtils {
+                                          override val messagesApi: MessagesApi,
+                                          val navigator: InfoNavigator,
+                                          override val auth: AuthAction,
+                                          override val getData: DataRetrievalAction,
+                                          override val requireData: DataRequiredAction,
+                                          override val userAllowList: UserAllowListAction,
+                                          formProvider: InvoiceDetailsFormProvider,
+                                          val controllerComponents: MessagesControllerComponents,
+                                          view: InvoiceDetailsView,
+                                          timeMachine: TimeMachine
+                                        ) extends BaseController with AuthActionHelper with DateUtils {
 
   def onPageLoad(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowList) { implicit request =>
@@ -55,7 +55,7 @@ class InvoiceDetailsController @Inject()(
     (auth(ern) andThen userAllowList) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors => renderView(BadRequest, formWithErrors),
-        value => Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        value => Redirect(navigator.nextPage(InvoiceDetailsPage, NormalMode, ern))
           .addingToSession(INVOICE_DETAILS -> Json.toJson(value).toString())
       )
     }

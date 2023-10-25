@@ -1,3 +1,5 @@
+GET         /trader/:ern/info                               controllers.sections.info.InfoIndexController.onPageLoad(ern: String)
+
 # INFO01
 GET         /trader/:ern/info/dispatch-place                controllers.sections.info.DispatchPlaceController.onPageLoad(ern: String)
 POST        /trader/:ern/info/dispatch-place                controllers.sections.info.DispatchPlaceController.onSubmit(ern: String)

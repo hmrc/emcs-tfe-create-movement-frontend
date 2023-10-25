@@ -19,10 +19,10 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerNameFormProvider
+import models.Mode
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
-import models.{Mode, NormalMode}
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 import play.api.data.Form
@@ -47,15 +47,15 @@ class TransportArrangerNameController @Inject()(
                                                  view: TransportArrangerNameView
                                                ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit dataRequest =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit dataRequest =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         renderView(Ok, fillForm(TransportArrangerNamePage, formProvider()), transportArrangerAnswer, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>
@@ -67,10 +67,9 @@ class TransportArrangerNameController @Inject()(
     }
 
   private def withTransportArrangerAnswer(f: TransportArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(
+    withAnswerAsync(
       page = TransportArrangerPage,
-      // TODO: update redirectRoute to journey index page when built
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(request.ern, request.draftId, NormalMode)
+      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
     ) {
       case transportArranger@(GoodsOwner | Other) => f(transportArranger)
       case transportArranger =>

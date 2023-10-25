@@ -19,6 +19,5 @@ package pages.sections.firstTransporter
 import pages.Page
 
 case object FirstTransporterCheckAnswersPage extends Page {
-
-  override def toString: String = "firstTransporterCheckAnswers"
+  override val toString: String = "firstTransporterCheckAnswers"
 }

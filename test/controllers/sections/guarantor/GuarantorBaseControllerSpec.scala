@@ -23,8 +23,7 @@ import models.sections.guarantor.GuarantorArranger._
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.mvc.Results.Ok
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
@@ -69,7 +68,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
   }
@@ -102,13 +101,13 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.routes.JourneyRecoveryController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
       "when guarantor arranger is Consignee" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, Consignee)) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.routes.JourneyRecoveryController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
   }

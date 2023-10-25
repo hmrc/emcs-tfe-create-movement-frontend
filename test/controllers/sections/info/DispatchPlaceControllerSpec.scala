@@ -17,9 +17,10 @@
 package controllers.sections.info
 
 import base.SpecBase
-import forms.DispatchPlaceFormProvider
+import forms.sections.info.DispatchPlaceFormProvider
 import mocks.services.MockUserAnswersService
-import models.{DispatchPlace, UserAnswers}
+import models.UserAnswers
+import models.sections.info.DispatchPlace
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import play.api.inject.bind

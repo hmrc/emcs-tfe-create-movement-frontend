@@ -19,7 +19,8 @@ package controllers.sections.transportUnit
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitTypePage}
 import play.api.data.Form
@@ -44,19 +45,19 @@ class TransportUnitGiveMoreInformationController @Inject()(
                                                             view: TransportUnitGiveMoreInformationView
                                                           ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage(idx), formProvider(transportUnitType)), idx, mode, transportUnitType)
         }
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(TransportUnitTypePage(idx)) { transportUnitType =>
+        withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode, transportUnitType),
             saveAndRedirect(TransportUnitGiveMoreInformationPage(idx), _, mode)

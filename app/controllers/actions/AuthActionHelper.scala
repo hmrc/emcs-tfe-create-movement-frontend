@@ -30,13 +30,13 @@ trait AuthActionHelper {
 
   private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
     auth(ern) andThen userAllowList
-  private def authorisedWithData(ern: String, lrn: String): ActionBuilder[DataRequest, AnyContent] =
-    authorised(ern) andThen getData(lrn) andThen requireData
+  private def authorisedWithData(ern: String, draftId: String): ActionBuilder[DataRequest, AnyContent] =
+    authorised(ern) andThen getData(draftId) andThen requireData
 
-  def authorisedDataRequest(ern: String, lrn: String)(block: DataRequest[_] => Result): Action[AnyContent] =
-    authorisedWithData(ern, lrn)(block)
+  def authorisedDataRequest(ern: String, draftId: String)(block: DataRequest[_] => Result): Action[AnyContent] =
+    authorisedWithData(ern, draftId)(block)
 
-  def authorisedDataRequestAsync(ern: String, lrn: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
-    authorisedWithData(ern, lrn).async(block)
+  def authorisedDataRequestAsync(ern: String, draftId: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
+    authorisedWithData(ern, draftId).async(block)
 
 }

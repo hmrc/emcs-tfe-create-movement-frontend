@@ -18,8 +18,7 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

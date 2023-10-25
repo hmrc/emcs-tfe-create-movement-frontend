@@ -20,10 +20,10 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorVatMessages
 import fixtures.messages.sections.guarantor.GuarantorVatMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -58,7 +58,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
             GuarantorVatSummary.row mustBe None
           }
@@ -66,7 +66,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
         "and there is a GuarantorRequiredPage answer of `no`" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
             GuarantorVatSummary.row mustBe None
           }
@@ -76,7 +76,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
           "and there is a GuarantorArrangerPage answer of `Consignee`" - {
             "then must not return a row" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -89,7 +89,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
           "and there is a GuarantorArrangerPage answer of `Consignor`" - {
             "then must not return a row" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -103,7 +103,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
             "and there is no answer for GuarantorVatPage" - {
               "then must render not provided row with change link" in {
-                implicit lazy val request = dataRequest(
+                implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
@@ -116,7 +116,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
             "and there is a GuarantorVatPage answer" - {
               "then must render row with value and change link" in {
-                implicit lazy val request = dataRequest(
+                implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
@@ -132,7 +132,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           "and there is a GuarantorArrangerPage answer of `Transporter`" - {
             "and there is no answer for GuarantorVatPage" - {
               "then must render not provided row with change link" in {
-                implicit lazy val request = dataRequest(
+                implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
@@ -145,7 +145,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
             "and there is a GuarantorVatPage answer" - {
               "then must render row with value and change link" in {
-                implicit lazy val request = dataRequest(
+                implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)

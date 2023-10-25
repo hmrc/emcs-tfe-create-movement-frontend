@@ -20,11 +20,11 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.GuarantorArrangerPage
 import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.guarantor.{GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -59,7 +59,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
             GuarantorNameSummary.row mustBe None
           }
@@ -67,7 +67,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
         "and there is a GuarantorRequiredPage answer of `no`" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
             GuarantorNameSummary.row mustBe None
           }
@@ -78,7 +78,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           "and there is a GuarantorArrangerPage answer of `Consignee`" - {
             "and that section hasn't been filled in yet" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -89,7 +89,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
             }
 
             "and that section has been filled in" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -103,7 +103,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
           "and there is a GuarantorArrangerPage answer of `Consignor`" - {
             "and that section has been filled in" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -117,7 +117,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
             "and that section hasn't been filled in yet" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -128,7 +128,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
             }
 
             "and that section has been filled in" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -143,7 +143,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           "and there is a GuarantorArrangerPage answer of `Transporter`" - {
             "and that section hasn't been filled in yet" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
@@ -154,7 +154,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
             }
 
             "and that section has been filled in" in {
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)

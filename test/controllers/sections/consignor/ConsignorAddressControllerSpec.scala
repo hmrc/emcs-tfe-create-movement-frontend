@@ -22,8 +22,8 @@ import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import navigation.ConsignorNavigator
+import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -49,7 +49,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
     val application = applicationBuilder(userAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[ConsignorNavigator].toInstance(new FakeConsignorNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
       )
       .build()
@@ -58,7 +58,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
   "ConsignorAddress Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(){
+    "must return OK and the correct view for a GET" in new Fixture() {
 
       running(application) {
         val request = FakeRequest(GET, consignorAddressRoute)

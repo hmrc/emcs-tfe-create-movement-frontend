@@ -42,16 +42,16 @@ class CheckYourAnswersJourneyTypeController @Inject()(
                                                        view: CheckYourAnswersJourneyTypeView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       Ok(view(
         checkYourAnswersJourneyTypeHelper.summaryList(),
-        controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(ern, lrn)
+        controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(ern, draftId)
       ))
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       Redirect(navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, request.userAnswers))
     }
 }

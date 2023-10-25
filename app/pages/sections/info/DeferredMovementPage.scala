@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DeferredMovementPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ "info" \ toString
-
-  override def toString: String = "deferredMovement"
+  override val toString: String = "deferredMovement"
+  override val path: JsPath = JsPath \ "info" \ toString
 }

@@ -46,38 +46,36 @@ class GuarantorVatController @Inject()(
                                         view: GuarantorVatView
                                       ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         renderView(Ok, fillForm(GuarantorVatPage, formProvider()), guarantorArranger, mode)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>
-            renderView(BadRequest, formWithErrors, guarantorArranger, mode),
+            Future.successful(renderView(BadRequest, formWithErrors, guarantorArranger, mode)),
           value =>
             saveAndRedirect(GuarantorVatPage, value, mode)
         )
       }
     }
 
-  def onNonGbVAT(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onNonGbVAT(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       saveAndRedirect(GuarantorVatPage, NONGBVAT, NormalMode)
     }
 
-  private def renderView(status: Status, form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    Future.successful(
-      status(view(
-        form = form,
-        guarantorArranger = guarantorArranger,
-        mode = mode
-      ))
-    )
+  private def renderView(status: Status, form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_]): Result = {
+    status(view(
+      form = form,
+      guarantorArranger = guarantorArranger,
+      mode = mode
+    ))
   }
 
 }

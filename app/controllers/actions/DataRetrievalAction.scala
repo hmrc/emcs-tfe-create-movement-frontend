@@ -29,7 +29,7 @@ class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersServi
                                         getTraderKnownFactsService: GetTraderKnownFactsService)
                                        (implicit val ec: ExecutionContext) extends DataRetrievalAction {
 
-  def apply(lrn: String): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
+  def apply(draftId: String): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
 
     override val executionContext = ec
 
@@ -38,15 +38,15 @@ class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersServi
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
       for {
-        userAnswers <- userAnswersService.get(request.ern, lrn)
+        userAnswers <- userAnswersService.get(request.ern, draftId)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
       } yield {
-        OptionalDataRequest(request, lrn, userAnswers, traderKnownFacts)
+        OptionalDataRequest(request, draftId, userAnswers, traderKnownFacts)
       }
     }
   }
 }
 
 trait DataRetrievalAction {
-  def apply(lrn: String): ActionTransformer[UserRequest, OptionalDataRequest]
+  def apply(draftId: String): ActionTransformer[UserRequest, OptionalDataRequest]
 }

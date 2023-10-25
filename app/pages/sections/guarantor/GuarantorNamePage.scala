@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object GuarantorNamePage extends QuestionPage[String] {
-
-  override def path: JsPath = JsPath \ "guarantor" \ toString
-
-  override def toString: String = "guarantorName"
+  override val toString: String = "guarantorName"
+  override val path: JsPath = GuarantorSection.path \ toString
 }

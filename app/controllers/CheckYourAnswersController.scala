@@ -42,33 +42,33 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            addressLookupFrontendService: AddressLookupFrontendService
                                           ) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, id: Option[String] = None): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, id: Option[String] = None): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
 
       id match {
         case Some(identifier) =>
           addressLookupFrontendService.retrieveAddress(identifier).map {
             case Right(address) =>
               Ok(view(
-                routes.CheckYourAnswersController.onSubmit(ern, lrn),
+                routes.CheckYourAnswersController.onSubmit(ern, draftId),
                 checkAnswersHelper.summaryList(Seq.empty),
                 address
               ))
             case _ => Ok(view(
-              routes.CheckYourAnswersController.onSubmit(ern, lrn),
+              routes.CheckYourAnswersController.onSubmit(ern, draftId),
               checkAnswersHelper.summaryList(Seq.empty)
             ))
           }
         case None =>
           Future.successful(Ok(view(
-            routes.CheckYourAnswersController.onSubmit(ern, lrn),
+            routes.CheckYourAnswersController.onSubmit(ern, draftId),
             checkAnswersHelper.summaryList(Seq.empty)
           )))
       }
     }
 
-  def onSubmit(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       //TODO: Add Call to Submission Service and replace `PLACEHOLDER` with receipt from Downstream
       Redirect(navigator.nextPage(CheckAnswersPage, NormalMode, request.userAnswers))
         .addingToSession(SUBMISSION_RECEIPT_REFERENCE -> "PLACEHOLDER")

@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages._
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterVatPage}
 import play.api.mvc.Call
@@ -41,14 +41,14 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       // TODO redirect to CAM02
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
-    case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
     case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
       if (
-          userAnswers.get(FirstTransporterNamePage).isEmpty ||
+        userAnswers.get(FirstTransporterNamePage).isEmpty ||
           userAnswers.get(FirstTransporterVatPage).isEmpty ||
           userAnswers.get(FirstTransporterAddressPage).isEmpty
       ) {
@@ -60,10 +60,17 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    case _ =>
+    case CheckMode =>
       checkRoutes(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

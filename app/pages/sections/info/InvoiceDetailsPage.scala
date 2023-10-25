@@ -21,8 +21,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
-
-  override def path: JsPath = JsPath \ "info" \ toString
-
-  override def toString: String = "invoiceDetails"
+  override val toString: String = "invoiceDetails"
+  override val path: JsPath = JsPath \ "info" \ toString
 }

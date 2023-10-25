@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object TransportArrangerNamePage extends QuestionPage[String] {
-
-  override def path: JsPath = JsPath \ "transportArranger" \ toString
-
-  override def toString: String = "transportArrangerName"
+  override val toString: String = "transportArrangerName"
+  override val path: JsPath = TransportArrangerSection.path \ toString
 }

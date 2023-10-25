@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode}
+import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 
@@ -28,12 +28,10 @@ class DispatchNavigatorSpec extends SpecBase {
   "DispatchNavigator" - {
 
     "in Normal mode" - {
-
-      "must go from a page that doesn't exist in the route map to Index" in {
-
+      "must go from a page that doesn't exist in the route map to Dispatch CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
+          controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
 
       "for the DispatchBusinessNamePage" - {
@@ -86,6 +84,22 @@ class DispatchNavigatorSpec extends SpecBase {
           navigator.nextPage(DispatchAddressPage, CheckMode, emptyUserAnswers) mustBe
             controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
+      }
+    }
+
+    "in Check mode" - {
+      "must go to CheckYourAnswersDispatchController" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
+      }
+    }
+
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

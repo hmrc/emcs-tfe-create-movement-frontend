@@ -20,14 +20,13 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.DispatchPlace.GreatBritain
+import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
 import models.{NormalMode, UserAnswers}
 import navigation.DestinationNavigator
 import navigation.FakeNavigators.FakeDestinationNavigator
-import pages.DispatchPlacePage
 import pages.sections.destination.DestinationDetailsChoicePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind

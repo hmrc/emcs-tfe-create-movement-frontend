@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.destination._
 import play.api.mvc.Call
@@ -66,14 +66,28 @@ class DestinationNavigator @Inject() extends BaseNavigator {
         controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+      //TODO: update to Destination CYA when built
+      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+  }
+
+
+  private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      //TODO: update to Destination CYA when built
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+  }
+
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    //TODO update when other modes are added
-    case _ =>
-      normalRoutes(page)(userAnswers)
+    case CheckMode =>
+      checkRouteMap(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

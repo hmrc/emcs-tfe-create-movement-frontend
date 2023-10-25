@@ -18,7 +18,7 @@ package views.sections.info
 
 import base.ViewSpecBase
 import fixtures.messages.sections.info.DeferredMovementMessages
-import forms.DeferredMovementFormProvider
+import forms.sections.info.DeferredMovementFormProvider
 import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -19,8 +19,6 @@ package navigation
 import controllers.routes
 import models._
 import pages._
-import pages.sections.consignor._
-import pages.sections.info._
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -29,16 +27,6 @@ import javax.inject.{Inject, Singleton}
 class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case LocalReferenceNumberPage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern)
-    case InvoiceDetailsPage =>
-      //TODO update when CAMINFO006 is complete
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case ConsignorAddressPage =>
-      (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-    case CheckAnswersConsignorPage =>
-      //TODO: Update when next page is ready
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case CheckAnswersPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
@@ -46,8 +34,6 @@ class Navigator @Inject()() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case ConsignorAddressPage =>
-      (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }

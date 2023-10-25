@@ -43,13 +43,13 @@ class ConsigneeExportController @Inject()(
                                            view: ConsigneeExportView
                                          ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
       Ok(view(fillForm(ConsigneeExportPage, formProvider()), mode))
     }
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),

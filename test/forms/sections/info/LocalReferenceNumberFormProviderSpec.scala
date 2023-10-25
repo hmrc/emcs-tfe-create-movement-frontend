@@ -17,7 +17,6 @@
 package forms.sections.info
 
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
-import forms.LocalReferenceNumberFormProvider
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError

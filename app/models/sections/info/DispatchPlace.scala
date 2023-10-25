@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package models.sections.info
 
+import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -24,6 +25,7 @@ sealed trait DispatchPlace
 
 object DispatchPlace extends Enumerable.Implicits {
   case object GreatBritain extends WithName("GB") with DispatchPlace
+
   case object NorthernIreland extends WithName("XI") with DispatchPlace
 
   val values: Seq[DispatchPlace] = Seq(
@@ -34,8 +36,8 @@ object DispatchPlace extends Enumerable.Implicits {
     case (value, index) =>
       RadioItem(
         content = Text(messages(s"dispatchPlace.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_${value.toString}")
+        value = Some(value.toString),
+        id = Some(s"value_${value.toString}")
       )
   }
 

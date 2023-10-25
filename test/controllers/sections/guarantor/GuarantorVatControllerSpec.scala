@@ -23,8 +23,7 @@ import models.NormalMode
 import models.sections.guarantor.GuarantorArranger.Transporter
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

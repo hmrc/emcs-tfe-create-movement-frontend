@@ -32,6 +32,21 @@ object FakeNavigators {
       desiredRoute
   }
 
+  class FakeConsignorNavigator(desiredRoute: Call) extends ConsignorNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+  class FakeItemsNavigator(desiredRoute: Call) extends ItemsNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
+
+  class FakeInfoNavigator(desiredRoute: Call) extends InfoNavigator {
+    override def nextPage(page: Page, mode: Mode, ern: String): Call =
+      desiredRoute
+  }
+
   class FakeConsigneeNavigator(desiredRoute: Call) extends ConsigneeNavigator {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute

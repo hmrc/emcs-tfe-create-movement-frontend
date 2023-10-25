@@ -19,24 +19,21 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import fixtures.TransportUnitFixtures
-import models.TransportUnitType.Tractor
-import models.{Index, NormalMode}
+import models.sections.transportUnit.TransportUnitType.Tractor
+import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportUnit._
 
 class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator
 
-  "TransportUnitNavigator" - {
+  "in Normal mode" - {
 
-    "in Normal mode" - {
-
-      "must go from a page that doesn't exist in the route map to Index" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
-      }
+    "must go from a page that doesn't exist in the route map to Transport Unit CYA" in {
+      //TODO: update to Transport Unit CYA when built
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     }
 
     "for the TransportUnitType (CAM-TU01)" - {
@@ -132,6 +129,23 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         navigator.nextPage(TransportUnitGiveMoreInformationPage(testIndex1), NormalMode, userAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+    }
+  }
+
+  "in Check mode" - {
+    "must go to CheckYourAnswersTransportUnitController" in {
+      //TODO: update to Transport Unit CYA when built
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    }
+  }
+
+  "in Review mode" - {
+    "must go to CheckYourAnswers" in {
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
     }
   }
 }

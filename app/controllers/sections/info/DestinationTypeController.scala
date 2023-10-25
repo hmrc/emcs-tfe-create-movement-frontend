@@ -17,25 +17,24 @@
 package controllers.sections.info
 
 import config.SessionKeys.DESTINATION_TYPE
-import controllers.BaseNavigationController
+import controllers.BaseController
 import controllers.actions._
 import forms.sections.info.DestinationTypeFormProvider
-import models.DispatchPlace.GreatBritain
-import models.NorthernIrelandWarehouseKeeper
+import models.sections.info.DispatchPlace.GreatBritain
 import models.requests.UserRequest
-import navigation.Navigator
+import models.{NormalMode, NorthernIrelandWarehouseKeeper}
+import navigation.InfoNavigator
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
 import views.html.sections.info.DestinationTypeView
 
 import javax.inject.Inject
 
 class DestinationTypeController @Inject()(
                                            override val messagesApi: MessagesApi,
-                                           override val userAnswersService: UserAnswersService,
-                                           override val navigator: Navigator,
+                                           val navigator: InfoNavigator,
                                            override val auth: AuthAction,
                                            override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,
@@ -43,7 +42,7 @@ class DestinationTypeController @Inject()(
                                            val controllerComponents: MessagesControllerComponents,
                                            view: DestinationTypeView,
                                            val userAllowList: UserAllowListAction
-                                         ) extends BaseNavigationController with AuthActionHelper {
+                                         ) extends BaseController with AuthActionHelper {
   def onPageLoad(ern: String): Action[AnyContent] =
     (auth(ern) andThen userAllowList) { implicit request =>
       renderView(Ok, formProvider())
@@ -55,7 +54,7 @@ class DestinationTypeController @Inject()(
         formWithErrors =>
           renderView(BadRequest, formWithErrors),
         value =>
-          Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern))
+          Redirect(navigator.nextPage(DestinationTypePage, NormalMode, ern))
             .addingToSession(DESTINATION_TYPE -> value.toString)
       )
     }

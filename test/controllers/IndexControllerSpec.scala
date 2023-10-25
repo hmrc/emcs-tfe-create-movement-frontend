@@ -24,37 +24,17 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" - {
 
-    "with a Northern Ireland Warehouse Keeper ERN" - {
+    "must redirect to the info Index controller" in {
 
-      "must redirect to the Dispatch place page (CAM-INFO01)" in {
+      val application = applicationBuilder(userAnswers = None).build()
 
-        val application = applicationBuilder(userAnswers = None).build()
+      running(application) {
 
-        running(application) {
+        val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
+        val result = route(application, request).value
 
-          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testNorthernIrelandErn).url)
-        }
-      }
-    }
-
-    "with any other ERN" - {
-
-      "must redirect to the Destination Type page (CAM-INFO08)" in {
-
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, routes.IndexController.onPageLoad(testGreatBritainErn).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.sections.info.routes.DestinationTypeController.onPageLoad(testGreatBritainErn).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testNorthernIrelandErn).url)
       }
     }
   }

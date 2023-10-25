@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
-import models.{Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.transportArranger._
 import play.api.mvc.Call
@@ -52,8 +52,8 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       //TODO: Update to route to next section when built
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
-    case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+    case _ => (userAnswers: UserAnswers) =>
+        controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
@@ -72,10 +72,17 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    case _ =>
+    case CheckMode =>
       checkRoutes(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

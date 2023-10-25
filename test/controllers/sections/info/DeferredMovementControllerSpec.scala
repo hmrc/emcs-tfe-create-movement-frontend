@@ -17,7 +17,7 @@
 package controllers.sections.info
 
 import base.SpecBase
-import forms.DeferredMovementFormProvider
+import forms.sections.info.DeferredMovementFormProvider
 import mocks.services.MockUserAnswersService
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator

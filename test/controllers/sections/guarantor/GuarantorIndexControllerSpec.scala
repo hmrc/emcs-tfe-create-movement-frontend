@@ -17,7 +17,10 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import models.NormalMode
+import models.sections.guarantor.GuarantorArranger.Consignor
+import models.{NormalMode, UserAddress}
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -25,7 +28,25 @@ import play.api.test.Helpers._
 class GuarantorIndexControllerSpec extends SpecBase {
 
   "GuarantorIndexController" - {
+    "when GuarantorSection.isCompleted" - {
+      "must redirect to the CYA controller" in {
+        val application = applicationBuilder(userAnswers = Some(
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, true)
+            .set(GuarantorArrangerPage, Consignor)
+            .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+        )).build()
 
+        running(application) {
+
+          val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        }
+      }
+    }
     "must redirect to the guarantor required controller" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

@@ -152,7 +152,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
+          controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 

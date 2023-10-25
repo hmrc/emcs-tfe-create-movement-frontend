@@ -18,7 +18,7 @@ package forms.sections.transportUnit
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.FormError
 
 class TransportUnitIdentityFormProviderSpec extends StringFieldBehaviours {
@@ -29,13 +29,11 @@ class TransportUnitIdentityFormProviderSpec extends StringFieldBehaviours {
   val invalidCharactersKey = "transportUnitIdentity.error.invalidCharacters"
 
 
-
-
   ".value" - {
     Seq(
       ("FixedTransport", TransportUnitType.FixedTransport, 5),
       ("Tractor", TransportUnitType.Tractor, 4),
-      ("Trailer" , TransportUnitType.Trailer, 3),
+      ("Trailer", TransportUnitType.Trailer, 3),
       ("Vehicle", TransportUnitType.Vehicle, 2),
       ("Container", TransportUnitType.Container, 1),
     ) foreach { case (name, transportUnitType, value) =>

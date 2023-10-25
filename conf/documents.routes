@@ -1,0 +1,1 @@
+GET        /trader/:ern/draft/:draftId/documents        controllers.sections.documents.DocumentsIndexController.onPageLoad(ern: String, draftId: String)

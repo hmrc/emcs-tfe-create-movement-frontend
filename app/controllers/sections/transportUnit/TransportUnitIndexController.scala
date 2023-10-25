@@ -26,7 +26,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class TransportUnitIndexController @Inject()(
                                               override val messagesApi: MessagesApi,
@@ -39,17 +38,13 @@ class TransportUnitIndexController @Inject()(
                                               val controllerComponents: MessagesControllerComponents
                                             ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      request.userAnswers.get(TransportUnitsSection) match {
-        case Some(_) =>
-          // TODO redirect ot CAM-TU07 when page built
-          Future.successful(Redirect(
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          ))
-        case None => Future.successful(Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
-        ))
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      if (TransportUnitsSection.isCompleted) {
+        //TODO: update to CAM-TU07 when built
+        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+      } else {
+        Redirect(controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(ern, draftId, Index(0), NormalMode))
       }
     }
 }

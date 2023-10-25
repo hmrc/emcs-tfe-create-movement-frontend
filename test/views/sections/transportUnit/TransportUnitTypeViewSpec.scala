@@ -18,7 +18,7 @@ package views.sections.transportUnit
 
 import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
-import forms.TransportUnitTypeFormProvider
+import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup

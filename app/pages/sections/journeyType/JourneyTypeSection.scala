@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package forms
+package pages.sections.journeyType
 
-import javax.inject.Inject
+import models.requests.DataRequest
+import pages.sections.Section
+import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{NotStarted, TaskListStatus}
 
-import forms.mappings.Mappings
-import play.api.data.Form
+case object JourneyTypeSection extends Section[JsObject] {
+  override val path: JsPath = JsPath \ "journeyType"
 
-class LocalReferenceNumberFormProvider @Inject() extends Mappings {
-
-  def apply(isDeferred: Boolean): Form[String] =
-    Form(
-      "value" -> text(errMsgForKey("required")(isDeferred))
-        .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
-    )
-
-  private def errMsgForKey(key: String)(isDeferred: Boolean) = {
-    val infix = if (isDeferred) "deferred" else "new"
-    s"localReferenceNumber.$infix.error.$key"
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    // TODO: Update when CAM-JT flow is built
+    NotStarted
   }
 }

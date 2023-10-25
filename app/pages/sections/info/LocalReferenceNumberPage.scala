@@ -20,8 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object LocalReferenceNumberPage extends QuestionPage[String] {
-
-  override def path: JsPath = JsPath \ "info" \ toString
-
-  override def toString: String = "localReferenceNumber"
+  override val toString: String = "localReferenceNumber"
+  override val path: JsPath = JsPath \ "info" \ toString
 }

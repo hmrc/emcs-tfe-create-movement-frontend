@@ -44,16 +44,16 @@ class DestinationWarehouseVatController @Inject()(
                                        view: DestinationWarehouseVatView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) {
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
           case Some(movementScenario) =>
             Ok(view(
               form = fillForm(DestinationWarehouseVatPage, formProvider()),
-              action = routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
+              action = routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario,
-              skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, lrn, mode)
+              skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)
             ))
           case None =>
             Redirect(controllers.sections.info.routes.DestinationTypeController.onSubmit(ern))
@@ -61,8 +61,8 @@ class DestinationWarehouseVatController @Inject()(
     }
 
 
-  def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) {
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         request.userAnswers.get(DestinationTypePage) match {
           case Some(movementScenario) =>
@@ -70,9 +70,9 @@ class DestinationWarehouseVatController @Inject()(
               formWithErrors =>
                 Future.successful(BadRequest(view(
                   formWithErrors,
-                  routes.DestinationWarehouseVatController.onSubmit(ern, lrn, mode),
+                  routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
                   movementScenario = movementScenario,
-                  routes.DestinationDetailsChoiceController.onPageLoad(ern, lrn, mode)))),
+                  routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)))),
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )

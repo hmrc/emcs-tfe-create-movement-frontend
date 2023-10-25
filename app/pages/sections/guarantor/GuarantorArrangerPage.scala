@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package pages.sections.guarantor
 
 import models.sections.guarantor.GuarantorArranger
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
-
-  override def path: JsPath = JsPath \ "guarantor" \ toString
-
-  override def toString: String = "guarantorArranger"
+  override val toString: String = "guarantorArranger"
+  override val path: JsPath = GuarantorSection.path \ toString
 }

@@ -23,13 +23,13 @@ import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import navigation.ConsigneeNavigator
+import pages.sections.consignee.ConsigneeSection
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                          override val auth: AuthAction,
@@ -41,24 +41,28 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                          val controllerComponents: MessagesControllerComponents
                                         ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String): Action[AnyContent] = {
-    authorisedDataRequestAsync(ern, lrn) {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] = {
+    authorisedDataRequest(ern, draftId) {
       implicit dataRequest =>
         withAnswer(DestinationTypePage) {
           destinationTypePageAnswer =>
             val ur: UserRequest[_] = dataRequest.request
 
-            if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
-              Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, lrn, NormalMode)))
-            } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
-              Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, lrn, NormalMode)))
-            } else if (shouldStartFlowFromConsigneeExcise(ur.userTypeFromErn, destinationTypePageAnswer)) {
-              Future.successful(Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, lrn, NormalMode)))
+            if (ConsigneeSection.isCompleted) {
+              Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, draftId))
             } else {
-              logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
-                s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
-              // TODO: Change redirect location when tasklist is built
-              Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+              if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
+                Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, draftId, NormalMode))
+              } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
+                Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, draftId, NormalMode))
+              } else if (shouldStartFlowFromConsigneeExcise(ur.userTypeFromErn, destinationTypePageAnswer)) {
+                Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, draftId, NormalMode))
+              } else {
+                logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
+                  s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
+                // TODO: Change redirect location when tasklist is built
+                Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+              }
             }
         }
 

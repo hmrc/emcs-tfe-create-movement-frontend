@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.guarantor
 
+import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
-import forms.sections.guarantor.GuarantorVatFormProvider
 import play.api.data.FormError
 
 class GuarantorVatFormProviderSpec extends StringFieldBehaviours {

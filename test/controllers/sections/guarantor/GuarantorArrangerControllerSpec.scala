@@ -24,8 +24,7 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, Transp
 import models.{NormalMode, UserAddress}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorNamePage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

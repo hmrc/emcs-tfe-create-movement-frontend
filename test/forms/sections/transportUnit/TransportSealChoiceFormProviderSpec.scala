@@ -18,8 +18,8 @@ package forms.sections.transportUnit
 
 import base.SpecBase
 import forms.behaviours.BooleanFieldBehaviours
-import models.TransportUnitType
-import models.TransportUnitType._
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType._
 import play.api.data.FormError
 
 class TransportSealChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
@@ -30,14 +30,15 @@ class TransportSealChoiceFormProviderSpec extends SpecBase with BooleanFieldBeha
   val requiredKeyVehicle = "Select yes if there is a commercial seal on this vehicle"
   val requiredKeyTrailer = "Select yes if there is a commercial seal on this trailer"
   val invalidKey = "error.boolean"
+
   def form(transportUnitType: TransportUnitType) = new TransportSealChoiceFormProvider()(transportUnitType)(messages(applicationBuilder().build()))
 
   Map(Tractor -> requiredKeyTractor,
-      Container -> requiredKeyContainer,
-      FixedTransport -> requiredKeyFixed,
-      Vehicle -> requiredKeyVehicle,
-      Trailer -> requiredKeyTrailer
-     ).foreach { case (transportUnitType, errorMessage) =>
+    Container -> requiredKeyContainer,
+    FixedTransport -> requiredKeyFixed,
+    Vehicle -> requiredKeyVehicle,
+    Trailer -> requiredKeyTrailer
+  ).foreach { case (transportUnitType, errorMessage) =>
     s".value for $transportUnitType" - {
 
       val fieldName = "value"

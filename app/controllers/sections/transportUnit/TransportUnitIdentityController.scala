@@ -19,7 +19,8 @@ package controllers.sections.transportUnit
 import controllers.actions._
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.i18n.MessagesApi
@@ -43,8 +44,8 @@ class TransportUnitIdentityController @Inject()(
                                                  view: TransportUnitIdentityView
                                                ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withTransportUnitType(idx) { transportUnitType =>
           Future.successful(Ok(view(fillForm(TransportUnitIdentityPage(idx), formProvider(transportUnitType)), transportUnitType, idx, mode)))
@@ -52,8 +53,8 @@ class TransportUnitIdentityController @Inject()(
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withTransportUnitType(idx) { transportUnitType =>
           formProvider(transportUnitType).bindFromRequest().fold(
@@ -68,7 +69,7 @@ class TransportUnitIdentityController @Inject()(
 
 
   private def withTransportUnitType(index: Index)(f: TransportUnitType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswer(
+    withAnswerAsync(
       page = TransportUnitTypePage(index),
       redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
     )(f)

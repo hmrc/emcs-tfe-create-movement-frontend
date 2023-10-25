@@ -21,7 +21,7 @@ import play.api.libs.json.JsPath
 
 class QuestionPageSpec extends PageBehaviours {
   object TestPage extends QuestionPage[String] {
-    override def path: JsPath = JsPath \ toString
+    override val path: JsPath = JsPath \ toString
 
     override def toString: String = "testPage"
   }

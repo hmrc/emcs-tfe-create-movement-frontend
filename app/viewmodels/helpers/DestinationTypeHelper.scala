@@ -16,10 +16,11 @@
 
 package viewmodels.helpers
 
-import models.DispatchPlace._
+import models._
 import models.requests.UserRequest
 import models.response.InvalidUserTypeException
-import models._
+import models.sections.info.DispatchPlace
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text

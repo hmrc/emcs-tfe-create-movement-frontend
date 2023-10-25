@@ -16,16 +16,21 @@
 
 package forms.sections.transportUnit
 
-import javax.inject.Inject
 import forms.mappings.Mappings
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
 import play.api.i18n.Messages
+
+import javax.inject.Inject
 
 class TransportUnitGiveMoreInformationChoiceFormProvider @Inject() extends Mappings {
 
   def apply(transportUnitType: TransportUnitType)(implicit messages: Messages): Form[Boolean] =
     Form(
-      "value" -> boolean("transportUnitGiveMoreInformationChoice.error.required", args = Seq(messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
+      "value" ->
+        boolean(
+          "transportUnitGiveMoreInformationChoice.error.required",
+          args = Seq(messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType"))
+        )
     )
 }

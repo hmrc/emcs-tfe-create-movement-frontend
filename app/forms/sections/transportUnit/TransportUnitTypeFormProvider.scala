@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package forms.sections.transportUnit
 
 import forms.mappings.Mappings
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
 
 import javax.inject.Inject

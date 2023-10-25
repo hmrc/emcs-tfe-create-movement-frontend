@@ -18,7 +18,7 @@ package forms.sections.transportUnit
 
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
-import models.TransportUnitType
+import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
 import play.api.i18n.Messages
 

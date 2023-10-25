@@ -19,7 +19,8 @@ package controllers.sections.transportUnit
 import controllers.actions._
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, TransportUnitType}
+import models.sections.transportUnit.TransportUnitType
+import models.{Index, Mode}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit._
 import play.api.data.Form
@@ -43,10 +44,10 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
                                               view: TransportSealChoiceView
                                              ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(
+        withAnswerAsync(
           page = TransportUnitTypePage(idx),
           redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
         ) { transportUnitType =>
@@ -55,10 +56,10 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswer(
+        withAnswerAsync(
           page = TransportUnitTypePage(idx),
           redirectRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId)
         ) { transportUnitType =>
@@ -77,7 +78,7 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
   private def renderView(
                           status: Status, form: Form[_], transportUnitType: TransportUnitType, idx: Index, mode: Mode
                         )(implicit request: DataRequest[_]): Future[Result] = {
-    Future(status(view(
+    Future.successful(status(view(
       form = form,
       mode = mode,
       transportUnitType = transportUnitType,

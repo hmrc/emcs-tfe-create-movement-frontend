@@ -23,8 +23,7 @@ import models.NormalMode
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
-import pages.GuarantorArrangerPage
-import pages.sections.guarantor.GuarantorNamePage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -156,7 +155,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if the guarantor arranger value is invalid for this controller/page" in {
+    "must redirect to CYA for a GET if the guarantor arranger value is invalid for this controller/page" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(GuarantorArrangerPage, Consignee))).build()
 
@@ -166,7 +165,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url
       }
     }
 

@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.{CheckMode, Mode, NormalMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
 import play.api.mvc.Call
@@ -38,7 +38,12 @@ class DispatchNavigator @Inject() extends BaseNavigator {
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  }
+
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
@@ -52,7 +57,7 @@ class DispatchNavigator @Inject() extends BaseNavigator {
       normalRoutes(page)(userAnswers)
     case CheckMode =>
       checkRoutes(page)(userAnswers)
-    case _ =>
-      normalRoutes(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

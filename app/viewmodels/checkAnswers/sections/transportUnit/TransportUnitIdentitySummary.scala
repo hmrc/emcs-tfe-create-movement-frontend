@@ -25,15 +25,15 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportUnitIdentitySummary  {
+object TransportUnitIdentitySummary {
 
   def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(TransportUnitIdentityPage(idx)).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "transportUnitIdentity.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "transportUnitIdentity.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

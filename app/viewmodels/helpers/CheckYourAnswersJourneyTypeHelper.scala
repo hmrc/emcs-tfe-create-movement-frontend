@@ -33,6 +33,8 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
         GiveInformationOtherTransportSummary.row(true),
         JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
+//        ,
+//        TransportJourneyTimeDaysSummary.row(true)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

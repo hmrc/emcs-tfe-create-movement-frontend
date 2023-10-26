@@ -17,9 +17,11 @@
 package pages.sections.transportUnit
 
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.TaskListStatus
+import queries.TransportUnitsCount
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object TransportUnitsSection extends Section[JsObject] {
   override val toString: String = "transportUnits"
@@ -27,6 +29,12 @@ case object TransportUnitsSection extends Section[JsObject] {
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    TransportUnitsSectionUnits.status
+    (TransportUnitsSectionUnits.status, request.userAnswers.get(TransportUnitsAddToListPage), request.userAnswers.get(TransportUnitsCount)) match {
+      case (Completed, _, Some(MAX)) => Completed
+      case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
+      case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
+      case (InProgress, _, _) => InProgress
+      case (NotStarted, _, _) => NotStarted
+    }
   }
 }

@@ -29,13 +29,10 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        HowMovementTransportedSummary.row(true),
-        GiveInformationOtherTransportSummary.row(true),
+        HowMovementTransportedSummary.row(),
+        GiveInformationOtherTransportSummary.row(),
         JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
-//        ,
-//        JourneyTimeHoursSummary.row(true),
-//        JourneyTimeDaysSummary.row(true)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

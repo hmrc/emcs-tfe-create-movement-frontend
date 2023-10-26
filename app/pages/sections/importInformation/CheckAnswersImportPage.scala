@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package pages.sections.importInformation
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import pages.Page
 
-<h2 @id.map(value => s"id=$value") class="@classes">@{if(hiddenContent != None){<span class="govuk-visually-hidden">{messages(hiddenContent.get)} </span>}}@messages(msg)</h2>
+case object CheckAnswersImportPage extends Page {
 
-@{
-    //$COVERAGE-OFF$
+  override def toString: String = "checkAnswersImport"
 }

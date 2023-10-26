@@ -775,3 +775,9 @@ importCustomsOfficeCode.error.required = Enter the customs office code
 importCustomsOfficeCode.error.length = Customs office code must be 8 characters
 importCustomsOfficeCode.error.invalidCharacter = Customs office code must not contain < and > and : and ;
 importCustomsOfficeCode.error.customsOfficeCodeRegex = Customs office code starts with 2 letters, followed by 6 numbers or 6 mixed letters and numbers
+importCustomsOfficeCode.change.hidden = customs office code
+importCustomsOfficeCode.checkYourAnswers.label = Customs office code
+
+checkYourAnswersImport.heading = Check your answers
+checkYourAnswersImport.title = Check your answers
+checkYourAnswersImport.hidden = This section is:

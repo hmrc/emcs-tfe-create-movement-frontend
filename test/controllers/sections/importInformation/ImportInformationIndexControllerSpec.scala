@@ -39,8 +39,7 @@ class ImportInformationIndexControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe
-            // TODO: update to CYA route when built
-            Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+            Some(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn,testDraftId).url)
         }
       }
     }

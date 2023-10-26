@@ -39,6 +39,9 @@ object ImportCustomsOfficeCodeMessages {
       } else {
         "This code is also known as a customs office reference number. Search for UK customs office codes (opens in new tab)."
       }
+
+    val cyaLabel: String = "Customs office code"
+    val cyaChangeHidden: String = "customs office code"
   }
 
   object English extends ViewMessages with BaseEnglish

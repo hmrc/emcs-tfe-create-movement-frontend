@@ -20,10 +20,10 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import models.requests.DataRequest
-import models.response.InvalidUserTypeException
 import models.{GreatBritainRegisteredConsignor, Mode, NorthernIrelandRegisteredConsignor, UserType}
 import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -47,11 +47,12 @@ class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: Mess
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        Future.successful(Ok(view(
-          fillForm(ImportCustomsOfficeCodePage, formProvider()),
-          routes.ImportCustomsOfficeCodeController.onSubmit(ern, draftId, mode),
-          userType
-        )))
+        userType match {
+          case Some(user) =>
+            renderView(Ok, fillForm(ImportCustomsOfficeCodePage, formProvider()), mode, user)
+          case _ =>
+            Future(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+        }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
@@ -59,27 +60,35 @@ class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: Mess
       implicit request =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>
-            Future.successful(
-              BadRequest(view(
-                formWithErrors,
-                routes.ImportCustomsOfficeCodeController.onSubmit(ern, draftId, mode),
-                userType
-              ))
-            ),
+            userType match {
+              case Some(user) =>
+                renderView(BadRequest, formWithErrors, mode, user)
+              case _ =>
+                Future(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+            },
           customsOfficeCode =>
             saveAndRedirect(ImportCustomsOfficeCodePage, customsOfficeCode, mode)
         )
     }
 
-  private def userType(implicit request: DataRequest[_]): UserType =
+  def renderView(status: Status, form: Form[_], mode: Mode, user: UserType)(implicit request: DataRequest[_]) = {
+        Future.successful(status(view(
+          form = form,
+          action = routes.ImportCustomsOfficeCodeController.onSubmit(request.ern, request.draftId, mode),
+          userType = user
+        )))
+    }
+
+
+  private def userType(implicit request: DataRequest[_]): Option[UserType] =
     if (request.request.isRegisteredConsignor && request.request.isNorthernIrelandErn) {
-      NorthernIrelandRegisteredConsignor
+      Some(NorthernIrelandRegisteredConsignor)
     }
     else if (request.request.isRegisteredConsignor) {
-      GreatBritainRegisteredConsignor
+      Some(GreatBritainRegisteredConsignor)
     }
     else {
-      throw InvalidUserTypeException("[CustomsOfficeController] User must be XIRC or GBRC user type")
+      None
     }
 
 }

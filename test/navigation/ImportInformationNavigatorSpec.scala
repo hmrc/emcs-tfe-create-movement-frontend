@@ -36,12 +36,12 @@ class ImportInformationNavigatorSpec extends SpecBase {
     }
 
     "for the ImportCustomsOfficeCodePage" - {
-      "must go to test only page" in {
+      "must go to CheckYourAnswers page" in {
 
         val userAnswers = emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456")
 
         navigator.nextPage(ImportCustomsOfficeCodePage, NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn,testDraftId)
       }
     }
 

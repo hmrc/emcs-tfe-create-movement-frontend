@@ -59,6 +59,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
         val request = FakeRequest(GET, importCustomsOfficeRoute)
         val result = route(application, request).value
 
+
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
       }
@@ -99,6 +100,19 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
+      }
+    }
+
+    "must redirect to unauthorised page is ERN is not XIRC or GBRC" in new Fixture() {
+      running(application){
+        val ern = "GBWK123"
+        val request = userRequest(FakeRequest(GET, controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, testDraftId, NormalMode).url)).copy(ern = ern)
+
+        val result = route(application, request).value
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
+
       }
     }
 

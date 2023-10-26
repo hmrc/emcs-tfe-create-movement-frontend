@@ -25,8 +25,8 @@ object ConsigneeExportMessages {
     val heading = "Are the goods being exported outside of the UK and EU?"
     val errorRequired = "Select yes if this is a deferred movement"
 
-    val cyaLabel: String = "Goods being exported outside of the UK and EU"
-    val cyaChangeHidden: String = "are the goods being exported outside of the UK and EU"
+    val cyaLabel: String = "Export outside of the UK and EU"
+    val cyaChangeHidden: String = "if the goods are being exported outside of the UK and EU"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -71,7 +71,7 @@
     <logger name="io.netty" level="INFO"/>
     <logger name="sun.net.www.protocol.http" level="INFO"/>
 
-    <logger name="connector" level="TRACE">
+    <logger name="connector" level="WARN">
         <appender-ref ref="STDOUT"/>
     </logger>
 

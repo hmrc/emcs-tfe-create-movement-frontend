@@ -35,7 +35,7 @@ class JourneyTimeHoursFormProviderSpec extends BigIntFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      Random.nextInt(maximum).toString
+      Random.between(minimum, maximum).toString
     )
 
     behave like bigIntField(

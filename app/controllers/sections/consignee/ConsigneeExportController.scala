@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.sections.consignee.ConsigneeExportFormProvider
 import models.Mode
 import navigation.ConsigneeNavigator
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee.{ConsigneeExportPage, ConsigneeSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -53,8 +53,10 @@ class ConsigneeExportController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(ConsigneeExportPage, value, mode)
+        value => {
+          val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(ConsigneeExportPage, value, request.userAnswers.remove(ConsigneeSection))
+          saveAndRedirect(ConsigneeExportPage, value, updatedUserAnswers, mode)
+        }
       )
     }
 }

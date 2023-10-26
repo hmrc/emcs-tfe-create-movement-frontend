@@ -19,7 +19,7 @@ package viewmodels.helpers
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeAddressSummary, ConsigneeBusinessNameSummary, ConsigneeExciseSummary, ConsigneeExemptOrganisationSummary, ConsigneeExportVatSummary}
+import viewmodels.checkAnswers.sections.consignee._
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -29,6 +29,7 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
+        ConsigneeExportSummary.row(showActionLinks = true),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         ConsigneeExciseSummary.row(showActionLinks = true),
         ConsigneeExportVatSummary.row(showActionLinks = true),

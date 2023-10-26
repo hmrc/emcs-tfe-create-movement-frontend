@@ -377,9 +377,9 @@ consigneeAddress.change.hidden = ConsigneeAddress
 
 consigneeExport.title = Are the goods being exported outside of the UK and EU?
 consigneeExport.heading = Are the goods being exported outside of the UK and EU?
-consigneeExport.checkYourAnswers.label = Goods being exported outside of the UK and EU
+consigneeExport.checkYourAnswers.label = Export outside of the UK and EU
 consigneeExport.error.required = Select yes if the goods are being exported outside of the UK and EU
-consigneeExport.change.hidden = are the goods being exported outside of the UK and EU
+consigneeExport.change.hidden = if the goods are being exported outside of the UK and EU
 
 consigneeExportVat.title = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
 consigneeExportVat.heading = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
@@ -389,6 +389,8 @@ consigneeExportVat.no = No
 consigneeExportVat.checkYourAnswers.label = VAT or EORI number of the person representing the consignor
 consigneeExportVat.checkYourAnswers.label.yesEoriNumber = EORI Number
 consigneeExportVat.checkYourAnswers.label.yesVatNumber = VAT Number
+consigneeExportVat.checkYourAnswers.label.notKnown = VAT or EORI number
+consigneeExportVat.checkYourAnswers.value.notKnown = Number not known
 consigneeExportVat.error.required = Select consigneeExportVat
 consigneeExportVat.change.hidden = VAT or EORI number of the person representing the consignor
 consigneeExportVat.vatNumber.label = VAT number

@@ -18,14 +18,13 @@ package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportMessages
-import models.CheckMode
+import models.NormalMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.ConsigneeExportSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -62,11 +61,11 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
+                    value = Value(Text(messagesForLanguage.yes)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testDraftId, NormalMode).url,
                         id = ConsigneeExportPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
@@ -85,7 +84,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("true")),
+                    value = Value(Text(messagesForLanguage.yes)),
                     actions = Seq()
                   )
                 )

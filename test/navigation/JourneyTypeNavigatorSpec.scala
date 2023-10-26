@@ -53,7 +53,6 @@ class JourneyTypeNavigatorSpec extends SpecBase {
           }
         }
 
-        // TODO update once CAM-JT03 has been created
         "must go to the Journey Type CYA page" - {
 
           "when the option selected is not `Other`" in {
@@ -62,14 +61,13 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+              controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
       }
 
       "for the GiveInformationOtherTransport page" - {
 
-        // TODO update once CAM-JT03 has been created
         "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
             .set(LocalReferenceNumberPage, "123")
@@ -77,7 +75,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
             .set(GiveInformationOtherTransportPage, "some information text")
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
 
         }
       }
@@ -121,7 +119,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+              controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, CheckMode)
           }
         }
       }

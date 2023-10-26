@@ -49,8 +49,7 @@
             .withSuffix(PrefixOrSuffix(classes = "days-suffix", content = Text(messages("journeyTimeDays.input.suffix"))))
         )
 
-        @* TODO link to CAM-JT04 *@
-        @p()(link(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, messages("journeyTimeDays.switchToHours")))
+        @p()(link(controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(request.ern, request.draftId, NormalMode).url, messages("journeyTimeDays.switchToHours")))
 
         @continueOrExit()
     }

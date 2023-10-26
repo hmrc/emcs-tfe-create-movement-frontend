@@ -35,18 +35,16 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
           case Some(Other) =>
             controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           case _ =>
-            // TODO redirect to CAM-JT03
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         }
 
     case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
-      // TODO redirect to CAM-JT03
+      controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+
+    case JourneyTimeDaysPage => (userAnswers: UserAnswers) =>
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-
-    case JourneyTimeDaysPage => (userAnswers: UserAnswers) =>
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckYourAnswersJourneyTypePage =>
@@ -64,8 +62,7 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
           case Some(Other) =>
             controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
           case _ =>
-            // TODO redirect to CAM-JT03
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
         }
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)

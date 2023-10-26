@@ -22,6 +22,7 @@ import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -30,9 +31,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
   "TransportUnitGiveMoreInformationSummary" - {
 
     lazy val app = applicationBuilder().build()
-    val link = app.injector.instanceOf[views.html.components.link]
-
-    object TestTransportUnitGiveMoreInformationSummary extends TransportUnitGiveMoreInformationSummary(link)
+    implicit val link = app.injector.instanceOf[views.html.components.link]
 
     Seq(TransportUnitGiveMoreInformationMessages.English).foreach { messagesForLanguage =>
 
@@ -43,7 +42,9 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's no answer" - {
 
           "must output the expected data" in {
-            TestTransportUnitGiveMoreInformationSummary.row(testIndex1, emptyUserAnswers) mustBe Some(
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
@@ -60,10 +61,9 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's an answer" - {
 
           "must output the expected row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), "value"))
 
-            val answers = emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), "value")
-
-            TestTransportUnitGiveMoreInformationSummary.row(testIndex1, answers) mustBe Some(
+            TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
@@ -71,7 +71,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
                     href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "transportUnitMoreInformation"
+                    id = "changeTransportUnitMoreInformation1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )

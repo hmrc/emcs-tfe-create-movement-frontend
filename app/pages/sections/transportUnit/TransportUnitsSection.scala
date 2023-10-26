@@ -16,33 +16,17 @@
 
 package pages.sections.transportUnit
 
-import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
-import play.api.libs.json.{JsArray, JsPath}
-import queries.TransportUnitsCount
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.TaskListStatus
 
-case object TransportUnitsSection extends Section[JsArray] {
+case object TransportUnitsSection extends Section[JsObject] {
   override val toString: String = "transportUnits"
   override val path: JsPath = JsPath \ toString
-
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(TransportUnitsCount) match {
-      case Some(count) =>
-        val statuses: Seq[TaskListStatus] = Range(0, count).map(value => TransportUnitSection(Index(value)).status)
-        if (statuses.forall(_ == NotStarted)) {
-          // every transport unit is not started
-          NotStarted
-        } else if (statuses.filterNot(_ == NotStarted).forall(_ == Completed)) {
-          // every transport unit, other than ones which are not started, is completed
-          Completed
-        } else {
-          InProgress
-        }
-      case _ => NotStarted
-    }
+    TransportUnitsSectionUnits.status
   }
 }

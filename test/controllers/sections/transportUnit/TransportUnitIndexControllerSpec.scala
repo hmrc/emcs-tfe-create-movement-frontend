@@ -19,9 +19,8 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import models.sections.transportUnit.TransportUnitType.Container
-import pages.sections.transportUnit._
-import play.api.http.Status.SEE_OTHER
+import models.sections.transportUnit.TransportUnitType
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import queries.TransportUnitsCount
@@ -30,29 +29,20 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
   lazy val transportUnitIndexRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
 
-  "TransportUnitIndex Controller" - {
+  "transportUnitIndex Controller" - {
 
-    "when TransportUnitSection.isCompleted" - {
-      // TODO: update route when CYA page is built (CAM-TU07)
-      "must redirect to the CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), Container)
-            .set(TransportUnitIdentityPage(testIndex1), "")
-            .set(TransportSealChoicePage(testIndex1), false)
-            .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
-        )).build()
+    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in {
 
-        running(application) {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-          val request = FakeRequest(GET, transportUnitIndexRoute)
+      running(application) {
+        val request = FakeRequest(GET, transportUnitIndexRoute)
 
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
       }
     }
 
@@ -66,20 +56,24 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+        redirectLocation(result).value mustBe
+          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
       }
     }
 
-    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in {
+    "must redirect to the add to list page (CAM-TU07) when any answer is present" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, transportUnitIndexRoute)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+        redirectLocation(result) mustBe
+          Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url)
       }
     }
   }

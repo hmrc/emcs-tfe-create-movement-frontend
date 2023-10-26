@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package queries
+package forms.sections.transportUnit
 
-import pages.sections.transportUnit.TransportUnitsSectionUnits
-import play.api.libs.json.{JsPath, JsValue}
+import forms.mappings.Mappings
+import models.sections.transportUnit.TransportUnitsAddToListModel
+import play.api.data.Form
 
-case object TransportUnitsCount extends Derivable[List[JsValue], Int] {
-  override val derive: List[JsValue] => Int = _.size
-  override val path: JsPath = TransportUnitsSectionUnits.path
+import javax.inject.Inject
+
+class TransportUnitsAddToListFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[TransportUnitsAddToListModel] =
+    Form(
+      "value" -> enumerable[TransportUnitsAddToListModel]("transportUnitsAddToList.error.required")
+    )
 }

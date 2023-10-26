@@ -23,6 +23,8 @@ import models.sections.transportUnit.TransportUnitType.Tractor
 import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportUnit._
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
+import models.sections.transportUnit.TransportUnitsAddToListModel
 
 class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator
@@ -30,10 +32,9 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   "in Normal mode" - {
 
     "must go from a page that doesn't exist in the route map to Transport Unit CYA" in {
-      //TODO: update to Transport Unit CYA when built
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
     }
 
     "for the TransportUnitType (CAM-TU01)" - {
@@ -42,7 +43,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
 
         navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
+          transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
       }
     }
 
@@ -55,7 +56,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportUnitIdentityPage(testIndex1), "weee")
 
         navigator.nextPage(TransportUnitIdentityPage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+          transportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
       }
     }
 
@@ -68,7 +69,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportSealChoicePage(testIndex1), true)
 
         navigator.nextPage(TransportSealChoicePage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          transportUnitRoutes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
       }
 
       "must go to CAM-TU05 when TransportSealChoice is false" in {
@@ -78,7 +79,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportSealChoicePage(testIndex1), false)
 
         navigator.nextPage(TransportSealChoicePage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          transportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
       }
     }
 
@@ -89,7 +90,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         val userAnswers = emptyUserAnswers.set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
 
         navigator.nextPage(TransportSealTypePage(testIndex1), NormalMode, userAnswers) mustBe
-          controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          transportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
       }
 
     }
@@ -102,24 +103,22 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
 
           navigator.nextPage(TransportUnitGiveMoreInformationChoicePage(testIndex1), NormalMode, userAnswers) mustBe
-            controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            transportUnitRoutes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 
-      // TODO redirect to CAM-TU07
       "must go to CAM-TU07" - {
 
         "when the answer is No" in {
           val userAnswers = emptyUserAnswers.set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
 
           navigator.nextPage(TransportUnitGiveMoreInformationChoicePage(testIndex1), NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
         }
       }
     }
 
     "for the TransportUnitGiveMoreInformation (CAM-TU06)" - {
-      // TODO redirect to CAM-TU07
       "must go to CAM-TU07" in {
 
         val userAnswers = emptyUserAnswers
@@ -127,9 +126,48 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
           .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
 
         navigator.nextPage(TransportUnitGiveMoreInformationPage(testIndex1), NormalMode, userAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
       }
     }
+
+    "for the TransportUnitAddToListPage (CAM-TU07)" - {
+      "must go to CAM-TU01" - {
+        "when user selects yes" in {
+
+          val userAnswers = emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.Yes)
+
+          navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
+            transportUnitRoutes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)
+        }
+      }
+      "must go to CAM02" - {
+        "when user selects I'll add more later" in {
+
+          val userAnswers = emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.MoreToCome)
+
+          navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        "when user selects no more" in {
+
+          val userAnswers = emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.NoMoreToCome)
+
+          navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+    }
+
   }
 
   "in Check mode" - {
@@ -137,7 +175,8 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       //TODO: update to Transport Unit CYA when built
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
+
     }
   }
 

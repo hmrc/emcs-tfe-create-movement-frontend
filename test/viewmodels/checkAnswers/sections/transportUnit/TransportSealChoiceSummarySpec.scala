@@ -18,10 +18,11 @@ package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
-import fixtures.messages.sections.transportUnit.TransportUnitIdentityMessages
+import fixtures.TransportUnitFixtures
+import fixtures.messages.sections.transportUnit.TransportSealChoiceMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.transportUnit.TransportUnitIdentityPage
+import pages.sections.transportUnit.TransportSealChoicePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -29,13 +30,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
+class TransportSealChoiceSummarySpec extends SpecBase with Matchers with TransportUnitFixtures {
 
-  "TransportUnitIdentitySummary" - {
+  "TransportSealChoiceSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportUnitIdentityMessages.English).foreach { messagesForLanguage =>
+    Seq(TransportSealChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -43,11 +44,11 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "must output row with answer not provided" in {
+          "must output a row with not provided" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -55,9 +56,9 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeTransportSealChoice1"
+                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
                 )
               )
@@ -66,21 +67,21 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "must output the expected row" in {
+          s"must output the expected row for TransportSealChoice" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("testName")),
+                  value = Value(Text("Yes")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeTransportSealChoice1"
+                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
                 )
               )

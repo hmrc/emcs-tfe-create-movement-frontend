@@ -16,31 +16,32 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import models.{CheckMode, Index, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportSealChoicePage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportSealChoiceSummary  {
+object TransportSealChoiceSummary {
 
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealChoicePage(idx)).map {
-      answer =>
-
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "transportSealChoice.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id ="changeTransportSealChoice")
-              .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
-          )
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    Some(
+      SummaryListRowViewModel(
+        key = "transportSealChoice.checkYourAnswersLabel",
+        value = ValueViewModel(getValue(idx)),
+        actions = Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            id = s"changeTransportSealChoice${idx.displayIndex}")
+            .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
         )
-    }
+      ))
+
+
+  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
+    request.userAnswers.get(TransportSealChoicePage(idx)).fold(Text(messages("site.notProvided")))(answer => if (answer) "site.yes" else "site.no")
 }

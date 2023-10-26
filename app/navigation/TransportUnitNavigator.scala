@@ -17,11 +17,13 @@
 package navigation
 
 import controllers.routes
-import controllers.sections.transportUnit.{routes => trasnportUnitRoutes}
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
+import models.sections.transportUnit.TransportUnitsAddToListModel
+import models.{Index, CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.transportUnit._
 import play.api.mvc.Call
+import queries.TransportUnitsCount
 
 import javax.inject.Inject
 
@@ -29,20 +31,20 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
     case TransportUnitIdentityPage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      transportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case TransportSealChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportSealChoicePage(idx)) match {
         case Some(true) =>
-          trasnportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          transportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          transportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
     case TransportSealTypePage(idx) => (userAnswers: UserAnswers) =>
-      trasnportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      transportUnitRoutes.TransportUnitGiveMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case TransportUnitGiveMoreInformationChoicePage(idx) =>
       (userAnswers: UserAnswers) =>
@@ -50,27 +52,34 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
           case Some(true) =>
             controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
-            //TODO redirect to CAM-TU07
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
 
-    case TransportUnitGiveMoreInformationPage(_) => (_: UserAnswers) =>
-      // TODO redirect to CAM-TU07
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case TransportUnitGiveMoreInformationPage(_) => (userAnswers: UserAnswers) =>
+      transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+
+    case TransportUnitsAddToListPage => (answers: UserAnswers) =>
+      answers.get(TransportUnitsAddToListPage) match {
+        case Some(TransportUnitsAddToListModel.Yes) =>
+          transportUnitRoutes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(TransportUnitsCount).getOrElse(0)), NormalMode)
+        case Some(TransportUnitsAddToListModel.NoMoreToCome | TransportUnitsAddToListModel.MoreToCome) =>
+          // TODO Redirect to (CAM02) task list when competed
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
 
     case _ =>
-      // TODO: update to CAM-TU07 when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      // TODO: update to CAM-TU07 when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    _ =>
+      (userAnswers: UserAnswers) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
-    case _ =>
+    _ =>
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 

@@ -20,9 +20,9 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.{Index, NormalMode}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.TransportUnitsCount
 import services.UserAnswersService
 
 import javax.inject.Inject
@@ -40,11 +40,13 @@ class TransportUnitIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (TransportUnitsSection.isCompleted) {
-        //TODO: update to CAM-TU07 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
-      } else {
-        Redirect(controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(ern, draftId, Index(0), NormalMode))
+      request.userAnswers.get(TransportUnitsCount) match {
+        case None | Some(0) => Redirect(
+          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
+        )
+        case Some(_) => Redirect(
+          controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.draftId)
+        )
       }
     }
 }

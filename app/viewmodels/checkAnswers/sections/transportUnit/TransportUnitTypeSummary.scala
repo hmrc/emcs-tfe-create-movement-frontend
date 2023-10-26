@@ -17,7 +17,8 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, Index, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,8 +27,8 @@ import viewmodels.implicits._
 
 object TransportUnitTypeSummary {
 
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportUnitTypePage(idx)).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(TransportUnitTypePage(idx)).map {
       answer =>
         SummaryListRowViewModel(
           key = "transportUnitType.checkYourAnswersLabel",
@@ -35,8 +36,8 @@ object TransportUnitTypeSummary {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              "changeTransportUnitType"
+              routes.TransportUnitTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              s"changeTransportUnitType${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("transportUnitType.change.hidden"))
           )
         )

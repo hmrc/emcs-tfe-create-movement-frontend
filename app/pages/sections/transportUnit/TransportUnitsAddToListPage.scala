@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package queries
+package pages.sections.transportUnit
 
-import pages.sections.transportUnit.TransportUnitsSectionUnits
-import play.api.libs.json.{JsPath, JsValue}
+import models.sections.transportUnit.TransportUnitsAddToListModel
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case object TransportUnitsCount extends Derivable[List[JsValue], Int] {
-  override val derive: List[JsValue] => Int = _.size
-  override val path: JsPath = TransportUnitsSectionUnits.path
+case object TransportUnitsAddToListPage extends QuestionPage[TransportUnitsAddToListModel] {
+  override val toString: String = "transportUnitsAddToList"
+  override val path: JsPath = TransportUnitsSection.path \ toString
 }

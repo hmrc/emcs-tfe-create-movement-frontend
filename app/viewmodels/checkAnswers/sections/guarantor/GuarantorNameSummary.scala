@@ -16,9 +16,10 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.CheckMode
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
+import models.{CheckMode, NormalMode}
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
 import play.api.i18n.Messages
@@ -35,35 +36,40 @@ object GuarantorNameSummary {
 
       request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
 
-        val showChangeLink: Boolean = arranger == GoodsOwner || arranger == Transporter
-
-        val businessName: String = arranger match {
-          case Consignor => request.traderKnownFacts.traderName
-          case Consignee => request.userAnswers.get(ConsigneeBusinessNamePage) match {
-            case Some(answer) => HtmlFormat.escape(answer).toString()
-            case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
-          }
-          case GoodsOwner | Transporter =>
-            request.userAnswers.get(GuarantorNamePage) match {
-              case Some(answer) => HtmlFormat.escape(answer).toString()
-              case None => messages("site.notProvided")
-            }
-        }
-
         SummaryListRowViewModel(
           key = "guarantorName.checkYourAnswersLabel",
-          value = ValueViewModel(businessName),
-          actions = if (!showChangeLink) Seq() else Seq(
-            ActionItemViewModel(
-              "site.change",
-              controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-              "changeGuarantorName"
-            ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
-          )
+          value = ValueViewModel(businessName(arranger)),
+          actions = if (!showChangeLink(arranger)) {
+            Seq()
+          } else {
+            val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
+            Seq(
+              ActionItemViewModel(
+                "site.change",
+                controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, mode).url,
+                "changeGuarantorName"
+              ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
+            )
+          }
         )
       }
     }
 
+  }
+
+  private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
+
+  private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): String = arranger match {
+    case Consignor => request.traderKnownFacts.traderName
+    case Consignee => request.userAnswers.get(ConsigneeBusinessNamePage) match {
+      case Some(answer) => HtmlFormat.escape(answer).toString()
+      case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
+    }
+    case GoodsOwner | Transporter =>
+      request.userAnswers.get(GuarantorNamePage) match {
+        case Some(answer) => HtmlFormat.escape(answer).toString()
+        case None => messages("site.notProvided")
+      }
   }
 
 }

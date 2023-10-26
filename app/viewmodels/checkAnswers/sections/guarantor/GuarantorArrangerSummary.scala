@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.CheckMode
+import models.NormalMode
 import models.requests.DataRequest
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
@@ -44,7 +44,7 @@ object GuarantorArrangerSummary {
             controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
               ern = request.ern,
               draftId = request.draftId,
-              mode = CheckMode
+              mode = NormalMode
             ).url,
             id = "changeGuarantorArranger")
             .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))

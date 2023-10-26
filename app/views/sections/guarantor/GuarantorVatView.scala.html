@@ -54,7 +54,7 @@
 
         @p() {
             @link(
-                controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(request.ern, request.draftId).url,
+                controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(request.ern, request.draftId, mode).url,
                 s"guarantorVat.$guarantorArranger.notUkVatLink"
             )
         }

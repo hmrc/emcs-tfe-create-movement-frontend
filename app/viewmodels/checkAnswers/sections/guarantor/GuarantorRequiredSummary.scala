@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.CheckMode
+import models.NormalMode
 import models.requests.DataRequest
 import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
@@ -40,7 +40,7 @@ object GuarantorRequiredSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.draftId, NormalMode).url,
             "changeGuarantorRequired"
           )
             .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))

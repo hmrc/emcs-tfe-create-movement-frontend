@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages.ViewMessages
-import models.CheckMode
+import models.NormalMode
 import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -39,7 +39,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url,
           id = "changeGuarantorRequired"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )

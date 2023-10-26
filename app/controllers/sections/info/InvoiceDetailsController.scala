@@ -71,7 +71,7 @@ class InvoiceDetailsController @Inject()(
         form = form,
         currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
         onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
-        skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, mode, request.userAnswers)
       ))
     )
   }

@@ -16,56 +16,63 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.INVOICE_DETAILS
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.InvoiceDetailsFormProvider
-import models.NormalMode
-import models.requests.UserRequest
-import navigation.InfoNavigator
+import models.Mode
+import models.requests.DataRequest
+import navigation.InformationNavigator
 import pages.sections.info.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.PreDraftService
 import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class InvoiceDetailsController @Inject()(
                                           override val messagesApi: MessagesApi,
-                                          val navigator: InfoNavigator,
-                                          override val auth: AuthAction,
-                                          override val getData: DataRetrievalAction,
-                                          override val requireData: DataRequiredAction,
-                                          override val userAllowList: UserAllowListAction,
+                                          val preDraftService: PreDraftService,
+                                          val navigator: InformationNavigator,
+                                          val auth: AuthAction,
+                                          val getPreDraftData: PreDraftDataRetrievalAction,
+                                          val requirePreDraftData: PreDraftDataRequiredAction,
+                                          val getData: DataRetrievalAction,
+                                          val requireData: DataRequiredAction,
+                                          val userAllowList: UserAllowListAction,
                                           formProvider: InvoiceDetailsFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: InvoiceDetailsView,
                                           timeMachine: TimeMachine
-                                        ) extends BaseController with AuthActionHelper with DateUtils {
+                                        ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper with DateUtils {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      renderView(Ok, formProvider())
+  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+      renderView(Ok, fillForm(InvoiceDetailsPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
+  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors => renderView(BadRequest, formWithErrors),
-        value => Redirect(navigator.nextPage(InvoiceDetailsPage, NormalMode, ern))
-          .addingToSession(INVOICE_DETAILS -> Json.toJson(value).toString())
+        formWithErrors =>
+          renderView(BadRequest, formWithErrors, mode),
+        value =>
+          savePreDraftAndRedirect(InvoiceDetailsPage, value, mode)
       )
     }
 
-  private def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result = {
-    status(view(
-      form = form,
-      currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
-      onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern),
-      skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    ))
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future.successful(
+      status(view(
+        form = form,
+        currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
+        onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
+        skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, mode, request.userAnswers)
+      ))
+    )
   }
 }

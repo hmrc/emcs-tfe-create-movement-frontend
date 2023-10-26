@@ -17,7 +17,7 @@
 package viewmodels.helpers
 
 import models._
-import models.requests.UserRequest
+import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
@@ -29,7 +29,7 @@ import utils.Logging
 
 class DestinationTypeHelper extends Logging {
 
-  def title(implicit request: UserRequest[_], messages: Messages): String = request.userTypeFromErn match {
+  def title(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
     case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.title.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.title.import")
     case userType =>
@@ -37,7 +37,7 @@ class DestinationTypeHelper extends Logging {
       throw InvalidUserTypeException(s"[DestinationTypeHelper][title] invalid UserType for CAM journey: $userType")
   }
 
-  def heading(implicit request: UserRequest[_], messages: Messages): String = request.userTypeFromErn match {
+  def heading(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
     case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.heading.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.heading.import")
     case userType =>
@@ -45,7 +45,7 @@ class DestinationTypeHelper extends Logging {
       throw InvalidUserTypeException(s"[DestinationTypeHelper][heading] invalid UserType for CAM journey: $userType")
   }
 
-  def options(dispatchPlace: DispatchPlace)(implicit request: UserRequest[_], messages: Messages): Seq[RadioItem] = {
+  def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
     // Note: __RC can only do imports, __WK can only do exports
     request.userTypeFromErn match {
       case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesUk.map(radioOption)

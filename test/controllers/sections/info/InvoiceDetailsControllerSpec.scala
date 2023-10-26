@@ -18,17 +18,21 @@ package controllers.sections.info
 
 import base.SpecBase
 import forms.sections.info.InvoiceDetailsFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeInfoNavigator
+import navigation.InformationNavigator
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
+import services.{PreDraftService, UserAnswersService}
 import utils.{DateUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import java.time.{LocalDate, LocalDateTime}
+import scala.concurrent.Future
 
-class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with DateUtils {
+class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateUtils {
 
   val testLocalDate = LocalDate.of(2023, 2, 9)
 
@@ -36,17 +40,19 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
     override def now(): LocalDateTime = testLocalDate.atStartOfDay()
   }
 
-  class Fixture() {
+  class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     val formProvider = new InvoiceDetailsFormProvider()
     val form = formProvider()
 
-    lazy val invoiceDetailsRoute = controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn).url
-    lazy val invoiceDetailsOnSubmit= controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn)
+    lazy val invoiceDetailsRoute = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, NormalMode).url
+    lazy val invoiceDetailsOnSubmit = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
 
-    val application = applicationBuilder()
+    val application = applicationBuilder(userAnswers)
       .overrides(
+        bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService),
+        bind[PreDraftService].toInstance(mockPreDraftService),
         bind[TimeMachine].toInstance(timeMachine)
       )
       .build()
@@ -69,14 +75,16 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = form,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        )(userRequest(request), messages(application)).toString
+          skipQuestionCall = testOnwardRoute
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       running(application) {
+        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+
         val request =
           FakeRequest(POST, invoiceDetailsRoute)
             .withFormUrlEncodedBody(
@@ -89,7 +97,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 
@@ -109,8 +117,8 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = boundForm,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        )(userRequest(request), messages(application)).toString
+          skipQuestionCall = testOnwardRoute
+        )(dataRequest(request), messages(application)).toString
       }
     }
   }

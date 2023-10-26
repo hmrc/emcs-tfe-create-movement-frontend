@@ -20,7 +20,8 @@ import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
 
 object LocalReferenceNumberMessages {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+  sealed trait ViewMessages extends BaseMessages {
+    _: i18n =>
 
     val newHeading: String = "Create a unique reference for this movement"
     val newTitle: String = titleHelper(newHeading)
@@ -34,6 +35,9 @@ object LocalReferenceNumberMessages {
     val deferredP1: String = "This must match the LRN on the Fallback Accompanying Document (FAD)."
     val deferredErrorRequired: String = "Enter the LRN"
     val deferredErrorLength: String = "LRN must be 22 characters or less"
+
+    val cyaLabel: String = "Local Reference Number (LRN)"
+    val cyaChangeHidden: String = "Local Reference Number (LRN)"
   }
 
   object English extends ViewMessages with BaseEnglish

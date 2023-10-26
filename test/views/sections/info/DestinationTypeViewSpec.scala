@@ -19,8 +19,9 @@ package views.sections.info
 import base.ViewSpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
 import forms.sections.info.DestinationTypeFormProvider
+import models.NormalMode
+import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
-import models.requests.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -42,12 +43,12 @@ class DestinationTypeViewSpec extends ViewSpecBase with ViewBehaviours {
           ern =>
             s"for ERN starting with $ern" - {
               implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-              implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = s"${ern}123")
+              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
               val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleMovement,
@@ -61,12 +62,12 @@ class DestinationTypeViewSpec extends ViewSpecBase with ViewBehaviours {
           ern =>
             s"for ERN starting with $ern" - {
               implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-              implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest()).copy(ern = s"${ern}123")
+              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
               val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleImport,

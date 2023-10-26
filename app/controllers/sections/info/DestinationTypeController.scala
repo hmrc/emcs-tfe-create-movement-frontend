@@ -16,60 +16,67 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.DESTINATION_TYPE
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DestinationTypeFormProvider
+import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
-import models.requests.UserRequest
-import models.{NormalMode, NorthernIrelandWarehouseKeeper}
-import navigation.InfoNavigator
+import models.{Mode, NorthernIrelandWarehouseKeeper}
+import navigation.InformationNavigator
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.PreDraftService
 import views.html.sections.info.DestinationTypeView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DestinationTypeController @Inject()(
                                            override val messagesApi: MessagesApi,
-                                           val navigator: InfoNavigator,
-                                           override val auth: AuthAction,
-                                           override val getData: DataRetrievalAction,
-                                           override val requireData: DataRequiredAction,
+                                           val preDraftService: PreDraftService,
+                                           val navigator: InformationNavigator,
+                                           val auth: AuthAction,
+                                           val getPreDraftData: PreDraftDataRetrievalAction,
+                                           val requirePreDraftData: PreDraftDataRequiredAction,
+                                           val getData: DataRetrievalAction,
+                                           val requireData: DataRequiredAction,
                                            formProvider: DestinationTypeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: DestinationTypeView,
                                            val userAllowList: UserAllowListAction
-                                         ) extends BaseController with AuthActionHelper {
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      renderView(Ok, formProvider())
+                                         ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+
+  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+      renderView(Ok, fillForm(DestinationTypePage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
+  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          renderView(BadRequest, formWithErrors),
+          renderView(BadRequest, formWithErrors, mode),
         value =>
-          Redirect(navigator.nextPage(DestinationTypePage, NormalMode, ern))
-            .addingToSession(DESTINATION_TYPE -> value.toString)
+          savePreDraftAndRedirect(DestinationTypePage, value, mode)
       )
     }
 
-  private[info] def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result = {
-    request.dispatchPlace match {
-      case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
-        // GB ERN or XIRC ERN
-        status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)))
-      case Some(dispatchPlace) =>
-        // XIWK ERN, dispatchPlace is known
-        status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onSubmit(request.ern)))
-      case None =>
-        // XI ERN, dispatchPlace is unknown
-        Redirect(controllers.sections.info.routes.DispatchPlaceController.onPageLoad(request.ern))
-    }
+  private[info] def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future.successful(
+      request.dispatchPlace match {
+        case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
+          // GB ERN or XIRC ERN
+          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, mode)))
+        case Some(dispatchPlace) =>
+          // XIWK ERN, dispatchPlace is known
+          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, mode)))
+        case None =>
+          // XI ERN, dispatchPlace is unknown
+          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, mode))
+      }
+    )
   }
 }

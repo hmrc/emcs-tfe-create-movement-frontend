@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Logging
 
@@ -55,7 +55,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
         authorised().retrieve(Retrievals.affinityGroup and Retrievals.allEnrolments and Retrievals.internalId and Retrievals.credentials) {
 
           case Some(Organisation) ~ enrolments ~ Some(internalId) ~ Some(credentials) =>
-            checkOrganisationEMCSEnrolment(ern, enrolments, internalId, credentials.providerId)(block)
+            checkOrganisationEMCSEnrolment(ern, enrolments, internalId, credentials.providerId, hc.sessionId)(block)
 
           case Some(Organisation) ~ _ ~ None ~ _ =>
             logger.warn("[invokeBlock] InternalId could not be retrieved from Auth")
@@ -86,7 +86,8 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
   private def checkOrganisationEMCSEnrolment[A](ernFromUrl: String,
                                                 enrolments: Enrolments,
                                                 internalId: String,
-                                                credId: String
+                                                credId: String,
+                                                sessionId: Option[SessionId]
                                                )(block: UserRequest[A] => Future[Result])
                                                (implicit request: Request[A]): Future[Result] =
     enrolments.enrolments.filter(enrolment => enrolment.key == EnrolmentKeys.EMCS_ENROLMENT) match {
@@ -96,7 +97,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       case emcsEnrolments =>
         emcsEnrolments.find(_.identifiers.exists(ident => ident.key == EnrolmentKeys.ERN && ident.value == ernFromUrl)) match {
           case Some(enrolment) if enrolment.isActivated =>
-            block(UserRequest(request, ernFromUrl, internalId, credId))
+            block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value))
           case Some(_) =>
             logger.debug(s"[checkOrganisationEMCSEnrolment] ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found but not activated")
             Future.successful(Redirect(controllers.error.routes.ErrorController.inactiveEnrolment()))

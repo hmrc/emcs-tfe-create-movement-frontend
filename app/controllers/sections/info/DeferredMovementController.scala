@@ -16,49 +16,56 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.DEFERRED_MOVEMENT
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DeferredMovementFormProvider
-import models.NormalMode
-import models.requests.UserRequest
-import navigation.InfoNavigator
+import models.Mode
+import models.requests.DataRequest
+import navigation.InformationNavigator
 import pages.sections.info.DeferredMovementPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.PreDraftService
 import views.html.sections.info.DeferredMovementView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DeferredMovementController @Inject()(
                                             override val messagesApi: MessagesApi,
-                                            val navigator: InfoNavigator,
-                                            override val auth: AuthAction,
-                                            override val getData: DataRetrievalAction,
-                                            override val requireData: DataRequiredAction,
+                                            val preDraftService: PreDraftService,
+                                            val navigator: InformationNavigator,
+                                            val auth: AuthAction,
+                                            val getPreDraftData: PreDraftDataRetrievalAction,
+                                            val requirePreDraftData: PreDraftDataRequiredAction,
+                                            val getData: DataRetrievalAction,
+                                            val requireData: DataRequiredAction,
                                             formProvider: DeferredMovementFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: DeferredMovementView,
                                             val userAllowList: UserAllowListAction
-                                          ) extends BaseController with AuthActionHelper {
+                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      renderView(Ok, formProvider())
+  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+      renderView(Ok, fillForm(DeferredMovementPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
+  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          renderView(BadRequest, formWithErrors),
+          renderView(BadRequest, formWithErrors, mode),
         value =>
-          Redirect(navigator.nextPage(DeferredMovementPage, NormalMode, ern))
-            .addingToSession(DEFERRED_MOVEMENT -> value.toString)
+          savePreDraftAndRedirect(DeferredMovementPage, value, mode)
       )
     }
 
-  def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result =
-    status(view(form, controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern)))
+  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future.successful(
+      status(view(form, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(request.ern, mode)))
+    )
+  }
 }

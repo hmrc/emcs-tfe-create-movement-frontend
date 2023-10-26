@@ -17,8 +17,8 @@
 package forms.sections.info
 
 import forms.mappings.Mappings
-import models.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
-import models.requests.UserRequest
+import models._
+import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.movementScenario.MovementScenario
 import play.api.data.Form
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class DestinationTypeFormProvider @Inject() extends Mappings with Logging {
 
-  def apply()(implicit request: UserRequest[_]): Form[MovementScenario] =
+  def apply()(implicit request: DataRequest[_]): Form[MovementScenario] =
     Form(
       "value" -> enumerable[MovementScenario](requiredKey = {
         request.userTypeFromErn match {

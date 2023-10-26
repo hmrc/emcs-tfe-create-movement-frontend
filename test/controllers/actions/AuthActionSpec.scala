@@ -29,8 +29,9 @@ import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,7 +39,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 
-  implicit val fakeRequest = FakeRequest()
+  implicit val fakeRequest = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
 
   lazy val app = applicationBuilder(userAnswers = None).build()
 
@@ -69,7 +70,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                    enrolments: Enrolments = Enrolments(Set.empty),
                    internalId: Option[String] = Some(testInternalId),
                    credId: Option[Credentials] = Some(Credentials(testCredId, "gg"))): AuthRetrieval =
-    new ~(new ~(new ~(affinityGroup, enrolments), internalId), credId)
+    new~(new~(new~(affinityGroup, enrolments), internalId), credId)
 
   "AuthAction" - {
 

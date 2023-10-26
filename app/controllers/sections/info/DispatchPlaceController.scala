@@ -16,61 +16,68 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.DISPATCH_PLACE
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DispatchPlaceFormProvider
-import models.NormalMode
-import models.requests.UserRequest
-import navigation.InfoNavigator
+import models.requests.DataRequest
+import models.{Mode, NormalMode}
+import navigation.InformationNavigator
 import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.PreDraftService
 import views.html.sections.info.DispatchPlaceView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DispatchPlaceController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         val navigator: InfoNavigator,
-                                         override val auth: AuthAction,
-                                         override val getData: DataRetrievalAction,
-                                         override val requireData: DataRequiredAction,
+                                         val preDraftService: PreDraftService,
+                                         val navigator: InformationNavigator,
+                                         val auth: AuthAction,
+                                         val getPreDraftData: PreDraftDataRetrievalAction,
+                                         val requirePreDraftData: PreDraftDataRequiredAction,
+                                         val getData: DataRetrievalAction,
+                                         val requireData: DataRequiredAction,
                                          formProvider: DispatchPlaceFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: DispatchPlaceView,
                                          val userAllowList: UserAllowListAction
-                                       ) extends BaseController with AuthActionHelper {
+                                       ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      withNorthernIrelandErn {
-        renderView(Ok, formProvider())
-      }
+  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+      renderView(Ok, fillForm(DispatchPlacePage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      withNorthernIrelandErn {
-        formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            renderView(BadRequest, formWithErrors),
-          value =>
-            Redirect(navigator.nextPage(DispatchPlacePage, NormalMode, ern))
-              .addingToSession(DISPATCH_PLACE -> value.toString)
-        )
-      }
+  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+      formProvider().bindFromRequest().fold(
+        formWithErrors =>
+          renderView(BadRequest, formWithErrors, mode),
+        value =>
+          savePreDraftAndRedirect(DispatchPlacePage, value, mode)
+      )
     }
 
-  def renderView(status: Status, form: Form[_])(implicit request: UserRequest[_]): Result =
-    status(view(form, controllers.sections.info.routes.DispatchPlaceController.onSubmit(request.ern)))
+  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    withGuard {
+      Future.successful(
+        status(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, mode)))
+      )
+    }
+  }
 
-  private def withNorthernIrelandErn(f: Result)(implicit request: UserRequest[_]): Result =
+  private def withGuard(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     if (request.isNorthernIrelandErn) {
       f
     } else {
-      Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(request.ern))
+      Future.successful(
+        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, NormalMode))
+      )
     }
 }
 

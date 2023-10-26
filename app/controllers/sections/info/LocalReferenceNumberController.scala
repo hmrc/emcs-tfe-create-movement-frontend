@@ -16,20 +16,19 @@
 
 package controllers.sections.info
 
-import config.SessionKeys.{DEFERRED_MOVEMENT, DESTINATION_TYPE}
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.LocalReferenceNumberFormProvider
-import models.requests.UserRequest
+import models.Mode
+import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.{NormalMode, UserAnswers}
-import navigation.InfoNavigator
-import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
+import navigation.InformationNavigator
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.libs.json.JsString
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.PreDraftService
 import views.html.sections.info.LocalReferenceNumberView
 
 import javax.inject.Inject
@@ -37,92 +36,50 @@ import scala.concurrent.Future
 
 class LocalReferenceNumberController @Inject()(
                                                 override val messagesApi: MessagesApi,
-                                                val userAnswersService: UserAnswersService,
-                                                val navigator: InfoNavigator,
+                                                val preDraftService: PreDraftService,
+                                                val navigator: InformationNavigator,
                                                 val auth: AuthAction,
-                                                val userAllowed: UserAllowListAction,
+                                                val getPreDraftData: PreDraftDataRetrievalAction,
+                                                val requirePreDraftData: PreDraftDataRequiredAction,
                                                 val getData: DataRetrievalAction,
+                                                val requireData: DataRequiredAction,
+                                                val userAllowList: UserAllowListAction,
                                                 formProvider: LocalReferenceNumberFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: LocalReferenceNumberView
-                                              ) extends BaseController {
+                                              ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowed).async { implicit request =>
+
+  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       withGuard {
         case (_, isDeferred) =>
-          renderView(Ok, formProvider(isDeferred), isDeferred)
+          renderView(Ok, fillForm(LocalReferenceNumberPage, formProvider(isDeferred)), isDeferred, mode)
       }
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowed).async { implicit request =>
+  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
+    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       withGuard {
         case (_, isDeferred) =>
           formProvider(isDeferred).bindFromRequest().fold(
-            renderView(BadRequest, _, isDeferred),
-            lrn =>
-              userAnswersService.get(ern, lrn).flatMap {
-                case Some(_) =>
-                  //TODO: Redirect to LRN already exists page when designed and built
-                  logger.debug("[onSubmit] Draft already exists with this LRN")
-                  Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
-                case _ =>
-                  logger.debug("[onSubmit] No Draft exists with this LRN, creating a new draft entry in the UserAnswers repo")
-                  createDraftEntryAndRedirect(lrn)
-              }
+            formWithErrors =>
+              renderView(BadRequest, formWithErrors, isDeferred, mode),
+            value =>
+              savePreDraftAndRedirect(LocalReferenceNumberPage, value, mode)
           )
       }
     }
 
-  private def renderView(status: Status, form: Form[_], isDeferred: Boolean)(implicit request: UserRequest[_]): Future[Result] =
-    Future.successful(status(view(isDeferred, form, controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern))))
+  private def renderView(status: Status, form: Form[_], isDeferred: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(isDeferred, form, controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(request.ern, mode))))
 
-  private def withDeferredMovementAnswer(f: Boolean => Future[Result])(implicit request: UserRequest[_]): Future[Result] =
-    request.session.get(DEFERRED_MOVEMENT) match {
-      case Some(isDeferred) =>
-        logger.debug(s"[withIsDeferredMovementAnswer] Deferred Movement answer: '$isDeferred'")
-        f(isDeferred.toBoolean)
-      case _ =>
-        logger.warn(s"[withIsDeferredMovementAnswer] No answer for Deferred Movement question, redirecting to get answer")
-        Future.successful(Redirect(controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern)))
-    }
-
-  private def withDestinationTypePageAnswer(f: MovementScenario => Future[Result])(implicit request: UserRequest[_]): Future[Result] =
-    request.session.get(DESTINATION_TYPE) match {
-      case Some(destinationTypeAnswer) =>
-        logger.debug(s"[withDestinationTypeAnswer] Destination Type answer: '$destinationTypeAnswer'")
-
-        JsString(destinationTypeAnswer).asOpt[MovementScenario] match {
-          case Some(movementScenario) => f(movementScenario)
-          case _ =>
-            logger.warn(s"[withDestinationTypeAnswer] Unable to parse answer for Destination Type question, redirecting to get answer")
-            Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(request.ern)))
-        }
-      case _ =>
-        logger.warn(s"[withDestinationTypeAnswer] No answer for Destination Type question, redirecting to get answer")
-        Future.successful(Redirect(controllers.sections.info.routes.DestinationTypeController.onPageLoad(request.ern)))
-    }
-
-  // TODO: move "create draft" functionality to INFO CYA page once built
-  private def createDraftEntryAndRedirect(lrn: String)(implicit request: UserRequest[_]): Future[Result] =
-    withGuard {
-      case (destinationTypePageAnswer, isDeferred) =>
-        val userAnswers = UserAnswers(request.ern, lrn)
-          .set(DestinationTypePage, destinationTypePageAnswer)
-          .set(DeferredMovementPage, isDeferred)
-          .set(LocalReferenceNumberPage, lrn)
-
-        userAnswersService.set(userAnswers).map { _ =>
-          Redirect(navigator.nextPage(LocalReferenceNumberPage, NormalMode, request.ern))
-        }
-    }
-
-  private def withGuard(f: (MovementScenario, Boolean) => Future[Result])(implicit request: UserRequest[_]): Future[Result] = {
+  private def withGuard(f: (MovementScenario, Boolean) => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     withDestinationTypePageAnswer { destinationTypePageAnswer =>
       withDeferredMovementAnswer { isDeferred =>
         f(destinationTypePageAnswer, isDeferred)
       }
     }
   }
+
 }

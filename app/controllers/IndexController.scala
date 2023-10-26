@@ -17,20 +17,31 @@
 package controllers
 
 import controllers.actions.{AuthAction, UserAllowListAction}
+import models.UserAnswers
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersService
+import services.{PreDraftService, UserAnswersService}
 
 import javax.inject.Inject
 
 class IndexController @Inject()(override val messagesApi: MessagesApi,
+                                val preDraftService: PreDraftService,
                                 val userAnswersService: UserAnswersService,
                                 authAction: AuthAction,
                                 userAllowed: UserAllowListAction,
                                 val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowed) { _ =>
+    (authAction(ern) andThen userAllowed) { request =>
+
+      // clear down any in flight pre draft and start again
+      preDraftService.set(
+        UserAnswers(
+          ern = ern,
+          draftId = request.sessionId
+        )
+      )
+
       Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(ern))
     }
 

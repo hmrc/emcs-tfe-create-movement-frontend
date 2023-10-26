@@ -18,25 +18,28 @@ package controllers.sections.info
 
 import base.SpecBase
 import forms.sections.info.DispatchPlaceFormProvider
-import mocks.services.MockUserAnswersService
-import models.UserAnswers
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchPlace
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeInfoNavigator
+import navigation.InformationNavigator
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
+import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.DispatchPlaceView
 
-class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
+import scala.concurrent.Future
+
+class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val application =
       applicationBuilder(userAnswers)
         .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
+          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
+          bind[UserAnswersService].toInstance(mockUserAnswersService),
+          bind[PreDraftService].toInstance(mockPreDraftService)
         )
         .build()
 
@@ -54,8 +57,8 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
       "with a Northern Ireland ERN" - {
         val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
 
-        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testNorthernIrelandErn).url
-        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onSubmit(testNorthernIrelandErn)
+        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url
+        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           running(application) {
@@ -64,7 +67,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
             val result = route(application, request).value
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(userRequest(request), messages(application)).toString
+            contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(application)).toString
           }
         }
       }
@@ -72,8 +75,8 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
       "with a Great Britain ERN" - {
         val greatBritainUserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
 
-        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPageLoad(testGreatBritainErn).url
-        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onSubmit(testGreatBritainErn).url
+        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url
+        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode).url
 
         "must redirect to the destination type page (CAM-INFO08)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
           running(application) {
@@ -93,7 +96,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
       "with a Northern Ireland ERN" - {
         val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
 
-        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onSubmit(testNorthernIrelandErn)
+        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return a Bad Request and errors when invalid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           running(application) {
@@ -104,12 +107,14 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
             val result = route(application, request).value
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(userRequest(request), messages(application)).toString
+            contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(application)).toString
           }
         }
 
         "must redirect to the next page when valid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           running(application) {
+
+            MockPreDraftService.set(northernIrelandUserAnswers).returns(Future.successful(true))
 
             val validDispatchPlaceValue = DispatchPlace.values.head.toString
 
@@ -118,8 +123,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService {
 
             status(result) mustEqual SEE_OTHER
 
-            redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onPageLoad(testNorthernIrelandErn).url
-
+            redirectLocation(result).value mustEqual testOnwardRoute.url
           }
         }
 

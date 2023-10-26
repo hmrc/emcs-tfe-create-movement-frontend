@@ -138,7 +138,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       }
     }
 
-    "must redirect to destination type Page for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
+    "must redirect to Journey Recovery for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
       .set(DispatchPlacePage, GreatBritain))) {
 
       running(application) {
@@ -147,11 +147,11 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to destination type Page for a POST if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
+    "must redirect to Journey Recovery for a POST if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
       .set(DispatchPlacePage, GreatBritain))) {
 
       running(application) {
@@ -161,7 +161,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DestinationTypeController.onSubmit(testErn).url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -178,7 +178,6 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-
 
       running(application) {
         val request =

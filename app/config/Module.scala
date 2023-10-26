@@ -18,12 +18,15 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
+import controllers.actions.predraft._
 import utils.{TimeMachine, TimeMachineImpl}
 
 class Module extends AbstractModule {
 
   override def configure(): Unit = {
 
+    bind(classOf[PreDraftDataRetrievalAction]).to(classOf[PreDraftDataRetrievalActionImpl]).asEagerSingleton()
+    bind(classOf[PreDraftDataRequiredAction]).to(classOf[PreDraftDataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[AuthAction]).to(classOf[AuthActionImpl]).asEagerSingleton()

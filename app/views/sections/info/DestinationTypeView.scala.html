@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.requests.UserRequest
+@import models.requests.DataRequest
 @import viewmodels.helpers.DestinationTypeHelper
 @import viewmodels.LegendSize
 @import models.sections.info.DispatchPlace
@@ -32,7 +32,7 @@
         destinationTypeHelper: DestinationTypeHelper
 )
 
-@(dispatchPlace: DispatchPlace, form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
+@(dispatchPlace: DispatchPlace, form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, destinationTypeHelper.title)) {
 

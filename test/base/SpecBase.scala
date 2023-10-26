@@ -17,9 +17,10 @@
 package base
 
 import controllers.actions._
+import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
 import fixtures.BaseFixtures
-import models.{TraderKnownFacts, UserAnswers}
 import models.requests.{DataRequest, UserRequest}
+import models.{TraderKnownFacts, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -41,14 +42,16 @@ trait SpecBase
     with BaseFixtures {
 
   def messagesApi(app: Application): MessagesApi = app.injector.instanceOf[MessagesApi]
+
   def messages(app: Application): Messages = messagesApi(app).preferred(FakeRequest())
+
   def messages(app: Application, lang: Lang): Messages = messagesApi(app).preferred(Seq(lang))
 
-  def userRequest[A](request: Request[A]): UserRequest[A] =
-    UserRequest(request, testErn, testInternalId, testCredId)
+  def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers): DataRequest[A] =
-    DataRequest(userRequest(request), testDraftId, answers, testMinTraderKnownFacts)
+  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
+    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
                                    optTraderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): GuiceApplicationBuilder =
@@ -59,6 +62,7 @@ trait SpecBase
       .overrides(
         bind[AuthAction].to[FakeAuthAction],
         bind[UserAllowListAction].to[FakeUserAllowListAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts))
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
+        bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts))
       )
 }

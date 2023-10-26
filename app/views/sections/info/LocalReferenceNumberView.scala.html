@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.requests.UserRequest
+@import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LocalReferenceNumberHelper
 
@@ -28,7 +28,7 @@
         helper: LocalReferenceNumberHelper
 )
 
-@(isDeferred: Boolean, form: Form[_], action: Call)(implicit request: UserRequest[_], messages: Messages)
+@(isDeferred: Boolean, form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = helper.title(form, isDeferred)) {
 

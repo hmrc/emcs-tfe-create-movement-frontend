@@ -20,7 +20,7 @@ import controllers.routes
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -41,6 +41,9 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
 
     case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
       // TODO redirect to CAM-JT03
+      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+
+    case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
       controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckYourAnswersJourneyTypePage =>

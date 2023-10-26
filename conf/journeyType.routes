@@ -10,5 +10,10 @@ POST        /trader/:ern/draft/:draftId/journey-type/give-information-other-tran
 GET         /trader/:ern/draft/:draftId/journey-type/give-information-other-transport/change        controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/journey-type/give-information-other-transport/change        controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
+GET         /trader/:ern/draft/:draftId/journey-type/time/hours                                     controllers.sections.journeyType.JourneyTimeHoursController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:draftId/journey-type/time/hours                                     controllers.sections.journeyType.JourneyTimeHoursController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:draftId/journey-type/time/hours/change                              controllers.sections.journeyType.JourneyTimeHoursController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:draftId/journey-type/time/hours/change                              controllers.sections.journeyType.JourneyTimeHoursController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+
 GET         /trader/:ern/draft/:draftId/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onPageLoad(ern: String, draftId: String)
 POST        /trader/:ern/draft/:draftId/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onSubmit(ern: String, draftId: String)

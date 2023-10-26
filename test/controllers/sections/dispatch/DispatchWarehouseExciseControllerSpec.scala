@@ -20,8 +20,8 @@ import base.SpecBase
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import navigation.FakeNavigators.{FakeDispatchNavigator, FakeNavigator}
-import navigation.{DispatchNavigator, Navigator}
+import navigation.DispatchNavigator
+import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.inject.bind
 import play.api.test.FakeRequest

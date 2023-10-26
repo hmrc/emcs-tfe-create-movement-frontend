@@ -19,6 +19,7 @@ package config
 import com.google.inject.AbstractModule
 import controllers.actions._
 import controllers.actions.predraft._
+import repositories.{SessionRepository, SessionRepositoryImpl}
 import utils.{TimeMachine, TimeMachineImpl}
 
 class Module extends AbstractModule {
@@ -32,5 +33,6 @@ class Module extends AbstractModule {
     bind(classOf[AuthAction]).to(classOf[AuthActionImpl]).asEagerSingleton()
     bind(classOf[UserAllowListAction]).to(classOf[UserAllowListActionImpl]).asEagerSingleton()
     bind(classOf[TimeMachine]).to(classOf[TimeMachineImpl]).asEagerSingleton()
+    bind(classOf[SessionRepository]).to(classOf[SessionRepositoryImpl]).asEagerSingleton()
   }
 }

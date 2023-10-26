@@ -31,6 +31,9 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.FakeRequest
+import repositories.SessionRepository
+import repository.{FakePlayMongoComponent, FakeSessionRepository}
+import uk.gov.hmrc.mongo.MongoComponent
 
 trait SpecBase
   extends AnyFreeSpec
@@ -63,6 +66,11 @@ trait SpecBase
         bind[AuthAction].to[FakeAuthAction],
         bind[UserAllowListAction].to[FakeUserAllowListAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
-        bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts))
+        bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts)),
+        bind[SessionRepository].toInstance(new FakeSessionRepository()),
+        bind[MongoComponent].to[FakePlayMongoComponent]
       )
 }
+
+
+

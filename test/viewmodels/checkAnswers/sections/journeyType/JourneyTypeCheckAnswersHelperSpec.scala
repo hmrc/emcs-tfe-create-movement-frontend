@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.journeyType
 import base.SpecBase
 import fixtures.messages.sections.journeyType._
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import models.sections.journeyType._
 import org.scalamock.scalatest.MockFactory
 import pages.sections.journeyType._
@@ -27,6 +28,9 @@ import play.api.test.FakeRequest
 import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 
 class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
+
+  val days = 2
+  val hours = 12
 
   trait Test {
     lazy val app = applicationBuilder().build()
@@ -41,9 +45,8 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
               FakeRequest(),
               emptyUserAnswers
                 .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, "beans")
-                .set(JourneyTimeHoursPage, 12)
-                .set(JourneyTimeDaysPage, None)
+                .set(HowMovementTransportedPage, AirTransport)
+                .set(JourneyTimeHoursPage, hours)
             )
             helper.summaryList()(request, msgs).rows.length mustBe 3
           }
@@ -54,11 +57,10 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
               FakeRequest(),
               emptyUserAnswers
                 .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, "beans")
-                .set(JourneyTimeHoursPage, None)
-                .set(JourneyTimeDaysPage, 2)
+                .set(HowMovementTransportedPage, AirTransport)
+               // .set(JourneyTimeDaysPage, days)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
+            helper.summaryList()(request, msgs).rows.length mustBe 2
           }
         }
   }

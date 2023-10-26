@@ -224,6 +224,7 @@ address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
 address.dispatchAddress.subheading = Place of dispatch information
 address.dispatchAddress.checkYourAnswersLabel = Address
+address.dispatchAddress.checkYourAnswers.consignorNotComplete = Consignor section not complete
 address.dispatchAddress.change.hidden = Address
 
 address.transportArrangerAddress.3.title = Enter the goods owner’s business address
@@ -537,6 +538,12 @@ dispatchWarehouseExcise.error.required = Enter the excise ID
 dispatchWarehouseExcise.error.length = Excise ID must be 16 characters or less
 dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch
+
+dispatchUseConsignorDetails.title = Is the place of dispatch the same as the consignor details?
+dispatchUseConsignorDetails.heading = Is the place of dispatch the same as the consignor details?
+dispatchUseConsignorDetails.checkYourAnswersLabel = Use consignor details
+dispatchUseConsignorDetails.error.required = Select yes if the place of dispatch and consignor details are the same
+dispatchUseConsignorDetails.change.hidden = whether to use consignor details
 
 dispatchBusinessName.title = What is the business name of the place of dispatch?
 dispatchBusinessName.heading = What is the business name of the place of dispatch?

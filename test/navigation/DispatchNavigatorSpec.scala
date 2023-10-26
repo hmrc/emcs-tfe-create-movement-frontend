@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage, DispatchWarehouseExcisePage}
+import pages.sections.dispatch._
 
 class DispatchNavigatorSpec extends SpecBase {
   val navigator = new DispatchNavigator
@@ -37,9 +37,33 @@ class DispatchNavigatorSpec extends SpecBase {
       "for the DispatchWarehouseExcisePage" - {
 
         "must go to DispatchConsignorDetails page" in {
-          //TODO: redirect to CAM-DIS02
           navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+      }
+
+      "for the DispatchUseConsignorDetailsPage" - {
+
+        "when using consignor details" - {
+
+          "must go to DispatchCheckYourAnswers page" in {
+
+            val userAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true)
+
+            navigator.nextPage(DispatchUseConsignorDetailsPage, NormalMode, userAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
+          }
+        }
+
+        "when NOT using consignor details" - {
+
+          "must go to DispatchBusinessName page" in {
+
+            val userAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, false)
+
+            navigator.nextPage(DispatchUseConsignorDetailsPage, NormalMode, userAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
+          }
         }
       }
 

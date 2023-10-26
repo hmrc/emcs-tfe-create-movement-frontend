@@ -25,7 +25,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
   val validAnswer = $minimum$
 
-  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "$className$ Controller" - {
 

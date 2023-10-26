@@ -18,6 +18,8 @@ package controllers.sections.dispatch
 
 import base.SpecBase
 import models.NormalMode
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -26,9 +28,12 @@ class DispatchIndexControllerSpec extends SpecBase {
   "DispatchIndexController" - {
 
     "when DispatchSection.isCompleted" - {
-      // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "must redirect to the CYA controller" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, true)
+          .set(ConsignorAddressPage, testUserAddress)
+        )).build()
 
         running(application) {
 
@@ -36,7 +41,7 @@ class DispatchIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
         }
       }
     }

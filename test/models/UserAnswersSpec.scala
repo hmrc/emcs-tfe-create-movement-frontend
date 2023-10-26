@@ -30,14 +30,13 @@ import queries.Derivable
 class UserAnswersSpec extends SpecBase {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
+    override val toString: String = "TestPage"
     override val path: JsPath = jsPath \ toString
-    override def toString: String = "TestPage"
   }
 
   case class TestPage2(jsPath: JsPath = JsPath) extends QuestionPage[String] {
+    override val toString: String = "TestPage2"
     override val path: JsPath = jsPath \ toString
-
-    override def toString: String = "TestPage2"
   }
 
   case class TestModel(TestPage: String,
@@ -349,15 +348,15 @@ class UserAnswersSpec extends SpecBase {
     "when calling .filterForPages" - {
 
       val page1 = new QuestionPage[String] {
-        override def toString: String = "page1"
+        override val toString: String = "page1"
         override val path: JsPath = __ \ toString
       }
       val page2 = new QuestionPage[String] {
-        override def toString: String = "page2"
+        override val toString: String = "page2"
         override val path: JsPath = __ \ toString
       }
       val page3 = new QuestionPage[String] {
-        override def toString: String = "page3"
+        override val toString: String = "page3"
         override val path: JsPath = __ \ toString
       }
 

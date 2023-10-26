@@ -20,7 +20,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testDraftId, NormalMode).url
 
   val formProvider = new $className$FormProvider()
   val form = formProvider()

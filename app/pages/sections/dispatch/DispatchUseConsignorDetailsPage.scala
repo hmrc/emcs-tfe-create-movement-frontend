@@ -16,9 +16,12 @@
 
 package pages.sections.dispatch
 
-import pages.Page
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case object DispatchCheckAnswersPage extends Page {
+case object DispatchUseConsignorDetailsPage extends QuestionPage[Boolean] {
 
-  override val toString: String = "dispatchCheckAnswers"
+  override val toString: String = "useConsignorDetails"
+  override val path: JsPath = DispatchSection.path \ toString
+
 }

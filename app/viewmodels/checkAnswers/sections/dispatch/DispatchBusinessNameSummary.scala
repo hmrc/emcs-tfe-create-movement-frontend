@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.dispatch
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.dispatch.DispatchBusinessNamePage
+import pages.sections.dispatch._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,19 +27,28 @@ import viewmodels.implicits._
 
 object DispatchBusinessNameSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DispatchBusinessNamePage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "dispatchBusinessName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-              id = "changeDispatchBusinessName"
-            ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
-          )
-        )
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    request.userAnswers.get(DispatchUseConsignorDetailsPage).flatMap {
+      case true => Some(SummaryListRowViewModel(
+        key = "dispatchBusinessName.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlFormat.escape(request.traderKnownFacts.traderName).toString),
+        actions = Seq()
+      ))
+      case false =>
+        request.userAnswers.get(DispatchBusinessNamePage).map {
+          answer =>
+            SummaryListRowViewModel(
+              key = "dispatchBusinessName.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer).toString),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = "site.change",
+                  href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+                  id = "changeDispatchBusinessName"
+                ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
+              )
+            )
+        }
     }
+  }
 }

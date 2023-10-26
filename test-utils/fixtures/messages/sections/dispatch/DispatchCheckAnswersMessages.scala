@@ -26,6 +26,7 @@ object DispatchCheckAnswersMessages {
     val traderNameLabel = "Trader name"
     val traderNameChangeHidden = "Trader name"
     val addressLabel: String = "Address"
+    val consignorSectionNotComplete: String = "Consignor section not complete"
     val addressChangeHidden: String = "Address"
   }
 

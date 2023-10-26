@@ -27,7 +27,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(testErn, testDraftId, NormalMode).url
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, $className;format="decap"$Route)

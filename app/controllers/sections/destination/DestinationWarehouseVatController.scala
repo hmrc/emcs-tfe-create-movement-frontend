@@ -32,40 +32,45 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class DestinationWarehouseVatController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: DestinationNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: DestinationWarehouseVatFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DestinationWarehouseVatView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val navigator: DestinationNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   override val userAllowList: UserAllowListAction,
+                                                   formProvider: DestinationWarehouseVatFormProvider,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: DestinationWarehouseVatView
+                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) {
       implicit request =>
-        request.userAnswers.get(DestinationTypePage) match {
-          case Some(movementScenario) =>
+
+        withAnswer(
+          page = DestinationTypePage
+        ) {
+          movementScenario =>
             Ok(view(
               form = fillForm(DestinationWarehouseVatPage, formProvider()),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario,
               skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)
             ))
-          case None =>
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
+
     }
 
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        request.userAnswers.get(DestinationTypePage) match {
-          case Some(movementScenario) =>
+
+        withAnswerAsync(
+          page = DestinationTypePage
+        ) {
+          movementScenario =>
             formProvider().bindFromRequest().fold(
               formWithErrors =>
                 Future.successful(BadRequest(view(
@@ -76,9 +81,9 @@ class DestinationWarehouseVatController @Inject()(
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )
-          case None =>
-            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         }
+
+
     }
 }
 

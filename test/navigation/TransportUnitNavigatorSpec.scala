@@ -172,7 +172,6 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
   "in Check mode" - {
     "must go to CheckYourAnswersTransportUnitController" in {
-      //TODO: update to Transport Unit CYA when built
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
         transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)

@@ -44,19 +44,19 @@ class TransportUnitRemoveUnitController @Inject()(
                                        view: TransportUnitRemoveUnitView
                                      ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, lrn: String, idx: Index): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         renderView(Ok, formProvider(), idx)
       }
     }
 
-  def onSubmit(ern: String, lrn: String, idx: Index): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, lrn) { implicit request =>
+  def onSubmit(ern: String, draftId: String, idx: Index): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx),
-          handleAnswerRemovalAndRedirect(_, idx)(ern, lrn)
+          handleAnswerRemovalAndRedirect(_, idx)(ern, draftId)
         )
       }
     }
@@ -71,15 +71,15 @@ class TransportUnitRemoveUnitController @Inject()(
     )
   }
 
-  private def handleAnswerRemovalAndRedirect(shouldRemoveTransportUnit: Boolean, index: Index)(ern: String, lrn: String)
+  private def handleAnswerRemovalAndRedirect(shouldRemoveTransportUnit: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if(shouldRemoveTransportUnit) {
       val cleansedAnswers = request.userAnswers.remove(TransportUnitSection(index))
       userAnswersService.set(cleansedAnswers).map {
-        _ => Redirect(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(ern, lrn))
+        _ => Redirect(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(ern, draftId))
       }
     } else {
-      Future(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())) //TODO redirect to TU07 (user answered no)
+      Future(Redirect(controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(ern, draftId)))
     }
   }
 }

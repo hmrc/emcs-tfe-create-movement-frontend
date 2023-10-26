@@ -26,7 +26,7 @@ GET         /trader/:ern/draft/:draftId/confirmation         controllers.Confirm
 ->          /                                                consignee.Routes
 ->          /                                                journeyType.Routes
 ->          /                                                transportArranger.Routes
-->          /                                                transportUnit.Routes
+->          /trader/:ern/draft/:draftId/transport-units      transportUnit.Routes
 ->          /                                                firstTransporter.Routes
 ->          /                                                dispatch.Routes
 ->          /                                                exportInformation.Routes

@@ -29,6 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
 import views.html.components.link
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 
 class TransportUnitsAddToListHelperSpec extends SpecBase {
 
@@ -67,7 +68,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title= Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -106,7 +107,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, //TODO change to delete page
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -126,7 +127,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit2))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, //TODO change to delete page
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit2),
                     attributes = Map("id" -> "removeTransportUnit2")

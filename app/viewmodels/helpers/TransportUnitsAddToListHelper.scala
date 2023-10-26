@@ -24,6 +24,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList}
 import viewmodels.checkAnswers.sections.transportUnit._
 import viewmodels.govuk.summarylist._
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 
 import javax.inject.Inject
 
@@ -51,7 +52,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: views.html.componen
       actions = Some(Actions( items = Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
-          href    = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+          href    = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
           id = s"removeTransportUnit${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex))
       ))))

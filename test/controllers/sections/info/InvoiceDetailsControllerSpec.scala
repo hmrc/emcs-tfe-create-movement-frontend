@@ -75,7 +75,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = form,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          skipQuestionCall = testOnwardRoute
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -117,7 +117,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
           form = boundForm,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsOnSubmit,
-          skipQuestionCall = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          skipQuestionCall = testOnwardRoute
         )(dataRequest(request), messages(application)).toString
       }
     }

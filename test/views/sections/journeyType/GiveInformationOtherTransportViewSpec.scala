@@ -53,7 +53,8 @@ class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehavi
           Selectors.title -> messagesForLanguage.title,
           subHeadingCaptionSelector -> messagesForLanguage.subHeading,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.saveAndContinue
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

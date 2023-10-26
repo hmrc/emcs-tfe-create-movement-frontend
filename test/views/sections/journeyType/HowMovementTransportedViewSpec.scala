@@ -61,7 +61,8 @@ class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.radioButton(7) -> messagesForLanguage.radioOption7,
           Selectors.radioButton(8) -> messagesForLanguage.radioOption8,
           // scalastyle:on magic.number
-          Selectors.button -> messagesForLanguage.saveAndContinue
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

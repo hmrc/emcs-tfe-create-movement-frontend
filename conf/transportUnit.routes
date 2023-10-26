@@ -25,13 +25,13 @@ POST        /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/choo
 GET         /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/choose-give-more-information/change        controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/choose-give-more-information/change        controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET        /transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST       /transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onPageLoad(ern: String, draftId: String)
-POST       /add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onSubmit(ern: String, draftId: String)
+GET        /trader/:ern/draft/:draftId/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onSubmit(ern: String, draftId: String)
 
-GET        /transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onPageLoad(ern: String, draftId: String, idx: Index)
-POST       /transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onSubmit(ern: String, draftId: String, idx: Index)
+GET        /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onPageLoad(ern: String, draftId: String, idx: Index)
+POST       /trader/:ern/draft/:draftId/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onSubmit(ern: String, draftId: String, idx: Index)

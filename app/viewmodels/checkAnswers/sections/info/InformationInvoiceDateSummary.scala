@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.info
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -35,10 +36,14 @@ object InformationInvoiceDateSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(InvoiceDetailsPage).map { invoiceDetailsPage =>
+    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage)
 
-      val value: String = formatDateForUIOutput(invoiceDetailsPage.date)
+    val value: String = data match {
+      case Some(invoiceDetailsPage) => formatDateForUIOutput(invoiceDetailsPage.date)
+      case None => messages("site.notProvided")
+    }
 
+    Some(
       SummaryListRowViewModel(
         key = "invoiceDetails.invoice-date.checkYourAnswersLabel",
         value = ValueViewModel(value),
@@ -50,8 +55,8 @@ object InformationInvoiceDateSummary {
             .withVisuallyHiddenText(messages("invoiceDetails.invoice-date.change.hidden"))
         )
       )
+    )
 
-    }
   }
 
 }

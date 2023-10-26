@@ -56,10 +56,10 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
       implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
       "and there is no answer for the InvoiceDetailsPage" - {
-        "then must not return a row" in {
+        "then must return not provided row" in {
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          InformationInvoiceDateSummary.row mustBe None
+          InformationInvoiceDateSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
         }
       }
 

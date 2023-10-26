@@ -59,7 +59,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

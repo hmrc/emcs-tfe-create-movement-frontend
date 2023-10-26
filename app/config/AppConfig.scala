@@ -123,4 +123,5 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val gbCustomsOfficeCodesUrl = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1155586/20230510_CDS_DE5-12_UKcustomsofficecodes.csv/preview"
 
   lazy val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  lazy val cacheReplaceIndexes: Boolean = configuration.get[Boolean]("mongodb.replaceIndexes")
 }

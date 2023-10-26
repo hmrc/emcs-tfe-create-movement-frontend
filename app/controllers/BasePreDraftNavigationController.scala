@@ -47,7 +47,7 @@ trait BasePreDraftNavigationController extends BaseController with Logging {
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
 
-  private def savePreDraft[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
+  private def savePreDraft[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit format: Format[A]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {
       Future.successful(currentAnswers)
     } else {

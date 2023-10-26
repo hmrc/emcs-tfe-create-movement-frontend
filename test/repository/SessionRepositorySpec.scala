@@ -20,18 +20,21 @@ import base.SpecBase
 import config.AppConfig
 import models.UserAnswers
 import pages.sections.info.DeferredMovementPage
-import repositories.SessionRepository
+import play.api.inject.guice.GuiceApplicationBuilder
+import repositories.SessionRepositoryImpl
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, PlayMongoRepositorySupport}
 
 import scala.concurrent.ExecutionContext
 
 class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[UserAnswers] with CleanMongoCollectionSupport {
 
-  implicit val ec: ExecutionContext = applicationBuilder().injector.instanceOf[ExecutionContext]
+  private lazy val application: GuiceApplicationBuilder = applicationBuilder()
 
-  lazy val repository: SessionRepository = new SessionRepository(
+  implicit val ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+  lazy val repository: SessionRepositoryImpl = new SessionRepositoryImpl(
     mongoComponent = mongoComponent,
-    appConfig = applicationBuilder().injector.instanceOf[AppConfig]
+    appConfig = application.injector.instanceOf[AppConfig]
   )
 
   val userAnswers = emptyUserAnswers

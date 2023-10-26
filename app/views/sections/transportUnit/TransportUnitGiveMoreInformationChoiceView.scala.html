@@ -46,7 +46,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationChoicePage(idx)))).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationChoicePage(idx)))).asPageHeading(LegendSize.Large)
             ).withHint(HintViewModel(Text(messages("transportUnitGiveMoreInformationChoice.hint"))))
         )
 

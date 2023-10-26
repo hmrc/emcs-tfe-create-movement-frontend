@@ -48,4 +48,28 @@ trait FieldBehaviours extends FormSpec {
       result.errors mustEqual Seq(requiredError)
     }
   }
+
+  def fieldWithFixedLength(form: Form[_],
+                           fieldName: String,
+                           lengthError: FormError,
+                           requiredLength: Int): Unit = {
+
+    "not bind when the value is less than the fixed length" in {
+      val input = "A" * (requiredLength - 1)
+      val result = form.bind(Map(fieldName -> input)).apply(fieldName)
+      result.errors mustEqual Seq(lengthError)
+    }
+
+    "not bind when the value is more than the fixed length" in {
+      val input = "A" * (requiredLength + 1)
+      val result = form.bind(Map(fieldName -> input)).apply(fieldName)
+      result.errors mustEqual Seq(lengthError)
+    }
+
+    "bind when the value is equal to the fixed length" in {
+      val input = "A" * requiredLength
+      val result = form.bind(Map(fieldName -> input)).apply(fieldName)
+      result.errors mustBe empty
+    }
+  }
 }

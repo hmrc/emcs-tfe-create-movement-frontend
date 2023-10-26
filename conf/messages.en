@@ -527,6 +527,15 @@ dispatchPlace.error.required = Select the place of dispatch for this movement
 dispatchPlace.checkYourAnswersLabel = Place of dispatch
 dispatchPlace.change.hidden = where is the place of dispatch
 
+dispatchWarehouseExcise.title = What is the excise ID of the tax warehouse of dispatch?
+dispatchWarehouseExcise.heading = What is the excise ID of the tax warehouse of dispatch?
+dispatchWarehouseExcise.hintText = This is sometimes called an excise registration number (ERN), starting with GB or XI. For example, GB00123456789.
+dispatchWarehouseExcise.checkYourAnswersLabel = Excise ID (ERN)
+dispatchWarehouseExcise.error.required = Enter the excise ID
+dispatchWarehouseExcise.error.length = Excise ID must be 16 characters or less
+dispatchWarehouseExcise.error.xss = Excise ID contain < and > and : and ;
+dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch
+
 dispatchBusinessName.title = What is the business name of the place of dispatch?
 dispatchBusinessName.heading = What is the business name of the place of dispatch?
 dispatchBusinessName.error.noInput = Enter the business name of the place of dispatch

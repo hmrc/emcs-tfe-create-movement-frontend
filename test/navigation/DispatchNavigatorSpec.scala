@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage, DispatchWarehouseExcisePage}
 
 class DispatchNavigatorSpec extends SpecBase {
   val navigator = new DispatchNavigator
@@ -32,6 +32,15 @@ class DispatchNavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId)
+      }
+
+      "for the DispatchWarehouseExcisePage" - {
+
+        "must go to DispatchConsignorDetails page" in {
+          //TODO: redirect to CAM-DIS02
+          navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
 
       "for the DispatchBusinessNamePage" - {

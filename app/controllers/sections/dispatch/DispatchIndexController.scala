@@ -18,6 +18,7 @@ package controllers.sections.dispatch
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.NormalMode
 import navigation.DispatchNavigator
 import pages.sections.dispatch.DispatchSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -40,8 +41,7 @@ class DispatchIndexController @Inject()(
       if (DispatchSection.isCompleted) {
         Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
-        // TODO: Change redirect location when CAM-DIS01 is built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 }

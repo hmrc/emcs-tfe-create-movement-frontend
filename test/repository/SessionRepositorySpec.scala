@@ -20,7 +20,7 @@ import base.SpecBase
 import config.AppConfig
 import models.UserAnswers
 import pages.sections.info.DeferredMovementPage
-import repositories.SessionRepository
+import repositories.SessionRepositoryImpl
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, PlayMongoRepositorySupport}
 
 import scala.concurrent.ExecutionContext
@@ -29,7 +29,7 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
 
   implicit val ec: ExecutionContext = applicationBuilder().injector.instanceOf[ExecutionContext]
 
-  lazy val repository: SessionRepository = new SessionRepository(
+  lazy val repository: SessionRepositoryImpl = new SessionRepositoryImpl(
     mongoComponent = mongoComponent,
     appConfig = applicationBuilder().injector.instanceOf[AppConfig]
   )

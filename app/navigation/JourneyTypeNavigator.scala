@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import controllers.sections.journeyType.{routes => jtRoutes}
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -33,26 +34,26 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
           case Some(Other) =>
-            controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           case _ =>
-            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         }
 
     case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case JourneyTimeDaysPage => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckYourAnswersJourneyTypePage =>
       //TODO update when next page is created
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
@@ -60,12 +61,12 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
           case Some(Other) =>
-            controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+            jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
           case _ =>
-            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+            jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
         }
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

@@ -22,7 +22,7 @@ import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.JourneyTimeHoursPage
+import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -55,7 +55,7 @@ class JourneyTimeHoursController @Inject()(
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         amountOfHours => {
-          val cleansedAnswers = request.userAnswers//.remove(JourneyTimeDaysPage) TODO: remove the CAM-JT03 answer
+          val cleansedAnswers = request.userAnswers.remove(JourneyTimeDaysPage)
           saveAndRedirect(JourneyTimeHoursPage, amountOfHours, cleansedAnswers, mode)
         }
       )

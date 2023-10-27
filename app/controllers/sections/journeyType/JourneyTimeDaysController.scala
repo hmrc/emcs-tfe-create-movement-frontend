@@ -24,8 +24,7 @@ import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported._
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.JourneyTimeDaysPage
-import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -60,7 +59,10 @@ class JourneyTimeDaysController @Inject()(
       withAnswerAsync(HowMovementTransportedPage) { transportMode =>
         formProvider(transportModeToMaxDays(transportMode)).bindFromRequest().fold(
           renderView(BadRequest, _, mode),
-          saveAndRedirect(JourneyTimeDaysPage, _, mode)
+          amountOfDays => {
+            val cleansedAnswers = request.userAnswers.remove(JourneyTimeHoursPage)
+            saveAndRedirect(JourneyTimeDaysPage, amountOfDays, cleansedAnswers, mode)
+          }
         )
       }
     }

@@ -26,7 +26,7 @@ object ImportCustomsOfficeCodeMessages {
 
     def heading(userType: UserType): String =
       if (userType == NorthernIrelandRegisteredConsignor) {
-        "Enter the customs office code for the place where the goods originally entered the EU"
+        "Enter the customs office code for the place where the goods originally entered the EU or UK"
       } else {
         "Enter the customs office code for the place where the goods originally entered the UK"
       }
@@ -35,9 +35,9 @@ object ImportCustomsOfficeCodeMessages {
 
     def paragraph(userType: UserType): String =
       if (userType == NorthernIrelandRegisteredConsignor) {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (opens in new tab) or search for EU customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. Search for UK customs office codes (opens in new tab) or search for EU customs office codes (opens in new tab)."
       } else {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. Search for UK customs office codes (opens in new tab)."
       }
   }
 
@@ -46,9 +46,9 @@ object ImportCustomsOfficeCodeMessages {
   object Welsh extends ViewMessages with BaseWelsh {
     override def paragraph(userType: UserType): String =
       if (userType == NorthernIrelandRegisteredConsignor) {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (yn agor tab newydd) or search for EU customs office codes here (yn agor tab newydd)."
+        "This code is also known as a customs office reference number. Search for UK customs office codes (yn agor tab newydd) or search for EU customs office codes (yn agor tab newydd)."
       } else {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (yn agor tab newydd)."
+        "This code is also known as a customs office reference number. Search for UK customs office codes (yn agor tab newydd)."
       }
   }
 }

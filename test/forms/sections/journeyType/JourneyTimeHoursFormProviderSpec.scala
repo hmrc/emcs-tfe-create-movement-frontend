@@ -16,12 +16,12 @@
 
 package forms.sections.journeyType
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigIntFieldBehaviours
 import play.api.data.FormError
 
 import scala.util.Random
 
-class JourneyTimeHoursFormProviderSpec extends IntFieldBehaviours {
+class JourneyTimeHoursFormProviderSpec extends BigIntFieldBehaviours {
 
   val form = new JourneyTimeHoursFormProvider()()
 
@@ -38,14 +38,14 @@ class JourneyTimeHoursFormProviderSpec extends IntFieldBehaviours {
       Random.nextInt(maximum).toString
     )
 
-    behave like intField(
+    behave like bigIntField(
       form,
       fieldName,
       nonNumericError  = FormError(fieldName, "journeyTimeHours.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "journeyTimeHours.error.wholeNumber")
     )
 
-    behave like intFieldWithRange(
+    behave like bigIntFieldWithRange(
       form,
       fieldName,
       minimum       = minimum,

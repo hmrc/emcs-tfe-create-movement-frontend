@@ -25,10 +25,11 @@ class JourneyTimeHoursFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Int] =
     Form(
-      "value" -> int(
+      "value" -> bigInt(
         requiredKey = "journeyTimeHours.error.required",
         wholeNumberKey = "journeyTimeHours.error.wholeNumber",
         nonNumericKey = "journeyTimeHours.error.nonNumeric"
-      ).verifying(inRange(1, 23, "journeyTimeHours.error.outOfRange"))
+      ).verifying(inRange[BigInt](1, 23, "journeyTimeHours.error.outOfRange"))
+        .transform[Int](_.toInt, BigInt(_))
     )
 }

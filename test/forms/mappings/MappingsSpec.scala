@@ -132,6 +132,59 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       result.get mustEqual 1
     }
 
+    "must bind a valid integer (with spaces)" in {
+      val result = testForm.bind(Map("value" -> " 1        1             2  "))
+      result.get mustEqual 112
+    }
+
+    "must not bind an empty value" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind an empty map" in {
+      val result = testForm.bind(Map.empty[String, String])
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind a decimal" in {
+      val result = testForm.bind(Map("value" -> "1.1"))
+      result.errors must contain(FormError("value", "error.wholeNumber"))
+    }
+
+    "must unbind a valid value" in {
+      val result = testForm.fill(123)
+      result.apply("value").value.value mustEqual "123"
+    }
+  }
+
+  "bigInt" - {
+
+    val testForm: Form[BigInt] =
+      Form(
+        "value" -> bigInt()
+      )
+
+    "must bind a valid integer" in {
+      val result = testForm.bind(Map("value" -> "1"))
+      result.get mustEqual 1
+    }
+
+    "must bind a valid integer (with spaces)" in {
+      val result = testForm.bind(Map("value" -> " 1        1             2  "))
+      result.get mustEqual 112
+    }
+
+    s"must bind an integer larger than ${Int.MaxValue}" in {
+      val result = testForm.bind(Map("value" -> s"${Int.MaxValue + 1}"))
+      result.get mustEqual Int.MaxValue + 1
+    }
+
+    s"must bind an integer smaller than ${Int.MinValue}" in {
+      val result = testForm.bind(Map("value" -> s"${Int.MinValue - 1}"))
+      result.get mustEqual Int.MinValue - 1
+    }
+
     "must not bind an empty value" in {
       val result = testForm.bind(Map("value" -> ""))
       result.errors must contain(FormError("value", "error.required"))

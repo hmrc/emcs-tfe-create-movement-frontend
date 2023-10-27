@@ -16,7 +16,6 @@
 
 package viewmodels.checkAnswers.sections.info
 
-import models.requests.DataRequest
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -24,7 +23,7 @@ import viewmodels.implicits._
 
 object InformationTimeOfDispatchSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row()(implicit messages: Messages): Option[SummaryListRow] = {
 
     val data: Option[String] = None
 

@@ -53,8 +53,14 @@ class JourneyTimeHoursViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.inputSuffix -> messagesForLanguage.suffix,
           Selectors.link(1) -> messagesForLanguage.toJourneyDaysLink,
-          Selectors.button -> messagesForLanguage.saveAndContinue
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
+
+        "must have the correct link to the CAM-JT03 page" in {
+          //TODO: link to CAM-JT03
+          doc.select(Selectors.link(1)).attr("href") mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        }
       }
     }
   }

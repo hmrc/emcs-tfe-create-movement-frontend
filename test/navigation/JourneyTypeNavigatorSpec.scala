@@ -119,7 +119,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, CheckMode)
+              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
           }
         }
       }

@@ -36,7 +36,10 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
           case Some(Other) =>
             jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           case _ =>
-            jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            userAnswers.get(JourneyTimeHoursPage) match {
+              case Some(_) => jtRoutes.JourneyTimeHoursController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+              case _ => jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            }
         }
 
     case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
@@ -63,7 +66,7 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
           case Some(Other) =>
             jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
           case _ =>
-            jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+            jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
     case _ => (userAnswers: UserAnswers) =>
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)

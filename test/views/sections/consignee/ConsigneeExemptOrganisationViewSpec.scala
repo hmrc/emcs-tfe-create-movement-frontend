@@ -34,7 +34,7 @@ class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviou
 
   s"consignee exempt organisation View" - {
 
-    Seq(ConsigneeExemptOrganisationMessages.English, ConsigneeExemptOrganisationMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExemptOrganisationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

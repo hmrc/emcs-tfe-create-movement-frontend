@@ -47,7 +47,7 @@ class TransportArrangerVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportArrangerVatView" - {
 
-    Seq(TransportArrangerVatMessages.English, TransportArrangerVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

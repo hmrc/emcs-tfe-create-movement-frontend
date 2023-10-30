@@ -37,7 +37,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportArrangerAddressMessages.English, TransportArrangerAddressMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerAddressMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

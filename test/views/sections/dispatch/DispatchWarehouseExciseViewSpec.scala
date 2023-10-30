@@ -34,7 +34,7 @@ class DispatchWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "DispatchWarehouseExciseView" - {
 
-    Seq(DispatchWarehouseExciseMessages.English, DispatchWarehouseExciseMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DispatchWarehouseExciseMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

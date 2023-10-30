@@ -33,7 +33,7 @@ class ConsigneeExciseViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Consignee Excise view" - {
 
-    Seq(ConsigneeExciseMessages.English, ConsigneeExciseMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExciseMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

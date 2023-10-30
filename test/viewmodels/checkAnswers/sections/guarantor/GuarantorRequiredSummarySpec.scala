@@ -46,7 +46,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
     )
   }
 
-  Seq(GuarantorRequiredMessages.English, GuarantorRequiredMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(GuarantorRequiredMessages.English).foreach { implicit messagesForLanguage =>
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 

@@ -35,7 +35,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportSealTypeMessages.English, TransportSealTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportSealTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

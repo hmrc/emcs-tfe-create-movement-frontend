@@ -45,7 +45,7 @@ class FirstTransporterVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "FirstTransporterVatView" - {
 
-    Seq(FirstTransporterVatMessages.English, FirstTransporterVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(FirstTransporterVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -52,7 +52,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
       )
     }
 
-    Seq(GuarantorNameMessages.English, GuarantorNameMessages.Welsh).foreach { implicit messagesForLanguage =>
+    Seq(GuarantorNameMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)

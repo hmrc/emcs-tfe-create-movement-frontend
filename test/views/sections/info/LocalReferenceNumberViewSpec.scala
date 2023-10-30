@@ -38,7 +38,7 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "LocalReferenceNumber view" - {
 
-    Seq(LocalReferenceNumberMessages.English, LocalReferenceNumberMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(LocalReferenceNumberMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

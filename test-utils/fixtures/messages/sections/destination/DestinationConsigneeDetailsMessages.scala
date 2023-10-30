@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object DestinationConsigneeDetailsMessages {
 
@@ -33,6 +33,4 @@ object DestinationConsigneeDetailsMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

@@ -51,7 +51,7 @@ class ImportCustomsOfficeCodeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "ImportCustomsOfficeCodeView" - {
 
-    Seq(ImportCustomsOfficeCodeMessages.English, ImportCustomsOfficeCodeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ImportCustomsOfficeCodeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

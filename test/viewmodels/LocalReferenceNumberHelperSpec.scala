@@ -30,7 +30,7 @@ class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
 
   "LocalReferenceNumberHelper" - {
 
-    Seq(LocalReferenceNumberMessages.English, LocalReferenceNumberMessages.Welsh).foreach { langMessages =>
+    Seq(LocalReferenceNumberMessages.English).foreach { langMessages =>
 
       implicit lazy val msgs = messages(app, langMessages.lang)
 

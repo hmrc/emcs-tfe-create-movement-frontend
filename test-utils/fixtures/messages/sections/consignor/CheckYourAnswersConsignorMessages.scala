@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.consignor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object CheckYourAnswersConsignorMessages {
 
@@ -30,5 +30,4 @@ object CheckYourAnswersConsignorMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-  object Welsh extends ViewMessages with BaseWelsh
 }

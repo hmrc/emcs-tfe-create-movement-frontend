@@ -34,7 +34,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
 
     object TestTransportUnitGiveMoreInformationSummary extends TransportUnitGiveMoreInformationSummary(link)
 
-    Seq(TransportUnitGiveMoreInformationMessages.English, TransportUnitGiveMoreInformationMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitGiveMoreInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

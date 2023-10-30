@@ -87,7 +87,7 @@ class LocalReferenceNumberFormProviderSpec extends StringFieldBehaviours with Gu
 
   "Error Messages" - {
 
-    Seq(LocalReferenceNumberMessages.English, LocalReferenceNumberMessages.Welsh) foreach { messagesForLanguage =>
+    Seq(LocalReferenceNumberMessages.English) foreach { messagesForLanguage =>
 
       implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 

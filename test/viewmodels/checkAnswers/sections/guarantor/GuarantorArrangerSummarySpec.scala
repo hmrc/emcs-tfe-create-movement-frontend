@@ -47,7 +47,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
     )
   }
 
-  Seq(GuarantorArrangerMessages.English, GuarantorArrangerMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(GuarantorArrangerMessages.English).foreach { implicit messagesForLanguage =>
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
       implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)

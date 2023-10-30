@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.GoodsOwner
 
@@ -46,6 +46,4 @@ object GuarantorVatMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

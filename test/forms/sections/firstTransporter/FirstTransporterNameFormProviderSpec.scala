@@ -58,7 +58,7 @@ class FirstTransporterNameFormProviderSpec extends StringFieldBehaviours with Gu
 
   "Error Messages" - {
 
-    Seq(FirstTransporterNameMessages.English, FirstTransporterNameMessages.Welsh) foreach { messagesForLanguage =>
+    Seq(FirstTransporterNameMessages.English) foreach { messagesForLanguage =>
 
       implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 

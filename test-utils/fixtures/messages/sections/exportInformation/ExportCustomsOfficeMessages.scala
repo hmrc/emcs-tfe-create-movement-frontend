@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.exportInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object ExportCustomsOfficeMessages {
 
@@ -37,13 +37,4 @@ object ExportCustomsOfficeMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override def hint(euExport: Boolean): String =
-      if (euExport) {
-        "This code is also known as a customs office reference number. Search for EU customs office codes here (yn agor tab newydd)."
-      } else {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (yn agor tab newydd)."
-      }
-  }
 }

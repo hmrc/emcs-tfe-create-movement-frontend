@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object ConsigneeBusinessNameMessages {
 
@@ -32,6 +32,4 @@ object ConsigneeBusinessNameMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

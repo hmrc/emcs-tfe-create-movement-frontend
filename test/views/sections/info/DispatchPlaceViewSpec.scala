@@ -35,7 +35,7 @@ class DispatchPlaceViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Dispatch Place view" - {
 
-    Seq(DispatchPlaceMessages.English, DispatchPlaceMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DispatchPlaceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

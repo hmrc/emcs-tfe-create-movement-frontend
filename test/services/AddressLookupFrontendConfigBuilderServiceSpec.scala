@@ -124,49 +124,7 @@ class AddressLookupFrontendConfigBuilderServiceSpec() extends SpecBase with Guic
                 changeLinkText = Some("Edit address")
               )
             )),
-            cy = Some(LanguageLabels(
-              appLevelLabels = AppLevelLabels(
-                navTitle = Some("Excise Movement and Control System"),
-                phaseBannerHtml = None
-              ),
-
-              CountryPickerLabels(
-                title = Some("Custom title - welsh"),
-                heading = Some("Custom heading - welsh"),
-                countryLabel = Some("Custom country label - welsh"),
-                submitLabel = Some("Custom submit label - welsh")
-              ),
-
-              SelectPageLabels(
-                title = Some("Choose address - welsh"),
-                heading = Some("Choose address - welsh"),
-                searchAgainLinkText = Some("Search again - welsh"),
-                editAddressLinkText = Some("Enter address manually - welsh")
-              ),
-
-              LookupPageLabels(
-                title = Some("Find address - welsh"),
-                heading = Some("Find address - welsh"),
-                filterLabel = Some("Property name or number (optional) - welsh"),
-                submitLabel = Some("Find address - welsh"),
-                manualAddressLinkText = Some("Enter the address manually - welsh")
-              ),
-
-              EditPageLabels(
-                title = Some("Enter address - welsh"),
-                heading = Some("Enter address - welsh"),
-                line1Label = Some("Address line 1 - welsh"),
-                line2Label = Some("Address line 2 (optional) - welsh"),
-                line3Label = Some("Address line 3 (optional) - welsh")
-              ),
-
-              ConfirmPageLabels(
-                title = Some("Confirm address - welsh"),
-                heading = Some("Review and confirm - welsh"),
-                submitLabel = Some("Confirm address - welsh"),
-                changeLinkText = Some("Edit address - welsh")
-              )
-            ))
+            cy = None
           )
         )
 

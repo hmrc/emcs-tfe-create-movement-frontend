@@ -36,7 +36,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportArrangerNameMessages.English, TransportArrangerNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

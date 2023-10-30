@@ -241,7 +241,7 @@ class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixt
 
   "Error Messages" - {
 
-    Seq(InvoiceDetailsMessages.English, InvoiceDetailsMessages.Welsh) foreach { messagesForLanguage =>
+    Seq(InvoiceDetailsMessages.English) foreach { messagesForLanguage =>
 
       implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 

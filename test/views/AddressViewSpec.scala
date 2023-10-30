@@ -47,7 +47,7 @@ class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  Seq(AddressMessages.English, AddressMessages.Welsh).foreach { messagesForLanguage =>
+  Seq(AddressMessages.English).foreach { messagesForLanguage =>
 
     s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - new Fixture(messagesForLanguage.lang) {
 

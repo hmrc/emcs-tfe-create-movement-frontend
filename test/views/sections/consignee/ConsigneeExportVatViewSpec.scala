@@ -34,7 +34,7 @@ class ConsigneeExportVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "ConsigneeExportVatView" - {
 
-    Seq(ConsigneeExportVatMessages.English, ConsigneeExportVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

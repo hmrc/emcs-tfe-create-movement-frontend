@@ -34,7 +34,7 @@ class CheckYourAnswersJourneyTypeViewSpec extends ViewSpecBase with ViewBehaviou
 
   "CheckYourAnswersJourneyType view" - {
 
-    Seq(CheckYourAnswersJourneyTypeMessages.English, CheckYourAnswersJourneyTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(CheckYourAnswersJourneyTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -285,7 +285,6 @@ guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
 importInformation.subHeading = Import information
-destination.subHeading = Place of destination information
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers

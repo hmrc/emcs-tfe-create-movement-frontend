@@ -36,7 +36,7 @@ class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "DestinationWarehouseVatView" - {
 
-    Seq(DestinationWarehouseVatMessages.English, DestinationWarehouseVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationWarehouseVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

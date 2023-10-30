@@ -47,7 +47,7 @@ class InformationDeferredMovementSummarySpec extends SpecBase {
     )
   }
 
-  Seq(DeferredMovementMessages.English, DeferredMovementMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(DeferredMovementMessages.English).foreach { implicit messagesForLanguage =>
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 

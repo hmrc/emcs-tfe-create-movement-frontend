@@ -35,7 +35,7 @@ class GuarantorVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "GuarantorVatView" - {
 
-    Seq(GuarantorVatMessages.English, GuarantorVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GuarantorVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

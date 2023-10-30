@@ -34,7 +34,7 @@ class FirstTransporterNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Deferred Movement view" - {
 
-    Seq(FirstTransporterNameMessages.English, FirstTransporterNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(FirstTransporterNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

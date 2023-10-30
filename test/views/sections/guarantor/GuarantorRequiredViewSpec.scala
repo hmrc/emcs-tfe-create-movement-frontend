@@ -35,7 +35,7 @@ class GuarantorRequiredViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Guarantor Required view" - {
 
-    Seq(GuarantorRequiredMessages.English, GuarantorRequiredMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GuarantorRequiredMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

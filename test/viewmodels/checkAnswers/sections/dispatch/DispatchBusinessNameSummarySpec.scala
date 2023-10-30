@@ -34,7 +34,7 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(DispatchCheckAnswersMessages.English, DispatchCheckAnswersMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DispatchCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

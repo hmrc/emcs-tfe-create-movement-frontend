@@ -35,7 +35,7 @@ class TransportUnitGiveMoreInformationViewSpec extends ViewSpecBase with ViewBeh
 
   "TransportUnitGiveMoreInformationView" - {
 
-    Seq(TransportUnitGiveMoreInformationMessages.English, TransportUnitGiveMoreInformationMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitGiveMoreInformationMessages.English).foreach { messagesForLanguage =>
 
       Seq(
         Container -> "container",

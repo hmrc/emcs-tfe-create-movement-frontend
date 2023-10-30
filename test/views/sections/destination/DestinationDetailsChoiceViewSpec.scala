@@ -36,7 +36,7 @@ class DestinationDetailsChoiceViewSpec extends ViewSpecBase with ViewBehaviours 
 
   "Destination Details Choice view" - {
 
-    Seq(DestinationDetailsChoiceMessages.English, DestinationDetailsChoiceMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationDetailsChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -35,7 +35,7 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ExportCustomsOfficeMessages.English, ExportCustomsOfficeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ExportCustomsOfficeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

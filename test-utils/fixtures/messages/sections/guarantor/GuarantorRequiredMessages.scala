@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object GuarantorRequiredMessages {
 
@@ -30,6 +30,4 @@ object GuarantorRequiredMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

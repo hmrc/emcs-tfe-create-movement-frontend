@@ -28,7 +28,8 @@ import javax.inject.{Inject, Singleton}
 class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) {
 
   private val english = Lang("en")
-  private val welsh = Lang("cy")
+
+  private val disableTranslations = true
 
   private def urlIsHttps(url: String): Boolean = url.startsWith("https")
 
@@ -68,7 +69,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
       selectPageConfig = Some(selectPageConfig),
       confirmPageConfig = Some(confirmPageConfig),
       timeoutConfig = Some(timeoutConfig),
-      disableTranslations = Some(!appConfig.languageTranslationEnabled)
+      disableTranslations = Some(disableTranslations)
     )
 
     def appLevelLabels(lang: Lang) =
@@ -130,14 +131,7 @@ class AddressLookupFrontendConfigBuilderService @Inject()(appConfig: AppConfig) 
         editPageLabels(english),
         confirmPageLabels(english)
       )),
-      cy = Some(LanguageLabels(
-        appLevelLabels(welsh),
-        countryPickerLabels(welsh),
-        selectPageLabels(welsh),
-        lookupPageLabels(welsh),
-        editPageLabels(welsh),
-        confirmPageLabels(welsh)
-      ))
+      cy = None
     )
 
     AddressLookupFrontendJourneyConfig(

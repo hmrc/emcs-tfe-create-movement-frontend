@@ -36,7 +36,7 @@ class DestinationTypeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Destination Type view" - {
 
-    Seq(DestinationTypeMessages.English, DestinationTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
         Seq("GBWK", "XIWK").foreach {

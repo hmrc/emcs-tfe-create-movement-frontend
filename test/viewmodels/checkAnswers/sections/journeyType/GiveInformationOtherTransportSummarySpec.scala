@@ -35,7 +35,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
   ".row" - {
 
-    Seq(GiveInformationOtherTransportMessages.English, GiveInformationOtherTransportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GiveInformationOtherTransportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

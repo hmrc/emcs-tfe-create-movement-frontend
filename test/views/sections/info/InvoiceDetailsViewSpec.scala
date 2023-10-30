@@ -37,7 +37,7 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateU
 
   "Invoice Details view" - {
 
-    Seq(InvoiceDetailsMessages.English, InvoiceDetailsMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(InvoiceDetailsMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -33,7 +33,7 @@ class TransportUnitRemoveUnitViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportUnitRemoveUnitView" - {
 
-    Seq(TransportUnitRemoveUnitMessages.English, TransportUnitRemoveUnitMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitRemoveUnitMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 

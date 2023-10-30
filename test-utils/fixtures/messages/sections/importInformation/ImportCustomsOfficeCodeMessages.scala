@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.importInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 import models.{NorthernIrelandRegisteredConsignor, UserType}
 
 object ImportCustomsOfficeCodeMessages {
@@ -42,13 +42,4 @@ object ImportCustomsOfficeCodeMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override def paragraph(userType: UserType): String =
-      if (userType == NorthernIrelandRegisteredConsignor) {
-        "This code is also known as a customs office reference number. Search for UK customs office codes (yn agor tab newydd) or search for EU customs office codes (yn agor tab newydd)."
-      } else {
-        "This code is also known as a customs office reference number. Search for UK customs office codes (yn agor tab newydd)."
-      }
-  }
 }

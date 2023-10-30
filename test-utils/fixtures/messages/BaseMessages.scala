@@ -48,6 +48,3 @@ trait BaseMessages { _: i18n =>
 
 trait BaseEnglish extends BaseMessages with EN
 object BaseEnglish extends BaseEnglish
-
-trait BaseWelsh extends BaseMessages with CY
-object BaseWelsh extends BaseWelsh

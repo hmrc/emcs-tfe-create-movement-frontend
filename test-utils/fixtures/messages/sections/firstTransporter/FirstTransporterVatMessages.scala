@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.firstTransporter
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object FirstTransporterVatMessages {
 
@@ -35,6 +35,4 @@ object FirstTransporterVatMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

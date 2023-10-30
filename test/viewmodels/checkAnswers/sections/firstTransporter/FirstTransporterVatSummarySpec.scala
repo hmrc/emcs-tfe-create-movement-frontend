@@ -35,7 +35,7 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(FirstTransporterVatMessages.English, FirstTransporterVatMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(FirstTransporterVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

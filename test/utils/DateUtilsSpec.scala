@@ -28,7 +28,7 @@ class DateUtilsSpec extends SpecBase with DateUtils {
 
   ".formatDateForUIOutput()" - {
 
-    Seq(MonthMessages.English, MonthMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(MonthMessages.English).foreach { messagesForLanguage =>
       1 to 12 foreach { month =>
 
         s"for month: `$month and language: '${messagesForLanguage.lang.code}'" - {

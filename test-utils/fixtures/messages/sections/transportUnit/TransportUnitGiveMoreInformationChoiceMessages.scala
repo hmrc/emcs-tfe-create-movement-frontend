@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object TransportUnitGiveMoreInformationChoiceMessages {
 
@@ -29,5 +29,5 @@ object TransportUnitGiveMoreInformationChoiceMessages {
 
   object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh
+
 }

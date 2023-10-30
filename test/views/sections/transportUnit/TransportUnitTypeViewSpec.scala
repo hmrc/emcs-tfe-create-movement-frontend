@@ -34,7 +34,7 @@ class TransportUnitTypeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportUnitTypeView" - {
 
-    Seq(TransportUnitTypeMessages.English, TransportUnitTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchCheckAnswersPage, DispatchWarehouseExcisePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,6 +27,11 @@ import javax.inject.Inject
 class DispatchNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
+    case DispatchWarehouseExcisePage =>
+      //TODO: route to CAM-DIS02
+      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case DispatchBusinessNamePage =>
       (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 

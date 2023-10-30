@@ -1,5 +1,10 @@
 GET         /trader/:ern/draft/:draftId/dispatch                             controllers.sections.dispatch.DispatchIndexController.onPageLoad(ern: String, draftId: String)
 
+GET        /trader/:ern/draft/:draftId/dispatch/warehouse-excise             controllers.sections.dispatch.DispatchWarehouseExciseController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/dispatch/warehouse-excise             controllers.sections.dispatch.DispatchWarehouseExciseController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/dispatch/warehouse-excise/change      controllers.sections.dispatch.DispatchWarehouseExciseController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/dispatch/warehouse-excise/change      controllers.sections.dispatch.DispatchWarehouseExciseController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+
 GET         /trader/:ern/draft/:draftId/dispatch/business-name               controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/dispatch/business-name               controllers.sections.dispatch.DispatchBusinessNameController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/dispatch/business-name/change        controllers.sections.dispatch.DispatchBusinessNameController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

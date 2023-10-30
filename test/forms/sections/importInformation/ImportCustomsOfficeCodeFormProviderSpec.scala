@@ -40,17 +40,12 @@ class ImportCustomsOfficeCodeFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
 
-    s"not bind a value that is less than $requiredLength" in {
-
-      val boundForm = form.bind(Map(fieldName -> "A" * (requiredLength - 1)))
-      boundForm.errors mustBe Seq(FormError(fieldName, lengthKey, Seq(requiredLength)))
-    }
-
-    s"not bind a value that is more than $requiredLength" in {
-
-      val boundForm = form.bind(Map(fieldName -> "A" * (requiredLength + 1)))
-      boundForm.errors mustBe Seq(FormError(fieldName, lengthKey, Seq(requiredLength)))
-    }
+    behave like fieldWithFixedLength(
+      form,
+      fieldName,
+      lengthError = FormError(fieldName, lengthKey, Seq(requiredLength)),
+      requiredLength = requiredLength
+    )
 
     s"not bind a value that contains XSS chars" in {
 

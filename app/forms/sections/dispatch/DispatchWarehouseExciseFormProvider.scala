@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.sections.dispatch
+package forms.sections.dispatch
 
-import models.requests.DataRequest
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.summarylist._
+import forms.XSS_REGEX
+import forms.mappings.Mappings
+import play.api.data.Form
 
 import javax.inject.Inject
 
-class DispatchCheckAnswersHelper @Inject()() {
+class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
-      rows = Seq(
-        DispatchBusinessNameSummary.row(),
-        DispatchWarehouseExciseSummary.row(),
-        DispatchAddressSummary.row()
-      ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("dispatchWarehouseExcise.error.required")
+        .verifying(firstError(
+          regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
+          maxLength(16, "dispatchWarehouseExcise.error.length")
+        ))
+    )
 }

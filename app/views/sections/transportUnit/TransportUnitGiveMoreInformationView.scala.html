@@ -51,7 +51,7 @@
             maxLength = Some(350),
             label = LabelViewModel(Text(helper.heading(transportUnitType, TransportUnitGiveMoreInformationPage(idx)))).asPageHeading(LabelSize.Large),
             value = form("value").value,
-            hint = Some(Hint(content = HtmlContent(
+            hint = Some(HintViewModel(content = HtmlContent(
                 messages("transportUnitGiveMoreInformation.hint.1") + "<br><br>" + messages("transportUnitGiveMoreInformation.hint.2")
             ))),
             attributes = Map("autocomplete" -> "off"),

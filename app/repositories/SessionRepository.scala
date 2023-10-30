@@ -62,7 +62,7 @@ class SessionRepositoryImpl @Inject()(
     collection
       .updateOne(
         filter = by(ern, sessionId),
-        update = Updates.set("lastUpdated", Instant.now),
+        update = Updates.set("lastUpdated", Instant.now)
       )
       .toFuture()
       .map(_ => true)

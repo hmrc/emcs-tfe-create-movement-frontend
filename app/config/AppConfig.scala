@@ -18,7 +18,6 @@ package config
 
 import featureswitch.core.config._
 import play.api.Configuration
-import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -60,18 +59,11 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
   lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
-  lazy val languageTranslationEnabled: Boolean = isEnabled(WelshTranslation)
-
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
   def returnToDraft: String = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
 
   private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
-
-  def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
-  )
 
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")

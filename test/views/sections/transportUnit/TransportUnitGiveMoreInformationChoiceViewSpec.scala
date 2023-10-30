@@ -35,7 +35,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
   "TransportUnitGiveMoreInformationChoiceView" - {
 
-    Seq(TransportUnitGiveMoreInformationChoiceMessages.English, TransportUnitGiveMoreInformationChoiceMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitGiveMoreInformationChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 

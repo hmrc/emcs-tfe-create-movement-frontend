@@ -33,7 +33,7 @@ class DispatchBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Dispatch Business Name view" - {
 
-    Seq(DispatchBusinessNameMessages.English, DispatchBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DispatchBusinessNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

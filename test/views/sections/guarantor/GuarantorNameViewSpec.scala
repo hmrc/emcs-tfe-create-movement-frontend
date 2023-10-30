@@ -35,7 +35,7 @@ class GuarantorNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "GuarantorNameView" - {
 
-    Seq(GuarantorNameMessages.English, GuarantorNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GuarantorNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

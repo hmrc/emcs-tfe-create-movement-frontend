@@ -34,7 +34,7 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(DispatchWarehouseExciseMessages.English, DispatchWarehouseExciseMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DispatchWarehouseExciseMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

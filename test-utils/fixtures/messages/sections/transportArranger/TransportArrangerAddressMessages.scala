@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportArranger
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object TransportArrangerAddressMessages {
 
@@ -27,5 +27,5 @@ object TransportArrangerAddressMessages {
 
   object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh
+
 }

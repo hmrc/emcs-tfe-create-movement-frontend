@@ -33,7 +33,7 @@ class DestinationBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Destination Business Name view" - {
 
-    Seq(DestinationBusinessNameMessages.English, DestinationBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationBusinessNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

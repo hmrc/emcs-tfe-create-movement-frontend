@@ -34,7 +34,7 @@ class InformationCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "InformationArrangerCheckAnswers view" - {
 
-    Seq(InformationCheckAnswersMessages.English, InformationCheckAnswersMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(InformationCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

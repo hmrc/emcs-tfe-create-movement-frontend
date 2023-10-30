@@ -38,7 +38,7 @@ class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviou
 
   "Destination Consignee Details view" - {
 
-    Seq(DestinationConsigneeDetailsMessages.English, DestinationConsigneeDetailsMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationConsigneeDetailsMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

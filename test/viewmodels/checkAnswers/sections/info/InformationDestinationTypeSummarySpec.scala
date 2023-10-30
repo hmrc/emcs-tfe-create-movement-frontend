@@ -47,7 +47,7 @@ class InformationDestinationTypeSummarySpec extends SpecBase {
     )
   }
 
-  Seq(DestinationTypeMessages.English, DestinationTypeMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(DestinationTypeMessages.English).foreach { implicit messagesForLanguage =>
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 

@@ -35,7 +35,7 @@ class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "HowMovementTransportedView" - {
 
-    Seq(HowMovementTransportedMessages.English, HowMovementTransportedMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(HowMovementTransportedMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

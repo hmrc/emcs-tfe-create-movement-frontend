@@ -35,7 +35,7 @@ class DestinationWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviour
 
   "Destination Warehouse Excise view" - {
 
-    Seq(DestinationWarehouseExciseMessages.English, DestinationWarehouseExciseMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DestinationWarehouseExciseMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

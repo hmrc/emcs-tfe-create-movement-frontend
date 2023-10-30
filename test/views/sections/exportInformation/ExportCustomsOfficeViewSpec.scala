@@ -50,7 +50,7 @@ class ExportCustomsOfficeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "ExportCustomsOfficeView" - {
 
-    Seq(ExportCustomsOfficeMessages.English, ExportCustomsOfficeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ExportCustomsOfficeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

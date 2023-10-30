@@ -46,7 +46,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
     )
   }
 
-  Seq(LocalReferenceNumberMessages.English, LocalReferenceNumberMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(LocalReferenceNumberMessages.English).foreach { implicit messagesForLanguage =>
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 

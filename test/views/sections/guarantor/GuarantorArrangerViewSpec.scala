@@ -34,7 +34,7 @@ class GuarantorArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "GuarantorArrangerView" - {
 
-    Seq(GuarantorArrangerMessages.English, GuarantorArrangerMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GuarantorArrangerMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

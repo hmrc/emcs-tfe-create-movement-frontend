@@ -35,7 +35,7 @@ class DeferredMovementViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Deferred Movement view" - {
 
-    Seq(DeferredMovementMessages.English, DeferredMovementMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(DeferredMovementMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

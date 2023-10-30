@@ -38,7 +38,7 @@ class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportSealChoice view" - {
 
-    Seq(TransportSealChoiceMessages.English, TransportSealChoiceMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportSealChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

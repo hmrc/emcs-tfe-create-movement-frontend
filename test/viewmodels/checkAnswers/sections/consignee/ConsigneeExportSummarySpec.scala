@@ -34,7 +34,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

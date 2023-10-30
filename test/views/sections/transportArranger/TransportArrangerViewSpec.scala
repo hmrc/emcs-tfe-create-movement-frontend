@@ -34,7 +34,7 @@ class TransportArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportArrangerView" - {
 
-    Seq(TransportArrangerMessages.English, TransportArrangerMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportArrangerMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

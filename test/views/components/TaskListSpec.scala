@@ -26,7 +26,7 @@ class TaskListSpec extends ViewSpecBase {
 
   "TaskList" - {
 
-    Seq(TaskListStatusMessages.English, TaskListStatusMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TaskListStatusMessages.English).foreach { messagesForLanguage =>
 
       s"when rendering with language code '${messagesForLanguage.lang.code}'" - {
 

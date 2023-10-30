@@ -30,7 +30,7 @@ class DestinationTypeHelperSpec extends SpecBase {
   lazy val helper = new DestinationTypeHelper()
 
 
-  Seq(DestinationTypeMessages.English, DestinationTypeMessages.Welsh).foreach { messagesForLanguage =>
+  Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
       lazy val app = applicationBuilder().build()
       implicit lazy val msgs = messages(app, messagesForLanguage.lang)

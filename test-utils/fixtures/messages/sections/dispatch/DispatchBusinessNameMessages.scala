@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.dispatch
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object DispatchBusinessNameMessages {
 
@@ -29,6 +29,4 @@ object DispatchBusinessNameMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

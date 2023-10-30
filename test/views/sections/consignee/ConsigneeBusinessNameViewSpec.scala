@@ -33,7 +33,7 @@ class ConsigneeBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "Deferred Movement view" - {
 
-    Seq(ConsigneeBusinessNameMessages.English, ConsigneeBusinessNameMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeBusinessNameMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

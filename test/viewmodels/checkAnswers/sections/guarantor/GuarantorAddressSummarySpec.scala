@@ -54,7 +54,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(GuarantorAddressMessages.English, GuarantorAddressMessages.Welsh).foreach { implicit messagesForLanguage =>
+    Seq(GuarantorAddressMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

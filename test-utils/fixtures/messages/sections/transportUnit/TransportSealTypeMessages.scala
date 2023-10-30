@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType._
 
@@ -52,6 +52,6 @@ object TransportSealTypeMessages {
 
   object English extends ViewMessages with BaseEnglish
 
-  object Welsh extends ViewMessages with BaseWelsh
+
 
 }

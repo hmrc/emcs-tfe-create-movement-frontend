@@ -35,7 +35,7 @@ class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehavi
 
   "GiveInformationOtherTransportView" - {
 
-    Seq(GiveInformationOtherTransportMessages.English, GiveInformationOtherTransportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(GiveInformationOtherTransportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

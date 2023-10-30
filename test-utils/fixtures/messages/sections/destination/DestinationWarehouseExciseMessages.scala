@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object DestinationWarehouseExciseMessages {
 
@@ -32,6 +32,4 @@ object DestinationWarehouseExciseMessages {
     val text: String = "This number contains 13 alpha-numeric characters starting with GB and can be found on your approval letter."
   }
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

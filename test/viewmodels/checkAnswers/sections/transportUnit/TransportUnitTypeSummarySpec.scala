@@ -35,7 +35,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(TransportUnitTypeMessages.English, TransportUnitTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportUnitTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

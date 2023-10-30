@@ -36,7 +36,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
   ".row" - {
 
-    Seq(HowMovementTransportedMessages.English, HowMovementTransportedMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(HowMovementTransportedMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

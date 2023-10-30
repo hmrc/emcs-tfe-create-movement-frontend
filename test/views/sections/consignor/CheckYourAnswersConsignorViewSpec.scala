@@ -37,7 +37,7 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
 
   "CheckYourAnswersConsignor view" - {
 
-    Seq(CheckYourAnswersConsignorMessages.English, CheckYourAnswersConsignorMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(CheckYourAnswersConsignorMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

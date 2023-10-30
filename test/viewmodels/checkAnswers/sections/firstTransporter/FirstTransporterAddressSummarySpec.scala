@@ -36,7 +36,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(FirstTransporterAddressMessages.English, FirstTransporterAddressMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(FirstTransporterAddressMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

@@ -32,6 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 
+@Singleton
 class SessionRepositoryImpl @Inject()(
                                    mongoComponent: MongoComponent,
                                    appConfig: AppConfig

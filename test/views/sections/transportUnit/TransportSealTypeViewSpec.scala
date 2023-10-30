@@ -34,7 +34,7 @@ class TransportSealTypeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "TransportSealTypeView" - {
 
-    Seq(TransportSealTypeMessages.English, TransportSealTypeMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(TransportSealTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

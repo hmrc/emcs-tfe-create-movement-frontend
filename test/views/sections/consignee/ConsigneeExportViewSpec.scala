@@ -34,7 +34,7 @@ class ConsigneeExportViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "ConsigneeExportView" - {
 
-    Seq(ConsigneeExportMessages.English, ConsigneeExportMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

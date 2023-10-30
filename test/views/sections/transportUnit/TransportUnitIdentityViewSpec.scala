@@ -47,7 +47,7 @@ class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
       ("Vehicle", TransportUnitType.Vehicle)
     ).foreach {
       case (name, transportUnitType) =>
-        Seq(TransportUnitIdentityMessages.English, TransportUnitIdentityMessages.Welsh).foreach { messagesForLanguage =>
+        Seq(TransportUnitIdentityMessages.English).foreach { messagesForLanguage =>
 
           s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for $name" - {
 

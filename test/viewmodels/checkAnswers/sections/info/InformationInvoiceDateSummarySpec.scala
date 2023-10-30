@@ -49,7 +49,7 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
     )
   }
 
-  Seq(InvoiceDetailsMessages.English, InvoiceDetailsMessages.Welsh).foreach { implicit messagesForLanguage =>
+  Seq(InvoiceDetailsMessages.English).foreach { implicit messagesForLanguage =>
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 

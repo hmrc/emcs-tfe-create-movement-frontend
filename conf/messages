@@ -532,7 +532,7 @@ dispatchWarehouseExcise.hintText = This is sometimes called an excise registrati
 dispatchWarehouseExcise.checkYourAnswersLabel = Excise ID (ERN)
 dispatchWarehouseExcise.error.required = Enter the excise ID
 dispatchWarehouseExcise.error.length = Excise ID must be 16 characters or less
-dispatchWarehouseExcise.error.xss = Excise ID contain < and > and : and ;
+dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch
 
 dispatchBusinessName.title = What is the business name of the place of dispatch?

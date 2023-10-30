@@ -74,7 +74,14 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    _ =>
+    case TransportSealChoicePage(idx) =>
+      (userAnswers: UserAnswers) =>
+        userAnswers.get(TransportSealChoicePage(idx)) match {
+          case Some(true) => transportUnitRoutes.TransportSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, CheckMode)
+          case _ => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        }
+
+    case _ =>
       (userAnswers: UserAnswers) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 

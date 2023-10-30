@@ -175,7 +175,16 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
         transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
+    }
 
+    "must go to CheckYourAnswersTransportUnitController from TransportSealChoicePage if answer is false" in {
+      navigator.nextPage(TransportSealChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(TransportSealChoicePage(testIndex1), false)) mustBe
+        transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
+    }
+
+    "must go to TransportSealTypePage from TransportSealChoicePage if answer is true" in {
+      navigator.nextPage(TransportSealChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true)) mustBe
+        transportUnitRoutes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
     }
   }
 

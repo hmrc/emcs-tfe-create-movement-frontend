@@ -17,10 +17,12 @@
 package viewmodels.checkAnswers.sections.destination
 
 import base.SpecBase
-import fixtures.messages.sections.destination.DestinationConsigneeDetailsMessages
+import fixtures.messages.sections.destination.DestinationDetailsChoiceMessages
 import models.CheckMode
+import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
 import org.scalatest.matchers.must.Matchers
-import pages.sections.destination.DestinationConsigneeDetailsPage
+import pages.sections.destination.DestinationDetailsChoicePage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -28,13 +30,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
+class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
 
-  "DestinationConsigneeDetailsSummary" - {
+  "DestinationDetailsChoiceSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(DestinationConsigneeDetailsMessages.English).foreach { messagesForLanguage =>
+    Seq(DestinationDetailsChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -46,7 +48,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DestinationConsigneeDetailsSummary.row() mustBe None
+            DestinationDetailsChoiceSummary.row() mustBe None
           }
         }
 
@@ -54,19 +56,22 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row when user answers yes" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, true))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationDetailsChoicePage, true)
+            )
 
-            DestinationConsigneeDetailsSummary.row() mustBe
+            DestinationDetailsChoiceSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
+                  key = messagesForLanguage.cyaLabel(GbTaxWarehouse.stringValue),
                   value = Value(Text(messagesForLanguage.yes)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDestinationConsigneeDetails"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "changeDestinationDetailsChoice"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
                   )
                 )
               )
@@ -74,19 +79,22 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row when user answers no" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, false))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationDetailsChoicePage, false)
+            )
 
-            DestinationConsigneeDetailsSummary.row() mustBe
+            DestinationDetailsChoiceSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
+                  key = messagesForLanguage.cyaLabel(GbTaxWarehouse.stringValue),
                   value = Value(Text(messagesForLanguage.no)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDestinationConsigneeDetails"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "changeDestinationDetailsChoice"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
                   )
                 )
               )

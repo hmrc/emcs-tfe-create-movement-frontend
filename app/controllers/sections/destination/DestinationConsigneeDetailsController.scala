@@ -19,10 +19,10 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import models.requests.DataRequest
 import navigation.DestinationNavigator
-import pages.sections.destination.DestinationConsigneeDetailsPage
+import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -55,8 +55,21 @@ class DestinationConsigneeDetailsController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, mode),
-        value =>
-          saveAndRedirect(DestinationConsigneeDetailsPage, value, mode)
+        value => if (request.userAnswers.get(DestinationConsigneeDetailsPage).contains(value)) {
+          Future(Redirect(navigator.nextPage(DestinationConsigneeDetailsPage, mode, request.userAnswers)))
+        } else {
+
+          val cleanedUserAnswers = if (!value) request.userAnswers else request.userAnswers
+            .remove(DestinationBusinessNamePage)
+            .remove(DestinationAddressPage)
+
+          saveAndRedirect(
+            page = DestinationConsigneeDetailsPage,
+            answer = value,
+            currentAnswers = cleanedUserAnswers,
+            mode = NormalMode
+          )
+        }
       )
     }
 

@@ -18,48 +18,49 @@ package viewmodels.checkAnswers.sections.destination
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.destination.{DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
+import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DestinationBusinessNameSummary  {
+object DestinationAddressSummary  {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val useConsignor = request.userAnswers.get(DestinationConsigneeDetailsPage)
 
     val businessNamePage = useConsignor match {
-      case Some(true) => ConsigneeBusinessNamePage
-      case _ => DestinationBusinessNamePage
+      case Some(true) => ConsigneeAddressPage
+      case _ => DestinationAddressPage
     }
 
-    val changeBusinessNameLink = Seq(
+    val changeAddressLink = Seq(
       ActionItemViewModel(
         content = "site.change",
-        href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-        id = "changeDestinationBusinessName"
-      ).withVisuallyHiddenText(messages("destinationBusinessName.change.hidden"))
+        href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+        id = "changeDestinationAddress"
+      ).withVisuallyHiddenText(messages("address.destinationAddress.change.hidden"))
     )
 
-    val (value, actions) = request.userAnswers.get(businessNamePage).fold[(String, Seq[ActionItem])] {
+    val (value, actions) = request.userAnswers.get(businessNamePage).fold[(HtmlContent, Seq[ActionItem])] {
       useConsignor match {
-        case Some(true) => (messages("destinationCheckAnswers.consignee.notProvided"), Seq.empty)
-        case _ => (messages("destinationCheckAnswers.destination.notProvided"), Seq.empty)
+        case Some(true) => (HtmlContent(messages("destinationCheckAnswers.consignee.notProvided")), Seq.empty)
+        case _ => (HtmlContent(messages("destinationCheckAnswers.destination.notProvided")), Seq.empty)
       }
     } { answer =>
       useConsignor match {
-        case Some(true) => (answer, Seq.empty)
-        case _ => (answer, changeBusinessNameLink)
+        case Some(true) => (answer.toCheckYourAnswersFormat, Seq.empty)
+        case _ => (answer.toCheckYourAnswersFormat, changeAddressLink)
       }
     }
 
     SummaryListRowViewModel(
-      key = "destinationBusinessName.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(value).toString),
+      key = "address.destinationAddress.checkYourAnswers.label",
+      value = Value(value),
       actions = actions
     )
   }

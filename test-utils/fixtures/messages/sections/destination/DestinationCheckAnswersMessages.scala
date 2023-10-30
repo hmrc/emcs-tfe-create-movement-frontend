@@ -18,18 +18,15 @@ package fixtures.messages.sections.destination
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object DestinationBusinessNameMessages {
+object DestinationCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the business name of the place of destination?"
+    val heading = "Check your answers"
     val title = titleHelper(heading)
-    val errorRequired = "Enter the business name of the place of destination"
-    val errorLength = "Enter a business name up to 182 characters"
-    val errorInvalid = "Business name must not contain < and > and : and ;"
-    val cyaLabel: String = "Trader name"
-    val cyaChangeHidden: String = "Trader name"
-    val cyaDestinationNotProvided: String = "Not provided"
-    val cyaConsigneeNotProvided: String = "Consignee section not complete"
+    val traderNameLabel = "Trader name"
+    val traderNameChangeHidden = "Trader name"
+    val addressLabel: String = "Address"
+    val addressChangeHidden: String = "Address"
   }
 
   object English extends ViewMessages with BaseEnglish

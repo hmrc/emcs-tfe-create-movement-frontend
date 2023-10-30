@@ -17,24 +17,25 @@
 package viewmodels.checkAnswers.sections.destination
 
 import base.SpecBase
-import fixtures.messages.sections.destination.DestinationConsigneeDetailsMessages
+import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.destination.DestinationConsigneeDetailsPage
+import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.checkAnswers.DestinationWarehouseVatSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
+class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers {
 
-  "DestinationConsigneeDetailsSummary" - {
+  "DestinationWarehouseVatSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(DestinationConsigneeDetailsMessages.English).foreach { messagesForLanguage =>
+    Seq(DestinationWarehouseVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -46,7 +47,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DestinationConsigneeDetailsSummary.row() mustBe None
+            DestinationWarehouseVatSummary.row() mustBe None
           }
         }
 
@@ -54,18 +55,18 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row when user answers yes" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, true))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, "vat"))
 
-            DestinationConsigneeDetailsSummary.row() mustBe
+            DestinationWarehouseVatSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.yes)),
+                  value = Value(Text("vat")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDestinationConsigneeDetails"
+                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "changeDestinationWarehouseVat"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
@@ -74,18 +75,18 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row when user answers no" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, false))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, "vat"))
 
-            DestinationConsigneeDetailsSummary.row() mustBe
+            DestinationWarehouseVatSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.no)),
+                  value = Value(Text("vat")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDestinationConsigneeDetails"
+                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "changeDestinationWarehouseVat"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )

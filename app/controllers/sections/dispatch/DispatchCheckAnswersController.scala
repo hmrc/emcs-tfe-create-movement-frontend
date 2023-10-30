@@ -28,7 +28,6 @@ import viewmodels.checkAnswers.sections.dispatch.DispatchCheckAnswersHelper
 import views.html.sections.dispatch.DispatchCheckAnswersView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class DispatchCheckAnswersController @Inject()(
                                                 override val messagesApi: MessagesApi,
@@ -45,13 +44,14 @@ class DispatchCheckAnswersController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(dispatchCheckAnswersHelper.summaryList(), controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(ern, draftId)))
+      Ok(view(
+        list = dispatchCheckAnswersHelper.summaryList(),
+        onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(ern, draftId)
+      ))
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      Future.successful(
-        Redirect(navigator.nextPage(DispatchCheckAnswersPage, NormalMode, request.userAnswers))
-      )
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Redirect(navigator.nextPage(DispatchCheckAnswersPage, NormalMode, request.userAnswers))
     }
 }

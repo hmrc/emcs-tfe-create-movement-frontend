@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.requests.DataRequest
 import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,14 +26,14 @@ import viewmodels.implicits._
 
 object DestinationWarehouseVatSummary  {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DestinationWarehouseVatPage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "destinationWarehouseVat.checkYourAnswers.label",
           value = ValueViewModel(answer),
-          actions = if (!showActionLinks) Seq() else Seq(
+          actions = Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
@@ -41,9 +41,8 @@ object DestinationWarehouseVatSummary  {
                 draftId = request.userAnswers.draftId,
                 mode = CheckMode
               ).url,
-              id = DestinationWarehouseVatPage
-            )
-              .withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
+              id = "changeDestinationWarehouseVat"
+            ).withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
           )
         )
     }

@@ -24,8 +24,8 @@ object DestinationWarehouseExciseMessages {
     _: i18n =>
     val title = titleHelper("What is the excise registration number (ERN) for the destination tax warehouse?")
     val heading: String = "What is the excise registration number (ERN) for the destination tax warehouse?"
-    val cyaLabel: String = "Enter the excise registration number (ERN)"
-    val cyaChangeHidden: String = "Enter the excise registration number (ERN)"
+    val cyaLabel: String = "Warehouse excise ID"
+    val cyaChangeHidden: String = "Warehouse excise ID"
     val errorRequired: String = "Enter the excise registration number (ERN)"
     val errorInvalidCharacters: String = "ERN must not include < and > and : and ;"
     val errorLength: String = "VAT registration number must be 16 characters or less"

@@ -18,14 +18,47 @@ package pages.sections.destination
 
 import models.requests.DataRequest
 import pages.sections.Section
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeSection}
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import viewmodels.taskList
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object DestinationSection extends Section[JsObject] {
+
   override val path: JsPath = JsPath \ "destination"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when all CAM-DES pages are built
-    NotStarted
+    (exciseVatAndDetailsChoicePagesComplete, detailsPagesComplete) match {
+      case (NotStarted, _) => NotStarted
+      case (Completed, Completed) => Completed
+      case _ => InProgress
+    }
+  }
+
+  private def exciseVatAndDetailsChoicePagesComplete(implicit request: DataRequest[_]): TaskListStatus = {
+    (
+      request.userAnswers.get(DestinationWarehouseExcisePage),
+      request.userAnswers.get(DestinationWarehouseVatPage),
+      request.userAnswers.get(DestinationDetailsChoicePage)
+    ) match {
+      case (Some(_), _, _) => Completed
+      case (_, Some(_), None) => InProgress
+      case (_, _, Some(_)) => Completed
+      case _ => NotStarted
+    }
+  }
+
+  private def detailsPagesComplete(implicit request: DataRequest[_]): TaskListStatus = {
+    if(request.userAnswers.get(DestinationDetailsChoicePage).contains(false)) Completed else (
+      request.userAnswers.get(DestinationConsigneeDetailsPage),
+      request.userAnswers.get(DestinationBusinessNamePage),
+      request.userAnswers.get(DestinationAddressPage),
+      request.userAnswers.get(ConsigneeBusinessNamePage),
+      request.userAnswers.get(ConsigneeAddressPage)
+    ) match {
+      case (Some(false), Some(_), Some(_), _, _) => Completed
+      case (Some(true), _, _, Some(_),Some(_)) => Completed
+      case _ => InProgress
+    }
   }
 }

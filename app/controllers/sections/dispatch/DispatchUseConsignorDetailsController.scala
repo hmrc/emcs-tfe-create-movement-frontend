@@ -19,8 +19,8 @@ package controllers.sections.dispatch
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
-import models.Mode
 import models.requests.DataRequest
+import models.{Mode, NormalMode}
 import navigation.DispatchNavigator
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
@@ -54,13 +54,21 @@ class DispatchUseConsignorDetailsController @Inject()(override val messagesApi: 
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         value => {
-          val updatedUserAnswers =
-            cleanseUserAnswersIfValueHasChanged(
+          if (request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(value)) {
+            Future(Redirect(navigator.nextPage(DispatchUseConsignorDetailsPage, mode, request.userAnswers)))
+          } else {
+
+            val cleanedUserAnswers = if (!value) request.userAnswers else request.userAnswers
+              .remove(DispatchBusinessNamePage)
+              .remove(DispatchAddressPage)
+
+            saveAndRedirect(
               page = DispatchUseConsignorDetailsPage,
-              newAnswer = value,
-              cleansingFunction = request.userAnswers.remove(DispatchBusinessNamePage).remove(DispatchAddressPage)
+              answer = value,
+              currentAnswers = cleanedUserAnswers,
+              mode = NormalMode
             )
-          saveAndRedirect(DispatchUseConsignorDetailsPage, value, updatedUserAnswers, mode)
+          }
         }
       )
     }

@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.dispatch
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import fixtures.messages.sections.dispatch.DispatchUseConsignorDetailsMessages
-import models.NormalMode
+import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
 import play.api.i18n.Messages
@@ -63,7 +63,7 @@ class DispatchUseConsignorDetailsSummarySpec extends SpecBase with Matchers with
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url,
+                      href = controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
                       id = "changeDispatchUseConsignorDetails"
                     ).withVisuallyHiddenText(messagesForLanguage.checkAnswersHiddenChangeLink)
                   )

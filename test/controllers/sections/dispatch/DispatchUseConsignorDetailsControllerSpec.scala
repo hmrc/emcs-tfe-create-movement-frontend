@@ -55,74 +55,110 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
 
   "DispatchUseConsignorDetails Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      running(application) {
+    "onPageLoad" - {
+      "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
+        running(application) {
 
-        val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
-        val result = route(application, request).value
+          val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
+        Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
+      ) {
+        running(application) {
+
+          val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form.fill(true), dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+        }
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
-    ) {
-      running(application) {
+    "onSubmit" - {
 
-        val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
-        val result = route(application, request).value
+      "must redirect to the next page when valid data is submitted - data is new" in new Fixture(Some(emptyUserAnswers)) {
+        running(application) {
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+          MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+          val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
       }
+
+      "must redirect to the next page when valid data is submitted - data has changed" in new Fixture(
+        Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
+      ) {
+        running(application) {
+
+          MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+          val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "false"))
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+
+      "must redirect to the next page when valid data is submitted - data has not changed" in new Fixture(
+        Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
+      ) {
+        running(application) {
+
+          val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        running(application) {
+
+          val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", ""))
+          val boundForm = form.bind(Map("value" -> ""))
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+        }
+      }
+
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
-      running(application) {
+    "must redirect to Journey Recovery" - {
+      "for a GET if no existing data is found" in new Fixture(None) {
+        running(application) {
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+          val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
+          val result = route(application, request).value
 
-        val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
-      running(application) {
+      "for a POST if no existing data is found" in new Fixture(None) {
+        running(application) {
 
-        val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", ""))
-        val boundForm = form.bind(Map("value" -> ""))
-        val result = route(application, request).value
+          val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
-
-        val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
-
-        val request = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.dispatch
 
-import models.NormalMode
+import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
 import play.api.i18n.Messages
@@ -38,7 +38,7 @@ object DispatchUseConsignorDetailsSummary {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(request.ern, request.draftId, NormalMode).url,
+              href = controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeDispatchUseConsignorDetails"
             )
               .withVisuallyHiddenText(messages("dispatchUseConsignorDetails.change.hidden"))

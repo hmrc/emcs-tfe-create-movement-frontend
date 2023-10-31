@@ -22,7 +22,7 @@ import models._
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
 import pages.sections.info.LocalReferenceNumberPage
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 
 class JourneyTypeNavigatorSpec extends SpecBase {
 
@@ -53,15 +53,38 @@ class JourneyTypeNavigatorSpec extends SpecBase {
           }
         }
 
-        "must go to the Journey Type CYA page" - {
+        "must go to the correct journey time page" - {
 
-          "when the option selected is not `Other`" in {
-            val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage, "123")
-              .set(HowMovementTransportedPage, AirTransport)
+          "when the option selected is not `Other`" - {
 
-            navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            "when the user has not previously entered a days or hours value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+
+            "when the user previously entered a days value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+                .set(JourneyTimeDaysPage, 1)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+
+            "when the user previously entered a hours value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+                .set(JourneyTimeHoursPage, 1)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
           }
         }
       }

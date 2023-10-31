@@ -33,7 +33,7 @@ class JourneyTimeDaysFormProviderSpec extends IntFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      Random.nextInt(maximum).toString
+      Random.between(minimum, maximum).toString
     )
 
     behave like intField(

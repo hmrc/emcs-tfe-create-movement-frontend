@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
+@import viewmodels.LabelSize
 
 @this(
     layout: templates.Layout,
@@ -24,6 +25,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     h1: components.h1,
+    h2: components.h2,
     p: components.p,
     link: components.link,
     continueOrExit: components.continueOrExit
@@ -39,10 +41,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("journeyType.subHeading"), "govuk-caption-xl")
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(HtmlContent(heading))
+                label = LabelViewModel(Text(messages("journeyTimeDays.heading"))).asPageHeading(LabelSize.Large)
             )
             .asNumeric()
             .withWidth(Fixed2)
@@ -55,6 +58,6 @@
     }
 }
 
-@heading = {
-    @h1("journeyTimeDays.heading", Some(messages("journeyType.subHeading")), "govuk-heading-l")
+@{
+    //$COVERAGE-OFF$
 }

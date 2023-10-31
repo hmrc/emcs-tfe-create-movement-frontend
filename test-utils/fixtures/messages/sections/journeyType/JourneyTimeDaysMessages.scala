@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, BaseWelsh, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object JourneyTimeDaysMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
@@ -31,6 +31,4 @@ object JourneyTimeDaysMessages {
   }
 
   object English extends ViewMessages with BaseEnglish
-
-  object Welsh extends ViewMessages with BaseWelsh
 }

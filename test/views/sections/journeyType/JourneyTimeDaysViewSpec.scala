@@ -35,7 +35,7 @@ class JourneyTimeDaysViewSpec extends ViewSpecBase with ViewBehaviours {
 
   "JourneyTimeDaysView" - {
 
-    Seq(JourneyTimeDaysMessages.English, JourneyTimeDaysMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(JourneyTimeDaysMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

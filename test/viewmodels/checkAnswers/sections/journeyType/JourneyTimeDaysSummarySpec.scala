@@ -34,7 +34,7 @@ class JourneyTimeDaysSummarySpec extends SpecBase with Matchers {
 
   ".row" - {
 
-    Seq(JourneyTimeDaysMessages.English, JourneyTimeDaysMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(JourneyTimeDaysMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

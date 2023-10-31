@@ -58,8 +58,8 @@ class JourneyTimeHoursViewSpec extends ViewSpecBase with ViewBehaviours {
         ))
 
         "must have the correct link to the CAM-JT03 page" in {
-          //TODO: link to CAM-JT03
-          doc.select(Selectors.link(1)).attr("href") mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          doc.select(Selectors.link(1)).attr("href") mustBe
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode).url
         }
       }
     }

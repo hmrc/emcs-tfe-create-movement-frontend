@@ -19,13 +19,24 @@ package pages.sections.journeyType
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object JourneyTypeSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "journeyType"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-JT flow is built
-    NotStarted
+    val pageAnswersExist = List(
+      request.userAnswers.get(HowMovementTransportedPage).isDefined,
+      request.userAnswers.get(GiveInformationOtherTransportPage).isDefined,
+      request.userAnswers.get(JourneyTimeDaysPage).isDefined || request.userAnswers.get(JourneyTimeHoursPage).isDefined
+    )
+
+    if (pageAnswersExist.forall(identity)) {
+      Completed
+    } else if (pageAnswersExist.exists(identity)) {
+      InProgress
+    } else {
+      NotStarted
+    }
   }
 }

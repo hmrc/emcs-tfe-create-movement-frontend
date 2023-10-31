@@ -17,10 +17,11 @@
 package navigation
 
 import controllers.routes
+import controllers.sections.journeyType.{routes => jtRoutes}
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -33,25 +34,29 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
           case Some(Other) =>
-            controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
           case _ =>
-            // TODO redirect to CAM-JT03
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            userAnswers.get(JourneyTimeHoursPage) match {
+              case Some(_) => jtRoutes.JourneyTimeHoursController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+              case _ => jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+            }
         }
 
     case GiveInformationOtherTransportPage => (userAnswers: UserAnswers) =>
-      // TODO redirect to CAM-JT03
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.JourneyTimeDaysController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+
+    case JourneyTimeDaysPage => (userAnswers: UserAnswers) =>
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case CheckYourAnswersJourneyTypePage =>
       //TODO update when next page is created
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
@@ -59,13 +64,12 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
           case Some(Other) =>
-            controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+            jtRoutes.GiveInformationOtherTransportController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
           case _ =>
-            // TODO redirect to CAM-JT03
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
     case _ => (userAnswers: UserAnswers) =>
-      controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

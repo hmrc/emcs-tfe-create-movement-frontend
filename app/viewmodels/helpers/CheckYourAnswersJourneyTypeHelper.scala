@@ -31,6 +31,7 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
       rows = Seq(
         HowMovementTransportedSummary.row(true),
         GiveInformationOtherTransportSummary.row(true),
+        JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")

@@ -335,6 +335,18 @@ giveInformationOtherTransport.error.character = Information must contain letters
 giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
 giveInformationOtherTransport.change.hidden = give information about your other type of transport
 
+journeyTimeDays.title = How many days will the journey take?
+journeyTimeDays.heading = How many days will the journey take?
+journeyTimeDays.input.suffix = days
+journeyTimeDays.switchToHours = Journey time is shorter than one day
+journeyTimeDays.checkYourAnswersLabel = Journey time
+journeyTimeDays.checkYourAnswersValue = {0} days
+journeyTimeDays.error.nonNumeric = Days must only contain numbers
+journeyTimeDays.error.required = Enter how many days the journey will take
+journeyTimeDays.error.wholeNumber = Days must only contain numbers
+journeyTimeDays.error.outOfRange = Days must be between {0} and {1}
+journeyTimeDays.change.hidden = how many days the journey will take
+
 journeyTimeHours.title = How many hours will the journey take?
 journeyTimeHours.heading = How many hours will the journey take?
 journeyTimeHours.input.suffix = hours

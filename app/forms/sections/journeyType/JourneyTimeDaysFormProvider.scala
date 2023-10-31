@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package pages.sections.journeyType
+package forms.sections.journeyType
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object JourneyTimeHoursPage extends QuestionPage[Int] {
-  override val toString: String = "journeyTimeHours"
-  override val path: JsPath = JourneyTypeSection.path \ toString
+import javax.inject.Inject
+
+class JourneyTimeDaysFormProvider @Inject() extends Mappings {
+
+  def apply(maxJourneyTimeDays: Int): Form[Int] = {
+    Form(
+      "value" -> int(
+        "journeyTimeDays.error.required",
+        "journeyTimeDays.error.wholeNumber",
+        "journeyTimeDays.error.nonNumeric")
+          .verifying(inRange(1, maxJourneyTimeDays, "journeyTimeDays.error.outOfRange"))
+    )
+  }
 }

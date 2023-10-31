@@ -18,6 +18,8 @@ package controllers.sections.journeyType
 
 import base.SpecBase
 import models.NormalMode
+import models.sections.journeyType.HowMovementTransported.SeaTransport
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -26,9 +28,12 @@ class JourneyTypeIndexControllerSpec extends SpecBase {
   "JourneyTypeIndexController" - {
 
     "when JourneyTypeSection.isCompleted" - {
-      // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "must redirect to the CYA controller" in {
+        val completedUserAnswers = emptyUserAnswers
+          .set(HowMovementTransportedPage, SeaTransport)
+          .set(GiveInformationOtherTransportPage, "information")
+          .set(JourneyTimeDaysPage, 1)
+        val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
 
         running(application) {
 
@@ -36,7 +41,8 @@ class JourneyTypeIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          redirectLocation(result) mustBe
+            Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url)
         }
       }
     }

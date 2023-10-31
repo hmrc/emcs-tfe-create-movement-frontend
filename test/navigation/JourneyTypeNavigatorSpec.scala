@@ -22,7 +22,7 @@ import models._
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
 import pages.sections.info.LocalReferenceNumberPage
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 
 class JourneyTypeNavigatorSpec extends SpecBase {
 
@@ -53,30 +53,77 @@ class JourneyTypeNavigatorSpec extends SpecBase {
           }
         }
 
-        // TODO update once CAM-JT03 has been created
-        "must go to the Journey Type CYA page" - {
+        "must go to the correct journey time page" - {
 
-          "when the option selected is not `Other`" in {
-            val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage, "123")
-              .set(HowMovementTransportedPage, AirTransport)
+          "when the option selected is not `Other`" - {
 
-            navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+            "when the user has not previously entered a days or hours value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+
+            "when the user previously entered a days value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+                .set(JourneyTimeDaysPage, 1)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+
+            "when the user previously entered a hours value" in {
+              val userAnswers = emptyUserAnswers
+                .set(LocalReferenceNumberPage, "123")
+                .set(HowMovementTransportedPage, AirTransport)
+                .set(JourneyTimeHoursPage, 1)
+
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
           }
         }
       }
 
       "for the GiveInformationOtherTransport page" - {
 
-        // TODO update once CAM-JT03 has been created
-        "must go to the Journey Type CYA page" - {
+        "must go to the Journey Type Days page" - {
           val userAnswers = emptyUserAnswers
             .set(LocalReferenceNumberPage, "123")
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "some information text")
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+
+        }
+      }
+
+      "for the JourneyTimeDaysPage page" - {
+
+        "must go to the Journey Type CYA page" - {
+          val userAnswers = emptyUserAnswers
+            .set(LocalReferenceNumberPage, "123")
+            .set(HowMovementTransportedPage, AirTransport)
+
+          navigator.nextPage(JourneyTimeDaysPage, NormalMode, userAnswers) mustBe
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+
+        }
+      }
+
+      "for the JourneyTimeHoursPage page" - {
+
+        "must go to the Journey Type CYA page" - {
+          val userAnswers = emptyUserAnswers
+            .set(LocalReferenceNumberPage, "123")
+            .set(HowMovementTransportedPage, AirTransport)
+
+          navigator.nextPage(JourneyTimeHoursPage, NormalMode, userAnswers) mustBe
             controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
 
         }

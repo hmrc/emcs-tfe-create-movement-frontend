@@ -18,20 +18,33 @@ package pages.sections.journeyType
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.SeaTransport
 import play.api.test.FakeRequest
 
 class JourneyTypeSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      // TODO: Update when CAM-JT05 is built
-      "when finished" ignore {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+      "when finished" in {
+        val completedUserAnswers = emptyUserAnswers
+          .set(HowMovementTransportedPage, SeaTransport)
+          .set(GiveInformationOtherTransportPage, "information")
+          .set(JourneyTimeDaysPage, 1)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), completedUserAnswers)
         JourneyTypeSection.isCompleted mustBe true
       }
     }
 
     "must return false" - {
-      // TODO: Update when CAM-JT05 is built
+      "when in progress" in {
+        val partiallyCompleteUserAnswers = emptyUserAnswers
+          .set(HowMovementTransportedPage, SeaTransport)
+          .set(GiveInformationOtherTransportPage, "information")
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), partiallyCompleteUserAnswers)
+        JourneyTypeSection.isCompleted mustBe false
+      }
+
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         JourneyTypeSection.isCompleted mustBe false

@@ -35,7 +35,11 @@ trait MockPreDraftService extends MockFactory {
 
     def set(userAnswers: UserAnswers): CallHandler1[UserAnswers, Future[Boolean]] =
       (mockPreDraftService.set(_: UserAnswers))
-        .expects(*)
+        .expects(where[UserAnswers](actualAnswers =>
+          actualAnswers.ern == userAnswers.ern &&
+            actualAnswers.data == userAnswers.data
+        ))
+
 
     def clear(ern: String, sessionId: String): CallHandler2[String, String, Future[Boolean]] = {
       (mockPreDraftService.clear(_: String, _: String))

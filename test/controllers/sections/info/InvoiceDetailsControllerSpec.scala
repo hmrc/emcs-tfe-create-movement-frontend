@@ -19,20 +19,22 @@ package controllers.sections.info
 import base.SpecBase
 import forms.sections.info.InvoiceDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.sections.info.InvoiceDetailsModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
+import pages.sections.info.InvoiceDetailsPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{PreDraftService, UserAnswersService}
-import utils.{DateUtils, TimeMachine}
+import utils.{DateTimeUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.Future
 
-class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateUtils {
+class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
 
   val testLocalDate = LocalDate.of(2023, 2, 9)
 
@@ -83,7 +85,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       running(application) {
-        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+
+        val expectedToSaveAnswers = emptyUserAnswers
+          .set(InvoiceDetailsPage, InvoiceDetailsModel("answer", LocalDate.of(2020,1,1)))
+
+        MockPreDraftService.set(expectedToSaveAnswers).returns(Future.successful(true))
 
         val request =
           FakeRequest(POST, invoiceDetailsRoute)

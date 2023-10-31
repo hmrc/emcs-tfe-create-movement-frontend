@@ -42,12 +42,10 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
     case InvoiceDetailsPage =>
-      // TODO update to redirect to the dispatch-details
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
-    //    case DispatchDetailsPage =>
-    //      // TODO update to redirect to the information CYA
-    //      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
+    case DispatchDetailsPage =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern)
 
     case InformationCheckAnswersPage =>
       (userAnswers: UserAnswers) =>

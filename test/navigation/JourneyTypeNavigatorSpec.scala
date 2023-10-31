@@ -91,7 +91,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
       "for the GiveInformationOtherTransport page" - {
 
-        "must go to the Journey Type CYA page" - {
+        "must go to the Journey Type Days page" - {
           val userAnswers = emptyUserAnswers
             .set(LocalReferenceNumberPage, "123")
             .set(HowMovementTransportedPage, Other)
@@ -99,6 +99,32 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
             controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+
+        }
+      }
+
+      "for the JourneyTimeDaysPage page" - {
+
+        "must go to the Journey Type CYA page" - {
+          val userAnswers = emptyUserAnswers
+            .set(LocalReferenceNumberPage, "123")
+            .set(HowMovementTransportedPage, AirTransport)
+
+          navigator.nextPage(JourneyTimeDaysPage, NormalMode, userAnswers) mustBe
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+
+        }
+      }
+
+      "for the JourneyTimeHoursPage page" - {
+
+        "must go to the Journey Type CYA page" - {
+          val userAnswers = emptyUserAnswers
+            .set(LocalReferenceNumberPage, "123")
+            .set(HowMovementTransportedPage, AirTransport)
+
+          navigator.nextPage(JourneyTimeHoursPage, NormalMode, userAnswers) mustBe
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
 
         }
       }

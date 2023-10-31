@@ -18,9 +18,9 @@ package controllers.sections.guarantor
 
 import controllers.actions._
 import forms.sections.guarantor.GuarantorArrangerFormProvider
-import models.Mode
 import models.requests.DataRequest
-import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorNamePage, GuarantorVatPage}
 import play.api.data.Form
@@ -60,7 +60,11 @@ class GuarantorArrangerController @Inject()(
             Future.successful(renderView(BadRequest, formWithErrors, mode)),
           {
             case value@(GoodsOwner | Transporter) =>
-              saveAndRedirect(GuarantorArrangerPage, value, mode)
+              if (Seq(Consignor, Consignee).exists(request.userAnswers.get(GuarantorArrangerPage).contains)) {
+                saveAndRedirect(GuarantorArrangerPage, value, NormalMode)
+              } else {
+                saveAndRedirect(GuarantorArrangerPage, value, mode)
+              }
             case value =>
               saveAndRedirect(
                 GuarantorArrangerPage,

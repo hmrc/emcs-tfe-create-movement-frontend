@@ -18,6 +18,7 @@ package controllers.sections.sad
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.NorthernIrelandRegisteredConsignor
 import navigation.SadNavigator
 import pages.sections.sad.SadSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -37,11 +38,16 @@ class SadIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (SadSection.isCompleted) {
-        // TODO: Update to CAM-SAD02 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+      if(request.userTypeFromErn == NorthernIrelandRegisteredConsignor) {
+        if (SadSection.isCompleted) {
+          // TODO: Update to CAM-SAD02 when built
+          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        } else {
+          // TODO: Update to CAM-SAD01 when built
+          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        }
       } else {
-        // TODO: Update to CAM-SAD01 when built
+        // TODO: Update to tasklist when built
         Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       }
     }

@@ -24,14 +24,30 @@ import play.api.test.Helpers._
 class SadIndexControllerSpec extends SpecBase {
   "SadIndexController" - {
 
-    "when SadSection.isCompleted" - {
-      // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
+    "for XIRC traders" - {
+      val ern = "XIWK123"
+      "when SadSection.isCompleted" - {
+        // TODO: remove ignore when CYA page is built
+        "must redirect to the CYA controller" ignore {
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+          running(application) {
+
+            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          }
+        }
+      }
+
+      "must redirect to the sad import number controller" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
 
-          val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url)
+          val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
@@ -40,16 +56,21 @@ class SadIndexControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the sad import number controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "for any other traders" - {
+      Seq("XIWK123", "GBRC123", "GBWK123").foreach {
+        ern =>
+          s"must redirect to the tasklist for traders starting with ${ern.take(4)}" in {
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
+            running(application) {
 
-        val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+              val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
+              val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+            }
+          }
       }
     }
   }

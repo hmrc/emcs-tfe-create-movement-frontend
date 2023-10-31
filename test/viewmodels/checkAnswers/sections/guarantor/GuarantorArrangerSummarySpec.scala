@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
-import models.NormalMode
+import models.CheckMode
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
@@ -40,7 +40,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
           id = "changeGuarantorArranger"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )

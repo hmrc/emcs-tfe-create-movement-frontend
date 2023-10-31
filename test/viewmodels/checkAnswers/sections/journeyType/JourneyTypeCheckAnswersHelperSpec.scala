@@ -58,9 +58,9 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
               emptyUserAnswers
                 .set(GiveInformationOtherTransportPage, "true")
                 .set(HowMovementTransportedPage, AirTransport)
-               // .set(JourneyTimeDaysPage, days)
+                .set(JourneyTimeDaysPage, days)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 2
+            helper.summaryList()(request, msgs).rows.length mustBe 3
           }
         }
   }

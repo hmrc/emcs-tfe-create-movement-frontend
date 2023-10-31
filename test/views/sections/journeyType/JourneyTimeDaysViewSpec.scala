@@ -55,6 +55,11 @@ class JourneyTimeDaysViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.link(1) -> messagesForLanguage.toJourneyHoursLink,
           Selectors.button -> messagesForLanguage.saveAndContinue
         ))
+
+        "must have the correct link to the CAM-JT04 page" in {
+          doc.select(Selectors.link(1)).attr("href") mustBe
+            controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode).url
+        }
       }
     }
   }

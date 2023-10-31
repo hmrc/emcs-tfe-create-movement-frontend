@@ -32,16 +32,20 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
   lazy val app = applicationBuilder().build()
 
-  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  private def expectedRow(value: String, deferredMovement: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+
+    val cyaLabel: String = if (deferredMovement) messagesForLanguage.deferredCyaLabel else messagesForLanguage.newCyaLabel
+    val cyaChangeHidden: String = if (deferredMovement) messagesForLanguage.deferredCyaChangeHidden else messagesForLanguage.newCyaChangeHidden
+
     Some(
       SummaryListRowViewModel(
-        key = Key(Text(messagesForLanguage.cyaLabel)),
+        key = Key(Text(cyaLabel)),
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
           href = controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(testErn, CheckMode).url,
           id = "changeLocalReferenceNumber"
-        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+        ).withVisuallyHiddenText(cyaChangeHidden))
       )
     )
   }
@@ -50,24 +54,49 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      "and this is a deferred movement" - {
 
-      "and there is no answer for the LocalReferenceNumberPage" - {
-        "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-          InformationLocalReferenceNumberSummary.row mustBe None
+        "and there is no answer for the LocalReferenceNumberPage" - {
+          "then must not return a row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            InformationLocalReferenceNumberSummary.row(deferredMovement = true) mustBe None
+          }
         }
+
+        "and there is a LocalReferenceNumberPage answer " - {
+          "then must return a row with the answer" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage, testLrn))
+
+            InformationLocalReferenceNumberSummary.row(deferredMovement = true) mustBe expectedRow(value = testLrn, deferredMovement = true)
+          }
+        }
+
       }
 
-      "and there is a LocalReferenceNumberPage answer " - {
-        "then must return a row with the answer" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage, testLrn))
+      "and this is NOT a deferred movement" - {
 
-          InformationLocalReferenceNumberSummary.row mustBe expectedRow(value = testLrn)
+        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+
+        "and there is no answer for the LocalReferenceNumberPage" - {
+          "then must not return a row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            InformationLocalReferenceNumberSummary.row(deferredMovement = false) mustBe None
+          }
         }
-      }
 
+        "and there is a LocalReferenceNumberPage answer " - {
+          "then must return a row with the answer" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage, testLrn))
+
+            InformationLocalReferenceNumberSummary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
+          }
+        }
+
+      }
     }
   }
 

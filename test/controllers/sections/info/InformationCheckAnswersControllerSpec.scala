@@ -62,10 +62,11 @@ class InformationCheckAnswersControllerSpec extends SpecBase
 
   "InformationCheckAnswers Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
+    val userAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse).set(DeferredMovementPage, true)
+    "must return OK and the correct view for a GET" in new Fixtures(Some(userAnswers)) {
       running(application) {
 
-        MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
+        MockCheckAnswersJourneyTypeHelper.summaryList(deferredMovement = true).returns(list)
 
         implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersRoute))
 
@@ -79,21 +80,20 @@ class InformationCheckAnswersControllerSpec extends SpecBase
       }
     }
 
-    val userAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse).set(DeferredMovementPage, true)
     "must redirect to the next page when submitting the page" in new Fixtures(Some(userAnswers)) {
-      running(application) {
+        running(application) {
 
-        MockUserAnswersService.set(userAnswers).returns(Future.successful(userAnswers))
-        MockPreDraftService.clear(testErn, testSessionId).returns(Future.successful(true))
+          MockUserAnswersService.set(userAnswers).returns(Future.successful(userAnswers))
+          MockPreDraftService.clear(testErn, testSessionId).returns(Future.successful(true))
 
-        val request = FakeRequest(POST, checkYourAnswersSubmitRoute)
+          val request = FakeRequest(POST, checkYourAnswersSubmitRoute)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
       }
-    }
 
   }
 }

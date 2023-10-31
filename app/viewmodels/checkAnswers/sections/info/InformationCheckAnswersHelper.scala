@@ -25,14 +25,14 @@ import javax.inject.Inject
 
 class InformationCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
 
     SummaryListViewModel(
       rows = Seq(
         InformationPlaceOfDispatchSummary.row,
         InformationDestinationTypeSummary.row,
         InformationDeferredMovementSummary.row,
-        InformationLocalReferenceNumberSummary.row,
+        InformationLocalReferenceNumberSummary.row(deferredMovement),
         InformationInvoiceReferenceSummary.row,
         InformationInvoiceDateSummary.row,
         InformationDateOfDispatchSummary.row,

@@ -201,8 +201,11 @@ localReferenceNumber.new.p1 = This is also known as a Local Reference Number (LR
 localReferenceNumber.new.p2 = Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement.
 localReferenceNumber.new.error.required = Enter a unique reference
 localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
-localReferenceNumber.checkYourAnswersLabel = Local Reference Number (LRN)
-localReferenceNumber.change.hidden = Local Reference Number (LRN)
+localReferenceNumber.deferred.checkYourAnswersLabel = Local Reference Number (LRN)
+localReferenceNumber.deferred.change.hidden = Local Reference Number (LRN)
+localReferenceNumber.new.checkYourAnswersLabel = Unique reference (LRN)
+localReferenceNumber.new.change.hidden = Unique reference (LRN)
+
 
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address

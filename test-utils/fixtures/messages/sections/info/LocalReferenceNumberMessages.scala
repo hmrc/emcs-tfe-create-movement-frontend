@@ -29,15 +29,16 @@ object LocalReferenceNumberMessages {
     val newP2: String = "Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement."
     val newErrorRequired: String = "Enter a unique reference"
     val newErrorLength: String = "Unique reference must be 22 characters or less"
+    val newCyaLabel: String = "Unique reference (LRN)"
+    val newCyaChangeHidden: String = "Unique reference (LRN)"
 
     val deferredHeading: String = "Enter the Local Reference Number (LRN) for the deferred movement"
     val deferredTitle: String = titleHelper(deferredHeading)
     val deferredP1: String = "This must match the LRN on the Fallback Accompanying Document (FAD)."
     val deferredErrorRequired: String = "Enter the LRN"
     val deferredErrorLength: String = "LRN must be 22 characters or less"
-
-    val cyaLabel: String = "Local Reference Number (LRN)"
-    val cyaChangeHidden: String = "Local Reference Number (LRN)"
+    val deferredCyaLabel: String = "Local Reference Number (LRN)"
+    val deferredCyaChangeHidden: String = "Local Reference Number (LRN)"
   }
 
   object English extends ViewMessages with BaseEnglish

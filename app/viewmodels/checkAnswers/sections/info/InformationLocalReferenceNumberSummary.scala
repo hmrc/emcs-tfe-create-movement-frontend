@@ -26,21 +26,23 @@ import viewmodels.implicits._
 
 object InformationLocalReferenceNumberSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     request.userAnswers.get(LocalReferenceNumberPage).map { lrn =>
 
       val value: String = lrn
 
+      val deferredType: String = if (deferredMovement) "deferred" else "new"
+
       SummaryListRowViewModel(
-        key = "localReferenceNumber.checkYourAnswersLabel",
+        key = s"localReferenceNumber.$deferredType.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
             controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(ern = request.ern, CheckMode).url,
             id = "changeLocalReferenceNumber")
-            .withVisuallyHiddenText(messages("localReferenceNumber.change.hidden"))
+            .withVisuallyHiddenText(messages(s"localReferenceNumber.$deferredType.change.hidden"))
         )
       )
     }

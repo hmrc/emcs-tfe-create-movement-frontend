@@ -52,13 +52,15 @@ class InformationCheckAnswersController @Inject()(
 
   def onPageLoad(ern: String): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      Future.successful(
-        Ok(view(
-          cyaHelper.summaryList(),
-          controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(ern)
-        ))
-      )
-
+      withGuard {
+        case (_, deferredMovement) =>
+          Future.successful(
+            Ok(view(
+              cyaHelper.summaryList(deferredMovement),
+              controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(ern)
+            ))
+          )
+      }
     }
 
   def onSubmit(ern: String): Action[AnyContent] =

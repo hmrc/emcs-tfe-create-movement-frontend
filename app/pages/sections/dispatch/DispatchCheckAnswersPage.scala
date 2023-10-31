@@ -19,6 +19,5 @@ package pages.sections.dispatch
 import pages.Page
 
 case object DispatchCheckAnswersPage extends Page {
-
   override val toString: String = "dispatchCheckAnswers"
 }

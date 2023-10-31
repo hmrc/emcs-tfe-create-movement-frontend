@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.consignee
 
-import models.{CheckMode, NormalMode}
+import models.NormalMode
 import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeExportPage
 import play.api.i18n.Messages

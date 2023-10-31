@@ -19,6 +19,5 @@ package pages.sections.guarantor
 import pages.Page
 
 case object GuarantorCheckAnswersPage extends Page {
-
   override val toString: String = "guarantorCheckAnswers"
 }

@@ -19,6 +19,5 @@ package pages.sections.info
 import pages.Page
 
 case object InformationCheckAnswersPage extends Page {
-
   override val toString: String = "informationCheckAnswers"
 }

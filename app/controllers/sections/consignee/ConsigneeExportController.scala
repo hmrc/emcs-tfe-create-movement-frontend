@@ -19,7 +19,7 @@ package controllers.sections.consignee
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExportFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.{ConsigneeExportPage, ConsigneeSection}
 import play.api.i18n.MessagesApi
@@ -54,8 +54,20 @@ class ConsigneeExportController @Inject()(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
         value => {
-          val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(ConsigneeExportPage, value, request.userAnswers.remove(ConsigneeSection))
-          saveAndRedirect(ConsigneeExportPage, value, updatedUserAnswers, mode)
+          if (request.userAnswers.get(ConsigneeExportPage).contains(value)) {
+            Future(Redirect(navigator.nextPage(ConsigneeExportPage, mode, request.userAnswers)))
+          } else {
+
+            val cleanedUserAnswers = if (!value) request.userAnswers else request.userAnswers
+              .remove(ConsigneeSection)
+
+            saveAndRedirect(
+              page = ConsigneeExportPage,
+              answer = value,
+              currentAnswers = cleanedUserAnswers,
+              mode = NormalMode
+            )
+          }
         }
       )
     }

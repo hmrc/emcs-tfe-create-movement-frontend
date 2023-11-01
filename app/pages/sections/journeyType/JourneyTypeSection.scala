@@ -17,6 +17,7 @@
 package pages.sections.journeyType
 
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.Other
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
@@ -27,9 +28,16 @@ case object JourneyTypeSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     val pageAnswersExist = List(
       request.userAnswers.get(HowMovementTransportedPage).isDefined,
-      request.userAnswers.get(GiveInformationOtherTransportPage).isDefined,
       request.userAnswers.get(JourneyTimeDaysPage).isDefined || request.userAnswers.get(JourneyTimeHoursPage).isDefined
-    )
+    ) ++ {
+      if(request.userAnswers.get(HowMovementTransportedPage).contains(Other)) {
+        // GiveInformationOtherTransportPage is only mandatory when Other is selected
+        List(request.userAnswers.get(GiveInformationOtherTransportPage).isDefined)
+      } else {
+        // if Other isn't selected
+        List()
+      }
+    }
 
     if (pageAnswersExist.forall(identity)) {
       Completed

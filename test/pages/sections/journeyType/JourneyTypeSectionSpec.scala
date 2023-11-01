@@ -18,21 +18,34 @@ package pages.sections.journeyType
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.SeaTransport
+import models.sections.journeyType.HowMovementTransported
+import models.sections.journeyType.HowMovementTransported.{Other, SeaTransport}
 import play.api.test.FakeRequest
 
 class JourneyTypeSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      "when finished" in {
+      "when finished and HowMovementTransportedPage is Other" in {
         val completedUserAnswers = emptyUserAnswers
-          .set(HowMovementTransportedPage, SeaTransport)
+          .set(HowMovementTransportedPage, Other)
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), completedUserAnswers)
         JourneyTypeSection.isCompleted mustBe true
       }
+
+      HowMovementTransported.values.filterNot(_ == Other).foreach(
+        answer =>
+          s"when finished and HowMovementTransportedPage is ${answer.getClass.getSimpleName.stripSuffix("$")}" in {
+            val completedUserAnswers = emptyUserAnswers
+              .set(HowMovementTransportedPage, answer)
+              .set(JourneyTimeHoursPage, 1)
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), completedUserAnswers)
+            JourneyTypeSection.isCompleted mustBe true
+          }
+      )
     }
 
     "must return false" - {

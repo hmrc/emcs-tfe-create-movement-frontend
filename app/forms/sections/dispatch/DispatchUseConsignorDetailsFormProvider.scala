@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.dispatch
+package forms.sections.dispatch
 
-import pages.Page
+import javax.inject.Inject
 
-case object DispatchCheckAnswersPage extends Page {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  override val toString: String = "dispatchCheckAnswers"
+class DispatchUseConsignorDetailsFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("dispatchUseConsignorDetails.error.required")
+    )
 }

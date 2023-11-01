@@ -18,9 +18,10 @@ package viewmodels.checkAnswers.sections.dispatch
 
 import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchCheckAnswersMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.dispatch.DispatchBusinessNamePage
+import pages.sections.dispatch.{DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -29,6 +30,10 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
+
+  class Test(userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "DispatchBusinessAddressSummary" - {
 
@@ -40,22 +45,36 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
 
         implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
 
-        "when there's no answer" - {
+        "must output no row" - {
+          "when there's no answer for DispatchUseConsignorDetailsPage" in new Test(emptyUserAnswers) {
+            DispatchBusinessNameSummary.row() mustBe None
+          }
 
-          "must output no row" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
+          "when DispatchUseConsignorDetailsPage is false and there's no answer for DispatchBusinessNamePage" in new Test(
+            emptyUserAnswers.set(DispatchUseConsignorDetailsPage, false)
+          ) {
             DispatchBusinessNameSummary.row() mustBe None
           }
         }
 
-        "when there's an answer" - {
+        s"must output the expected row for DispatchBusinessName" - {
 
-          s"must output the expected row for DispatchBusinessName" in {
+          "when DispatchUseConsignorDetailsPage is true" in new Test(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true)) {
+            DispatchBusinessNameSummary.row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.traderNameLabel,
+                  value = Value(Text(testMinTraderKnownFacts.traderName)),
+                  actions = Seq()
+                )
+              )
+          }
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchBusinessNamePage, "business name"))
-
+          "when DispatchUseConsignorDetailsPage is false and there's an answer" in new Test(
+            emptyUserAnswers
+              .set(DispatchUseConsignorDetailsPage, false)
+              .set(DispatchBusinessNamePage, "business name")
+          ) {
             DispatchBusinessNameSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(

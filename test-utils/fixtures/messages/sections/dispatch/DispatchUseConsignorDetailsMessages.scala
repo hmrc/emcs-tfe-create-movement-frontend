@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package fixtures.messages.sections.dispatch
 
-import pages.behaviours.PageBehaviours
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-class QuestionPageSpec extends PageBehaviours {
-  object TestPage extends QuestionPage[String] {
-    override val toString: String = "testPage"
-    override val path: JsPath = JsPath \ toString
+object DispatchUseConsignorDetailsMessages {
+
+  sealed trait ViewMessages extends BaseMessages {
+    _: i18n =>
+    val heading = "Is the place of dispatch the same as the consignor details?"
+    val title = titleHelper(heading)
+    val checkAnswersLabel = "Use consignor details"
+    val checkAnswersHiddenChangeLink = "whether to use consignor details"
+    val errorRequired = "Select yes if the place of dispatch and consignor details are the same"
   }
 
-  "QuestionPage" - {
-    beRetrievable[String].apply(TestPage, "value1")
-    beSettable[String].apply(TestPage, "value1", "value2")
-    beRemovable[String].apply(TestPage, "value1")
-  }
+  object English extends ViewMessages with BaseEnglish
 }

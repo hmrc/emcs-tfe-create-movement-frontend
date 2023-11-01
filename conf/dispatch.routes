@@ -18,3 +18,9 @@ POST        /trader/:ern/draft/:draftId/dispatch/address/change              con
 
 GET         /trader/:ern/draft/:draftId/dispatch/check-answers               controllers.sections.dispatch.DispatchCheckAnswersController.onPageLoad(ern: String, draftId: String)
 POST        /trader/:ern/draft/:draftId/dispatch/check-answers               controllers.sections.dispatch.DispatchCheckAnswersController.onSubmit(ern: String, draftId: String)
+
+# DIS02
+GET        /trader/:ern/draft/:draftId/dispatch/consignor-details            controllers.sections.dispatch.DispatchUseConsignorDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/dispatch/consignor-details            controllers.sections.dispatch.DispatchUseConsignorDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/dispatch/consignor-details/change     controllers.sections.dispatch.DispatchUseConsignorDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/dispatch/consignor-details/change     controllers.sections.dispatch.DispatchUseConsignorDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)

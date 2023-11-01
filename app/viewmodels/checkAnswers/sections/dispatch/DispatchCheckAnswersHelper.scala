@@ -28,6 +28,7 @@ class DispatchCheckAnswersHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
+        DispatchUseConsignorDetailsSummary.row(),
         DispatchBusinessNameSummary.row(),
         DispatchWarehouseExciseSummary.row(),
         DispatchAddressSummary.row()

@@ -18,22 +18,55 @@ package pages.sections.dispatch
 
 import base.SpecBase
 import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
 import play.api.test.FakeRequest
 
 class DispatchSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      // TODO: Update when CAM-DIS06 is built
-      "when finished" ignore {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+      "when Consignor details question is 'yes' and Consignor section is completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, true)
+          .set(ConsignorAddressPage, testUserAddress)
+        )
+        DispatchSection.isCompleted mustBe true
+      }
+      "when Consignor details question is 'no' and the rest of the flow is completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, false)
+          .set(DispatchBusinessNamePage, "beans")
+          .set(DispatchAddressPage, testUserAddress)
+        )
         DispatchSection.isCompleted mustBe true
       }
     }
 
     "must return false" - {
-      // TODO: Update when CAM-DIS06 is built
-      "when not finished" in {
+      "when not started" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        DispatchSection.isCompleted mustBe false
+      }
+      "when only DispatchWarehouseExcisePage is completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+        )
+        DispatchSection.isCompleted mustBe false
+      }
+      "when Consignor details question is 'yes' and Consignor section is not completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, true)
+        )
+        DispatchSection.isCompleted mustBe false
+      }
+      "when Consignor details question is 'no' and the rest of the flow is not completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, false)
+          .set(DispatchBusinessNamePage, "beans")
+        )
         DispatchSection.isCompleted mustBe false
       }
     }

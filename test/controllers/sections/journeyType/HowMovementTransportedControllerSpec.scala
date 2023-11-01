@@ -22,7 +22,6 @@ import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
 import models.sections.journeyType.HowMovementTransported
-import models.sections.journeyType.HowMovementTransported.{InlandWaterwayTransport, Other}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import navigation.JourneyTypeNavigator
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}

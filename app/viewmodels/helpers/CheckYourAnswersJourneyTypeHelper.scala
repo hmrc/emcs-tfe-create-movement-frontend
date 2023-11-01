@@ -29,8 +29,8 @@ class CheckYourAnswersJourneyTypeHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        HowMovementTransportedSummary.row(true),
-        GiveInformationOtherTransportSummary.row(true),
+        HowMovementTransportedSummary.row(),
+        GiveInformationOtherTransportSummary.row(),
         JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
       ).flatten

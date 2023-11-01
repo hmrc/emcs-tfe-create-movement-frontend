@@ -26,14 +26,14 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 object GiveInformationOtherTransportSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(GiveInformationOtherTransportPage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "giveInformationOtherTransport.checkYourAnswers.label",
           value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = if (!showActionLinks) Seq() else Seq(
+          actions = Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(

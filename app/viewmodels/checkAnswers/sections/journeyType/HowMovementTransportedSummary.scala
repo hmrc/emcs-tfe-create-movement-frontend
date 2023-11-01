@@ -26,7 +26,7 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 object HowMovementTransportedSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(HowMovementTransportedPage).map {
       answer =>
 
@@ -39,7 +39,7 @@ object HowMovementTransportedSummary {
         SummaryListRowViewModel(
           key = "howMovementTransported.checkYourAnswers.label",
           value = value,
-          actions = if (!showActionLinks) Seq() else Seq(
+          actions = Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(

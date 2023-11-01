@@ -47,7 +47,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe None
+            GiveInformationOtherTransportSummary.row() mustBe None
           }
         }
 
@@ -59,7 +59,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
 
-              GiveInformationOtherTransportSummary.row(showActionLinks = true) mustBe
+              GiveInformationOtherTransportSummary.row() mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
@@ -71,23 +71,6 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
                         id = GiveInformationOtherTransportPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
-                  )
-                )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
-
-              GiveInformationOtherTransportSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("some text")),
-                    actions = Seq()
                   )
                 )
             }

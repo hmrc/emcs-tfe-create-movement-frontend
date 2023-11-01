@@ -26,7 +26,7 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
-        saveAndContinue: components.saveAndContinue
+        continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
@@ -39,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("journeyType.subHeading", request.draftId), "govuk-caption-l")
+        @h2(messages("journeyType.subHeading", request.draftId), "govuk-caption-xl")
 
         @{govukCharacterCount(CharacterCount(
             id = "value",
@@ -53,7 +53,7 @@
             }
         ))}
 
-        @saveAndContinue()
+        @continueOrExit()
 
     }
 }

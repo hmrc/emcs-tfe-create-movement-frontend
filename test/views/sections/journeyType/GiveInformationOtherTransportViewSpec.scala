@@ -47,13 +47,14 @@ class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehavi
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
 
-        val subHeadingCaptionSelector: String = "main .govuk-caption-l"
+        val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           subHeadingCaptionSelector -> messagesForLanguage.subHeading,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.saveAndContinue
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

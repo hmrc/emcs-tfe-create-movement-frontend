@@ -48,7 +48,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            HowMovementTransportedSummary.row(showActionLinks = true) mustBe None
+            HowMovementTransportedSummary.row() mustBe None
           }
         }
         "when there's an answer" - {
@@ -59,7 +59,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
 
-              HowMovementTransportedSummary.row(showActionLinks = true) mustBe Some(
+              HowMovementTransportedSummary.row() mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(messagesForLanguage.radioOption1)),
@@ -70,22 +70,6 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
                       id = HowMovementTransportedPage
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
-                )
-              )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
-
-              HowMovementTransportedSummary.row(showActionLinks = false) mustBe Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(HtmlContent(messagesForLanguage.radioOption1)),
-                  actions = Seq()
                 )
               )
             }

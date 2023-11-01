@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.documents.DocumentsCertificatesPage
 
 class DocumentsNavigatorSpec extends SpecBase {
   val navigator = new DocumentsNavigator
@@ -30,6 +31,14 @@ class DocumentsNavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+      "for the DocumentsCertificatesPage" - {
+
+        "must go to DispatchConsignorDetails page" in {
+          navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
 
     }

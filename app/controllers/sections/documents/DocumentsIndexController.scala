@@ -19,6 +19,7 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import navigation.DocumentsNavigator
+import models.NormalMode
 import pages.sections.documents.DocumentsSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -41,8 +42,7 @@ class DocumentsIndexController @Inject()(
         // TODO: Update to CAM-DOC06 when built
         Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       } else {
-        // TODO: Update to CAM-DOC01 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 

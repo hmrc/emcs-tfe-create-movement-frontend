@@ -30,13 +30,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-
-
 @Singleton
 class SessionRepositoryImpl @Inject()(
-                                   mongoComponent: MongoComponent,
-                                   appConfig: AppConfig
-                                 )(implicit ec: ExecutionContext)
+                                       mongoComponent: MongoComponent,
+                                       appConfig: AppConfig
+                                     )(implicit ec: ExecutionContext)
   extends PlayMongoRepository[UserAnswers](
     collectionName = "pre-draft-user-answers",
     mongoComponent = mongoComponent,

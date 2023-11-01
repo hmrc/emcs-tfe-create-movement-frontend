@@ -179,5 +179,31 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       status(result) mustEqual SEE_OTHER
     }
 
+    "must cleanse the guarantor section when answering yes" in {
+      val expectedAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val application = applicationBuilder(
+        userAnswers = Some(
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
+            .set(GuarantorArrangerPage, Transporter)
+            .set(GuarantorNamePage, "a name")
+        )
+      )
+        .overrides(
+          bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+        )
+        .build()
+
+
+      val request = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+    }
+
   }
 }

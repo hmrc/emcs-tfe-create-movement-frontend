@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
-import models.CheckMode
+import models.{CheckMode, Mode, NormalMode}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
@@ -38,14 +38,14 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+    def expectedRow(value: String, showChangeLink: Boolean, mode: Mode = CheckMode)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
       Some(
         SummaryListRowViewModel(
           key = Key(Text(messagesForLanguage.cyaLabel)),
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, mode).url,
             id = "changeGuarantorName"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )
@@ -124,7 +124,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorArrangerPage, GoodsOwner)
               )
 
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
             }
 
             "and that section has been filled in" in {
@@ -150,7 +150,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorArrangerPage, Transporter)
               )
 
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
             }
 
             "and that section has been filled in" in {

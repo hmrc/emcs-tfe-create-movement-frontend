@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package pages.sections.sad
 
-import pages.Page
+import models.requests.DataRequest
+import pages.sections.Section
+import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{NotStarted, TaskListStatus}
 
-case object InformationCheckAnswersPage extends Page {
-  override val toString: String = "informationCheckAnswers"
+case object SadSection extends Section[JsObject] {
+  override val path: JsPath = JsPath \ "sad"
+
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    // TODO: Update when CAM-SAD02 is built
+    NotStarted
+  }
 }

@@ -130,7 +130,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
           .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testDraftId).url)
+        val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testDraftId, NormalMode).url)
 
         val result = route(application, request).value
 

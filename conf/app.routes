@@ -35,3 +35,4 @@ GET         /trader/:ern/draft/:draftId/confirmation         controllers.Confirm
 ->          /                                                importInformation.Routes
 ->          /                                                items.Routes
 ->          /                                                documents.Routes
+->          /                                                sad.Routes

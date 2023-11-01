@@ -20,8 +20,8 @@ import base.SpecBase
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger
-import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, Transporter}
-import models.{NormalMode, UserAddress}
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.{CheckMode, NormalMode, UserAddress}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import navigation.GuarantorNavigator
 import pages.sections.guarantor._
@@ -39,6 +39,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   def onwardRoute = Call("GET", "/foo")
 
   lazy val guarantorArrangerRoute = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val guarantorArrangerRouteCheckMode = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url
 
   val formProvider = new GuarantorArrangerFormProvider()
   val form = formProvider()
@@ -201,7 +202,66 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
         }
     )
+
+    Seq(GoodsOwner, Transporter).foreach {
+      guarantorArranger =>
+        Seq(Consignor, Consignee).foreach(
+          consignorOrConsigneeOldAnswer =>
+            s"must force NormalMode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
+              s" and old answer is ${consignorOrConsigneeOldAnswer.getClass.getSimpleName.stripSuffix("$")}" in {
+              val application = applicationBuilder(
+                userAnswers = Some(
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, consignorOrConsigneeOldAnswer)
+                )
+              )
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService)
+                )
+                .build()
+
+              MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+              val request = FakeRequest(POST, guarantorArrangerRouteCheckMode).withFormUrlEncodedBody(("value", guarantorArranger.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+            }
+        )
+        Seq(GoodsOwner, Transporter).foreach(
+          oldAnswer =>
+            s"must keep old Mode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
+              s" and old answer is ${oldAnswer.getClass.getSimpleName.stripSuffix("$")}" in {
+              val application = applicationBuilder(
+                userAnswers = Some(
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, oldAnswer)
+                )
+              )
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService)
+                )
+                .build()
+
+              if(oldAnswer != guarantorArranger) {
+                MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+              }
+
+              val request = FakeRequest(POST, guarantorArrangerRouteCheckMode).withFormUrlEncodedBody(("value", guarantorArranger.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url
+            }
+        )
+    }
   }
 }

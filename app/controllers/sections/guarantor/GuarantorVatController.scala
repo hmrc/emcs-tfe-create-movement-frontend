@@ -19,9 +19,9 @@ package controllers.sections.guarantor
 import config.Constants.NONGBVAT
 import controllers.actions._
 import forms.sections.guarantor.GuarantorVatFormProvider
+import models.Mode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
-import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
 import pages.sections.guarantor.GuarantorVatPage
 import play.api.data.Form
@@ -65,9 +65,9 @@ class GuarantorVatController @Inject()(
       }
     }
 
-  def onNonGbVAT(ern: String, draftId: String): Action[AnyContent] =
+  def onNonGbVAT(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      saveAndRedirect(GuarantorVatPage, NONGBVAT, NormalMode)
+      saveAndRedirect(GuarantorVatPage, NONGBVAT, mode)
     }
 
   private def renderView(status: Status, form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_]): Result = {

@@ -32,10 +32,28 @@ object ConsigneeExportVatSummary  {
     request.userAnswers.get(ConsigneeExportVatPage).flatMap {
       case ConsigneeExportVat(YesVatNumber, Some(vat), _) => Some(summaryRow(showActionLinks, YesVatNumber.toString, vat))
       case ConsigneeExportVat(YesEoriNumber, _, Some(eori)) => Some(summaryRow(showActionLinks, YesEoriNumber.toString, eori))
-      case _ => None
+      case _ => Some(notKnownSummaryRow())
     }
 
-  def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages) = {
+  private def notKnownSummaryRow()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "consigneeExportVat.checkYourAnswers.label.notKnown",
+      value = ValueViewModel("consigneeExportVat.checkYourAnswers.value.notKnown"),
+      actions = Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(
+            ern = request.userAnswers.ern,
+            draftId = request.userAnswers.draftId,
+            mode = CheckMode
+          ).url,
+          id = "changeConsigneeExportVat"
+        )
+          .withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
+      )
+    )
+
+  private def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
       key = s"consigneeExportVat.checkYourAnswers.label.$key",
       value = ValueViewModel(value),

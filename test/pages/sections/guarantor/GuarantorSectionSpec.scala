@@ -19,33 +19,25 @@ package pages.sections.guarantor
 import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner}
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExportPage, ConsigneeExportVatPage}
-import pages.sections.consignor.ConsignorAddressPage
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import play.api.test.FakeRequest
 
 class GuarantorSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      "when Consignor is selected and completed" in {
+      "when Consignor is selected" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignor)
-            .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
         )
         GuarantorSection.isCompleted mustBe true
       }
-      "when Consignee is selected and completed" in {
+      "when Consignee is selected" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignee)
-            .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -56,37 +48,24 @@ class GuarantorSectionSpec extends SpecBase {
         )
         GuarantorSection.isCompleted mustBe true
       }
-      "when another option is selected and the rest of the Guarantor section is completed" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, GoodsOwner)
-            .set(GuarantorNamePage, "")
-            .set(GuarantorVatPage, "")
-            .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
-        )
-        GuarantorSection.isCompleted mustBe true
+      Seq(GoodsOwner, Transporter) foreach {
+        arranger =>
+          s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorRequiredPage, true)
+                .set(GuarantorArrangerPage, arranger)
+                .set(GuarantorNamePage, "")
+                .set(GuarantorVatPage, "")
+                .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
+            )
+            GuarantorSection.isCompleted mustBe true
+          }
       }
     }
 
     "must return false" - {
-      "when Consignor is selected and not completed" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, Consignor)
-        )
-        GuarantorSection.isCompleted mustBe false
-      }
-      "when Consignee is selected and not completed" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, Consignee)
-        )
-        GuarantorSection.isCompleted mustBe false
-      }
-      "when only GuarantorRequiredPage is completed" in {
+      "when guarantor is required but only GuarantorRequiredPage is completed" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
@@ -99,15 +78,18 @@ class GuarantorSectionSpec extends SpecBase {
         )
         GuarantorSection.isCompleted mustBe false
       }
-      "when another option is selected and the rest of the Guarantor section is not completed" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, GoodsOwner)
-            .set(GuarantorNamePage, "")
-            .set(GuarantorVatPage, "")
-        )
-        GuarantorSection.isCompleted mustBe false
+      Seq(GoodsOwner, Transporter) foreach {
+        arranger =>
+          s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorRequiredPage, true)
+                .set(GuarantorArrangerPage, arranger)
+                .set(GuarantorNamePage, "")
+                .set(GuarantorVatPage, "")
+            )
+            GuarantorSection.isCompleted mustBe false
+          }
       }
     }
   }

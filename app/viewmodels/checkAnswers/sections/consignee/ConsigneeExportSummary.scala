@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.consignee
 
-import models.CheckMode
+import models.NormalMode
 import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeExportPage
 import play.api.i18n.Messages
@@ -30,16 +30,18 @@ object ConsigneeExportSummary {
     request.userAnswers.get(ConsigneeExportPage).map {
       answer =>
 
+        val value = if (answer) "site.yes" else "site.no"
+
         SummaryListRowViewModel(
           key = "consigneeExport.checkYourAnswers.label",
-          value = ValueViewModel(answer.toString),
+          value = ValueViewModel(value),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(
                 ern = request.userAnswers.ern,
                 draftId = request.userAnswers.draftId,
-                mode = CheckMode
+                mode = NormalMode
               ).url,
               id = ConsigneeExportPage
             )

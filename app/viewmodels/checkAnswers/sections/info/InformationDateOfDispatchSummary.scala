@@ -25,6 +25,7 @@ object InformationDateOfDispatchSummary {
 
   def row()(implicit messages: Messages): Option[SummaryListRow] = {
 
+    // TODO: take from user answers when page is built
     val data: Option[String] = None
 
     val value: String = data match {

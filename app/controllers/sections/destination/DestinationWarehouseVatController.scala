@@ -48,29 +48,22 @@ class DestinationWarehouseVatController @Inject()(
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) {
       implicit request =>
-
-        withAnswer(
-          page = DestinationTypePage
-        ) {
+        withAnswer(DestinationTypePage) {
           movementScenario =>
             Ok(view(
               form = fillForm(DestinationWarehouseVatPage, formProvider()),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario,
-              skipQuestionCall = routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)
+              skipQuestionCall = routes.DestinationWarehouseVatController.skipThisQuestion(ern, draftId, mode)
             ))
         }
-
     }
 
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-
-        withAnswerAsync(
-          page = DestinationTypePage
-        ) {
+        withAnswerAsync(DestinationTypePage) {
           movementScenario =>
             formProvider().bindFromRequest().fold(
               formWithErrors =>
@@ -78,13 +71,23 @@ class DestinationWarehouseVatController @Inject()(
                   formWithErrors,
                   routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
                   movementScenario = movementScenario,
-                  routes.DestinationDetailsChoiceController.onPageLoad(ern, draftId, mode)))),
+                  routes.DestinationWarehouseVatController.skipThisQuestion(ern, draftId, mode)
+                ))),
               value =>
                 saveAndRedirect(DestinationWarehouseVatPage, value, mode)
             )
         }
+    }
 
-
+  def skipThisQuestion(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      println("THIS ZERO THIS ZERO THIS ZERO")
+      val newUserAnswers = request.userAnswers.remove(DestinationWarehouseVatPage)
+      userAnswersService.set(newUserAnswers).map(result => {
+        println("THIS ONE THIS ONE THIS ONE")
+        Redirect(navigator.nextPage(DestinationWarehouseVatPage, mode, result))
+      }
+      )
     }
 }
 

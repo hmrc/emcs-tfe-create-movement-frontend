@@ -18,17 +18,17 @@ package fixtures.messages.sections.documents
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object DocumentsCertificatesMessages {
+object ReferenceAvailableMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading = "Are there any document certificates associated with this movement?"
+    val heading = "Does the document have a reference?"
     val title = titleHelper(heading)
-    val errorRequired = "Select yes if there are documents associated with this movement"
-    val hint = "For example, a delivery note, invoice or electronic administrative document (eAD). You will have the chance to add more later."
-    val cyaLabel: String = "Documents Certificates"
+    val errorRequired = "Select yes if the document has a reference"
 
-    val cyaChangeHidden: String = "Documents Certificates"
+    val cyaLabel: String = "Reference Available"
+
+    val cyaChangeHidden: String = "Reference Available"
   }
 
   object English extends ViewMessages with BaseEnglish

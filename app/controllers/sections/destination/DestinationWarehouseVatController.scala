@@ -26,6 +26,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import utils.JsonOptionFormatter
 import views.html.sections.destination.DestinationWarehouseVatView
 
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class DestinationWarehouseVatController @Inject()(
                                                    formProvider: DestinationWarehouseVatFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationWarehouseVatView
-                                                 ) extends BaseNavigationController with AuthActionHelper {
+                                                 ) extends BaseNavigationController with AuthActionHelper with JsonOptionFormatter {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) {

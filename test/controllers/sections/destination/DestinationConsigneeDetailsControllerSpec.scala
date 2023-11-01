@@ -167,7 +167,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       }
 
       "when for a user with WarehouseVat answered" in new Test(Some(emptyUserAnswers
-        .set(DestinationWarehouseVatPage, "vat")
+        .set(DestinationWarehouseVatPage, Some("vat"))
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, true)
         .set(DestinationBusinessNamePage, "business name")
@@ -207,7 +207,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       }
 
       "when for a user with WarehouseVat answered" in new Test(Some(emptyUserAnswers
-        .set(DestinationWarehouseVatPage, "vat")
+        .set(DestinationWarehouseVatPage, Some("vat"))
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationBusinessNamePage, "business name")
@@ -215,7 +215,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       )) {
 
         val expectedAnswers = emptyUserAnswers
-          .set(DestinationWarehouseVatPage, "vat")
+          .set(DestinationWarehouseVatPage, Some("vat"))
           .set(DestinationDetailsChoicePage, true)
           .set(DestinationConsigneeDetailsPage, true)
 

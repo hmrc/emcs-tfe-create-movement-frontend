@@ -32,7 +32,7 @@ class DestinationIndexControllerSpec extends SpecBase {
       "must redirect to the CYA controller" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers
           .set(DestinationTypePage, TemporaryRegisteredConsignee)
-          .set(DestinationWarehouseVatPage, "vat")
+          .set(DestinationWarehouseVatPage, Some("vat"))
           .set(DestinationDetailsChoicePage, false)
         )).build()
 

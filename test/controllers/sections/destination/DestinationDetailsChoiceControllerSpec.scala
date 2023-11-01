@@ -35,11 +35,12 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
+import utils.JsonOptionFormatter
 import views.html.sections.destination.DestinationDetailsChoiceView
 
 import scala.concurrent.Future
 
-class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
+class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures with JsonOptionFormatter {
 
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -126,7 +127,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       "when for a user with WarehouseExcise answered and the new answer is the same" in new Setup(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
-        .set(DestinationWarehouseVatPage, "vat")
+        .set(DestinationWarehouseVatPage, Some("vat"))
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationBusinessNamePage, "business name")
@@ -147,7 +148,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       "when for a user with WarehouseExcise answered" in new Setup(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
-        .set(DestinationWarehouseVatPage, "vat")
+        .set(DestinationWarehouseVatPage, Some("vat"))
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationBusinessNamePage, "business name")
@@ -156,7 +157,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         val expectedAnswers = emptyUserAnswers
           .set(DestinationTypePage, RegisteredConsignee)
-          .set(DestinationWarehouseVatPage, "vat")
+          .set(DestinationWarehouseVatPage, Some("vat"))
           .set(DestinationDetailsChoicePage, false)
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

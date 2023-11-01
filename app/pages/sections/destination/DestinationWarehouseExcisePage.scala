@@ -21,5 +21,5 @@ import play.api.libs.json.JsPath
 
 case object DestinationWarehouseExcisePage extends QuestionPage[String] {
   override val toString: String = "destinationWarehouseExcise"
-  override val path: JsPath = JsPath \ "destination" \ toString
+  override val path: JsPath = DestinationSection.path \ toString
 }

@@ -80,7 +80,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationWarehouseVatPage, "answer").set(DestinationTypePage, RegisteredConsignee)
+      .set(DestinationWarehouseVatPage, Some("answer")).set(DestinationTypePage, RegisteredConsignee)
     )) {
 
       running(application) {
@@ -89,7 +89,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         val expectedView = view(
-          form.fill("answer"),
+          form.fill(Some("answer")),
           destinationWarehouseVatOnSubmit,
           RegisteredConsignee,
           destinationDetailsChoiceRoute)(dataRequest(request), messages(application)).toString
@@ -125,9 +125,9 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       running(application) {
         val request =
           FakeRequest(POST, destinationWarehouseVatRoute)
-            .withFormUrlEncodedBody(("value", ""))
+            .withFormUrlEncodedBody(("value", "12345678901234567890"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> "12345678901234567890"))
 
         val result = route(application, request).value
 

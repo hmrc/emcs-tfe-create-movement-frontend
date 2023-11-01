@@ -31,9 +31,9 @@ object DestinationAddressSummary  {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val useConsignor = request.userAnswers.get(DestinationConsigneeDetailsPage)
+    val useConsignee = request.userAnswers.get(DestinationConsigneeDetailsPage)
 
-    val businessNamePage = useConsignor match {
+    val businessNamePage = useConsignee match {
       case Some(true) => ConsigneeAddressPage
       case _ => DestinationAddressPage
     }
@@ -47,12 +47,12 @@ object DestinationAddressSummary  {
     )
 
     val (value, actions) = request.userAnswers.get(businessNamePage).fold[(HtmlContent, Seq[ActionItem])] {
-      useConsignor match {
+      useConsignee match {
         case Some(true) => (HtmlContent(messages("destinationCheckAnswers.consignee.notProvided")), Seq.empty)
         case _ => (HtmlContent(messages("destinationCheckAnswers.destination.notProvided")), Seq.empty)
       }
     } { answer =>
-      useConsignor match {
+      useConsignee match {
         case Some(true) => (answer.toCheckYourAnswersFormat, Seq.empty)
         case _ => (answer.toCheckYourAnswersFormat, changeAddressLink)
       }

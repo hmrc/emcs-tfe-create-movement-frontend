@@ -20,30 +20,40 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
+import utils.JsonOptionFormatter
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DestinationWarehouseVatSummary  {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DestinationWarehouseVatPage).map {
-      answer =>
 
-        SummaryListRowViewModel(
-          key = "destinationWarehouseVat.checkYourAnswers.label",
-          value = ValueViewModel(answer),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
-                ern = request.userAnswers.ern,
-                draftId = request.userAnswers.draftId,
-                mode = CheckMode
-              ).url,
-              id = "changeDestinationWarehouseVat"
-            ).withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
-          )
-        )
+object DestinationWarehouseVatSummary extends JsonOptionFormatter {
+
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    val vatPageAnswer = request.userAnswers.get(DestinationWarehouseVatPage).map{
+      case Some(answer) => answer
+      case _ => "site.notProvided"
     }
+
+    val changeVatLink: Seq[ActionItem] = Seq(
+      ActionItemViewModel(
+        content = "site.change",
+        href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
+          ern = request.userAnswers.ern,
+          draftId = request.userAnswers.draftId,
+          mode = CheckMode
+        ).url,
+        id = "changeDestinationWarehouseVat"
+      ).withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
+    )
+
+    vatPageAnswer.map { value =>
+      SummaryListRowViewModel(
+        key = "destinationWarehouseVat.checkYourAnswers.label",
+        value = ValueViewModel(value),
+        actions = changeVatLink
+      )
+    }
+  }
 }

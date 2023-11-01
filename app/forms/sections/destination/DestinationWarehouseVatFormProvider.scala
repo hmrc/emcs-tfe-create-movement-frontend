@@ -19,6 +19,7 @@ package forms.sections.destination
 import forms.XSS_REGEX
 import forms.mappings.Mappings
 import play.api.data.Form
+import play.api.data.Forms.optional
 
 import javax.inject.Inject
 
@@ -27,12 +28,13 @@ class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
   private val VAT_NUMBER_MAX_LENGTH = 14
 
-  def apply(): Form[String] = {
+  def apply(): Form[Option[String]] = {
     Form(
-      "value" -> text("destinationWarehouseVat.error.required")
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
-        .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
-        )
+      "value" -> optional(
+        text("destinationWarehouseVat.error.required")
+          .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
+          .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length"))
+      )
     )
   }
 }

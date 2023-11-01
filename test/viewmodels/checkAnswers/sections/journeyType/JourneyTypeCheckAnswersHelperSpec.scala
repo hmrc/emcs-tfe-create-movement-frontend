@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.messages.sections.journeyType._
 import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.AirTransport
-import models.sections.journeyType._
 import org.scalamock.scalatest.MockFactory
 import pages.sections.journeyType._
 import play.api.i18n.Messages

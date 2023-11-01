@@ -357,7 +357,7 @@ journeyTimeHours.checkYourAnswersValue = {0} hours
 journeyTimeHours.error.nonNumeric = Hours must only contain numbers
 journeyTimeHours.error.required = Enter how many hours the journey will take
 journeyTimeHours.error.wholeNumber = Hours must only contain numbers
-journeyTimeHours.error.outOfRange = Hours must be 23 or less
+journeyTimeHours.error.outOfRange = Hours must be between {0} and {1}
 journeyTimeHours.change.hidden = how many hours the journey will take
 
 consigneeBusinessName.title = What is the consignee’s business name?

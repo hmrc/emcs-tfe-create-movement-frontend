@@ -18,22 +18,29 @@ package viewmodels.checkAnswers
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.destination.DestinationWarehouseVatPage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
-import utils.JsonOptionFormatter
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 
-
-object DestinationWarehouseVatSummary extends JsonOptionFormatter {
+object DestinationWarehouseVatSummary  {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val vatPageAnswer = request.userAnswers.get(DestinationWarehouseVatPage).map{
-      case Some(answer) => answer
-      case _ => "site.notProvided"
+    val wasShownVatPage: Option[Boolean] = request.userAnswers.get(DestinationTypePage).map(
+      Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).contains(_)
+    )
+
+    val vatPageAnswer: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+
+    val answer = (wasShownVatPage, vatPageAnswer) match {
+      case (_, Some(answer)) => Some(answer)
+      case (Some(true), _) => Some("site.notProvided")
+      case _ => None
     }
 
     val changeVatLink: Seq[ActionItem] = Seq(
@@ -48,7 +55,7 @@ object DestinationWarehouseVatSummary extends JsonOptionFormatter {
       ).withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
     )
 
-    vatPageAnswer.map { value =>
+    answer.map { value =>
       SummaryListRowViewModel(
         key = "destinationWarehouseVat.checkYourAnswers.label",
         value = ValueViewModel(value),

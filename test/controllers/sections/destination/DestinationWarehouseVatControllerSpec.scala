@@ -58,7 +58,6 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
     val view = application.injector.instanceOf[DestinationWarehouseVatView]
 
-
   }
 
   "DestinationWarehouseVat Controller" - {
@@ -80,7 +79,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationWarehouseVatPage, Some("answer")).set(DestinationTypePage, RegisteredConsignee)
+      .set(DestinationWarehouseVatPage, "answer").set(DestinationTypePage, RegisteredConsignee)
     )) {
 
       running(application) {
@@ -89,7 +88,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         val expectedView = view(
-          form.fill(Some("answer")),
+          form.fill("answer"),
           destinationWarehouseVatOnSubmit,
           RegisteredConsignee,
           destinationDetailsChoiceRoute)(dataRequest(request), messages(application)).toString

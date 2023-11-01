@@ -22,7 +22,7 @@ import fixtures.messages.sections.destination.DestinationAddressMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage, DestinationDetailsChoicePage}
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value

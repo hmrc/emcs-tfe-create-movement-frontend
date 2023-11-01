@@ -46,8 +46,35 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
         "when there's no answer" - {
 
+          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation) foreach { destinationType =>
 
-          "DestinationType is not one of the VAT flow destinations" - {
+            s"when the destination type is ${destinationType.toString}" - {
+
+              "must output the expected row when user answers yes" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(),
+                  emptyUserAnswers.set(DestinationTypePage, destinationType)
+                )
+
+                DestinationWarehouseVatSummary.row() mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = Value(Text(messagesForLanguage.notProvided)),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                          id = "changeDestinationWarehouseVat"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+            }
+          }
+
+          "when the DestinationType is NOT one that leads to DestinationVatPage flow" - {
 
             "must output no row" in {
 
@@ -62,7 +89,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
           "must output the expected row when vat page is answered" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, Some("vat")))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, "vat"))
 
             DestinationWarehouseVatSummary.row() mustBe
               Some(
@@ -78,29 +105,6 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
                   )
                 )
               )
-          }
-
-          "when the answer has been not been provided" - {
-
-            "must output the expected row with Not Provided" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, None))
-
-              DestinationWarehouseVatSummary.row() mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.notProvided)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeDestinationWarehouseVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
-                  )
-                )
-            }
           }
         }
       }

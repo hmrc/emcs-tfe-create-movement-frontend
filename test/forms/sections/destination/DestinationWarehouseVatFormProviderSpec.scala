@@ -28,7 +28,7 @@ class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldB
   val maxLength = 14
   val invalidCharactersKey = "destinationWarehouseVat.error.invalidCharacters"
 
-  val form: Form[Option[String]] = new DestinationWarehouseVatFormProvider()()
+  val form: Form[String] = new DestinationWarehouseVatFormProvider()()
 
   ".value" - {
 
@@ -53,12 +53,10 @@ class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldB
       FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
     )
 
-    "input is empty" in {
-      val data = Map("value" -> "")
-      val result = form.bind(data)
-
-      result.errors mustBe Seq()
-      result.value.flatten mustBe None
-    }
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

@@ -17,10 +17,10 @@
 package forms.sections.destination
 
 import forms.XSS_REGEX
-
-import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
+
+import javax.inject.Inject
 
 class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
 

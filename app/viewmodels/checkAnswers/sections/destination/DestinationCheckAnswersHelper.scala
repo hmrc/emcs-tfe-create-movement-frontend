@@ -17,7 +17,6 @@
 package viewmodels.checkAnswers.sections.destination
 
 import models.requests.DataRequest
-import pages.sections.destination.DestinationDetailsChoicePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.DestinationWarehouseVatSummary

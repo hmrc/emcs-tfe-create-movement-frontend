@@ -17,8 +17,8 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress}
 import models.sections.info.movementScenario.MovementScenario._
+import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress}
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest

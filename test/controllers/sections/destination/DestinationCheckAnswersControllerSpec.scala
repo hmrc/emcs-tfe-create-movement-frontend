@@ -36,9 +36,6 @@ import viewmodels.govuk.all.FluentSummaryList
 import viewmodels.govuk.summarylist._
 import views.html.sections.destination.DestinationCheckAnswersView
 
-import java.awt.JobAttributes.DestinationType
-import scala.concurrent.Future
-
 
 class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDestinationCheckAnswersHelper {
 

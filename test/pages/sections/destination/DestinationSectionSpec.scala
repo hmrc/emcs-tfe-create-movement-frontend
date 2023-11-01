@@ -167,7 +167,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return true" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "business name")
@@ -184,7 +184,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationAddressPage, userAddressModelMax)
@@ -200,7 +200,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "business name")
@@ -216,7 +216,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
 
@@ -234,7 +234,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return true" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, true)
                 .set(ConsigneeBusinessNamePage, "business name")
@@ -251,7 +251,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, true)
                 .set(ConsigneeAddressPage, userAddressModelMax)
@@ -267,7 +267,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, true)
                 .set(ConsigneeBusinessNamePage, "business name")
@@ -283,7 +283,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             "must return false" in {
 
               val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, Some("vat"))
+                .set(DestinationWarehouseVatPage, "vat")
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, true)
 
@@ -300,7 +300,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
         "must return true" in {
 
           val userAnswers = emptyUserAnswers
-            .set(DestinationWarehouseVatPage, Some("vat"))
+            .set(DestinationWarehouseVatPage, "vat")
             .set(DestinationDetailsChoicePage, false)
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -314,7 +314,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
         "must return true" in {
 
           val userAnswers = emptyUserAnswers
-            .set(DestinationWarehouseVatPage, Some("vat"))
+            .set(DestinationWarehouseVatPage, "vat")
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

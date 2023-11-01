@@ -19,7 +19,6 @@ package views.sections.destination
 import base.ViewSpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.sections.destination.DestinationWarehouseVatFormProvider
-
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import org.jsoup.Jsoup

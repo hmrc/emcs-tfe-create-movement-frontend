@@ -17,10 +17,10 @@
 package navigation
 
 import base.SpecBase
+import controllers.sections.destination.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.destination._
-import controllers.sections.destination.routes
 
 class DestinationNavigatorSpec extends SpecBase {
   val navigator = new DestinationNavigator

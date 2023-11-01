@@ -69,7 +69,7 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
           .set(DestinationDetailsChoicePage, true)
           .set(DestinationConsigneeDetailsPage, false)
           .set(DestinationBusinessNamePage, "name")
-          .set(DestinationWarehouseVatPage, Some("vat"))
+          .set(DestinationWarehouseVatPage, "vat")
           .set(DestinationAddressPage, userAddressModelMax)
         ) {
 
@@ -105,7 +105,7 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
         }
 
         "the VAT Number has been provided" in new Setup(emptyUserAnswers
-          .set(DestinationWarehouseVatPage, Some("vat"))
+          .set(DestinationWarehouseVatPage, "vat")
         ) {
 
           val expectedResult = SummaryList(Seq(

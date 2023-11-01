@@ -18,10 +18,9 @@ package pages.sections.destination
 
 import models.requests.DataRequest
 import pages.sections.Section
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeSection}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
-import viewmodels.taskList
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object DestinationSection extends Section[JsObject] with JsonOptionFormatter {

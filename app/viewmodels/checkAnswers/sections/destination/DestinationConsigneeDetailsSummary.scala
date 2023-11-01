@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers.sections.destination
 
 import controllers.sections.destination.routes
+import models.CheckMode
 import models.requests.DataRequest
-import models.{CheckMode, UserAnswers}
 import pages.sections.destination.DestinationConsigneeDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

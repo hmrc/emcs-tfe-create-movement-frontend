@@ -26,7 +26,7 @@ import models.sections.info.movementScenario.MovementScenario.RegisteredConsigne
 import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.DestinationNavigator
 import navigation.FakeNavigators.FakeDestinationNavigator
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationDetailsChoicePage, DestinationWarehouseExcisePage, DestinationWarehouseVatPage}
+import pages.sections.destination._
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.Application
 import play.api.data.Form
@@ -127,7 +127,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       "when for a user with WarehouseExcise answered and the new answer is the same" in new Setup(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
-        .set(DestinationWarehouseVatPage, Some("vat"))
+        .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationBusinessNamePage, "business name")
@@ -148,7 +148,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       "when for a user with WarehouseExcise answered" in new Setup(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
-        .set(DestinationWarehouseVatPage, Some("vat"))
+        .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationBusinessNamePage, "business name")
@@ -157,7 +157,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         val expectedAnswers = emptyUserAnswers
           .set(DestinationTypePage, RegisteredConsignee)
-          .set(DestinationWarehouseVatPage, Some("vat"))
+          .set(DestinationWarehouseVatPage, "vat")
           .set(DestinationDetailsChoicePage, false)
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

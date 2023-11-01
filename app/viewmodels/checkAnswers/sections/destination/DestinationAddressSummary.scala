@@ -21,7 +21,6 @@ import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._

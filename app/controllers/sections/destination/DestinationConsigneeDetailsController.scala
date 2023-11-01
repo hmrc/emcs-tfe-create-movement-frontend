@@ -19,8 +19,8 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
-import models.{Mode, NormalMode}
 import models.requests.DataRequest
+import models.{Mode, NormalMode}
 import navigation.DestinationNavigator
 import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
 import play.api.data.Form

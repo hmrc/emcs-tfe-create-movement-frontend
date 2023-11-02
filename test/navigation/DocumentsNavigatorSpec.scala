@@ -36,7 +36,8 @@ class DocumentsNavigatorSpec extends SpecBase {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
-      "for the DocumentsCertificatesPage" - {
+      //TODO update to correct page when finished
+      "must go from DocumentsCertificatesPage to UnderConstructionPage" in {
 
         "must go to CheckAnswersPage if no is selected" in {
           navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
@@ -58,15 +59,15 @@ class DocumentsNavigatorSpec extends SpecBase {
 
       "for the ReferenceAvailablePage" - {
 
-        "must go to ReferenceAvailablePage when user selects yes" in {
+        "to ReferenceAvailablePage when user selects yes" in {
 
           val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
 
           navigator.nextPage(ReferenceAvailablePage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
-        "must go to ReferenceAvailablePage when user selects no" in {
+        "to ReferenceAvailablePage when user selects no" in {
 
           val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, false)
 
@@ -74,16 +75,22 @@ class DocumentsNavigatorSpec extends SpecBase {
             routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
-        "must go to Journey Recovery if no answer is present" in {
+        "to Journey Recovery if no answer is present" in {
 
           navigator.nextPage(ReferenceAvailablePage, NormalMode, emptyUserAnswers) mustBe
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }
       }
 
-      "must go from Document Description page to UnderConstruction" in {
+      "must go from DocumentDescriptionPage to DocumentReferencePage" in {
 
         navigator.nextPage(DocumentDescriptionPage, NormalMode, emptyUserAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+      "must go from DocumentReferencePage to UnderConstruction" in {
+
+        navigator.nextPage(DocumentReferencePage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }

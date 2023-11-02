@@ -39,9 +39,8 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
     case DocumentDescriptionPage =>
-      //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case DocumentDescriptionPage =>
+    case DocumentReferencePage =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case DocumentsCheckAnswersPage =>
@@ -82,7 +81,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def referenceAvailableRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(ReferenceAvailablePage) match {
       case Some(true) =>
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
       case Some(false) =>
         routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
       case _ =>

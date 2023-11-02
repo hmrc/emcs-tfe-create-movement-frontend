@@ -99,8 +99,8 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        //TODO redirect to TU07 when implemented
-        redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        redirectLocation(result).value mustEqual
+          controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url
       }
     }
 

@@ -21,7 +21,7 @@ import fixtures.TransportUnitFixtures
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.transportUnit.TransportSealTypePage
+import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -43,21 +43,74 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
 
         "when there's no answer" - {
 
-          "must output no row" in {
+          "must output no row if TransportSealChoicePage is not answered" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealTypeSummary.row(testIndex1, request.userAnswers) mustBe None
+            TransportSealTypeSummary.row(testIndex1) mustBe None
+          }
+
+          "must output no row if TransportSealChoicePage is false" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealChoicePage(testIndex1), false)
+            )
+
+            TransportSealTypeSummary.row(testIndex1) mustBe None
+          }
+
+          "must output row with answer not provide if TransportSealChoicePage is true" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealTypeSummary.row(testIndex1) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.sealTypeCYA,
+                  value = Value(Text(messagesForLanguage.notProvided)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeTransportSealType1"
+                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
+                  )
+                )
+              )
           }
         }
 
         "when there's an answer" - {
 
-          s"must output the expected row for TransportSealType" in {
+          "must output no row if TransportSealChoicePage is false" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealTypePage(testIndex1), transportSealTypeModelMax))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+              .set(TransportSealChoicePage(testIndex1), false)
+            )
 
-            TransportSealTypeSummary.row(testIndex1, request.userAnswers) mustBe
+            TransportSealTypeSummary.row(testIndex1) mustBe None
+          }
+
+          "must output no row if TransportSealChoicePage is not answered" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+            )
+
+            TransportSealTypeSummary.row(testIndex1) mustBe None
+          }
+
+          s"must output the expected row for TransportSealType and TransportSealChoicePage is true" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealTypeSummary.row(testIndex1) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.sealTypeCYA,
@@ -66,7 +119,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
                       href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportSealType"
+                      id = "changeTransportSealType1"
                     ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
                   )
                 )

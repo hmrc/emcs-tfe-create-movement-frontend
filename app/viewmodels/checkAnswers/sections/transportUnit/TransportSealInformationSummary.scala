@@ -16,41 +16,40 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import com.google.inject.Inject
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, Index, UserAnswers}
-import pages.sections.transportUnit.TransportSealTypePage
+import models.requests.DataRequest
+import models.sections.transportUnit.TransportSealTypeModel
+import models.{CheckMode, Index}
+import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class TransportSealInformationSummary @Inject()(link: views.html.components.link) {
+object TransportSealInformationSummary {
 
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealTypePage(idx)).map {
-      answer =>
-        answer.moreInfo.fold {
-          SummaryListRowViewModel(
-            key = "transportSealType.moreInfo.checkYourAnswersLabel",
-            value = ValueViewModel(HtmlContent(link(
-              link = routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] =
+    request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
+      request.userAnswers.get(TransportSealTypePage(idx)) match {
+        case Some(TransportSealTypeModel(_, Some(info))) => SummaryListRowViewModel(
+          key = "transportSealType.moreInfo.checkYourAnswersLabel",
+          value = ValueViewModel(info),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              s"changeTransportSealInformation${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
           )
-        }{ info =>
-            SummaryListRowViewModel(
-              key = "transportSealType.moreInfo.checkYourAnswersLabel",
-              value = ValueViewModel(info),
-              actions = Seq(
-                ActionItemViewModel(
-                  "site.change",
-                  routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-                  "changeTransportSealInformation"
-                ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
-              )
-            )
-        }
-
+        )
+        case _ => SummaryListRowViewModel(
+          key = "transportSealType.moreInfo.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlContent(link(
+            link = routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
+        )
+      }
     }
+
 }

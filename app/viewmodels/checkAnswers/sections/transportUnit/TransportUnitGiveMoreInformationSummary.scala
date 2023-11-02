@@ -16,7 +16,8 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
-import models.{CheckMode, Index, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -26,23 +27,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-import javax.inject.Inject
+object TransportUnitGiveMoreInformationSummary {
 
-class TransportUnitGiveMoreInformationSummary @Inject()(link: views.html.components.link) {
-
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = {
-    val optMoreInformation = answers.get(TransportUnitGiveMoreInformationPage(idx))
+  def row(idx: Index)(implicit request: DataRequest[_],  messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+    val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx))
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
-        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode))),
+        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode))),
       actions = {
         Seq(
           optMoreInformation.map(_ =>
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = "transportUnitMoreInformation"
+              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              id = s"changeTransportUnitMoreInformation${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
           )
         ).flatten
@@ -50,7 +49,7 @@ class TransportUnitGiveMoreInformationSummary @Inject()(link: views.html.compone
     ))
   }
 
-  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages): Content =
+  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages, link: views.html.components.link): Content =
     optValue.fold[Content](HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue"))))(value => Text(value))
 
 }

@@ -23,7 +23,7 @@ import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObject] {
-  override val path: JsPath = TransportUnitsSection.path \ transportUnitIndex.position
+  override val path: JsPath = TransportUnitsSectionUnits.path \ transportUnitIndex.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     val unitTypeAnswer = request.userAnswers.get(TransportUnitTypePage(transportUnitIndex))

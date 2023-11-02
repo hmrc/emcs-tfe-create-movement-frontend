@@ -713,10 +713,10 @@ transportSealType.moreInfo.error.invalid = Information must only contain letters
 transportSealType.moreInfo.error.invalidCharacter = Information must not include < and > and : and ;
 transportSealType.moreInfo.error.length = Information must be 350 characters or less
 transportSealType.sealType.checkYourAnswersLabel = Commercial seal type
-transportSealType.sealType.change.hidden = Commercial seal type
+transportSealType.sealType.change.hidden = commercial seal type
 transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
 transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
-transportSealType.moreInfo.change.hidden = Commercial seal information
+transportSealType.moreInfo.change.hidden = commercial seal information
 
 transportUnitGiveMoreInformationChoice.title = Do you know any more information about this {0}?
 transportUnitGiveMoreInformationChoice.heading = Do you know any more information about this {0}?
@@ -744,6 +744,18 @@ transportUnitGiveMoreInformation.transportUnitType.2 = vehicle
 transportUnitGiveMoreInformation.transportUnitType.3 = trailer
 transportUnitGiveMoreInformation.transportUnitType.4 = tractor
 transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installation
+
+transportUnitsAddToList.title.singular = You have given information for 1 transport unit
+transportUnitsAddToList.title.plural = You have given information for {0} transport units
+transportUnitsAddToList.heading.singular = You have given information for 1 transport unit
+transportUnitsAddToList.heading.plural = You have given information for {0} transport units
+transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
+transportUnitsAddToList.legend = Do you need to add another transport unit?
+transportUnitsAddToList.1 = Yes
+transportUnitsAddToList.2 = No, this is the only transport unit for this movement
+transportUnitsAddToList.divider = or
+transportUnitsAddToList.3 = I will add more transport units later
+transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
 
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?
 transportUnitRemoveUnit.heading = Are you sure you want to remove transport unit {0}?

@@ -18,33 +18,33 @@ package viewmodels.checkAnswers.sections.destination
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.destination.DestinationWarehouseExcisePage
+import pages.sections.destination.DestinationDetailsChoicePage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DestinationWarehouseExciseSummary {
+object DestinationDetailsChoiceSummary  {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DestinationWarehouseExcisePage).map {
-      answer =>
+    request.userAnswers.get(DestinationDetailsChoicePage).flatMap { answer =>
+      request.userAnswers.get(DestinationTypePage).map { movementType =>
 
-        SummaryListRowViewModel(
-          key = "destinationWarehouseExcise.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(
-                ern = request.ern,
-                draftId = request.draftId,
-                mode = CheckMode
-              ).url,
-              id = "changeDestinationWarehouseExcise")
-              .withVisuallyHiddenText(messages("destinationWarehouseExcise.change.hidden"))
+          val value: String = if (answer) "site.yes" else "site.no"
+
+          SummaryListRowViewModel(
+            key = messages(s"destinationDetailsChoice.checkYourAnswersLabel", movementType.stringValue),
+            value = ValueViewModel(HtmlFormat.escape(value).toString),
+            actions = Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+                id = "changeDestinationDetailsChoice"
+              ).withVisuallyHiddenText(messages("destinationDetailsChoice.change.hidden", movementType.stringValue))
+            )
           )
-        )
+      }
     }
 }

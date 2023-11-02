@@ -21,8 +21,8 @@ import controllers.routes
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import navigation.FakeNavigators.FakeConsigneeNavigator
 import navigation.ConsigneeNavigator
+import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import play.api.inject.bind
 import play.api.mvc.Call

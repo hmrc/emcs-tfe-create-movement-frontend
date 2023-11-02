@@ -16,35 +16,51 @@
 
 package viewmodels.checkAnswers
 
-import models.requests.DataRequest
 import models.CheckMode
+import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.destination.DestinationWarehouseVatPage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
+
 object DestinationWarehouseVatSummary  {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DestinationWarehouseVatPage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-        SummaryListRowViewModel(
-          key = "destinationWarehouseVat.checkYourAnswers.label",
-          value = ValueViewModel(answer),
-          actions = if (!showActionLinks) Seq() else Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
-                ern = request.userAnswers.ern,
-                draftId = request.userAnswers.draftId,
-                mode = CheckMode
-              ).url,
-              id = DestinationWarehouseVatPage
-            )
-              .withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
-          )
-        )
+    val wasShownVatPage: Option[Boolean] = request.userAnswers.get(DestinationTypePage).map(
+      Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).contains(_)
+    )
+
+    val vatPageAnswer: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+
+    val answer = (wasShownVatPage, vatPageAnswer) match {
+      case (_, Some(answer)) => Some(answer)
+      case (Some(true), _) => Some("site.notProvided")
+      case _ => None
     }
+
+    val changeVatLink: Seq[ActionItem] = Seq(
+      ActionItemViewModel(
+        content = "site.change",
+        href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(
+          ern = request.userAnswers.ern,
+          draftId = request.userAnswers.draftId,
+          mode = CheckMode
+        ).url,
+        id = "changeDestinationWarehouseVat"
+      ).withVisuallyHiddenText(messages("destinationWarehouseVat.change.hidden"))
+    )
+
+    answer.map { value =>
+      SummaryListRowViewModel(
+        key = "destinationWarehouseVat.checkYourAnswers.label",
+        value = ValueViewModel(value),
+        actions = changeVatLink
+      )
+    }
+  }
 }

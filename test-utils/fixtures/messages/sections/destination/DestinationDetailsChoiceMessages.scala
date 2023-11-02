@@ -25,6 +25,8 @@ object DestinationDetailsChoiceMessages {
     val heading = "Do you want to give the address and business name of the registered consignee?"
     val title = titleHelper(heading)
     val hint = "This information is optional."
+    val cyaLabel: String => String = destinationType => s"Give details of $destinationType"
+    val cyaChangeHidden: String => String = destinationType => s"Give details of $destinationType"
   }
 
   object English extends ViewMessages with BaseEnglish

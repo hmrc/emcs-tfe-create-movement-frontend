@@ -20,8 +20,8 @@ import base.SpecBase
 import controllers.routes
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.sections.transportUnit.TransportSealTypeModel
+import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator

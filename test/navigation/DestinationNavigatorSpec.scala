@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers.sections.destination.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.destination._
@@ -30,41 +30,76 @@ class DestinationNavigatorSpec extends SpecBase {
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Destination CYA" in {
-        //TODO: update to Destination CYA when built
+
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
 
       "for the DestinationWarehouseExcisePage" - {
-        "must go to Destination Consignee details page (CAM-DES04) if answer is no" in {
-          val userAnswers = emptyUserAnswers.set(DestinationWarehouseExcisePage, "Answer")
 
-          navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+        "must go to Destination Consignee details page" in {
 
+          navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+      }
+
+      "for the DestinationWarehouseVatPage" - {
+
+        "must go to test Only page" in {
+
+          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
+            routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+      }
+
+      "for the DestinationDetailsChoicePage" - {
+
+        "must go to CAM-DES03 when user selects yes" in {
+
+          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
+        "must go to DestinationCheckAnswersPage when user selects no" in {
+
+          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, false)
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
+
+        "must go to Journey Recovery if no answer is present" in {
+
+          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.JourneyRecoveryController.onPageLoad()
+        }
       }
 
       "for the DestinationConsigneeDetailsPage" - {
+
         "must go to Destination Business Name page (CAM-DES04) if answer is no" in {
+
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
 
         }
 
         "must go to Destination Check Answers page (CAM-DES06) if answer is yes" in {
-          //TODO change when CAM-DES06 check answers page built
+
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, true)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
 
         "must go to Journey Recovery Controller if no answer is present" in {
+
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, emptyUserAnswers) mustBe
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }
@@ -75,66 +110,46 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to Destination Address page" in {
 
           navigator.nextPage(DestinationBusinessNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
       "for the DestinationAddressPage" - {
 
-        "must go to test Only page" in {
+        "must go to DestinationCheckAnswersPage page" in {
 
           navigator.nextPage(DestinationAddressPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 
-      "for the DestinationDetailsChoicePage" - {
-        "must go to CAM-DES03 when user selects yes" in {
-          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
-
-          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            controllers.sections.destination.routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
-
-        "must go to CAM-02 when user selects no" in {
-          //TODO change when CAM-02 check answers page built
-          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, false)
-
-          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
+      "for the DestinationCheckAnswersPage" - {
 
         "must go to test Only page" in {
 
-          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(DestinationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
-
-      "for the DestinationWarehouseVatPage" - {
-        "must go to test Only page" in {
-
-          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
-      }
-
     }
 
     "in Check mode" - {
+
       "must go to CheckYourAnswersDestinationController" in {
-        //TODO: update to Destination CYA when built
+
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
 
     "in Review mode" - {
+
       "must go to CheckYourAnswers" in {
+
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

@@ -17,44 +17,38 @@
 package views.sections.destination
 
 import base.ViewSpecBase
-import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
-import forms.sections.destination.DestinationWarehouseVatFormProvider
+import fixtures.messages.sections.destination.DestinationCheckAnswersMessages
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.destination.DestinationWarehouseVatView
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import views.html.sections.destination.DestinationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-
-class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "DestinationWarehouseVatView" - {
+  "Destination Business Name view" - {
 
-    Seq(DestinationWarehouseVatMessages.English).foreach { messagesForLanguage =>
+    Seq(DestinationCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationWarehouseVatView]
-        val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider]
+        val view = app.injector.instanceOf[DestinationCheckAnswersView]
 
-        val skipRoute: Call = Call("GET", "/skip-url")
-
-        implicit val doc: Document = Jsoup.parse(view(form(), testOnwardRoute, MovementScenario.RegisteredConsignee,
-          skipQuestionCall = skipRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq.empty), testOnwardRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.skipThisQuestion
+          Selectors.button -> messagesForLanguage.confirmAnswers
         ))
       }
     }

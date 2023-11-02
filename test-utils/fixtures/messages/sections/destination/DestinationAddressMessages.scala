@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package pages.sections.destination
+package fixtures.messages.sections.destination
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case object DestinationWarehouseExcisePage extends QuestionPage[String] {
-  override val toString: String = "destinationWarehouseExcise"
-  override val path: JsPath = DestinationSection.path \ toString
+object DestinationAddressMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+
+    val cyaLabel: String = "Address"
+    val cyaChangeHidden: String = "Address"
+    val cyaDestinationNotProvided: String = "Not provided"
+    val cyaConsigneeNotProvided: String = "Consignee section not complete"
+  }
+
+  object English extends ViewMessages with BaseEnglish
 }

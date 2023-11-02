@@ -19,9 +19,9 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import navigation.DestinationNavigator
-import pages.sections.destination.DestinationDetailsChoicePage
+import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationDetailsChoicePage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -62,10 +62,28 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
         withAnswerAsync(DestinationTypePage) {
           movementScenario =>
             formProvider(movementScenario).bindFromRequest().fold(
-              formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, routes.DestinationDetailsChoiceController.onSubmit(ern, draftId, mode), movementScenario))),
+              formWithErrors => Future.successful(BadRequest(view(
+                form = formWithErrors,
+                action = routes.DestinationDetailsChoiceController.onSubmit(ern, draftId, mode),
+                movementScenario = movementScenario
+              ))),
               value =>
-                saveAndRedirect(DestinationDetailsChoicePage, value, mode)
+                if(request.userAnswers.get(DestinationDetailsChoicePage).contains(value)) {
+                  Future(Redirect(navigator.nextPage(DestinationDetailsChoicePage, mode, request.userAnswers)))
+                } else {
+
+                  val cleanedUserAnswers = if (value) request.userAnswers else request.userAnswers
+                    .remove(DestinationConsigneeDetailsPage)
+                    .remove(DestinationBusinessNamePage)
+                    .remove(DestinationAddressPage)
+
+                  saveAndRedirect(
+                    page = DestinationDetailsChoicePage,
+                    answer = value,
+                    currentAnswers = cleanedUserAnswers,
+                    mode = NormalMode
+                  )
+              }
             )
         }
     }

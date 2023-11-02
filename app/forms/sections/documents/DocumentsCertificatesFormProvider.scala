@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms.sections.documents
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import javax.inject.Inject
 
+import forms.mappings.Mappings
+import play.api.data.Form
 
-<h2 @id.map(value => s"id=$value") class="@classes">
- @hiddenContent.map { content =>
- <span class="govuk-visually-hidden">@messages(content)</span>
- } @messages(msg)
-</h2>
+class DocumentsCertificatesFormProvider @Inject() extends Mappings {
 
-
-@{
-    //$COVERAGE-OFF$
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("documentsCertificates.error.required")
+    )
 }

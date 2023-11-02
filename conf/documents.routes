@@ -1,1 +1,7 @@
 GET        /trader/:ern/draft/:draftId/documents        controllers.sections.documents.DocumentsIndexController.onPageLoad(ern: String, draftId: String)
+
+GET        /trader/:ern/draft/:draftId/documents/document-certificates                        controllers.sections.documents.DocumentsCertificatesController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/documents/document-certificates                        controllers.sections.documents.DocumentsCertificatesController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/documents/document-certificates/change                  controllers.sections.documents.DocumentsCertificatesController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/documents/document-certificates/change                  controllers.sections.documents.DocumentsCertificatesController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+

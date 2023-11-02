@@ -22,6 +22,7 @@ trait BaseSelectors {
   val h1: String = "h1"
   val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
   def h2(i: Int) = s"main h2:nth-of-type($i)"
+  val hiddenText = s".govuk-visually-hidden"
   def h3(i: Int) = s"main h3:nth-of-type($i)"
   val p: Int => String = i => s"main p:nth-of-type($i)"
   val link: Int => String = i => s"main a:nth-of-type($i)"

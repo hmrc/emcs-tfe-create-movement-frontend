@@ -91,4 +91,9 @@ object FakeNavigators {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }
+
+  class FakeDocumentsNavigator(desiredRoute: Call) extends DocumentsNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
+  }
 }

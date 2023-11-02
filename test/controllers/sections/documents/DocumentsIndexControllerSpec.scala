@@ -20,6 +20,7 @@ import base.SpecBase
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import models.NormalMode
 
 class DocumentsIndexControllerSpec extends SpecBase {
   "DocumentsIndexController" - {
@@ -49,7 +50,7 @@ class DocumentsIndexControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
     }
   }

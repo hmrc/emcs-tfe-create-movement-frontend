@@ -55,11 +55,11 @@
 
             @govukDateInput(
                 DateViewModel(
-                    field  = form("date"),
-                    legend = LegendViewModel(Text(messages("dispatchDetails.date.value.label"))).withCssClass(LabelSize.Medium.toString),
+                    field  = form("value"),
+                    legend = LegendViewModel(Text(messages("dispatchDetails.value.value.label"))).withCssClass(LabelSize.Medium.toString),
                     erroredFields
                 )
-                .withHint(HintViewModel(messages("dispatchDetails.date.hint")))
+                .withHint(HintViewModel(messages("dispatchDetails.value.hint")))
             )
 
             @govukInput(

@@ -63,7 +63,7 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
             Selectors.p(1) -> messagesForLanguage.deferredMovementTrueParagraph,
-            "#date-hint" -> messagesForLanguage.dateHint,
+            "#value-hint" -> messagesForLanguage.dateHint,
             "#time-hint" -> messagesForLanguage.timeHint,
             Selectors.button -> messagesForLanguage.continue,
             Selectors.link(1) -> messagesForLanguage.skipThisQuestion
@@ -97,7 +97,7 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
             Selectors.p(1) -> messagesForLanguage.deferredMovementFalseParagraph,
-            "#date-hint" -> messagesForLanguage.dateHint,
+            "#value-hint" -> messagesForLanguage.dateHint,
             "#time-hint" -> messagesForLanguage.timeHint,
             Selectors.button -> messagesForLanguage.continue,
             Selectors.link(1) -> messagesForLanguage.skipThisQuestion

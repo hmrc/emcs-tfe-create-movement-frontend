@@ -29,11 +29,11 @@ class DispatchDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[DispatchDetailsModel] =
     Form(
       mapping(
-        "date" -> localDate(
-          invalidKey = "dispatchDetails.date.error.invalid",
-          allRequiredKey = "dispatchDetails.date.error.required.all",
-          twoRequiredKey = "dispatchDetails.date.error.required.two",
-          requiredKey = "dispatchDetails.date.error.required"
+        "value" -> localDate(
+          invalidKey = "dispatchDetails.value.error.invalid",
+          allRequiredKey = "dispatchDetails.value.error.required.all",
+          twoRequiredKey = "dispatchDetails.value.error.required.two",
+          requiredKey = "dispatchDetails.value.error.required"
         ),
         "time" -> localTime(
           invalidKey = "dispatchDetails.time.error.invalid",

@@ -28,10 +28,10 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{PreDraftService, UserAnswersService}
-import utils.{DateTimeUtils, TimeMachine}
+import utils.DateTimeUtils
 import views.html.sections.info.DispatchDetailsView
 
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.time.{LocalDate, LocalTime}
 import scala.concurrent.Future
 
 class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
@@ -137,9 +137,9 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
                 val request =
                   FakeRequest(POST, dispatchDetailsRoute)
                     .withFormUrlEncodedBody(
-                      ("date.day", "31"),
-                      ("date.month", "12"),
-                      ("date.year", "2022"),
+                      ("value.day", "31"),
+                      ("value.month", "12"),
+                      ("value.year", "2022"),
                       ("time", "6am")
                     )
 

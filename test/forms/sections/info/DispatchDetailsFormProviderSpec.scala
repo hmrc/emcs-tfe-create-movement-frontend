@@ -24,10 +24,10 @@ import utils.DateTimeUtils
 
 class DispatchDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixtures with DateTimeUtils with GuiceOneAppPerSuite {
 
-  val dateField = "date"
-  val dayField = "date.day"
-  val monthField = "date.month"
-  val yearField = "date.year"
+  val dateField = "value"
+  val dayField = "value.day"
+  val monthField = "value.month"
+  val yearField = "value.year"
   val timeField = "time"
 
   val form = new DispatchDetailsFormProvider()()

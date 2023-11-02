@@ -39,14 +39,14 @@ object InformationDateOfDispatchSummary extends DateTimeUtils {
 
     Some(
       SummaryListRowViewModel(
-        key = "dispatchDetails.date.checkYourAnswersLabel",
+        key = "dispatchDetails.value.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
             controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url,
             id = "changeDateOfDispatch")
-            .withVisuallyHiddenText(messages("dispatchDetails.date.change.hidden"))
+            .withVisuallyHiddenText(messages("dispatchDetails.value.change.hidden"))
         )
       )
     )

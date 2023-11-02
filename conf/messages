@@ -806,6 +806,11 @@ destinationCheckAnswers.heading = Check your answers
 destinationCheckAnswers.consignee.notProvided = Consignee section not complete
 destinationCheckAnswers.destination.notProvided = Not provided
 
+destinationCheckAnswers.title = Check your answers
+destinationCheckAnswers.heading = Check your answers
+destinationCheckAnswers.consignee.notProvided = Consignee section not complete
+destinationCheckAnswers.destination.notProvided = Not provided
+
 documentsCertificates.title = Are there any document certificates associated with this movement?
 documentsCertificates.heading = Are there any document certificates associated with this movement?
 documentsCertificates.checkYourAnswersLabel = documentsCertificates

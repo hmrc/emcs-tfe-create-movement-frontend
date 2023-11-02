@@ -39,10 +39,9 @@ class ImportInformationIndexController @Inject()(
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       if (ImportInformationSection.isCompleted) {
-        // TODO: change to CAM-IMP02 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(ern, draftId))
       } else {
-        Redirect(routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode))
+        Redirect(controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern,draftId, NormalMode))
       }
     }
 

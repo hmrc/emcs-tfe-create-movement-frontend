@@ -5,3 +5,8 @@ GET        /trader/:ern/draft/:draftId/import-information/customs-office        
 POST       /trader/:ern/draft/:draftId/import-information/customs-office                        controllers.sections.importInformation.ImportCustomsOfficeCodeController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/import-information/customs-office/change                 controllers.sections.importInformation.ImportCustomsOfficeCodeController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/import-information/customs-office/change                 controllers.sections.importInformation.ImportCustomsOfficeCodeController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:draftId/import-information/check-answers                         controllers.sections.importInformation.CheckYourAnswersImportController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/import-information/check-answers                         controllers.sections.importInformation.CheckYourAnswersImportController.onSubmit(ern: String, draftId: String)
+GET        /trader/:ern/draft/:draftId/import-information/check-answers/change                  controllers.sections.importInformation.CheckYourAnswersImportController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/import-information/check-answers/change                  controllers.sections.importInformation.CheckYourAnswersImportController.onSubmit(ern: String, draftId: String)

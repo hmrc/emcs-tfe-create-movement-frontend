@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.importInformation.ImportCustomsOfficeCodePage
+import pages.sections.importInformation.{CheckAnswersImportPage, ImportCustomsOfficeCodePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -28,7 +28,10 @@ class ImportInformationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ImportCustomsOfficeCodePage =>
-      //TODO update to next page when finished
+      (userAnswers: UserAnswers) => controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+
+    //TODO: Route to next section when available (CAM-02)
+    case CheckAnswersImportPage =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
@@ -37,8 +40,7 @@ class ImportInformationNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      // TODO: update to Import Information CYA when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package fixtures.messages.sections.importInformation
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-<h2 @id.map(value => s"id=$value") class="@classes">@{if(hiddenContent != None){<span class="govuk-visually-hidden">{messages(hiddenContent.get)} </span>}}@messages(msg)</h2>
+object CheckYourAnswersImportMessages {
 
-@{
-    //$COVERAGE-OFF$
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Check your answers"
+    val title: String = titleHelper(heading)
+    val caption: String = "This section is: Import information"
+    val customsOfficeCode: String = "Customs office code"
+  }
+
+  object English extends ViewMessages with BaseEnglish
 }

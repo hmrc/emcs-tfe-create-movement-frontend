@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package viewmodels.helpers
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import models.requests.DataRequest
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.importInformation._
+import viewmodels.govuk.summarylist._
 
-<h2 @id.map(value => s"id=$value") class="@classes">@{if(hiddenContent != None){<span class="govuk-visually-hidden">{messages(hiddenContent.get)} </span>}}@messages(msg)</h2>
+import javax.inject.Inject
 
-@{
-    //$COVERAGE-OFF$
+class CheckYourAnswersImportHelper @Inject()() {
+
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    SummaryListViewModel(
+      rows = Seq(
+        ImportCustomsOfficeCodeSummary.row(showActionLinks = true)
+      ).flatten
+    )
+  }
+
 }

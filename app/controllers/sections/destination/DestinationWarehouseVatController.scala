@@ -81,10 +81,8 @@ class DestinationWarehouseVatController @Inject()(
 
   def skipThisQuestion(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      println("THIS ZERO THIS ZERO THIS ZERO")
       val newUserAnswers = request.userAnswers.remove(DestinationWarehouseVatPage)
       userAnswersService.set(newUserAnswers).map(result => {
-        println("THIS ONE THIS ONE THIS ONE")
         Redirect(navigator.nextPage(DestinationWarehouseVatPage, mode, result))
       }
       )

@@ -585,7 +585,7 @@ exportCustomsOffice.hint.gb.link = Search for UK customs office codes here
 exportCustomsOffice.error.required = Enter the customs office code
 exportCustomsOffice.error.length = Customs office code must be {0} characters
 exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
-exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 letters
+exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 capital letters representing the member state, followed by 6 mixed numbers and letters. For example IT0830AB
 exportCustomsOffice.checkYourAnswers.label = Customs office code
 exportCustomsOffice.change.hidden = customs office code
 

@@ -19,9 +19,9 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTypeSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -53,12 +53,18 @@ class HowMovementTransportedController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
-        value => {
-          val cleansedAnswers =
-            cleanseUserAnswersIfValueHasChanged(
-              HowMovementTransportedPage, value, request.userAnswers.remove(GiveInformationOtherTransportPage)
-            )
-          saveAndRedirect(HowMovementTransportedPage, value, cleansedAnswers, mode)
+        value => if (request.userAnswers.get(HowMovementTransportedPage).contains(value)) {
+          Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
+        } else {
+
+          val cleansedAnswers = request.userAnswers.remove(JourneyTypeSection)
+
+          saveAndRedirect(
+            page = HowMovementTransportedPage,
+            answer = value,
+            currentAnswers = cleansedAnswers,
+            mode = NormalMode
+          )
         }
       )
     }

@@ -219,6 +219,8 @@ address.consigneeAddress.checkYourAnswers.label = Address
 address.destinationAddress.title = Enter the place of destination address
 address.destinationAddress.heading = Enter the place of destination address
 address.destinationAddress.subheading = Place of destination information
+address.destinationAddress.checkYourAnswers.label = Address
+address.destinationAddress.change.hidden = Address
 
 address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
@@ -627,10 +629,11 @@ guarantorCheckAnswers.heading = Check your answers
 
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.heading = What is the business name of the place of destination?
-destinationBusinessName.checkYourAnswersLabel = destinationBusinessName
 destinationBusinessName.error.required = Enter the business name of the place of destination
 destinationBusinessName.error.length = Business name must be less than 182 characters
 destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;
+destinationBusinessName.checkYourAnswersLabel = Trader name
+destinationBusinessName.change.hidden = Trader name
 
 checkYourAnswersConsignee.title = Check your answers
 checkYourAnswersConsignee.heading = Check your answers
@@ -662,15 +665,18 @@ destinationDetailsChoice.title = Do you want to give the address and business na
 destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.hint = This information is optional.
 destinationDetailsChoice.error.required = Select ’yes’ to enter the address and business name of the {0}
+destinationDetailsChoice.checkYourAnswersLabel = Give details of {0}
+destinationDetailsChoice.change.hidden = Give details of {0}
 
 destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
 destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
-destinationWarehouseVat.checkYourAnswersLabel = destinationWarehouseVat
 destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
 destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
 destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 destinationWarehouseVat.link.skip = Skip this question for now
+destinationWarehouseVat.checkYourAnswers.label = VAT number
+destinationWarehouseVat.change.hidden = VAT number
 
 destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
 destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?
@@ -707,10 +713,10 @@ transportSealType.moreInfo.error.invalid = Information must only contain letters
 transportSealType.moreInfo.error.invalidCharacter = Information must not include < and > and : and ;
 transportSealType.moreInfo.error.length = Information must be 350 characters or less
 transportSealType.sealType.checkYourAnswersLabel = Commercial seal type
-transportSealType.sealType.change.hidden = Commercial seal type
+transportSealType.sealType.change.hidden = commercial seal type
 transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
 transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
-transportSealType.moreInfo.change.hidden = Commercial seal information
+transportSealType.moreInfo.change.hidden = commercial seal information
 
 transportUnitGiveMoreInformationChoice.title = Do you know any more information about this {0}?
 transportUnitGiveMoreInformationChoice.heading = Do you know any more information about this {0}?
@@ -739,6 +745,18 @@ transportUnitGiveMoreInformation.transportUnitType.3 = trailer
 transportUnitGiveMoreInformation.transportUnitType.4 = tractor
 transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installation
 
+transportUnitsAddToList.title.singular = You have given information for 1 transport unit
+transportUnitsAddToList.title.plural = You have given information for {0} transport units
+transportUnitsAddToList.heading.singular = You have given information for 1 transport unit
+transportUnitsAddToList.heading.plural = You have given information for {0} transport units
+transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
+transportUnitsAddToList.legend = Do you need to add another transport unit?
+transportUnitsAddToList.1 = Yes
+transportUnitsAddToList.2 = No, this is the only transport unit for this movement
+transportUnitsAddToList.divider = or
+transportUnitsAddToList.3 = I will add more transport units later
+transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
+
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?
 transportUnitRemoveUnit.heading = Are you sure you want to remove transport unit {0}?
 transportUnitRemoveUnit.error.required = Select yes if you want to remove this transport unit
@@ -749,10 +767,10 @@ dispatchCheckAnswers.heading = Check your answers
 destinationWarehouseExcise.title = What is the excise registration number (ERN) for the destination tax warehouse?
 destinationWarehouseExcise.heading = What is the excise registration number (ERN) for the destination tax warehouse?
 destinationWarehouseExcise.text = This number contains 13 alpha-numeric characters starting with GB and can be found on your approval letter.
-destinationWarehouseExcise.checkYourAnswersLabel = destinationWarehouseExcise
+destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
 destinationWarehouseExcise.error.required = Enter the excise registration number (ERN)
 destinationWarehouseExcise.error.length = ERN must be 16 characters or less
-destinationWarehouseExcise.change.hidden = DestinationWarehouseExcise
+destinationWarehouseExcise.change.hidden = Warehouse excise ID
 destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
 
 informationCheckAnswers.title = Check your answers
@@ -781,3 +799,8 @@ importCustomsOfficeCode.checkYourAnswers.label = Customs office code
 checkYourAnswersImport.heading = Check your answers
 checkYourAnswersImport.title = Check your answers
 checkYourAnswersImport.hidden = This section is:
+
+destinationCheckAnswers.title = Check your answers
+destinationCheckAnswers.heading = Check your answers
+destinationCheckAnswers.consignee.notProvided = Consignee section not complete
+destinationCheckAnswers.destination.notProvided = Not provided

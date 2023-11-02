@@ -17,30 +17,32 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, Index, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportUnitIdentityPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object TransportUnitIdentitySummary {
 
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportUnitIdentityPage(idx)).map {
-      answer =>
+  def row(idx: Index)(implicit request: DataRequest[_],  messages: Messages): Option[SummaryListRow] =
+    Some(SummaryListRowViewModel(
+      key     = "transportUnitIdentity.checkYourAnswersLabel",
+      value   = ValueViewModel(getValue(idx)),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.TransportUnitIdentityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+          s"changeTransportUnitIdentity${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
+      )
+    ))
 
-        SummaryListRowViewModel(
-          key = "transportUnitIdentity.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.TransportUnitIdentityController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              "changeTransportUnitIdentity"
-            ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
-          )
-        )
-    }
+  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
+    request.userAnswers.get(TransportUnitIdentityPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
+
 }

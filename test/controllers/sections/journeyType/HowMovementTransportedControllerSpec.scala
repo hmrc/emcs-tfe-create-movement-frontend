@@ -24,7 +24,7 @@ import models.NormalMode
 import models.sections.journeyType.HowMovementTransported
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -154,7 +154,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       }
     }
 
-    "must cleanse the give more information Other transport page when changing the answer" in {
+    "must cleanse the journey section when changing the answer" in {
       val expectedAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
 
@@ -165,6 +165,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
           emptyUserAnswers
             .set(HowMovementTransportedPage, HowMovementTransported.Other )
             .set(GiveInformationOtherTransportPage, "blah")
+            .set(JourneyTimeDaysPage, 1)
         )
       )
         .overrides(
@@ -176,6 +177,31 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       val request = FakeRequest(POST, howMovementTransportedRoute).withFormUrlEncodedBody(("value", HowMovementTransported.values.head.toString))
       val result = route(application, request).value
       status(result) mustEqual SEE_OTHER
+    }
+
+    "must redirect to next page when answer unchanged" in {
+      val unchangingTransportMode = HowMovementTransported.SeaTransport
+      val unchangingAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, unchangingTransportMode)
+        .set(JourneyTimeDaysPage, 1)
+
+      val application =
+        applicationBuilder(userAnswers = Some(unchangingAnswers))
+          .overrides(
+            bind[JourneyTypeNavigator].toInstance(new FakeJourneyTypeNavigator(onwardRoute)),
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, howMovementTransportedRoute)
+            .withFormUrlEncodedBody(("value", unchangingTransportMode.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
     }
   }
 }

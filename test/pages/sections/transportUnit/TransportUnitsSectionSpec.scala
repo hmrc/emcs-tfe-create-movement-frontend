@@ -17,10 +17,13 @@
 package pages.sections.transportUnit
 
 import base.SpecBase
+import models.Index
 import models.requests.DataRequest
-import models.sections.transportUnit.TransportUnitType.Container
+import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
+import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
 import play.api.libs.json.{JsArray, Json}
 import play.api.test.FakeRequest
+import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
 class TransportUnitsSectionSpec extends SpecBase {
   "isCompleted" - {
@@ -37,6 +40,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportUnitIdentityPage(testIndex2), "")
               .set(TransportSealChoicePage(testIndex2), false)
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
+              .set(TransportUnitsAddToListPage, NoMoreToCome)
           )
         TransportUnitsSection.isCompleted mustBe true
       }
@@ -65,6 +69,97 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportSealChoicePage(testIndex2), false)
           )
         TransportUnitsSection.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+    "must return completed" - {
+      "when all sections are completed and add to list si no more" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Container)
+              .set(TransportUnitIdentityPage(testIndex1), "")
+              .set(TransportSealChoicePage(testIndex1), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+              .set(TransportUnitTypePage(testIndex2), Container)
+              .set(TransportUnitIdentityPage(testIndex2), "")
+              .set(TransportSealChoicePage(testIndex2), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
+              .set(TransportUnitsAddToListPage, NoMoreToCome)
+          )
+
+        TransportUnitsSection.status mustBe Completed
+      }
+
+      "when max units added and all complete" in {
+        val fullUserAnswers = (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers
+          .set(TransportUnitTypePage(Index(int)), Tractor)
+          .set(TransportUnitIdentityPage(Index(int)), "")
+          .set(TransportSealChoicePage(Index(int)), false)
+          .set(TransportUnitGiveMoreInformationChoicePage(Index(int)), false)
+        )
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), fullUserAnswers)
+
+        TransportUnitsSection.status mustBe Completed
+      }
+    }
+    "must return in progress" - {
+      "when all completed and add to list is more to come" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Container)
+              .set(TransportUnitIdentityPage(testIndex1), "")
+              .set(TransportSealChoicePage(testIndex1), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+              .set(TransportUnitTypePage(testIndex2), Container)
+              .set(TransportUnitIdentityPage(testIndex2), "")
+              .set(TransportSealChoicePage(testIndex2), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
+              .set(TransportUnitsAddToListPage, MoreToCome)
+          )
+
+        TransportUnitsSection.status mustBe InProgress
+      }
+      "when at least one section is in progress" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Container)
+              .set(TransportUnitIdentityPage(testIndex1), "")
+              .set(TransportSealChoicePage(testIndex1), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+              .set(TransportUnitTypePage(testIndex2), Container)
+              .set(TransportUnitIdentityPage(testIndex2), "")
+          )
+
+        TransportUnitsSection.status mustBe InProgress
+      }
+      "when at least one section is in progress and add to list is No more to come" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Container)
+              .set(TransportUnitIdentityPage(testIndex1), "")
+              .set(TransportSealChoicePage(testIndex1), false)
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
+              .set(TransportUnitTypePage(testIndex2), Container)
+              .set(TransportUnitIdentityPage(testIndex2), "")
+              .set(TransportUnitsAddToListPage, NoMoreToCome)
+          )
+
+        TransportUnitsSection.status mustBe InProgress
+      }
+    }
+
+    "must return not started" - {
+      "when empty user answers" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        TransportUnitsSection.status mustBe NotStarted
       }
     }
   }

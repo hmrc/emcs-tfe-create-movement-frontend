@@ -16,9 +16,9 @@
 
 package forms.sections.destination
 
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
-import forms.XSS_REGEX
 
 class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
 

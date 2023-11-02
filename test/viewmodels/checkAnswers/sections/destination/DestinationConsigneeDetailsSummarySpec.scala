@@ -46,7 +46,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DestinationConsigneeDetailsSummary.row(request.userAnswers) mustBe None
+            DestinationConsigneeDetailsSummary.row() mustBe None
           }
         }
 
@@ -56,7 +56,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, true))
 
-            DestinationConsigneeDetailsSummary.row(request.userAnswers) mustBe
+            DestinationConsigneeDetailsSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -76,7 +76,7 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, false))
 
-            DestinationConsigneeDetailsSummary.row(request.userAnswers) mustBe
+            DestinationConsigneeDetailsSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

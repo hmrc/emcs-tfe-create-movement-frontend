@@ -19,6 +19,7 @@ package controllers.sections.destination
 import base.SpecBase
 import models.NormalMode
 import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
@@ -28,17 +29,20 @@ class DestinationIndexControllerSpec extends SpecBase {
   "DestinationIndexController" - {
 
     "when DestinationSection.isCompleted" - {
-      // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))).build()
+      "must redirect to the CYA controller" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers
+          .set(DestinationTypePage, TemporaryRegisteredConsignee)
+          .set(DestinationWarehouseVatPage, "vat")
+          .set(DestinationDetailsChoicePage, false)
+        )).build()
 
         running(application) {
 
-          val request = FakeRequest(GET, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+          val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
         }
       }
     }
@@ -53,12 +57,12 @@ class DestinationIndexControllerSpec extends SpecBase {
 
             running(application) {
 
-              val request = FakeRequest(GET, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
               val result = route(application, request).value
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
+                Some(routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
           }
       )
@@ -74,12 +78,12 @@ class DestinationIndexControllerSpec extends SpecBase {
 
             running(application) {
 
-              val request = FakeRequest(GET, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
               val result = route(application, request).value
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
+                Some(routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
           }
       )
@@ -95,7 +99,7 @@ class DestinationIndexControllerSpec extends SpecBase {
 
             running(application) {
 
-              val request = FakeRequest(GET, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
               val result = route(application, request).value
 
               status(result) mustEqual SEE_OTHER

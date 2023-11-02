@@ -16,7 +16,8 @@
 
 package viewmodels.checkAnswers.sections.destination
 
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,17 +27,22 @@ import viewmodels.implicits._
 
 object DestinationWarehouseExciseSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DestinationWarehouseExcisePage).map {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DestinationWarehouseExcisePage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "destinationWarehouseExcise.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change",
-              controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
-              id = DestinationWarehouseExcisePage)
+            ActionItemViewModel(
+              content = "site.change",
+              href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(
+                ern = request.ern,
+                draftId = request.draftId,
+                mode = CheckMode
+              ).url,
+              id = "changeDestinationWarehouseExcise")
               .withVisuallyHiddenText(messages("destinationWarehouseExcise.change.hidden"))
           )
         )

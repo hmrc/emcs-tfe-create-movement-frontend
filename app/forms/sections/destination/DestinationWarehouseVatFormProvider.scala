@@ -31,8 +31,7 @@ class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("destinationWarehouseVat.error.required")
         .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
-        .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
-        )
+        .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length"))
     )
   }
 }

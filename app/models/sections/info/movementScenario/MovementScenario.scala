@@ -26,6 +26,7 @@ sealed trait MovementScenario {
   def destinationType: DestinationType
   def movementType(implicit request: UserRequest[_]): MovementType
 
+  //TODO we should probably change this to use the messages file instead of having the message here directly
   val stringValue: String
 }
 

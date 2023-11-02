@@ -17,7 +17,8 @@
 package viewmodels.checkAnswers.sections.destination
 
 import controllers.sections.destination.routes
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.destination.DestinationConsigneeDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,22 +27,21 @@ import viewmodels.implicits._
 
 object DestinationConsigneeDetailsSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DestinationConsigneeDetailsPage).map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DestinationConsigneeDetailsPage).map { answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key     = "destinationConsigneeDetails.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = routes.DestinationConsigneeDetailsController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
-              id = "changeDestinationConsigneeDetails"
-            ).withVisuallyHiddenText(messages("destinationConsigneeDetails.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key     = "destinationConsigneeDetails.checkYourAnswersLabel",
+        value   = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = routes.DestinationConsigneeDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+            id = "changeDestinationConsigneeDetails"
+          ).withVisuallyHiddenText(messages("destinationConsigneeDetails.change.hidden"))
         )
+      )
     }
 }

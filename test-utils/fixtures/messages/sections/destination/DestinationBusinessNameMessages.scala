@@ -26,6 +26,10 @@ object DestinationBusinessNameMessages {
     val errorRequired = "Enter the business name of the place of destination"
     val errorLength = "Enter a business name up to 182 characters"
     val errorInvalid = "Business name must not contain < and > and : and ;"
+    val cyaLabel: String = "Trader name"
+    val cyaChangeHidden: String = "Trader name"
+    val cyaDestinationNotProvided: String = "Not provided"
+    val cyaConsigneeNotProvided: String = "Consignee section not complete"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import base.SpecBase
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.messages.sections.transportUnit.TransportUnitIdentityMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -42,11 +43,24 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "must output no row" in {
+          "must output row with answer not provided" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitIdentitySummary.row(testIndex1, request.userAnswers) mustBe None
+            TransportUnitIdentitySummary.row(testIndex1) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.notProvided)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeTransportUnitIdentity1"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
           }
         }
 
@@ -56,7 +70,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(testIndex1, request.userAnswers) mustBe
+            TransportUnitIdentitySummary.row(testIndex1) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -64,8 +78,8 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity"
+                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeTransportUnitIdentity1"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )

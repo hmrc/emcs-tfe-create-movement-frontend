@@ -22,8 +22,8 @@ import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeDispatchNavigator
 import navigation.DispatchNavigator
+import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchAddressPage
 import play.api.inject.bind
 import play.api.test.FakeRequest

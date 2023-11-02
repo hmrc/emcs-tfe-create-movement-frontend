@@ -44,13 +44,12 @@ class DestinationIndexController @Inject()(
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
           if(DestinationSection.isCompleted) {
-            // TODO: update once CYA page is built
-            Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+            Redirect(routes.DestinationCheckAnswersController.onPageLoad(ern, draftId))
           } else {
             if (shouldRedirectToDestinationWarehouseExcise) {
-              Redirect(controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
+              Redirect(routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
             } else if (shouldRedirectToDestinationWarehouseVat) {
-              Redirect(controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
+              Redirect(routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
               // TODO: Change redirect location when tasklist is built

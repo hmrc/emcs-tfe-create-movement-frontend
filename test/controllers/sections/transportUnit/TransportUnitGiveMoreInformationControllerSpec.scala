@@ -38,8 +38,7 @@ import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockUserAnswersService {
 
-  //TODO add correct URL for CAM-TU07
-  val onwardRoute: Call = Call("GET", "/emcs/create-movement/test-only/construction")
+  val onwardRoute: Call = Call("GET", s"/emcs/create-movement/trader/${testErn}/draft/$testDraftId/transport-units/add-to-list")
 
   val formProvider = new TransportUnitGiveMoreInformationFormProvider()
 

@@ -17,28 +17,33 @@
 package viewmodels.checkAnswers.sections.transportUnit
 
 import controllers.sections.transportUnit.routes
-import models.{CheckMode, Index, UserAnswers}
-import pages.sections.transportUnit.TransportSealTypePage
+import models.requests.DataRequest
+import models.{CheckMode, Index}
+import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportSealTypeSummary  {
+object TransportSealTypeSummary {
 
-  def row(idx: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TransportSealTypePage(idx)).map {
-      answer =>
-        SummaryListRowViewModel(
-          key     = "transportSealType.sealType.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.sealType),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.TransportSealTypeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              "changeTransportSealType"
-            ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
-          )
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
+      SummaryListRowViewModel(
+        key = "transportSealType.sealType.checkYourAnswersLabel",
+        value = ValueViewModel(getValue(idx)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            s"changeTransportSealType${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
         )
+      )
     }
+  }
+
+  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
+    request.userAnswers.get(TransportSealTypePage(idx)).fold(Text(messages("site.notProvided")))(answer => answer.sealType)
 }

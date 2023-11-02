@@ -16,10 +16,10 @@
 
 package queries
 
-import pages.sections.transportUnit.TransportUnitsSection
+import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.{JsPath, JsValue}
 
 case object TransportUnitsCount extends Derivable[List[JsValue], Int] {
   override val derive: List[JsValue] => Int = _.size
-  override val path: JsPath = TransportUnitsSection.path
+  override val path: JsPath = TransportUnitsSectionUnits.path
 }

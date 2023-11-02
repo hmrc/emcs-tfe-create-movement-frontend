@@ -33,6 +33,7 @@ case object TransportUnitsSection extends Section[JsObject] {
       case (Completed, _, Some(MAX)) => Completed
       case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
       case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
+      case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
       case (InProgress, _, _) => InProgress
       case (status, _, _) => status
     }

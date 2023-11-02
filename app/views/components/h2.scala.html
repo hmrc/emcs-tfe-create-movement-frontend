@@ -18,7 +18,13 @@
 
 @(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
 
-<h2 @id.map(value => s"id=$value") class="@classes">@{if(hiddenContent != None){<span class="govuk-visually-hidden">{messages(hiddenContent.get)} </span>}}@messages(msg)</h2>
+
+<h2 @id.map(value => s"id=$value") class="@classes">
+ @hiddenContent.map { content =>
+ <span class="govuk-visually-hidden">@messages(content)</span>
+ } @messages(msg)
+</h2>
+
 
 @{
     //$COVERAGE-OFF$

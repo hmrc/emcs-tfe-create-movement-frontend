@@ -292,6 +292,7 @@ movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
 importInformation.subHeading = Import information
 documents.subHeading = Documents
+subHeading.hidden = This section is
 
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers

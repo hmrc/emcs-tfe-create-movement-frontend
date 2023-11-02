@@ -29,8 +29,6 @@ import utils.DateTimeUtils
 import views.html.sections.info.DispatchDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-import java.time.LocalDate
-
 class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
@@ -63,7 +61,8 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
             Selectors.p(1) -> messagesForLanguage.deferredMovementTrueParagraph,
-            "#value-hint" -> messagesForLanguage.dateHint,
+            Selectors.p(2) -> messagesForLanguage.registeredConsignorParagraph,
+            Selectors.p(3) -> messagesForLanguage.dateHint,
             "#time-hint" -> messagesForLanguage.timeHint,
             Selectors.button -> messagesForLanguage.continue,
             Selectors.link(1) -> messagesForLanguage.skipThisQuestion
@@ -97,7 +96,8 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
             Selectors.p(1) -> messagesForLanguage.deferredMovementFalseParagraph,
-            "#value-hint" -> messagesForLanguage.dateHint,
+            Selectors.p(2) -> messagesForLanguage.registeredConsignorParagraph,
+            Selectors.p(3) -> messagesForLanguage.dateHint,
             "#time-hint" -> messagesForLanguage.timeHint,
             Selectors.button -> messagesForLanguage.continue,
             Selectors.link(1) -> messagesForLanguage.skipThisQuestion

@@ -47,19 +47,15 @@
 
             @h1("dispatchDetails.heading")
 
-            @p(){@messages(s"dispatchDetails.deferredMovement.$deferredMovement.paragraph")}
-
-            @if(request.isRegisteredConsignor) {
-                @p(){@messages("dispatchDetails.registeredConsignor.paragraph")}
-            }
-
             @govukDateInput(
                 DateViewModel(
                     field  = form("value"),
                     legend = LegendViewModel(Text(messages("dispatchDetails.value.value.label"))).withCssClass(LabelSize.Medium.toString),
                     erroredFields
                 )
-                .withHint(HintViewModel(messages("dispatchDetails.value.hint")))
+                .withHint(
+                    HintViewModel(HtmlContent(hint))
+                )
             )
 
             @govukInput(
@@ -74,6 +70,22 @@
             @continueOrSkip(skipQuestionCall.url)
         }
     }
+}
+
+@hint = {
+    @p() {
+        @messages(s"dispatchDetails.deferredMovement.$deferredMovement.paragraph")
+    }
+
+    @if(request.isRegisteredConsignor) {
+        @p(){@messages("dispatchDetails.registeredConsignor.paragraph")}
+    }
+
+    @p() {
+        @messages("dispatchDetails.value.hint")
+    }
+
+
 }
 
 @{

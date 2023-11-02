@@ -28,6 +28,8 @@ object DispatchDetailsMessages {
     val deferredMovementFalseParagraph = "You can create a draft electronic administrative document (eAD) at any time, but it cannot be submitted more than 7 days before the date of dispatch."
     val deferredMovementTrueParagraph = "This date must match the date you entered on the fallback document."
 
+    val registeredConsignorParagraph = "Enter the date when this movement begins. This will be when the goods get dispatched from where they entered the UK."
+
     val dateHint = "For example, 30 06 2023."
     val timeHint = "For example, 9am or 14:00. Enter 12pm for midday."
 

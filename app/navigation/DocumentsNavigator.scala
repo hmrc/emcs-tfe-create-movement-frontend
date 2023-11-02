@@ -16,8 +16,8 @@
 
 package navigation
 
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import controllers.sections.documents.routes
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
 import play.api.mvc.Call
@@ -38,6 +38,9 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
+    case DocumentDescriptionPage =>
+      //TODO update with next page when finished
+      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case DocumentDescriptionPage =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

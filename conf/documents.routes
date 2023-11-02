@@ -15,5 +15,10 @@ POST       /trader/:ern/draft/:draftId/documents/document-description           
 GET        /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:draftId/documents/document-description                        controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/documents/document-description                        controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+
 GET        /trader/:ern/draft/:draftId/documents/check-answers                              controllers.sections.documents.DocumentsCheckAnswersController.onPageLoad(ern: String, draftId: String)
 POST       /trader/:ern/draft/:draftId/documents/check-answers                              controllers.sections.documents.DocumentsCheckAnswersController.onSubmit(ern: String, draftId: String)

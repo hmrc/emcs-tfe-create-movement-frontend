@@ -31,7 +31,6 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationWarehouseExcisePage =>
       (userAnswers: UserAnswers) => routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationWarehouseVatPage =>
-      println("THIS TWO THIS TWO THIS TWO")
       (userAnswers: UserAnswers) => routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationDetailsChoicePage =>
       destinationDetailsChoiceRouting()

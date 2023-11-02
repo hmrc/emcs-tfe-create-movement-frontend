@@ -840,3 +840,10 @@ dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
 
+documentDescription.title = Enter a description for this document
+documentDescription.heading = Enter a description for this document
+documentDescription.error.required = Enter a description for this document
+documentDescription.error.length = Document description must be 350 characters or less
+documentDescription.error.xss = Document description must not contain < and > and : and ;
+documentDescription.change.hidden = documentDescription
+documentDescription.checkYourAnswersLabel = documentDescription

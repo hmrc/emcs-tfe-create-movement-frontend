@@ -16,10 +16,9 @@
 
 package navigation
 
-import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.sections.transportUnit.TransportUnitsAddToListModel
-import models.{Index, CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.transportUnit._
 import play.api.mvc.Call
@@ -87,7 +86,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
     _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

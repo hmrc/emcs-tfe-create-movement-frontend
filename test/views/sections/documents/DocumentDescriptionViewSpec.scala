@@ -17,48 +17,39 @@
 package views.sections.documents
 
 import base.ViewSpecBase
-import fixtures.messages.sections.documents.DocumentsCertificatesMessages
-import forms.sections.documents.DocumentsCertificatesFormProvider
-import models.NormalMode
+import fixtures.messages.sections.documents.DocumentDescriptionMessages
+import forms.sections.documents.DocumentDescriptionFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.documents.DocumentsCertificatesView
+import views.html.sections.documents.DocumentDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsCertificatesViewSpec extends ViewSpecBase with ViewBehaviours {
-
+class DocumentDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "Documents Certificates view" - {
+  "Dispatch Business Name view" - {
 
-    Seq(DocumentsCertificatesMessages.English).foreach { messagesForLanguage =>
+    Seq(DocumentDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DocumentsCertificatesView]
-        val form = app.injector.instanceOf[DocumentsCertificatesFormProvider].apply()
+        val view = app.injector.instanceOf[DocumentDescriptionView]
+        val form = app.injector.instanceOf[DocumentDescriptionFormProvider].apply()
 
-        implicit val doc: Document =
-          Jsoup.parse(view(
-            form = form,
-            mode = NormalMode
-          ).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.documentsSection,
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-          Selectors.hint -> messagesForLanguage.hint,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
+          Selectors.title -> messagesForLanguage.title,
+          Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -66,3 +57,4 @@ class DocumentsCertificatesViewSpec extends ViewSpecBase with ViewBehaviours {
     }
   }
 }
+

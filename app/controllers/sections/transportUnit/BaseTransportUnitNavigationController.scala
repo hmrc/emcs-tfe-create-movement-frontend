@@ -33,6 +33,4 @@ trait BaseTransportUnitNavigationController extends BaseNavigationController {
     )
   }
 
-
-
 }

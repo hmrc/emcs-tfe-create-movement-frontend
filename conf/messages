@@ -847,3 +847,14 @@ documentDescription.error.length = Document description must be 350 characters o
 documentDescription.error.xss = Document description must not contain < and > and : and ;
 documentDescription.change.hidden = documentDescription
 documentDescription.checkYourAnswersLabel = documentDescription
+sad.subHeading = Single Administrative Document
+
+importNumber.title = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
+importNumber.heading = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
+importNumber.checkYourAnswersLabel = Import Number
+importNumber.error.required = Enter Enter the number of the Single Administrative Document
+importNumber.error.length = The number must be 21 characters or less must be 21 characters or less
+importNumber.hint = For example, 555 A12345B 14092016. You will have the chance to add more SAD numbers later.
+importNumber.error.invalidCharacter = Document reference must not include < and > and : and ;
+importNumber.change.hidden = changeImportNumber
+importNumber.error.alphanumeric = Document reference must only contain letters and numbers

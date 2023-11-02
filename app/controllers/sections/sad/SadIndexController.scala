@@ -18,7 +18,7 @@ package controllers.sections.sad
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models.NorthernIrelandRegisteredConsignor
+import models.{NormalMode, NorthernIrelandRegisteredConsignor}
 import navigation.SadNavigator
 import pages.sections.sad.SadSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -43,8 +43,7 @@ class SadIndexController @Inject()(
           // TODO: Update to CAM-SAD02 when built
           Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
         } else {
-          // TODO: Update to CAM-SAD01 when built
-          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+          Redirect(routes.ImportNumberController.onPageLoad(ern, draftId, NormalMode))
         }
       } else {
         // TODO: Update to tasklist when built

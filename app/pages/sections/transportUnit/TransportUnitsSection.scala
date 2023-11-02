@@ -21,7 +21,7 @@ import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.TransportUnitsCount
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
 
 case object TransportUnitsSection extends Section[JsObject] {
   override val toString: String = "transportUnits"

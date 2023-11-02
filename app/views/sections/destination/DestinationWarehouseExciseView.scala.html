@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
+@import viewmodels.LabelSize
 
 @this(
     layout: templates.Layout,
@@ -41,14 +42,13 @@
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl")
 
-        @h1(messages(s"destinationWarehouseExcise.heading"))
-
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationWarehouseExcise.text")))
+                label = LabelViewModel(Text(messages("destinationWarehouseExcise.heading"))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
+            .withHint(HintViewModel(content = Text(messages("destinationWarehouseExcise.text"))))
         )
 
         @continueOrExit()

@@ -766,14 +766,14 @@ transportUnitRemoveUnit.error.required = Select yes if you want to remove this t
 dispatchCheckAnswers.title = Check your answers
 dispatchCheckAnswers.heading = Check your answers
 
-destinationWarehouseExcise.title = What is the excise registration number (ERN) for the destination tax warehouse?
-destinationWarehouseExcise.heading = What is the excise registration number (ERN) for the destination tax warehouse?
-destinationWarehouseExcise.text = This number contains 13 alpha-numeric characters starting with GB and can be found on your approval letter.
+destinationWarehouseExcise.title = What is the excise ID of the tax warehouse of destination?
+destinationWarehouseExcise.heading = What is the excise ID of the tax warehouse of destination?
+destinationWarehouseExcise.text = This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789.
+destinationWarehouseExcise.error.required = Enter the excise ID of the tax warehouse of destination
+destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be 16 characters or less
+destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehouse must not include < and > and : and ;
 destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
-destinationWarehouseExcise.error.required = Enter the excise registration number (ERN)
-destinationWarehouseExcise.error.length = ERN must be 16 characters or less
 destinationWarehouseExcise.change.hidden = Warehouse excise ID
-destinationWarehouseExcise.error.invalidCharacter = ERN must not include < and > and : and ;
 
 informationCheckAnswers.title = Check your answers
 informationCheckAnswers.heading = Check your answers

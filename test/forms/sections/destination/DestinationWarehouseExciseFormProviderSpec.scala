@@ -16,11 +16,14 @@
 
 package forms.sections.destination
 
+import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Messages, MessagesApi}
 
-class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
+class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
@@ -57,5 +60,34 @@ class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error Messages" - {
+
+    Seq(DestinationWarehouseExciseMessages.English) foreach { messagesForLanguage =>
+
+      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+
+      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+
+        "have the correct required error message" in {
+
+          messages("destinationWarehouseExcise.error.required") mustBe
+            messagesForLanguage.errorRequired
+        }
+
+        "have the correct length error message" in {
+
+          messages("destinationWarehouseExcise.error.length") mustBe
+            messagesForLanguage.errorLength
+        }
+
+        "have the correct invalidCharacters error message" in {
+
+          messages("destinationWarehouseExcise.error.invalidCharacter") mustBe
+            messagesForLanguage.errorInvalidCharacters
+        }
+      }
+    }
   }
 }

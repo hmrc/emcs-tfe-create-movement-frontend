@@ -47,15 +47,15 @@ class DestinationWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviour
 
         implicit val doc: Document =
           Jsoup.parse(view(
-            form,
-            controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
+            form = form,
+            onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.destinationSection,
-          Selectors.label("value") -> messagesForLanguage.text,
+          Selectors.hint -> messagesForLanguage.text,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

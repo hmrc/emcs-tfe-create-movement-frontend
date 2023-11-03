@@ -1,6 +1,6 @@
 GET        /trader/:ern/draft/:draftId/sad        controllers.sections.sad.SadIndexController.onPageLoad(ern: String, draftId: String)
 
-GET        /trader/:ern/draft/:draftId/import-number                        controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/import-number                        controllers.sections.sad.ImportNumberController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/import-number/change                  controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/import-number/change                  controllers.sections.sad.ImportNumberController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/sad/import-number                        controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/sad/import-number                        controllers.sections.sad.ImportNumberController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/sad/import-number/change                  controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/sad/import-number/change                  controllers.sections.sad.ImportNumberController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)

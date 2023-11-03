@@ -16,29 +16,28 @@
 
 package viewmodels.checkAnswers.sections.documents
 
-import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.sections.documents.DocumentsCertificatesPage
+import pages.sections.documents.ReferenceAvailablePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DocumentsCertificatesSummary  {
+object ReferenceAvailableSummary  {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DocumentsCertificatesPage).map {
+    answers.get(ReferenceAvailablePage).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "documentsCertificates.checkYourAnswersLabel",
+          key     = "referenceAvailable.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
-              id = "changeDocumentsCertificates")
-              .withVisuallyHiddenText(messages("documentsCertificates.change.hidden"))
+            ActionItemViewModel("site.change", controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
+              id = "changeReferenceAvailable")
+              .withVisuallyHiddenText(messages("referenceAvailable.change.hidden"))
           )
         )
     }

@@ -809,10 +809,16 @@ destinationCheckAnswers.destination.notProvided = Not provided
 
 documentsCertificates.title = Are there any document certificates associated with this movement?
 documentsCertificates.heading = Are there any document certificates associated with this movement?
-documentsCertificates.checkYourAnswersLabel = documentsCertificates
+documentsCertificates.checkYourAnswersLabel = Documents Certificates
 documentsCertificates.hintText = For example, a delivery note, invoice or electronic administrative document (eAD). You will have the chance to add more later.
 documentsCertificates.error.required = Select yes if there are documents associated with this movement
-documentsCertificates.change.hidden = DocumentsCertificates
+documentsCertificates.change.hidden = Documents Certificates
+
+referenceAvailable.title = Does the document have a reference?
+referenceAvailable.heading = Does the document have a reference?
+referenceAvailable.checkYourAnswersLabel = Reference Available
+referenceAvailable.error.required = Select yes if the document has a reference
+referenceAvailable.change.hidden = Reference Available
 
 dispatchDetails.title = Dispatch details
 dispatchDetails.heading = Dispatch details
@@ -833,3 +839,4 @@ dispatchDetails.time.error.required = Enter the time the goods will be dispatche
 dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
+

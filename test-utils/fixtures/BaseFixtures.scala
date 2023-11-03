@@ -18,13 +18,13 @@ package fixtures
 
 import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.sections.info.InvoiceDetailsModel
+import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import models.{CountryModel, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
 import java.time.temporal.ChronoUnit
-import java.time.{Instant, LocalDate}
+import java.time.{Instant, LocalDate, LocalTime}
 
 trait BaseFixtures {
 
@@ -148,5 +148,15 @@ trait BaseFixtures {
   val invoiceDetailsJson = Json.obj(
     "reference" -> "somereference",
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2))
+  )
+
+  val dispatchDetailsModel = DispatchDetailsModel(
+    date = LocalDate.of(2020, 2, 2),
+    time = LocalTime.of(7,25)
+  )
+
+  val dispatchDetailsJson = Json.obj(
+    "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
+    "time" -> "07:25"
   )
 }

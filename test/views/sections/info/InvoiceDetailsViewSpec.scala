@@ -25,13 +25,13 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import utils.DateUtils
+import utils.DateTimeUtils
 import views.html.sections.info.InvoiceDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
 import java.time.LocalDate
 
-class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateUtils {
+class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
 

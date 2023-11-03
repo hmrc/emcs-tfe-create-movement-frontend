@@ -18,6 +18,7 @@ package controllers
 
 import base.SpecBase
 import mocks.services.MockPreDraftService
+import models.UserAnswers
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
 import play.api.Application
@@ -43,7 +44,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService {
     "must redirect to the info Index controller" in {
       running(application) {
 
-        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+        MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
 
         val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
         val result = route(application, request).value

@@ -76,8 +76,16 @@ class InformationNavigatorSpec extends SpecBase {
 
         "must go to the CAM-INFO06" in {
 
-          // TODO update when CAM-INFO006 is complete
           navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, NormalMode)
+        }
+      }
+
+      "for the Dispatch Details page" - {
+
+        "must go to the CAM-INFO07" in {
+
+          navigator.nextPage(DispatchDetailsPage, NormalMode, emptyUserAnswers) mustBe
             controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testErn)
         }
       }

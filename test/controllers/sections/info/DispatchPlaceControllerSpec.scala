@@ -23,6 +23,7 @@ import models.sections.info.DispatchPlace
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
+import pages.sections.info.DispatchPlacePage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -113,12 +114,11 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
 
         "must redirect to the next page when valid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           running(application) {
+            val validDispatchPlaceValue = DispatchPlace.values.head
 
-            MockPreDraftService.set(northernIrelandUserAnswers).returns(Future.successful(true))
+            MockPreDraftService.set(northernIrelandUserAnswers.set(DispatchPlacePage, validDispatchPlaceValue )).returns(Future.successful(true))
 
-            val validDispatchPlaceValue = DispatchPlace.values.head.toString
-
-            val request = FakeRequest(POST, dispatchPlaceSubmitAction.url).withFormUrlEncodedBody(("value", validDispatchPlaceValue))
+            val request = FakeRequest(POST, dispatchPlaceSubmitAction.url).withFormUrlEncodedBody(("value", validDispatchPlaceValue.toString))
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER

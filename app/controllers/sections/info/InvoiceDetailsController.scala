@@ -28,7 +28,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.PreDraftService
-import utils.{DateUtils, TimeMachine}
+import utils.{DateTimeUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
 import javax.inject.Inject
@@ -48,7 +48,7 @@ class InvoiceDetailsController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: InvoiceDetailsView,
                                           timeMachine: TimeMachine
-                                        ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper with DateUtils {
+                                        ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper with DateTimeUtils {
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>

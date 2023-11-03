@@ -20,9 +20,9 @@ import base.SpecBase
 import fixtures.messages.MonthMessages
 import play.api.i18n.Messages
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
-class DateUtilsSpec extends SpecBase with DateUtils {
+class DateTimeUtilsSpec extends SpecBase with DateTimeUtils {
 
   lazy val app = applicationBuilder().build()
 
@@ -42,6 +42,24 @@ class DateUtilsSpec extends SpecBase with DateUtils {
       }
     }
   }
+
+  ".formatTimeForUIOutput()" - {
+
+    Seq(
+      LocalTime.of(0,0) -> "0:00",
+      LocalTime.of(12,0) -> "12:00",
+      LocalTime.of(5,15) -> "5:15",
+      LocalTime.of(13,0) -> "13:00",
+      LocalTime.of(20,1) -> "20:01"
+    ).foreach {
+      case (localTime, expectedDisplayResult) =>
+
+      s"must format $localTime as $expectedDisplayResult" in {
+        localTime.formatTimeForUIOutput() mustBe expectedDisplayResult
+      }
+    }
+  }
+
 
   ".formatDateNumbersOnly" - {
 

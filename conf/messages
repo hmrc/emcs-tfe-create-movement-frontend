@@ -778,11 +778,6 @@ destinationWarehouseExcise.change.hidden = Warehouse excise ID
 informationCheckAnswers.title = Check your answers
 informationCheckAnswers.heading = Check your answers
 
-dispatchDetails.dateOfDispatch.checkYourAnswersLabel = Date of dispatch
-dispatchDetails.dateOfDispatch.change.hidden = date of dispatch
-dispatchDetails.timeOfDispatch.checkYourAnswersLabel = Time of dispatch
-dispatchDetails.timeOfDispatch.change.hidden = time of dispatch
-
 importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the UK
 importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the UK
 importCustomsOfficeCode.northernIrishRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the EU or UK
@@ -818,3 +813,23 @@ documentsCertificates.checkYourAnswersLabel = documentsCertificates
 documentsCertificates.hintText = For example, a delivery note, invoice or electronic administrative document (eAD). You will have the chance to add more later.
 documentsCertificates.error.required = Select yes if there are documents associated with this movement
 documentsCertificates.change.hidden = DocumentsCertificates
+
+dispatchDetails.title = Dispatch details
+dispatchDetails.heading = Dispatch details
+dispatchDetails.deferredMovement.true.paragraph = This date must match the date you entered on the fallback document.
+dispatchDetails.deferredMovement.false.paragraph = You can create a draft electronic administrative document (eAD) at any time, but it cannot be submitted more than 7 days before the date of dispatch.
+dispatchDetails.registeredConsignor.paragraph = Enter the date when this movement begins. This will be when the goods get dispatched from where they entered the UK.
+dispatchDetails.value.hint = For example, 30 06 2023.
+dispatchDetails.value.value.label = Date of dispatch
+dispatchDetails.value.error.required.all = Enter the date you received the movement
+dispatchDetails.value.error.required.two = The date of dispatch must include {0} and {1}
+dispatchDetails.value.error.required = The date of dispatch must include {0}
+dispatchDetails.value.error.invalid = The date of dispatch must be a real date
+dispatchDetails.value.checkYourAnswersLabel = Date of dispatch
+dispatchDetails.value.change.hidden = date of dispatch
+dispatchDetails.time.label = Time of dispatch
+dispatchDetails.time.hint = For example, 9am or 14:00. Enter 12pm for midday.
+dispatchDetails.time.error.required = Enter the time the goods will be dispatched, or skip this question for now
+dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
+dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
+dispatchDetails.time.change.hidden = time of dispatch

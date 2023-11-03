@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers.sections.documents.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
@@ -26,8 +26,11 @@ class DocumentsNavigatorSpec extends SpecBase {
   val navigator = new DocumentsNavigator
 
   "DocumentsNavigator" - {
+
     "in Normal mode" - {
+
       "must go from a page that doesn't exist in the route map to Documents CYA" in {
+
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -43,15 +46,38 @@ class DocumentsNavigatorSpec extends SpecBase {
 
       "for the ReferenceAvailablePage" - {
 
-        "must go to Next page" in {
-          navigator.nextPage(ReferenceAvailablePage, NormalMode, emptyUserAnswers) mustBe
+        "must go to ReferenceAvailablePage when user selects yes" in {
+
+          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
+
+          navigator.nextPage(ReferenceAvailablePage, NormalMode, userAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        "must go to ReferenceAvailablePage when user selects no" in {
+
+          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, false)
+
+          navigator.nextPage(ReferenceAvailablePage, NormalMode, userAnswers) mustBe
+            routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+
+        "must go to Journey Recovery if no answer is present" in {
+
+          navigator.nextPage(ReferenceAvailablePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.JourneyRecoveryController.onPageLoad()
         }
       }
 
+      "must go from Document Description page to UnderConstruction" in {
+
+        navigator.nextPage(DocumentDescriptionPage, NormalMode, emptyUserAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
     }
 
     "in Check mode" - {
+
       "must go to CheckYourAnswersDocumentsController" in {
         //TODO: update to Documents CYA when built
         case object UnknownPage extends Page
@@ -61,12 +87,12 @@ class DocumentsNavigatorSpec extends SpecBase {
     }
 
     "in Review mode" - {
+
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }
-
 }

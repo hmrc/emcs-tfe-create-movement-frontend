@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package pages.sections.documents
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-<h2 @id.map(value => s"id=$value") class="@classes">
- @hiddenContent.map { content =>
-   <span class="govuk-visually-hidden">@messages(content)</span>
- } @messages(msg)
-</h2>
-
-@{
-    //$COVERAGE-OFF$
+case object DocumentDescriptionPage extends QuestionPage[String] {
+  override val toString: String = "documentDescription"
+  override val path: JsPath = DocumentsSection.path \ toString
 }

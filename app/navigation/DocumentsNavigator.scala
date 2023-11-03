@@ -16,8 +16,8 @@
 
 package navigation
 
-import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import controllers.sections.documents.routes
 import pages.Page
 import pages.sections.documents._
 import play.api.mvc.Call
@@ -31,10 +31,13 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       //TODO update to next page when finished
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case ReferenceAvailablePage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      referenceAvailableRouting()
+    case DocumentDescriptionPage =>
+      //TODO update with next page when finished
+      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case _ =>
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
@@ -45,7 +48,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -56,4 +59,14 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
+
+  private def referenceAvailableRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(ReferenceAvailablePage) match {
+      case Some(true) =>
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      case Some(false) =>
+        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+      case _ =>
+        controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
 }

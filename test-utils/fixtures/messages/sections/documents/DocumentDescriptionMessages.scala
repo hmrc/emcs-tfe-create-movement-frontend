@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package fixtures.messages.sections.documents
 
-@(msg: String, classes: String = "govuk-heading-m", id: Option[String] = None, hiddenContent: Option[String] = None)(implicit messages: Messages)
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-<h2 @id.map(value => s"id=$value") class="@classes">
- @hiddenContent.map { content =>
-   <span class="govuk-visually-hidden">@messages(content)</span>
- } @messages(msg)
-</h2>
+object DocumentDescriptionMessages {
 
-@{
-    //$COVERAGE-OFF$
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Enter a description for this document"
+    val title = titleHelper(heading)
+    val errorRequired = "Enter a description for this document"
+    val errorLength = "Document description must be 350 characters or less"
+    val errorXss = "Document description must not contain < and > and : and ;"
+  }
+
+  object English extends ViewMessages with BaseEnglish
 }

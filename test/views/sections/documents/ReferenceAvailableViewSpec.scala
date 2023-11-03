@@ -55,6 +55,7 @@ class ReferenceAvailableViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.documentsSection,
+          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,

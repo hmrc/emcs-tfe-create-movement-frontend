@@ -22,24 +22,18 @@ import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import utils.DateTimeUtils
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-import java.time.LocalDate
-
-object InformationInvoiceDateSummary {
-
-  def formatDateForUIOutput(date: LocalDate)(implicit messages: Messages): String = {
-    val monthMessage = messages(s"date.month.${date.getMonthValue}")
-    s"${date.getDayOfMonth} $monthMessage ${date.getYear}"
-  }
+object InformationInvoiceDateSummary extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage)
 
     val value: String = data match {
-      case Some(invoiceDetailsPage) => formatDateForUIOutput(invoiceDetailsPage.date)
+      case Some(invoiceDetailsPage) =>invoiceDetailsPage.date.formatDateForUIOutput()
       case None => messages("site.notProvided")
     }
 

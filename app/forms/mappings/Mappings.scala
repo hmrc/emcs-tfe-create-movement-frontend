@@ -20,7 +20,7 @@ import models.Enumerable
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 trait Mappings extends Formatters with Constraints {
 
@@ -57,4 +57,11 @@ trait Mappings extends Formatters with Constraints {
                            requiredKey: String,
                            args: Seq[String] = Seq.empty): FieldMapping[LocalDate] =
     of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey, args))
+
+
+  protected def localTime(
+                           invalidKey: String,
+                           requiredKey: String,
+                           args: Seq[String] = Seq.empty): FieldMapping[LocalTime] =
+    of(new LocalTimeFormatter(invalidKey, requiredKey, args))
 }

@@ -38,6 +38,7 @@ import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
+import pages.sections.info.DeferredMovementPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -87,7 +88,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
           FakeRequest(POST, deferredMovementRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
-        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+        MockPreDraftService.set(emptyUserAnswers.set(DeferredMovementPage, true)).returns(Future.successful(true))
 
         val result = route(application, request).value
 

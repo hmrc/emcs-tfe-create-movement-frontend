@@ -52,7 +52,7 @@ class UserAnswersSpec extends SpecBase {
 
       "when no data exists for that page" - {
 
-        "must set the answer for the first time" in {
+        "must set the answer for the first userEnteredTime" in {
           emptyUserAnswers.set(TestPage(), "foo") mustBe emptyUserAnswers.copy(data = Json.obj(
             "TestPage" -> "foo"
           ))

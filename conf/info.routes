@@ -24,6 +24,12 @@ POST        /trader/:ern/info/deferred-movement                 controllers.sect
 GET         /trader/:ern/info/deferred-movement/change          controllers.sections.info.DeferredMovementController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
 POST        /trader/:ern/info/deferred-movement/change          controllers.sections.info.DeferredMovementController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
 
+# INFO06
+GET         /trader/:ern/info/dispatch-details                  controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/dispatch-details                  controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/dispatch-details/change           controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/dispatch-details/change           controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+
 # INFO08
 GET         /trader/:ern/info/destination-type                  controllers.sections.info.DestinationTypeController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
 POST        /trader/:ern/info/destination-type                  controllers.sections.info.DestinationTypeController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)

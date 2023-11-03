@@ -16,33 +16,36 @@
 
 package viewmodels.checkAnswers.sections.info
 
+import models.CheckMode
+import models.requests.DataRequest
+import models.sections.info.DispatchDetailsModel
+import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import utils.DateTimeUtils
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object InformationTimeOfDispatchSummary {
+object InformationTimeOfDispatchSummary extends DateTimeUtils {
 
-  def row()(implicit messages: Messages): Option[SummaryListRow] = {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    // TODO: take from user answers when page is built
-    val data: Option[String] = None
+    val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage)
 
     val value: String = data match {
-      case Some(answer) => messages(s"dispatchDetails.timeOfDispatch.$answer")
+      case Some(dispatchDetailsPage) => dispatchDetailsPage.time.formatTimeForUIOutput
       case None => messages("site.notProvided")
     }
-
     Some(
       SummaryListRowViewModel(
-        key = "dispatchDetails.timeOfDispatch.checkYourAnswersLabel",
+        key = "dispatchDetails.time.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+            controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url,
             id = "changeTimeOfDispatch")
-            .withVisuallyHiddenText(messages("dispatchDetails.timeOfDispatch.change.hidden"))
+            .withVisuallyHiddenText(messages("dispatchDetails.time.change.hidden"))
         )
       )
     )

@@ -39,9 +39,10 @@ import models.NormalMode
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
-import pages.sections.info.DispatchPlacePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -137,7 +138,9 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
     "onSubmit" - {
       "must redirect to the next page when valid data is submitted" in new Fixture(None, value = "exportWithCustomsDeclarationLodgedInTheUk") {
         running(application) {
-          MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+
+          val expectedAnswersToSave = emptyUserAnswers.copy(ern = testGreatBritainErn).set(DestinationTypePage,ExportWithCustomsDeclarationLodgedInTheUk)
+          MockPreDraftService.set(expectedAnswersToSave).returns(Future.successful(true))
 
           status(postResult) mustEqual SEE_OTHER
           redirectLocation(postResult).value mustEqual testOnwardRoute.url

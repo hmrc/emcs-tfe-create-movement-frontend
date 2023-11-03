@@ -16,11 +16,14 @@
 
 package forms.sections.exportInformation
 
+import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Messages, MessagesApi}
 
-class ExportCustomsOfficeFormProviderSpec extends StringFieldBehaviours {
+class ExportCustomsOfficeFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
   val requiredKey = "exportCustomsOffice.error.required"
   val lengthKey = "exportCustomsOffice.error.length"
@@ -64,6 +67,41 @@ class ExportCustomsOfficeFormProviderSpec extends StringFieldBehaviours {
       val boundForm = form.bind(Map(fieldName -> "GB345678"))
       boundForm.errors mustBe Seq()
       boundForm.value mustBe Some("GB345678")
+    }
+  }
+
+  "Error Messages" - {
+
+    Seq(ExportCustomsOfficeMessages.English) foreach { messagesForLanguage =>
+
+      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+
+      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+
+        "have the correct required error message" in {
+
+          messages("exportCustomsOffice.error.required") mustBe
+            messagesForLanguage.errorRequired
+        }
+
+        "have the correct length error message" in {
+
+          messages("exportCustomsOffice.error.length", requiredLength) mustBe
+            messagesForLanguage.errorLength(requiredLength)
+        }
+
+        "have the correct invalidCharacter error message" in {
+
+          messages("exportCustomsOffice.error.invalidCharacter") mustBe
+            messagesForLanguage.errorInvalidCharacter
+        }
+
+        "have the correct customsOfficeRegex error message" in {
+
+          messages("exportCustomsOffice.error.customOfficeRegex") mustBe
+            messagesForLanguage.errorCustomOfficeRegex
+        }
+      }
     }
   }
 }

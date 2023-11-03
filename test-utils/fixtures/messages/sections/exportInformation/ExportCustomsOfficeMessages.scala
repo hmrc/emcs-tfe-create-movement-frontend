@@ -32,6 +32,11 @@ object ExportCustomsOfficeMessages {
         "This code is also known as a customs office reference number. Search for UK customs office codes here (opens in new tab)."
       }
 
+    val errorRequired = "Enter the customs office code"
+    val errorLength = (int: Int) => s"Customs office code must be $int characters"
+    val errorInvalidCharacter = "Customs office code must not contain < and > and : and ;"
+    val errorCustomOfficeRegex = "Customs office code must start with 2 capital letters representing the member state, followed by 6 mixed numbers and letters. For example IT0830AB"
+
     val cyaLabel = "Customs office code"
     val cyaChangeHidden = "customs office code"
   }

@@ -20,16 +20,17 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object DestinationWarehouseExciseMessages {
 
-  sealed trait ViewMessages extends BaseMessages {
-    _: i18n =>
-    val title = titleHelper("What is the excise registration number (ERN) for the destination tax warehouse?")
-    val heading: String = "What is the excise registration number (ERN) for the destination tax warehouse?"
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+
+    val heading: String = "What is the excise ID of the tax warehouse of destination?"
+    val title = titleHelper(heading)
     val cyaLabel: String = "Warehouse excise ID"
     val cyaChangeHidden: String = "Warehouse excise ID"
-    val errorRequired: String = "Enter the excise registration number (ERN)"
-    val errorInvalidCharacters: String = "ERN must not include < and > and : and ;"
-    val errorLength: String = "VAT registration number must be 16 characters or less"
-    val text: String = "This number contains 13 alpha-numeric characters starting with GB and can be found on your approval letter."
+    val errorRequired: String = "Enter the excise ID of the tax warehouse of destination"
+    val errorLength: String = "Excise ID of the tax warehouse must be 16 characters or less"
+    val errorInvalidCharacters: String = "Excise ID of the tax warehouse must not include < and > and : and ;"
+    val text: String = "This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789."
   }
+
   object English extends ViewMessages with BaseEnglish
 }

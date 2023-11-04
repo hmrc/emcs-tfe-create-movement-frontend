@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.sections.sad.ImportNumberFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Index, Mode}
 import navigation.SadNavigator
 import pages.sections.sad.ImportNumberPage
 import play.api.i18n.MessagesApi
@@ -42,20 +42,25 @@ class ImportNumberController @Inject()(
                                        formProvider: ImportNumberFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: ImportNumberView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseSadNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(ImportNumberPage, formProvider()), mode))
-    }
-
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(ImportNumberPage, value, mode)
-      )
+      validateIndex(idx) {
+          Future.successful(Ok(view(fillForm(ImportNumberPage(idx), formProvider()), idx, mode)))
+      }
     }
+
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, idx, mode))),
+          value =>
+            saveAndRedirect(ImportNumberPage(idx), value, mode)
+        )
+      }
+    }
+
 }

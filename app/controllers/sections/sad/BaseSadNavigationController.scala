@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-package pages.sections.sad
+package controllers.sections.sad
 
+import controllers.BaseNavigationController
 import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.requests.DataRequest
+import play.api.mvc.Result
+import queries.SadCount
 
-case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "importNumber"
-  override val path: JsPath = SadSection(idx).path \ toString
+import scala.concurrent.Future
+
+trait BaseSadNavigationController extends BaseNavigationController {
+
+  def validateIndex(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    super.validateIndex(SadCount, index)(
+      onSuccess,
+      Future.successful(Redirect(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId)))
+    )
+  }
+
 }

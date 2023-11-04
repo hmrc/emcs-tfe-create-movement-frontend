@@ -16,28 +16,38 @@
 
 package viewmodels.checkAnswers.sections.sad
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
+import controllers.sections.sad.routes
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.sad.ImportNumberPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ImportNumberSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ImportNumberPage).map {
-      answer =>
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-        SummaryListRowViewModel(
-          key     = "importNumber.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.sad.routes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,id = "importNumber")
-              .withVisuallyHiddenText(messages("importNumber.change.hidden"))
-          )
+    Some(SummaryListRowViewModel(
+      key = "importNumber.checkYourAnswersLabel",
+      value = ValueViewModel(getValue(idx)),
+      actions = {
+        Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              routes.ImportNumberController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              id = s"changeImportNumber${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages("importNumber.change.hidden"))
         )
-    }
+      }
+    ))
+  }
+
+  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
+    request.userAnswers.get(ImportNumberPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
+
 }

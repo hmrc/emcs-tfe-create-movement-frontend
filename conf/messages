@@ -874,3 +874,19 @@ importNumber.error.invalidCharacter = Document reference must not include < and 
 importNumber.change.hidden = changeImportNumber
 importNumber.error.alphanumeric = Document reference must only contain letters and numbers
 
+sadAddToList.title.singular = You have given information for 1 Single Administrative Document (SAD) number
+sadAddToList.title.plural = You have given information for {0} Single Administrative Document (SAD) numbers
+sadAddToList.heading.singular = You have given information for 1 Single Administrative Document (SAD) number
+sadAddToList.heading.plural = You have given information for {0} Single Administrative Document (SAD) numbers
+sadAddToList.error.required = Enter Select yes if you need to add another SAD import number
+sadAddToList.sadCardTitle = SAD document number {0}
+sadAddToList.legend = Do you need to add another Single Administrative Document (SAD) number for this movement?
+sadAddToList.1 = Yes
+sadAddToList.2 = No, this is the only Single Administrative Document (SAD) number for this movement
+sadAddToList.divider = or
+sadAddToList.3 = I will add more Single Administrative Document later
+
+sadRemoveDocument.title = Are you sure you want to remove Single Administrative Document {0}?
+sadRemoveDocument.heading = Are you sure you want to remove Single Administrative Document {0}?
+sadRemoveDocument.error.required = Select yes if you want to remove this Single Administrative Document
+

@@ -15,44 +15,42 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.InputWidth._
-@import viewmodels.LabelSize
+@import viewmodels.LegendSize
+@import models.Index
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukRadios: GovukRadios,
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], indexOfSad: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("importNumber.title"))) {
+@layout(pageTitle = title(form, messages("sadRemoveDocument.title", indexOfSad.displayIndex))) {
 
-    @formHelper(action = controllers.sections.sad.routes.ImportNumberController.onSubmit(request.ern, request.draftId, idx, mode)) {
+    @formHelper(action = controllers.sections.sad.routes.SadRemoveDocumentController.onSubmit(request.ern, request.draftId, indexOfSad), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @h2(messages("sad.subHeading"), request.draftId), "govuk-caption-xl")
-        @govukInput(
-            InputViewModel(
+
+        @h2(messages("sad.subHeading"), "govuk-caption-xl")
+        @govukRadios(
+            RadiosViewModel.yesNo(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("importNumber.heading"))).asPageHeading(LabelSize.Large)
+                legend = LegendViewModel(Text(messages("sadRemoveDocument.heading", indexOfSad.displayIndex))).asPageHeading(LegendSize.Large)
             )
-            .withWidth(Full)
-            .withHint(HintViewModel(messages("importNumber.hint")))
         )
 
         @continueOrExit()
     }
 }
 
-
 @{
-    //$COVERAGE-OFF$
+  //$COVERAGE-OFF$
 }

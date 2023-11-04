@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package pages.sections.sad
+package queries
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.sad.SadSectionDocuments
+import play.api.libs.json.{JsPath, JsValue}
 
-case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "importNumber"
-  override val path: JsPath = SadSection(idx).path \ toString
+case object SadCount extends Derivable[List[JsValue], Int] {
+  override val derive: List[JsValue] => Int = _.size
+  override val path: JsPath = SadSectionDocuments.path
 }

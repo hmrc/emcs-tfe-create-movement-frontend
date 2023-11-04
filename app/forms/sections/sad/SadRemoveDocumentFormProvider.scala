@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.sad
+package forms.sections.sad
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "importNumber"
-  override val path: JsPath = SadSection(idx).path \ toString
+import javax.inject.Inject
+
+class SadRemoveDocumentFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("sadRemoveDocument.error.required")
+    )
 }

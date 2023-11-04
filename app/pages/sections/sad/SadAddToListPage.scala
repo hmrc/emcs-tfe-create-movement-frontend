@@ -16,11 +16,11 @@
 
 package pages.sections.sad
 
-import models.Index
+import models.sections.sad.SadAddToListModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "importNumber"
-  override val path: JsPath = SadSection(idx).path \ toString
+case object SadAddToListPage extends QuestionPage[SadAddToListModel] {
+  override val toString: String = "sadAddToList"
+  override val path: JsPath = SadsSection.path  \ toString
 }

@@ -38,7 +38,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @h2(messages("sad.subHeading"), request.draftId), "govuk-caption-xl")
+        @h2(messages("sad.subHeading", request.draftId), "govuk-caption-xl")
         @govukInput(
             InputViewModel(
                 field = form("value"),

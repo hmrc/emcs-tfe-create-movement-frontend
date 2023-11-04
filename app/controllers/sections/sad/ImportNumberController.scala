@@ -16,18 +16,19 @@
 
 package controllers.sections.sad
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.sad.ImportNumberFormProvider
+import models.requests.DataRequest
 
 import javax.inject.Inject
 import models.{Index, Mode}
 import navigation.SadNavigator
-import pages.sections.sad.ImportNumberPage
+import pages.sections.sad.{ImportNumberPage, SadsSection}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.sad.ImportNumberView
+import queries.SadCount
 
 import scala.concurrent.Future
 
@@ -62,5 +63,15 @@ class ImportNumberController @Inject()(
         )
       }
     }
+
+  override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    validateIndexForJourneyEntry(SadCount, idx, SadsSection.MAX)(
+      onSuccess = f,
+      onFailure = Future.successful(
+        Redirect(
+          controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId)
+        )
+      )
+    )
 
 }

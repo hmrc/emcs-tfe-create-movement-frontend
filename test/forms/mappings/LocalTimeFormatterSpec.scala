@@ -32,6 +32,7 @@ class LocalTimeFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     )
   )
 
+  // scalastyle:off magic.number
   val time: LocalTime = LocalTime.of(6, 25)
 
   val validEntries = Seq(
@@ -63,8 +64,10 @@ class LocalTimeFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     "5." -> LocalTime.of(5, 0),
     "9am" -> LocalTime.of(9, 0),
     "14:00" -> LocalTime.of(14, 0),
+    "12am" -> LocalTime.of(0,0),
     "12pm" -> LocalTime.of(12, 0)
   )
+  // scalastyle:on magic.number
 
   val invalidEntries = Seq(
     "9;15am",

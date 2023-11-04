@@ -41,6 +41,7 @@ private[mappings] class LocalTimeFormatter(
 
     val pattern = """^([0-1]?[0-9]|2[0-3])[:.\s]?(([0-5][0-9])?)[.\s]?(([ap]\.?m\.?)?)$""".r
 
+    // scalastyle:off magic.number
     value match {
       case pattern(hour, _, minute, _, ampm) =>
 
@@ -54,8 +55,14 @@ private[mappings] class LocalTimeFormatter(
           case (true, h, m, o) =>
             if (o.isDefined) Left(Seq(FormError(key, invalidKey, args))) else Right(LocalTime.of(h, m))
 
-          case(false, h, m, o) if o.contains("pm") =>
-            if (h==12) Right(LocalTime.of(h, m)) else Right(LocalTime.of(h + 12, m))
+          case(false, 12, m, Some("pm")) =>
+            Right(LocalTime.of(12, m))
+
+          case (false, h, m, Some("pm")) =>
+            Right(LocalTime.of(h + 12, m))
+
+          case (false, 12, m, Some("am")) =>
+            Right(LocalTime.of(0, m))
 
           case (false, h, m, _) =>
             Right(LocalTime.of(h, m))
@@ -68,7 +75,9 @@ private[mappings] class LocalTimeFormatter(
       case _ =>
         Left(Seq(FormError(key, invalidKey, args)))
     }
+    // scalastyle:on magic.number
   }
+
 
   override def unbind(key: String, time: LocalTime): Map[String, String] =
     Map(key -> time.formatTimeForUIOutput)

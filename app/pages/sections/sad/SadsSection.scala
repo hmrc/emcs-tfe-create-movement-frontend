@@ -33,7 +33,6 @@ case object SadsSection extends Section[JsObject] {
     (SadSectionDocuments.status, request.userAnswers.get(SadAddToListPage), request.userAnswers.get(SadCount)) match {
       case (Completed, _, Some(MAX)) => Completed
       case (Completed, Some(SadAddToListModel.NoMoreToCome), _) => Completed
-      case (Completed, Some(SadAddToListModel.MoreToCome) | None, _) => InProgress
       case (Completed, Some(SadAddToListModel.Yes) | None, _) => InProgress
       case (InProgress, _, _) => InProgress
       case (status, _, _) => status

@@ -31,7 +31,6 @@ case object TransportUnitsSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     (TransportUnitsSectionUnits.status, request.userAnswers.get(TransportUnitsAddToListPage), request.userAnswers.get(TransportUnitsCount)) match {
       case (Completed, _, Some(MAX)) => Completed
-      case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
       case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
       case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
       case (InProgress, _, _) => InProgress

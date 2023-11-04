@@ -26,11 +26,10 @@ sealed trait SadAddToListModel
 object SadAddToListModel extends Enumerable.Implicits {
 
   case object Yes extends WithName("1") with SadAddToListModel
-  case object MoreToCome extends WithName("2") with SadAddToListModel
-  case object NoMoreToCome extends WithName("3") with SadAddToListModel
+  case object NoMoreToCome extends WithName("2") with SadAddToListModel
 
   val values: Seq[SadAddToListModel] = Seq(
-    Yes, MoreToCome, NoMoreToCome
+    Yes, NoMoreToCome
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = {
@@ -40,15 +39,9 @@ object SadAddToListModel extends Enumerable.Implicits {
       id = Some(s"value_$index")
     )
 
-    val orDivider = RadioItem(
-      divider = Some(messages(s"sadAddToList.divider"))
-    )
-
     Seq(
       radioItem(Yes, 0),
-      radioItem(MoreToCome, 1),
-      orDivider,
-      radioItem(NoMoreToCome, 2)
+      radioItem(NoMoreToCome, 1)
     )
   }
 

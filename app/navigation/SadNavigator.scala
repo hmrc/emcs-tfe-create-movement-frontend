@@ -38,8 +38,8 @@ class SadNavigator @Inject() extends BaseNavigator {
       answers.get(SadAddToListPage) match {
         case Some(SadAddToListModel.Yes) =>
           sadRoutes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(SadCount).getOrElse(0)), NormalMode)
-        case Some(SadAddToListModel.NoMoreToCome | SadAddToListModel.MoreToCome) =>
-          // TODO Redirect to (SAD03) task list when competed
+        case Some(SadAddToListModel.NoMoreToCome ) =>
+          // TODO Redirect to (CAM-02) when competed
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
@@ -50,9 +50,7 @@ class SadNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      // TODO: update to Sad add-to-list when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case _ => (userAnswers: UserAnswers) => sadRoutes.SadAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

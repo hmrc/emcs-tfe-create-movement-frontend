@@ -21,13 +21,14 @@ import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import models.NormalMode
+import pages.sections.documents.DocumentsCertificatesPage
 
 class DocumentsIndexControllerSpec extends SpecBase {
   "DocumentsIndexController" - {
 
     "when DocumentsSection.isCompleted" - {
-      // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
+      // TODO: remove ignore when CAM-DOC02 page is built
+      "must redirect to the Add To List controller" ignore {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -38,6 +39,20 @@ class DocumentsIndexControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
         }
+      }
+    }
+
+    "must redirect to check answers page when Document Certificates page is false" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DocumentsCertificatesPage, false))).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
 

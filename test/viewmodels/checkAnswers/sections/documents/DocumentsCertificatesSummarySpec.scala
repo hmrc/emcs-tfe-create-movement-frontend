@@ -46,7 +46,7 @@ class DocumentsCertificatesSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DocumentsCertificatesSummary.row(request.userAnswers) mustBe None
+            DocumentsCertificatesSummary.row() mustBe None
           }
         }
 
@@ -56,7 +56,7 @@ class DocumentsCertificatesSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, true))
 
-            DocumentsCertificatesSummary.row(request.userAnswers) mustBe
+            DocumentsCertificatesSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -76,7 +76,7 @@ class DocumentsCertificatesSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
 
-            DocumentsCertificatesSummary.row(request.userAnswers) mustBe
+            DocumentsCertificatesSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

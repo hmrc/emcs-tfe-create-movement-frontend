@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package pages.sections.documents
+package fixtures.messages.sections.documents
 
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case object DocumentsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "documents"
+object DocumentsCheckAnswersMessages {
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(DocumentsCertificatesPage) match {
-      case Some(false) => Completed
-      case _ => // TODO: Update when CAM-DOC06 is built
-        NotStarted
-    }
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Check your answers"
+    val title = titleHelper(heading)
   }
+
+  object English extends ViewMessages with BaseEnglish
 }

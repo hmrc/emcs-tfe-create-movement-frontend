@@ -38,8 +38,20 @@ class DocumentsNavigatorSpec extends SpecBase {
 
       "for the DocumentsCertificatesPage" - {
 
-        "must go to Next page" in {
+        "must go to CheckAnswersPage if no is selected" in {
           navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        "must go to CAM-DOC02 page if yes is selected" in {
+          navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      "for the DocumentsCheckAnswersPage" - {
+        "must go to task list page when built" in {
+          navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
@@ -78,12 +90,17 @@ class DocumentsNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
-      "must go to CheckYourAnswersDocumentsController" in {
-        //TODO: update to Documents CYA when built
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+      "must go to CheckYourAnswersDocumentsController if DocumentsCertificatesPage is no" in {
+        navigator.nextPage(DocumentsCertificatesPage, CheckMode, emptyUserAnswers.set(DocumentsCertificatesPage, false)) mustBe
+          routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+      }
+
+      "must go to AddToListPage if DocumentsCertificatesPage is yes" in {
+        //TODO redirect to AddToList CAM-DOC06 Page when built
+        navigator.nextPage(DocumentsCertificatesPage, CheckMode, emptyUserAnswers.set(DocumentsCertificatesPage, true)) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+
     }
 
     "in Review mode" - {

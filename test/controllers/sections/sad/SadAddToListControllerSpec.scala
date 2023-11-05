@@ -99,7 +99,9 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual
+         //TODO when CAM02 is built
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
       }
     }
 

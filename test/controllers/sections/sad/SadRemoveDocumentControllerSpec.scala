@@ -106,9 +106,9 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
     "must redirect to the index controller when the user answers yes (removing the Sad Document)" in {
 
       MockUserAnswersService.set(
-        emptyUserAnswers.set(ImportNumberPage(testIndex2), "answer2")
+        emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer2")
       ).returns(Future.successful(
-        emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer1")
+        emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer2")
       ))
 
       val application =

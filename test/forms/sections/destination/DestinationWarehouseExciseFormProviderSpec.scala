@@ -16,7 +16,7 @@
 
 package forms.sections.destination
 
-import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
+import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,7 +28,7 @@ class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours w
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
   val maxLength = 16
-  val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacters"
+  val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
   val form = new DestinationWarehouseExciseFormProvider()()
 
@@ -64,29 +64,26 @@ class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours w
 
   "Error Messages" - {
 
-    Seq(DestinationWarehouseExciseMessages.English) foreach { messagesForLanguage =>
+    implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+    s"when output for language code '${English.lang.code}'" - {
 
-      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+      "have the correct required error message" in {
 
-        "have the correct required error message" in {
+        messages(requiredKey) mustBe
+          English.errorRequired
+      }
 
-          messages("destinationWarehouseExcise.error.required") mustBe
-            messagesForLanguage.errorRequired
-        }
+      "have the correct length error message" in {
 
-        "have the correct length error message" in {
+        messages(lengthKey) mustBe
+          English.errorLength
+      }
 
-          messages("destinationWarehouseExcise.error.length") mustBe
-            messagesForLanguage.errorLength
-        }
+      "have the correct invalidCharacters error message" in {
 
-        "have the correct invalidCharacters error message" in {
-
-          messages("destinationWarehouseExcise.error.invalidCharacter") mustBe
-            messagesForLanguage.errorInvalidCharacters
-        }
+        messages(invalidCharactersKey) mustBe
+          English.errorInvalidCharacters
       }
     }
   }

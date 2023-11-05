@@ -26,14 +26,7 @@ class DocumentReferenceFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("documentReference.error.required")
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "value" -> normalisedSpaceText("documentReference.error.required")
         .verifying(maxLength(35, s"documentReference.error.length"))
         .verifying(regexp(XSS_REGEX, s"documentReference.error.xss"))
     )

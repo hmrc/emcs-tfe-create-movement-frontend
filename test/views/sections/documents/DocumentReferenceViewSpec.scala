@@ -17,7 +17,7 @@
 package views.sections.documents
 
 import base.ViewSpecBase
-import fixtures.messages.sections.documents.DocumentReferenceMessages
+import fixtures.messages.sections.documents.DocumentReferenceMessages.English
 import forms.sections.documents.DocumentReferenceFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -31,29 +31,26 @@ import views.{BaseSelectors, ViewBehaviours}
 class DocumentReferenceViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "Dispatch Business Name view" - {
+  "DocumentReferenceView" - {
 
-    Seq(DocumentReferenceMessages.English).foreach { messagesForLanguage =>
+    s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+      val view = app.injector.instanceOf[DocumentReferenceView]
+      val form = app.injector.instanceOf[DocumentReferenceFormProvider].apply()
 
-        val view = app.injector.instanceOf[DocumentReferenceView]
-        val form = app.injector.instanceOf[DocumentReferenceFormProvider].apply()
+      implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.h2(1) -> messagesForLanguage.documentsSection,
-          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.h2(1) -> English.documentsSection,
+        Selectors.hiddenText -> English.hiddenSectionContent,
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.button -> English.saveAndContinue,
+        Selectors.link(1) -> English.returnToDraft
+      ))
     }
   }
 }

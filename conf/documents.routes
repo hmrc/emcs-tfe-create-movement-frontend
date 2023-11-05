@@ -15,11 +15,6 @@ POST       /trader/:ern/draft/:draftId/documents/document-description           
 GET        /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/documents/document-description                        controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/documents/document-description                        controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/documents/document-description/change                 controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-
 GET        /trader/:ern/draft/:draftId/documents/document-reference                          controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/documents/document-reference                          controllers.sections.documents.DocumentReferenceController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/documents/document-reference/change                   controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

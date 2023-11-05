@@ -59,7 +59,7 @@ class DocumentsNavigatorSpec extends SpecBase {
 
       "for the ReferenceAvailablePage" - {
 
-        "to ReferenceAvailablePage when user selects yes" in {
+        "to DocumentReference when user selects yes" in {
 
           val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
 
@@ -67,7 +67,7 @@ class DocumentsNavigatorSpec extends SpecBase {
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
-        "to ReferenceAvailablePage when user selects no" in {
+        "to DocumentDescription when user selects no" in {
 
           val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, false)
 

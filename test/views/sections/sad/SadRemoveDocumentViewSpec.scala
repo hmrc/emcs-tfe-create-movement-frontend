@@ -17,41 +17,41 @@
 package views.sections.sad
 
 import base.ViewSpecBase
-import fixtures.messages.sections.transportUnit.TransportUnitRemoveUnitMessages
-import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
+import fixtures.messages.sections.sad.SadRemoveDocumentMessages
+import forms.sections.sad.SadRemoveDocumentFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.transportUnit.TransportUnitRemoveUnitView
+import views.html.sections.sad.SadRemoveDocumentView
 import views.{BaseSelectors, ViewBehaviours}
 
 class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "TransportUnitRemoveUnitView" - {
+  "SadRemoveDocumentView" - {
 
-    Seq(TransportUnitRemoveUnitMessages.English).foreach { messagesForLanguage =>
+    Seq(SadRemoveDocumentMessages.English).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' " - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitRemoveUnitView]
-        val form = app.injector.instanceOf[TransportUnitRemoveUnitFormProvider].apply()
+        val view = app.injector.instanceOf[SadRemoveDocumentView]
+        val form = app.injector.instanceOf[SadRemoveDocumentFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
-            indexOfTransportUnit = testIndex1
+            indexOfSad = testIndex1
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(1),
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.transportUnitsSection,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.sadSection,
           Selectors.h1 -> messagesForLanguage.heading(1),
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,

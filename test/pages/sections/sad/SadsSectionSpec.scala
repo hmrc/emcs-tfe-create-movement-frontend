@@ -44,7 +44,7 @@ class SadsSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         SadsSection.isCompleted mustBe false
       }
-      "when there is somehow a transport unit with nothing in it" in {
+      "when there is somehow a sad with nothing in it" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(), emptyUserAnswers.copy(data = Json.obj(SadSection.toString -> JsArray(Seq(Json.obj())))))
         SadsSection.isCompleted mustBe false
@@ -63,7 +63,7 @@ class SadsSectionSpec extends SpecBase {
 
   "status" - {
     "must return completed" - {
-      "when all sections are completed and add to list si no more" in {
+      "when all sections are completed and add to list is no more" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers

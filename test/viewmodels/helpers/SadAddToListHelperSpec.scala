@@ -50,7 +50,7 @@ class SadAddToListHelperSpec extends SpecBase {
       }
       "return required rows when all answers filled out" - {
 
-        s"when all answers entered '${msg.lang.code}' and single transport units" in new Setup(
+        s"when all answers entered '${msg.lang.code}' and single Sad" in new Setup(
           emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")) {
           implicit lazy val msgs: Messages = messages(app, msg.lang)
@@ -74,7 +74,7 @@ class SadAddToListHelperSpec extends SpecBase {
           )
         }
 
-        s"when all answers entered '${msg.lang.code}' and multiple transport units" in new Setup(emptyUserAnswers
+        s"when all answers entered '${msg.lang.code}' and multiple Sads" in new Setup(emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
           .set(ImportNumberPage(testIndex2), "wee2")) {
           implicit lazy val msgs: Messages = messages(app, msg.lang)

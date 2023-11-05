@@ -33,7 +33,7 @@ class ImportNumberViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "GiveInformationOtherTransportView" - {
+  "ImportNumberView" - {
 
     Seq(ImportNumberMessages.English).foreach { messagesForLanguage =>
 

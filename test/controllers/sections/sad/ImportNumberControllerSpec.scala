@@ -39,7 +39,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
   val formProvider = new ImportNumberFormProvider()
   val form = formProvider()
 
-  lazy val importNumberRoute = routes.ImportNumberController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val importNumberRoute = routes.ImportNumberController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
   "ImportNumber Controller" - {
 
@@ -55,13 +55,13 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[ImportNumberView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(ImportNumberPage, "answer")
+      val userAnswers = emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +73,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -117,7 +117,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 

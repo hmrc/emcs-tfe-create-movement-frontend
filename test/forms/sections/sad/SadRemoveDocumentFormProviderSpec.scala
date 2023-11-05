@@ -16,24 +16,24 @@
 
 package forms.sections.sad
 
-import forms.behaviours.OptionFieldBehaviours
-import models.sections.sad.SadAddToListModel
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class SadAddToListFormProviderSpec extends OptionFieldBehaviours {
+class SadRemoveDocumentFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "sadAddToList.error.required"
-  val form = new SadAddToListFormProvider()()
+  val requiredKey = "sadRemoveDocument.error.required"
+  val invalidKey = "error.boolean"
+
+  val form = new SadRemoveDocumentFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
 
-    behave like optionsField[SadAddToListModel](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = SadAddToListModel.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(

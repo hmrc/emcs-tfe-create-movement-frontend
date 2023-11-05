@@ -17,47 +17,49 @@
 package views.sections.sad
 
 import base.ViewSpecBase
-import fixtures.messages.sections.sad.ImportNumberMessages
-import forms.sections.sad.ImportNumberFormProvider
-import models.NormalMode
+import fixtures.messages.sections.transportUnit.TransportUnitRemoveUnitMessages
+import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.sad.ImportNumberView
+import views.html.sections.transportUnit.TransportUnitRemoveUnitView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportNumberViewSpec extends ViewSpecBase with ViewBehaviours {
-
+class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "GiveInformationOtherTransportView" - {
+  "TransportUnitRemoveUnitView" - {
 
-    Seq(ImportNumberMessages.English).foreach { messagesForLanguage =>
+    Seq(TransportUnitRemoveUnitMessages.English).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ImportNumberView]
-        val form = app.injector.instanceOf[ImportNumberFormProvider].apply()
+        val view = app.injector.instanceOf[TransportUnitRemoveUnitView]
+        val form = app.injector.instanceOf[TransportUnitRemoveUnitFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testIndex1, NormalMode).toString())
-
-        val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            form = form,
+            indexOfTransportUnit = testIndex1
+          ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          subHeadingCaptionSelector -> messagesForLanguage.subHeading,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.title -> messagesForLanguage.title(1),
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.transportUnitsSection,
+          Selectors.h1 -> messagesForLanguage.heading(1),
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }
   }
 }
+

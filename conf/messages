@@ -883,8 +883,6 @@ sadAddToList.sadCardTitle = SAD document number {0}
 sadAddToList.legend = Do you need to add another Single Administrative Document (SAD) number for this movement?
 sadAddToList.1 = Yes
 sadAddToList.2 = No, this is the only Single Administrative Document (SAD) number for this movement
-sadAddToList.divider = or
-sadAddToList.3 = I will add more Single Administrative Document later
 
 sadRemoveDocument.title = Are you sure you want to remove Single Administrative Document {0}?
 sadRemoveDocument.heading = Are you sure you want to remove Single Administrative Document {0}?

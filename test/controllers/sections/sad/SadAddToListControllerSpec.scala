@@ -17,18 +17,20 @@
 package controllers.sections.sad
 
 import base.SpecBase
-import forms.SadAddToListFormProvider
+import forms.sections.sad.SadAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
+import models.sections.sad.SadAddToListModel
+import models.sections.sad.SadAddToListModel.{NoMoreToCome, Yes}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.SadAddToListPage
+import pages.sections.sad.SadAddToListPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
-import views.html.SadAddToListView
+import views.html.sections.sad.SadAddToListView
 
 import scala.concurrent.Future
 
@@ -39,7 +41,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
   val formProvider = new SadAddToListFormProvider()
   val form = formProvider()
 
-  lazy val sadAddToListRoute = routes.SadAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val sadAddToListRoute = routes.SadAddToListController.onPageLoad(testErn, testDraftId).url
 
   "SadAddToList Controller" - {
 
@@ -55,13 +57,13 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[SadAddToListView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(form), Nil, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(SadAddToListPage, "answer")
+      val userAnswers = emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.values.head)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +75,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(form.fill(SadAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -92,7 +94,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
       running(application) {
         val request =
           FakeRequest(POST, sadAddToListRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", SadAddToListModel.NoMoreToCome.toString))
 
         val result = route(application, request).value
 
@@ -108,16 +110,16 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
       running(application) {
         val request =
           FakeRequest(POST, sadAddToListRoute)
-            .withFormUrlEncodedBody(("value", ""))
+            .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> "invalid value"))
 
         val view = application.injector.instanceOf[SadAddToListView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(boundForm), Nil,  NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -131,7 +133,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -147,7 +149,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

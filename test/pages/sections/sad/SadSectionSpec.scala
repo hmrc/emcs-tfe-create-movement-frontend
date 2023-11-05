@@ -26,7 +26,7 @@ class SadSectionSpec extends SpecBase {
       // TODO: Update when CAM-SAD02 is built
       "when finished" ignore {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadSection.isCompleted mustBe true
+        SadsSection.isCompleted mustBe true
       }
     }
 
@@ -34,7 +34,7 @@ class SadSectionSpec extends SpecBase {
       // TODO: Update when CAM-SAD02 is built
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadSection.isCompleted mustBe false
+        SadsSection.isCompleted mustBe false
       }
     }
   }

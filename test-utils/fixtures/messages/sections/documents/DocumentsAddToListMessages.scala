@@ -17,6 +17,7 @@
 package fixtures.messages.sections.documents
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
 object DocumentsAddToListMessages {
 
@@ -29,11 +30,13 @@ object DocumentsAddToListMessages {
 
     val title: Int => String = idx => titleHelper(heading(idx))
 
-    val documentCardTitle = (idx: Int) => s"Document $idx"
+    def documentCardTitle(idx: Index) = s"Document ${idx.displayIndex}"
+    def removeDocument(idx: Index): String = s"Remove ${documentCardTitle(idx)}"
 
     val h2 = "Do you need to add another document?"
     val no1 = "No, this is the only document"
     val no2 = "No, these are the only documents in this movement"
+    val moreLater = "I will add more documents later"
     val errorRequired = "Select yes if you need to add another document"
   }
 

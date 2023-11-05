@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
-import models.CheckMode
+import models.{CheckMode, Index}
 import models.requests.DataRequest
 import pages.sections.documents.DocumentDescriptionPage
 import play.api.i18n.Messages
@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object DocumentDescriptionSummary  {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DocumentDescriptionPage).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DocumentDescriptionPage(idx)).map {
       answer =>
 
         SummaryListRowViewModel(
@@ -38,7 +38,7 @@ object DocumentDescriptionSummary  {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.DocumentDescriptionController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+              href = routes.DocumentDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = "changeDocumentDescription"
             ).withVisuallyHiddenText(messages("documentDescription.change.hidden"))
           )

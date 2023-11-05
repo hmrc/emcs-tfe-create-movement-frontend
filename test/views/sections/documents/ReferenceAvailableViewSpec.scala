@@ -48,7 +48,7 @@ class ReferenceAvailableViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document =
           Jsoup.parse(view(
             form,
-            NormalMode
+            testOnwardRoute
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

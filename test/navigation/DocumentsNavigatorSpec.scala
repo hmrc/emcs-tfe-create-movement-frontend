@@ -84,31 +84,31 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         "to DocumentReference when user selects yes" in {
 
-          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
+          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage(0), true)
 
-          navigator.nextPage(ReferenceAvailablePage, NormalMode, userAnswers) mustBe
+          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, userAnswers) mustBe
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, NormalMode)
         }
 
         "to DocumentDescription when user selects no" in {
 
-          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, false)
+          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage(0), false)
 
-          navigator.nextPage(ReferenceAvailablePage, NormalMode, userAnswers) mustBe
-            routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, NormalMode)
+          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, userAnswers) mustBe
+            routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
         "to Journey Recovery if no answer is present" in {
 
-          navigator.nextPage(ReferenceAvailablePage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, emptyUserAnswers) mustBe
             controllers.routes.JourneyRecoveryController.onPageLoad()
         }
       }
 
       "must go from DocumentDescriptionPage to DocumentReferencePage" in {
 
-        navigator.nextPage(DocumentDescriptionPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        navigator.nextPage(DocumentDescriptionPage(0), NormalMode, emptyUserAnswers) mustBe
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
       }
 
       "must go from DocumentReferencePage to UnderConstruction" in {

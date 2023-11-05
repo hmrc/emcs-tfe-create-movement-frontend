@@ -25,6 +25,7 @@ case object DocumentsSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "documents"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    //TODO update before PR
     request.userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => Completed
       case _ => // TODO: Update when CAM-DOC06 is built

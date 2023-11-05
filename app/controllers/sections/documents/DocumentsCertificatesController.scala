@@ -19,16 +19,17 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsCertificatesFormProvider
-
-import javax.inject.Inject
 import models.Mode
+import models.requests.DataRequest
 import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentsCertificatesPage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.documents.DocumentsCertificatesView
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 class DocumentsCertificatesController @Inject()(
@@ -46,16 +47,23 @@ class DocumentsCertificatesController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(DocumentsCertificatesPage, formProvider()), mode))
+      renderView(Ok, fillForm(DocumentsCertificatesPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future(renderView(BadRequest, formWithErrors, mode)),
         value =>
           saveAndRedirect(DocumentsCertificatesPage, value, mode)
       )
     }
+
+  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
+    status(view(
+      form = form,
+      onSubmitCall = controllers.sections.documents.routes.DocumentsCertificatesController.onSubmit(request.ern, request.draftId, mode)
+    ))
+
 }

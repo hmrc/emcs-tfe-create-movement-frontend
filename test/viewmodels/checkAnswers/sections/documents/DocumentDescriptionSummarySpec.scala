@@ -44,7 +44,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers {
 
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          DocumentDescriptionSummary.row() mustBe None
+          DocumentDescriptionSummary.row(0) mustBe None
         }
       }
 
@@ -54,9 +54,9 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers {
 
           val answer = "description"
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentDescriptionPage, answer))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentDescriptionPage(0), answer))
 
-          DocumentDescriptionSummary.row() mustBe
+          DocumentDescriptionSummary.row(0) mustBe
             Some(
               SummaryListRowViewModel(
                 key = English.cyaLabel,
@@ -64,7 +64,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = English.change,
-                    href = controllers.sections.documents.routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.documents.routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
                     id = "changeDocumentDescription"
                   ).withVisuallyHiddenText(English.cyaChangeHidden)
                 )

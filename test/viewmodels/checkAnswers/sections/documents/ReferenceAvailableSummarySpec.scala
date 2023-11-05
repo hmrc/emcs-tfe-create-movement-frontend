@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
-import fixtures.messages.sections.documents.ReferenceAvailableMessages
+import fixtures.messages.sections.documents.ReferenceAvailableMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.ReferenceAvailablePage
@@ -34,63 +34,60 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ReferenceAvailableMessages.English).foreach { messagesForLanguage =>
+    s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit lazy val msgs: Messages = messages(app, English.lang)
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      "when there's no answer" - {
 
-        "when there's no answer" - {
+        "must output no row" in {
 
-          "must output no row" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          ReferenceAvailableSummary.row(0) mustBe None
+        }
+      }
 
-            ReferenceAvailableSummary.row(request.userAnswers) mustBe None
-          }
+      "when there's an answer" - {
+
+        "must output the expected row when user answers yes" in {
+
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), true))
+
+          ReferenceAvailableSummary.row(0) mustBe
+            Some(
+              SummaryListRowViewModel(
+                key = English.cyaLabel,
+                value = Value(Text(English.yes)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = English.change,
+                    href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
+                    id = "changeReferenceAvailable"
+                  ).withVisuallyHiddenText(English.cyaChangeHidden)
+                )
+              )
+            )
         }
 
-        "when there's an answer" - {
+        "must output the expected row when user answers no" in {
 
-          "must output the expected row when user answers yes" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), false))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage, true))
-
-            ReferenceAvailableSummary.row(request.userAnswers) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.yes)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeReferenceAvailable"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+          ReferenceAvailableSummary.row(0) mustBe
+            Some(
+              SummaryListRowViewModel(
+                key = English.cyaLabel,
+                value = Value(Text(English.no)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = English.change,
+                    href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
+                    id = "changeReferenceAvailable"
+                  ).withVisuallyHiddenText(English.cyaChangeHidden)
                 )
               )
-          }
-
-          "must output the expected row when user answers no" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage, false))
-
-            ReferenceAvailableSummary.row(request.userAnswers) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.no)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeReferenceAvailable"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              )
-          }
+            )
         }
       }
     }

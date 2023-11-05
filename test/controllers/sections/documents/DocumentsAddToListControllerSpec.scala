@@ -23,6 +23,7 @@ import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
+import pages.sections.documents.{DocumentDescriptionPage, DocumentsCertificatesPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -58,7 +59,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
     "GET onPageLoad" - {
 
-      "must return OK and the correct view for a GET" in new Setup() {
+      "must return OK and the correct view for a GET" in new Setup(Some(emptyUserAnswers)) {
 
         running(application) {
 

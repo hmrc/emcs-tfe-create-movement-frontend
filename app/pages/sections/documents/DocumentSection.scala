@@ -17,11 +17,17 @@
 package pages.sections.documents
 
 import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.requests.DataRequest
+import pages.sections.Section
+import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{NotStarted, TaskListStatus}
 
-case class DocumentDescriptionPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "documentDescription"
-  override val path: JsPath = DocumentSection(idx).path \ toString
+case class DocumentSection(idx: Index) extends Section[JsObject] {
+
+  override val path: JsPath = DocumentsSection.path \ idx.position
+
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    // TODO: Update when CAM-DOC06 is built
+    NotStarted
+  }
 }
-

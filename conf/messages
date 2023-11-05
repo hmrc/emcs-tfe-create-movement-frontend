@@ -912,8 +912,10 @@ documentsAddToList.documentCardTitle = Document {0}
 
 documentsAddToList.h2 = Do you need to add another document?
 documentsAddToList.1 = Yes
-documentsAddToList.2 = No, this is the only document
-documentsAddToList.3 = No, these are the only documents in this movement
+documentsAddToList.2.singular = No, this is the only document
+documentsAddToList.2.plural = No, these are the only documents in this movement
+documentsAddToList.divider = or
+documentsAddToList.3 = I will add more documents later
 documentsAddToList.error.required = Select yes if you need to add another document
 
 documentReference.title = Enter a reference for this document

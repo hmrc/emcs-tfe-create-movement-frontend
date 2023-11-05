@@ -18,7 +18,7 @@ package navigation
 
 import controllers.sections.documents.routes
 import models.sections.documents.DocumentType
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
 import play.api.mvc.Call
@@ -44,9 +44,9 @@ case DocumentTypePage =>
           case _ =>
             controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
-    case ReferenceAvailablePage =>
-      referenceAvailableRouting()
-    case DocumentDescriptionPage =>
+    case ReferenceAvailablePage(idx) =>
+      referenceAvailableRouting(idx)
+    case DocumentDescriptionPage(_) =>
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case DocumentReferencePage =>
       //TODO update with next page when finished
@@ -61,15 +61,14 @@ case DocumentTypePage =>
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage =>
-      (answers) =>
+      (answers: UserAnswers) =>
         answers.get(DocumentsCertificatesPage) match {
           case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
           case _ => //TODO redirect to CAM-DOC02 or CAM-DOC06 when built
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
     case _ =>
-      // TODO: update to Add to List CAM-DOC06 page when built as only one option goes to CYA Page
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
@@ -86,12 +85,12 @@ case DocumentTypePage =>
       reviewRouteMap(page)(userAnswers)
   }
 
-  private def referenceAvailableRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
-    userAnswers.get(ReferenceAvailablePage) match {
+  private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(ReferenceAvailablePage(idx)) match {
       case Some(true) =>
         routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
       case Some(false) =>
-        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }

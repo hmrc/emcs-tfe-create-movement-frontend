@@ -48,7 +48,7 @@ class DocumentsCertificatesViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document =
           Jsoup.parse(view(
             form = form,
-            mode = NormalMode
+            testOnwardRoute
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

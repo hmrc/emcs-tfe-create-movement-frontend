@@ -38,6 +38,7 @@ class DocumentsIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
+      //TODO update with logic based on DocumentsCount
       request.userAnswers.get(DocumentsCertificatesPage) match {
         case Some(false) => Redirect(controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(ern, draftId))
         case _ =>
@@ -49,5 +50,4 @@ class DocumentsIndexController @Inject()(
           }
       }
     }
-
 }

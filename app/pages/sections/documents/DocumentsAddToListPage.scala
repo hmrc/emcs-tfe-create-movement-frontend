@@ -16,11 +16,12 @@
 
 package pages.sections.documents
 
+import models.Index
 import models.sections.documents.DocumentsAddToList
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DocumentsAddToListPage extends QuestionPage[DocumentsAddToList] {
   override val toString: String = "documentsAddToList"
-  override val path: JsPath = JsPath \ toString
+  override val path: JsPath = DocumentsSection.path \ toString
 }

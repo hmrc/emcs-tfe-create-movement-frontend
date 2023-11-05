@@ -32,7 +32,7 @@
 
 @(form: Form[_], onSubmitCall: Call, documents: Seq[SummaryList])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", 1))) {
+@layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", documents.length))) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
@@ -41,7 +41,7 @@
         }
 
         @h2(messages("documents.subHeading"), "govuk-caption-xl")
-        @h1(pluralSingular("documentsAddToList.heading", 1), classes = "govuk-heading-l")
+        @h1(pluralSingular("documentsAddToList.heading", documents.length), classes = "govuk-heading-l")
 
         @documents.map { document =>
             @govukSummaryList(document)
@@ -51,7 +51,7 @@
             RadiosViewModel(
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("documentsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
-                items  = DocumentsAddToList.options
+                items  = DocumentsAddToList.options(documents.length)
             )
         )
 

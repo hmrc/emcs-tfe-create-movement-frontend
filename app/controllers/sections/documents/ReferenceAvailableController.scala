@@ -19,11 +19,13 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.ReferenceAvailableFormProvider
-import models.Mode
+import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.ReferenceAvailablePage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.documents.ReferenceAvailableView
 
@@ -43,18 +45,24 @@ class ReferenceAvailableController @Inject()(
                                                  view: ReferenceAvailableView
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(ReferenceAvailablePage, formProvider()), mode))
+      renderView(Ok, fillForm(ReferenceAvailablePage(idx), formProvider()), idx, mode)
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future(renderView(BadRequest, formWithErrors, idx, mode)),
         value =>
-          saveAndRedirect(ReferenceAvailablePage, value, mode)
+          saveAndRedirect(ReferenceAvailablePage(idx), value, mode)
       )
     }
+
+  def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Result =
+    status(view(
+      form = form,
+      onSubmitCall = controllers.sections.documents.routes.ReferenceAvailableController.onSubmit(request.ern, request.draftId, idx, mode)
+    ))
 }

@@ -48,8 +48,11 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
     val formProvider = new DocumentDescriptionFormProvider()
     val form = formProvider()
 
-    lazy val onPageLoadRoute = routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val onSubmitCall = routes.DocumentDescriptionController.onSubmit(testErn, testDraftId, NormalMode)
+    lazy val onPageLoadRoute =
+      routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, NormalMode).url
+
+    lazy val onSubmitCall =
+      routes.DocumentDescriptionController.onSubmit(testErn, testDraftId, 0, NormalMode)
 
     val view = application.injector.instanceOf[DocumentDescriptionView]
   }
@@ -76,7 +79,7 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(emptyUserAnswers
-        .set(DocumentDescriptionPage, "answer")
+        .set(DocumentDescriptionPage(0), "answer")
       )) {
 
         running(application) {

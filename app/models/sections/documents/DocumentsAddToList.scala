@@ -16,6 +16,7 @@
 
 package models.sections.documents
 
+import views.ViewUtils.pluralSingular
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -26,30 +27,33 @@ sealed trait DocumentsAddToList
 object DocumentsAddToList extends Enumerable.Implicits {
 
   case object Yes extends WithName("1") with DocumentsAddToList
-  case object MoreToCome extends WithName("2") with DocumentsAddToList
-  case object NoMoreToCome extends WithName("3") with DocumentsAddToList
+  case object No extends WithName("2") with DocumentsAddToList
+  case object MoreLater extends WithName("3") with DocumentsAddToList
 
   val values: Seq[DocumentsAddToList] = Seq(
-    Yes, MoreToCome, NoMoreToCome
+    Yes, No, MoreLater
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = {
+  def options(totalDocuments: Int)(implicit messages: Messages): Seq[RadioItem] = {
 
-    def radioItem(value: DocumentsAddToList, index: Int): RadioItem = RadioItem(
-      content = Text(messages(s"documentsAddToList.${value.toString}")),
+    def radioItem(value: DocumentsAddToList, index: Int, totalDocuments: Option[Int]): RadioItem = RadioItem(
+      content = totalDocuments match {
+        case None => Text(messages(s"documentsAddToList.${value.toString}"))
+        case Some(amount) => Text(pluralSingular(s"documentsAddToList.${value.toString}", amount))
+      },
       value = Some(value.toString),
       id = Some(s"value_$index")
     )
 
     val orDivider = RadioItem(
-      divider = Some(messages(s"transportUnitsAddToList.divider"))
+      divider = Some(messages(s"documentsAddToList.divider"))
     )
 
     Seq(
-      radioItem(Yes, 0),
-      radioItem(MoreToCome, 1),
+      radioItem(Yes, 0, None),
+      radioItem(No, 1, Some(totalDocuments)),
       orDivider,
-      radioItem(NoMoreToCome, 2)
+      radioItem(MoreLater, 2, None)
     )
   }
 

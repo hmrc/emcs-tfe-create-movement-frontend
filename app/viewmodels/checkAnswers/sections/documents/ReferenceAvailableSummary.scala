@@ -16,7 +16,8 @@
 
 package viewmodels.checkAnswers.sections.documents
 
-import models.{CheckMode, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.documents.ReferenceAvailablePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -25,8 +26,8 @@ import viewmodels.implicits._
 
 object ReferenceAvailableSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReferenceAvailablePage).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(ReferenceAvailablePage(idx)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
@@ -35,9 +36,11 @@ object ReferenceAvailableSummary  {
           key     = "referenceAvailable.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
-              id = "changeReferenceAvailable")
-              .withVisuallyHiddenText(messages("referenceAvailable.change.hidden"))
+            ActionItemViewModel(
+              content = "site.change",
+              href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              id = "changeReferenceAvailable"
+            ).withVisuallyHiddenText(messages("referenceAvailable.change.hidden"))
           )
         )
     }

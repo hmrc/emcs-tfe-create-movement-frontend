@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.sections.documents.{DocumentDescriptionPage, DocumentsCertificatesPage}
 import play.api.Application
 import play.api.i18n.Messages
@@ -42,24 +42,40 @@ class DocumentsAddToListHelperSpec extends SpecBase {
 
     "return nothing" - {
 
-      //TODO update when indexing added
-//      s"when no answers specified for '${English.lang.code}'" in new Setup() {
-//        implicit lazy val msgs: Messages = messages(app, English.lang)
-//
-//        helper.allDocumentsSummary() mustBe Nil
-//      }
+      s"when no answers specified for '${English.lang.code}'" in new Setup() {
+
+        implicit lazy val msgs: Messages = messages(app, English.lang)
+
+        helper.allDocumentsSummary() mustBe Nil
+      }
     }
 
     "return required rows when all answers filled out" - {
 
       s"when all answers entered '${English.lang.code}' and single transport units" in new Setup(emptyUserAnswers
-        .set(DocumentsCertificatesPage, true)
-        .set(DocumentDescriptionPage, "description")
+        .set(DocumentDescriptionPage(0), "description")
+        .set(DocumentDescriptionPage(1), "description")
+
       ) {
 
         implicit lazy val msgs: Messages = messages(app, English.lang)
 
         helper.allDocumentsSummary() mustBe Seq(
+          SummaryList(
+            card = Some(Card(
+              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              actions = Some(Actions(items = Seq(
+                ActionItem(
+                  href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+                  content = Text(English.remove),
+                  visuallyHiddenText = Some(English.documentCardTitle(0)),
+                  attributes = Map("id" -> "removeDocuments1")
+                )
+              ))))),
+            rows = Seq(
+              DocumentDescriptionSummary.row(0).get
+            )
+          ),
           SummaryList(
             card = Some(Card(
               title = Some(CardTitle(Text(English.documentCardTitle(1)))),
@@ -68,28 +84,11 @@ class DocumentsAddToListHelperSpec extends SpecBase {
                   href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
                   content = Text(English.remove),
                   visuallyHiddenText = Some(English.documentCardTitle(1)),
-                  attributes = Map("id" -> "removeDocuments1")
-                )
-              ))))),
-            rows = Seq(
-              DocumentsCertificatesSummary.row().get,
-              DocumentDescriptionSummary.row().get
-            )
-          ),
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(2)))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(2)),
                   attributes = Map("id" -> "removeDocuments2")
                 )
               ))))),
             rows = Seq(
-              DocumentsCertificatesSummary.row().get,
-              DocumentDescriptionSummary.row().get
+              DocumentDescriptionSummary.row(1).get
             )
           )
         )

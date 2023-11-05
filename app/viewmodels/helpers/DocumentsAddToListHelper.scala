@@ -21,38 +21,36 @@ import models.requests.DataRequest
 import play.api.i18n.Messages
 import queries.DocumentsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList}
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentsCertificatesSummary}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentsCertificatesSummary, ReferenceAvailableSummary}
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class DocumentsAddToListHelper @Inject()(implicit link: views.html.components.link) {
+class DocumentsAddToListHelper @Inject()() {
 
   def allDocumentsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
-    Seq(summaryList(Index(0)), summaryList(Index(1)))
-//    request.userAnswers.get(DocumentsCount) match {
-//      case Some(value) => (0 until value).map(int => summaryList(Index(int)))
-//      case None => Nil
-//    }
+    request.userAnswers.get(DocumentsCount) match {
+      case Some(value) => (0 until value).map(int => summaryList(Index(int)))
+      case None => Nil
+    }
   }
 
   def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        DocumentsCertificatesSummary.row(),
-        DocumentDescriptionSummary.row()
+        ReferenceAvailableSummary.row(idx),
+        DocumentDescriptionSummary.row(idx)
       ).flatten
     ).copy(card =  Some(Card(
       title = Some(CardTitle(Text(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))),
       actions = Some(Actions( items = Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
-          href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,//TODO UPDATE THIS
+          href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, //TODO update with document remove page when created
           id = s"removeDocuments${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex))
       ))))
     ))
   }
-
 }

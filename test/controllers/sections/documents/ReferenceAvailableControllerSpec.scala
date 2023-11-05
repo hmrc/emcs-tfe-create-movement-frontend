@@ -19,7 +19,7 @@ package controllers.sections.documents
 import base.SpecBase
 import forms.sections.documents.ReferenceAvailableFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.ReferenceAvailablePage
@@ -34,65 +34,74 @@ import scala.concurrent.Future
 
 class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  val formProvider = new ReferenceAvailableFormProvider()
-  val form = formProvider()
+    def onwardRoute = Call("GET", "/foo")
 
-  lazy val referenceAvailableRoute = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, NormalMode).url
+    val application = applicationBuilder(userAnswers = userAnswers)
+      .overrides(
+        bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
+        bind[UserAnswersService].toInstance(mockUserAnswersService)
+      )
+      .build()
+
+    val formProvider = new ReferenceAvailableFormProvider()
+    val form = formProvider()
+
+    lazy val referenceAvailableRoute =
+      routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode).url
+
+    lazy val onSubmitCall =
+      routes.ReferenceAvailableController.onSubmit(testErn, testDraftId, 0, NormalMode)
+
+    val view = application.injector.instanceOf[ReferenceAvailableView]
+  }
+
 
   "ReferenceAvailable Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must return OK and the correct view for a GET" in new Setup() {
 
       running(application) {
+
         val request = FakeRequest(GET, referenceAvailableRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ReferenceAvailableView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form,
+          onSubmitCall = onSubmitCall
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(emptyUserAnswers
+      .set(ReferenceAvailablePage(0), true)
+    )) {
 
       running(application) {
-        val request = FakeRequest(GET, referenceAvailableRoute)
 
-        val view = application.injector.instanceOf[ReferenceAvailableView]
+        val request = FakeRequest(GET, referenceAvailableRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form.fill(true),
+          onSubmitCall = onSubmitCall
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the next page when valid data is submitted" in new Setup() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
       running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+
+        val request = FakeRequest(POST, referenceAvailableRoute)
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -101,31 +110,29 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
       running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
-            .withFormUrlEncodedBody(("value", ""))
+
+        val request = FakeRequest(POST, referenceAvailableRoute)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[ReferenceAvailableView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          onSubmitCall = onSubmitCall
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
 
       running(application) {
+
         val request = FakeRequest(GET, referenceAvailableRoute)
 
         val result = route(application, request).value
@@ -135,14 +142,12 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
 
       running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+
+        val request = FakeRequest(POST, referenceAvailableRoute)
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 

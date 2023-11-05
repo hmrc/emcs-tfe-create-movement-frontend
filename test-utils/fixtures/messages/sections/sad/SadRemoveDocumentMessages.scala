@@ -21,7 +21,7 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object SadRemoveDocumentMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def title(sadNumber: Int): String = titleHelper(s"Are you sure you want to remove Single Administrative Documentt $sadNumber?")
+    def title(sadNumber: Int): String = titleHelper(s"Are you sure you want to remove Single Administrative Document $sadNumber?")
     def heading(sadNumber: Int): String = s"Are you sure you want to remove Single Administrative Document $sadNumber?"
     def errorMessage: String = "Select yes if you want to remove this Single Administrative Document"
   }

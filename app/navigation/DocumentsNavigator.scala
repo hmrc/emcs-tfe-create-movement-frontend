@@ -36,7 +36,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
           case _ =>
             controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
-    case DocumentTypePage =>
+case DocumentTypePage =>
       (answers: UserAnswers) =>
         answers.get(DocumentTypePage) match {
           case Some(DocumentType.OtherCode) =>

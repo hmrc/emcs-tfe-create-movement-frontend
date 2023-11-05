@@ -18,16 +18,23 @@ package fixtures.messages.sections.documents
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object DocumentDescriptionMessages {
+object DocumentsAddToListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Enter a description for this document"
-    val title = titleHelper(heading)
-    val errorRequired = "Enter a description for this document"
-    val errorLength = "Document description must be 350 characters or less"
-    val errorXss = "Document description must not contain < and > and : and ;"
-    val cyaLabel = "Document description"
-    val cyaChangeHidden = "Document description"
+
+    val heading: Int => String = {
+      case 1 => "You have given information for 1 transport unit"
+      case idx => s"You have given information for $idx transport units"
+    }
+
+    val title: Int => String = idx => titleHelper(heading(idx))
+
+    val documentCardTitle = (idx: Int) => s"Document $idx"
+
+    val h2 = "Do you need to add another document?"
+    val no1 = "No, this is the only document"
+    val no2 = "No, these are the only documents in this movement"
+    val errorRequired = "Select yes if you need to add another document"
   }
 
   object English extends ViewMessages with BaseEnglish

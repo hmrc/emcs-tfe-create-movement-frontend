@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object DocumentsCertificatesSummary  {
 
-  def row()(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DocumentsCertificatesPage).map {
       answer =>
 
@@ -36,9 +36,11 @@ object DocumentsCertificatesSummary  {
           key     = "documentsCertificates.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, CheckMode).url,
-              id = "changeDocumentsCertificates")
-              .withVisuallyHiddenText(messages("documentsCertificates.change.hidden"))
+            ActionItemViewModel(
+              content = "site.change",
+              href = controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+              id = "changeDocumentsCertificates"
+            ).withVisuallyHiddenText(messages("documentsCertificates.change.hidden"))
           )
         )
     }

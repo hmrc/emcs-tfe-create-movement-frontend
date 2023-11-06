@@ -17,6 +17,7 @@ site.startAgain = Start again
 site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
 site.opensInNewTab = (opens in new tab)
+site.item = item
 
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
@@ -292,6 +293,7 @@ movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
 importInformation.subHeading = Import information
 documents.subHeading = Documents
+items.subHeading = Item information
 subHeading.hidden = This section is
 
 checkYourAnswersJourneyType.title = Check your answers
@@ -888,3 +890,25 @@ sadRemoveDocument.title = Are you sure you want to remove this Single Administra
 sadRemoveDocument.heading = Are you sure you want to remove this Single Administrative Document (SAD) number?
 sadRemoveDocument.error.required = Select yes if you want to remove this Single Administrative Document
 
+
+#TODO: Waiting on wording confirmation from Lexi
+goodsType.W.singular = Wine
+goodsType.W.plural = Wines
+goodsType.B.singular = Beer
+goodsType.B.plural = Beers
+goodsType.T.singular = Tobacco
+goodsType.T.plural = Tobaccos
+goodsType.I.singular = Intermediate product
+goodsType.I.plural = Intermediate products
+goodsType.S.singular = Spirit
+goodsType.S.plural = Spirits
+goodsType.E.singular = Energy
+goodsType.E.plural = Energies
+
+itemBrandName.title = Do you know the brand name of the {0}?
+itemBrandName.heading = Do you know the brand name of the {0}?
+itemBrandName.label = Brand name
+itemBrandName.error.required = Select yes if you know the brand name
+itemBrandName.error.brandName.required = Enter a brand name between 1 and {0} characters
+itemBrandName.error.brandName.length = Brand name must be {0} characters or less
+itemBrandName.error.brandName.invalid = Brand name must not include < and > and : and ;

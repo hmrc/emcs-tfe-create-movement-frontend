@@ -884,7 +884,7 @@ sadAddToList.legend = Do you need to add another Single Administrative Document 
 sadAddToList.1 = Yes
 sadAddToList.2 = No, there are no other Single Administrative Document (SAD) numbers for this movement
 
-sadRemoveDocument.title = Are you sure you want to remove Single Administrative Document {0}?
-sadRemoveDocument.heading = Are you sure you want to remove Single Administrative Document {0}?
+sadRemoveDocument.title = Are you sure you want to remove this Single Administrative Document (SAD) number?
+sadRemoveDocument.heading = Are you sure you want to remove this Single Administrative Document (SAD) number?
 sadRemoveDocument.error.required = Select yes if you want to remove this Single Administrative Document
 

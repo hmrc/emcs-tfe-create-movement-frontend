@@ -50,9 +50,9 @@ class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title(1),
+          Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.sadSection,
-          Selectors.h1 -> messagesForLanguage.heading(1),
+          Selectors.h1 -> messagesForLanguage.heading,
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,

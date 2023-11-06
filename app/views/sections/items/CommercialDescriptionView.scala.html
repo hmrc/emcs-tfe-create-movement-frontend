@@ -1,0 +1,47 @@
+@import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
+@import viewmodels.LabelSize
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukCharacterCount : GovukCharacterCount,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        saveAndContinue: components.saveAndContinue
+)
+
+@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("commercialDescription.title"))) {
+
+    @formHelper(action = routes.CommercialDescriptionController.onSubmit(request.ern, request.draftId, mode)) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-l")
+
+        @{govukCharacterCount(CharacterCount(
+            id = "value",
+            name = "value",
+            maxLength = Some(350),
+            label = LabelViewModel(Text(messages("commercialDescription.heading"))).asPageHeading(LabelSize.Large),
+            value = form("value").value,
+            errorMessage = form.errors("value") match {
+                case Nil => None
+                case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+            }
+        ))}
+
+        @saveAndContinue()
+
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

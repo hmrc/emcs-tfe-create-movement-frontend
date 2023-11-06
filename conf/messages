@@ -848,5 +848,13 @@ documentDescription.error.xss = Document description must not contain < and > an
 documentDescription.change.hidden = documentDescription
 documentDescription.checkYourAnswersLabel = documentDescription
 
+documentReference.title = Enter a reference for this document
+documentReference.heading = Enter a reference for this document
+documentReference.error.required = Enter a reference for this document
+documentReference.error.length = Document reference must be 35 characters or less
+documentReference.error.xss = Document reference must not contain < and > and : and ;
+documentReference.change.hidden = documentReference
+documentReference.checkYourAnswersLabel = documentReference
+
 documentsCheckAnswers.title = Check your answers
 documentsCheckAnswers.heading = Check your answers

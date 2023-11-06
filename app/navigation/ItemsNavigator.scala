@@ -28,6 +28,7 @@ import javax.inject.Inject
 class ItemsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
 
     case ItemBrandNamePage(_) => (_: UserAnswers) =>
@@ -36,6 +37,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)
+
+    case CommercialDescriptionPage(idx) =>
+      //TODO update when next page is created
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

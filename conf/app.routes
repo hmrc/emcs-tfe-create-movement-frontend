@@ -38,8 +38,3 @@ GET         /trader/:ern/draft/:draftId/confirmation          controllers.Confir
 ->          /                                                 items.Routes
 ->          /                                                 documents.Routes
 ->          /                                                 sad.Routes
-
-GET        /trader/:ern/draft/:draftId/commercialDescription                        controllers.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/commercialDescription                        controllers.CommercialDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/CommercialDescription/change                  controllers.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/CommercialDescription/change                  controllers.CommercialDescriptionController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)

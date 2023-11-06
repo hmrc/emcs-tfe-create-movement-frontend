@@ -17,7 +17,8 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
-import models.{CheckMode, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index, UserAnswers}
 import pages.sections.documents.DocumentReferencePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -27,8 +28,8 @@ import viewmodels.implicits._
 
 object DocumentReferenceSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DocumentReferencePage).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DocumentReferencePage(idx)).map {
       answer =>
 
         SummaryListRowViewModel(
@@ -37,7 +38,7 @@ object DocumentReferenceSummary  {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
+              routes.DocumentReferenceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = "changeDocumentReference"
             ).withVisuallyHiddenText(messages("documentReference.change.hidden"))
           )

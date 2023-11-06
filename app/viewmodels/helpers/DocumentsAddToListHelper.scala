@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import queries.DocumentsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentsCertificatesSummary, ReferenceAvailableSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -40,6 +40,7 @@ class DocumentsAddToListHelper @Inject()() {
     SummaryListViewModel(
       rows = Seq(
         ReferenceAvailableSummary.row(idx),
+        DocumentReferenceSummary.row(idx),
         DocumentDescriptionSummary.row(idx)
       ).flatten
     ).copy(card =  Some(Card(

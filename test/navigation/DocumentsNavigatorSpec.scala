@@ -87,7 +87,7 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage(0), true)
 
           navigator.nextPage(ReferenceAvailablePage(0), NormalMode, userAnswers) mustBe
-            routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
         "to DocumentDescription when user selects no" in {
@@ -113,8 +113,8 @@ class DocumentsNavigatorSpec extends SpecBase {
 
       "must go from DocumentReferencePage to UnderConstruction" in {
 
-        navigator.nextPage(DocumentReferencePage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        navigator.nextPage(DocumentReferencePage(0), NormalMode, emptyUserAnswers) mustBe
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
       }
     }
 

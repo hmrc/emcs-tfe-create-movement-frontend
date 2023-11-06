@@ -16,10 +16,11 @@
 
 package pages.sections.documents
 
+import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DocumentReferencePage extends QuestionPage[String] {
+case class DocumentReferencePage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "documentReference"
-  override val path: JsPath = DocumentsSection.path \ toString
+  override val path: JsPath = DocumentSection(idx).path \ toString
 }

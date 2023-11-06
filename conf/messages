@@ -895,6 +895,14 @@ documentType.checkYourAnswersLabel = What type of document do you want to add?
 documentType.error.required = Select the document you want to add
 documentType.change.hidden = DocumentType
 
+documentReference.title = Enter a reference for this document
+documentReference.heading = Enter a reference for this document
+documentReference.error.required = Enter a reference for this document
+documentReference.error.length = Document reference must be 35 characters or less
+documentReference.error.xss = Document reference must not contain < and > and : and ;
+documentReference.change.hidden = Document reference
+documentReference.checkYourAnswersLabel = Document reference
+
 documentDescription.title = Enter a description for this document
 documentDescription.heading = Enter a description for this document
 documentDescription.error.required = Enter a description for this document
@@ -903,10 +911,10 @@ documentDescription.error.xss = Document description must not contain < and > an
 documentDescription.change.hidden = Document description
 documentDescription.checkYourAnswersLabel = Document description
 
-documentsAddToList.title.singular = You have given information for 1 transport unit
-documentsAddToList.title.plural = You have given information for {0} transport units
-documentsAddToList.heading.singular = You have given information for 1 transport unit
-documentsAddToList.heading.plural = You have given information for {0} transport units
+documentsAddToList.title.singular = You have given information for 1 document
+documentsAddToList.title.plural = You have given information for {0} documents
+documentsAddToList.heading.singular = You have given information for 1 document
+documentsAddToList.heading.plural = You have given information for {0} documents
 
 documentsAddToList.documentCardTitle = Document {0}
 
@@ -917,14 +925,6 @@ documentsAddToList.2.plural = No, these are the only documents in this movement
 documentsAddToList.divider = or
 documentsAddToList.3 = I will add more documents later
 documentsAddToList.error.required = Select yes if you need to add another document
-
-documentReference.title = Enter a reference for this document
-documentReference.heading = Enter a reference for this document
-documentReference.error.required = Enter a reference for this document
-documentReference.error.length = Document reference must be 35 characters or less
-documentReference.error.xss = Document reference must not contain < and > and : and ;
-documentReference.change.hidden = documentReference
-documentReference.checkYourAnswersLabel = documentReference
 
 documentsCheckAnswers.title = Check your answers
 documentsCheckAnswers.heading = Check your answers

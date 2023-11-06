@@ -24,8 +24,8 @@ object DocumentsAddToListMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: Int => String = {
-      case 1 => "You have given information for 1 transport unit"
-      case idx => s"You have given information for $idx transport units"
+      case 1 => "You have given information for 1 document"
+      case idx => s"You have given information for $idx documents"
     }
 
     val title: Int => String = idx => titleHelper(heading(idx))

@@ -36,7 +36,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
           case _ =>
             controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
-case DocumentTypePage =>
+    case DocumentTypePage =>
       (answers: UserAnswers) =>
         answers.get(DocumentTypePage) match {
           case Some(DocumentType.OtherCode) =>
@@ -47,11 +47,10 @@ case DocumentTypePage =>
     case ReferenceAvailablePage(idx) =>
       referenceAvailableRouting(idx)
     case DocumentDescriptionPage(_) =>
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case DocumentReferencePage =>
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+    case DocumentReferencePage(_) =>
       //TODO update with next page when finished
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DocumentsCheckAnswersPage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
@@ -85,10 +84,17 @@ case DocumentTypePage =>
       reviewRouteMap(page)(userAnswers)
   }
 
+  private def documentsCertificatesRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(DocumentsCertificatesPage) match {
+      case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      case _ => //TODO redirect to CAM-DOC02 when page built
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    }
+
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(ReferenceAvailablePage(idx)) match {
       case Some(true) =>
-        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case Some(false) =>
         routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>

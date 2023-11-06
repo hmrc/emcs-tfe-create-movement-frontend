@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.{Mode, NormalMode}
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTypeSection}
+import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService

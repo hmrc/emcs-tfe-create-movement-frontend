@@ -37,21 +37,23 @@ class DocumentsNavigatorSpec extends SpecBase {
       }
 
       //TODO update to correct page when finished
-      "must go from DocumentsCertificatesPage to UnderConstructionPage" in {
+      "must go from DocumentsCertificatesPage" - {
 
-        "must go to CheckAnswersPage if no is selected" in {
+        "to CheckAnswersPage if no is selected" in {
           navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
 
-        "must go to CAM-DOC02 page if yes is selected" in {
+        "to CAM-DOC02 page if yes is selected" in {
           navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
 
       "for the DocumentsCheckAnswersPage" - {
+
         "must go to task list page when built" in {
+
           navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }

@@ -29,7 +29,7 @@ object SadAddToListMessages {
 
     val question = "Do you need to add another Single Administrative Document (SAD) number for this movement?"
     val yesOption = "Yes"
-    val noOption = "No, this is the only Single Administrative Document (SAD) number for this movement"
+    val noOption = "No, there are no other Single Administrative Document (SAD) numbers for this movement"
     val errorMessage = "Enter Select yes if you need to add another SAD import number"
     val errorMessageHelper: String => String = s"Error: " + _
 

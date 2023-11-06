@@ -847,3 +847,6 @@ documentDescription.error.length = Document description must be 350 characters o
 documentDescription.error.xss = Document description must not contain < and > and : and ;
 documentDescription.change.hidden = documentDescription
 documentDescription.checkYourAnswersLabel = documentDescription
+
+documentsCheckAnswers.title = Check your answers
+documentsCheckAnswers.heading = Check your answers

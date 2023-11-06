@@ -28,21 +28,37 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage =>
-      //TODO update to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (answers: UserAnswers) => {
+        answers.get(DocumentsCertificatesPage) match {
+          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
+          case _ => //TODO redirect to CAM-DOC02 when page built
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+      }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
     case DocumentDescriptionPage =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case DocumentsCheckAnswersPage =>
+      _ => //TODO redirect CAM02 when built
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case _ =>
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case DocumentsCertificatesPage =>
+      (answers) =>
+        answers.get(DocumentsCertificatesPage) match {
+          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
+          case _ => //TODO redirect to CAM-DOC02 or CAM-DOC06 when built
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
     case _ =>
-      // TODO: update to Documents CYA when built
+      // TODO: update to Add to List CAM-DOC06 page when built as only one option goes to CYA Page
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
 

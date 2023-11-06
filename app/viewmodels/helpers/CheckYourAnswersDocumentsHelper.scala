@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package pages.sections.documents
+package viewmodels.helpers
 
 import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.documents.DocumentsCertificatesSummary
+import viewmodels.govuk.summarylist._
 
-case object DocumentsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "documents"
+import javax.inject.Inject
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(DocumentsCertificatesPage) match {
-      case Some(false) => Completed
-      case _ => // TODO: Update when CAM-DOC06 is built
-        NotStarted
-    }
+class CheckYourAnswersDocumentsHelper @Inject()() {
+
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    SummaryListViewModel(
+      rows = Seq(
+        DocumentsCertificatesSummary.row()
+      ).flatten
+    )
   }
+
 }

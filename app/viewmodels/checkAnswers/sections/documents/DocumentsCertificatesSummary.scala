@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers.sections.documents
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.documents.DocumentsCertificatesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,8 +26,8 @@ import viewmodels.implicits._
 
 object DocumentsCertificatesSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DocumentsCertificatesPage).map {
+  def row()(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
+    request.userAnswers.get(DocumentsCertificatesPage).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
@@ -36,7 +36,7 @@ object DocumentsCertificatesSummary  {
           key     = "documentsCertificates.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
+            ActionItemViewModel("site.change", controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, CheckMode).url,
               id = "changeDocumentsCertificates")
               .withVisuallyHiddenText(messages("documentsCertificates.change.hidden"))
           )

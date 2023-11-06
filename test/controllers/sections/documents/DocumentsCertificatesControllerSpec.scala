@@ -19,9 +19,9 @@ package controllers.sections.documents
 import base.SpecBase
 import forms.sections.documents.DocumentsCertificatesFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
+import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import navigation.{DocumentsNavigator, Navigator}
 import pages.sections.documents.DocumentsCertificatesPage
 import play.api.inject.bind
 import play.api.mvc.Call

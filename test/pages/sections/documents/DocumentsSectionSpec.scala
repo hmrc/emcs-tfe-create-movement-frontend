@@ -19,6 +19,7 @@ package pages.sections.documents
 import base.SpecBase
 import models.requests.DataRequest
 import play.api.test.FakeRequest
+import viewmodels.taskList.Completed
 
 class DocumentsSectionSpec extends SpecBase {
   "isCompleted" - {
@@ -35,6 +36,15 @@ class DocumentsSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         DocumentsSection.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+    "mustBe completed" - {
+      "when DocumentCertificatesPage is set to false" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
+        DocumentsSection.status mustBe Completed
       }
     }
   }

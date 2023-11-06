@@ -16,19 +16,8 @@
 
 package pages.sections.documents
 
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import pages.Page
 
-case object DocumentsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "documents"
-
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(DocumentsCertificatesPage) match {
-      case Some(false) => Completed
-      case _ => // TODO: Update when CAM-DOC06 is built
-        NotStarted
-    }
-  }
+object DocumentsCheckAnswersPage extends Page {
+  override val toString: String = "documentsCheckAnswers"
 }

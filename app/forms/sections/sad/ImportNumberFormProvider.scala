@@ -27,7 +27,6 @@ class ImportNumberFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("importNumber.error.required")
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "importNumber.error.invalidCharacter"))
         .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "importNumber.error.alphanumeric"))
         .verifying(maxLength(21, "importNumber.error.length"))
     )

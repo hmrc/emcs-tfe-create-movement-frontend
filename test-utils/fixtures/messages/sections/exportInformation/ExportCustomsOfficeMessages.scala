@@ -27,15 +27,15 @@ object ExportCustomsOfficeMessages {
 
     def hint(euExport: Boolean): String =
       if(euExport) {
-        "This code is also known as a customs office reference number. Search for EU customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001. Search for EU customs office codes here (opens in new tab)."
       } else {
-        "This code is also known as a customs office reference number. Search for UK customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001. Search for UK customs office codes here (opens in new tab)."
       }
 
     val errorRequired = "Enter the customs office code"
     val errorLength = (int: Int) => s"Customs office code must be $int characters"
     val errorInvalidCharacter = "Customs office code must not contain < and > and : and ;"
-    val errorCustomOfficeRegex = "Customs office code must start with 2 capital letters representing the member state, followed by 6 mixed numbers and letters. For example IT0830AB"
+    val errorCustomOfficeRegex = "Customs office code must start with 2 capital letters followed by 6 mixed numbers and letters."
 
     val cyaLabel = "Customs office code"
     val cyaChangeHidden = "customs office code"

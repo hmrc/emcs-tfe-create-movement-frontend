@@ -48,7 +48,7 @@ case class DataRequest[A](request: UserRequest[A],
   val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
   val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
 
-  val dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage) match {
+  def dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage) match {
     case Some(dp) if dp == GreatBritain => Some(GreatBritain)
     case Some(dp) if dp == NorthernIreland => Some(NorthernIreland)
     case None if !isNorthernIrelandErn => Some(GreatBritain)

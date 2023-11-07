@@ -28,8 +28,8 @@ trait BaseMessages { _: i18n =>
   val exportInformationSection: String = "Export information"
   val importInformationSection: String = "Import information"
   val destinationSection: String = "Place of destination information"
-  val documentsSection: String = "This section is Documents"
   val hiddenSectionContent: String = "This section is"
+  val documentsSection: String = s"$hiddenSectionContent Documents"
 
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"

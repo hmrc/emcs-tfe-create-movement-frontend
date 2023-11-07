@@ -22,3 +22,6 @@ POST       /trader/:ern/draft/:draftId/documents/document-reference/change      
 
 GET        /trader/:ern/draft/:draftId/documents/check-answers                              controllers.sections.documents.DocumentsCheckAnswersController.onPageLoad(ern: String, draftId: String)
 POST       /trader/:ern/draft/:draftId/documents/check-answers                              controllers.sections.documents.DocumentsCheckAnswersController.onSubmit(ern: String, draftId: String)
+
+GET        /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                        controllers.sections.documents.DocumentsRemoveFromListController.onPageLoad(ern: String, draftId: String, idx: Index)
+POST       /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                        controllers.sections.documents.DocumentsRemoveFromListController.onSubmit(ern: String, draftId: String, idx: Index)

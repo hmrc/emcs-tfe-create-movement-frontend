@@ -858,3 +858,7 @@ documentReference.checkYourAnswersLabel = documentReference
 
 documentsCheckAnswers.title = Check your answers
 documentsCheckAnswers.heading = Check your answers
+
+documentsRemoveFromList.title = Are you sure you want to remove document {0}?
+documentsRemoveFromList.heading = Are you sure you want to remove document {0}?
+documentsRemoveFromList.error.required = Select yes if you want to remove document {0}

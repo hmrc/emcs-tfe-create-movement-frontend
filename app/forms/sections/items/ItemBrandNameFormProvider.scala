@@ -20,7 +20,7 @@ import forms.XSS_REGEX
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.BrandNameModel
+import models.sections.items.ItemBrandNameModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text => playText}
 
@@ -28,7 +28,7 @@ class ItemBrandNameFormProvider @Inject() extends Mappings {
 
   import ItemBrandNameFormProvider._
 
-  def apply(): Form[BrandNameModel] =
+  def apply(): Form[ItemBrandNameModel] =
     Form(
       mapping(
         hasBrandNameField -> boolean(radioRequired),
@@ -37,7 +37,7 @@ class ItemBrandNameFormProvider @Inject() extends Mappings {
             .verifying(maxLength(brandNameMaxLength, brandNameLength))
             .verifying(regexp(XSS_REGEX, brandNameInvalid))
         )
-      )(BrandNameModel.apply)(BrandNameModel.unapply)
+      )(ItemBrandNameModel.apply)(ItemBrandNameModel.unapply)
     )
 }
 

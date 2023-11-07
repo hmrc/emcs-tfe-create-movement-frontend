@@ -16,30 +16,78 @@
 
 package forms.sections.items
 
+import forms.XSS_REGEX
 import forms.behaviours.BooleanFieldBehaviours
+import models.sections.items.ItemBrandNameModel
 import play.api.data.FormError
 
 class ItemBrandNameFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "itemBrandName.error.required"
-  val invalidKey = "error.boolean"
-
   val form = new ItemBrandNameFormProvider()()
 
-  ".value" - {
+  "when binding 'Yes'" - {
 
-    val fieldName = "value"
+    "when brand name contains invalid characters" - {
 
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
+      "must error when binding the form" in {
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+        val boundForm = form.bind(Map(
+          ItemBrandNameFormProvider.hasBrandNameField -> "true",
+          ItemBrandNameFormProvider.brandNameField -> "<"
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          ItemBrandNameFormProvider.brandNameField,
+          ItemBrandNameFormProvider.brandNameInvalid,
+          Seq(XSS_REGEX)
+        ))
+      }
+    }
+
+    "when brand name is too long" - {
+
+      "must error when binding the form" in {
+
+        val boundForm = form.bind(Map(
+          ItemBrandNameFormProvider.hasBrandNameField -> "true",
+          ItemBrandNameFormProvider.brandNameField -> "a" * (ItemBrandNameFormProvider.brandNameMaxLength + 1)
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          ItemBrandNameFormProvider.brandNameField,
+          ItemBrandNameFormProvider.brandNameLength,
+          Seq(ItemBrandNameFormProvider.brandNameMaxLength)
+        ))
+      }
+    }
+
+    "when brand name is valid" - {
+
+      "must bind the form successfully" in {
+
+        val boundForm = form.bind(Map(
+          ItemBrandNameFormProvider.hasBrandNameField -> "true",
+          ItemBrandNameFormProvider.brandNameField -> "brand"
+        ))
+
+        boundForm.errors mustBe Seq()
+
+        boundForm.value mustBe Some(ItemBrandNameModel(hasBrandName = true, Some("brand")))
+      }
+    }
+  }
+
+  "when binding 'No'" - {
+
+    "must bind the form successfully" in {
+
+      val boundForm = form.bind(Map(
+        ItemBrandNameFormProvider.hasBrandNameField -> "false"
+      ))
+
+      boundForm.errors mustBe Seq()
+
+      boundForm.value mustBe Some(ItemBrandNameModel(hasBrandName = false, None))
+    }
   }
 }

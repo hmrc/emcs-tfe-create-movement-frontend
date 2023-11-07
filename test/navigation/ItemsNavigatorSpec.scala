@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.items.ItemBrandNamePage
 
 class ItemsNavigatorSpec extends SpecBase {
   val navigator = new ItemsNavigator
@@ -32,6 +33,14 @@ class ItemsNavigatorSpec extends SpecBase {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
+      "must go from the Item Brand Name page" - {
+
+        //TODO: Update routing as part of future story when next page in flow is built
+        "to the Under Construction Page" in {
+          navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {

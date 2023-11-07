@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
 @import models.GoodsTypeModel.GoodsType
+@import forms.sections.items.ItemBrandNameFormProvider
 
 @this(
         layout: templates.Layout,
@@ -26,7 +27,8 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         h1: components.h1,
-        h2: components.h2
+        h2: components.h2,
+        continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
@@ -46,13 +48,13 @@
                 field = form("hasBrandName"),
                 items = Seq(
                     RadioItem(
-                        id      = Some(form("hasBrandName").id),
+                        id      = Some(form(ItemBrandNameFormProvider.hasBrandNameField).id),
                         value   = Some("true"),
                         content = Text(messages("site.yes")),
                         conditionalHtml = Some(brandName)
                     ),
                     RadioItem(
-                        id      = Some(s"${form("hasBrandName").id}-no"),
+                        id      = Some(s"${form(ItemBrandNameFormProvider.hasBrandNameField).id}-no"),
                         value   = Some("false"),
                         content = Text(messages("site.no"))
                     )
@@ -61,15 +63,13 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueOrExit()
     }
 }
 
 @brandName = {
     @govukInput(InputViewModel.apply(
-        form("brandName"),
+        form(ItemBrandNameFormProvider.brandNameField),
         LabelViewModel(Text(messages("itemBrandName.label")))
     ))
 }

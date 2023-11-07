@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package models.sections.items
 
 import play.api.libs.json.Json
 
-case class BrandNameModel(hasBrandName: Boolean,
-                          brandName: Option[String])
+case class ItemBrandNameModel(hasBrandName: Boolean,
+                              brandName: Option[String])
 
-object BrandNameModel {
-  implicit val format = Json.format[BrandNameModel]
+object ItemBrandNameModel {
+  implicit val format = Json.format[ItemBrandNameModel]
 }

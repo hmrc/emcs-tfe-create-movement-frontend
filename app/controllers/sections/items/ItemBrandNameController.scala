@@ -20,7 +20,8 @@ import controllers.actions._
 import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemBrandNameFormProvider._
 import models.requests.DataRequest
-import models.{BrandNameModel, Index, Mode}
+import models.sections.items.ItemBrandNameModel
+import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemBrandNamePage
 import play.api.data.Form
@@ -71,7 +72,7 @@ class ItemBrandNameController @Inject()(
       )))
     }
 
-  private def handleSubmittedForm(brandNameModel: BrandNameModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
+  private def handleSubmittedForm(brandNameModel: ItemBrandNameModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
 
     if(brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
       renderView(

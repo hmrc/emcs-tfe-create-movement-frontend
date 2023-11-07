@@ -18,11 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.documents.routes
-<<<<<<< HEAD
 import models.sections.documents.DocumentType
-=======
 import models.sections.documents.DocumentsAddToList
->>>>>>> 70381a6f ([ETFE-2479] updated navigator)
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
@@ -48,8 +45,26 @@ class DocumentsNavigatorSpec extends SpecBase {
 
           navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
             controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+
+          val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, false)
+
+          navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
 
+        "when DocumentCount is less than 1" - {
+
+          "to DocumentAddToList page" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(DocumentsCertificatesPage, true)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+
+            navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
+              routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
         "to CAM-DOC02 page if yes is selected" in {
           val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
 
@@ -75,12 +90,15 @@ class DocumentsNavigatorSpec extends SpecBase {
         }
       }
 
-      "for the DocumentsCheckAnswersPage" - {
+        "when DocumentCount is at least 1" - {
 
-        "must go to task list page when built" in {
+          "to DocumentAddToList page" in {
 
-          navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+            val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
+
+            navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
+              routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+          }
         }
       }
 
@@ -147,21 +165,91 @@ class DocumentsNavigatorSpec extends SpecBase {
             routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
+
+      "for the DocumentsCheckAnswersPage" - {
+
+        "must go to task list page when built" in {
+
+          navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {
 
-      "must go to CheckYourAnswersDocumentsController if DocumentsCertificatesPage is no" in {
-        navigator.nextPage(DocumentsCertificatesPage, CheckMode, emptyUserAnswers.set(DocumentsCertificatesPage, false)) mustBe
-          routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+      "must go from DocumentsCertificatesPage" - {
+
+        "to CheckAnswersPage if no is selected" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, false)
+
+          navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
+
+        "when DocumentCount is less than 1" - {
+
+          "to DocumentAddToList page" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(DocumentsCertificatesPage, true)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+
+            navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
+              routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "when DocumentCount is at least 1" - {
+
+          "to DocumentAddToList page" in {
+
+            val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
+
+            navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
+              routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+          }
+        }
       }
 
-      "must go to AddToListPage if DocumentsCertificatesPage is yes" in {
-        //TODO redirect to AddToList CAM-DOC06 Page when built
-        navigator.nextPage(DocumentsCertificatesPage, CheckMode, emptyUserAnswers.set(DocumentsCertificatesPage, true)) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "must go from DocumentsAddToListPage" - {
+
+        "to DocumentReference when user selects Yes" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.Yes)
+
+          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
+            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+        }
+
+        "to DocumentDescription when user selects No" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
+
+          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
+
+        "to DocumentDescription when user selects MoreLater" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
+
+          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
       }
 
+      "must go from any other page" - {
+
+        "to DocumentsIndexController" in {
+
+          case object UnknownPage extends Page
+          navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers.set(DocumentsCertificatesPage, true)) mustBe
+            routes.DocumentsIndexController.onPageLoad(testErn, testDraftId)
+        }
+      }
     }
 
     "in Review mode" - {

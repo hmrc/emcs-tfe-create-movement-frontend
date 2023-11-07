@@ -70,15 +70,10 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case DocumentsCertificatesPage =>
-      (answers: UserAnswers) =>
-        answers.get(DocumentsCertificatesPage) match {
-          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ => //TODO redirect to CAM-DOC02 or CAM-DOC06 when built
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
+    case DocumentsCertificatesPage => documentsCertificatesRouting()
+    case DocumentsAddToListPage => documentsAddToListRouting()
     case _ =>
-      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      (userAnswers: UserAnswers) => routes.DocumentsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
@@ -97,9 +92,12 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private def documentsCertificatesRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DocumentsCertificatesPage) match {
-      case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => //TODO redirect to CAM-DOC02 when page built
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        userAnswers.get(DocumentsCount) match {
+          case Some(0) | None => routes.ReferenceAvailableController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, NormalMode)
+          case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        }
     }
 
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>

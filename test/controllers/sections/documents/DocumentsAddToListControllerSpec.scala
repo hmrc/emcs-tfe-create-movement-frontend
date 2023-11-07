@@ -21,9 +21,9 @@ import forms.sections.documents.DocumentsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentsAddToListPage, DocumentsCertificatesPage, ReferenceAvailablePage}
+import navigation.DocumentsNavigator
+import navigation.FakeNavigators.FakeDocumentsNavigator
+import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -41,7 +41,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
     val application = applicationBuilder(startingUserAnswers)
       .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
       )
       .build()

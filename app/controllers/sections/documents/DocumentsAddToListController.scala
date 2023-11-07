@@ -19,10 +19,10 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsAddToListFormProvider
-import models.{Index, Mode, NormalMode}
 import models.requests.DataRequest
 import models.sections.documents.DocumentsAddToList
-import navigation.Navigator
+import models.{Mode, NormalMode}
+import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentsAddToListPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -38,7 +38,7 @@ class DocumentsAddToListController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        override val userAnswersService: UserAnswersService,
                                        override val userAllowList: UserAllowListAction,
-                                       override val navigator: Navigator,
+                                       override val navigator: DocumentsNavigator,
                                        override val auth: AuthAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,

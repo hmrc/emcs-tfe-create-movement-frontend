@@ -22,7 +22,7 @@ import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.{DocumentDescriptionPage, DocumentsCertificatesPage}
+import pages.sections.documents.DocumentDescriptionPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

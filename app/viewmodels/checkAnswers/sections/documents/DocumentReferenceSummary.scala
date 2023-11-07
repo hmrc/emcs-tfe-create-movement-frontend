@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
 import models.requests.DataRequest
-import models.{CheckMode, Index, UserAnswers}
+import models.{CheckMode, Index}
 import pages.sections.documents.DocumentReferencePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat

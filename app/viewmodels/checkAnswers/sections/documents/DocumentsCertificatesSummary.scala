@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.documents
 
-import models.{CheckMode, Index}
+import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.documents.DocumentsCertificatesPage
 import play.api.i18n.Messages

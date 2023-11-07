@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.DocumentsNavigator
-import pages.sections.documents.{DocumentsCertificatesPage, DocumentsSection}
+import pages.sections.documents.DocumentsCertificatesPage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -38,16 +38,10 @@ class DocumentsIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      //TODO update with logic based on DocumentsCount
       request.userAnswers.get(DocumentsCertificatesPage) match {
-        case Some(false) => Redirect(controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(ern, draftId))
-        case _ =>
-          // TODO: Update when CAM-DOC06 built
-          if (DocumentsSection.isCompleted) {
-            Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
-          } else {
-            Redirect(controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(ern, draftId, NormalMode))
-          }
+        case Some(false) => Redirect(routes.DocumentsCheckAnswersController.onPageLoad(ern, draftId))
+        case Some(true) => Redirect(routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId, NormalMode))
+        case _ => Redirect(routes.DocumentsCertificatesController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 }

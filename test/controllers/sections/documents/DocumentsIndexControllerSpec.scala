@@ -17,55 +17,68 @@
 package controllers.sections.documents
 
 import base.SpecBase
+import models.NormalMode
+import pages.sections.documents.DocumentsCertificatesPage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import models.NormalMode
-import pages.sections.documents.DocumentsCertificatesPage
 
 class DocumentsIndexControllerSpec extends SpecBase {
+
   "DocumentsIndexController" - {
 
-    "when DocumentsSection.isCompleted" - {
-      // TODO: remove ignore when CAM-DOC02 page is built
-      "must redirect to the Add To List controller" ignore {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "when DocumentsCertificate is false" - {
+
+      "must redirect to the DocumentsCheckAnswers page" in {
+
+        val application = applicationBuilder(userAnswers = Some(
+          emptyUserAnswers.set(DocumentsCertificatesPage, false)
+        )).build()
 
         running(application) {
 
-          val request = FakeRequest(GET, controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
+          val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          redirectLocation(result) mustBe Some(routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
         }
       }
     }
 
-    "must redirect to check answers page when Document Certificates page is false" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DocumentsCertificatesPage, false))).build()
+    "when DocumentsCertificate is true" - {
 
-      running(application) {
+      "must redirect to the DocumentReference page" in {
 
-        val request = FakeRequest(GET, controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(
+          emptyUserAnswers.set(DocumentsCertificatesPage, true)
+        )).build()
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        running(application) {
+
+          val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        }
       }
     }
 
-    "must redirect to the documents required controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "when DocumentsCertificate is not answered" - {
 
-      running(application) {
+      "must redirect to the DocumentsCheckAnswers page" in {
 
-        val request = FakeRequest(GET, controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        running(application) {
+
+          val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        }
       }
     }
   }

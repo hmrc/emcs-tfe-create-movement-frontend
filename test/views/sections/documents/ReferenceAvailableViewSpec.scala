@@ -19,7 +19,6 @@ package views.sections.documents
 import base.ViewSpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages
 import forms.sections.documents.ReferenceAvailableFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

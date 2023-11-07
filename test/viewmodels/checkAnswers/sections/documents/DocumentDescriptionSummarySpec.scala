@@ -65,7 +65,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers {
                   ActionItemViewModel(
                     content = English.change,
                     href = controllers.sections.documents.routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                    id = "changeDocumentDescription"
+                    id = "changeDocumentDescription-1"
                   ).withVisuallyHiddenText(English.cyaChangeHidden)
                 )
               )

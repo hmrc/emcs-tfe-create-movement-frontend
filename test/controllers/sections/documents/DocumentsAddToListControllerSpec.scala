@@ -23,7 +23,7 @@ import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.sections.documents.{DocumentDescriptionPage, DocumentsCertificatesPage}
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentsAddToListPage, DocumentsCertificatesPage, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,11 +35,11 @@ import scala.concurrent.Future
 
 class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     def onwardRoute = Call("GET", "/foo")
 
-    val application = applicationBuilder(userAnswers = userAnswers)
+    val application = applicationBuilder(startingUserAnswers)
       .overrides(
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -92,14 +92,89 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
     "POST onSubmit" - {
 
-      "must redirect to the next page when valid data is submitted" in new Setup() {
+      "must redirect to the next page when Yes is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+        MockUserAnswersService.set(startingUserAnswers.value).returns(Future.successful(startingUserAnswers.value))
 
         running(application) {
 
           val request = FakeRequest(POST, controllerRoute)
-            .withFormUrlEncodedBody(("value", DocumentsAddToList.values.head.toString))
+            .withFormUrlEncodedBody(("value", DocumentsAddToList.Yes.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page and wipe data when Yes is submitted with this page already answered" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+          .set(DocumentsAddToListPage, DocumentsAddToList.No)
+      )) {
+
+        val updatedUserAnswers = emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+
+        MockUserAnswersService.set(updatedUserAnswers).returns(Future.successful(updatedUserAnswers))
+
+        running(application) {
+
+          val request = FakeRequest(POST, controllerRoute)
+            .withFormUrlEncodedBody(("value", DocumentsAddToList.Yes.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page when No is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
+
+        val updatedAnswers = startingUserAnswers.value
+          .set(DocumentsAddToListPage, DocumentsAddToList.No)
+
+        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
+
+        running(application) {
+
+          val request = FakeRequest(POST, controllerRoute)
+            .withFormUrlEncodedBody(("value", DocumentsAddToList.No.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page when MoreLater is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
+
+        val updatedAnswers = startingUserAnswers.value
+          .set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
+
+        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
+
+        running(application) {
+
+          val request = FakeRequest(POST, controllerRoute)
+            .withFormUrlEncodedBody(("value", DocumentsAddToList.MoreLater.toString))
 
           val result = route(application, request).value
 

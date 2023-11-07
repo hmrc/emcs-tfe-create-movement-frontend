@@ -39,7 +39,7 @@ object DocumentReferenceSummary  {
             ActionItemViewModel(
               content = "site.change",
               routes.DocumentReferenceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              id = "changeDocumentReference"
+              id = s"changeDocumentReference-${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("documentReference.change.hidden"))
           )
         )

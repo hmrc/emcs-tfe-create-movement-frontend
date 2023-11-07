@@ -57,19 +57,7 @@ class DocumentsAddToListController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors => Future(renderView(BadRequest, formWithErrors, mode)),
-        {
-          case DocumentsAddToList.Yes =>
-            val answersWithDocumentAddToList = request.userAnswers
-            userAnswersService.set(request.userAnswers.remove(DocumentsAddToListPage))
-              .map { _ =>
-                Redirect(navigator.nextPage(
-                  page = DocumentsAddToListPage,
-                  mode = NormalMode,
-                  userAnswers = answersWithDocumentAddToList
-                ))
-              }
-          case value => saveAndRedirect(DocumentsAddToListPage, value, mode)
-        }
+        handleSubmissionRedirect(_, mode)
       )
     }
 
@@ -79,5 +67,20 @@ class DocumentsAddToListController @Inject()(
       onSubmitCall = controllers.sections.documents.routes.DocumentsAddToListController.onSubmit(request.ern, request.draftId, mode),
       documents = addToListHelper.allDocumentsSummary()
     ))
+  }
+
+  private def handleSubmissionRedirect(answer: DocumentsAddToList, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    answer match {
+      case DocumentsAddToList.Yes =>
+        val answersWithDocumentAddToList = request.userAnswers
+        userAnswersService.set(request.userAnswers.remove(DocumentsAddToListPage))
+          .map { _ =>
+            Redirect(navigator.nextPage(
+              page = DocumentsAddToListPage,
+              mode = NormalMode,
+              userAnswers = answersWithDocumentAddToList
+            ))
+          }
+      case value => saveAndRedirect(DocumentsAddToListPage, value, mode)
   }
 }

@@ -17,15 +17,16 @@
 package viewmodels.helpers
 
 import base.SpecBase
+import controllers.sections.documents.routes
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
-import models.{Index, UserAnswers}
-import pages.sections.documents.{DocumentDescriptionPage, DocumentsCertificatesPage}
+import models.UserAnswers
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentsCertificatesSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
 import views.html.components.link
 
 class DocumentsAddToListHelperSpec extends SpecBase {
@@ -53,9 +54,10 @@ class DocumentsAddToListHelperSpec extends SpecBase {
     "return required rows when all answers filled out" - {
 
       s"when all answers entered '${English.lang.code}' and single transport units" in new Setup(emptyUserAnswers
+        .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
-        .set(DocumentDescriptionPage(1), "description")
-
+        .set(ReferenceAvailablePage(1), true)
+        .set(DocumentReferencePage(1), "reference")
       ) {
 
         implicit lazy val msgs: Messages = messages(app, English.lang)
@@ -66,13 +68,14 @@ class DocumentsAddToListHelperSpec extends SpecBase {
               title = Some(CardTitle(Text(English.documentCardTitle(0)))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
-                  href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
                   content = Text(English.remove),
                   visuallyHiddenText = Some(English.documentCardTitle(0)),
-                  attributes = Map("id" -> "removeDocuments1")
+                  attributes = Map("id" -> "removeDocuments-1")
                 )
               ))))),
             rows = Seq(
+              ReferenceAvailableSummary.row(0).get,
               DocumentDescriptionSummary.row(0).get
             )
           ),
@@ -81,14 +84,15 @@ class DocumentsAddToListHelperSpec extends SpecBase {
               title = Some(CardTitle(Text(English.documentCardTitle(1)))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
-                  href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
+                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url,
                   content = Text(English.remove),
                   visuallyHiddenText = Some(English.documentCardTitle(1)),
-                  attributes = Map("id" -> "removeDocuments2")
+                  attributes = Map("id" -> "removeDocuments-2")
                 )
               ))))),
             rows = Seq(
-              DocumentDescriptionSummary.row(1).get
+              ReferenceAvailableSummary.row(1).get,
+              DocumentReferenceSummary.row(1).get
             )
           )
         )

@@ -26,6 +26,8 @@ object DocumentReferenceMessages {
     val errorRequired = "Enter a reference for this document"
     val errorLength = "Document reference must be 35 characters or less"
     val errorXss = "Document reference must not contain < and > and : and ;"
+    val cyaLabel = "Document reference"
+    val cyaChangeHidden = "Document reference"
   }
 
   object English extends ViewMessages with BaseEnglish

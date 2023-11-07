@@ -17,10 +17,11 @@
 package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
-import fixtures.messages.sections.documents.ReferenceAvailableMessages.English
-import models.{CheckMode, Index}
+import controllers.sections.documents.routes
+import fixtures.messages.sections.documents.DocumentReferenceMessages.English
+import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.documents.ReferenceAvailablePage
+import pages.sections.documents.DocumentReferencePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -28,9 +29,9 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ReferenceAvailableSummarySpec extends SpecBase with Matchers {
+class DocumentReferenceSummarySpec extends SpecBase with Matchers {
 
-  "ReferenceAvailableSummary" - {
+  "DocumentReferenceummary" - {
 
     lazy val app = applicationBuilder().build()
 
@@ -44,46 +45,28 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers {
 
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          ReferenceAvailableSummary.row(0) mustBe None
+          DocumentReferenceSummary.row(0) mustBe None
         }
       }
 
       "when there's an answer" - {
 
-        "must output the expected row when user answers yes" in {
+        "must output the expected row" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), true))
+          val answer = "reference"
 
-          ReferenceAvailableSummary.row(0) mustBe
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentReferencePage(0), answer))
+
+          DocumentReferenceSummary.row(0) mustBe
             Some(
               SummaryListRowViewModel(
                 key = English.cyaLabel,
-                value = Value(Text(English.yes)),
+                value = Value(Text(answer)),
                 actions = Seq(
                   ActionItemViewModel(
                     content = English.change,
-                    href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                    id = "changeReferenceAvailable-1"
-                  ).withVisuallyHiddenText(English.cyaChangeHidden)
-                )
-              )
-            )
-        }
-
-        "must output the expected row when user answers no" in {
-
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), false))
-
-          ReferenceAvailableSummary.row(0) mustBe
-            Some(
-              SummaryListRowViewModel(
-                key = English.cyaLabel,
-                value = Value(Text(English.no)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = English.change,
-                    href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                    id = s"changeReferenceAvailable-1"
+                    href = routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
+                    id = "changeDocumentReference-1"
                   ).withVisuallyHiddenText(English.cyaChangeHidden)
                 )
               )

@@ -38,7 +38,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
     val legendQuestion = ".govuk-fieldset__legend.govuk-fieldset__legend--m"
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child($index)"
     val errorField: String = "p.govuk-error-message"
-    val removeItemLink: Int => String = index => s"#removeDocuments$index"
+    val removeItemLink: Int => String = index => s"#removeDocuments-$index"
   }
 
   "DocumentsAddToListView" - {

@@ -16,10 +16,10 @@
 
 package queries
 
-import pages.sections.documents.DocumentsSection
+import pages.sections.documents.DocumentsSectionUnits
 import play.api.libs.json.{JsPath, JsValue}
 
 case object DocumentsCount extends Derivable[List[JsValue], Int] {
   override val derive: List[JsValue] => Int = _.size
-  override val path: JsPath = DocumentsSection.path
+  override val path: JsPath = DocumentsSectionUnits.path
 }

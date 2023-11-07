@@ -20,15 +20,23 @@ import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsArray, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import queries.DocumentsCount
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case class DocumentsSectionIndex(index: Index) extends Section[JsArray] {
+case object DocumentsSectionUnits extends Section[JsArray] {
+  override val toString: String = "units"
+  override val path: JsPath = DocumentsSection.path \ toString
 
-  override val path: JsPath = DocumentsSection.path \ index.position
+  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(DocumentsCount) match {
+    case Some(0) | None => NotStarted
+    case Some(count) =>
+      val statuses: Seq[TaskListStatus] = (0 until count).map(value => DocumentSection(Index(value)).status)
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-DOC06 is built
-    NotStarted
+      if (statuses.forall(_ == Completed)) {
+        Completed
+      } else {
+        InProgress
+      }
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

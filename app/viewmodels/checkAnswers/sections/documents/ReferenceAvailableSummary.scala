@@ -39,7 +39,7 @@ object ReferenceAvailableSummary  {
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              id = "changeReferenceAvailable"
+              id = s"changeReferenceAvailable-${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("referenceAvailable.change.hidden"))
           )
         )

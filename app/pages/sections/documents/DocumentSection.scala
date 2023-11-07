@@ -24,7 +24,7 @@ import viewmodels.taskList.{NotStarted, TaskListStatus}
 
 case class DocumentSection(idx: Index) extends Section[JsObject] {
 
-  override val path: JsPath = DocumentsSection.path \ idx.position
+  override val path: JsPath = DocumentsSectionUnits.path \ idx.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     // TODO: Update when CAM-DOC06 is built

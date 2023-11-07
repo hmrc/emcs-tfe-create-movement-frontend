@@ -19,9 +19,9 @@ package controllers.sections.documents
 import base.SpecBase
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import mocks.services.MockUserAnswersService
-import models.{Index, UserAnswers}
+import models.{Index, NormalMode, UserAnswers}
+import pages.sections.documents.{DocumentReferencePage, ReferenceAvailablePage}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -31,76 +31,80 @@ import scala.concurrent.Future
 
 class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(userAnswersWithDocuments())) {
+  val userAnswersWithDocuments = emptyUserAnswers
+    .set(ReferenceAvailablePage(0), true)
+    .set(DocumentReferencePage(0), "reference")
+
+  class Fixture(userAnswers: Option[UserAnswers] = Some(userAnswersWithDocuments)) {
 
     val application = applicationBuilder(userAnswers)
       .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
       .build()
 
+    val formProvider = new DocumentsRemoveFromListFormProvider()
+
+    def documentsRemoveUnitRoute(idx: Index = 0) =
+      controllers.sections.documents.routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, idx).url
+
     val view = application.injector.instanceOf[DocumentsRemoveFromListView]
   }
-
-  val formProvider = new DocumentsRemoveFromListFormProvider()
-  val form = formProvider(testIndex1)
-
-  //TODO: Dummy documents to simulate documents being added to the array
-  def userAnswersWithDocuments(nDocuments: Int = 1) = {
-    emptyUserAnswers.copy(data = Json.obj("documents" -> (1 to nDocuments).map(_ => Json.obj())))
-  }
-
-  def documentsRemoveUnitRoute(idx: Index = testIndex1) =
-    controllers.sections.documents.routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, idx).url
 
   "DocumentsRemoveFromList Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture() {
+
       running(application) {
 
         val request = FakeRequest(GET, documentsRemoveUnitRoute())
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(formProvider(0), 0)(dataRequest(request), messages(application)).toString
       }
     }
 
     "must redirect to the index controller when index is out of bounds (for GET)" in new Fixture() {
       running(application) {
 
-        val request = FakeRequest(GET, documentsRemoveUnitRoute(testIndex2))
+        val request = FakeRequest(GET, documentsRemoveUnitRoute(1))
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
     "must redirect to Add to List when the user answers POSTs an answer of no" in new Fixture() {
       running(application) {
 
-        val request = FakeRequest(POST, documentsRemoveUnitRoute(testIndex1)).withFormUrlEncodedBody(("value", "false"))
+        val request = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", "false"))
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          //TODO: Update to route to Add To List
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
       }
     }
 
     "must redirect to the index controller when the user answers yes (removing the document)" in new Fixture(
-      Some(userAnswersWithDocuments(nDocuments = 2))
+      Some(userAnswersWithDocuments
+        .set(ReferenceAvailablePage(1), false)
+        .set(DocumentReferencePage(1), "description")
+      )
     ) {
       running(application) {
 
-        MockUserAnswersService.set(userAnswersWithDocuments())
-          .returns(Future.successful(userAnswersWithDocuments()))
+        val answersAfterRemoval = emptyUserAnswers
+          .set(ReferenceAvailablePage(0), false)
+          .set(DocumentReferencePage(0), "description")
+
+        MockUserAnswersService.set(answersAfterRemoval).returns(Future.successful(answersAfterRemoval))
 
         val request = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", "true"))
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -108,13 +112,13 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
       running(application) {
 
         val request =
-          FakeRequest(POST, routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, testIndex2).url)
+          FakeRequest(POST, routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -122,11 +126,11 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
       running(application) {
 
         val request = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", ""))
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = formProvider(0).bind(Map("value" -> ""))
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, 0)(dataRequest(request), messages(application)).toString
       }
     }
 

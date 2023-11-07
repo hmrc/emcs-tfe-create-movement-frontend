@@ -39,7 +39,7 @@ object DocumentDescriptionSummary  {
             ActionItemViewModel(
               content = "site.change",
               href = routes.DocumentDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              id = "changeDocumentDescription"
+              id = s"changeDocumentDescription-${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("documentDescription.change.hidden"))
           )
         )

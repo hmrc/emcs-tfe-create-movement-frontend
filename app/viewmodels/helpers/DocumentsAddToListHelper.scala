@@ -23,6 +23,7 @@ import queries.DocumentsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
+import controllers.sections.documents.routes
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -43,15 +44,15 @@ class DocumentsAddToListHelper @Inject()() {
         DocumentReferenceSummary.row(idx),
         DocumentDescriptionSummary.row(idx)
       ).flatten
-    ).copy(card =  Some(Card(
+    ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))),
       actions = Some(Actions( items = Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
-          href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, //TODO update with document remove page when created
-          id = s"removeDocuments${idx.displayIndex}"
+          href = routes.DocumentsRemoveFromListController.onPageLoad(request.ern, request.draftId, idx).url,
+          id = s"removeDocuments-${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex))
-      ))))
-    ))
+      )))
+    )))
   }
 }

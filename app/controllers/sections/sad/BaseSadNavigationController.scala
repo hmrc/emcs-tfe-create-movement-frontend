@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package pages.sections.sad
+package controllers.sections.sad
 
-import base.SpecBase
+import controllers.BaseNavigationController
+import models.Index
 import models.requests.DataRequest
-import play.api.test.FakeRequest
+import play.api.mvc.Result
+import queries.SadCount
 
-class SadSectionSpec extends SpecBase {
-  "isCompleted" - {
-    "must return true" - {
-      // TODO: Update when CAM-SAD02 is built
-      "when finished" ignore {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadsSection.isCompleted mustBe true
-      }
-    }
+import scala.concurrent.Future
 
-    "must return false" - {
-      // TODO: Update when CAM-SAD02 is built
-      "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadsSection.isCompleted mustBe false
-      }
-    }
+trait BaseSadNavigationController extends BaseNavigationController {
+
+  def validateIndex(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    super.validateIndex(SadCount, index)(
+      onSuccess,
+      Future.successful(Redirect(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId)))
+    )
   }
+
 }

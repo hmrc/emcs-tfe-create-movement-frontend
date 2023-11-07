@@ -16,6 +16,7 @@
 
 package navigation
 
+import controllers.sections.sad.{routes => sadRoutes}
 import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
@@ -39,7 +40,7 @@ class SadNavigatorSpec extends SpecBase {
         //TODO: update to Sad CYA when built
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          sadRoutes.SadAddToListController.onPageLoad(testErn, testDraftId)
       }
     }
 

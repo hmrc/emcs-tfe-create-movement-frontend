@@ -16,24 +16,41 @@
 
 package navigation
 
+import controllers.sections.sad.{routes => sadRoutes}
 import controllers.routes
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import models.sections.sad.SadAddToListModel
+import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.sad._
 import play.api.mvc.Call
+import queries.SadCount
 
 import javax.inject.Inject
 
 class SadNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
+    case ImportNumberPage(idx) => (userAnswers: UserAnswers) =>
+      sadRoutes.SadAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+
+    case SadAddToListPage => (answers: UserAnswers) =>
+      answers.get(SadAddToListPage) match {
+        case Some(SadAddToListModel.Yes) =>
+          sadRoutes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(SadCount).getOrElse(0)), NormalMode)
+        case Some(SadAddToListModel.NoMoreToCome ) =>
+          // TODO Redirect to (CAM-02) when competed
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      // TODO: update to Sad add-to-list when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case _ => (userAnswers: UserAnswers) => sadRoutes.SadAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

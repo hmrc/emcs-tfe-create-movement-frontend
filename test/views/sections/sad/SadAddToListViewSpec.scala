@@ -21,7 +21,6 @@ import fixtures.messages.sections.sad.SadAddToListMessages
 import forms.sections.sad.SadAddToListFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.sad.SadAddToListModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.sad._

@@ -19,7 +19,7 @@ package controllers.sections.sad
 import base.SpecBase
 import forms.sections.sad.ImportNumberFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.FakeNavigators.FakeSadNavigator
 import navigation.SadNavigator
 import pages.sections.sad.ImportNumberPage

@@ -16,7 +16,7 @@
 
 package forms.sections.sad
 
-import forms.{ONLY_ALPHANUMERIC_REGEX, XSS_REGEX}
+import forms.ONLY_ALPHANUMERIC_REGEX
 
 import javax.inject.Inject
 import forms.mappings.Mappings

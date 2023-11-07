@@ -22,7 +22,7 @@ import models.NormalMode
 import models.requests.DataRequest
 import models.sections.sad.SadAddToListModel
 import navigation.SadNavigator
-import pages.sections.sad.{SadAddToListPage, SadSection, SadsSection}
+import pages.sections.sad.{SadAddToListPage, SadsSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.SadCount

@@ -19,9 +19,8 @@ package controllers.sections.sad
 import base.SpecBase
 import forms.sections.sad.SadAddToListFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.sections.sad.SadAddToListModel
-import models.sections.sad.SadAddToListModel.{NoMoreToCome, Yes}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import pages.sections.sad.SadAddToListPage

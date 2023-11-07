@@ -17,8 +17,6 @@
 package forms.sections.sad
 
 import fixtures.messages.sections.sad.ImportNumberMessages
-import forms.XSS_REGEX
-import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError

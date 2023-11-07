@@ -35,10 +35,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: Update to route to next page in flow when built
      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
+
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)
 
-    case CommercialDescriptionPage(idx) =>
+    case CommercialDescriptionPage(_) =>
       //TODO update when next page is created
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 

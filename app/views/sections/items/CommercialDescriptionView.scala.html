@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.LabelSize
+@import models.GoodsTypeModel.GoodsType
 
 @this(
         layout: templates.Layout,
@@ -31,28 +32,26 @@
         p: components.p
 )
 
-@(form: Form[_], goodsType: GoodsType, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("commercialDescription.title"))) {
+@layout(pageTitle = title(form, messages("commercialDescription.title", goodsType.fold(messages("site.item"))(_.code.toString)))) {
 
-    @formHelper(action = controllers.sections.items.routes.CommercialDescriptionController.onSubmit(request.ern, request.draftId, idx, mode)) {
+    @formHelper(action, 'autoComplete -> "off"){
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-l")
-
-        @p(){@messages("commercialDescription.paragraph")}
+        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @{govukCharacterCount(CharacterCount(
             id = "value",
             name = "value",
             maxLength = Some(350),
-            label = LabelViewModel(Text(messages("commercialDescription.heading"))).asPageHeading(LabelSize.Large),
+            label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.fold(messages("site.item"))(_.code.toString)))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(HintViewModel(content = HtmlContent(
-            messages(s"commercialDescription.hint.${goodsType.toString}")
+            messages(s"commercialDescription.hint.${goodsType.fold(messages("site.item"))(_.code.toLowerCase)}")
             ))),
             errorMessage = form.errors("value") match {
                 case Nil => None
@@ -60,7 +59,7 @@
             }
         ))}
 
-       @if(goodsType == "beer") {
+       @if(goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "b") {
         @details("commercialDescription.summary"){
             @p(){
                 @messages("commercialDescription.details.beer1")
@@ -71,12 +70,72 @@
             @p(){
                 @messages("commercialDescription.details.beer3")
             }
-            @p(){
-                @messages("commercialDescription.details.beer4")
-            }
         }
-       } else if (goodsType == "wine") {}
-
+       } else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "w") {
+@details("commercialDescription.summary"){
+@p(){
+@messages("commercialDescription.details.wine1")
+}
+@p(){
+@messages("commercialDescription.details.wine2")
+}
+@p(){
+@messages("commercialDescription.details.wine3")
+}
+@p(){
+@messages("commercialDescription.details.wine4")
+}
+@p(){
+@messages("commercialDescription.details.wine5")
+}
+@p(){
+@messages("commercialDescription.details.wine6")
+}
+}
+} else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "f") {
+@details("commercialDescription.summary"){
+@p(){
+@messages("commercialDescription.details.fermentedBeverage1")
+}
+@p(){
+@messages("commercialDescription.details.fermentedBeverage2")
+}
+@p(){
+@messages("commercialDescription.details.fermentedBeverage3")
+}
+} }else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "t") {
+@details("commercialDescription.summary"){
+@p(){
+@messages("commercialDescription.details.tobacco1")
+}
+@p(){
+@messages("commercialDescription.details.tobacco2")
+}
+@p(){
+@messages("commercialDescription.details.tobacco3")
+}
+@p(){
+@messages("commercialDescription.details.tobacco4")
+}
+} }else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "s") {
+@details("commercialDescription.summary"){
+@p(){
+@messages("commercialDescription.details.ethylAlcohol1")
+}
+@p(){
+@messages("commercialDescription.details.ethylAlcohol2")
+}
+@p(){
+@messages("commercialDescription.details.ethylAlcohol3")
+}
+@p(){
+@messages("commercialDescription.details.ethylAlcohol4")
+}
+@p(){
+@messages("commercialDescription.details.ethylAlcohol5")
+}
+}
+}else {}
 
         @continueOrExit()
 

@@ -16,11 +16,9 @@
 
 package controllers.sections.items
 
-import controllers.BaseNavigationController
 import models.requests.DataRequest
 import controllers.actions._
 import forms.sections.items.CommercialDescriptionFormProvider
-
 import javax.inject.Inject
 import models.{Index, Mode}
 import navigation.ItemsNavigator
@@ -44,23 +42,21 @@ class CommercialDescriptionController @Inject()(
                                        formProvider: CommercialDescriptionFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: CommercialDescriptionView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswerAsync(TransportUnitTypePage(idx)) { goodsType =>
-          renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider(goodsType)), idx, mode, goodsType)
-        }
+          renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        withAnswerAsync(TransportUnitTypePage(idx)) { goodsType =>
-          formProvider(goodsType).bindFromRequest().fold(
-            renderView(BadRequest, _, idx, mode, goodsType),
+        withGoodsType(idx) { goodsType =>
+          formProvider().bindFromRequest().fold(
+            renderView(BadRequest, _, idx, mode),
             saveAndRedirect(CommercialDescriptionPage(idx), _, mode)
           )
         }
@@ -68,15 +64,12 @@ class CommercialDescriptionController @Inject()(
     }
 
 
-  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode, goodsType: GoodsType)
-                        (implicit request: DataRequest[_]): Future[Result] = {
-    Future.successful(
-      status(view(
+  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    withGoodsType(idx) { goodsType =>
+      Future.successful(status(view(
         form = form,
-        mode = mode,
-        idx = idx,
+        action = routes.CommercialDescriptionController.onSubmit(request.ern, request.draftId, idx, mode),
         goodsType = goodsType
-      ))
-    )
-  }
+      )))
+    }
 }

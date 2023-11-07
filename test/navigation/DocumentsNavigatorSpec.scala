@@ -18,7 +18,11 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.documents.routes
+<<<<<<< HEAD
 import models.sections.documents.DocumentType
+=======
+import models.sections.documents.DocumentsAddToList
+>>>>>>> 70381a6f ([ETFE-2479] updated navigator)
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
@@ -115,6 +119,33 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         navigator.nextPage(DocumentReferencePage(0), NormalMode, emptyUserAnswers) mustBe
           routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+      }
+
+      "must go from DocumentsAddToListPage" - {
+
+        "to DocumentReference when user selects Yes" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.Yes)
+
+          navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
+            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+        }
+
+        "to DocumentDescription when user selects No" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
+
+          navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
+
+        "to DocumentDescription when user selects MoreLater" in {
+
+          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
+
+          navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
+            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+        }
       }
     }
 

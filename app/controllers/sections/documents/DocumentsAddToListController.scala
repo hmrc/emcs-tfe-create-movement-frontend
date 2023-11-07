@@ -19,8 +19,9 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsAddToListFormProvider
-import models.{Index, Mode}
+import models.{Index, Mode, NormalMode}
 import models.requests.DataRequest
+import models.sections.documents.DocumentsAddToList
 import navigation.Navigator
 import pages.sections.documents.DocumentsAddToListPage
 import play.api.data.Form
@@ -49,15 +50,26 @@ class DocumentsAddToListController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, formProvider(), mode)
+      renderView(Ok, fillForm(DocumentsAddToListPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, mode)),
-          saveAndRedirect(DocumentsAddToListPage, _, mode)
+        formWithErrors => Future(renderView(BadRequest, formWithErrors, mode)),
+        {
+          case DocumentsAddToList.Yes =>
+            val answersWithDocumentAddToList = request.userAnswers
+            userAnswersService.set(request.userAnswers.remove(DocumentsAddToListPage))
+              .map { _ =>
+                Redirect(navigator.nextPage(
+                  page = DocumentsAddToListPage,
+                  mode = NormalMode,
+                  userAnswers = answersWithDocumentAddToList
+                ))
+              }
+          case value => saveAndRedirect(DocumentsAddToListPage, value, mode)
+        }
       )
     }
 

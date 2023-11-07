@@ -17,17 +17,23 @@
 package navigation
 
 import controllers.sections.documents.routes
+<<<<<<< HEAD
 import models.sections.documents.DocumentType
+=======
+import models.sections.documents.DocumentsAddToList
+>>>>>>> 70381a6f ([ETFE-2479] updated navigator)
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
 import play.api.mvc.Call
+import queries.DocumentsCount
 
 import javax.inject.Inject
 
 class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+<<<<<<< HEAD
     case DocumentsCertificatesPage =>
       (answers: UserAnswers) =>
         answers.get(DocumentsCertificatesPage) match {
@@ -46,11 +52,16 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
         }
     case ReferenceAvailablePage(idx) =>
       referenceAvailableRouting(idx)
+=======
+    case DocumentsCertificatesPage => documentsCertificatesRouting()
+    case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
+>>>>>>> 70381a6f ([ETFE-2479] updated navigator)
     case DocumentDescriptionPage(_) =>
       (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DocumentReferencePage(_) =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+    case DocumentsAddToListPage => documentsAddToListRouting()
     case DocumentsCheckAnswersPage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
@@ -100,4 +111,16 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       case _ =>
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }
+
+  private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+    userAnswers.get(DocumentsAddToListPage) match {
+      case Some(DocumentsAddToList.No | DocumentsAddToList.MoreLater) =>
+        routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      case _ =>
+        val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
+        //TODO update with document type page when it's created
+        routes.ReferenceAvailableController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+
+    }
+  }
 }

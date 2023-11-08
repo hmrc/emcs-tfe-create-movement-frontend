@@ -20,6 +20,7 @@ package fixtures.messages
 trait BaseMessages { _: i18n =>
   def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
   val opensInNewTab: String = "(opens in new tab)"
+  val hiddenSectionContent: String = "This section is"
   val movementInformationSection: String = "Movement information"
   val consigneeInformationSection = "Consignee information"
   val transportArrangerSection: String = "Transport arranger"
@@ -28,9 +29,9 @@ trait BaseMessages { _: i18n =>
   val exportInformationSection: String = "Export information"
   val importInformationSection: String = "Import information"
   val destinationSection: String = "Place of destination information"
-  val hiddenSectionContent: String = "This section is"
-  val documentsSection: String = s"$hiddenSectionContent Documents"
   val sadSection: String = "Single Administrative Document"
+  val documentsSection: String = s"$hiddenSectionContent Documents"
+  val itemSection: String = s"$hiddenSectionContent Documents"
 
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"

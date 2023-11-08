@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.items.ItemBrandNamePage
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -26,6 +27,9 @@ import javax.inject.Inject
 class ItemsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case ItemBrandNamePage(_) => (_: UserAnswers) =>
+      //TODO: Update to route to next page in flow when built
+     testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }

@@ -27,7 +27,7 @@ import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.PreDraftService
+import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.DispatchPlaceView
 
 import javax.inject.Inject
@@ -36,6 +36,7 @@ import scala.concurrent.Future
 class DispatchPlaceController @Inject()(
                                          override val messagesApi: MessagesApi,
                                          val preDraftService: PreDraftService,
+                                         val userAnswersService: UserAnswersService,
                                          val navigator: InformationNavigator,
                                          val auth: AuthAction,
                                          val getPreDraftData: PreDraftDataRetrievalAction,

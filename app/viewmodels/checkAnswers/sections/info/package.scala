@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package viewmodels.checkAnswers.sections
 
-import models.sections.info.DispatchDetailsModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.requests.DataRequest
+import pages.sections.info.InformationCheckAnswersPage
 
-case class DispatchDetailsPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[DispatchDetailsModel] {
-
-  override val toString: String = "dispatchDetails"
-  override val path: JsPath = InfoSection.path \ toString
-
+package object info {
+  def isOnPreDraftFlow(implicit request: DataRequest[_]): Boolean = request.userAnswers.get(InformationCheckAnswersPage) match {
+    case Some(_) => false
+    case None => true
+  }
 }

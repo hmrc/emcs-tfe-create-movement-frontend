@@ -35,13 +35,17 @@ object InformationDestinationTypeSummary {
       SummaryListRowViewModel(
         key = "destinationType.checkYourAnswersLabel",
         value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern = request.ern, CheckMode).url,
-            id = "changeDestinationType")
-            .withVisuallyHiddenText(messages("destinationType.change.hidden"))
-        )
+        actions = if(isOnPreDraftFlow) {
+          Seq(
+            ActionItemViewModel(
+              "site.change",
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern = request.ern, CheckMode).url,
+              id = "changeDestinationType")
+              .withVisuallyHiddenText(messages("destinationType.change.hidden"))
+          )
+        } else {
+          Seq()
+        }
       )
     }
   }

@@ -35,7 +35,7 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
   )
 
   val userAnswers = emptyUserAnswers
-    .set(DeferredMovementPage, true)
+    .set(DeferredMovementPage(), true)
 
 
   ".get" - {

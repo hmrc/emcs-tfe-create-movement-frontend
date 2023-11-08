@@ -35,13 +35,17 @@ object InformationPlaceOfDispatchSummary {
       SummaryListRowViewModel(
         key = "dispatchPlace.checkYourAnswersLabel",
         value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, CheckMode).url,
-            id = "changeDispatchPlace")
-            .withVisuallyHiddenText(messages("dispatchPlace.change.hidden"))
-        )
+        actions = if(isOnPreDraftFlow) {
+          Seq(
+            ActionItemViewModel(
+              "site.change",
+              controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, CheckMode).url,
+              id = "changeDispatchPlace")
+              .withVisuallyHiddenText(messages("dispatchPlace.change.hidden"))
+          )
+        } else {
+          Seq()
+        }
       )
 
     }

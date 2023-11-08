@@ -16,8 +16,10 @@
 
 package pages.sections.info
 
-import pages.Page
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case object InformationCheckAnswersPage extends Page {
+case object InformationCheckAnswersPage extends QuestionPage[Boolean] {
   override val toString: String = "informationCheckAnswers"
+  override val path: JsPath = InfoSection.path \ toString
 }

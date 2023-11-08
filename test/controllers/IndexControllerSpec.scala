@@ -50,7 +50,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testNorthernIrelandErn).url)
+        redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
       }
     }
   }

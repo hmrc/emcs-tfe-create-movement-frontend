@@ -17,8 +17,9 @@
 package controllers.sections.info
 
 import controllers.BaseController
-import controllers.actions.{AuthAction, UserAllowListAction}
+import controllers.actions.{AuthAction, AuthActionHelper, DataRequiredAction, DataRetrievalAction, UserAllowListAction}
 import models.{NormalMode, NorthernIrelandWarehouseKeeper}
+import navigation.InformationNavigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
@@ -26,16 +27,25 @@ import javax.inject.Inject
 
 class InfoIndexController @Inject()(override val messagesApi: MessagesApi,
                                     authAction: AuthAction,
-                                    userAllowed: UserAllowListAction,
-                                    val controllerComponents: MessagesControllerComponents) extends BaseController {
+                                    val userAllowList: UserAllowListAction,
+                                    val getData: DataRetrievalAction,
+                                    val requireData: DataRequiredAction,
+                                    val navigator: InformationNavigator,
+                                    val auth: AuthAction,
+                                    val controllerComponents: MessagesControllerComponents) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowed) { implicit request =>
+  def onPreDraftPageLoad(ern: String): Action[AnyContent] =
+    (authAction(ern) andThen userAllowList) { implicit request =>
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
         Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, NormalMode))
       } else {
         Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, NormalMode))
       }
+    }
+
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { _ =>
+      Redirect(controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(ern, draftId))
     }
 
 }

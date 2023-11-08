@@ -22,5 +22,5 @@ import play.api.libs.json.JsPath
 
 case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "importNumber"
-  override val path: JsPath = SadSection(idx).path \ toString
+  override val path: JsPath = SadSectionItem(idx).path \ toString
 }

@@ -63,7 +63,7 @@ class InformationDeferredMovementSummarySpec extends SpecBase {
 
       "and there is a DeferredMovementPage answer of yes" - {
         "then must return a row with the answer of yes " in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage, true))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), true))
 
           InformationDeferredMovementSummary.row mustBe expectedRow(value = messagesForLanguage.yes)
         }
@@ -71,7 +71,7 @@ class InformationDeferredMovementSummarySpec extends SpecBase {
 
       "and there is a DeferredMovementPage answer of no" - {
         "then must return a row with the answer " in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage, false))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), false))
 
           InformationDeferredMovementSummary.row mustBe expectedRow(value = messagesForLanguage.no)
         }

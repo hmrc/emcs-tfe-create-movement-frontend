@@ -28,9 +28,13 @@ import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.test.FakeRequest
 import views.ViewUtils.titleNoForm
+import views.html.components.taskList
 
 class DraftMovementHelperSpec extends SpecBase {
-  lazy val helper = new DraftMovementHelper()
+  lazy val app = applicationBuilder().build()
+
+  lazy val taskList = app.injector.instanceOf[taskList]
+  lazy val helper = new DraftMovementHelper(taskList)
 
   Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
@@ -88,17 +92,17 @@ class DraftMovementHelperSpec extends SpecBase {
             Seq[String](
               "GBRC123",
               "XIRC123"
-            ).foreach (
+            ).foreach(
               ern =>
-              MovementScenario.values.foreach {
-                movementScenario =>
-                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
+                MovementScenario.values.foreach {
+                  movementScenario =>
+                    implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                val input1 = msgs(s"destinationType.$movementScenario")
+                    val input1 = msgs(s"destinationType.$movementScenario")
 
-                helper.heading mustBe messagesForLanguage.headingImportFor(input1)
-                titleNoForm(helper.heading) mustBe messagesForLanguage.titleImportFor(input1)
-              }
+                    helper.heading mustBe messagesForLanguage.headingImportFor(input1)
+                    titleNoForm(helper.heading) mustBe messagesForLanguage.titleImportFor(input1)
+                }
             )
           }
           "must return the destination type" in {

@@ -45,7 +45,7 @@ class InformationCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),
-          controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(testErn)
+          controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn)
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

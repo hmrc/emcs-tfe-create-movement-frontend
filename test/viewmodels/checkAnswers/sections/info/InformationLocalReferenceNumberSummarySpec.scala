@@ -68,7 +68,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
         "and there is a LocalReferenceNumberPage answer " - {
           "then must return a row with the answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage, testLrn))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
             InformationLocalReferenceNumberSummary.row(deferredMovement = true) mustBe expectedRow(value = testLrn, deferredMovement = true)
           }
@@ -90,7 +90,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
         "and there is a LocalReferenceNumberPage answer " - {
           "then must return a row with the answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage, testLrn))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
             InformationLocalReferenceNumberSummary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
           }

@@ -65,9 +65,9 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
 
       "and there is a InvoiceDetailsPage answer " - {
         "then must return a row with the answer" in {
-          val model = InvoiceDetailsModel("inv reference", LocalDate.of(2023,06,07))
+          val model = InvoiceDetailsModel("inv reference", LocalDate.of(2023,6,7))
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, model))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
 
           InformationInvoiceDateSummary.row mustBe expectedRow(value = "7 June 2023")
         }

@@ -45,7 +45,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is 'Other'" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage, "123")
+              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, Other)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
@@ -59,7 +59,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
             "when the user has not previously entered a days or hours value" in {
               val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage, "123")
+                .set(LocalReferenceNumberPage(), "123")
                 .set(HowMovementTransportedPage, AirTransport)
 
               navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
@@ -68,7 +68,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
             "when the user previously entered a days value" in {
               val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage, "123")
+                .set(LocalReferenceNumberPage(), "123")
                 .set(HowMovementTransportedPage, AirTransport)
                 .set(JourneyTimeDaysPage, 1)
 
@@ -78,7 +78,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
             "when the user previously entered a hours value" in {
               val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage, "123")
+                .set(LocalReferenceNumberPage(), "123")
                 .set(HowMovementTransportedPage, AirTransport)
                 .set(JourneyTimeHoursPage, 1)
 
@@ -93,7 +93,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type Days page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage, "123")
+            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "some information text")
 
@@ -107,7 +107,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage, "123")
+            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, AirTransport)
 
           navigator.nextPage(JourneyTimeDaysPage, NormalMode, userAnswers) mustBe
@@ -120,7 +120,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage, "123")
+            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, AirTransport)
 
           navigator.nextPage(JourneyTimeHoursPage, NormalMode, userAnswers) mustBe
@@ -134,7 +134,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
         // TODO update to confirmation page when created
         "must go to the construction page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage, "123")
+            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "some information text")
 
@@ -152,7 +152,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is 'Other'" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage, "123")
+              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, Other)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
@@ -164,7 +164,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is not `Other`" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage, "123")
+              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe

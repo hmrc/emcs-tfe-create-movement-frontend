@@ -22,5 +22,5 @@ import play.api.libs.json.JsPath
 
 case object SadAddToListPage extends QuestionPage[SadAddToListModel] {
   override val toString: String = "sadAddToList"
-  override val path: JsPath = SadsSection.path  \ toString
+  override val path: JsPath = SadSection.path  \ toString
 }

@@ -26,7 +26,7 @@ class SadIndexControllerSpec extends SpecBase {
 
     "for XIRC traders" - {
       val ern = "XIWK123"
-      "when SadSection.isCompleted" - {
+      "when SadSectionItem.isCompleted" - {
         // TODO: remove ignore when CYA page is built
         "must redirect to the CYA controller" ignore {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

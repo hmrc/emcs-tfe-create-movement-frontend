@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import javax.inject.Inject
 import models.{Index, Mode}
 import navigation.SadNavigator
-import pages.sections.sad.{ImportNumberPage, SadsSection}
+import pages.sections.sad.{ImportNumberPage, SadSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
@@ -65,7 +65,7 @@ class ImportNumberController @Inject()(
     }
 
   override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    validateIndexForJourneyEntry(SadCount, idx, SadsSection.MAX)(
+    validateIndexForJourneyEntry(SadCount, idx, SadSection.MAX)(
       onSuccess = f,
       onFailure = Future.successful(
         Redirect(

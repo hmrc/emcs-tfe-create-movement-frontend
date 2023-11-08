@@ -21,7 +21,7 @@ import forms.sections.sad.SadRemoveDocumentFormProvider
 import models.Index
 import models.requests.DataRequest
 import navigation.SadNavigator
-import pages.sections.sad.SadSection
+import pages.sections.sad.SadSectionItem
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -74,7 +74,7 @@ class SadRemoveDocumentController @Inject()(
   private def handleAnswerRemovalAndRedirect(shouldRemoveSadDocument: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if(shouldRemoveSadDocument) {
-      val cleansedAnswers = request.userAnswers.remove(SadSection(index))
+      val cleansedAnswers = request.userAnswers.remove(SadSectionItem(index))
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, draftId))
       }

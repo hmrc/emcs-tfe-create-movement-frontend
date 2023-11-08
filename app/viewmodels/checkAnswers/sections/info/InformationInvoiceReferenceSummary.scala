@@ -30,7 +30,7 @@ object InformationInvoiceReferenceSummary {
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
 
-    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage)
+    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage())
 
     val value: String = data match {
       case Some(invoiceDetailsPage) => invoiceDetailsPage.reference
@@ -44,7 +44,11 @@ object InformationInvoiceReferenceSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url,
+            if(isOnPreDraftFlow) {
+              controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
+            } else {
+              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url
+            },
             id = "changeInvoiceReference")
             .withVisuallyHiddenText(messages("invoiceDetails.invoice-reference.change.hidden"))
         )

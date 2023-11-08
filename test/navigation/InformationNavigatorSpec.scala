@@ -17,6 +17,7 @@
 package navigation
 
 import base.SpecBase
+import controllers.routes
 import models._
 import pages._
 import pages.sections.info._
@@ -58,7 +59,7 @@ class InformationNavigatorSpec extends SpecBase {
 
         "must go to the LocalReferenceNumber page" in {
 
-          navigator.nextPage(DeferredMovementPage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(DeferredMovementPage(), NormalMode, emptyUserAnswers) mustBe
             controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
@@ -67,7 +68,7 @@ class InformationNavigatorSpec extends SpecBase {
 
         "must go to the Invoice Details page" in {
 
-          navigator.nextPage(LocalReferenceNumberPage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(LocalReferenceNumberPage(), NormalMode, emptyUserAnswers) mustBe
             controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
@@ -76,7 +77,7 @@ class InformationNavigatorSpec extends SpecBase {
 
         "must go to the CAM-INFO06" in {
 
-          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(InvoiceDetailsPage(), NormalMode, emptyUserAnswers) mustBe
             controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, NormalMode)
         }
       }
@@ -85,8 +86,59 @@ class InformationNavigatorSpec extends SpecBase {
 
         "must go to the CAM-INFO07" in {
 
-          navigator.nextPage(DispatchDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testErn)
+          navigator.nextPage(DispatchDetailsPage(), NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(testErn)
+        }
+      }
+
+      "for the CYA page" - {
+        "must go to the tasklist" in {
+          navigator.nextPage(InformationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+        }
+      }
+    }
+
+    "in Check mode" - {
+      "for pages with isOnPreDraftFlow" - {
+        def pagesWithIsOnPreDraftFlow(isOnPreDraftFlow: Boolean): Seq[QuestionPage[_]] = Seq(
+          DeferredMovementPage(isOnPreDraftFlow),
+          DispatchDetailsPage(isOnPreDraftFlow),
+          InvoiceDetailsPage(isOnPreDraftFlow),
+          LocalReferenceNumberPage(isOnPreDraftFlow)
+        )
+
+        "when isOnPreDraftFlow is true" - {
+          "must redirect to pre-draft CYA" in {
+            pagesWithIsOnPreDraftFlow(true).foreach {
+              page =>
+                navigator.nextPage(page, CheckMode, emptyUserAnswers) mustBe
+                  controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(testErn)
+            }
+          }
+        }
+        "when isOnPreDraftFlow is false" - {
+          "must redirect to post-draft CYA" in {
+            pagesWithIsOnPreDraftFlow(false).foreach {
+              page =>
+                navigator.nextPage(page, CheckMode, emptyUserAnswers) mustBe
+                  controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testErn, testDraftId)
+            }
+          }
+        }
+      }
+      "for all other pages" - {
+        "must redirect to pre-draft CYA" in {
+          val allOtherPages: Seq[QuestionPage[_]] = Seq(
+            DestinationTypePage,
+            DispatchPlacePage
+          )
+
+          allOtherPages.foreach {
+            page =>
+              navigator.nextPage(page, CheckMode, emptyUserAnswers) mustBe
+                controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(testErn)
+          }
         }
       }
     }

@@ -67,7 +67,7 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
         "then must return a row with the answer" in {
           val model = InvoiceDetailsModel("inv reference", LocalDate.now)
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, model))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
 
           InformationInvoiceReferenceSummary.row mustBe expectedRow(value = "inv reference")
         }

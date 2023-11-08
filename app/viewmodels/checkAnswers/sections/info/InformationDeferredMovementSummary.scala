@@ -28,7 +28,7 @@ object InformationDeferredMovementSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val value: String = request.userAnswers.get(DeferredMovementPage) match {
+    val value: String = request.userAnswers.get(DeferredMovementPage()) match {
       case Some(answer) => if (answer) "site.yes" else "site.no"
       case None => messages("site.notProvided")
     }
@@ -40,7 +40,11 @@ object InformationDeferredMovementSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(ern = request.ern, CheckMode).url,
+            if(isOnPreDraftFlow) {
+              controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(ern = request.ern, CheckMode).url
+            } else {
+              controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern = request.ern, request.draftId).url
+            },
             id = "changeDeferredMovement")
             .withVisuallyHiddenText(messages("deferredMovement.change.hidden"))
         )

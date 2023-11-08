@@ -58,7 +58,7 @@ class TaskListSpec extends ViewSpecBase {
             val section = doc.select(sectionSelector(1))
 
             "should have the correct heading" in {
-              section.select("h2").text() mustBe "1. Test 1"
+              section.select("h2").text() mustBe "Test 1"
             }
 
             "for the 1st row" - {
@@ -139,7 +139,7 @@ class TaskListSpec extends ViewSpecBase {
             val section = doc.select(sectionSelector(2))
 
             "should have the correct heading" in {
-              section.select("h2").text() mustBe "2. Test 2"
+              section.select("h2").text() mustBe "Test 2"
             }
 
             "for the 1st row" - {

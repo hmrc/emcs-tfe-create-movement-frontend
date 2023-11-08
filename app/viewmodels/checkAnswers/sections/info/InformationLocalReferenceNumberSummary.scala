@@ -28,7 +28,7 @@ object InformationLocalReferenceNumberSummary {
 
   def row(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(LocalReferenceNumberPage).map { lrn =>
+    request.userAnswers.get(LocalReferenceNumberPage()).map { lrn =>
 
       val value: String = lrn
 
@@ -40,7 +40,11 @@ object InformationLocalReferenceNumberSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(ern = request.ern, CheckMode).url,
+            if(isOnPreDraftFlow) {
+              controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(ern = request.ern, CheckMode).url
+            } else {
+              controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId).url
+            },
             id = "changeLocalReferenceNumber")
             .withVisuallyHiddenText(messages(s"localReferenceNumber.$deferredType.change.hidden"))
         )

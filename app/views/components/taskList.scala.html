@@ -24,7 +24,6 @@
   @taskList.sections.zipWithIndex.map { case (section, i) =>
     <li>
       <h2 class="app-task-list__section">
-        <span class="app-task-list__section-number">@(i + 1). </span>
         @messages(section.sectionHeading)
       </h2>
       <ul class="app-task-list__items">

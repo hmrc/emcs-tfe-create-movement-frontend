@@ -28,7 +28,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.PreDraftService
+import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.DestinationTypeView
 
 import javax.inject.Inject
@@ -38,6 +38,7 @@ class DestinationTypeController @Inject()(
                                            override val messagesApi: MessagesApi,
                                            val preDraftService: PreDraftService,
                                            val navigator: InformationNavigator,
+                                           val userAnswersService: UserAnswersService,
                                            val auth: AuthAction,
                                            val getPreDraftData: PreDraftDataRetrievalAction,
                                            val requirePreDraftData: PreDraftDataRequiredAction,

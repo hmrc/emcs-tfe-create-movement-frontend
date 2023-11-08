@@ -69,7 +69,7 @@ class InformationDispatchDateSummarySpec extends SpecBase {
         "then must return a row with the answer" in {
           val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage, model))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
 
           InformationDateOfDispatchSummary.row mustBe expectedRow(value = "7 June 2023")
         }

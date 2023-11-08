@@ -36,11 +36,13 @@
 
     @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
     @p() {
-        @messages("draftMovement.lrn", request.userAnswers.get(LocalReferenceNumberPage).getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.lrn", request.userAnswers.get(LocalReferenceNumberPage()).getOrElse(messages("draftMovement.notProvided")))
     }
     @p() {
         @messages("draftMovement.consignee", request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(messages("draftMovement.notProvided")))
     }
+
+    @helper.rows
 }
 
 @{

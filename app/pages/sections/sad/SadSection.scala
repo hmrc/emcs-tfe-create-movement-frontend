@@ -16,28 +16,26 @@
 
 package pages.sections.sad
 
-import models.Index
 import models.requests.DataRequest
+import models.sections.sad.SadAddToListModel
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import queries.SadCount
+import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
 
 
-case class SadSection(sadIndex: Index) extends Section[JsObject] {
-  override val path: JsPath = SadSectionDocuments.path \ sadIndex.position
+case object SadSection extends Section[JsObject] {
+  override val toString: String = "sad"
+  override val path: JsPath = JsPath \ toString
+  val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    val importNumberAnswer = request.userAnswers.get(ImportNumberPage(sadIndex))
-
-    importNumberAnswer match {
-      case Some(_) =>
-          Completed
-      case _ =>
-        if(Seq(importNumberAnswer).exists(_.nonEmpty)) {
-          InProgress
-        } else {
-          NotStarted
-        }
+    (SadSectionDocuments.status, request.userAnswers.get(SadAddToListPage), request.userAnswers.get(SadCount)) match {
+      case (Completed, _, Some(MAX)) => Completed
+      case (Completed, Some(SadAddToListModel.NoMoreToCome), _) => Completed
+      case (Completed, Some(SadAddToListModel.Yes) | None, _) => InProgress
+      case (InProgress, _, _) => InProgress
+      case (status, _, _) => status
     }
   }
 }

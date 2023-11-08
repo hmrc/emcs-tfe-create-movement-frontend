@@ -35,17 +35,17 @@ class InformationNavigator @Inject()() extends BaseNavigator {
     case DestinationTypePage =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
-    case DeferredMovementPage =>
+    case DeferredMovementPage(_) =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
-    case LocalReferenceNumberPage =>
+    case LocalReferenceNumberPage(_) =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
-    case InvoiceDetailsPage =>
+    case InvoiceDetailsPage(_) =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
 
-    case DispatchDetailsPage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern)
+    case DispatchDetailsPage(_) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
 
     case InformationCheckAnswersPage =>
       (userAnswers: UserAnswers) =>
@@ -56,8 +56,16 @@ class InformationNavigator @Inject()() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case DeferredMovementPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case LocalReferenceNumberPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case InvoiceDetailsPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case DispatchDetailsPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

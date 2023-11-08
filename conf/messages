@@ -154,6 +154,8 @@ draftMovement.notProvided = Not provided
 draftMovement.heading.importFor = Import for {0}
 draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
 draftMovement.heading.dispatchPlaceTo = {0} tax warehouse to {1}
+draftMovement.section.movement = Movement
+draftMovement.section.movement.movementDetails = Movement details
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

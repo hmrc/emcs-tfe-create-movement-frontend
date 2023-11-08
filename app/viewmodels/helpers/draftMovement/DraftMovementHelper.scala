@@ -18,15 +18,21 @@ package viewmodels.helpers.draftMovement
 
 import models._
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario._
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
 import play.api.i18n.Messages
+import play.twirl.api.Html
 import utils.Logging
+import viewmodels.taskList.{TaskList, TaskListSection, TaskListSectionRow}
+import views.html.components.taskList
 
 import javax.inject.Inject
 
-class DraftMovementHelper @Inject()() extends Logging {
+class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
+
+  // disable for "line too long" warnings
+  // noinspection ScalaStyle
   def heading(implicit request: DataRequest[_], messages: Messages): String =
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
       case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
@@ -51,5 +57,23 @@ class DraftMovementHelper @Inject()() extends Logging {
         logger.error(s"[heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
         throw InvalidUserTypeException(s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
     }
+
+  def movementRow(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
+    sectionHeading = messages("draftMovement.section.movement"),
+    rows = Seq(
+      TaskListSectionRow(
+        taskName = messages("draftMovement.section.movement.movementDetails"),
+        id = "movementDetails",
+        link = Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(request.ern, request.draftId).url),
+        status = InfoSection.status
+      )
+    )
+  )
+
+  def rows(implicit request: DataRequest[_], messages: Messages): Html = {
+    taskList(TaskList(sections = Seq(
+      movementRow
+    )))
+  }
 
 }

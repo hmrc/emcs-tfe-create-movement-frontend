@@ -19,7 +19,7 @@ package pages.sections.info
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object LocalReferenceNumberPage extends QuestionPage[String] {
+case class LocalReferenceNumberPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[String] {
   override val toString: String = "localReferenceNumber"
-  override val path: JsPath = JsPath \ "info" \ toString
+  override val path: JsPath = InfoSection.path \ toString
 }

@@ -48,8 +48,7 @@ class SadIndexController @Inject()(
           )
         }
       } else {
-        // TODO: Update to tasklist when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
       }
     }
 

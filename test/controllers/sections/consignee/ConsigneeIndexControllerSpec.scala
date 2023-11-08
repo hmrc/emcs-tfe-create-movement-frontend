@@ -238,9 +238,8 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustBe SEE_OTHER
-          // TODO: Change redirect location when tasklist is built
           redirectLocation(result) mustBe
-            Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+            Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
         }
       }
     }

@@ -131,15 +131,9 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
       "for the CheckYourAnswers page" - {
 
-        // TODO update to confirmation page when created
-        "must go to the construction page" - {
-          val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage(), "123")
-            .set(HowMovementTransportedPage, Other)
-            .set(GiveInformationOtherTransportPage, "some information text")
-
-          navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        "must go to the construction page" in {
+          navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, emptyUserAnswers) mustBe
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

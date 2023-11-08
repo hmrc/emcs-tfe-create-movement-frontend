@@ -48,9 +48,8 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
     case TransportArrangerAddressPage => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    case TransportArrangerCheckAnswersPage => _ =>
-      //TODO: Update to route to next section when built
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case TransportArrangerCheckAnswersPage => (userAnswers: UserAnswers) =>
+      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ => (userAnswers: UserAnswers) =>
         controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)

@@ -51,9 +51,8 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
     case JourneyTimeHoursPage => (userAnswers: UserAnswers) =>
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    case CheckYourAnswersJourneyTypePage =>
-      //TODO update when next page is created
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case CheckYourAnswersJourneyTypePage => (userAnswers: UserAnswers) =>
+      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ => (userAnswers: UserAnswers) =>
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId)

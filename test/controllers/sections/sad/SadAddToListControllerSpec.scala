@@ -19,11 +19,11 @@ package controllers.sections.sad
 import base.SpecBase
 import forms.sections.sad.SadAddToListFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
+import models.{Index, NormalMode}
 import models.sections.sad.SadAddToListModel
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import pages.sections.sad.SadAddToListPage
+import pages.sections.sad.{ImportNumberPage, SadAddToListPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -99,8 +99,26 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-         //TODO when CAM02 is built
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
+      }
+    }
+
+    "must redirect to task list page CAM-02 if Transport units is 99 for POST" in {
+      val fullUserAnswers = (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers.set(ImportNumberPage(Index(int)), ""))
+
+      val userAnswers = fullUserAnswers.set(SadAddToListPage, SadAddToListModel.Yes)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, sadAddToListRoute)
+          .withFormUrlEncodedBody("value" -> SadAddToListModel.Yes.toString)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
       }
     }
 

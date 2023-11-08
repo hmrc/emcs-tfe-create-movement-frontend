@@ -52,8 +52,7 @@ class DestinationIndexController @Inject()(
               Redirect(routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
-              // TODO: Change redirect location when tasklist is built
-              Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+              Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
             }
           }
       }

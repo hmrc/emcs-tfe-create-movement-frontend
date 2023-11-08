@@ -22,7 +22,7 @@ import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType.Tractor
 import models.sections.transportUnit.TransportUnitsAddToListModel
-import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, Yes}
+import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome, Yes}
 import models.{Index, NormalMode}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
@@ -125,8 +125,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
         status(result) mustEqual SEE_OTHER
 
-        // TODO update redirect url for CAM-02
-        redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -171,7 +170,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .returns(
           Future.successful(
             emptyUserAnswers
-              .set(TransportUnitsAddToListPage, Yes)
+              .set(TransportUnitsAddToListPage, NoMoreToCome)
           ))
 
       val application =
@@ -191,7 +190,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -201,7 +200,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .returns(
           Future.successful(
             emptyUserAnswers
-              .set(TransportUnitsAddToListPage, Yes)
+              .set(TransportUnitsAddToListPage, MoreToCome)
           ))
 
       val application =
@@ -221,7 +220,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
       }
     }
 

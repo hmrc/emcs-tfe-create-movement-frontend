@@ -48,8 +48,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
 
     case InformationCheckAnswersPage =>
-      (userAnswers: UserAnswers) =>
-        routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
       (userAnswers: UserAnswers) => controllers.routes.IndexController.onPageLoad(userAnswers.ern)

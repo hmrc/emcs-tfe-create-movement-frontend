@@ -49,9 +49,8 @@ class ConsignorNavigatorSpec extends SpecBase {
       "for the CheckYourAnswersConsignor page" - {
 
         "must go to the tasklist" in {
-          //TODO: update when tasklist is built
           navigator.nextPage(CheckAnswersConsignorPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

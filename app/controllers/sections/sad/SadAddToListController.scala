@@ -57,7 +57,7 @@ class SadAddToListController @Inject()(
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       onMax(
-        ifMax = Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())),
+        ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))),
         ifNotMax = formProvider().bindFromRequest().fold(
           formWithErrors =>
             Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allSadSummary(), NormalMode))), {

@@ -30,7 +30,6 @@ class SadItemSectionSpec extends SpecBase {
     }
 
     "must return false" - {
-      // TODO: Update when CAM-SAD02 is built
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         SadSectionItem(testIndex1).isCompleted mustBe false

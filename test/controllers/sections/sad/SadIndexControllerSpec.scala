@@ -17,6 +17,8 @@
 package controllers.sections.sad
 
 import base.SpecBase
+import models.NormalMode
+import pages.sections.sad.ImportNumberPage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -25,10 +27,24 @@ class SadIndexControllerSpec extends SpecBase {
   "SadIndexController" - {
 
     "for XIRC traders" - {
-      val ern = "XIWK123"
-      "when SadSectionItem.isCompleted" - {
-        // TODO: remove ignore when CYA page is built
-        "must redirect to the CYA controller" ignore {
+      val ern = "XIRC123"
+      "when SadSectionItem.isCompleted is true" - {
+        "must redirect to the CYA controller" in {
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ImportNumberPage(testIndex1), "beans"))).build()
+
+          running(application) {
+
+            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(controllers.sections.sad.routes.SadAddToListController.onPageLoad(ern, testDraftId).url)
+          }
+        }
+      }
+
+      "when SadSectionItem.isCompleted is false" - {
+        "must redirect to the sad import number controller" in {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
           running(application) {
@@ -37,41 +53,28 @@ class SadIndexControllerSpec extends SpecBase {
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+            redirectLocation(result) mustBe Some(controllers.sections.sad.routes.ImportNumberController.onPageLoad(ern, testDraftId, testIndex1, NormalMode).url)
           }
         }
       }
 
-      "must redirect to the sad import number controller" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
-        }
-      }
     }
+      "for any other traders" - {
+        Seq("XIWK123", "GBRC123", "GBWK123").foreach {
+          ern =>
+            s"must redirect to the tasklist for traders starting with ${ern.take(4)}" in {
+              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-    "for any other traders" - {
-      Seq("XIWK123", "GBRC123", "GBWK123").foreach {
-        ern =>
-          s"must redirect to the tasklist for traders starting with ${ern.take(4)}" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+              running(application) {
 
-            running(application) {
+                val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
+                val result = route(application, request).value
 
-              val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-              val result = route(application, request).value
-
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+              }
             }
-          }
+        }
       }
     }
-  }
 }

@@ -103,7 +103,7 @@ class DestinationIndexControllerSpec extends SpecBase {
               val result = route(application, request).value
 
               status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+              redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
             }
           }
       )

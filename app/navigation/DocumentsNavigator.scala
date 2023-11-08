@@ -53,8 +53,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case DocumentsCheckAnswersPage =>
-      _ => //TODO redirect CAM02 when built
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 

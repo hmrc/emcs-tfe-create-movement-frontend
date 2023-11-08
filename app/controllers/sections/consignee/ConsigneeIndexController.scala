@@ -60,8 +60,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
               } else {
                 logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
                   s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
-                // TODO: Change redirect location when tasklist is built
-                Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+                Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
               }
             }
         }

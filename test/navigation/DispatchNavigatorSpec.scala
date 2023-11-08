@@ -89,10 +89,10 @@ class DispatchNavigatorSpec extends SpecBase {
 
       "for the CYA page" - {
 
-        "must go to under construction page" in {
+        "must go to the tasklist page" in {
 
           navigator.nextPage(DispatchCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

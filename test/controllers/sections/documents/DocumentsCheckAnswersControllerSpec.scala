@@ -48,7 +48,6 @@ class DocumentsCheckAnswersControllerSpec extends SpecBase {
     }
 
     "must redirect to task list for POST" in {
-      //TODO update to CAM02 when built
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -59,7 +58,7 @@ class DocumentsCheckAnswersControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
 
       }
     }

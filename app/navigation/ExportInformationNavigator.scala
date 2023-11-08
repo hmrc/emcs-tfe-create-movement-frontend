@@ -31,9 +31,8 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
     case ExportCustomsOfficePage => (userAnswers: UserAnswers) =>
       controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    //TODO: Route to next section when available
-    case ExportInformationCheckAnswersPage => (_: UserAnswers) =>
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ExportInformationCheckAnswersPage => (userAnswers: UserAnswers) =>
+      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)

@@ -30,8 +30,7 @@ class ConsignorNavigator @Inject() extends BaseNavigator {
     case ConsignorAddressPage =>
       (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case CheckAnswersConsignorPage =>
-      //TODO: update to tasklist when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
       (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)

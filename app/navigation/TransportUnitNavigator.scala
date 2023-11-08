@@ -16,6 +16,7 @@
 
 package navigation
 
+import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
@@ -62,8 +63,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
         case Some(TransportUnitsAddToListModel.Yes) =>
           transportUnitRoutes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(TransportUnitsCount).getOrElse(0)), NormalMode)
         case Some(TransportUnitsAddToListModel.NoMoreToCome | TransportUnitsAddToListModel.MoreToCome) =>
-          // TODO Redirect to (CAM02) task list when competed
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          routes.DraftMovementController.onPageLoad(answers.ern, answers.draftId)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }

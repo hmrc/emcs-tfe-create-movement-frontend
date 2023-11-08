@@ -44,8 +44,7 @@ class DispatchNavigator @Inject() extends BaseNavigator {
       controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case DispatchCheckAnswersPage =>
-      //TODO update to route to next page when finished
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
       (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)

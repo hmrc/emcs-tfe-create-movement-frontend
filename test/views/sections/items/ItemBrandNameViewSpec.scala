@@ -20,7 +20,6 @@ import base.ViewSpecBase
 import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.sections.items.ItemBrandNameFormProvider
 import models.GoodsTypeModel.Beer
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

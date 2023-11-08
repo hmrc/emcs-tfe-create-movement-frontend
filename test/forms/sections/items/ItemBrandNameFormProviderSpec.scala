@@ -63,7 +63,7 @@ class ItemBrandNameFormProviderSpec extends BooleanFieldBehaviours {
 
     "when brand name is valid" - {
 
-      "must bind the form successfully" in {
+      "must bind the form successfully when true with value" in {
 
         val boundForm = form.bind(Map(
           ItemBrandNameFormProvider.hasBrandNameField -> "true",
@@ -79,7 +79,19 @@ class ItemBrandNameFormProviderSpec extends BooleanFieldBehaviours {
 
   "when binding 'No'" - {
 
-    "must bind the form successfully" in {
+    "must bind the form successfully when false with value (should be transformed to None on bind)" in {
+
+      val boundForm = form.bind(Map(
+        ItemBrandNameFormProvider.hasBrandNameField -> "false",
+        ItemBrandNameFormProvider.brandNameField -> "brand"
+      ))
+
+      boundForm.errors mustBe Seq()
+
+      boundForm.value mustBe Some(ItemBrandNameModel(hasBrandName = false, None))
+    }
+
+    "must bind the form successfully when false with NO value" in {
 
       val boundForm = form.bind(Map(
         ItemBrandNameFormProvider.hasBrandNameField -> "false"

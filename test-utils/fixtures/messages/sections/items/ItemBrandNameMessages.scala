@@ -26,6 +26,8 @@ object ItemBrandNameMessages {
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
     val brandNameLabel = "Brand name"
+    val cyaLabel = "Brand name"
+    val cyaChangeHidden = "if goods are branded"
 
     val errorRadioRequired = "Select yes if you know the brand name"
     val errorBrandNameRequired = s"Enter a brand name between 1 and ${ItemBrandNameFormProvider.brandNameMaxLength} characters"

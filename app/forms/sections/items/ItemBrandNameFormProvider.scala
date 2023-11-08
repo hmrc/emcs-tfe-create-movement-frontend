@@ -38,6 +38,9 @@ class ItemBrandNameFormProvider @Inject() extends Mappings {
             .verifying(regexp(XSS_REGEX, brandNameInvalid))
         )
       )(ItemBrandNameModel.apply)(ItemBrandNameModel.unapply)
+        .transform[ItemBrandNameModel](
+          model => if(!model.hasBrandName) model.copy(brandName = None) else model, identity
+        )
     )
 }
 

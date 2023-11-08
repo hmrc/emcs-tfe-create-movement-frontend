@@ -24,7 +24,7 @@ import queries.SadCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object SadSectionDocuments extends Section[JsArray] {
-  override val toString: String = "units"
+  override val toString: String = "documents"
   override val path: JsPath = SadsSection.path \ toString
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(SadCount) match {

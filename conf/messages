@@ -868,7 +868,7 @@ sad.subHeading = Single Administrative Document
 
 importNumber.title = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
 importNumber.heading = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
-importNumber.checkYourAnswersLabel = Import Number
+importNumber.checkYourAnswersLabel = Number
 importNumber.error.required = Enter the number of the Single Administrative Document
 importNumber.error.length = The number must be 21 characters or less
 importNumber.hint = For example, 555 A12345B 14092016. You will have the chance to add more SAD numbers later.

@@ -16,9 +16,10 @@
 
 package navigation
 
-import controllers.sections.items.routes
 import models.GoodsTypeModel._
 import models._
+import controllers.sections.items.{routes => itemsRoutes}
+import controllers.routes
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -31,10 +32,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
 
-    case ItemBrandNamePage(_) => (_: UserAnswers) =>
-      //TODO: Update to route to next page in flow when built
-     testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
+    case ItemBrandNamePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.CommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)

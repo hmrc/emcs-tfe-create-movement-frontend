@@ -18,8 +18,10 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode, ReviewMode}
+import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
+import controllers.sections.items.{routes => itemsRoutes}
+import models.sections.items.ItemBrandNameModel
 import pages.sections.items._
 
 class ItemsNavigatorSpec extends SpecBase {
@@ -70,9 +72,19 @@ class ItemsNavigatorSpec extends SpecBase {
 
     "must go from the Item Brand Name page" - {
 
+        "to the Commercial Description Page" in {
+          val userAnswers = emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+
+
+          navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, userAnswers) mustBe
+            itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
+        }
+      }
+      "must go from the Commercial Description Name page" - {
+
         //TODO: Update routing as part of future story when next page in flow is built
         "to the Under Construction Page" in {
-          navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }

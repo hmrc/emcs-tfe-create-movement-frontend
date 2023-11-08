@@ -32,7 +32,7 @@
 
 @()(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("draftMovement.title"))) {
+@layout(pageTitle = titleNoForm(helper.heading)) {
 
     @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
     @p() {

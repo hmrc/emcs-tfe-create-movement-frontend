@@ -16,17 +16,15 @@
 
 package controllers
 
-import config.SessionKeys.SUBMISSION_RECEIPT_REFERENCE
 import controllers.actions._
 import handlers.ErrorHandler
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
-import views.html.{ConfirmationView, DraftMovementView}
+import views.html.DraftMovementView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class DraftMovementController @Inject()(
                                         override val messagesApi: MessagesApi,

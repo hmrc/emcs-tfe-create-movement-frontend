@@ -28,11 +28,11 @@ import javax.inject.Inject
 
 class DraftMovementHelper @Inject()() extends Logging {
   def heading(implicit request: DataRequest[_], messages: Messages): String =
-    (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage).get) match {
-      case (GreatBritainWarehouseKeeper, GbTaxWarehouse) =>
+    (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
+      case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(s"destinationType.$GbTaxWarehouse"))
 
-      case (NorthernIrelandWarehouseKeeper, destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination)) =>
+      case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(value) =>
             messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(s"destinationType.$destinationType"))
@@ -41,10 +41,10 @@ class DraftMovementHelper @Inject()() extends Logging {
             throw MissingMandatoryPage(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
         }
 
-      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, destinationType) =>
+      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
         messages("draftMovement.heading.importFor", messages(s"destinationType.$destinationType"))
 
-      case (GreatBritainWarehouseKeeper | NorthernIrelandRegisteredConsignor, destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)) =>
+      case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
         messages(s"destinationType.$destinationType")
 
       case (userType, destinationType) =>

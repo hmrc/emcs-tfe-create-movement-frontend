@@ -16,7 +16,7 @@
 
 package viewmodels.helpers
 
-import models.Index
+import models.{Index, NormalMode}
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import queries.DocumentsCount
@@ -24,7 +24,9 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
 import controllers.sections.documents.routes
+import pages.sections.documents.DocumentSection
 import viewmodels.govuk.summarylist._
+import viewmodels.taskList.InProgress
 
 import javax.inject.Inject
 
@@ -37,7 +39,7 @@ class DocumentsAddToListHelper @Inject()() {
     }
   }
 
-  def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
         ReferenceAvailableSummary.row(idx),
@@ -46,13 +48,30 @@ class DocumentsAddToListHelper @Inject()() {
       ).flatten
     ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))),
-      actions = Some(Actions( items = Seq(
-        ActionItemViewModel(
-          content = Text(messages("site.remove")),
-          href = routes.DocumentsRemoveFromListController.onPageLoad(request.ern, request.draftId, idx).url,
-          id = s"removeDocuments-${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex))
-      )))
+      actions = Some(Actions(items = Seq(
+        continueEditingLink(idx),
+        Some(removeLink(idx))
+      ).flatten))
     )))
+  }
+
+  private def removeLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): ActionItem = {
+    ActionItemViewModel(
+      content = Text(messages("site.remove")),
+      href = routes.DocumentsRemoveFromListController.onPageLoad(request.ern, request.draftId, idx).url,
+      id = s"removeDocuments-${idx.displayIndex}"
+    ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex))
+  }
+
+  private def continueEditingLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] = {
+    DocumentSection(idx).status match {
+      case InProgress =>
+        Some(ActionItemViewModel(
+          content = Text(messages("site.continueEditing")),
+          href = routes.ReferenceAvailableController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
+          id = s"editDocuments-${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))
+      case _ => None
+    }
   }
 }

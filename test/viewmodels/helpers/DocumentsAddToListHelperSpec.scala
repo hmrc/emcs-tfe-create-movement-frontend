@@ -19,7 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
 import play.api.Application
 import play.api.i18n.Messages
@@ -53,11 +53,10 @@ class DocumentsAddToListHelperSpec extends SpecBase {
 
     "return required rows when all answers filled out" - {
 
-      s"when all answers entered '${English.lang.code}' and single transport units" in new Setup(emptyUserAnswers
+      s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
         .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
         .set(ReferenceAvailablePage(1), true)
-        .set(DocumentReferencePage(1), "reference")
       ) {
 
         implicit lazy val msgs: Messages = messages(app, English.lang)
@@ -73,7 +72,8 @@ class DocumentsAddToListHelperSpec extends SpecBase {
                   visuallyHiddenText = Some(English.documentCardTitle(0)),
                   attributes = Map("id" -> "removeDocuments-1")
                 )
-              ))))),
+              )))
+            )),
             rows = Seq(
               ReferenceAvailableSummary.row(0).get,
               DocumentDescriptionSummary.row(0).get
@@ -84,15 +84,21 @@ class DocumentsAddToListHelperSpec extends SpecBase {
               title = Some(CardTitle(Text(English.documentCardTitle(1)))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
+                  href = routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
+                  content = Text(English.continueEditing),
+                  visuallyHiddenText = Some(English.documentCardTitle(1)),
+                  attributes = Map("id" -> "editDocuments-2")
+                ),
+                ActionItem(
                   href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url,
                   content = Text(English.remove),
                   visuallyHiddenText = Some(English.documentCardTitle(1)),
                   attributes = Map("id" -> "removeDocuments-2")
                 )
-              ))))),
+              )))
+            )),
             rows = Seq(
-              ReferenceAvailableSummary.row(1).get,
-              DocumentReferenceSummary.row(1).get
+              ReferenceAvailableSummary.row(1).get
             )
           )
         )

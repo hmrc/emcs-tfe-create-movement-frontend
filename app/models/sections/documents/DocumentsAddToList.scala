@@ -34,7 +34,7 @@ object DocumentsAddToList extends Enumerable.Implicits {
     Yes, No, MoreLater
   )
 
-  def options(totalDocuments: Int)(implicit messages: Messages): Seq[RadioItem] = {
+  def options(totalDocuments: Int, showNoOption: Boolean)(implicit messages: Messages): Seq[RadioItem] = {
 
     def radioItem(value: DocumentsAddToList, index: Int, totalDocuments: Option[Int]): RadioItem = RadioItem(
       content = totalDocuments match {
@@ -50,11 +50,11 @@ object DocumentsAddToList extends Enumerable.Implicits {
     )
 
     Seq(
-      radioItem(Yes, 0, None),
-      radioItem(No, 1, Some(totalDocuments)),
-      orDivider,
-      radioItem(MoreLater, 2, None)
-    )
+      Some(radioItem(Yes, 0, None)),
+      if(showNoOption) Some(radioItem(No, 1, Some(totalDocuments))) else None,
+      if(showNoOption) Some(orDivider) else None,
+      Some(radioItem(MoreLater, 2, None))
+    ).flatten
   }
 
   implicit val enumerable: Enumerable[DocumentsAddToList] =

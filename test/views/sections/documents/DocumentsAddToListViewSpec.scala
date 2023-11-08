@@ -22,7 +22,7 @@ import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.DocumentDescriptionPage
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -39,11 +39,86 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child($index)"
     val errorField: String = "p.govuk-error-message"
     val removeItemLink: Int => String = index => s"#removeDocuments-$index"
+    val editItemLink: Int => String = index => s"#editDocuments-$index"
   }
 
   "DocumentsAddToListView" - {
 
-    s"when being rendered in lang code of '${English.lang.code}' for singular item" - {
+    s"when being rendered for singular item" - {
+
+      implicit val msgs: Messages = messages(app, English.lang)
+
+      val userAnswers = emptyUserAnswers
+        .set(ReferenceAvailablePage(0), false)
+        .set(DocumentDescriptionPage(0), "description")
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+
+      val view = app.injector.instanceOf[DocumentsAddToListView]
+      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
+      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
+
+      implicit val doc: Document = Jsoup.parse(view(
+        form = form,
+        onSubmitCall = testOnwardRoute,
+        documents = helper,
+        showNoOption = true
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.h2(1) -> English.documentsSection,
+        Selectors.hiddenText -> English.hiddenSectionContent,
+        Selectors.title -> English.title(1),
+        Selectors.h1 -> English.heading(1),
+        Selectors.cardTitle -> English.documentCardTitle(0),
+        Selectors.removeItemLink(1) -> English.removeDocument(0),
+        Selectors.legendQuestion -> English.h2,
+        Selectors.radioButton(1) -> English.yes,
+        Selectors.radioButton(2) -> English.no1,
+        Selectors.radioButton(4) -> English.moreLater,
+        Selectors.button -> English.saveAndContinue,
+        Selectors.returnToDraftLink -> English.returnToDraft
+      ))
+    }
+
+    s"when being rendered for multiple items" - {
+
+      implicit val msgs: Messages = messages(app, English.lang)
+
+      val userAnswers = emptyUserAnswers
+        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentReferencePage(0), "reference1")
+        .set(ReferenceAvailablePage(0), false)
+        .set(DocumentDescriptionPage(1), "description2")
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+
+      val view = app.injector.instanceOf[DocumentsAddToListView]
+      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
+      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
+
+      implicit val doc: Document = Jsoup.parse(view(
+        form = form,
+        onSubmitCall = testOnwardRoute,
+        documents = helper,
+        showNoOption = true
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title(2),
+        Selectors.h1 -> English.heading(2),
+        Selectors.cardTitle -> English.documentCardTitle(0),
+        Selectors.removeItemLink(1) -> English.removeDocument(0),
+        Selectors.legendQuestion -> English.h2,
+        Selectors.radioButton(1) -> English.yes,
+        Selectors.radioButton(2) -> English.no2,
+        Selectors.radioButton(4) -> English.moreLater,
+        Selectors.button -> English.saveAndContinue,
+        Selectors.returnToDraftLink -> English.returnToDraft
+      ))
+    }
+
+    s"when being rendered for an InProgress item" - {
 
       implicit val msgs: Messages = messages(app, English.lang)
 
@@ -59,52 +134,21 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val doc: Document = Jsoup.parse(view(
         form = form,
         onSubmitCall = testOnwardRoute,
-        documents = helper
+        documents = helper,
+        showNoOption = false
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.h2(1) -> English.documentsSection,
+        Selectors.hiddenText -> English.hiddenSectionContent,
         Selectors.title -> English.title(1),
         Selectors.h1 -> English.heading(1),
         Selectors.cardTitle -> English.documentCardTitle(0),
         Selectors.removeItemLink(1) -> English.removeDocument(0),
+        Selectors.editItemLink(1) -> English.editDocument(0),
         Selectors.legendQuestion -> English.h2,
         Selectors.radioButton(1) -> English.yes,
-        Selectors.radioButton(2) -> English.no1,
-        Selectors.radioButton(4) -> English.moreLater,
-        Selectors.button -> English.saveAndContinue,
-        Selectors.returnToDraftLink -> English.returnToDraft
-      ))
-    }
-
-    s"when being rendered in lang code of '${English.lang.code}' for multiple items" - {
-
-      implicit val msgs: Messages = messages(app, English.lang)
-
-      val userAnswers = emptyUserAnswers
-        .set(DocumentDescriptionPage(0), "description1")
-        .set(DocumentDescriptionPage(1), "description2")
-
-      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-
-      val view = app.injector.instanceOf[DocumentsAddToListView]
-      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
-      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
-
-      implicit val doc: Document = Jsoup.parse(view(
-        form = form,
-        onSubmitCall = testOnwardRoute,
-        documents = helper
-      ).toString())
-
-      behave like pageWithExpectedElementsAndMessages(Seq(
-        Selectors.title -> English.title(2),
-        Selectors.h1 -> English.heading(2),
-        Selectors.cardTitle -> English.documentCardTitle(0),
-        Selectors.removeItemLink(1) -> English.removeDocument(0),
-        Selectors.legendQuestion -> English.h2,
-        Selectors.radioButton(1) -> English.yes,
-        Selectors.radioButton(2) -> English.no2,
-        Selectors.radioButton(4) -> English.moreLater,
+        Selectors.radioButton(2) -> English.moreLater,
         Selectors.button -> English.saveAndContinue,
         Selectors.returnToDraftLink -> English.returnToDraft
       ))

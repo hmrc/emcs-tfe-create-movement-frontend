@@ -20,14 +20,23 @@ import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 case class DocumentSection(idx: Index) extends Section[JsObject] {
 
   override val path: JsPath = DocumentsSectionUnits.path \ idx.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-DOC06 is built
-    NotStarted
+
+    (
+      request.userAnswers.get(ReferenceAvailablePage(idx)),
+      request.userAnswers.get(DocumentReferencePage(idx)),
+      request.userAnswers.get(DocumentDescriptionPage(idx))
+    ) match {
+      case (Some(true), Some(_), None) => Completed
+      case (Some(false), None, Some(_)) => Completed
+      case (None, None, None) => NotStarted
+      case _ => InProgress
+    }
   }
 }

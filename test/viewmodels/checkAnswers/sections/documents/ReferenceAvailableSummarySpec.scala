@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages.English
 import models.{CheckMode, Index}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.documents.ReferenceAvailablePage
+import pages.sections.documents.{DocumentReferencePage, ReferenceAvailablePage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -50,9 +50,12 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers {
 
       "when there's an answer" - {
 
-        "must output the expected row when user answers yes" in {
+        "must output the expected row WITH a change link when the document IS Completed" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), true))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentReferencePage(0), "reference")
+          )
 
           ReferenceAvailableSummary.row(0) mustBe
             Some(
@@ -70,22 +73,17 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers {
             )
         }
 
-        "must output the expected row when user answers no" in {
+        "must output the expected row WITHOUT a change link when the document is NOT Completed" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ReferenceAvailablePage(0), false))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(
+            ReferenceAvailablePage(0), false)
+          )
 
           ReferenceAvailableSummary.row(0) mustBe
             Some(
               SummaryListRowViewModel(
                 key = English.cyaLabel,
-                value = Value(Text(English.no)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = English.change,
-                    href = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                    id = s"changeReferenceAvailable-1"
-                  ).withVisuallyHiddenText(English.cyaChangeHidden)
-                )
+                value = Value(Text(English.no))
               )
             )
         }

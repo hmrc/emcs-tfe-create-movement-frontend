@@ -19,9 +19,11 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
+import models.requests.DataRequest
 import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentsCertificatesPage
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.DocumentsCount
 import services.UserAnswersService
 
 import javax.inject.Inject
@@ -40,8 +42,17 @@ class DocumentsIndexController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       request.userAnswers.get(DocumentsCertificatesPage) match {
         case Some(false) => Redirect(routes.DocumentsCheckAnswersController.onPageLoad(ern, draftId))
-        case Some(true) => Redirect(routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId, NormalMode))
+        case Some(true) => hasDocumentsRouting()
         case _ => Redirect(routes.DocumentsCertificatesController.onPageLoad(ern, draftId, NormalMode))
       }
     }
+
+  private def hasDocumentsRouting()(implicit request: DataRequest[_]): Result = {
+    request.userAnswers.get(DocumentsCount) match {
+      case None | Some(0) =>
+        Redirect(routes.DocumentsCertificatesController.onPageLoad(request.ern, request.draftId, NormalMode))
+      case Some(_) =>
+        Redirect(routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId, NormalMode))
+    }
+  }
 }

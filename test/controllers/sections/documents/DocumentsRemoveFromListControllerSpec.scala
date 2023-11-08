@@ -19,8 +19,9 @@ package controllers.sections.documents
 import base.SpecBase
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.documents.DocumentsAddToList
 import models.{Index, NormalMode, UserAnswers}
-import pages.sections.documents.{DocumentReferencePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,11 +32,10 @@ import scala.concurrent.Future
 
 class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val userAnswersWithDocuments = emptyUserAnswers
+  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers
     .set(ReferenceAvailablePage(0), true)
     .set(DocumentReferencePage(0), "reference")
-
-  class Fixture(userAnswers: Option[UserAnswers] = Some(userAnswersWithDocuments)) {
+  )) {
 
     val application = applicationBuilder(userAnswers)
       .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
@@ -86,10 +86,13 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
       }
     }
 
-    "must redirect to the index controller when the user answers yes (removing the document)" in new Fixture(
-      Some(userAnswersWithDocuments
+    "must redirect to the index controller when the user answers yes (removing the document and DocumentsAddToListPage)" in new Fixture(
+      Some(emptyUserAnswers
+        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentReferencePage(0), "reference")
         .set(ReferenceAvailablePage(1), false)
         .set(DocumentReferencePage(1), "description")
+        .set(DocumentsAddToListPage, DocumentsAddToList.No)
       )
     ) {
       running(application) {

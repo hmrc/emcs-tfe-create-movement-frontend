@@ -20,8 +20,9 @@ import controllers.actions._
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import models.{Index, NormalMode}
 import models.requests.DataRequest
+import models.sections.documents.DocumentsAddToList
 import navigation.TransportUnitNavigator
-import pages.sections.documents.DocumentSection
+import pages.sections.documents.{DocumentSection, DocumentsAddToListPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -68,9 +69,11 @@ class DocumentsRemoveFromListController @Inject()(
   private def handleAnswerRemovalAndRedirect(removeDocument: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if(removeDocument) {
-      val cleansedAnswers = request.userAnswers.remove(DocumentSection(index))
-      userAnswersService.set(cleansedAnswers).map {
-        _ => Redirect(routes.DocumentsIndexController.onPageLoad(ern, draftId))
+      val cleansedAnswers = request.userAnswers
+        .remove(DocumentSection(index))
+        .remove(DocumentsAddToListPage)
+
+      userAnswersService.set(cleansedAnswers).map { _ => Redirect(routes.DocumentsIndexController.onPageLoad(ern, draftId))
       }
     } else {
       Future(Redirect(routes.DocumentsAddToListController.onPageLoad(ern, draftId, NormalMode)))

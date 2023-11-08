@@ -30,7 +30,7 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], onSubmitCall: Call, documents: Seq[SummaryList])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitCall: Call, documents: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", documents.length))) {
 
@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("documents.subHeading"), "govuk-caption-xl")
+        @h2(messages("documents.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(pluralSingular("documentsAddToList.heading", documents.length), classes = "govuk-heading-l")
 
         @documents.map { document =>
@@ -51,7 +51,7 @@
             RadiosViewModel(
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("documentsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
-                items  = DocumentsAddToList.options(documents.length)
+                items  = DocumentsAddToList.options(documents.length, showNoOption)
             )
         )
 

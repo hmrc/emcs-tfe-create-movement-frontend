@@ -17,23 +17,32 @@
 package controllers.sections.documents
 
 import base.SpecBase
+import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
 import mocks.services.MockUserAnswersService
+import mocks.viewmodels.MockDocumentsAddToListHelper
 import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, ReferenceAvailableSummary}
+import viewmodels.helpers.DocumentsAddToListHelper
 import views.html.sections.documents.DocumentsAddToListView
 
 import scala.concurrent.Future
 
-class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService {
+class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsAddToListHelper {
+
+
 
   class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -42,10 +51,10 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
     val application = applicationBuilder(startingUserAnswers)
       .overrides(
         bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
+        bind[DocumentsAddToListHelper].toInstance(mockDocumentsAddToListHelper)
       )
       .build()
-
     lazy val controllerRoute = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
     lazy val onSubmitCall = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId, NormalMode)
 
@@ -59,9 +68,14 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
     "GET onPageLoad" - {
 
-      "must return OK and the correct view for a GET" in new Setup(Some(emptyUserAnswers)) {
+      "must return OK and the correct view when there are NO InProgress items" in new Setup(Some(emptyUserAnswers
+        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentReferencePage(0), "reference")
+      )) {
 
         running(application) {
+
+          MockDocumentsAddToListHelper.allDocumentsSummary()
 
           val request = FakeRequest(GET, controllerRoute)
 
@@ -71,7 +85,30 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(result) mustEqual view(
             form = form,
             onSubmitCall = onSubmitCall,
-            documents = Seq.empty
+            documents = Seq.empty,
+            showNoOption = true
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must return OK and the correct view when there ARE InProgress items" in new Setup(Some(emptyUserAnswers
+        .set(ReferenceAvailablePage(0), true)
+      )) {
+
+        running(application) {
+
+          MockDocumentsAddToListHelper.allDocumentsSummary()
+
+          val request = FakeRequest(GET, controllerRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form,
+            onSubmitCall = onSubmitCall,
+            documents = Seq.empty,
+            showNoOption = false
           )(dataRequest(request), messages(application)).toString
         }
       }
@@ -187,6 +224,8 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         running(application) {
 
+          MockDocumentsAddToListHelper.allDocumentsSummary()
+
           val request = FakeRequest(POST, controllerRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
@@ -198,7 +237,8 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(result) mustEqual view(
             form = boundForm,
             onSubmitCall = onSubmitCall,
-            documents = Seq.empty
+            documents = Seq.empty,
+            showNoOption = true
           )(dataRequest(request), messages(application)).toString
         }
       }

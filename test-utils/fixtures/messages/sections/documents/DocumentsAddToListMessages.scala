@@ -33,6 +33,8 @@ object DocumentsAddToListMessages {
     def documentCardTitle(idx: Index) = s"Document ${idx.displayIndex}"
     def removeDocument(idx: Index): String = s"Remove ${documentCardTitle(idx)}"
 
+    def editDocument(idx: Index): String = s"Continue editing ${documentCardTitle(idx)}"
+
     val h2 = "Do you need to add another document?"
     val no1 = "No, this is the only document"
     val no2 = "No, these are the only documents in this movement"

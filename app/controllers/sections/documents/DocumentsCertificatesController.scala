@@ -22,7 +22,7 @@ import forms.sections.documents.DocumentsCertificatesFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.DocumentsNavigator
-import pages.sections.documents.DocumentsCertificatesPage
+import pages.sections.documents.{DocumentsAddToListPage, DocumentsCertificatesPage, DocumentsSectionUnits}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -56,14 +56,28 @@ class DocumentsCertificatesController @Inject()(
         formWithErrors =>
           Future(renderView(BadRequest, formWithErrors, mode)),
         value =>
-          saveAndRedirect(DocumentsCertificatesPage, value, mode)
+          cleanseAndRedirect(value, mode)
       )
     }
 
-  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
     status(view(
       form = form,
       onSubmitCall = controllers.sections.documents.routes.DocumentsCertificatesController.onSubmit(request.ern, request.draftId, mode)
     ))
 
+  private def cleanseAndRedirect(answer: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = if(answer) request.userAnswers else {
+      request.userAnswers
+        .remove(DocumentsSectionUnits)
+        .remove(DocumentsAddToListPage)
+    }
+
+    saveAndRedirect(
+      page = DocumentsCertificatesPage,
+      answer = answer,
+      currentAnswers = cleansedAnswers,
+      mode = mode
+    )
+  }
 }

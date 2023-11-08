@@ -17,21 +17,26 @@
 package pages.sections.documents
 
 import models.requests.DataRequest
+import models.sections.documents.DocumentsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object DocumentsSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "documents"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    //TODO update before PR
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
     request.userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => Completed
-      case _ => // TODO: Update when CAM-DOC06 is built
-        NotStarted
+      case Some(true) => documentListStatus
+      case None => NotStarted
     }
-  }
+
+  private def documentListStatus(implicit request: DataRequest[_]): TaskListStatus =
+    request.userAnswers.get(DocumentsAddToListPage) match {
+      case Some(DocumentsAddToList.No) => DocumentsSectionUnits.status
+      case _ => InProgress
+    }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

@@ -22,7 +22,7 @@ import forms.sections.documents.ReferenceAvailableFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.DocumentsNavigator
-import pages.sections.documents.ReferenceAvailablePage
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -55,8 +55,7 @@ class ReferenceAvailableController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future(renderView(BadRequest, formWithErrors, idx, mode)),
-        value =>
-          saveAndRedirect(ReferenceAvailablePage(idx), value, mode)
+          cleanseAndRedirect(_, idx, mode)
       )
     }
 
@@ -65,4 +64,14 @@ class ReferenceAvailableController @Inject()(
       form = form,
       onSubmitCall = controllers.sections.documents.routes.ReferenceAvailableController.onSubmit(request.ern, request.draftId, idx, mode)
     ))
+
+  private def cleanseAndRedirect(answer: Boolean, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val pageToCleanse = if(answer) DocumentDescriptionPage(idx) else DocumentReferencePage(idx)
+    saveAndRedirect(
+      page = ReferenceAvailablePage(idx),
+      answer = answer,
+      currentAnswers = request.userAnswers.remove(pageToCleanse),
+      mode = mode
+    )
+  }
 }

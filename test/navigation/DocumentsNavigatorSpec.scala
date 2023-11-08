@@ -154,7 +154,7 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad
         }
 
         "to DocumentDescription when user selects MoreLater" in {
@@ -162,7 +162,7 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad
         }
       }
 
@@ -229,7 +229,7 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
 
           navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
-            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad
         }
 
         "to DocumentDescription when user selects MoreLater" in {
@@ -237,7 +237,7 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
 
           navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
-            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad
         }
       }
 

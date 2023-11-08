@@ -2,6 +2,7 @@ service.name = Excise Movement and Control System
 
 site.back = Back
 site.remove = Remove
+site.continueEditing = Continue editing
 site.change = Change
 site.no = No
 site.yes = Yes

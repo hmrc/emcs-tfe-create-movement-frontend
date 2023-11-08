@@ -18,33 +18,132 @@ package pages.sections.documents
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.documents.DocumentsAddToList
 import play.api.test.FakeRequest
-import viewmodels.taskList.Completed
+import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
 class DocumentsSectionSpec extends SpecBase {
+
   "isCompleted" - {
+
     "must return true" - {
-      // TODO: Update when CAM-DOC06 is built
-      "when finished" ignore {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+      "when finished" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DocumentsCertificatesPage, false)
+        )
+
         DocumentsSection.isCompleted mustBe true
       }
     }
 
     "must return false" - {
-      // TODO: Update when CAM-DOC06 is built
+
       "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DocumentsCertificatesPage, true)
+        )
+
         DocumentsSection.isCompleted mustBe false
       }
     }
   }
 
   "status" - {
-    "mustBe completed" - {
+
+    "mustBe Completed" - {
+
       "when DocumentCertificatesPage is set to false" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DocumentsCertificatesPage, false)
+        )
+
         DocumentsSection.status mustBe Completed
+      }
+
+      "when DocumentCertificatesPage is set to true" - {
+
+        "when every document has been Completed and the DocumentsAddToList page has been answered No" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentsCertificatesPage, true)
+            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentReferencePage(0), "reference")
+            .set(DocumentsAddToListPage, DocumentsAddToList.No)
+          )
+
+          DocumentsSection.status mustBe Completed
+        }
+      }
+    }
+
+    "mustBe InProgress" - {
+
+      "when DocumentCertificatesPage is set to true" - {
+
+        "when every document has been Completed" - {
+
+          "the DocumentsAddToList page has been answered MoreLater" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DocumentsCertificatesPage, true)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+              .set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
+            )
+
+            DocumentsSection.status mustBe InProgress
+          }
+
+          "the DocumentsAddToList page has been answered Yes" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DocumentsCertificatesPage, true)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+              .set(DocumentsAddToListPage, DocumentsAddToList.Yes)
+            )
+
+            DocumentsSection.status mustBe InProgress
+          }
+
+          "the DocumentsAddToList page has NOT been answered" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DocumentsCertificatesPage, true)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+            )
+
+            DocumentsSection.status mustBe InProgress
+          }
+        }
+
+        "when every document at least one document is InProgress" - {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentsCertificatesPage, true)
+            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentReferencePage(0), "reference")
+            .set(ReferenceAvailablePage(1), false)
+            .set(DocumentsAddToListPage, DocumentsAddToList.No)
+          )
+
+          DocumentsSection.status mustBe InProgress
+        }
+      }
+    }
+
+    "mustBe NotStated" - {
+
+      "when DocumentCertificatesPage is NOT answered" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        DocumentsSection.status mustBe NotStarted
       }
     }
   }

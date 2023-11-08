@@ -19,10 +19,11 @@ package controllers.sections.documents
 import base.SpecBase
 import forms.sections.documents.DocumentsCertificatesFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.DocumentsCertificatesPage
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentsAddToListPage, DocumentsCertificatesPage, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -34,11 +35,11 @@ import scala.concurrent.Future
 
 class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     def onwardRoute = Call("GET", "/foo")
 
-    val application = applicationBuilder(userAnswers = userAnswers)
+    val application = applicationBuilder(userAnswers = startingUserAnswers)
       .overrides(
         bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -59,101 +60,143 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
   "DocumentsCertificates Controller" - {
 
-    "must return OK and the correct view for a GET" in new Setup() {
+    "GET onPageLoad" - {
 
-      running(application) {
+      "must return OK and the correct view for a GET" in new Setup() {
 
-        val request = FakeRequest(GET, documentsCertificatesRoute)
+        running(application) {
 
-        val result = route(application, request).value
+          val request = FakeRequest(GET, documentsCertificatesRoute)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form,
-          onSubmitCall = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form,
+            onSubmitCall = onSubmitCall
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(emptyUserAnswers
+        .set(DocumentsCertificatesPage, true)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, documentsCertificatesRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form.fill(true),
+            onSubmitCall = onSubmitCall
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, documentsCertificatesRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(emptyUserAnswers
-      .set(DocumentsCertificatesPage, true)
-    )) {
+    "POST onSubmit" - {
 
-      running(application) {
+      "must redirect to the next page and not wipe answers when true is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+          .set(ReferenceAvailablePage(1), false)
+          .set(DocumentDescriptionPage(1), "description")
+          .set(DocumentsAddToListPage, DocumentsAddToList.No)
+      )) {
 
-        val request = FakeRequest(GET, documentsCertificatesRoute)
+        val updatedAnswers = startingUserAnswers.value
+          .set(DocumentsCertificatesPage, true)
 
-        val result = route(application, request).value
+        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form.fill(true),
-          onSubmitCall = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
+        running(application) {
+
+          val request = FakeRequest(POST, documentsCertificatesRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must redirect to the next page when valid data is submitted" in new Setup() {
+      "must redirect to the next page and not wipe answers when false is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+          .set(ReferenceAvailablePage(1), false)
+          .set(DocumentDescriptionPage(1), "description")
+          .set(DocumentsAddToListPage, DocumentsAddToList.No)
+      )) {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+        val updatedAnswers = emptyUserAnswers
+          .set(DocumentsCertificatesPage, false)
 
-      running(application) {
+        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
 
-        val request = FakeRequest(POST, documentsCertificatesRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+        running(application) {
 
-        val result = route(application, request).value
+          val request = FakeRequest(POST, documentsCertificatesRoute)
+            .withFormUrlEncodedBody(("value", "false"))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
+      "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(POST, documentsCertificatesRoute)
-          .withFormUrlEncodedBody(("value", ""))
+          val request = FakeRequest(POST, documentsCertificatesRoute)
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> ""))
+          val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[DocumentsCertificatesView]
+          val view = application.injector.instanceOf[DocumentsCertificatesView]
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          form = boundForm,
-          onSubmitCall = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(
+            form = boundForm,
+            onSubmitCall = onSubmitCall
+          )(dataRequest(request), messages(application)).toString
+        }
       }
-    }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+      "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(GET, documentsCertificatesRoute)
+          val request = FakeRequest(POST, documentsCertificatesRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None){
-
-      running(application) {
-
-        val request = FakeRequest(POST, documentsCertificatesRoute)
-          .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

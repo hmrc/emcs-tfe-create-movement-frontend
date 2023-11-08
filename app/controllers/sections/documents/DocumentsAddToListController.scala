@@ -23,12 +23,13 @@ import models.requests.DataRequest
 import models.sections.documents.DocumentsAddToList
 import models.{Mode, NormalMode}
 import navigation.DocumentsNavigator
-import pages.sections.documents.DocumentsAddToListPage
+import pages.sections.documents.{DocumentsAddToListPage, DocumentsSectionUnits}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import viewmodels.helpers.DocumentsAddToListHelper
+import viewmodels.taskList.InProgress
 import views.html.sections.documents.DocumentsAddToListView
 
 import javax.inject.Inject
@@ -65,7 +66,8 @@ class DocumentsAddToListController @Inject()(
     status(view(
       form = form,
       onSubmitCall = controllers.sections.documents.routes.DocumentsAddToListController.onSubmit(request.ern, request.draftId, mode),
-      documents = addToListHelper.allDocumentsSummary()
+      documents = addToListHelper.allDocumentsSummary(),
+      showNoOption = DocumentsSectionUnits.status != InProgress
     ))
   }
 

@@ -16,7 +16,6 @@
 
 package pages.sections.documents
 
-import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsArray, JsPath}
@@ -30,7 +29,7 @@ case object DocumentsSectionUnits extends Section[JsArray] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(DocumentsCount) match {
     case Some(0) | None => NotStarted
     case Some(count) =>
-      val statuses: Seq[TaskListStatus] = (0 until count).map(value => DocumentSection(Index(value)).status)
+      val statuses: Seq[TaskListStatus] = (0 until count).map(value => DocumentSection(value).status)
 
       if (statuses.forall(_ == Completed)) {
         Completed

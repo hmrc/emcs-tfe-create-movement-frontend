@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages.English
-import models.{CheckMode, Index}
+import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.{DocumentReferencePage, ReferenceAvailablePage}
 import play.api.i18n.Messages

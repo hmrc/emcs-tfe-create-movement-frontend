@@ -20,13 +20,13 @@ import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import models.{NormalMode, UserAnswers}
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentDescriptionPage, ReferenceAvailablePage}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, ReferenceAvailableSummary}
 import views.html.components.link
 
 class DocumentsAddToListHelperSpec extends SpecBase {

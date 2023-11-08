@@ -17,7 +17,6 @@
 package controllers.sections.documents
 
 import base.SpecBase
-import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDocumentsAddToListHelper
@@ -26,15 +25,11 @@ import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
-import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, ReferenceAvailableSummary}
 import viewmodels.helpers.DocumentsAddToListHelper
 import views.html.sections.documents.DocumentsAddToListView
 

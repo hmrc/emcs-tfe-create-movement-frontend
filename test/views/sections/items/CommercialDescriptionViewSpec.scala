@@ -51,9 +51,9 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
         val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title(Beer.code),
+          Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-          Selectors.h1 -> messagesForLanguage.heading(Beer.code),
+          Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintb,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft

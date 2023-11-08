@@ -57,6 +57,9 @@ object CommercialDescriptionMessages {
     val detailsTobacco4 = "- if transporting hand rolling or pipe tobacco state the number and weight of individual packets."
     val summary = "Help with commercial description"
     val errorXss = "Document reference must not contain < and > and : and ;"
+    val cyaLabel = "Commercial Description"
+    val valueWhenAnswerNotPresent = "Enter a commercial description of the goods"
+    val cyaChangeHidden = "changeCommercialDescription"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -34,7 +34,7 @@
 
 @(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("commercialDescription.title", goodsType.fold(messages("site.item"))(_.code.toString)))) {
+@layout(pageTitle = title(form, messages("commercialDescription.title", goodsType.fold(messages("site.item"))(_.toSingularOutput())))) {
 
     @formHelper(action, 'autoComplete -> "off"){
 
@@ -48,7 +48,7 @@
             id = "value",
             name = "value",
             maxLength = Some(350),
-            label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.fold(messages("site.item"))(_.code.toString)))).asPageHeading(LabelSize.Large),
+            label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(HintViewModel(content = HtmlContent(
             messages(s"commercialDescription.hint.${goodsType.fold(messages("site.item"))(_.code.toLowerCase)}")

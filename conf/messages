@@ -914,3 +914,14 @@ itemBrandName.change.hidden = if goods are branded
 itemBrandName.error.brandName.required = Enter a brand name between 1 and {0} characters
 itemBrandName.error.brandName.length = Brand name must be {0} characters or less
 itemBrandName.error.brandName.invalid = Brand name must not include < and > and : and ;
+
+itemAlcoholStrength.title = What is the alcohol strength by volume (ABV) for the {0}?
+itemAlcoholStrength.heading = What is the alcohol strength by volume (ABV) for the {0}?
+itemAlcoholStrength.hint = Enter the alcoholic strength as a percentage (by volume at 20°C).
+itemAlcoholStrength.suffix = %vol.
+itemAlcoholStrength.checkYourAnswersLabel = Alcohol by volume (ABV)
+itemAlcoholStrength.change.hidden = alcohol strength
+itemAlcoholStrength.error.required = Enter the alcoholic strength
+itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
+itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
+itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places

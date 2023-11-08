@@ -33,17 +33,7 @@ case class DataRequest[A](request: UserRequest[A],
 
   val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
 
-  private val ERN_PREFIX_LENGTH = 4
-
-  val userTypeFromErn: UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
-    case "GBRC" => GreatBritainRegisteredConsignor
-    case "XIRC" => NorthernIrelandRegisteredConsignor
-    case "GBWK" => GreatBritainWarehouseKeeper
-    case "XIWK" => NorthernIrelandWarehouseKeeper
-    case "XI00" => NorthernIrelandWarehouse
-    case "GB00" => GreatBritainWarehouse
-    case _ => Unknown
-  }
+  val userTypeFromErn: UserType = UserType(ern)
 
   val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
   val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)

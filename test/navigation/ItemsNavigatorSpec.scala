@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
-import pages.sections.items.ItemBrandNamePage
+import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
 
 class ItemsNavigatorSpec extends SpecBase {
   val navigator = new ItemsNavigator
@@ -39,6 +39,79 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Under Construction Page" in {
           navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      "must go from the Item Alcohol Strength page" - {
+
+        "when GoodsType is Beer and XIWK or XIRC" - {
+
+          //TODO: Redirect to CAM-ITM07
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(1.5))
+
+            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when GoodsType is Beer and GBWK or GBRC and ABV < 8.5" - {
+
+          //TODO: Redirect to CAM-ITM41
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
+
+            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when GoodsType is Beer and GBWK or GBRC and ABV >= 8.5" - {
+
+          //TODO: Redirect to CAM-ITM19
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when GoodsType is Spirits" - {
+
+          //TODO: Redirect to CAM-ITM08
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+              .set(ItemExciseProductCodePage(testIndex1), "S100")
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when GoodsType is anything else (e.g. Wine)" - {
+
+          //TODO: Redirect to CAM-ITM09
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+              .set(ItemExciseProductCodePage(testIndex1), "W100")
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
         }
       }
     }

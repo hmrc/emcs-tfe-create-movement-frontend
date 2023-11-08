@@ -19,6 +19,7 @@ package forms.mappings
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import java.time.LocalDate
+import scala.util.Try
 
 trait Constraints {
 
@@ -110,6 +111,31 @@ trait Constraints {
         Valid
       case _ =>
         Invalid(errorKey, maximum)
+    }
+
+
+  protected def isDecimal(errorKey: String): Constraint[String] =
+    Constraint {
+      case answer if Try(BigDecimal(answer)).isSuccess =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  protected def decimalRange(min: BigDecimal, max: BigDecimal, errorKey: String): Constraint[BigDecimal] =
+    Constraint {
+      case answer if answer <= max && answer >= min =>
+        Valid
+      case _ =>
+        Invalid(errorKey, min, max)
+    }
+
+  protected def decimalPlaces(max: Int, errorKey: String): Constraint[BigDecimal] =
+    Constraint {
+      case answer if answer.scale <= max =>
+        Valid
+      case _ =>
+        Invalid(errorKey, max)
     }
 
   protected def decimalMaxAmount(maximum: BigDecimal, errorKey: String): Constraint[BigDecimal] =

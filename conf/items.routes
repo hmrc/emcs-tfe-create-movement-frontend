@@ -4,3 +4,8 @@ GET        /trader/:ern/draft/:draftId/items/:idx/brand-name                    
 POST       /trader/:ern/draft/:draftId/items/:idx/brand-name                        controllers.sections.items.ItemBrandNameController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/items/:idx/brand-name/change                 controllers.sections.items.ItemBrandNameController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/brand-name/change                 controllers.sections.items.ItemBrandNameController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:draftId/items/:idx/alcohol-strength                  controllers.sections.items.ItemAlcoholStrengthController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/alcohol-strength                  controllers.sections.items.ItemAlcoholStrengthController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/alcohol-strength/change           controllers.sections.items.ItemAlcoholStrengthController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/alcohol-strength/change           controllers.sections.items.ItemAlcoholStrengthController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

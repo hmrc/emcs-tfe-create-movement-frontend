@@ -16,13 +16,13 @@
 
 package viewmodels.checkAnswers.sections.items
 
-
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.CommercialDescriptionPage
 import play.api.i18n.Messages
-import play.api.mvc.Call
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -32,24 +32,22 @@ object CommercialDescriptionSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
 
-  val commercialDescription = request.userAnswers.get(CommercialDescriptionPage(idx))
-
   Some(SummaryListRowViewModel(
     key = "commercialDescription.checkYourAnswersLabel",
-    value = ValueViewModel(getValue(commercialDescription,
-      controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode))),
+    value = ValueViewModel(getValue(idx)),
     actions = {
       Seq(
-        commercialDescription.map(_ =>
-        ActionItemViewModel("site.change", controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-          id = s"changeTransportUnitMoreInformation${idx.displayIndex}")
-          .withVisuallyHiddenText(messages("commercialDescription.change.hidden"))
-        )
-      ).flatten
+        ActionItemViewModel(
+          content = "site.change",
+          routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+          id = s"changeCommercialDescription${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages("commercialDescription.change.hidden"))
+      )
     }
   ))
 }
-  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages, link: views.html.components.link): Content =
-    optValue.fold[Content](HtmlContent(link(redirectUrl.url, messages("commercialDescription.checkYourAnswersValue"))))(value => Text(value))
+
+  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
+    request.userAnswers.get(CommercialDescriptionPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
 
 }

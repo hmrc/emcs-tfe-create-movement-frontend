@@ -46,13 +46,16 @@ class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
 
             CommercialDescriptionSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(
-                  HtmlContent(link(
-                    controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    messagesForLanguage.valueWhenAnswerNotPresent))
-                ),
-                actions = Seq()
+                key = messagesForLanguage.checkYourAnswersLabel,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeCommercialDescription1"
+                  ).withVisuallyHiddenText(messagesForLanguage.changehidden)
+                )
+
               )
             )
           }

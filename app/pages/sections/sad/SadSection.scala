@@ -23,7 +23,6 @@ import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 
-
 case class SadSection(sadIndex: Index) extends Section[JsObject] {
   override val path: JsPath = SadSectionDocuments.path \ sadIndex.position
 

@@ -28,6 +28,8 @@ object ImportNumberMessages {
     val errorXss = "Document reference must not include < and > and : and ;"
     val alphanumeric = "Document reference must only contain letters and numbers"
     val errorRequired = "Enter the number of the Single Administrative Document"
+    val checkYourAnswersLabel = "Number"
+    val changeHidden = "changeImportNumber"
   }
 
   object English extends ViewMessages with BaseEnglish

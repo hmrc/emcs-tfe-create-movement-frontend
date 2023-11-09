@@ -17,14 +17,16 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
+import pages.sections.documents.DocumentSection
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.documents.DocumentReferencePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.taskList.Completed
 
 object DocumentReferenceSummary  {
 
@@ -32,16 +34,27 @@ object DocumentReferenceSummary  {
     request.userAnswers.get(DocumentReferencePage(idx)).map {
       answer =>
 
-        SummaryListRowViewModel(
-          key     = "documentReference.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              routes.DocumentReferenceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              id = s"changeDocumentReference-${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("documentReference.change.hidden"))
-          )
-        )
+        DocumentSection(idx).status match {
+          case Completed =>
+            SummaryListRowViewModel(
+              key = "documentReference.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer).toString),
+              actions = Seq(changeLink(idx))
+            )
+          case _ =>
+            SummaryListRowViewModel(
+              key = "documentReference.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer).toString)
+            )
+        }
+
     }
+
+  private def changeLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): ActionItem = {
+    ActionItemViewModel(
+      content = "site.change",
+      routes.DocumentReferenceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+      id = s"changeDocumentReference-${idx.displayIndex}"
+    ).withVisuallyHiddenText(messages("documentReference.change.hidden"))
+  }
 }

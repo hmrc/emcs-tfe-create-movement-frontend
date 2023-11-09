@@ -22,9 +22,11 @@ import models.requests.DataRequest
 import pages.sections.documents.DocumentDescriptionPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import pages.sections.documents.DocumentSection
+import viewmodels.taskList.Completed
 
 object DocumentDescriptionSummary  {
 
@@ -32,16 +34,26 @@ object DocumentDescriptionSummary  {
     request.userAnswers.get(DocumentDescriptionPage(idx)).map {
       answer =>
 
-        SummaryListRowViewModel(
-          key     = "documentDescription.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = routes.DocumentDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              id = s"changeDocumentDescription-${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("documentDescription.change.hidden"))
-          )
-        )
+        DocumentSection(idx).status match {
+          case Completed =>
+            SummaryListRowViewModel(
+              key     = "documentDescription.checkYourAnswersLabel",
+              value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+              actions = Seq(changeLink(idx))
+            )
+          case _ =>
+            SummaryListRowViewModel(
+              key     = "documentDescription.checkYourAnswersLabel",
+              value   = ValueViewModel(HtmlFormat.escape(answer).toString)
+            )
+        }
     }
+
+  private def changeLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): ActionItem = {
+    ActionItemViewModel(
+      content = "site.change",
+      href = routes.DocumentDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+      id = s"changeDocumentDescription-${idx.displayIndex}"
+    ).withVisuallyHiddenText(messages("documentDescription.change.hidden"))
+  }
 }

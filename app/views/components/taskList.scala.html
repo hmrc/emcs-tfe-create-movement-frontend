@@ -36,7 +36,9 @@
                 <a href="@link" aria-describedby="@row.id">@row.taskName</a>
               }
             </span>
-            <strong class="govuk-tag @row.status.tagClass.getOrElse("") app-task-list__tag" id="@row.id">@messages(row.status.msgKey)</strong>
+            @row.status.map { status =>
+                <strong class="govuk-tag @status.tagClass.getOrElse("") app-task-list__tag" id="@row.id">@messages(status.msgKey)</strong>
+            }
           </li>
         }
       </ul>

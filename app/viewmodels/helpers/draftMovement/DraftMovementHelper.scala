@@ -78,7 +78,7 @@ class DraftMovementHelper @Inject()() extends Logging {
         id = "movementDetails",
         link = Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(request.ern, request.draftId).url),
         section = Some(InfoSection),
-        status = InfoSection.status
+        status = Some(InfoSection.status)
       )
     )
   )
@@ -93,7 +93,7 @@ class DraftMovementHelper @Inject()() extends Logging {
           id = "consignor",
           link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(ConsignorSection),
-          status = ConsignorSection.status
+          status = Some(ConsignorSection.status)
         )),
         if (ImportInformationSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
@@ -101,7 +101,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "import",
             link = Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(ImportInformationSection),
-            status = ImportInformationSection.status
+            status = Some(ImportInformationSection.status)
           ))
         } else {
           None
@@ -112,7 +112,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "dispatch",
             link = Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(DispatchSection),
-            status = DispatchSection.status
+            status = Some(DispatchSection.status)
           ))
         } else {
           None
@@ -123,7 +123,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "consignee",
             link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(ConsigneeSection),
-            status = ConsigneeSection.status
+            status = Some(ConsigneeSection.status)
           ))
         } else {
           None
@@ -134,7 +134,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "destination",
             link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(DestinationSection),
-            status = DestinationSection.status
+            status = Some(DestinationSection.status)
           ))
         } else {
           None
@@ -145,7 +145,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "export",
             link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(ExportInformationSection),
-            status = ExportInformationSection.status
+            status = Some(ExportInformationSection.status)
           ))
         } else {
           None
@@ -163,7 +163,7 @@ class DraftMovementHelper @Inject()() extends Logging {
           id = "guarantor",
           link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(GuarantorSection),
-          status = GuarantorSection.status
+          status = Some(GuarantorSection.status)
         ))
       ).flatten
     )
@@ -178,28 +178,28 @@ class DraftMovementHelper @Inject()() extends Logging {
           id = "journeyType",
           link = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(JourneyTypeSection),
-          status = JourneyTypeSection.status
+          status = Some(JourneyTypeSection.status)
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.transportArranger"),
           id = "transportArranger",
           link = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(TransportArrangerSection),
-          status = TransportArrangerSection.status
+          status = Some(TransportArrangerSection.status)
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.firstTransporter"),
           id = "firstTransporter",
           link = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(FirstTransporterSection),
-          status = FirstTransporterSection.status
+          status = Some(FirstTransporterSection.status)
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.units"),
           id = "units",
           link = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(TransportUnitsSection),
-          status = TransportUnitsSection.status
+          status = Some(TransportUnitsSection.status)
         ))
       ).flatten
     )
@@ -214,7 +214,7 @@ class DraftMovementHelper @Inject()() extends Logging {
           id = "items",
           link = Some(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(ItemsSection),
-          status = ItemsSection.status
+          status = Some(ItemsSection.status)
         ))
       ).flatten
     )
@@ -231,7 +231,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "sad",
             link = Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(SadSection),
-            status = ItemsSection.status
+            status = Some(ItemsSection.status)
           ))
         } else {
           None
@@ -241,7 +241,7 @@ class DraftMovementHelper @Inject()() extends Logging {
           id = "documents",
           link = Some(controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(request.ern, request.draftId).url),
           section = Some(DocumentsSection),
-          status = DocumentsSection.status
+          status = Some(DocumentsSection.status)
         ))
       ).flatten
     )
@@ -261,20 +261,16 @@ class DraftMovementHelper @Inject()() extends Logging {
 
     val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
 
-    val status: TaskListStatus = if (rows.nonEmpty && rows.forall(_.status == Completed)) {
-      Completed
-    } else {
-      CannotStartYet
-    }
+    val completed: Boolean = rows.nonEmpty && rows.forall(_.status.contains(Completed))
 
     TaskListSection(
       sectionHeading = messages("draftMovement.section.submit"),
       rows = Seq(TaskListSectionRow(
         taskName = messages("draftMovement.section.submit.reviewAndSubmit"),
         id = "submit",
-        link = if (status == Completed) Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url) else None,
+        link = if (completed) Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url) else None,
         section = None,
-        status = status
+        status = if (completed) None else Some(CannotStartYet)
       ))
     )
   }

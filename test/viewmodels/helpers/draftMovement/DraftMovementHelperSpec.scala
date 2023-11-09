@@ -173,7 +173,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "movementDetails",
                 Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testDraftId).url),
                 Some(InfoSection),
-                NotStarted
+                Some(NotStarted)
               )
             )
           )
@@ -186,7 +186,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "import",
           Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(ern, testDraftId).url),
           Some(ImportInformationSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         def dispatchRow(ern: String) = TaskListSectionRow(
@@ -194,7 +194,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "dispatch",
           Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(ern, testDraftId).url),
           Some(DispatchSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         def consigneeRow(ern: String) = TaskListSectionRow(
@@ -202,7 +202,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "consignee",
           Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url),
           Some(ConsigneeSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         def destinationRow(ern: String) = TaskListSectionRow(
@@ -210,7 +210,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "destination",
           Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, testDraftId).url),
           Some(DestinationSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         def exportRow(ern: String) = TaskListSectionRow(
@@ -218,7 +218,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "export",
           Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(ern, testDraftId).url),
           Some(ExportInformationSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         "should have the correct heading" in {
@@ -232,7 +232,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "consignor",
             Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url),
             Some(ConsignorSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
         "should render the import row" - {
@@ -370,7 +370,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "guarantor",
                 Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url),
                 Some(GuarantorSection),
-                NotStarted
+                Some(NotStarted)
               )
             )
           )
@@ -390,7 +390,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "journeyType",
             Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testDraftId).url),
             Some(JourneyTypeSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
         "should render the transportArranger row" in {
@@ -400,7 +400,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "transportArranger",
             Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url),
             Some(TransportArrangerSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
         "should render the firstTransporter row" in {
@@ -410,7 +410,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "firstTransporter",
             Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url),
             Some(FirstTransporterSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
         "should render the units row" in {
@@ -420,7 +420,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "units",
             Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url),
             Some(TransportUnitsSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
       }
@@ -436,7 +436,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "items",
                 Some(controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url),
                 Some(ItemsSection),
-                NotStarted
+                Some(NotStarted)
               )
             )
           )
@@ -449,7 +449,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "sad",
           Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url),
           Some(SadSection),
-          NotStarted
+          Some(NotStarted)
         )
 
         "should have the correct heading" in {
@@ -481,7 +481,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "documents",
             Some(controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url),
             Some(DocumentsSection),
-            NotStarted
+            Some(NotStarted)
           ))
         }
       }
@@ -508,14 +508,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId1",
                     link = None,
                     section = Some(TestSection),
-                    status = Completed
+                    status = Some(Completed)
                   ),
                   TaskListSectionRow(
                     taskName = "testName2",
                     id = "testId2",
                     link = None,
                     section = Some(TestSection),
-                    status = Completed
+                    status = Some(Completed)
                   )
                 )
               ),
@@ -527,14 +527,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId3",
                     link = None,
                     section = Some(TestSection),
-                    status = Completed
+                    status = Some(Completed)
                   ),
                   TaskListSectionRow(
                     taskName = "testName4",
                     id = "testId4",
                     link = None,
                     section = Some(TestSection),
-                    status = Completed
+                    status = Some(Completed)
                   )
                 )
               )
@@ -548,7 +548,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "submit",
                   link = Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url),
                   section = None,
-                  status = Completed
+                  status = None
                 )
               )
             )
@@ -566,14 +566,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId1",
                     link = None,
                     section = None,
-                    status = InProgress
+                    status = Some(InProgress)
                   ),
                   TaskListSectionRow(
                     taskName = "testName2",
                     id = "testId2",
                     link = None,
                     section = None,
-                    status = NotStarted
+                    status = Some(NotStarted)
                   )
                 )
               ),
@@ -585,14 +585,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId3",
                     link = None,
                     section = None,
-                    status = Completed
+                    status = Some(Completed)
                   ),
                   TaskListSectionRow(
                     taskName = "testName4",
                     id = "testId4",
                     link = None,
                     section = None,
-                    status = Completed
+                    status = Some(Completed)
                   )
                 )
               )
@@ -606,7 +606,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "submit",
                   link = None,
                   section = None,
-                  status = CannotStartYet
+                  status = Some(CannotStartYet)
                 )
               )
             )
@@ -621,14 +621,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId1",
                     link = None,
                     section = None,
-                    status = NotStarted
+                    status = Some(NotStarted)
                   ),
                   TaskListSectionRow(
                     taskName = "testName2",
                     id = "testId2",
                     link = None,
                     section = None,
-                    status = NotStarted
+                    status = Some(NotStarted)
                   )
                 )
               ),
@@ -640,14 +640,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     id = "testId3",
                     link = None,
                     section = None,
-                    status = NotStarted
+                    status = Some(NotStarted)
                   ),
                   TaskListSectionRow(
                     taskName = "testName4",
                     id = "testId4",
                     link = None,
                     section = None,
-                    status = NotStarted
+                    status = Some(NotStarted)
                   )
                 )
               )
@@ -661,7 +661,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "submit",
                   link = None,
                   section = None,
-                  status = CannotStartYet
+                  status = Some(CannotStartYet)
                 )
               )
             )
@@ -687,7 +687,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "submit",
                   link = None,
                   section = None,
-                  status = CannotStartYet
+                  status = Some(CannotStartYet)
                 )
               )
             )
@@ -703,14 +703,14 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "submit",
                   link = None,
                   section = None,
-                  status = CannotStartYet
+                  status = Some(CannotStartYet)
                 )
               )
             )
           }
         }
 
-        "must filter out sections which cannot be filled out for that user/destination type, even if Completed" in {
+        "must filter out sections which cannot be filled out for that user/destination type, even ifSome(Completed)" in {
           object TestSection extends Section[JsObject] {
             override def status(implicit request: DataRequest[_]): TaskListStatus = Completed
 
@@ -728,7 +728,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   id = "testid",
                   None,
                   Some(TestSection),
-                  Completed
+                  Some(Completed)
                 )
               )
             )
@@ -742,7 +742,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 id = "submit",
                 link = None,
                 section = None,
-                status = CannotStartYet
+                status = Some(CannotStartYet)
               )
             )
           )

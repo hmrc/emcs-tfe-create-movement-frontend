@@ -42,7 +42,7 @@ case class TaskListSectionRow(taskName: String,
                               id: String,
                               link: Option[String],
                               section: Option[Section[_]],
-                              status: TaskListStatus)
+                              status: Option[TaskListStatus])
 
 case class TaskListSection(sectionHeading: String,
                            rows: Seq[TaskListSectionRow])

@@ -16,6 +16,8 @@
 
 package viewmodels.taskList
 
+import pages.sections.Section
+
 sealed trait TaskListStatus {
   val msgKey: String
   val tagClass: Option[String] = None
@@ -39,6 +41,7 @@ case object CannotStartYet extends TaskListStatus {
 case class TaskListSectionRow(taskName: String,
                               id: String,
                               link: Option[String],
+                              section: Option[Section[_]],
                               status: TaskListStatus)
 
 case class TaskListSection(sectionHeading: String,

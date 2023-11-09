@@ -170,6 +170,8 @@ draftMovement.section.transport.journeyType = Journey type
 draftMovement.section.transport.transportArranger = Transport arranger
 draftMovement.section.transport.firstTransporter = First transporter
 draftMovement.section.transport.units = Transport units
+draftMovement.section.items = Items
+draftMovement.section.items.items = Items
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

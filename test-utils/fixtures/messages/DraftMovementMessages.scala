@@ -45,6 +45,9 @@ object DraftMovementMessages {
     val transportArranger: String = "Transport arranger"
     val firstTransporter: String = "First transporter"
     val units: String = "Transport units"
+
+    val itemsSectionHeading: String = "Items"
+    val items: String = "Items"
   }
 
   object English extends ViewMessages with BaseEnglish

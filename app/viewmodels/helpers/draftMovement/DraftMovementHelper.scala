@@ -29,6 +29,7 @@ import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
 import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
+import pages.sections.items.ItemsSection
 import pages.sections.journeyType.JourneyTypeSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
@@ -76,6 +77,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
         taskName = messages("draftMovement.section.movement.movementDetails"),
         id = "movementDetails",
         link = Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(request.ern, request.draftId).url),
+        section = Some(InfoSection),
         status = InfoSection.status
       )
     )
@@ -90,6 +92,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
           taskName = messages("draftMovement.section.delivery.consignor"),
           id = "consignor",
           link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(ConsignorSection),
           status = ConsignorSection.status
         )),
         if (ImportInformationSection.canBeCompletedForTraderAndDestinationType) {
@@ -97,6 +100,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
             taskName = messages("draftMovement.section.delivery.import"),
             id = "import",
             link = Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(ImportInformationSection),
             status = ImportInformationSection.status
           ))
         } else {
@@ -107,6 +111,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
             taskName = messages("draftMovement.section.delivery.dispatch"),
             id = "dispatch",
             link = Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(DispatchSection),
             status = DispatchSection.status
           ))
         } else {
@@ -117,6 +122,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
             taskName = messages("draftMovement.section.delivery.consignee"),
             id = "consignee",
             link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(ConsigneeSection),
             status = ConsigneeSection.status
           ))
         } else {
@@ -127,6 +133,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
             taskName = messages("draftMovement.section.delivery.destination"),
             id = "destination",
             link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(DestinationSection),
             status = DestinationSection.status
           ))
         } else {
@@ -137,6 +144,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
             taskName = messages("draftMovement.section.delivery.export"),
             id = "export",
             link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(ExportInformationSection),
             status = ExportInformationSection.status
           ))
         } else {
@@ -154,6 +162,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
           taskName = messages("draftMovement.section.guarantor.guarantor"),
           id = "guarantor",
           link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(GuarantorSection),
           status = GuarantorSection.status
         ))
       ).flatten
@@ -168,37 +177,60 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
           taskName = messages("draftMovement.section.transport.journeyType"),
           id = "journeyType",
           link = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(JourneyTypeSection),
           status = JourneyTypeSection.status
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.transportArranger"),
           id = "transportArranger",
           link = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(TransportArrangerSection),
           status = TransportArrangerSection.status
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.firstTransporter"),
           id = "firstTransporter",
           link = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(FirstTransporterSection),
           status = FirstTransporterSection.status
         )),
         Some(TaskListSectionRow(
           taskName = messages("draftMovement.section.transport.units"),
           id = "units",
           link = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(TransportUnitsSection),
           status = TransportUnitsSection.status
         ))
       ).flatten
     )
   }
 
+
+  private[draftMovement] def itemsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.items"),
+      rows = Seq(
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.items.items"),
+          id = "items",
+          link = Some(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(ItemsSection),
+          status = ItemsSection.status
+        ))
+      ).flatten
+    )
+  }
+
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
-    taskList(TaskList(sections = Seq(
+    val sectionsExceptSubmit: Seq[TaskListSection] = Seq(
       movementSection,
       deliverySection,
       guarantorSection,
       transportSection,
-    )))
+      itemsSection
+    )
+
+    taskList(TaskList(sections = sectionsExceptSubmit))
   }
 
 }

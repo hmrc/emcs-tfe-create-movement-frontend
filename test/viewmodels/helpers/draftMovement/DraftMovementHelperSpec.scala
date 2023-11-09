@@ -25,7 +25,19 @@ import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.consignee.ConsigneeSection
+import pages.sections.consignor.ConsignorSection
+import pages.sections.destination.DestinationSection
+import pages.sections.dispatch.DispatchSection
+import pages.sections.exportInformation.ExportInformationSection
+import pages.sections.firstTransporter.FirstTransporterSection
+import pages.sections.guarantor.GuarantorSection
+import pages.sections.importInformation.ImportInformationSection
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
+import pages.sections.items.ItemsSection
+import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.transportArranger.TransportArrangerSection
+import pages.sections.transportUnit.TransportUnitsSection
 import play.api.test.FakeRequest
 import viewmodels.taskList.{NotStarted, TaskListSection, TaskListSectionRow}
 import views.ViewUtils.titleNoForm
@@ -158,6 +170,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 messagesForLanguage.movementDetails,
                 "movementDetails",
                 Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testDraftId).url),
+                Some(InfoSection),
                 NotStarted
               )
             )
@@ -170,6 +183,7 @@ class DraftMovementHelperSpec extends SpecBase {
           messagesForLanguage.`import`,
           "import",
           Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(ern, testDraftId).url),
+          Some(ImportInformationSection),
           NotStarted
         )
 
@@ -177,6 +191,7 @@ class DraftMovementHelperSpec extends SpecBase {
           messagesForLanguage.dispatch,
           "dispatch",
           Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(ern, testDraftId).url),
+          Some(DispatchSection),
           NotStarted
         )
 
@@ -184,6 +199,7 @@ class DraftMovementHelperSpec extends SpecBase {
           messagesForLanguage.consignee,
           "consignee",
           Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url),
+          Some(ConsigneeSection),
           NotStarted
         )
 
@@ -191,6 +207,7 @@ class DraftMovementHelperSpec extends SpecBase {
           messagesForLanguage.destination,
           "destination",
           Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, testDraftId).url),
+          Some(DestinationSection),
           NotStarted
         )
 
@@ -198,6 +215,7 @@ class DraftMovementHelperSpec extends SpecBase {
           messagesForLanguage.export,
           "export",
           Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(ern, testDraftId).url),
+          Some(ExportInformationSection),
           NotStarted
         )
 
@@ -211,6 +229,7 @@ class DraftMovementHelperSpec extends SpecBase {
             messagesForLanguage.consignor,
             "consignor",
             Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(ConsignorSection),
             NotStarted
           ))
         }
@@ -348,6 +367,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 messagesForLanguage.guarantor,
                 "guarantor",
                 Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url),
+                Some(GuarantorSection),
                 NotStarted
               )
             )
@@ -367,6 +387,7 @@ class DraftMovementHelperSpec extends SpecBase {
             messagesForLanguage.journeyType,
             "journeyType",
             Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(JourneyTypeSection),
             NotStarted
           ))
         }
@@ -376,6 +397,7 @@ class DraftMovementHelperSpec extends SpecBase {
             messagesForLanguage.transportArranger,
             "transportArranger",
             Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(TransportArrangerSection),
             NotStarted
           ))
         }
@@ -385,6 +407,7 @@ class DraftMovementHelperSpec extends SpecBase {
             messagesForLanguage.firstTransporter,
             "firstTransporter",
             Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(FirstTransporterSection),
             NotStarted
           ))
         }
@@ -394,8 +417,27 @@ class DraftMovementHelperSpec extends SpecBase {
             messagesForLanguage.units,
             "units",
             Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(TransportUnitsSection),
             NotStarted
           ))
+        }
+      }
+
+      "itemsSection" - {
+        "should render the Items section" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.itemsSection mustBe TaskListSection(
+            messagesForLanguage.itemsSectionHeading,
+            Seq(
+              TaskListSectionRow(
+                messagesForLanguage.items,
+                "items",
+                Some(controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url),
+                Some(ItemsSection),
+                NotStarted
+              )
+            )
+          )
         }
       }
     }

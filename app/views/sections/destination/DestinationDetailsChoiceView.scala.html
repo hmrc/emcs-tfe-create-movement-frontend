@@ -30,7 +30,7 @@
 
 @(form: Form[_], action: Call, movementScenario: MovementScenario)(implicit request: DataRequest[_], messages: Messages)
 
-    @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", movementScenario.stringValue))) {
+    @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(action, Symbol("autoComplete") -> "off") {
 
@@ -63,4 +63,3 @@
     @{
         //$COVERAGE-OFF$
     }
-

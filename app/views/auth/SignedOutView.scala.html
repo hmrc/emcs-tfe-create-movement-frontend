@@ -38,7 +38,7 @@
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.signIn"))
-                .asLink(appConfig.emcsTfeHomeUrl)
+                .asLink(appConfig.emcsTfeHomeUrl())
         )
     </p>
 }

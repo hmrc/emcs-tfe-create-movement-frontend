@@ -17,6 +17,7 @@
 @import config.AppConfig
 @import views.html.helper.CSPNonce
 @import views.html.templates.FullWidthMainContentTemplate
+@import views.ViewUtils._
 
 @this(
     appConfig: AppConfig,
@@ -41,6 +42,7 @@
         timeout: Boolean = true,
         showSignOut: Boolean = true,
         fullWidthContent: Boolean = false,
+        maybeShowActiveTrader: Option[TraderInfo] = None,
         additionalCss: Html = Html(""),
         additionalScripts: Html = Html("")
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
@@ -71,7 +73,15 @@
     @additionalScripts
 }
 
+@activeTraderBlock(traderName: String, ern: String) = {
+    <div class="active-trader-info govuk-!-margin-bottom-0" aria-label="Organisation switcher">
+        <div class="active-trader-info__title">@traderName (@ern)</div>
+        <a href="@{ appConfig.emcsTfeHomeUrl(Some(ern)) }" class="active-trader-info__link">@{ messages("activeTraderInfo.link") }</a>
+    </div>
+}
+
 @beforeContent = {
+    @{ maybeShowActiveTrader.map { case TraderInfo(name, ern) => activeTraderBlock(name, ern) } }
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
     }
@@ -90,7 +100,7 @@
     pageTitle   = Some(pageTitle),
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
-        serviceUrl  = Some(appConfig.emcsTfeHomeUrl),
+        serviceUrl  = Some(appConfig.emcsTfeHomeUrl()),
         signOutUrl  = if(showSignOut) Some(appConfig.signOutUrl()(request)) else None,
         phaseBanner = Some(betaBanner(appConfig.betaBannerFeedbackUrl))
     )),

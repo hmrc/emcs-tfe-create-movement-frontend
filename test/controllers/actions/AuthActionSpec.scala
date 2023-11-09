@@ -19,10 +19,11 @@ package controllers.actions
 import base.SpecBase
 import config.{AppConfig, EnrolmentKeys}
 import fixtures.BaseFixtures
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
 import play.api.Play
+import play.api.http.HttpEntity
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
+import play.api.mvc.{Action, AnyContent, BodyParsers, ResponseHeader, Result, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -33,9 +34,10 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration.Duration
 
-class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
+class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll with PrivateMethodTester {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 
@@ -198,44 +200,64 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                 }
 
                 s"the ${EnrolmentKeys.ERN} identifier is present" - {
+                  val singleEnrolement = Enrolments(Set(
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
+                      state = EnrolmentKeys.ACTIVATED
+                    )
+                  ))
 
                   "allow the User through, returning a 200 (OK)" in new Harness {
-
-                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = Enrolments(Set(
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
-                        state = EnrolmentKeys.ACTIVATED
-                      )
-                    ))))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
 
                     status(result) mustBe OK
+                  }
+
+                  "set UserRequest.hasMultipleErns to false" in new Harness {
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
+
+                    val hasMultipleErns = authAction(testErn) { req =>
+                      Result(ResponseHeader(if (req.hasMultipleErns) 1 else 0), HttpEntity.NoEntity)
+                    }(fakeRequest).map(_.header.status == 1)
+
+                    Await.result(hasMultipleErns, Duration.Inf) mustBe false
                   }
                 }
 
                 s"there are multiple Enrolments with ${EnrolmentKeys.ERN}'s present and ERN matches one" - {
+                  val multipleEnrolements = Enrolments(Set(
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_1")),
+                      state = EnrolmentKeys.INACTIVE
+                    ),
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
+                      state = EnrolmentKeys.ACTIVATED
+                    ),
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_2")),
+                      state = EnrolmentKeys.ACTIVATED
+                    )
+                  ))
 
                   "allow the User through, returning a 200 (OK)" in new Harness {
-
-                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = Enrolments(Set(
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_1")),
-                        state = EnrolmentKeys.INACTIVE
-                      ),
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
-                        state = EnrolmentKeys.ACTIVATED
-                      ),
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_2")),
-                        state = EnrolmentKeys.ACTIVATED
-                      )
-                    ))))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
 
                     status(result) mustBe OK
+                  }
+
+                  "set UserRequest.hasMultipleErns to true" in new Harness {
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
+
+                    val hasMultipleErns = authAction(testErn) { req =>
+                      Result(ResponseHeader(if (req.hasMultipleErns) 1 else 0), HttpEntity.NoEntity)
+                    }(fakeRequest).map(_.header.status == 1)
+
+                    Await.result(hasMultipleErns, Duration.Inf) mustBe true
                   }
                 }
               }

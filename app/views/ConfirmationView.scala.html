@@ -28,7 +28,7 @@
 
 @(reference: String)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("confirmation.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("confirmation.title")), showBackLink = false, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @confirmationPanel("confirmation.heading")
 

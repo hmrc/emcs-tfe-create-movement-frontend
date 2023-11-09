@@ -31,7 +31,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("firstTransporterName.title"))) {
+@layout(pageTitle = title(form, messages("firstTransporterName.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onSubmit(request.ern, request.draftId, mode)) {
 

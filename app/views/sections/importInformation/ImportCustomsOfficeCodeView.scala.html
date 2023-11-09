@@ -39,7 +39,7 @@
     } else {
         messages("importCustomsOfficeCode.northernIrishRegisteredConsignor.title")
     }
-)) {
+), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 

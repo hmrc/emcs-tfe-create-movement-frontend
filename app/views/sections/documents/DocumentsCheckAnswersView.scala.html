@@ -27,7 +27,7 @@
 
 @(summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("documentsCheckAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("documentsCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.documents.routes.DocumentsCheckAnswersController.onSubmit(request.ern, request.draftId), 'autoComplete -> "off") {
 

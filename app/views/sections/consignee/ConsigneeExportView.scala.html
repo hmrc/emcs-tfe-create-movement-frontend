@@ -30,7 +30,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("consigneeExport.title"))) {
+@layout(pageTitle = title(form, messages("consigneeExport.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

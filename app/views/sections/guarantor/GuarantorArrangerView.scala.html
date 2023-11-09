@@ -30,7 +30,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("guarantorArranger.title"))) {
+@layout(pageTitle = title(form, messages("guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

@@ -35,7 +35,7 @@
     } else {
         messages("consigneeExcise.title")
     }
-)) {
+), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 

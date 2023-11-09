@@ -53,3 +53,8 @@ case object RedirectToFeedbackSurvey extends FeatureSwitch {
   override val configName: String = "features.redirectToFeedbackSurvey"
   override val displayName: String = "Enable redirecting to feedback survey"
 }
+
+case object ReturnToLegacy extends FeatureSwitch {
+  override val configName: String = "features.returnToLegacy"
+  override val displayName: String = "Return the User to the Legacy EMCS service"
+}

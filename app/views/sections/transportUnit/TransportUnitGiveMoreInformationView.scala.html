@@ -35,7 +35,7 @@
 
 @(form: Form[_], idx: Index, mode: Mode, transportUnitType: TransportUnitType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationPage(idx))) {
+@layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationPage(idx)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onSubmit(request.ern, request.draftId, idx, mode), Symbol("autoComplete") -> "off") {
 

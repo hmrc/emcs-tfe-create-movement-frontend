@@ -51,7 +51,7 @@ class DeferredMovementController @Inject()(
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      renderView(Ok, fillForm(DeferredMovementPage(isOnPreDraftFlow = true), formProvider()), controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(request.ern, mode))
+      renderView(Ok, fillForm(DeferredMovementPage(), formProvider()), controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(request.ern, mode))
     }
 
   def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
@@ -60,13 +60,13 @@ class DeferredMovementController @Inject()(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(request.ern, mode)),
         value =>
-          savePreDraftAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, mode)
+          savePreDraftAndRedirect(DeferredMovementPage(), value, mode)
       )
     }
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DeferredMovementPage(isOnPreDraftFlow = true), formProvider()), controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern, draftId))
+      renderView(Ok, fillForm(DeferredMovementPage(isOnPreDraftFlow = false), formProvider()), controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern, draftId))
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =

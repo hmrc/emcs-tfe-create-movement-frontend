@@ -51,4 +51,6 @@ object InfoSection extends Section[JsObject] {
   }
 
   override val path: JsPath = JsPath \ "info"
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

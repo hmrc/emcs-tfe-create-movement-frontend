@@ -24,5 +24,9 @@ import viewmodels.taskList.{Completed, TaskListStatus}
 trait Section[T <: JsValue] extends QuestionPage[T] {
   def status(implicit request: DataRequest[_]): TaskListStatus
 
+  // Certain sections can only be completed under certain conditions - e.g. only XIRC/GBRC can complete SAD.
+  // Use this Boolean to filter out sections which are not applicable when submitting.
+  def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean
+
   final def isCompleted(implicit request: DataRequest[_]): Boolean = status == Completed
 }

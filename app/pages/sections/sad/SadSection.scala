@@ -18,6 +18,7 @@ package pages.sections.sad
 
 import models.requests.DataRequest
 import models.sections.sad.SadAddToListModel
+import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.SadCount
@@ -38,4 +39,7 @@ case object SadSection extends Section[JsObject] {
       case (status, _, _) => status
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    (request.userTypeFromErn == GreatBritainRegisteredConsignor) || (request.userTypeFromErn == NorthernIrelandRegisteredConsignor)
 }

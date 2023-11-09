@@ -19,7 +19,6 @@ package viewmodels.helpers.draftMovement
 import models._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
-import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
@@ -79,7 +78,6 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
 
   //noinspection ScalaStyle
   private[draftMovement] def deliverySection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
-    val dt: Option[MovementScenario] = request.userAnswers.get(DestinationTypePage)
     TaskListSection(
       sectionHeading = messages("draftMovement.section.delivery"),
       rows = Seq(
@@ -89,7 +87,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
           link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.draftId).url),
           status = ConsignorSection.status
         )),
-        if (Seq(GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor).contains(request.userTypeFromErn)) {
+        if (ImportInformationSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.delivery.import"),
             id = "import",
@@ -99,7 +97,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
         } else {
           None
         },
-        if (Seq(GreatBritainWarehouseKeeper, NorthernIrelandWarehouseKeeper).contains(request.userTypeFromErn)) {
+        if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.delivery.dispatch"),
             id = "dispatch",
@@ -109,35 +107,35 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
         } else {
           None
         },
-        dt match {
-          case Some(value) if value != UnknownDestination =>
-            Some(TaskListSectionRow(
-              taskName = messages("draftMovement.section.delivery.consignee"),
-              id = "consignee",
-              link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.draftId).url),
-              status = ConsigneeSection.status
-            ))
-          case _ => None
+        if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.delivery.consignee"),
+            id = "consignee",
+            link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.draftId).url),
+            status = ConsigneeSection.status
+          ))
+        } else {
+          None
         },
-        dt match {
-          case Some(value) if Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains(value) =>
-            Some(TaskListSectionRow(
-              taskName = messages("draftMovement.section.delivery.destination"),
-              id = "destination",
-              link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.draftId).url),
-              status = DestinationSection.status
-            ))
-          case _ => None
+        if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.delivery.destination"),
+            id = "destination",
+            link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.draftId).url),
+            status = DestinationSection.status
+          ))
+        } else {
+          None
         },
-        dt match {
-          case Some(value) if Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(value) =>
-            Some(TaskListSectionRow(
-              taskName = messages("draftMovement.section.delivery.export"),
-              id = "export",
-              link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
-              status = ExportInformationSection.status
-            ))
-          case _ => None
+        if (ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.delivery.export"),
+            id = "export",
+            link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
+            status = ExportInformationSection.status
+          ))
+        } else {
+          None
         },
       ).flatten
     )

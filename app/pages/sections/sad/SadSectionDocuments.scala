@@ -38,4 +38,7 @@ case object SadSectionDocuments extends Section[JsArray] {
         InProgress
       }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    SadSection.canBeCompletedForTraderAndDestinationType
 }

@@ -17,8 +17,10 @@
 package pages.sections.destination
 
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
 import pages.sections.Section
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
@@ -61,4 +63,11 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case _ => InProgress
     }
   }
+
+  //noinspection ScalaStyle
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(DestinationTypePage) match {
+      case Some(value) if Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains(value) => true
+      case _ => false
+    }
 }

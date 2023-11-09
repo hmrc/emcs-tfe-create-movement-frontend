@@ -60,4 +60,7 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
       case _ if !moreInfoChoiceAnswer => true
       case _ => false
     }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 }

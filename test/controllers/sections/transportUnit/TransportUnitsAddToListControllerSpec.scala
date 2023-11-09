@@ -22,7 +22,7 @@ import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType.Tractor
 import models.sections.transportUnit.TransportUnitsAddToListModel
-import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome, Yes}
+import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
 import models.{Index, NormalMode}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator

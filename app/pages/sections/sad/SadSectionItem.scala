@@ -36,4 +36,7 @@ case class SadSectionItem(sadIndex: Index) extends Section[JsObject] {
         NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    SadSection.canBeCompletedForTraderAndDestinationType
 }

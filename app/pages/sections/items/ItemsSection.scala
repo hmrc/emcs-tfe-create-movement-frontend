@@ -29,4 +29,6 @@ case object ItemsSection extends Section[JsObject] {
     // TODO: Update when CAM-ITM34 is built
     NotStarted
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

@@ -172,6 +172,9 @@ draftMovement.section.transport.firstTransporter = First transporter
 draftMovement.section.transport.units = Transport units
 draftMovement.section.items = Items
 draftMovement.section.items.items = Items
+draftMovement.section.documents = Documents
+draftMovement.section.documents.sad = Single Administrative Documents
+draftMovement.section.documents.documents = Documents
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

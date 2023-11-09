@@ -48,6 +48,10 @@ object DraftMovementMessages {
 
     val itemsSectionHeading: String = "Items"
     val items: String = "Items"
+
+    val documentsSectionHeading: String = "Documents"
+    val sad: String = "Single Administrative Documents"
+    val documents: String = "Documents"
   }
 
   object English extends ViewMessages with BaseEnglish

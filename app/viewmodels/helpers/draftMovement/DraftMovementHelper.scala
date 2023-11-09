@@ -24,6 +24,7 @@ import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
+import pages.sections.documents.DocumentsSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
@@ -31,6 +32,7 @@ import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
 import pages.sections.items.ItemsSection
 import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
@@ -221,13 +223,41 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
+
+  private[draftMovement] def documentsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.documents"),
+      rows = Seq(
+        if(SadSection.canBeCompletedForTraderAndDestinationType) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.documents.sad"),
+            id = "sad",
+            link = Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId).url),
+            section = Some(SadSection),
+            status = ItemsSection.status
+          ))
+        } else {
+          None
+        },
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.documents.documents"),
+          id = "documents",
+          link = Some(controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(request.ern, request.draftId).url),
+          section = Some(DocumentsSection),
+          status = DocumentsSection.status
+        ))
+      ).flatten
+    )
+  }
+
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
     val sectionsExceptSubmit: Seq[TaskListSection] = Seq(
       movementSection,
       deliverySection,
       guarantorSection,
       transportSection,
-      itemsSection
+      itemsSection,
+      documentsSection
     )
 
     taskList(TaskList(sections = sectionsExceptSubmit))

@@ -29,6 +29,7 @@ import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
+import pages.sections.documents.DocumentsSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
@@ -36,6 +37,7 @@ import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
 import pages.sections.items.ItemsSection
 import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.test.FakeRequest
@@ -438,6 +440,49 @@ class DraftMovementHelperSpec extends SpecBase {
               )
             )
           )
+        }
+      }
+
+      "documentsSection" - {
+        def sadRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.sad,
+          "sad",
+          Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url),
+          Some(SadSection),
+          NotStarted
+        )
+
+        "should have the correct heading" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.documentsSection.sectionHeading mustBe messagesForLanguage.documentsSectionHeading
+        }
+        "should render the sad row" - {
+          "when UserType is valid" in {
+            Seq("GBRC123", "XIRC123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.documentsSection.rows must contain(sadRow(ern))
+            }
+          }
+        }
+        "should not render the sad row" - {
+          "when UserType is invalid" in {
+            Seq("GBWK123", "XIWK123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.documentsSection.rows must not contain sadRow(ern)
+            }
+          }
+        }
+        "should render the documents row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.documentsSection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.documents,
+            "documents",
+            Some(controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url),
+            Some(DocumentsSection),
+            NotStarted
+          ))
         }
       }
     }

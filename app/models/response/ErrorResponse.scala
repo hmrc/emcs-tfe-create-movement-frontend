@@ -46,4 +46,7 @@ case class MissingHeaderError(message: String) extends Exception(message) with N
 case class TraderKnownFactsException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class MemberStatesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
+case class ExciseProductCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

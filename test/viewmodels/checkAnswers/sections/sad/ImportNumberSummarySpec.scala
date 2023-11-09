@@ -39,7 +39,7 @@ import org.scalatest.matchers.must.Matchers
 import pages.sections.sad.ImportNumberPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -47,7 +47,6 @@ class ImportNumberSummarySpec extends SpecBase with Matchers {
   "ImportNumberSummary" - {
 
     lazy val app = applicationBuilder().build()
-    implicit val link = app.injector.instanceOf[views.html.components.link]
 
     Seq(ImportNumberMessages.English).foreach { messagesForLanguage =>
 

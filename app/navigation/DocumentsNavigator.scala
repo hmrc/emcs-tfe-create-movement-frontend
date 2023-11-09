@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.sections.documents.routes
+import models.sections.documents.DocumentType
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
@@ -36,10 +37,10 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
         }
     case DocumentTypePage =>
       (answers: UserAnswers) => answers.get(DocumentTypePage) match {
-        case Some("Other") => //TODO change from magic string
-          controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        case _ =>
+        case Some(DocumentType.OtherCode) =>
           controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+        case _ =>
+          controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
       }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()

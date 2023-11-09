@@ -25,6 +25,7 @@ import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
 import pages.sections.exportInformation.ExportInformationSection
+import pages.sections.guarantor.GuarantorSection
 import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
 import play.api.i18n.Messages
@@ -136,7 +137,21 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
           ))
         } else {
           None
-        },
+        }
+      ).flatten
+    )
+  }
+
+  private[draftMovement] def guarantorSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.guarantor"),
+      rows = Seq(
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.guarantor.guarantor"),
+          id = "guarantor",
+          link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = GuarantorSection.status
+        ))
       ).flatten
     )
   }
@@ -144,7 +159,8 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
     taskList(TaskList(sections = Seq(
       movementSection,
-      deliverySection
+      deliverySection,
+      guarantorSection,
     )))
   }
 

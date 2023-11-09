@@ -36,6 +36,9 @@ object DraftMovementMessages {
     val consignee: String = "Consignee"
     val destination: String = "Place of destination"
     val export: String = "Export"
+
+    val guarantorSectionHeading: String = "Guarantor"
+    val guarantor: String = "Guarantor"
   }
 
   object English extends ViewMessages with BaseEnglish

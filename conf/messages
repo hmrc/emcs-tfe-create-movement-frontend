@@ -163,6 +163,8 @@ draftMovement.section.delivery.dispatch = Place of dispatch
 draftMovement.section.delivery.consignee = Consignee
 draftMovement.section.delivery.destination = Place of destination
 draftMovement.section.delivery.export = Export
+draftMovement.section.guarantor = Guarantor
+draftMovement.section.guarantor.guarantor = Guarantor
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

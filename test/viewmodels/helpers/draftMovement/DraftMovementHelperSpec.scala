@@ -337,6 +337,24 @@ class DraftMovementHelperSpec extends SpecBase {
           }
         }
       }
+
+
+      "guarantorSection" - {
+        "should render the Guarantor section" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.guarantorSection mustBe TaskListSection(
+            messagesForLanguage.guarantorSectionHeading,
+            Seq(
+              TaskListSectionRow(
+                messagesForLanguage.guarantor,
+                "guarantor",
+                Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url),
+                NotStarted
+              )
+            )
+          )
+        }
+      }
     }
   }
 }

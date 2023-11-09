@@ -51,7 +51,7 @@
             label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(HintViewModel(content = HtmlContent(
-            messages(s"commercialDescription.hint.${goodsType.fold(messages("site.item"))(_.code.toLowerCase)}")
+            messages(s"commercialDescription.hint.${goodsType.fold(messages("site.item"))(_.toSingularOutput())}")
             ))),
             errorMessage = form.errors("value") match {
                 case Nil => None
@@ -59,7 +59,7 @@
             }
         ))}
 
-       @if(goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "b") {
+       @if(goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Beer") {
         @details("commercialDescription.summary"){
             @p(){
                 @messages("commercialDescription.details.beer1")
@@ -71,7 +71,7 @@
                 @messages("commercialDescription.details.beer3")
             }
         }
-       } else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "w") {
+       } else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Wine") {
 @details("commercialDescription.summary"){
 @p(){
 @messages("commercialDescription.details.wine1")
@@ -92,7 +92,7 @@
 @messages("commercialDescription.details.wine6")
 }
 }
-} else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "t") {
+} else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Tobacco") {
 @details("commercialDescription.summary"){
 @p(){
 @messages("commercialDescription.details.tobacco1")
@@ -106,7 +106,7 @@
 @p(){
 @messages("commercialDescription.details.tobacco4")
 }
-} }else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "s") {
+} }else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Spirits") {
 @details("commercialDescription.summary"){
 @p(){
 @messages("commercialDescription.details.ethylAlcohol1")

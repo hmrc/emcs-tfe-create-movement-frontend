@@ -30,7 +30,7 @@ import viewmodels.implicits._
 
 object CommercialDescriptionSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
   Some(SummaryListRowViewModel(
     key = "commercialDescription.checkYourAnswersLabel",

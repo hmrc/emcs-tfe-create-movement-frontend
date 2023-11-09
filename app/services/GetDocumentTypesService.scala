@@ -19,6 +19,7 @@ package services
 import connectors.referenceData.GetDocumentTypesConnector
 import models.response.DocumentTypesException
 import models.sections.documents.DocumentType
+import models.sections.documents.DocumentType.OtherCode
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -31,7 +32,9 @@ class GetDocumentTypesService @Inject()(connector: GetDocumentTypesConnector)
   def getDocumentTypes()(implicit hc: HeaderCarrier): Future[Seq[DocumentType]] = {
     connector.getDocumentTypes().map {
       case Left(_) => throw DocumentTypesException("No document types retrieved")
-      case Right(value) => value
+      case Right(documentTypes) => documentTypes.partition(_.code == OtherCode) match {
+        case (other, documentTypes) => documentTypes ++ other
       }
     }
+  }
 }

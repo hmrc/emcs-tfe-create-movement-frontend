@@ -25,4 +25,6 @@ case class DocumentType(code: String, description: String) {
 
 object DocumentType {
   implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
+
+  final val OtherCode: String = "0"
 }

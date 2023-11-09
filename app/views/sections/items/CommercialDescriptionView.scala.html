@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.LabelSize
 @import models.GoodsTypeModel.GoodsType
+@import viewmodels.helpers.CommercialDescriptionHelper
 
 @this(
         layout: templates.Layout,
@@ -29,7 +30,8 @@
         h2: components.h2,
         continueOrExit: components.continueOrExit,
         details: components.details,
-        p: components.p
+        p: components.p,
+        helper: CommercialDescriptionHelper
 )
 
 @(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
@@ -59,72 +61,8 @@
             }
         ))}
 
-       @if(goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Beer") {
-        @details("commercialDescription.summary"){
-            @p(){
-                @messages("commercialDescription.details.beer1")
-            }
-            @p(){
-                @messages("commercialDescription.details.beer2")
-            }
-            @p(){
-                @messages("commercialDescription.details.beer3")
-            }
-        }
-       } else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Wine") {
-@details("commercialDescription.summary"){
-@p(){
-@messages("commercialDescription.details.wine1")
-}
-@p(){
-@messages("commercialDescription.details.wine2")
-}
-@p(){
-@messages("commercialDescription.details.wine3")
-}
-@p(){
-@messages("commercialDescription.details.wine4")
-}
-@p(){
-@messages("commercialDescription.details.wine5")
-}
-@p(){
-@messages("commercialDescription.details.wine6")
-}
-}
-} else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Tobacco") {
-@details("commercialDescription.summary"){
-@p(){
-@messages("commercialDescription.details.tobacco1")
-}
-@p(){
-@messages("commercialDescription.details.tobacco2")
-}
-@p(){
-@messages("commercialDescription.details.tobacco3")
-}
-@p(){
-@messages("commercialDescription.details.tobacco4")
-}
-} }else if (goodsType.fold(messages("site.item"))(_.toSingularOutput()) == "Spirits") {
-@details("commercialDescription.summary"){
-@p(){
-@messages("commercialDescription.details.ethylAlcohol1")
-}
-@p(){
-@messages("commercialDescription.details.ethylAlcohol2")
-}
-@p(){
-@messages("commercialDescription.details.ethylAlcohol3")
-}
-@p(){
-@messages("commercialDescription.details.ethylAlcohol4")
-}
-@p(){
-@messages("commercialDescription.details.ethylAlcohol5")
-}
-}
-}else {}
+
+     @helper.content(goodsType.fold(messages("site.item"))(_.toSingularOutput()))
 
         @continueOrExit()
 

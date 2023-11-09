@@ -892,18 +892,18 @@ sadRemoveDocument.error.required = Select yes if you want to remove this Single 
 
 
 #TODO: Waiting on wording confirmation from Lexi
-goodsType.W.singular = Wine
-goodsType.W.plural = Wines
-goodsType.B.singular = Beer
-goodsType.B.plural = Beers
-goodsType.T.singular = Tobacco
-goodsType.T.plural = Tobaccos
-goodsType.I.singular = Intermediate product
-goodsType.I.plural = Intermediate products
-goodsType.S.singular = Spirit
-goodsType.S.plural = Spirits
-goodsType.E.singular = Energy
-goodsType.E.plural = Energies
+goodsType.W.singular = wine
+goodsType.W.plural = wines
+goodsType.B.singular = beer
+goodsType.B.plural = beers
+goodsType.T.singular = tobacco
+goodsType.T.plural = tobaccos
+goodsType.I.singular = intermediate product
+goodsType.I.plural = intermediate products
+goodsType.S.singular = spirit
+goodsType.S.plural = spirits
+goodsType.E.singular = energy
+goodsType.E.plural = energies
 
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?

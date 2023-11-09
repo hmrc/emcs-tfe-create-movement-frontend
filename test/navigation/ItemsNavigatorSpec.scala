@@ -17,7 +17,6 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
 import controllers.sections.items.{routes => itemsRoutes}
 import models.sections.items.ItemBrandNameModel
 import models.{CheckMode, NormalMode, ReviewMode}
@@ -162,15 +161,14 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is Beer and XIWK or XIRC" - {
 
-          //TODO: Redirect to CAM-ITM07
-          "to the Under Construction Page" in {
+          "to the Item Degrees Plato Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
               .set(ItemExciseProductCodePage(testIndex1), "B200")
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(1.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemDegreesPlatoController.onPageLoad(testNorthernIrelandErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -239,6 +237,35 @@ class ItemsNavigatorSpec extends SpecBase {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
+
+      "must go from the Item Degrees Plato page" - {
+
+        "when Alcohol Strength is < 8.5 abv" - {
+
+          //TODO: Redirect to CAM-ITM41
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
+
+            navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when Alcohol Strength is >= 8.5 abv" - {
+
+          //TODO: Redirect to CAM-ITM19
+          "to the Under Construction Page" in {
+
+            val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+            navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+      }
     }
 
     "in Check mode" - {
@@ -288,7 +315,7 @@ class ItemsNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
       }
     }
   }

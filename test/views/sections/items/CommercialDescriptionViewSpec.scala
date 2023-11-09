@@ -19,8 +19,7 @@ package views.sections.items
 import base.ViewSpecBase
 import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.sections.items.CommercialDescriptionFormProvider
-import models.GoodsTypeModel.Beer
-import models.NormalMode
+import models.GoodsTypeModel.{Beer, Wine,Energy}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -34,7 +33,7 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "CommercialDescriptionView" - {
+  "CommercialDescriptionView for Beer" - {
 
     Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
@@ -48,13 +47,61 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Beer)).toString())
 
-        val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
-
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintb,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+    }
+  }
+  "CommercialDescriptionView for Wine" - {
+
+    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        val view = app.injector.instanceOf[CommercialDescriptionView]
+        val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Wine)).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
+          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+          Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
+          Selectors.hint -> messagesForLanguage.hintw,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+    }
+  }
+  "CommercialDescriptionView for Energy" - {
+
+    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        val view = app.injector.instanceOf[CommercialDescriptionView]
+        val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Energy)).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.title(Energy.toSingularOutput()),
+          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+          Selectors.h1 -> messagesForLanguage.heading(Energy.toSingularOutput()),
+          Selectors.hint -> messagesForLanguage.hinte,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))

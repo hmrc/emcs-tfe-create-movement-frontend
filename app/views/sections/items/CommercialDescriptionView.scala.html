@@ -92,18 +92,7 @@
 @messages("commercialDescription.details.wine6")
 }
 }
-} else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "f") {
-@details("commercialDescription.summary"){
-@p(){
-@messages("commercialDescription.details.fermentedBeverage1")
-}
-@p(){
-@messages("commercialDescription.details.fermentedBeverage2")
-}
-@p(){
-@messages("commercialDescription.details.fermentedBeverage3")
-}
-} }else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "t") {
+} else if (goodsType.fold(messages("site.item"))(_.code.toLowerCase) == "t") {
 @details("commercialDescription.summary"){
 @p(){
 @messages("commercialDescription.details.tobacco1")

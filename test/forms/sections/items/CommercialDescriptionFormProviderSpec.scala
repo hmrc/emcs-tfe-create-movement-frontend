@@ -16,13 +16,17 @@
 
 package forms.sections.items
 
+import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Messages, MessagesApi}
 
-class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours {
+class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite{
 
   val requiredKey = "commercialDescription.error.required"
   val lengthKey = "commercialDescription.error.length"
+  val xssKey = "commercialDescription.error.invalidCharacter"
   val maxLength = 350
 
   val form = new CommercialDescriptionFormProvider()()
@@ -50,4 +54,34 @@ class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+  "Error Messages" - {
+
+    Seq(CommercialDescriptionMessages.English) foreach { messagesForLanguage =>
+
+      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+
+      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+
+        "have the correct error message for required" in {
+
+          messages("commercialDescription.error.required") mustBe
+            messagesForLanguage.errorRequired
+        }
+
+        "have the correct error message for length" in {
+
+          messages("commercialDescription.error.length") mustBe
+            messagesForLanguage.errorLength
+        }
+
+        "have the correct error message for xss" in {
+
+          messages("commercialDescription.error.invalidCharacter") mustBe
+            messagesForLanguage.errorXss
+        }
+
+      }
+    }
+  }
+
 }

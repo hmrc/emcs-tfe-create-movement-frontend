@@ -77,7 +77,7 @@ class ItemsNavigatorSpec extends SpecBase {
 
 
           navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, userAnswers) mustBe
-            itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
+            itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
       "must go from the Commercial Description Name page" - {

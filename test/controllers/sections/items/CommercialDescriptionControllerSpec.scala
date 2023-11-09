@@ -20,9 +20,9 @@ import base.SpecBase
 import forms.sections.items.CommercialDescriptionFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
-import models.{Index, NormalMode, UserAnswers}
+import models.{Index, NormalMode}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.{ItemsNavigator, Navigator}
+import navigation.ItemsNavigator
 import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
 import play.api.inject.bind
 import play.api.mvc.Call

@@ -55,7 +55,11 @@
                 ),
                 items = Seq(SelectItem(text = "")) ++ documentTypes.map(documentType =>
                     SelectItem(value = Some(documentType.code), text = documentType.displayName)
-                )
+                ),
+                errorMessage = form.errors("document-type") match {
+                    case Nil => None
+                    case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+                }
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(

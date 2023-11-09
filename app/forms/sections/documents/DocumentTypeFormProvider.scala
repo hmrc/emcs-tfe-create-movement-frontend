@@ -26,7 +26,7 @@ class DocumentTypeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] = {
     Form(
-      single("document-type" -> nonEmptyText)
+      single("document-type" -> text("documentType.error.required"))
     )
   }
 }

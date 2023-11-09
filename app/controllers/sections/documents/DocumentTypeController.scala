@@ -53,7 +53,7 @@ class DocumentTypeController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors => for {
           documentTypes <- getDocumentTypesService.getDocumentTypes()
-        } yield Ok(view(formWithErrors, mode, documentTypes)),
+        } yield BadRequest(view(formWithErrors, mode, documentTypes)),
         value =>
           saveAndRedirect(DocumentTypePage, value, mode)
       )

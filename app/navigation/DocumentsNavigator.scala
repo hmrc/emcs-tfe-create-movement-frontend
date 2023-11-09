@@ -29,19 +29,21 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage =>
-      (answers: UserAnswers) => answers.get(DocumentsCertificatesPage) match {
+      (answers: UserAnswers) =>
+        answers.get(DocumentsCertificatesPage) match {
           case Some(false) =>
             controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
           case _ =>
             controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
     case DocumentTypePage =>
-      (answers: UserAnswers) => answers.get(DocumentTypePage) match {
-        case Some(DocumentType.OtherCode) =>
-          controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        case _ =>
-          controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-      }
+      (answers: UserAnswers) =>
+        answers.get(DocumentTypePage) match {
+          case Some(DocumentType.OtherCode) =>
+            controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+          case _ =>
+            controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+        }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
     case DocumentDescriptionPage =>

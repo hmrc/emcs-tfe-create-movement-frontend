@@ -18,6 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.documents.routes
+import models.sections.documents.DocumentType
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
@@ -36,17 +37,37 @@ class DocumentsNavigatorSpec extends SpecBase {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
-      //TODO update to correct page when finished
       "must go from DocumentsCertificatesPage" - {
 
         "to CheckAnswersPage if no is selected" in {
-          navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, false)
+
+          navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
+            controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
 
         "to CAM-DOC02 page if yes is selected" in {
-          navigator.nextPage(DocumentsCertificatesPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
+
+          navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
+            controllers.sections.documents.routes.DocumentTypeController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+      }
+
+      "must go from DocumentsTypePage" - {
+
+        s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage, DocumentType.OtherCode)
+
+          navigator.nextPage(DocumentTypePage, NormalMode, userAnswers) mustBe
+            controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+
+        "to CAM-DOC05 DocumentReference page if yes is selected" in {
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage, "testCode")
+
+          navigator.nextPage(DocumentTypePage, NormalMode, userAnswers) mustBe
+            controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 

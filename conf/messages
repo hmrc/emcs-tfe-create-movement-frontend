@@ -156,6 +156,13 @@ draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
 draftMovement.heading.dispatchPlaceTo = {0} tax warehouse to {1}
 draftMovement.section.movement = Movement
 draftMovement.section.movement.movementDetails = Movement details
+draftMovement.section.delivery = Delivery
+draftMovement.section.delivery.consignor = Consignor
+draftMovement.section.delivery.import = Import
+draftMovement.section.delivery.dispatch = Place of dispatch
+draftMovement.section.delivery.consignee = Consignee
+draftMovement.section.delivery.destination = Place of destination
+draftMovement.section.delivery.export = Export
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

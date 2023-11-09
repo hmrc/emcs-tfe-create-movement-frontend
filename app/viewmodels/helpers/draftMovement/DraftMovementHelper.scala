@@ -19,7 +19,14 @@ package viewmodels.helpers.draftMovement
 import models._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.consignee.ConsigneeSection
+import pages.sections.consignor.ConsignorSection
+import pages.sections.destination.DestinationSection
+import pages.sections.dispatch.DispatchSection
+import pages.sections.exportInformation.ExportInformationSection
+import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
 import play.api.i18n.Messages
 import play.twirl.api.Html
@@ -58,7 +65,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
         throw InvalidUserTypeException(s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
     }
 
-  def movementRow(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
+  private[draftMovement] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
     sectionHeading = messages("draftMovement.section.movement"),
     rows = Seq(
       TaskListSectionRow(
@@ -70,9 +77,76 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   )
 
+  //noinspection ScalaStyle
+  private[draftMovement] def deliverySection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+    val dt: Option[MovementScenario] = request.userAnswers.get(DestinationTypePage)
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.delivery"),
+      rows = Seq(
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.delivery.consignor"),
+          id = "consignor",
+          link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = ConsignorSection.status
+        )),
+        if (Seq(GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor).contains(request.userTypeFromErn)) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.delivery.import"),
+            id = "import",
+            link = Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
+            status = ImportInformationSection.status
+          ))
+        } else {
+          None
+        },
+        if (Seq(GreatBritainWarehouseKeeper, NorthernIrelandWarehouseKeeper).contains(request.userTypeFromErn)) {
+          Some(TaskListSectionRow(
+            taskName = messages("draftMovement.section.delivery.dispatch"),
+            id = "dispatch",
+            link = Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(request.ern, request.draftId).url),
+            status = DispatchSection.status
+          ))
+        } else {
+          None
+        },
+        dt match {
+          case Some(value) if value != UnknownDestination =>
+            Some(TaskListSectionRow(
+              taskName = messages("draftMovement.section.delivery.consignee"),
+              id = "consignee",
+              link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.draftId).url),
+              status = ConsigneeSection.status
+            ))
+          case _ => None
+        },
+        dt match {
+          case Some(value) if Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains(value) =>
+            Some(TaskListSectionRow(
+              taskName = messages("draftMovement.section.delivery.destination"),
+              id = "destination",
+              link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.draftId).url),
+              status = DestinationSection.status
+            ))
+          case _ => None
+        },
+        dt match {
+          case Some(value) if Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(value) =>
+            Some(TaskListSectionRow(
+              taskName = messages("draftMovement.section.delivery.export"),
+              id = "export",
+              link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.draftId).url),
+              status = ExportInformationSection.status
+            ))
+          case _ => None
+        },
+      ).flatten
+    )
+  }
+
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
     taskList(TaskList(sections = Seq(
-      movementRow
+      movementSection,
+      deliverySection
     )))
   }
 

@@ -27,6 +27,7 @@ import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.test.FakeRequest
+import viewmodels.taskList.{NotStarted, TaskListSection, TaskListSectionRow}
 import views.ViewUtils.titleNoForm
 import views.html.components.taskList
 
@@ -143,6 +144,196 @@ class DraftMovementHelperSpec extends SpecBase {
             val response = intercept[MissingMandatoryPage](helper.heading)
 
             response.message mustBe s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper"
+          }
+        }
+      }
+
+      "movementSection" - {
+        "should render the Movement details section" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.movementSection mustBe TaskListSection(
+            messagesForLanguage.movementSectionHeading,
+            Seq(
+              TaskListSectionRow(
+                messagesForLanguage.movementDetails,
+                "movementDetails",
+                Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testDraftId).url),
+                NotStarted
+              )
+            )
+          )
+        }
+      }
+
+      "deliverySection" - {
+        def importRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.`import`,
+          "import",
+          Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(ern, testDraftId).url),
+          NotStarted
+        )
+
+        def dispatchRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.dispatch,
+          "dispatch",
+          Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(ern, testDraftId).url),
+          NotStarted
+        )
+
+        def consigneeRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.consignee,
+          "consignee",
+          Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url),
+          NotStarted
+        )
+
+        def destinationRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.destination,
+          "destination",
+          Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, testDraftId).url),
+          NotStarted
+        )
+
+        def exportRow(ern: String) = TaskListSectionRow(
+          messagesForLanguage.export,
+          "export",
+          Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(ern, testDraftId).url),
+          NotStarted
+        )
+
+        "should have the correct heading" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.deliverySection.sectionHeading mustBe messagesForLanguage.deliverySectionHeading
+        }
+        "should render the consignor row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.deliverySection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.consignor,
+            "consignor",
+            Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url),
+            NotStarted
+          ))
+        }
+        "should render the import row" - {
+          "when UserType is valid" in {
+            Seq("GBRC123", "XIRC123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.deliverySection.rows must contain(importRow(ern))
+            }
+          }
+        }
+        "should not render the import row" - {
+          "when UserType is invalid" in {
+            Seq("GBWK123", "XIWK123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.deliverySection.rows must not contain importRow(ern)
+            }
+          }
+        }
+        "should render the dispatch row" - {
+          "when UserType is valid" in {
+            Seq("GBWK123", "XIWK123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.deliverySection.rows must contain(dispatchRow(ern))
+            }
+          }
+        }
+        "should not render the dispatch row" - {
+          "when UserType is invalid" in {
+            Seq("GBRC123", "XIRC123").foreach {
+              ern =>
+                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
+                helper.deliverySection.rows must not contain dispatchRow(ern)
+            }
+          }
+        }
+        "should render the consignee row" - {
+          "when MovementScenario is valid" in {
+            MovementScenario.values.filterNot(_ == UnknownDestination).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must contain(consigneeRow(testErn))
+            }
+          }
+        }
+        "should not render the consignee row" - {
+          "when MovementScenario is invalid" in {
+            Seq(UnknownDestination).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must not contain consigneeRow(testErn)
+            }
+          }
+          "when MovementScenario is missing" in {
+            implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+            helper.deliverySection.rows must not contain consigneeRow(testErn)
+          }
+        }
+        "should render the destination row" - {
+          "when MovementScenario is valid" in {
+            Seq(
+              GbTaxWarehouse,
+              EuTaxWarehouse,
+              RegisteredConsignee,
+              TemporaryRegisteredConsignee,
+              ExemptedOrganisation,
+              DirectDelivery
+            ).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must contain(destinationRow(testErn))
+            }
+          }
+        }
+        "should not render the destination row" - {
+          "when MovementScenario is invalid" in {
+            MovementScenario.values.filterNot(Seq(
+              GbTaxWarehouse,
+              EuTaxWarehouse,
+              RegisteredConsignee,
+              TemporaryRegisteredConsignee,
+              ExemptedOrganisation,
+              DirectDelivery
+            ).contains).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must not contain destinationRow(testErn)
+            }
+          }
+          "when MovementScenario is missing" in {
+            implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+            helper.deliverySection.rows must not contain destinationRow(testErn)
+          }
+        }
+        "should render the export row" - {
+          "when MovementScenario is valid" in {
+            Seq(
+              ExportWithCustomsDeclarationLodgedInTheUk,
+              ExportWithCustomsDeclarationLodgedInTheEu
+            ).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must contain(exportRow(testErn))
+            }
+          }
+        }
+        "should not render the export row" - {
+          "when MovementScenario is invalid" in {
+            MovementScenario.values.filterNot(Seq(
+              ExportWithCustomsDeclarationLodgedInTheUk,
+              ExportWithCustomsDeclarationLodgedInTheEu
+            ).contains).foreach {
+              scenario =>
+                implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                helper.deliverySection.rows must not contain exportRow(testErn)
+            }
+          }
+          "when MovementScenario is missing" in {
+            implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+            helper.deliverySection.rows must not contain exportRow(testErn)
           }
         }
       }

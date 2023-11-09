@@ -25,12 +25,17 @@ object DraftMovementMessages {
     def titleDispatchPlaceTo(input1: String, input2: String): String = titleHelper(headingDispatchPlaceTo(input1, input2))
     def headingImportFor(input1: String): String = s"Import for $input1"
     def titleImportFor(input1: String): String = titleHelper(headingImportFor(input1))
-    val headingImport = "What is the destination type for this import?"
-    val titleImport = titleHelper(headingImport)
-    val caption = "Movement information"
-    val taxWarehouseInGb = "Tax warehouse in Great Britain"
-    val cyaLabel: String = "Destination type"
-    val cyaChangeHidden: String = "destination type"
+
+    val movementSectionHeading: String = "Movement"
+    val movementDetails: String = "Movement details"
+
+    val deliverySectionHeading: String = "Delivery"
+    val consignor: String = "Consignor"
+    val `import`: String = "Import"
+    val dispatch: String = "Place of dispatch"
+    val consignee: String = "Consignee"
+    val destination: String = "Place of destination"
+    val export: String = "Export"
   }
 
   object English extends ViewMessages with BaseEnglish

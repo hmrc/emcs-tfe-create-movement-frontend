@@ -18,7 +18,6 @@ package pages.sections.dispatch
 
 import models.requests.DataRequest
 import pages.sections.Section
-import pages.sections.consignor.ConsignorSection
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList._
 
@@ -28,10 +27,10 @@ case object DispatchSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     request.userAnswers.get(DispatchWarehouseExcisePage) match {
       case Some(_) => request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
-        case Some(true) => ConsignorSection.status
+        case Some(true) => Completed
         case Some(false) =>
           val remainingPages: Seq[Option[_]] = Seq(request.userAnswers.get(DispatchBusinessNamePage), request.userAnswers.get(DispatchAddressPage))
-          if(remainingPages.forall(_.nonEmpty)) {
+          if (remainingPages.forall(_.nonEmpty)) {
             Completed
           } else {
             InProgress

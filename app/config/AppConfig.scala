@@ -17,6 +17,7 @@
 package config
 
 import featureswitch.core.config._
+import models.requests.DataRequest
 import play.api.Configuration
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
@@ -61,7 +62,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
 
-  def returnToDraft: String = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+  def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
   private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
 

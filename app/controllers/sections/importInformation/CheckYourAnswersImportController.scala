@@ -20,8 +20,7 @@ import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
 import navigation.ImportInformationNavigator
-import pages.sections.consignee.CheckAnswersConsigneePage
-import pages.sections.importInformation.ImportCustomsOfficeCodePage
+import pages.sections.importInformation.{CheckAnswersImportPage, ImportCustomsOfficeCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import viewmodels.helpers.CheckYourAnswersImportHelper
@@ -57,7 +56,7 @@ class CheckYourAnswersImportController @Inject()(override val messagesApi: Messa
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) {
       implicit request =>
-        Redirect(navigator.nextPage(CheckAnswersConsigneePage, NormalMode, request.userAnswers))
+        Redirect(navigator.nextPage(CheckAnswersImportPage, NormalMode, request.userAnswers))
     }
 
 }

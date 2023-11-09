@@ -16,15 +16,17 @@
 
 package navigation
 
-import models.GoodsTypeModel._
-import models._
 import controllers.sections.items.{routes => itemsRoutes}
-import controllers.routes
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.items._
+import models.GoodsTypeModel._
+import models._
+import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
+
 
 class ItemsNavigator @Inject() extends BaseNavigator {
 
@@ -41,6 +43,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case CommercialDescriptionPage(_) =>
       //TODO update when next page is created
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+    case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
+      alcoholStrengthRouting(idx, userAnswers)
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -91,7 +96,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       case _ =>
-        routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =

@@ -42,7 +42,7 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
           "when the goodsType is beer" - {
 
             "must output the expected title" in {
-              helper.content(goodsType = "Beer") mustBe
+              helper.content(goodsType = "beer") mustBe
                 details(langMessages.summary) {
                   HtmlFormat.fill(Seq(
                     p()(Html(langMessages.detailsBeer1)),
@@ -56,7 +56,7 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
           "when the goodsType is Wine" - {
 
             "must output the expected title" in {
-              helper.content(goodsType = "Wine") mustBe
+              helper.content(goodsType = "wine") mustBe
                 details(langMessages.summary) {
                   HtmlFormat.fill(Seq(
                     p()(Html(langMessages.detailsWine1)),
@@ -72,7 +72,7 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "when the goodsType is Spirits" - {
 
               "must output the expected title" in {
-                helper.content(goodsType = "Spirits") mustBe
+                helper.content(goodsType = "spirits") mustBe
                   details(langMessages.summary) {
                     HtmlFormat.fill(Seq(
                       p()(Html(langMessages.detailsEthylAlcohol1)),
@@ -88,7 +88,7 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "when the goodsType is Tobacco" - {
 
               "must output the expected title" in {
-                helper.content(goodsType = "Tobacco") mustBe
+                helper.content(goodsType = "tobacco") mustBe
                   details(langMessages.summary) {
                     HtmlFormat.fill(Seq(
                       p()(Html(langMessages.detailsTobacco1)),

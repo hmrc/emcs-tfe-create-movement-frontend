@@ -27,7 +27,7 @@ class CommercialDescriptionHelper @Inject()(p: views.html.components.p,
 
   def content(goodsType: String)(implicit messages: Messages): Html =
 
-      if(goodsType == "Beer") {
+      if(goodsType == "beer") {
         details("commercialDescription.summary")
         {
         HtmlFormat.fill(
@@ -44,7 +44,7 @@ class CommercialDescriptionHelper @Inject()(p: views.html.components.p,
             Html(messages("commercialDescription.details.beer3"))
           }))
         }
-      } else if (goodsType == "Wine") {
+      } else if (goodsType == "wine") {
         details("commercialDescription.summary")
         {
           HtmlFormat.fill(
@@ -74,7 +74,7 @@ class CommercialDescriptionHelper @Inject()(p: views.html.components.p,
             Html(messages("commercialDescription.details.wine6"))
           }))
         }
-      } else if (goodsType == "Tobacco") {
+      } else if (goodsType == "tobacco") {
         details("commercialDescription.summary")
         {
           HtmlFormat.fill(
@@ -96,7 +96,7 @@ class CommercialDescriptionHelper @Inject()(p: views.html.components.p,
             Html(messages("commercialDescription.details.tobacco4"))
           }))
         }
-      } else if (goodsType == "Spirits") {
+      } else if (goodsType == "spirits") {
         details("commercialDescription.summary")
         {
           HtmlFormat.fill(

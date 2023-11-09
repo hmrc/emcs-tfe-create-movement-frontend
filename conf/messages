@@ -934,3 +934,8 @@ itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
 itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places
 
+documentType.title = What type of document do you want to add?
+documentType.heading = What type of document do you want to add?
+documentType.checkYourAnswersLabel = What type of document do you want to add?
+documentType.error.required = Select the document you want to add
+documentType.change.hidden = DocumentType

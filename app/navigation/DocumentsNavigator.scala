@@ -28,13 +28,18 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage =>
-      (answers: UserAnswers) => {
-        answers.get(DocumentsCertificatesPage) match {
-          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ => //TODO redirect to CAM-DOC02 when page built
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (answers: UserAnswers) => answers.get(DocumentsCertificatesPage) match {
+          case Some(false) =>
+            controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
+          case _ =>
+            controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
-
+    case DocumentTypePage =>
+      (answers: UserAnswers) => answers.get(DocumentTypePage) match {
+        case Some("Other") => //TODO change from magic string
+          controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+        case _ =>
+          controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
       }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
@@ -43,6 +48,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case DocumentReferencePage =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case DocumentsCheckAnswersPage =>
       _ => //TODO redirect CAM02 when built
         testOnly.controllers.routes.UnderConstructionController.onPageLoad()

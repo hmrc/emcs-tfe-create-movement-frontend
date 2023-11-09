@@ -151,6 +151,7 @@ draftMovement.subHeading = Draft movement
 draftMovement.lrn = Local Reference Number (LRN): {0}
 draftMovement.consignee = Consignee: {0}
 draftMovement.notProvided = Not provided
+draftMovement.delete = Delete this draft
 draftMovement.heading.importFor = Import for {0}
 draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
 draftMovement.heading.dispatchPlaceTo = {0} tax warehouse to {1}

@@ -36,14 +36,12 @@ import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
-import play.twirl.api.Html
 import utils.Logging
-import viewmodels.taskList.{CannotStartYet, Completed, TaskList, TaskListSection, TaskListSectionRow, TaskListStatus}
-import views.html.components.taskList
+import viewmodels.taskList._
 
 import javax.inject.Inject
 
-class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
+class DraftMovementHelper @Inject()() extends Logging {
 
   // disable for "line too long" warnings
   // noinspection ScalaStyle
@@ -207,7 +205,6 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
-
   private[draftMovement] def itemsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
       sectionHeading = messages("draftMovement.section.items"),
@@ -250,8 +247,20 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
-  def submitSection(sectionsExceptSubmit: Seq[TaskListSection])(implicit messages: Messages): TaskListSection = {
-    val rows = sectionsExceptSubmit.flatMap(_.rows)
+  def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
+    movementSection,
+    deliverySection,
+    guarantorSection,
+    transportSection,
+    itemsSection,
+    documentsSection
+  )
+
+  private[draftMovement] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
+                                          (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+
+    val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
+
     val status: TaskListStatus = if (rows.nonEmpty && rows.forall(_.status == Completed)) {
       Completed
     } else {
@@ -270,17 +279,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
-  def rows(implicit request: DataRequest[_], messages: Messages): Html = {
-    val sectionsExceptSubmit: Seq[TaskListSection] = Seq(
-      movementSection,
-      deliverySection,
-      guarantorSection,
-      transportSection,
-      itemsSection,
-      documentsSection
-    )
-
-    taskList(TaskList(sections = sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)))
-  }
+  def sections(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] =
+    sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)
 
 }

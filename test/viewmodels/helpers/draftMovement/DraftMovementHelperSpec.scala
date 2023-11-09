@@ -25,8 +25,9 @@ import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.Section
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.consignor.{ConsignorAddressPage, ConsignorSection}
+import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
 import pages.sections.documents.DocumentsSection
@@ -40,16 +41,15 @@ import pages.sections.journeyType.JourneyTypeSection
 import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
+import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
-import viewmodels.taskList.{CannotStartYet, Completed, InProgress, NotStarted, TaskListSection, TaskListSectionRow}
+import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
-import views.html.components.taskList
 
 class DraftMovementHelperSpec extends SpecBase {
   lazy val app = applicationBuilder().build()
 
-  lazy val taskList = app.injector.instanceOf[taskList]
-  lazy val helper = new DraftMovementHelper(taskList)
+  lazy val helper = new DraftMovementHelper()
 
   Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
@@ -487,8 +487,18 @@ class DraftMovementHelperSpec extends SpecBase {
       }
 
       "submitSection" - {
+        implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+
         "must return a TaskList with a link" - {
           "when all sections are completed" in {
+            object TestSection extends Section[JsObject] {
+              override def status(implicit request: DataRequest[_]): TaskListStatus = Completed
+
+              override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+
+              override val path: JsPath = JsPath
+            }
+
             val testSections: Seq[TaskListSection] = Seq(
               TaskListSection(
                 sectionHeading = "testHeading1",
@@ -497,14 +507,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     taskName = "testName1",
                     id = "testId1",
                     link = None,
-                    section = None,
+                    section = Some(TestSection),
                     status = Completed
                   ),
                   TaskListSectionRow(
                     taskName = "testName2",
                     id = "testId2",
                     link = None,
-                    section = None,
+                    section = Some(TestSection),
                     status = Completed
                   )
                 )
@@ -516,14 +526,14 @@ class DraftMovementHelperSpec extends SpecBase {
                     taskName = "testName3",
                     id = "testId3",
                     link = None,
-                    section = None,
+                    section = Some(TestSection),
                     status = Completed
                   ),
                   TaskListSectionRow(
                     taskName = "testName4",
                     id = "testId4",
                     link = None,
-                    section = None,
+                    section = Some(TestSection),
                     status = Completed
                   )
                 )
@@ -698,6 +708,60 @@ class DraftMovementHelperSpec extends SpecBase {
               )
             )
           }
+        }
+
+        "must filter out sections which cannot be filled out for that user/destination type, even if Completed" in {
+          object TestSection extends Section[JsObject] {
+            override def status(implicit request: DataRequest[_]): TaskListStatus = Completed
+
+            override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = false
+
+            override val path: JsPath = JsPath
+          }
+
+          val testSections: Seq[TaskListSection] = Seq(
+            TaskListSection(
+              sectionHeading = "testHeading",
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = "testName",
+                  id = "testid",
+                  None,
+                  Some(TestSection),
+                  Completed
+                )
+              )
+            )
+          )
+
+          helper.submitSection(testSections) mustBe TaskListSection(
+            sectionHeading = messagesForLanguage.submitSectionHeading,
+            rows = Seq(
+              TaskListSectionRow(
+                taskName = messagesForLanguage.reviewAndSubmit,
+                id = "submit",
+                link = None,
+                section = None,
+                status = CannotStartYet
+              )
+            )
+          )
+        }
+      }
+
+      "sections" - {
+        "should return all sections" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.sections.map(_.sectionHeading) mustBe
+            Seq(
+              messagesForLanguage.movementSectionHeading,
+              messagesForLanguage.deliverySectionHeading,
+              messagesForLanguage.guarantorSectionHeading,
+              messagesForLanguage.transportSectionHeading,
+              messagesForLanguage.itemsSectionHeading,
+              messagesForLanguage.documentsSectionHeading,
+              messagesForLanguage.submitSectionHeading,
+            )
         }
       }
     }

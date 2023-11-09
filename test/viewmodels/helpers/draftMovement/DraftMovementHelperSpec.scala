@@ -338,7 +338,6 @@ class DraftMovementHelperSpec extends SpecBase {
         }
       }
 
-
       "guarantorSection" - {
         "should render the Guarantor section" in {
           implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
@@ -353,6 +352,50 @@ class DraftMovementHelperSpec extends SpecBase {
               )
             )
           )
+        }
+      }
+
+      "transportSection" - {
+
+        "should have the correct heading" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.transportSection.sectionHeading mustBe messagesForLanguage.transportSectionHeading
+        }
+        "should render the journeyType row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.transportSection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.journeyType,
+            "journeyType",
+            Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testDraftId).url),
+            NotStarted
+          ))
+        }
+        "should render the transportArranger row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.transportSection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.transportArranger,
+            "transportArranger",
+            Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url),
+            NotStarted
+          ))
+        }
+        "should render the firstTransporter row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.transportSection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.firstTransporter,
+            "firstTransporter",
+            Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url),
+            NotStarted
+          ))
+        }
+        "should render the units row" in {
+          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
+          helper.transportSection.rows must contain(TaskListSectionRow(
+            messagesForLanguage.units,
+            "units",
+            Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url),
+            NotStarted
+          ))
         }
       }
     }

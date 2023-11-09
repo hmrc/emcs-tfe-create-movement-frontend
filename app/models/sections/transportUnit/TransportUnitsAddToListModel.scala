@@ -46,9 +46,9 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
 
     Seq(
       radioItem(Yes, 0),
-      radioItem(MoreToCome, 1),
+      radioItem(NoMoreToCome, 1),
       orDivider,
-      radioItem(NoMoreToCome, 2)
+      radioItem(MoreToCome, 2)
     )
   }
 

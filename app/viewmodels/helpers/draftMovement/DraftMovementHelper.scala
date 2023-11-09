@@ -25,9 +25,13 @@ import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
 import pages.sections.exportInformation.ExportInformationSection
+import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
 import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
+import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.transportArranger.TransportArrangerSection
+import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.Logging
@@ -156,11 +160,44 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
+  private[draftMovement] def transportSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.transport"),
+      rows = Seq(
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.transport.journeyType"),
+          id = "journeyType",
+          link = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = JourneyTypeSection.status
+        )),
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.transport.transportArranger"),
+          id = "transportArranger",
+          link = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = TransportArrangerSection.status
+        )),
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.transport.firstTransporter"),
+          id = "firstTransporter",
+          link = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = FirstTransporterSection.status
+        )),
+        Some(TaskListSectionRow(
+          taskName = messages("draftMovement.section.transport.units"),
+          id = "units",
+          link = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.draftId).url),
+          status = TransportUnitsSection.status
+        ))
+      ).flatten
+    )
+  }
+
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
     taskList(TaskList(sections = Seq(
       movementSection,
       deliverySection,
       guarantorSection,
+      transportSection,
     )))
   }
 

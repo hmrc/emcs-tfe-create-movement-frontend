@@ -165,6 +165,11 @@ draftMovement.section.delivery.destination = Place of destination
 draftMovement.section.delivery.export = Export
 draftMovement.section.guarantor = Guarantor
 draftMovement.section.guarantor.guarantor = Guarantor
+draftMovement.section.transport = Transport
+draftMovement.section.transport.journeyType = Journey type
+draftMovement.section.transport.transportArranger = Transport arranger
+draftMovement.section.transport.firstTransporter = First transporter
+draftMovement.section.transport.units = Transport units
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
@@ -777,9 +782,9 @@ transportUnitsAddToList.heading.plural = You have given information for {0} tran
 transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
 transportUnitsAddToList.legend = Do you need to add another transport unit?
 transportUnitsAddToList.1 = Yes
-transportUnitsAddToList.2 = No, this is the only transport unit for this movement
+transportUnitsAddToList.2 = I will add more transport units later
+transportUnitsAddToList.3 = No, this is the only transport unit for this movement
 transportUnitsAddToList.divider = or
-transportUnitsAddToList.3 = I will add more transport units later
 transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
 
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?

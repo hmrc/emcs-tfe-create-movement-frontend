@@ -25,6 +25,7 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         h1: components.h1,
+        h2: components.h2,
         continueOrExit: components.continueOrExit
 )
 
@@ -38,10 +39,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(HtmlContent(heading))
+                label = LabelViewModel(Text(messages("itemAlcoholStrength.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())))).asPageHeading(LabelSize.Large)
             )
                     .withWidth(Fixed4)
                     .withSuffix(PrefixOrSuffix(content = Text(messages("itemAlcoholStrength.suffix"))))
@@ -52,16 +55,6 @@
     }
 }
 
-@heading = {
-
-    @h1(
-        messages("itemAlcoholStrength.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())),
-        Some(messages("items.subHeading", request.draftId)),
-        "govuk-heading-l",
-        Some(messages("subHeading.hidden"))
-    )
-}
-
 @{
     //$COVERAGE-OFF$
-}
+}@import viewmodels.LabelSize

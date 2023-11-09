@@ -20,7 +20,6 @@ import base.SpecBase
 import mocks.connectors.MockGetExciseProductCodesConnector
 import models.response.{ExciseProductCodesException, UnexpectedDownstreamResponseError}
 import play.api.test.Helpers._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -38,7 +38,7 @@ import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.Logging
-import viewmodels.taskList.{TaskList, TaskListSection, TaskListSectionRow}
+import viewmodels.taskList.{CannotStartYet, Completed, TaskList, TaskListSection, TaskListSectionRow, TaskListStatus}
 import views.html.components.taskList
 
 import javax.inject.Inject
@@ -228,7 +228,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     TaskListSection(
       sectionHeading = messages("draftMovement.section.documents"),
       rows = Seq(
-        if(SadSection.canBeCompletedForTraderAndDestinationType) {
+        if (SadSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.documents.sad"),
             id = "sad",
@@ -250,6 +250,26 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
     )
   }
 
+  def submitSection(sectionsExceptSubmit: Seq[TaskListSection])(implicit messages: Messages): TaskListSection = {
+    val rows = sectionsExceptSubmit.flatMap(_.rows)
+    val status: TaskListStatus = if (rows.nonEmpty && rows.forall(_.status == Completed)) {
+      Completed
+    } else {
+      CannotStartYet
+    }
+
+    TaskListSection(
+      sectionHeading = messages("draftMovement.section.submit"),
+      rows = Seq(TaskListSectionRow(
+        taskName = messages("draftMovement.section.submit.reviewAndSubmit"),
+        id = "submit",
+        link = if (status == Completed) Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url) else None,
+        section = None,
+        status = status
+      ))
+    )
+  }
+
   def rows(implicit request: DataRequest[_], messages: Messages): Html = {
     val sectionsExceptSubmit: Seq[TaskListSection] = Seq(
       movementSection,
@@ -260,7 +280,7 @@ class DraftMovementHelper @Inject()(taskList: taskList) extends Logging {
       documentsSection
     )
 
-    taskList(TaskList(sections = sectionsExceptSubmit))
+    taskList(TaskList(sections = sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)))
   }
 
 }

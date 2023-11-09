@@ -175,6 +175,8 @@ draftMovement.section.items.items = Items
 draftMovement.section.documents = Documents
 draftMovement.section.documents.sad = Single Administrative Documents
 draftMovement.section.documents.documents = Documents
+draftMovement.section.submit = Submit
+draftMovement.section.submit.reviewAndSubmit = Review and submit
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

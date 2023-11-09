@@ -26,7 +26,7 @@ import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.consignor.ConsignorSection
+import pages.sections.consignor.{ConsignorAddressPage, ConsignorSection}
 import pages.sections.destination.DestinationSection
 import pages.sections.dispatch.DispatchSection
 import pages.sections.documents.DocumentsSection
@@ -41,7 +41,7 @@ import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.test.FakeRequest
-import viewmodels.taskList.{NotStarted, TaskListSection, TaskListSectionRow}
+import viewmodels.taskList.{CannotStartYet, Completed, InProgress, NotStarted, TaskListSection, TaskListSectionRow}
 import views.ViewUtils.titleNoForm
 import views.html.components.taskList
 
@@ -483,6 +483,221 @@ class DraftMovementHelperSpec extends SpecBase {
             Some(DocumentsSection),
             NotStarted
           ))
+        }
+      }
+
+      "submitSection" - {
+        "must return a TaskList with a link" - {
+          "when all sections are completed" in {
+            val testSections: Seq[TaskListSection] = Seq(
+              TaskListSection(
+                sectionHeading = "testHeading1",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName1",
+                    id = "testId1",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName2",
+                    id = "testId2",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  )
+                )
+              ),
+              TaskListSection(
+                sectionHeading = "testHeading2",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName3",
+                    id = "testId3",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName4",
+                    id = "testId4",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  )
+                )
+              )
+            )
+
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url),
+                  section = None,
+                  status = Completed
+                )
+              )
+            )
+          }
+        }
+
+        "must return a TaskList without a link" - {
+          "when some sections are incomplete" in {
+            val testSections: Seq[TaskListSection] = Seq(
+              TaskListSection(
+                sectionHeading = "testHeading1",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName1",
+                    id = "testId1",
+                    link = None,
+                    section = None,
+                    status = InProgress
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName2",
+                    id = "testId2",
+                    link = None,
+                    section = None,
+                    status = NotStarted
+                  )
+                )
+              ),
+              TaskListSection(
+                sectionHeading = "testHeading2",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName3",
+                    id = "testId3",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName4",
+                    id = "testId4",
+                    link = None,
+                    section = None,
+                    status = Completed
+                  )
+                )
+              )
+            )
+
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = None,
+                  section = None,
+                  status = CannotStartYet
+                )
+              )
+            )
+          }
+          "when all sections are incomplete" in {
+            val testSections: Seq[TaskListSection] = Seq(
+              TaskListSection(
+                sectionHeading = "testHeading1",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName1",
+                    id = "testId1",
+                    link = None,
+                    section = None,
+                    status = NotStarted
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName2",
+                    id = "testId2",
+                    link = None,
+                    section = None,
+                    status = NotStarted
+                  )
+                )
+              ),
+              TaskListSection(
+                sectionHeading = "testHeading2",
+                rows = Seq(
+                  TaskListSectionRow(
+                    taskName = "testName3",
+                    id = "testId3",
+                    link = None,
+                    section = None,
+                    status = NotStarted
+                  ),
+                  TaskListSectionRow(
+                    taskName = "testName4",
+                    id = "testId4",
+                    link = None,
+                    section = None,
+                    status = NotStarted
+                  )
+                )
+              )
+            )
+
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = None,
+                  section = None,
+                  status = CannotStartYet
+                )
+              )
+            )
+          }
+          "when all sections are empty" in {
+            val testSections: Seq[TaskListSection] = Seq(
+              TaskListSection(
+                sectionHeading = "testHeading1",
+                rows = Seq()
+              ),
+              TaskListSection(
+                sectionHeading = "testHeading2",
+                rows = Seq()
+              )
+            )
+
+
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = None,
+                  section = None,
+                  status = CannotStartYet
+                )
+              )
+            )
+          }
+          "when no sections are provided" in {
+            val testSections: Seq[TaskListSection] = Seq()
+
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = None,
+                  section = None,
+                  status = CannotStartYet
+                )
+              )
+            )
+          }
         }
       }
     }

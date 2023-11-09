@@ -28,7 +28,7 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class SadAddToListHelper @Inject()(implicit link: views.html.components.link) {
+class SadAddToListHelper @Inject()() {
 
   def allSadSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
     request.userAnswers.get(SadCount) match {

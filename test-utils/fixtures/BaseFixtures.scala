@@ -19,7 +19,7 @@ package fixtures
 import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import models.{CountryModel, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
+import models.{CountryModel, ExciseProductCode, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -158,5 +158,33 @@ trait BaseFixtures {
   val dispatchDetailsJson = Json.obj(
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
+  )
+
+  val beerExciseProductCode = ExciseProductCode(
+    code = "B000",
+    description = "Beer",
+    category = "B",
+    categoryDescription = "Beer"
+  )
+
+  val wineExciseProductCode = ExciseProductCode(
+    code = "W200",
+    description = "Still wine and still fermented beverages other than wine and beer",
+    category = "W",
+    categoryDescription = "Wine and fermented beverages other than wine and beer"
+  )
+
+  val beerExciseProductCodeJson = Json.obj(
+    "code" -> "B000",
+    "description" -> "Beer",
+    "category" -> "B",
+    "categoryDescription" -> "Beer"
+  )
+
+  val wineExciseProductCodeJson = Json.obj(
+    "code" -> "W200",
+    "description" -> "Still wine and still fermented beverages other than wine and beer",
+    "category" -> "W",
+    "categoryDescription" -> "Wine and fermented beverages other than wine and beer"
   )
 }

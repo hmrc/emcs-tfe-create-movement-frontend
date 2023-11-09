@@ -33,7 +33,7 @@ class ItemAlcoholStrengthViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Guarantor Required view" - {
+  "Item Alcohol Strength view" - {
 
     Seq(ItemAlcoholStrengthMessages.English).foreach { messagesForLanguage =>
 
@@ -50,6 +50,7 @@ class ItemAlcoholStrengthViewSpec extends ViewSpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.inputSuffix -> messagesForLanguage.suffix,
           Selectors.button -> messagesForLanguage.saveAndContinue,

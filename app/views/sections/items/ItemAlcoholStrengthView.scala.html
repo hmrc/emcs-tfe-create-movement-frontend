@@ -53,11 +53,13 @@
 }
 
 @heading = {
-@h1(
-    messages("itemAlcoholStrength.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())),
-    Some(messages("items.subHeading", request.draftId)),
-    "govuk-heading-l"
-)
+
+    @h1(
+        messages("itemAlcoholStrength.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())),
+        Some(messages("items.subHeading", request.draftId)),
+        "govuk-heading-l",
+        Some(messages("subHeading.hidden"))
+    )
 }
 
 @{

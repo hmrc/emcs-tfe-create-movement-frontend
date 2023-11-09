@@ -50,6 +50,7 @@ class ItemBrandNameViewSpec extends ViewSpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.label(ItemBrandNameFormProvider.brandNameField) -> messagesForLanguage.brandNameLabel,
           //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1

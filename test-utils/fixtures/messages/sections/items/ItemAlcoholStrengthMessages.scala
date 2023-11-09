@@ -17,7 +17,6 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
-import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemAlcoholStrengthFormProvider._
 
 object ItemAlcoholStrengthMessages {
@@ -34,8 +33,8 @@ object ItemAlcoholStrengthMessages {
 
     val errorRadioRequired = "Enter the alcoholic strength"
     val errorBrandNameRequired = "Amount must only include numbers"
-    val errorBrandNameInvalid = s"Enter an amount with up to $maxDecimalPlaces decimal places between $minValue and $maxValue"
-    val errorBrandNameLength = s"Amount can have up to $maxDecimalPlaces decimal places"
+    val errorBrandNameInvalid = s"Enter an amount with up to $maxDecimalPlacesValue decimal places between $minValue and $maxValue"
+    val errorBrandNameLength = s"Amount can have up to $maxDecimalPlacesValue decimal places"
   }
 
   object English extends ViewMessages with BaseEnglish

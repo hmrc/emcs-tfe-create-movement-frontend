@@ -18,7 +18,7 @@ package navigation
 
 import controllers.sections.items.routes
 import models.GoodsTypeModel._
-import models.{CheckMode, GoodsTypeModel, GreatBritainRegisteredConsignor, GreatBritainWarehouse, GreatBritainWarehouseKeeper, Index, Mode, NormalMode, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, ReviewMode, UserAnswers, UserType}
+import models._
 import pages.Page
 import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
 import play.api.mvc.Call

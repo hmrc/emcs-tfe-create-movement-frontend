@@ -65,7 +65,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -77,7 +77,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
 
@@ -119,6 +119,22 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+    }
+
+    "must render BadRequest when invalid data is submitted" in new Fixture() {
+      running(application) {
+
+        val request = FakeRequest(POST, itemAlcoholStrengthRoute()).withFormUrlEncodedBody(("value", ""))
+        val result = route(application, request).value
+        val boundForm = form.bind(Map("value" -> ""))
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          boundForm,
+          itemAlcoholStrengthSubmitAction(),
+          Some(Wine)
+        )(dataRequest(request), messages(application)).toString
       }
     }
 

@@ -21,11 +21,12 @@
 @(
         headingMsg: String,
         captionMsg: Option[String] = None,
-        classes: String = "govuk-heading-l govuk-!-margin-bottom-2"
+        classes: String = "govuk-heading-l govuk-!-margin-bottom-2",
+        hiddenContent: Option[String] = None
 )(implicit messages: Messages)
 
 @captionMsg.map { caption =>
-  @h2(caption, "govuk-caption-xl")
+ @h2(caption, "govuk-caption-xl", hiddenContent = hiddenContent)
 }
 
 <h1 class="@classes">@messages(headingMsg)</h1>

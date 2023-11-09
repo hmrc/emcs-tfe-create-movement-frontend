@@ -130,7 +130,7 @@ trait Constraints {
         Invalid(errorKey, min, max)
     }
 
-  protected def decimalPlaces(max: Int, errorKey: String): Constraint[BigDecimal] =
+  protected def maxDecimalPlaces(max: Int, errorKey: String): Constraint[BigDecimal] =
     Constraint {
       case answer if answer.scale <= max =>
         Valid

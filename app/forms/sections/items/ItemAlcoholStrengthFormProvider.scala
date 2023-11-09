@@ -31,7 +31,7 @@ class ItemAlcoholStrengthFormProvider @Inject() extends Mappings {
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
         .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
-        .verifying(decimalPlaces(maxDecimalPlaces, maxDecimalPlacesErrorKey))
+        .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
     )
 }
 
@@ -39,7 +39,7 @@ object ItemAlcoholStrengthFormProvider {
 
   val maxValue = BigDecimal(100)
   val minValue = BigDecimal(0.5)
-  val maxDecimalPlaces = 2
+  val maxDecimalPlacesValue = 2
 
   val fieldName = "value"
 

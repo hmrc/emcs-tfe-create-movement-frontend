@@ -84,7 +84,7 @@ class ItemAlcoholStrengthFormProviderSpec extends BooleanFieldBehaviours {
       "must error when binding the form" in {
 
         val boundForm = form.bind(Map(fieldName -> "1.123"))
-        boundForm.errors mustBe Seq(FormError(fieldName, maxDecimalPlacesErrorKey, Seq(maxDecimalPlaces)))
+        boundForm.errors mustBe Seq(FormError(fieldName, maxDecimalPlacesErrorKey, Seq(maxDecimalPlacesValue)))
       }
     }
 

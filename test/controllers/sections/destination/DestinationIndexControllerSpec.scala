@@ -49,8 +49,7 @@ class DestinationIndexControllerSpec extends SpecBase {
 
     "must redirect to the destination warehouse excise controller" - {
       Seq(GbTaxWarehouse,
-        EuTaxWarehouse,
-        DirectDelivery).foreach(
+        EuTaxWarehouse).foreach(
         answer =>
           s"when DestinationTypePage answer is $answer" in {
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
@@ -84,6 +83,25 @@ class DestinationIndexControllerSpec extends SpecBase {
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
                 Some(routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
+            }
+          }
+      )
+    }
+
+    "must redirect to the destination business name controller" - {
+      Seq(DirectDelivery).foreach(
+        answer =>
+          s"when DestinationTypePage answer is $answer" in {
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
+
+            running(application) {
+
+              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
           }
       )

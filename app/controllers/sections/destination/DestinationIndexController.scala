@@ -50,6 +50,8 @@ class DestinationIndexController @Inject()(
               Redirect(routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
             } else if (shouldRedirectToDestinationWarehouseVat) {
               Redirect(routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
+            } else if (shouldRedirectToDestinationBusinessName) {
+              Redirect(routes.DestinationBusinessNameController.onPageLoad(ern, draftId, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
               Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
@@ -61,8 +63,7 @@ class DestinationIndexController @Inject()(
   private def shouldRedirectToDestinationWarehouseExcise(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
       GbTaxWarehouse,
-      EuTaxWarehouse,
-      DirectDelivery
+      EuTaxWarehouse
     ).contains(destinationTypePageAnswer)
 
   private def shouldRedirectToDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
@@ -70,6 +71,11 @@ class DestinationIndexController @Inject()(
       RegisteredConsignee,
       TemporaryRegisteredConsignee,
       ExemptedOrganisation
+    ).contains(destinationTypePageAnswer)
+
+  private def shouldRedirectToDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      DirectDelivery
     ).contains(destinationTypePageAnswer)
 
 }

@@ -24,3 +24,18 @@ case object NorthernIrelandWarehouseKeeper extends UserType
 case object GreatBritainWarehouse extends UserType
 case object NorthernIrelandWarehouse extends UserType
 case object Unknown extends UserType
+
+object UserType {
+
+  private val ERN_PREFIX_LENGTH = 4
+
+  def apply(ern: String): UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
+    case "GBRC" => GreatBritainRegisteredConsignor
+    case "XIRC" => NorthernIrelandRegisteredConsignor
+    case "GBWK" => GreatBritainWarehouseKeeper
+    case "XIWK" => NorthernIrelandWarehouseKeeper
+    case "XI00" => NorthernIrelandWarehouse
+    case "GB00" => GreatBritainWarehouse
+    case _ => Unknown
+  }
+}

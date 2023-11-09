@@ -175,4 +175,67 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
       result mustEqual Invalid("error.past", "foo")
     }
   }
+
+  "isDecimal" - {
+
+    "must return Valid for a valid number" in {
+
+      val result = isDecimal("error")("10.56")
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a non-numeric" in {
+
+      val result = isDecimal("error")("banana")
+      result mustEqual Invalid("error")
+    }
+  }
+
+  "decimalRange" - {
+
+    "must return Valid for a valid number (min)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(1.2)
+      result mustEqual Valid
+    }
+
+    "must return Valid for a valid number (max)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(835.5)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a number outside of the range (less than)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(1.199999999)
+      result mustEqual Invalid("error", 1.2, 835.5)
+    }
+
+    "must return Invalid for a number outside of the range (more than)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(835.50000000001)
+      result mustEqual Invalid("error", 1.2, 835.5)
+    }
+  }
+
+  "maxDecimalPlaces" - {
+
+    "must return Valid for a valid number of dp (max)" in {
+
+      val result = maxDecimalPlaces(5, "error")(1.12345)
+      result mustEqual Valid
+    }
+
+    "must return Valid for a valid number of dp (min)" in {
+
+      val result = maxDecimalPlaces(5, "error")(1)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a number that exceeds the dp" in {
+
+      val result = maxDecimalPlaces(5, "error")(1.123456)
+      result mustEqual Invalid("error", 5)
+    }
+  }
 }

@@ -48,7 +48,7 @@ class ItemBrandNameController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when flow is properly enabled - commented out to allow JT to hit directly for now
+      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
       //validateIndex(idx) {
         renderView(Ok, fillForm(ItemBrandNamePage(idx), formProvider()), idx, mode)
       //}
@@ -56,7 +56,7 @@ class ItemBrandNameController @Inject()(
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when flow is properly enabled - commented out to allow JT to hit directly for now
+      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
       //validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),

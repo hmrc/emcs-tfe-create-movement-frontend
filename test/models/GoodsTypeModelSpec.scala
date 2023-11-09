@@ -50,18 +50,18 @@ class GoodsTypeModelSpec extends SpecBase with GuiceOneAppPerSuite {
         "must output the correct messages" in {
 
           //TODO: Content to be confirmed by Lexi
-          Wine.toSingularOutput() mustBe "Wine"
-          Wine.toPluralOutput() mustBe "Wines"
-          Spirits.toSingularOutput() mustBe "Spirit"
-          Spirits.toPluralOutput() mustBe "Spirits"
-          Intermediate.toSingularOutput() mustBe "Intermediate product"
-          Intermediate.toPluralOutput() mustBe "Intermediate products"
-          Tobacco.toSingularOutput() mustBe "Tobacco"
-          Tobacco.toPluralOutput() mustBe "Tobaccos"
-          Energy.toSingularOutput() mustBe "Energy"
-          Energy.toPluralOutput() mustBe "Energies"
-          Beer.toSingularOutput() mustBe "Beer"
-          Beer.toPluralOutput() mustBe "Beers"
+          Wine.toSingularOutput() mustBe "wine"
+          Wine.toPluralOutput() mustBe "wines"
+          Spirits.toSingularOutput() mustBe "spirit"
+          Spirits.toPluralOutput() mustBe "spirits"
+          Intermediate.toSingularOutput() mustBe "intermediate product"
+          Intermediate.toPluralOutput() mustBe "intermediate products"
+          Tobacco.toSingularOutput() mustBe "tobacco"
+          Tobacco.toPluralOutput() mustBe "tobaccos"
+          Energy.toSingularOutput() mustBe "energy"
+          Energy.toPluralOutput() mustBe "energies"
+          Beer.toSingularOutput() mustBe "beer"
+          Beer.toPluralOutput() mustBe "beers"
         }
       }
     }

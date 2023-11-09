@@ -17,8 +17,8 @@
 package views.sections.items
 
 import base.ViewSpecBase
-import fixtures.messages.sections.items.ItemBrandNameMessages
-import forms.sections.items.ItemBrandNameFormProvider
+import fixtures.messages.sections.items.ItemAlcoholStrengthMessages
+import forms.sections.items.ItemAlcoholStrengthFormProvider
 import models.GoodsTypeModel.Beer
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,24 +26,24 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.items.ItemBrandNameView
+import views.html.sections.items.ItemAlcoholStrengthView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemBrandNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemAlcoholStrengthViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Guarantor Required view" - {
+  "Item Alcohol Strength view" - {
 
-    Seq(ItemBrandNameMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemAlcoholStrengthMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemBrandNameView]
-        val form = app.injector.instanceOf[ItemBrandNameFormProvider].apply()
+        val view = app.injector.instanceOf[ItemAlcoholStrengthView]
+        val form = app.injector.instanceOf[ItemAlcoholStrengthFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Beer)).toString())
 
@@ -51,10 +51,8 @@ class ItemBrandNameViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.label(ItemBrandNameFormProvider.brandNameField) -> messagesForLanguage.brandNameLabel,
-          //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
-          Selectors.radioButton(3) -> messagesForLanguage.no,
+          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.inputSuffix -> messagesForLanguage.suffix,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

@@ -16,10 +16,11 @@
 
 package navigation
 
-import controllers.routes
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import controllers.sections.items.routes
+import models.GoodsTypeModel._
+import models._
 import pages.Page
-import pages.sections.items.ItemBrandNamePage
+import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -30,6 +31,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemBrandNamePage(_) => (_: UserAnswers) =>
       //TODO: Update to route to next page in flow when built
      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+    case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
+      alcoholStrengthRouting(idx, userAnswers)
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
@@ -42,7 +47,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -53,4 +58,31 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
+
+
+  private def alcoholStrengthRouting(idx: Index, userAnswers: UserAnswers): Call =
+    (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemAlcoholStrengthPage(idx))) match {
+      case (Some(epc), Some(abv)) =>
+        GoodsTypeModel(epc) match {
+          case Beer =>
+            if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
+              //TODO: Redirect to CAM-ITM07
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            } else if (Seq(GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper).contains(UserType(userAnswers.ern)) && abv < 8.5) {
+              //TODO: Redirect to CAM-ITM41
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            } else {
+              //TODO: Redirect to CAM-ITM19
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            }
+          case Spirits =>
+            //TODO: Redirect to CAM-ITM08
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            //TODO: Redirect to CAM-ITM09
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      case _ =>
+        routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
 }

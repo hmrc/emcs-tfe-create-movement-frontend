@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        h2: components.h2
-)
+package pages.sections.items
 
-@(
-        headingMsg: String,
-        captionMsg: Option[String] = None,
-        classes: String = "govuk-heading-l govuk-!-margin-bottom-2",
-        hiddenContent: Option[String] = None
-)(implicit messages: Messages)
+import models.Index
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-@captionMsg.map { caption =>
- @h2(caption, "govuk-caption-xl", hiddenContent = hiddenContent)
-}
-
-<h1 class="@classes">@messages(headingMsg)</h1>
-
-@{
-    //$COVERAGE-OFF$
+case class ItemAlcoholStrengthPage(idx: Index) extends QuestionPage[BigDecimal] {
+  override val toString: String = "itemAlcoholStrength"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

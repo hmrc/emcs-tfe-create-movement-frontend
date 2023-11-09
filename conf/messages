@@ -892,18 +892,18 @@ sadRemoveDocument.error.required = Select yes if you want to remove this Single 
 
 
 #TODO: Waiting on wording confirmation from Lexi
-goodsType.W.singular = Wine
-goodsType.W.plural = Wines
-goodsType.B.singular = Beer
-goodsType.B.plural = Beers
-goodsType.T.singular = Tobacco
-goodsType.T.plural = Tobaccos
-goodsType.I.singular = Intermediate product
-goodsType.I.plural = Intermediate products
-goodsType.S.singular = Spirit
-goodsType.S.plural = Spirits
-goodsType.E.singular = Energy
-goodsType.E.plural = Energies
+goodsType.W.singular = wine
+goodsType.W.plural = wines
+goodsType.B.singular = beer
+goodsType.B.plural = beers
+goodsType.T.singular = tobacco
+goodsType.T.plural = tobaccos
+goodsType.I.singular = intermediate product
+goodsType.I.plural = intermediate products
+goodsType.S.singular = spirit
+goodsType.S.plural = spirits
+goodsType.E.singular = energy
+goodsType.E.plural = energies
 
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?
@@ -914,3 +914,14 @@ itemBrandName.change.hidden = if goods are branded
 itemBrandName.error.brandName.required = Enter a brand name between 1 and {0} characters
 itemBrandName.error.brandName.length = Brand name must be {0} characters or less
 itemBrandName.error.brandName.invalid = Brand name must not include < and > and : and ;
+
+itemAlcoholStrength.title = What is the alcohol strength by volume (ABV) for the {0}?
+itemAlcoholStrength.heading = What is the alcohol strength by volume (ABV) for the {0}?
+itemAlcoholStrength.hint = Enter the alcoholic strength as a percentage (by volume at 20°C).
+itemAlcoholStrength.suffix = %vol.
+itemAlcoholStrength.checkYourAnswersLabel = Alcohol by volume (ABV)
+itemAlcoholStrength.change.hidden = alcohol strength
+itemAlcoholStrength.error.required = Enter the alcoholic strength
+itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
+itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
+itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places

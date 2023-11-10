@@ -17,11 +17,8 @@
 package navigation
 
 import controllers.sections.documents.routes
-<<<<<<< HEAD
 import models.sections.documents.DocumentType
-=======
 import models.sections.documents.DocumentsAddToList
->>>>>>> 70381a6f ([ETFE-2479] updated navigator)
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
@@ -33,29 +30,9 @@ import javax.inject.Inject
 class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-<<<<<<< HEAD
-    case DocumentsCertificatesPage =>
-      (answers: UserAnswers) =>
-        answers.get(DocumentsCertificatesPage) match {
-          case Some(false) =>
-            controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ =>
-            controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        }
-    case DocumentTypePage =>
-      (answers: UserAnswers) =>
-        answers.get(DocumentTypePage) match {
-          case Some(DocumentType.OtherCode) =>
-            controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-          case _ =>
-            controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        }
-    case ReferenceAvailablePage(idx) =>
-      referenceAvailableRouting(idx)
-=======
     case DocumentsCertificatesPage => documentsCertificatesRouting()
+    case DocumentTypePage => documentTypeRouting()
     case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
->>>>>>> 70381a6f ([ETFE-2479] updated navigator)
     case DocumentDescriptionPage(_) =>
       (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DocumentReferencePage(_) =>
@@ -70,6 +47,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage => documentsCertificatesRouting()
+    case DocumentTypePage => documentTypeRouting()
     case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
     case DocumentsAddToListPage => documentsAddToListRouting()
     case _ =>
@@ -94,9 +72,17 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => userAnswers.get(DocumentsCount) match {
-        case Some(0) | None => routes.ReferenceAvailableController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, NormalMode)
+        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
+    }
+
+  private def documentTypeRouting(mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
+    answers.get(DocumentTypePage) match {
+      case Some(DocumentType.OtherCode) =>
+        controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, 0, NormalMode)
+      case _ =>
+        controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, 0, NormalMode)
     }
 
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>

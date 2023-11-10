@@ -47,6 +47,8 @@ case class TraderKnownFactsException(message: String) extends Exception(message)
 
 case class MemberStatesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
+case class DocumentTypesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class ExciseProductCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

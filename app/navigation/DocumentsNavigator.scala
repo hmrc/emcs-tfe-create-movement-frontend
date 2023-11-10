@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.sections.documents.routes
+import models.sections.documents.DocumentType
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
@@ -28,14 +29,21 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage =>
-      (answers: UserAnswers) => {
+      (answers: UserAnswers) =>
         answers.get(DocumentsCertificatesPage) match {
-          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ => //TODO redirect to CAM-DOC02 when page built
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(false) =>
+            controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
+          case _ =>
+            controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
         }
-
-      }
+    case DocumentTypePage =>
+      (answers: UserAnswers) =>
+        answers.get(DocumentTypePage) match {
+          case Some(DocumentType.OtherCode) =>
+            controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+          case _ =>
+            controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
+        }
     case ReferenceAvailablePage =>
       referenceAvailableRouting()
     case DocumentDescriptionPage =>
@@ -43,6 +51,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case DocumentReferencePage =>
       //TODO update with next page when finished
       (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case DocumentsCheckAnswersPage =>
       _ => //TODO redirect CAM02 when built
         testOnly.controllers.routes.UnderConstructionController.onPageLoad()

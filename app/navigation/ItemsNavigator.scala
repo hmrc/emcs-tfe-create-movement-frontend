@@ -40,12 +40,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)
 
-    case CommercialDescriptionPage(_) =>
-      //TODO update when next page is created
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
-    case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
-      alcoholStrengthRouting(idx, userAnswers)
+    case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
+      commercialDescriptionRouting(idx, userAnswers)
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -111,4 +107,29 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         controllers.sections.items.routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
+  private def commercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
+    userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) =>
+        GoodsTypeModel(epc) match {
+          case Beer =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Spirits =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Wine =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Intermediate =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Tobacco =>
+            //TODO: Redirect to CAM-ITM22
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Energy =>
+            //TODO: Redirect to CAM-ITM19 or 33 depending on the EPC code
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            //TODO: Redirect to CAM-ITM09
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      case _ =>
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
 }

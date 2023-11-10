@@ -80,12 +80,74 @@ class ItemsNavigatorSpec extends SpecBase {
             itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
-      "must go from the Commercial Description Name page" - {
 
-        //TODO: Update routing as part of future story when next page in flow is built
-        "to the Under Construction Page" in {
-          navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "must go from the Commercial Description page" - {
+        "when GoodsType is Beer" - {
+          "to the Alcohol Strength Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "B200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+        "when GoodsType is Spirits" - {
+          "to the  Alcohol Strength Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "S200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+        "when GoodsType is Wine" - {
+          "to the Alcohol Strength Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+        "when GoodsType is Intermediate" - {
+          "to the Alcohol Strength Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "I200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+        "when GoodsType is one type of Tobacco " - {
+          //TODO: Update routing as part of future story when next page in flow is built
+          "to the Under Construction Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "T200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+        "when GoodsType is one type of Energy " - {
+          //TODO: Update routing as part of future story when next page in flow is built
+          "to the Under Construction Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "E200")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "when GoodsType is other Energy code " - {
+          //TODO: Update routing as part of future story when next page in flow is built
+          "to the Under Construction Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "E470")
+
+            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
         }
       }
 

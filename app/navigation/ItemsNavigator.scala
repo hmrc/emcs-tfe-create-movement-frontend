@@ -22,7 +22,6 @@ import pages.Page
 import pages.sections.items._
 import models.GoodsTypeModel._
 import models._
-import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -104,7 +103,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         //TODO: Route to CAM-ITM38 when implemented
         testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       case _ =>
-        controllers.sections.items.routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
   private def commercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =

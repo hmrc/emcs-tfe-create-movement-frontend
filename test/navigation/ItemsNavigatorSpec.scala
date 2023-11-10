@@ -42,7 +42,7 @@ class ItemsNavigatorSpec extends SpecBase {
           Seq("S500", "T300", "S400", "E600", "E800", "E910").foreach(epc => {
             s"when the EPC is $epc" in {
               navigator.nextPage(
-                ItemBrandNamePage(testIndex1),
+                ItemExciseProductCodePage(testIndex1),
                 NormalMode,
                 emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)) mustBe
                 testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -54,7 +54,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "to CAM-ITM38 page" - {
           "when the EPC has multiple commodity codes" in {
             navigator.nextPage(
-              ItemBrandNamePage(testIndex1),
+              ItemExciseProductCodePage(testIndex1),
               NormalMode,
               emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -63,14 +63,13 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "to the Items index page" - {
           "when there is no answer" in {
-            navigator.nextPage(ItemBrandNamePage(testIndex1),
-              NormalMode, emptyUserAnswers) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            navigator.nextPage(ItemExciseProductCodePage(testIndex1),
+              NormalMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
       }
-    }
 
-    "must go from the Item Brand Name page" - {
+      "must go from the Item Brand Name page" - {
 
         "to the Commercial Description Page" in {
           val userAnswers = emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
@@ -225,27 +224,27 @@ class ItemsNavigatorSpec extends SpecBase {
       }
     }
 
-  "in Check mode" - {
-    "must go from the Excise Product Code page" - {
+    "in Check mode" - {
+      "must go from the Excise Product Code page" - {
 
-      //TODO: Route to CAM-ITM43 when implemented
-      "to CAM-ITM43 page" - {
-        Seq("S500", "T300", "S400", "E600", "E800", "E910").foreach(epc => {
-          s"when the EPC is $epc" in {
-            navigator.nextPage(
-              ItemBrandNamePage(testIndex1),
-              CheckMode,
-              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          }
-        })
-      }
+        //TODO: Route to CAM-ITM43 when implemented
+        "to CAM-ITM43 page" - {
+          Seq("S500", "T300", "S400", "E600", "E800", "E910").foreach(epc => {
+            s"when the EPC is $epc" in {
+              navigator.nextPage(
+                ItemExciseProductCodePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)) mustBe
+                testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            }
+          })
+        }
 
       //TODO: Route to CAM-ITM43 when implemented
       "to CAM-ITM38 page" - {
         "when the EPC has multiple commodity codes" in {
           navigator.nextPage(
-            ItemBrandNamePage(testIndex1),
+            ItemExciseProductCodePage(testIndex1),
             CheckMode,
             emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -254,25 +253,26 @@ class ItemsNavigatorSpec extends SpecBase {
 
       "to the Items index page" - {
         "when there is no answer" in {
-          navigator.nextPage(ItemBrandNamePage(testIndex1),
-            CheckMode, emptyUserAnswers) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          navigator.nextPage(ItemExciseProductCodePage(testIndex1),
+            CheckMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
         }
       }
     }
 
-    "must go to CheckYourAnswersItemsController" in {
-      //TODO: update to Items CYA when built
-      case object UnknownPage extends Page
-      navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "must go to CheckYourAnswersItemsController" in {
+        //TODO: update to Items CYA when built
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
     }
-  }
 
-  "in Review mode" - {
-    "must go to CheckYourAnswers" in {
-      case object UnknownPage extends Page
-      navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+    "in Review mode" - {
+      "must go to CheckYourAnswers" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+      }
     }
   }
 }

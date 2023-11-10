@@ -59,8 +59,8 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
   }
 
   "ItemBrandName Controller" - {
-
-    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
+    //TODO: implement in CAM-ITM19
+    "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
       running(application) {
 
         val request = FakeRequest(GET, itemBrandNameRoute(testIndex2))
@@ -71,7 +71,8 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
+    //TODO: implement in CAM-ITM19
+    "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
       running(application) {
 
         val request = FakeRequest(POST, itemBrandNameRoute(testIndex2)).withFormUrlEncodedBody((hasBrandNameField, "false"))

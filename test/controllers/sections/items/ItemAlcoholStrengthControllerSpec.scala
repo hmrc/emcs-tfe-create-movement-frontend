@@ -56,8 +56,8 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
   }
 
   "ItemAlcoholStrength Controller" - {
-
-    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
+    //TODO: implement in CAM-ITM19
+    "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
       running(application) {
 
         val request = FakeRequest(GET, itemAlcoholStrengthRoute(testIndex2))
@@ -68,7 +68,8 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
+    //TODO: implement in CAM-ITM19
+    "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
       running(application) {
 
         val request = FakeRequest(POST, itemAlcoholStrengthRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))

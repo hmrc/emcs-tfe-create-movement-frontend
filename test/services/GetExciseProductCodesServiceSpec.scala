@@ -33,7 +33,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
 
   ".getExciseProductCodes" - {
 
-    "should return Seq[SelectItem]" - {
+    "should return Seq[ExciseProductCode]" - {
 
       "when Connector returns success from downstream" in {
 
@@ -42,7 +42,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
           wineExciseProductCode
         )
 
-        MockGetMemberStatesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode))))
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode))))
 
         val actualResults = testService.getExciseProductCodes().futureValue
 
@@ -56,7 +56,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
 
         val expectedResult = "No excise product codes retrieved"
 
-        MockGetMemberStatesConnector.getExciseProductCodes().returns(Future(Left(UnexpectedDownstreamResponseError)))
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Left(UnexpectedDownstreamResponseError)))
 
         val actualResult = intercept[ExciseProductCodesException](await(testService.getExciseProductCodes())).getMessage
 

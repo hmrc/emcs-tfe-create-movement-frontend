@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package forms.sections.items
 
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import forms.mappings.Mappings
+import models.ExciseProductCode
+import play.api.data.Form
 
-case object ItemsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "items"
-  val MAX: Int = 999
+import javax.inject.Inject
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
-  }
+class ItemExciseProductCodeFormProvider @Inject() extends Mappings {
+
+  def apply(exciseProductCodes: Seq[ExciseProductCode]): Form[String] =
+    Form(
+      "excise-product-code" -> text("itemExciseProductCode.error.required")
+        .verifying(valueInList(exciseProductCodes.map(_.code), "itemExciseProductCode.error.required"))
+    )
 }

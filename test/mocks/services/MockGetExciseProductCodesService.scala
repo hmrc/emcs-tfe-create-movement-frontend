@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package mocks.connectors
+package mocks.services
 
-import connectors.referenceData.GetExciseProductCodesConnector
 import models.ExciseProductCode
-import models.response.ErrorResponse
-import org.scalamock.handlers.CallHandler2
+import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import services.GetExciseProductCodesService
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-trait MockGetExciseProductCodesConnector extends MockFactory {
+trait MockGetExciseProductCodesService extends MockFactory {
 
-  lazy val mockGetExciseProductCodesConnector: GetExciseProductCodesConnector = mock[GetExciseProductCodesConnector]
+  lazy val mockGetExciseProductCodesService: GetExciseProductCodesService = mock[GetExciseProductCodesService]
 
-  object MockGetExciseProductCodesConnector {
-    def getExciseProductCodes(): CallHandler2[HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[ExciseProductCode]]]]  =
-      (mockGetExciseProductCodesConnector.getExciseProductCodes()(_: HeaderCarrier, _: ExecutionContext))
-        .expects(*, *)
+  object MockGetExciseProductCodesService {
+
+    def getExciseProductCodes(): CallHandler1[HeaderCarrier, Future[Seq[ExciseProductCode]]] =
+      (mockGetExciseProductCodesService.getExciseProductCodes()(_: HeaderCarrier)).expects(*)
   }
 }

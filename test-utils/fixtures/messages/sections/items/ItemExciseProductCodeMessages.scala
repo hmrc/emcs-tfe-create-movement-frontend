@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package fixtures.messages.sections.items
 
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case object ItemsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "items"
-  val MAX: Int = 999
+object ItemExciseProductCodeMessages {
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Choose the Excise Product Code (EPC) for the item"
+    val title = titleHelper(heading)
+
+    val cyaLabel = "Excise Product Code"
+    val cyaChangeHidden = "Excise Product Code"
+
+    val defaultSelectOption = "Choose Excise Product Code"
+    val beerSelectOption = "B000: Beer"
   }
+
+  object English extends ViewMessages with BaseEnglish
+
 }

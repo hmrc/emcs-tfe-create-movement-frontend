@@ -20,7 +20,7 @@ import controllers.sections.items.routes
 import models.GoodsTypeModel._
 import models._
 import pages.Page
-import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
+import pages.sections.items._
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -28,6 +28,8 @@ import javax.inject.Inject
 class ItemsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
+
     case ItemBrandNamePage(_) => (_: UserAnswers) =>
       //TODO: Update to route to next page in flow when built
      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -40,6 +42,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, CheckMode)
     case _ =>
       // TODO: update to Items CYA when built
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -85,4 +88,17 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case _ =>
         routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
+
+  private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
+    userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some("S500" | "T300" | "S400" | "E600" | "E800" | "E910") =>
+        //TODO: Route to CAM-ITM43 when implemented
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      case Some(_) =>
+        //TODO: Route to CAM-ITM38 when implemented
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      case _ =>
+        controllers.sections.items.routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
+
 }

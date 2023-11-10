@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.{Index, NormalMode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemsSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,8 +42,7 @@ class ItemsIndexController @Inject()(
         // TODO: Update to CAM-ITM34 when built
         Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
       } else {
-        // TODO: Update to CAM-ITM38 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode))
       }
     }
 

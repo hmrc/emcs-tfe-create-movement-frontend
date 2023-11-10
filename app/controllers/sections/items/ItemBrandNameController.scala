@@ -48,21 +48,19 @@ class ItemBrandNameController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
-      //validateIndex(idx) {
+//      validateIndex(idx) { TODO: implement in CAM-ITM19
         renderView(Ok, fillForm(ItemBrandNamePage(idx), formProvider()), idx, mode)
-      //}
+//      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
-      //validateIndex(idx) {
+//      validateIndex(idx) { TODO: implement in CAM-ITM19
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           handleSubmittedForm(_, idx, mode)
         )
-      //}
+//      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =

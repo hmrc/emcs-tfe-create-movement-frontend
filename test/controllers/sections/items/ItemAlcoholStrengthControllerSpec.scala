@@ -56,8 +56,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
   }
 
   "ItemAlcoholStrength Controller" - {
-
-    //TODO: IGNORED! Add this test back in when the validateIDX method is called once the flow is wired up
+    //TODO: implement in CAM-ITM19
     "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
       running(application) {
 
@@ -69,7 +68,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    //TODO: IGNORED! Add this test back in when the validateIDX method is called once the flow is wired up
+    //TODO: implement in CAM-ITM19
     "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
       running(application) {
 

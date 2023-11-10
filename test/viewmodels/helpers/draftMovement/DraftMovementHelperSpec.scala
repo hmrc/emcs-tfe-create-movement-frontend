@@ -69,7 +69,7 @@ class DraftMovementHelperSpec extends SpecBase {
               case (ern, movementScenario) =>
                 implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                val input1 = msgs(s"destinationType.$movementScenario")
+                val input1 = msgs(s"draftMovement.heading.$movementScenario")
 
                 helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(input1)
                 titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(input1)
@@ -97,7 +97,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DispatchPlacePage, dispatchPlace).set(DestinationTypePage, movementScenario))
 
                 val input1 = msgs(s"dispatchPlace.$dispatchPlace")
-                val input2 = msgs(s"destinationType.$movementScenario")
+                val input2 = msgs(Seq(s"draftMovement.heading.$movementScenario", s"destinationType.$movementScenario"))
 
                 helper.heading mustBe messagesForLanguage.headingDispatchPlaceTo(input1, input2)
                 titleNoForm(helper.heading) mustBe messagesForLanguage.titleDispatchPlaceTo(input1, input2)

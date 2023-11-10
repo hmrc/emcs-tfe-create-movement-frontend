@@ -48,12 +48,12 @@ class DraftMovementHelper @Inject()() extends Logging {
   def heading(implicit request: DataRequest[_], messages: Messages): String =
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
       case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
-        messages("draftMovement.heading.gbTaxWarehouseTo", messages(s"destinationType.$GbTaxWarehouse"))
+        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
 
       case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(value) =>
-            messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(s"destinationType.$destinationType"))
+            messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
           case None =>
             logger.error(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
             throw MissingMandatoryPage(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
@@ -231,7 +231,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             id = "sad",
             link = Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.draftId).url),
             section = Some(SadSection),
-            status = Some(ItemsSection.status)
+            status = Some(SadSection.status)
           ))
         } else {
           None

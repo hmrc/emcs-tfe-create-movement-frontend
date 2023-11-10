@@ -19,7 +19,6 @@ package pages.sections.destination
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import models.requests.DataRequest
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import play.api.test.FakeRequest
 import utils.JsonOptionFormatter
 
@@ -94,64 +93,15 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
       "when DestinationConsigneeDetails is true" - {
 
-        "when Consignee Business Name and address is given" - {
+        "must return true" in {
 
-          "must return true" in {
+          val userAnswers = emptyUserAnswers
+            .set(DestinationWarehouseExcisePage, "excise")
+            .set(DestinationConsigneeDetailsPage, true)
 
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, true)
-              .set(ConsigneeBusinessNamePage, "business name")
-              .set(ConsigneeAddressPage, userAddressModelMax)
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe true
-          }
-        }
-
-        "when Consignee Business Name is NOT given" - {
-
-          "must return false" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, true)
-              .set(ConsigneeAddressPage, userAddressModelMax)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
-          }
-        }
-
-        "when Consignee Address is NOT given" - {
-
-          "must return false" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, true)
-              .set(ConsigneeBusinessNamePage, "business name")
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
-          }
-        }
-
-        "when Destination Business Name and Destination Address are NOT given" - {
-
-          "must return false" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, true)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
-          }
+          DestinationSection.isCompleted mustBe true
         }
       }
     }
@@ -229,69 +179,18 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
         "when DestinationConsigneeDetails is true" - {
 
-          "when Consignee Business Name and address is given" - {
+          "must return true" in {
 
-            "must return true" in {
+            val userAnswers = emptyUserAnswers
+              .set(DestinationWarehouseVatPage, "vat")
+              .set(DestinationDetailsChoicePage, true)
+              .set(DestinationConsigneeDetailsPage, true)
 
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeBusinessNamePage, "business name")
-                .set(ConsigneeAddressPage, userAddressModelMax)
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe true
-            }
+            DestinationSection.isCompleted mustBe true
           }
 
-          "when Consignee Business Name is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeAddressPage, userAddressModelMax)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Consignee Address is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeBusinessNamePage, "business name")
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Business Name and Destination Address are NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
         }
       }
 
@@ -392,65 +291,17 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
         "when DestinationConsigneeDetails is true" - {
 
-          "when Consignee Business Name and address is given" - {
+          "must return true" in {
 
-            "must return true" in {
+            val userAnswers = emptyUserAnswers
+              .set(DestinationDetailsChoicePage, true)
+              .set(DestinationConsigneeDetailsPage, true)
 
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeBusinessNamePage, "business name")
-                .set(ConsigneeAddressPage, userAddressModelMax)
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe true
-            }
+            DestinationSection.isCompleted mustBe true
           }
 
-          "when Consignee Business Name is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeAddressPage, userAddressModelMax)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Consignee Address is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeBusinessNamePage, "business name")
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Business Name and Destination Address are NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, true)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
         }
       }
 

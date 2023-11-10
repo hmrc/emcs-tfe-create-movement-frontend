@@ -19,7 +19,6 @@ package pages.sections.destination
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
 import pages.sections.Section
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
@@ -51,15 +50,13 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   }
 
   private def detailsPagesComplete(implicit request: DataRequest[_]): TaskListStatus = {
-    if(request.userAnswers.get(DestinationDetailsChoicePage).contains(false)) Completed else (
+    if (request.userAnswers.get(DestinationDetailsChoicePage).contains(false)) Completed else (
       request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
-      request.userAnswers.get(DestinationAddressPage),
-      request.userAnswers.get(ConsigneeBusinessNamePage),
-      request.userAnswers.get(ConsigneeAddressPage)
+      request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(false), Some(_), Some(_), _, _) => Completed
-      case (Some(true), _, _, Some(_),Some(_)) => Completed
+      case (Some(false), Some(_), Some(_)) => Completed
+      case (Some(true), _, _) => Completed
       case _ => InProgress
     }
   }

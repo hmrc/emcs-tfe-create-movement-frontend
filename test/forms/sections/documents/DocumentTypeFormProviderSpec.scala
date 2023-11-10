@@ -16,11 +16,13 @@
 
 package forms.sections.documents
 
+import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.behaviours.OptionFieldBehaviours
-import models.sections.documents.DocumentType
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Messages, MessagesApi}
 
-class DocumentTypeFormProviderSpec extends OptionFieldBehaviours {
+class DocumentTypeFormProviderSpec extends OptionFieldBehaviours with GuiceOneAppPerSuite {
 
   val form = new DocumentTypeFormProvider()()
 
@@ -34,5 +36,16 @@ class DocumentTypeFormProviderSpec extends OptionFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error Messages" - {
+
+    implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+
+    "have the correct error message for required" in {
+
+      messages("documentType.error.required") mustBe
+        English.errorRequired
+    }
   }
 }

@@ -17,6 +17,7 @@
 package controllers.sections.items
 
 import base.SpecBase
+import models.{Index, NormalMode}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -35,12 +36,12 @@ class ItemsIndexControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+          redirectLocation(result).value mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
         }
       }
     }
 
-    "must redirect to the items commodity code controller" in {
+    "must redirect to the items excise product code controller" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -49,7 +50,8 @@ class ItemsIndexControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        redirectLocation(result).value mustBe
+          controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, Index(0), NormalMode).url
       }
     }
   }

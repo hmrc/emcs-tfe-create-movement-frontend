@@ -41,7 +41,7 @@ class GetExciseProductCodesConnectorSpec extends SpecBase
   lazy val appConfig = app.injector.instanceOf[AppConfig]
   lazy val connector = new GetExciseProductCodesConnector(mockHttpClient, appConfig)
 
-  "getMemberStates" - {
+  "getExciseProductCodes" - {
     
     "should return a successful response" - {
       

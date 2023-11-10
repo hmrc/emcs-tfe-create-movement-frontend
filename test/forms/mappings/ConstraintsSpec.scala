@@ -238,4 +238,20 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
       result mustEqual Invalid("error", 5)
     }
   }
+
+  "valueInList" - {
+
+    "must return Valid when the given value is in the list" in {
+
+      val result = valueInList(Seq("apple", "banana", "carrot"), "error.notInList")("apple")
+      result mustEqual Valid
+    }
+
+    "must return Invalid when the given value is not in the list" in {
+
+      val result = valueInList(Seq("apple", "banana", "carrot"), "error.notInList")("grape")
+      result mustEqual Invalid("error.notInList", Seq())
+    }
+
+  }
 }

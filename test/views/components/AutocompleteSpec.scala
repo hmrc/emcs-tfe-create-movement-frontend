@@ -49,7 +49,8 @@ class AutocompleteSpec extends ViewSpecBase {
         SelectItem(value = Some("c"), text = "Test C"),
         SelectItem(value = Some("d"), text = "Test D")
       )),
-      "Not found message"
+      defaultValue = "",
+      noResultMessageKey = "Not found message",
     )
 
     implicit val doc: Document = Jsoup.parse(html.toString())
@@ -77,6 +78,8 @@ class AutocompleteSpec extends ViewSpecBase {
           |         selectElement: document.getElementById("testId"),
           |         name: 'testNameAutocomplete',
           |         defaultValue: '',
+          |         showAllValues: true,
+          |         autoselect: false,
           |         tNoResults: () => 'Not found message' ,
           |         onConfirm: () => {
           |          const matchingOption = Array.from(document.querySelectorAll("#testId-select > option")).find(function (c) {

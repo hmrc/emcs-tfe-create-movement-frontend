@@ -35,10 +35,10 @@ class GetExciseProductCodesConnector @Inject()(val http: HttpClient,
     get(baseUrl + "/oracle/epc-codes")
       .recover {
         case JsResultException(errors) =>
-          logger.warn(s"[getMemberStates] Bad JSON response from emcs-tfe-reference-data: " + errors)
+          logger.warn(s"[getExciseProductCodes] Bad JSON response from emcs-tfe-reference-data: " + errors)
           Left(JsonValidationError)
         case error =>
-          logger.warn(s"[getMemberStates] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
+          logger.warn(s"[getExciseProductCodes] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
   }

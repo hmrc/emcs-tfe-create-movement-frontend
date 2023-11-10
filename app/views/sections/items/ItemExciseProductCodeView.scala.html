@@ -1,0 +1,66 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    govukSelect: GovukSelect,
+    h1: components.h1,
+    h2: components.h2,
+    continueOrExit: components.continueOrExit,
+    autocomplete: components.autocomplete
+)
+
+@(form: Form[_], action: Call, epcSelectItems: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title"))) {
+
+    @formHelper(action = action) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @autocomplete(
+            Select(
+                id = "excise-product-code",
+                name = "excise-product-code",
+                label = Label(
+                    classes = "govuk-label--l",
+                    isPageHeading = true,
+                    content = Text(messages("itemExciseProductCode.heading"))
+                ),
+                items = SelectItem(text = messages("itemExciseProductCode.select.defaultValue"), selected = true, disabled = true) +: epcSelectItems,
+                errorMessage = form.errors("excise-product-code") match {
+                  case Nil => None
+                  case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+                },
+            ), defaultValue = "", noResultMessageKey = "site.noResultsFound")
+
+        @continueOrExit()
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

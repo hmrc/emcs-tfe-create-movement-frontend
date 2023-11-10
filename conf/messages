@@ -18,6 +18,7 @@ site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
 site.opensInNewTab = (opens in new tab)
 site.item = item
+site.noResultsFound = No results found
 
 taskListStatus.completed = Completed
 taskListStatus.inProgress = In Progress
@@ -905,6 +906,13 @@ goodsType.S.plural = spirits
 goodsType.E.singular = energy
 goodsType.E.plural = energies
 
+itemExciseProductCode.title = Choose the Excise Product Code (EPC) for the item
+itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for the item
+itemExciseProductCode.checkYourAnswersLabel = Excise Product Code
+itemExciseProductCode.error.required = Choose the Excise product code
+itemExciseProductCode.change.hidden = Excise Product Code
+itemExciseProductCode.select.defaultValue = Choose Excise Product Code
+
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?
 itemBrandName.label = Brand name
@@ -925,3 +933,4 @@ itemAlcoholStrength.error.required = Enter the alcoholic strength
 itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
 itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places
+

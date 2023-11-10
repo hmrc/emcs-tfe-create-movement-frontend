@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package viewmodels.helpers
 
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import models.ExciseProductCode
+import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
-case object ItemsSection extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "items"
-  val MAX: Int = 999
+object ItemExciseProductCodeHelper {
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
+  def constructSelectItemsForEPCs(exciseProductCodes: Seq[ExciseProductCode], existingAnswer: Option[String] = None): Seq[SelectItem] = {
+    exciseProductCodes.map { epc =>
+      SelectItem(
+        value = Some(epc.code),
+        text = s"${epc.code}: ${epc.description}",
+        selected = existingAnswer.contains(epc.code)
+      )
+    }
   }
 }

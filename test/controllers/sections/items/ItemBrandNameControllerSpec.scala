@@ -60,8 +60,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
 
   "ItemBrandName Controller" - {
 
-    //TODO: IGNORED! Add this test back in when the validateIDX method is called once the flow is wired up
-    "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(GET, itemBrandNameRoute(testIndex2))
@@ -72,8 +71,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    //TODO: IGNORED! Add this test back in when the validateIDX method is called once the flow is wired up
-    "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(POST, itemBrandNameRoute(testIndex2)).withFormUrlEncodedBody((hasBrandNameField, "false"))

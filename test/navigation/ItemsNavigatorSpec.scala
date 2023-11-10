@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
-import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemExciseProductCodePage}
+import pages.sections.items._
 
 class ItemsNavigatorSpec extends SpecBase {
   val navigator = new ItemsNavigator
@@ -33,7 +33,42 @@ class ItemsNavigatorSpec extends SpecBase {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
-      "must go from the Item Brand Name page" - {
+      "must go from the Excise Product Code page" - {
+
+        //TODO: Route to CAM-ITM43 when implemented
+        "to CAM-ITM43 page" - {
+          Seq("S500", "T300", "S400", "E600", "E800", "E910").foreach(epc => {
+            s"when the EPC is $epc" in {
+              navigator.nextPage(
+                ItemBrandNamePage(testIndex1),
+                NormalMode,
+                emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)) mustBe
+                testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            }
+          })
+        }
+
+        //TODO: Route to CAM-ITM43 when implemented
+        "to CAM-ITM38 page" - {
+          "when the EPC has multiple commodity codes" in {
+            navigator.nextPage(
+              ItemBrandNamePage(testIndex1),
+              NormalMode,
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Items index page" - {
+          "when there is no answer" in {
+            navigator.nextPage(ItemBrandNamePage(testIndex1),
+              NormalMode, emptyUserAnswers) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+      }
+    }
+
+    "must go from the Item Brand Name page" - {
 
         //TODO: Update routing as part of future story when next page in flow is built
         "to the Under Construction Page" in {
@@ -116,22 +151,54 @@ class ItemsNavigatorSpec extends SpecBase {
       }
     }
 
-    "in Check mode" - {
-      "must go to CheckYourAnswersItemsController" in {
-        //TODO: update to Items CYA when built
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+  "in Check mode" - {
+    "must go from the Excise Product Code page" - {
+
+      //TODO: Route to CAM-ITM43 when implemented
+      "to CAM-ITM43 page" - {
+        Seq("S500", "T300", "S400", "E600", "E800", "E910").foreach(epc => {
+          s"when the EPC is $epc" in {
+            navigator.nextPage(
+              ItemBrandNamePage(testIndex1),
+              CheckMode,
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        })
+      }
+
+      //TODO: Route to CAM-ITM43 when implemented
+      "to CAM-ITM38 page" - {
+        "when the EPC has multiple commodity codes" in {
+          navigator.nextPage(
+            ItemBrandNamePage(testIndex1),
+            CheckMode,
+            emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      "to the Items index page" - {
+        "when there is no answer" in {
+          navigator.nextPage(ItemBrandNamePage(testIndex1),
+            CheckMode, emptyUserAnswers) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
     }
 
-    "in Review mode" - {
-      "must go to CheckYourAnswers" in {
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
-      }
+    "must go to CheckYourAnswersItemsController" in {
+      //TODO: update to Items CYA when built
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     }
   }
 
+  "in Review mode" - {
+    "must go to CheckYourAnswers" in {
+      case object UnknownPage extends Page
+      navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+    }
+  }
 }

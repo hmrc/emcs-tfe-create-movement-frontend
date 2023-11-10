@@ -18,7 +18,7 @@
 
 @this(select: GovukSelect)
 
-@(selectModel: Select, noResultMessageKey: String)(implicit messages: Messages, request: Request[_])
+@(selectModel: Select, defaultValue: String, noResultMessageKey: String)(implicit messages: Messages, request: Request[_])
 
 <div class="govuk-body">
     @select(selectModel)
@@ -29,7 +29,9 @@
         accessibleAutocomplete.enhanceSelectElement({
          selectElement: document.getElementById("@selectModel.id"),
          name: '@{selectModel.name + "Autocomplete"}',
-         defaultValue: '',
+         defaultValue: '@defaultValue',
+         showAllValues: true,
+         autoselect: false,
          tNoResults: () => '@messages(noResultMessageKey)' ,
          @*
            Had to override the onConfirm function to include custom validation for types options being null / undefined values are not handled by the Autocomplete form.

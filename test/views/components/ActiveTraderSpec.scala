@@ -20,9 +20,7 @@ import base.ViewSpecBase
 import config.AppConfig
 import fixtures.messages.TaskListStatusMessages
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 import play.api.i18n.Messages
-import viewmodels.taskList._
 import viewmodels.traderInfo.TraderInfo
 
 class ActiveTraderSpec extends ViewSpecBase {

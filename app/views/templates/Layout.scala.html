@@ -17,7 +17,8 @@
 @import config.AppConfig
 @import views.html.helper.CSPNonce
 @import views.html.templates.FullWidthMainContentTemplate
-@import views.ViewUtils._
+@import views.html.components.activeTrader
+@import viewmodels.traderInfo.TraderInfo
 
 @this(
     appConfig: AppConfig,
@@ -33,7 +34,8 @@
     hmrcScripts: HmrcScripts,
     betaBanner: StandardBetaBanner,
     defaultMainContent: TwoThirdsMainContent,
-    fullWidthMainContent: FullWidthMainContentTemplate
+    fullWidthMainContent: FullWidthMainContentTemplate,
+    activeTrader: activeTrader
 )
 
 @(
@@ -73,15 +75,8 @@
     @additionalScripts
 }
 
-@activeTraderBlock(traderName: String, ern: String) = {
-    <div class="active-trader-info govuk-!-margin-bottom-0" aria-label="Organisation switcher">
-        <div class="active-trader-info__title">@traderName (@ern)</div>
-        <a href="@{ appConfig.emcsTfeHomeUrl }" class="active-trader-info__link">@{ messages("activeTraderInfo.link") }</a>
-    </div>
-}
-
 @beforeContent = {
-    @{ maybeShowActiveTrader.map { case TraderInfo(name, ern) => activeTraderBlock(name, ern) } }
+    @{ activeTrader(maybeShowActiveTrader, appConfig) }
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
     }

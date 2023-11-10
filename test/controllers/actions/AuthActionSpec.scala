@@ -22,9 +22,8 @@ import fixtures.BaseFixtures
 import models.requests.UserRequest
 import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
 import play.api.Play
-import play.api.http.HttpEntity
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, BodyParsers, ResponseHeader, Result, Results}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -225,7 +224,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
 
                   "set UserRequest.hasMultipleErns to false" in new Harness {
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
-                    val hasMultipleErns = testRequest(req => !req.hasMultipleErns)
+                    val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 
                     hasMultipleErns mustBe false
                   }

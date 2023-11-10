@@ -17,7 +17,8 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
-import models.{CheckMode, UserAnswers}
+import models.requests.DataRequest
+import models.{CheckMode, Index}
 import pages.sections.documents.DocumentTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,8 +29,8 @@ import viewmodels.implicits._
 
 object DocumentTypeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DocumentTypePage).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DocumentTypePage(idx)).map {
       answer =>
 
         val value = ValueViewModel(
@@ -44,7 +45,7 @@ object DocumentTypeSummary  {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
+              routes.DocumentTypeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = "changeDocumentType"
             ).withVisuallyHiddenText(messages("documentType.change.hidden"))
           )

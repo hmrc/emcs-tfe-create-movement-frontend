@@ -5,6 +5,11 @@ POST       /trader/:ern/draft/:draftId/documents/document-certificates          
 GET        /trader/:ern/draft/:draftId/documents/document-certificates/change                   controllers.sections.documents.DocumentsCertificatesController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/documents/document-certificates/change                   controllers.sections.documents.DocumentsCertificatesController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:draftId/documents/:idx/document-type                             controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/documents/:idx/document-type                             controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
 GET        /trader/:ern/draft/:draftId/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/documents/:idx/reference-available/change                controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
@@ -28,10 +33,5 @@ POST       /trader/:ern/draft/:draftId/documents/add-to-list/change             
 GET        /trader/:ern/draft/:draftId/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onPageLoad(ern: String, draftId: String)
 POST       /trader/:ern/draft/:draftId/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onSubmit(ern: String, draftId: String)
 
-GET        /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                        controllers.sections.documents.DocumentsRemoveFromListController.onPageLoad(ern: String, draftId: String, idx: Index)
-POST       /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                        controllers.sections.documents.DocumentsRemoveFromListController.onSubmit(ern: String, draftId: String, idx: Index)
-
-GET        /trader/:ern/draft/:draftId/documents/document-type                                controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/documents/document-type                                controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/documents/document-type/change                         controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/documents/document-type/change                         controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                          controllers.sections.documents.DocumentsRemoveFromListController.onPageLoad(ern: String, draftId: String, idx: Index)
+POST       /trader/:ern/draft/:draftId/documents/:idx/remove-from-list                          controllers.sections.documents.DocumentsRemoveFromListController.onSubmit(ern: String, draftId: String, idx: Index)

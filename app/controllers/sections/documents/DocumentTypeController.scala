@@ -18,16 +18,19 @@ package controllers.sections.documents
 
 import controllers.actions._
 import forms.sections.documents.DocumentTypeFormProvider
-import models.Mode
+import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentTypePage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{GetDocumentTypesService, UserAnswersService}
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DocumentTypeController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -43,22 +46,26 @@ class DocumentTypeController @Inject()(
                                        view: DocumentTypeView
                                      ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request => for {
-        documentTypes <- getDocumentTypesService.getDocumentTypes()
-        selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
-      } yield Ok(view(formProvider(), mode, selectItems))
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      renderView(Ok, fillForm(DocumentTypePage(idx), formProvider()), idx, mode)
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors => for {
-          documentTypes <- getDocumentTypesService.getDocumentTypes()
-          selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue")
-        } yield BadRequest(view(formWithErrors, mode, selectItems)),
-        value =>
-          saveAndRedirect(DocumentTypePage, value, mode)
+        renderView(BadRequest, _, idx, mode),
+        saveAndRedirect(DocumentTypePage(idx), _, mode)
       )
+    }
+
+  def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    getDocumentTypesService.getDocumentTypes().map { documentTypes =>
+//      val selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
+      status(view(
+        form = form,
+        onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
+        documentTypes = documentTypes
+      ))
     }
 }

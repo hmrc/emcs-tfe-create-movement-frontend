@@ -51,7 +51,7 @@ class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
         defaultTextMessageKey = "documentType.select.defaultValue"
       )
 
-      implicit val doc: Document = Jsoup.parse(view(form, NormalMode, selectOptions).toString())
+      implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.h2(1) -> English.documentsSection,

@@ -33,7 +33,7 @@
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], mode: Mode, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitCall: Call, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
@@ -42,7 +42,7 @@
 
 @layout(pageTitle = title(form, messages("documentType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
-    @formHelper(action = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))

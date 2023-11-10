@@ -64,5 +64,4 @@ class DocumentReferenceController @Inject()(
       form = form,
       onSubmitCall = controllers.sections.documents.routes.DocumentReferenceController.onSubmit(request.ern, request.draftId, idx, mode)
     ))
-
 }

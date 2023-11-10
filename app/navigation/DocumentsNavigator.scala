@@ -31,7 +31,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage => documentsCertificatesRouting()
-    case DocumentTypePage => documentTypeRouting()
+    case DocumentTypePage(idx) => documentTypeRouting(idx)
     case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
     case DocumentDescriptionPage(_) =>
       (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
@@ -47,7 +47,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage => documentsCertificatesRouting()
-    case DocumentTypePage => documentTypeRouting()
+    case DocumentTypePage(idx) => documentTypeRouting(idx)
     case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
     case DocumentsAddToListPage => documentsAddToListRouting()
     case _ =>
@@ -72,17 +72,17 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => userAnswers.get(DocumentsCount) match {
-        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, NormalMode)
         case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
     }
 
-  private def documentTypeRouting(mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
-    answers.get(DocumentTypePage) match {
+  private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
+    answers.get(DocumentTypePage(idx)) match {
       case Some(DocumentType.OtherCode) =>
-        controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, 0, NormalMode)
+        controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
       case _ =>
-        controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, 0, NormalMode)
+        controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
     }
 
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>

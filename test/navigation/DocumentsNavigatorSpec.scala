@@ -56,7 +56,7 @@ class DocumentsNavigatorSpec extends SpecBase {
               val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
 
               navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
-                routes.DocumentTypeController.onPageLoad(testErn, testDraftId, NormalMode)
+                routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
             }
           }
 
@@ -80,17 +80,17 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage, DocumentType.OtherCode)
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), DocumentType.OtherCode)
 
-          navigator.nextPage(DocumentTypePage, NormalMode, userAnswers) mustBe
+          navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
             routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
         "to CAM-DOC05 DocumentReference page if yes is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage, "testCode")
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), "testCode")
 
-          navigator.nextPage(DocumentTypePage, NormalMode, userAnswers) mustBe
+          navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
       }
@@ -190,7 +190,7 @@ class DocumentsNavigatorSpec extends SpecBase {
               val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
 
               navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
-                routes.DocumentTypeController.onPageLoad(testErn, testDraftId, NormalMode)
+                routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
             }
           }
 
@@ -214,17 +214,17 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage, DocumentType.OtherCode)
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), DocumentType.OtherCode)
 
-          navigator.nextPage(DocumentTypePage, CheckMode, userAnswers) mustBe
+          navigator.nextPage(DocumentTypePage(0), CheckMode, userAnswers) mustBe
             routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
         "to CAM-DOC05 DocumentReference page if yes is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage, "testCode")
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), "testCode")
 
-          navigator.nextPage(DocumentTypePage, CheckMode, userAnswers) mustBe
+          navigator.nextPage(DocumentTypePage(0), CheckMode, userAnswers) mustBe
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
       }

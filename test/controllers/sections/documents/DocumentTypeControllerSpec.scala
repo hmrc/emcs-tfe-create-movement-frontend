@@ -17,6 +17,7 @@
 package controllers.sections.documents
 
 import base.SpecBase
+import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentTypeFormProvider
 import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
@@ -35,91 +36,91 @@ import views.html.sections.documents.DocumentTypeView
 
 import scala.concurrent.Future
 
-class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService with MockGetDocumentTypesService {
+class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures with MockGetDocumentTypesService {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  lazy val documentTypeRoute = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, NormalMode).url
+    def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DocumentTypeFormProvider()
-  val form = formProvider()
-  val testDocumentType = DocumentType("testCode", "testDocumentType")
+    val mockGetDocumentTypesService = stub[GetDocumentTypesService]
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
     val application = applicationBuilder(userAnswers = userAnswers)
       .overrides(
         bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[GetDocumentTypesService].toInstance(mockGetDocumentTypesService)
-      )
+        bind[GetDocumentTypesService].to(mockGetDocumentTypesService),
+    )
       .build()
 
-    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
-      selectOptions = Seq(testDocumentType),
-      defaultTextMessageKey = "documentType.select.defaultValue")(messages(application))
-  }
 
-  implicit val hc = HeaderCarrier()
+    lazy val documentTypeRoute = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode).url
+    lazy val onSubmitCall = routes.DocumentTypeController.onSubmit(testErn, testDraftId, 0, NormalMode)
+
+    val formProvider = new DocumentTypeFormProvider()
+    val form = formProvider()
+
+    val view = application.injector.instanceOf[DocumentTypeView]
+
+//    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
+//      selectOptions = Seq(testDocumentType),
+//      defaultTextMessageKey = "documentType.select.defaultValue")(messages(application))
+  }
 
   "DocumentType Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(Some(
-      emptyUserAnswers
-    )) {
-
-      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
+    "must return OK and the correct view for a GET" in new Setup() {
 
       running(application) {
+
+        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(documentTypeModel)))
 
         val request = FakeRequest(GET, documentTypeRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DocumentTypeView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, sampleDocumentTypesSelectOptions)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form,
+          onSubmitCall = onSubmitCall,
+          documentTypes = Seq(documentTypeModel)
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(
-      emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)
+    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
+      emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
     )) {
-
-      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
 
       running(application) {
 
         val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
-          selectOptions = Seq(testDocumentType),
+          selectOptions = Seq(documentTypeModel),
           defaultTextMessageKey = "documentType.select.defaultValue",
           existingAnswer = Some(testDocumentType.code))(messages(application))
 
         val request = FakeRequest(GET, documentTypeRoute)
 
-        val view = application.injector.instanceOf[DocumentTypeView]
-
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testDocumentType.code), NormalMode,
-          sampleDocumentTypesSelectOptionsWithPreFilledSelection)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = form.fill(documentTypeModel.code),
+          onSubmitCall = onSubmitCall,
+          documentTypes = Seq(documentTypeModel)
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(
-      emptyUserAnswers
-    )) {
+    "must redirect to the next page when valid data is submitted" in new Setup() {
 
-      MockUserAnswersService.set(
-        emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)
-      ).returns(Future.successful(emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)))
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       running(application) {
 
-        val request =
-          FakeRequest(POST, documentTypeRoute)
-            .withFormUrlEncodedBody(("document-type", testDocumentType.code))
+        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(documentTypeModel)))
+
+        val request = FakeRequest(POST, documentTypeRoute)
+          .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
         val result = route(application, request).value
 
@@ -128,33 +129,31 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(
-      emptyUserAnswers
-    )) {
-
-      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
+    "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
       running(application) {
+        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(documentTypeModel)))
 
-        val request =
-          FakeRequest(POST, documentTypeRoute)
-            .withFormUrlEncodedBody(("document-type", ""))
+        val request = FakeRequest(POST, documentTypeRoute)
+          .withFormUrlEncodedBody(("document-type", ""))
 
         val boundForm = form.bind(Map("document-type" -> ""))
-
-        val view = application.injector.instanceOf[DocumentTypeView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, sampleDocumentTypesSelectOptions)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          onSubmitCall = onSubmitCall,
+          documentTypes = Seq(documentTypeModel)
+        )(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
 
       running(application) {
+
         val request = FakeRequest(GET, documentTypeRoute)
 
         val result = route(application, request).value
@@ -164,8 +163,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       }
     }
 
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
-      val application = applicationBuilder(userAnswers = None).build()
+    "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
 
       val testDocumentType = "testDocumentType"
 

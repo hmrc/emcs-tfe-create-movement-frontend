@@ -19,6 +19,7 @@ package controllers.actions
 import base.SpecBase
 import config.{AppConfig, EnrolmentKeys}
 import fixtures.BaseFixtures
+import models.requests.UserRequest
 import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
 import play.api.Play
 import play.api.http.HttpEntity
@@ -66,6 +67,14 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
     def onPageLoad(): Action[AnyContent] = authAction(testErn) { _ => Results.Ok }
 
     lazy val result = onPageLoad()(fakeRequest)
+
+    def testRequest(isOk: UserRequest[_] => Boolean): Boolean =
+      Await.result(
+        authAction(testErn) { req =>
+          if (isOk(req)) Results.Ok else Results.BadRequest
+        }(fakeRequest).map(_.header.status == OK),
+        Duration.Inf
+      )
   }
 
   def authResponse(affinityGroup: Option[AffinityGroup] = Some(Organisation),
@@ -216,12 +225,9 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
 
                   "set UserRequest.hasMultipleErns to false" in new Harness {
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
+                    val hasMultipleErns = testRequest(req => !req.hasMultipleErns)
 
-                    val hasMultipleErns = authAction(testErn) { req =>
-                      Result(ResponseHeader(if (req.hasMultipleErns) 1 else 0), HttpEntity.NoEntity)
-                    }(fakeRequest).map(_.header.status == 1)
-
-                    Await.result(hasMultipleErns, Duration.Inf) mustBe false
+                    hasMultipleErns mustBe false
                   }
                 }
 
@@ -252,12 +258,9 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
 
                   "set UserRequest.hasMultipleErns to true" in new Harness {
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
+                    val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 
-                    val hasMultipleErns = authAction(testErn) { req =>
-                      Result(ResponseHeader(if (req.hasMultipleErns) 1 else 0), HttpEntity.NoEntity)
-                    }(fakeRequest).map(_.header.status == 1)
-
-                    Await.result(hasMultipleErns, Duration.Inf) mustBe true
+                    hasMultipleErns mustBe true
                   }
                 }
               }

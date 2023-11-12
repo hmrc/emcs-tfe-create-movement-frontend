@@ -25,6 +25,7 @@ import pages.sections.documents._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.DocumentsCount
 import services.{GetDocumentTypesService, UserAnswersService}
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
@@ -48,15 +49,19 @@ class DocumentTypeController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DocumentTypePage(idx), formProvider()), idx, mode)
+      validateIndex(idx) {
+        renderView(Ok, fillForm(DocumentTypePage(idx), formProvider()), idx, mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, idx, mode),
-        cleanseAndRedirect(_, idx, mode)
-      )
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          renderView(BadRequest, _, idx, mode),
+          cleanseAndRedirect(_, idx, mode)
+        )
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
@@ -86,4 +91,14 @@ class DocumentTypeController @Inject()(
         mode = NormalMode
       )
     }
+
+  override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    validateIndexForJourneyEntry(DocumentsCount, idx)(
+      onSuccess = f,
+      onFailure = Future.successful(
+        Redirect(
+          routes.DocumentsIndexController.onPageLoad(request.ern, request.draftId)
+        )
+      )
+    )
 }

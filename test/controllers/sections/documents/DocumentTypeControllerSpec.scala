@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentTypeFormProvider
 import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
-import models.{NormalMode, UserAnswers}
+import models.{Index, NormalMode, UserAnswers}
 import models.sections.documents.DocumentType
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
@@ -51,8 +51,11 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
     )
       .build()
 
-    lazy val documentTypeRoute = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode).url
-    lazy val onSubmitCall = routes.DocumentTypeController.onSubmit(testErn, testDraftId, 0, NormalMode)
+    def documentTypeRoute(idx: Index = 0): String =
+      routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+    def onSubmitCall(idx: Index = 0) =
+      routes.DocumentTypeController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
     val formProvider = new DocumentTypeFormProvider()
     val form = formProvider()
@@ -68,168 +71,296 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
   "DocumentType Controller" - {
 
-    "must return OK and the correct view for a GET" in new Setup() {
+    "GET onPageLoad" - {
 
-      running(application) {
+      "must return OK and the correct view for a GET" in new Setup() {
 
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+        running(application) {
 
-        val request = FakeRequest(GET, documentTypeRoute)
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val result = route(application, request).value
+          val request = FakeRequest(GET, documentTypeRoute())
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form,
-          onSubmitCall = onSubmitCall,
-          documentTypes = documentTypes
-        )(dataRequest(request), messages(application)).toString
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form,
+            onSubmitCall = onSubmitCall(),
+            documentTypes = documentTypes
+          )(dataRequest(request), messages(application)).toString
+        }
       }
-    }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
-      emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
-    )) {
+      "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
+        emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
+      )) {
 
-      running(application) {
+        running(application) {
 
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 //        val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
 //          selectOptions = Seq(documentTypeModel),
 //          defaultTextMessageKey = "documentType.select.defaultValue",
 //          existingAnswer = Some(testDocumentType.code))(messages(application))
 
-        val request = FakeRequest(GET, documentTypeRoute)
+          val request = FakeRequest(GET, documentTypeRoute())
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form.fill(documentTypeModel.code),
-          onSubmitCall = onSubmitCall,
-          documentTypes = documentTypes
-        )(dataRequest(request), messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form.fill(documentTypeModel.code),
+            onSubmitCall = onSubmitCall(),
+            documentTypes = documentTypes
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must redirect to DocumentsIndexController for a GET when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
+
+        running(application) {
+
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
+
+          val request = FakeRequest(POST, documentTypeRoute(1))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController for a GET when the idx is greater than the next document to valid document idx" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
+
+        running(application) {
+
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
+
+          val request = FakeRequest(POST, documentTypeRoute(2))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController for a GET when the idx is less than 0" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
+
+        running(application) {
+
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
+
+          val request = FakeRequest(POST, documentTypeRoute(-1))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, documentTypeRoute())
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in new Setup() {
+    "POST onSubmit" - {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      "must redirect to the next page when valid data is submitted" in new Setup() {
 
-      running(application) {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+        running(application) {
 
-        val request = FakeRequest(POST, documentTypeRoute)
-          .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val result = route(application, request).value
+          val request = FakeRequest(POST, documentTypeRoute())
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must redirect to the next page without changing the UserAnswers when the same answer is submitted" in new Setup(Some(
-      emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel.code)
-        .set(ReferenceAvailablePage(0), true)
-        .set(DocumentReferencePage(0), "reference")
-    )) {
+      "must redirect to the next page without changing the UserAnswers when the same answer is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
 
-      running(application) {
+        running(application) {
 
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val request = FakeRequest(POST, documentTypeRoute)
-          .withFormUrlEncodedBody(("document-type", documentTypeOtherModel.code))
+          val request = FakeRequest(POST, documentTypeRoute())
+            .withFormUrlEncodedBody(("document-type", documentTypeOtherModel.code))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must redirect to the next page update the UserAnswers when the answer is changed" in new Setup(Some(
-      emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel.code)
-        .set(ReferenceAvailablePage(0), true)
-        .set(DocumentReferencePage(0), "reference")
-    )) {
+      "must redirect to the next page update the UserAnswers when the answer is changed" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
 
-      val expectedUserAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
+        val expectedUserAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
 
-      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+        MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
-      running(application) {
+        running(application) {
 
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val request = FakeRequest(POST, documentTypeRoute)
-          .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+          val request = FakeRequest(POST, documentTypeRoute())
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
+      "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
-      running(application) {
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-          .returns(Future.successful(documentTypes))
+        running(application) {
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val request = FakeRequest(POST, documentTypeRoute)
-          .withFormUrlEncodedBody(("document-type", ""))
+          val request = FakeRequest(POST, documentTypeRoute())
+            .withFormUrlEncodedBody(("document-type", ""))
 
-        val boundForm = form.bind(Map("document-type" -> ""))
+          val boundForm = form.bind(Map("document-type" -> ""))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          form = boundForm,
-          onSubmitCall = onSubmitCall,
-          documentTypes = documentTypes
-        )(dataRequest(request), messages(application)).toString
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(
+            form = boundForm,
+            onSubmitCall = onSubmitCall(),
+            documentTypes = documentTypes
+          )(dataRequest(request), messages(application)).toString
+        }
       }
-    }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+      "must redirect to DocumentsIndexController for a POST when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
 
-      running(application) {
+        running(application) {
 
-        val request = FakeRequest(GET, documentTypeRoute)
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val result = route(application, request).value
+          val request = FakeRequest(POST, documentTypeRoute(1))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
       }
-    }
 
-    "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
+      "must redirect to DocumentsIndexController for a POST when the idx is greater than the next document to valid document idx" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
 
-      val testDocumentType = "testDocumentType"
+        running(application) {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, documentTypeRoute)
-            .withFormUrlEncodedBody(("value", testDocumentType))
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
 
-        val result = route(application, request).value
+          val request = FakeRequest(POST, documentTypeRoute(2))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
-        status(result) mustEqual SEE_OTHER
+          val result = route(application, request).value
 
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController for a POST when the idx is less than 0" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+      )) {
+
+        running(application) {
+
+          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+            .returns(Future.successful(documentTypes))
+
+          val request = FakeRequest(POST, documentTypeRoute(-1))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
+
+        val testDocumentType = "testDocumentType"
+
+        running(application) {
+          val request =
+            FakeRequest(POST, documentTypeRoute())
+              .withFormUrlEncodedBody(("value", testDocumentType))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

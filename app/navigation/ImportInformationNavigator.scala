@@ -27,25 +27,24 @@ import javax.inject.Inject
 class ImportInformationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ImportCustomsOfficeCodePage =>
-      (userAnswers: UserAnswers) => controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case ImportCustomsOfficeCodePage => (userAnswers: UserAnswers) =>
+      controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    //TODO: Route to next section when available (CAM-02)
-    case CheckAnswersImportPage =>
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case CheckAnswersImportPage => (userAnswers: UserAnswers) =>
+      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    case _ =>
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case _ => (userAnswers: UserAnswers) =>
+      routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

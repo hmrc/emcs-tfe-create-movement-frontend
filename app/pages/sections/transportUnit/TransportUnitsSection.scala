@@ -38,4 +38,6 @@ case object TransportUnitsSection extends Section[JsObject] {
       case (status, _, _) => status
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

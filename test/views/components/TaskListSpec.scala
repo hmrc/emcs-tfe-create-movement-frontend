@@ -38,13 +38,14 @@ class TaskListSpec extends ViewSpecBase {
 
           val html = taskList(TaskList(Seq(
             TaskListSection("Test 1", Seq(
-              TaskListSectionRow("Row 1", "ern-1", Some("link"), Completed),
-              TaskListSectionRow("Row 2", "ern-2", Some("link"), InProgress),
-              TaskListSectionRow("Row 3", "ern-2", Some("link"), NotStarted),
-              TaskListSectionRow("Row 4", "ern-4", None, CannotStartYet)
+              TaskListSectionRow("Row 1", "ern-1", Some("link"), None, Some(Completed)),
+              TaskListSectionRow("Row 2", "ern-2", Some("link"), None, Some(InProgress)),
+              TaskListSectionRow("Row 3", "ern-2", Some("link"), None, Some(NotStarted)),
+              TaskListSectionRow("Row 4", "ern-4", None, None, Some(CannotStartYet)),
+              TaskListSectionRow("Row 4", "ern-4", None, None, None),
             )),
             TaskListSection("Test 2", Seq(
-              TaskListSectionRow("Row 1", "ern-1", None, CannotStartYet)
+              TaskListSectionRow("Row 1", "ern-1", None, None, Some(CannotStartYet))
             ))
           )))
 
@@ -58,7 +59,7 @@ class TaskListSpec extends ViewSpecBase {
             val section = doc.select(sectionSelector(1))
 
             "should have the correct heading" in {
-              section.select("h2").text() mustBe "1. Test 1"
+              section.select("h2").text() mustBe "Test 1"
             }
 
             "for the 1st row" - {
@@ -139,7 +140,7 @@ class TaskListSpec extends ViewSpecBase {
             val section = doc.select(sectionSelector(2))
 
             "should have the correct heading" in {
-              section.select("h2").text() mustBe "2. Test 2"
+              section.select("h2").text() mustBe "Test 2"
             }
 
             "for the 1st row" - {

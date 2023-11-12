@@ -76,7 +76,7 @@ class DocumentsNavigatorSpec extends SpecBase {
         "must go to task list page when built" in {
 
           navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
 

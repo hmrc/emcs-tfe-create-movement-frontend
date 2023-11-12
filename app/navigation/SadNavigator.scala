@@ -31,16 +31,15 @@ class SadNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
-    case ImportNumberPage(idx) => (userAnswers: UserAnswers) =>
+    case ImportNumberPage(_) => (userAnswers: UserAnswers) =>
       sadRoutes.SadAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case SadAddToListPage => (answers: UserAnswers) =>
       answers.get(SadAddToListPage) match {
         case Some(SadAddToListModel.Yes) =>
           sadRoutes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(SadCount).getOrElse(0)), NormalMode)
-        case Some(SadAddToListModel.NoMoreToCome ) =>
-          // TODO Redirect to (CAM-02) when competed
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(SadAddToListModel.NoMoreToCome) =>
+          routes.DraftMovementController.onPageLoad(answers.ern, answers.draftId)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }

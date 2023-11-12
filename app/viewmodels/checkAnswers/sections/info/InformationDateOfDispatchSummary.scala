@@ -30,7 +30,7 @@ object InformationDateOfDispatchSummary extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage)
+    val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage())
 
     val value: String = data match {
       case Some(dispatchDetailsPage) => dispatchDetailsPage.date.formatDateForUIOutput()
@@ -44,7 +44,11 @@ object InformationDateOfDispatchSummary extends DateTimeUtils {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url,
+            if(isOnPreDraftFlow) {
+              controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
+            } else {
+              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId).url
+            },
             id = "changeDateOfDispatch")
             .withVisuallyHiddenText(messages("dispatchDetails.value.change.hidden"))
         )

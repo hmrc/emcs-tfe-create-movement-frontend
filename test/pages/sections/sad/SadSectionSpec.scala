@@ -17,24 +17,79 @@
 package pages.sections.sad
 
 import base.SpecBase
+import models.Index
 import models.requests.DataRequest
+import models.sections.sad.SadAddToListModel.NoMoreToCome
+import play.api.libs.json.{JsArray, Json}
 import play.api.test.FakeRequest
+import viewmodels.taskList.{Completed, NotStarted}
 
 class SadSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      // TODO: Update when CAM-SAD02 is built
-      "when finished" ignore {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadsSection.isCompleted mustBe true
+      "when all items are finished" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "")
+              .set(ImportNumberPage(testIndex2), "")
+              .set(SadAddToListPage, NoMoreToCome)
+          )
+        SadSection.isCompleted mustBe true
       }
     }
 
     "must return false" - {
-      // TODO: Update when CAM-SAD02 is built
-      "when not finished" in {
+      "when empty user answers" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        SadsSection.isCompleted mustBe false
+        SadSection.isCompleted mustBe false
+      }
+      "when there is somehow a sad with nothing in it" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(), emptyUserAnswers.copy(data = Json.obj(SadSectionItem.toString -> JsArray(Seq(Json.obj())))))
+        SadSection.isCompleted mustBe false
+      }
+      "when at least one section is unfinished" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "")
+              .set(ImportNumberPage(testIndex2), "")
+          )
+        SadSection.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+    "must return completed" - {
+      "when all sections are completed and add to list is no more" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "")
+              .set(ImportNumberPage(testIndex2), "")
+              .set(SadAddToListPage, NoMoreToCome)
+          )
+
+        SadSection.status mustBe Completed
+      }
+
+      "when max units added and all complete" in {
+        val fullUserAnswers = (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers
+          .set(ImportNumberPage(Index(int)), "")
+        )
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), fullUserAnswers)
+
+        SadSection.status mustBe Completed
+      }
+    }
+    "must return not started" - {
+      "when empty user answers" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        SadSection.status mustBe NotStarted
       }
     }
   }

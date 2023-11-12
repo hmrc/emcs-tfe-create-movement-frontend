@@ -47,4 +47,6 @@ case object JourneyTypeSection extends Section[JsObject] {
       NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

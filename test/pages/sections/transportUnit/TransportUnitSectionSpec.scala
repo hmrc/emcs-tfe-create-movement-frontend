@@ -26,18 +26,17 @@ import play.api.test.FakeRequest
 class TransportUnitSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
-      "when mandatory pages are answered, sca = false, mica = false" in {
+      "when mandatory pages are answered, sca = false" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
               .set(TransportUnitTypePage(testIndex1), Container)
               .set(TransportUnitIdentityPage(testIndex1), "")
               .set(TransportSealChoicePage(testIndex1), false)
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
           )
         TransportUnitSection(Index(0)).isCompleted mustBe true
       }
-      "when mandatory pages are answered, sca = true and seal choice has an answer, mica = false" in {
+      "when mandatory pages are answered, sca = true and seal choice has an answer" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -45,23 +44,10 @@ class TransportUnitSectionSpec extends SpecBase {
               .set(TransportUnitIdentityPage(testIndex1), "")
               .set(TransportSealChoicePage(testIndex1), true)
               .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("", None))
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
           )
         TransportUnitSection(Index(0)).isCompleted mustBe true
       }
-      "when mandatory pages are answered, sca = false, mica = true and more info has an answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), false)
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-              .set(TransportUnitGiveMoreInformationPage(testIndex1), "")
-          )
-        TransportUnitSection(Index(0)).isCompleted mustBe true
-      }
-      "when mandatory pages are answered, sca = true, mica = true, all pages have an answer" in {
+      "when mandatory pages are answered, sca = true, all pages have an answer" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -81,36 +67,23 @@ class TransportUnitSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         TransportUnitSection(Index(0)).isCompleted mustBe false
       }
-      "when mandatory pages are answered, sca = true and seal choice has no answer, mica = false" in {
+      "when mandatory pages are answered, sca = true and seal choice has no answer" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
               .set(TransportUnitTypePage(testIndex1), Container)
               .set(TransportUnitIdentityPage(testIndex1), "")
               .set(TransportSealChoicePage(testIndex1), true)
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
           )
         TransportUnitSection(Index(0)).isCompleted mustBe false
       }
-      "when mandatory pages are answered, sca = false, mica = true and more info has no answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), false)
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          )
-        TransportUnitSection(Index(0)).isCompleted mustBe false
-      }
-      "when mandatory pages are answered, sca = true, mica = true, all optional pages have no answer" in {
+      "when mandatory pages are answered, sca = true, all optional pages have no answer" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
               .set(TransportUnitTypePage(testIndex1), Container)
               .set(TransportUnitIdentityPage(testIndex1), "")
               .set(TransportSealChoicePage(testIndex1), true)
-              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
           )
         TransportUnitSection(Index(0)).isCompleted mustBe false
       }

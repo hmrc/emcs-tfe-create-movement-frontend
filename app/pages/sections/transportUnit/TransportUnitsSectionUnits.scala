@@ -38,4 +38,7 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
         InProgress
       }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 }

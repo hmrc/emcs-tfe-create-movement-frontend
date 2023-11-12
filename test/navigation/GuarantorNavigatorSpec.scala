@@ -110,10 +110,9 @@ class GuarantorNavigatorSpec extends SpecBase {
       }
 
       "for GuarantorCheckAnswersPage" - {
-        //TODO: Update to route to next section when built
-        "must goto under construction page" in {
+        "must goto the tasklist page" in {
           navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

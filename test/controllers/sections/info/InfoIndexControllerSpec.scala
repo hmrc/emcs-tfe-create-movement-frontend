@@ -41,38 +41,58 @@ class InfoIndexControllerSpec extends SpecBase {
 
   "InfoIndex Controller" - {
 
-    "with a Northern Ireland Warehouse Keeper ERN" - {
+    "pre-draft" - {
 
-      "must redirect to the Dispatch place page (CAM-INFO01)" in {
+      "with a Northern Ireland Warehouse Keeper ERN" - {
 
-        val application = applicationBuilder(userAnswers = None).build()
+        "must redirect to the Dispatch place page (CAM-INFO01)" in {
 
-        running(application) {
+          val application = applicationBuilder(userAnswers = None).build()
 
-          val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPageLoad(testNorthernIrelandErn).url)
-          val result = route(application, request).value
+          running(application) {
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url)
+            val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url)
+          }
+        }
+      }
+
+      "with any other ERN" - {
+
+        "must redirect to the Destination Type page (CAM-INFO08)" in {
+
+          val application = applicationBuilder(userAnswers = None).build()
+
+          running(application) {
+
+            val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testGreatBritainErn).url)
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url)
+          }
         }
       }
     }
 
-    "with any other ERN" - {
+    "post-draft" - {
+      "must redirect to CYA" in {
 
-      "must redirect to the Destination Type page (CAM-INFO08)" in {
-
-        val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
         running(application) {
 
-          val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPageLoad(testGreatBritainErn).url)
+          val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPageLoad(testGreatBritainErn, testDraftId).url)
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe
-            Some(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url)
+            Some(controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testGreatBritainErn, testDraftId).url)
         }
       }
     }

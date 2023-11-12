@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import models.NormalMode
 import pages.Page
-import pages.sections.importInformation.ImportCustomsOfficeCodePage
+import pages.sections.importInformation.{CheckAnswersImportPage, ImportCustomsOfficeCodePage}
 
 class ImportInformationNavigatorSpec extends SpecBase {
 
@@ -31,7 +31,7 @@ class ImportInformationNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn,testDraftId)
       }
     }
 
@@ -42,6 +42,14 @@ class ImportInformationNavigatorSpec extends SpecBase {
 
         navigator.nextPage(ImportCustomsOfficeCodePage, NormalMode, userAnswers) mustBe
           controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn,testDraftId)
+      }
+    }
+
+    "for the CYA page" - {
+      "must go to the tasklist page" in {
+
+        navigator.nextPage(CheckAnswersImportPage, NormalMode, emptyUserAnswers) mustBe
+          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
       }
     }
 

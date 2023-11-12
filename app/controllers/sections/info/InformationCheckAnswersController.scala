@@ -23,7 +23,7 @@ import models.NormalMode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import navigation.InformationNavigator
-import pages.sections.info.InformationCheckAnswersPage
+import pages.sections.info.{DeferredMovementPage, InformationCheckAnswersPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{PreDraftService, UserAnswersService}
@@ -50,37 +50,56 @@ class InformationCheckAnswersController @Inject()(
                                                    view: InformationCheckAnswersView
                                                  ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
+  def onPreDraftPageLoad(ern: String): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      withGuard {
+      withGuard(isOnPreDraftFlow = true) {
         case (_, deferredMovement) =>
           Future.successful(
             Ok(view(
               cyaHelper.summaryList(deferredMovement),
-              controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(ern)
+              controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(ern)
             ))
           )
       }
     }
 
-  def onSubmit(ern: String): Action[AnyContent] =
+  def onPreDraftSubmit(ern: String): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       createDraftEntryAndRedirect()
     }
 
-  private def withGuard(f: (MovementScenario, Boolean) => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      withAnswer(DeferredMovementPage(false)) {
+        deferredMovement =>
+          Ok(view(
+            cyaHelper.summaryList(deferredMovement),
+            controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(ern, draftId)
+          ))
+      }
+    }
+
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Redirect(navigator.nextPage(InformationCheckAnswersPage, NormalMode, request.userAnswers))
+    }
+
+  private def withGuard(isOnPreDraftFlow: Boolean)(f: (MovementScenario, Boolean) => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     withDestinationTypePageAnswer { destinationTypePageAnswer =>
-      withDeferredMovementAnswer { isDeferred =>
+      withDeferredMovementAnswer(isOnPreDraftFlow = isOnPreDraftFlow) { isDeferred =>
         f(destinationTypePageAnswer, isDeferred)
       }
     }
   }
 
   private def createDraftEntryAndRedirect()(implicit request: DataRequest[_]): Future[Result] =
-    withGuard {
+    withGuard(isOnPreDraftFlow = true) {
       case (_, _) =>
 
-        val userAnswers = request.userAnswers.copy(draftId = UUID.randomUUID().toString)
+        val userAnswers = request
+          .userAnswers
+          .set(InformationCheckAnswersPage, true)
+          .copy(draftId = UUID.randomUUID().toString)
 
         for {
           _ <- userAnswersService.set(userAnswers)

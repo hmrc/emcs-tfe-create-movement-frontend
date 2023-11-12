@@ -20,15 +20,15 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.LocalReferenceNumberFormProvider
-import models.Mode
+import models.{CheckMode, Mode}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import navigation.InformationNavigator
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.PreDraftService
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.LocalReferenceNumberView
 
 import javax.inject.Inject
@@ -45,6 +45,7 @@ class LocalReferenceNumberController @Inject()(
                                                 val requireData: DataRequiredAction,
                                                 val userAllowList: UserAllowListAction,
                                                 formProvider: LocalReferenceNumberFormProvider,
+                                                val userAnswersService: UserAnswersService,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: LocalReferenceNumberView
                                               ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
@@ -52,31 +53,73 @@ class LocalReferenceNumberController @Inject()(
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      withGuard {
+      withGuard(isOnPreDraftFlow = true) {
         case (_, isDeferred) =>
-          renderView(Ok, fillForm(LocalReferenceNumberPage, formProvider(isDeferred)), isDeferred, mode)
+          renderView(
+            Ok,
+            fillForm(LocalReferenceNumberPage(isOnPreDraftFlow = true), formProvider(isDeferred)),
+            isDeferred,
+            controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(request.ern, mode)
+          )
       }
     }
 
   def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      withGuard {
+      withGuard(isOnPreDraftFlow = true) {
         case (_, isDeferred) =>
           formProvider(isDeferred).bindFromRequest().fold(
             formWithErrors =>
-              renderView(BadRequest, formWithErrors, isDeferred, mode),
+              renderView(
+                BadRequest,
+                formWithErrors,
+                isDeferred,
+                controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(request.ern, mode)
+              ),
             value =>
-              savePreDraftAndRedirect(LocalReferenceNumberPage, value, mode)
+              savePreDraftAndRedirect(LocalReferenceNumberPage(isOnPreDraftFlow = true), value, mode)
           )
       }
     }
 
-  private def renderView(status: Status, form: Form[_], isDeferred: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    Future.successful(status(view(isDeferred, form, controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(request.ern, mode))))
 
-  private def withGuard(f: (MovementScenario, Boolean) => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withGuard(isOnPreDraftFlow = false) {
+        case (_, isDeferred) =>
+          renderView(
+            Ok,
+            fillForm(LocalReferenceNumberPage(isOnPreDraftFlow = false), formProvider(isDeferred)),
+            isDeferred,
+            controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId)
+          )
+      }
+    }
+
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withGuard(isOnPreDraftFlow = false) {
+        case (_, isDeferred) =>
+          formProvider(isDeferred).bindFromRequest().fold(
+            formWithErrors =>
+              renderView(
+                BadRequest,
+                formWithErrors,
+                isDeferred,
+                controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId)
+              ),
+            value =>
+              saveAndRedirect(LocalReferenceNumberPage(isOnPreDraftFlow = false), value, CheckMode)
+          )
+      }
+    }
+
+  private def renderView(status: Status, form: Form[_], isDeferred: Boolean, onSubmitCall: Call)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(isDeferred, form, onSubmitCall)))
+
+  private def withGuard(isOnPreDraftFlow: Boolean)(f: (MovementScenario, Boolean) => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     withDestinationTypePageAnswer { destinationTypePageAnswer =>
-      withDeferredMovementAnswer { isDeferred =>
+      withDeferredMovementAnswer(isOnPreDraftFlow = isOnPreDraftFlow) { isDeferred =>
         f(destinationTypePageAnswer, isDeferred)
       }
     }

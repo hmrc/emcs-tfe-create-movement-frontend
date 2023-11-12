@@ -25,12 +25,12 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object SadSectionDocuments extends Section[JsArray] {
   override val toString: String = "documents"
-  override val path: JsPath = SadsSection.path \ toString
+  override val path: JsPath = SadSection.path \ toString
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(SadCount) match {
     case Some(0) | None => NotStarted
     case Some(count) =>
-      val statuses: Seq[TaskListStatus] = (0 until count).map(value => SadSection(Index(value)).status)
+      val statuses: Seq[TaskListStatus] = (0 until count).map(value => SadSectionItem(Index(value)).status)
 
       if (statuses.forall(_ == Completed)) {
         Completed
@@ -38,4 +38,7 @@ case object SadSectionDocuments extends Section[JsArray] {
         InProgress
       }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    SadSection.canBeCompletedForTraderAndDestinationType
 }

@@ -146,6 +146,41 @@ signedOut.guidance.notSaved = We have not saved your answers.
 
 lrn.subHeading = Create movement for {0}
 
+draftMovement.title = Draft movement
+draftMovement.subHeading = Draft movement
+draftMovement.lrn = Local Reference Number (LRN): {0}
+draftMovement.consignee = Consignee: {0}
+draftMovement.notProvided = Not provided
+draftMovement.delete = Delete this draft
+draftMovement.heading.importFor = Import for {0}
+draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
+draftMovement.heading.gbTaxWarehouse = Great Britain tax warehouse
+draftMovement.heading.euTaxWarehouse = European Union tax warehouse
+draftMovement.heading.dispatchPlaceTo = {0} tax warehouse to {1}
+draftMovement.section.movement = Movement
+draftMovement.section.movement.movementDetails = Movement details
+draftMovement.section.delivery = Delivery
+draftMovement.section.delivery.consignor = Consignor
+draftMovement.section.delivery.import = Import
+draftMovement.section.delivery.dispatch = Place of dispatch
+draftMovement.section.delivery.consignee = Consignee
+draftMovement.section.delivery.destination = Place of destination
+draftMovement.section.delivery.export = Export
+draftMovement.section.guarantor = Guarantor
+draftMovement.section.guarantor.guarantor = Guarantor
+draftMovement.section.transport = Transport
+draftMovement.section.transport.journeyType = Journey type
+draftMovement.section.transport.transportArranger = Transport arranger
+draftMovement.section.transport.firstTransporter = First transporter
+draftMovement.section.transport.units = Transport units
+draftMovement.section.items = Items
+draftMovement.section.items.items = Items
+draftMovement.section.documents = Documents
+draftMovement.section.documents.sad = Single Administrative Documents
+draftMovement.section.documents.documents = Documents
+draftMovement.section.submit = Submit
+draftMovement.section.submit.reviewAndSubmit = Review and submit
+
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
 checkYourAnswers.submit.button = Submit movement
@@ -304,17 +339,17 @@ destinationType.heading.movement = What is the destination type for this movemen
 destinationType.heading.import = What is the destination type for this import?
 destinationType.title.movement = What is the destination type for this movement?
 destinationType.title.import = What is the destination type for this import?
-destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 
+destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
 destinationType.directDelivery = Direct delivery
 destinationType.euTaxWarehouse = Tax warehouse in the European Union
-
 destinationType.exemptedOrganisation = Exempted organisation
 destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
 destinationType.registeredConsignee = Registered consignee
 destinationType.temporaryRegisteredConsignee = Temporary registered consignee
 destinationType.unknownDestination = Unknown destination
+
 destinationType.error.required.movement = Select the place of destination for this movement
 destinationType.error.required.import = Select the place of destination for this import
 destinationType.checkYourAnswersLabel = Destination type
@@ -757,9 +792,9 @@ transportUnitsAddToList.heading.plural = You have given information for {0} tran
 transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
 transportUnitsAddToList.legend = Do you need to add another transport unit?
 transportUnitsAddToList.1 = Yes
-transportUnitsAddToList.2 = No, this is the only transport unit for this movement
+transportUnitsAddToList.2 = I will add more transport units later
+transportUnitsAddToList.3 = No, this is the only transport unit for this movement
 transportUnitsAddToList.divider = or
-transportUnitsAddToList.3 = I will add more transport units later
 transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
 
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?

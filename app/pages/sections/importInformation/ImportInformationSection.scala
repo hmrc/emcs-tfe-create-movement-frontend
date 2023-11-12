@@ -17,6 +17,7 @@
 package pages.sections.importInformation
 
 import models.requests.DataRequest
+import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
@@ -25,10 +26,12 @@ case object ImportInformationSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "importInformation"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    if(request.userAnswers.get(ImportCustomsOfficeCodePage).nonEmpty) {
+    if (request.userAnswers.get(ImportCustomsOfficeCodePage).nonEmpty) {
       Completed
     } else {
       NotStarted
     }
 
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    (request.userTypeFromErn == GreatBritainRegisteredConsignor) || (request.userTypeFromErn == NorthernIrelandRegisteredConsignor)
 }

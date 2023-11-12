@@ -31,4 +31,6 @@ case object ConsignorSection extends Section[JsObject] {
       NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

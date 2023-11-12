@@ -19,8 +19,10 @@ package navigation
 import controllers.sections.sad.{routes => sadRoutes}
 import base.SpecBase
 import controllers.routes
+import models.sections.sad.SadAddToListModel
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.sad.{ImportNumberPage, SadAddToListPage}
 
 class SadNavigatorSpec extends SpecBase {
   val navigator = new SadNavigator
@@ -33,11 +35,40 @@ class SadNavigatorSpec extends SpecBase {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
+      "for ImportNumberPage" - {
+        "must redirect to AddToList" in {
+          navigator.nextPage(ImportNumberPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.sad.routes.SadAddToListController.onPageLoad(testErn, testDraftId)
+        }
+      }
+
+      "for SadAddToListPage" - {
+        "when Some(Yes)" - {
+          "must redirect to Import" in {
+            navigator.nextPage(SadAddToListPage, NormalMode, emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.Yes)) mustBe
+              controllers.sections.sad.routes.ImportNumberController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            navigator.nextPage(SadAddToListPage, NormalMode, emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.Yes).set(ImportNumberPage(testIndex1), "")) mustBe
+              controllers.sections.sad.routes.ImportNumberController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)
+          }
+        }
+        "when Some(NoMoreToCome)" - {
+          "must redirect to tasklist" in {
+            navigator.nextPage(SadAddToListPage, NormalMode, emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.NoMoreToCome)) mustBe
+              routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          }
+        }
+        "when None" - {
+          "must redirect to journey recovery" in {
+            navigator.nextPage(SadAddToListPage, NormalMode, emptyUserAnswers) mustBe
+              routes.JourneyRecoveryController.onPageLoad()
+          }
+        }
+      }
+
     }
 
     "in Check mode" - {
       "must go to CheckYourAnswersSadController" in {
-        //TODO: update to Sad CYA when built
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
           sadRoutes.SadAddToListController.onPageLoad(testErn, testDraftId)

@@ -106,11 +106,10 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
       "for the TransportArrangerCheckAnswersPage" - {
 
-        //TODO: Update when next section exists
         "must go to the next Section" in {
 
           navigator.nextPage(TransportArrangerCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

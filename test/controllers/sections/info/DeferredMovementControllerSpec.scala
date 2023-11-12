@@ -65,51 +65,104 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
   val formProvider = new DeferredMovementFormProvider()
   val form = formProvider()
 
-  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode).url
+  lazy val deferredMovementPreDraftRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(testErn, NormalMode).url
+  lazy val deferredMovementPreDraftSubmitRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode)
+  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn, testDraftId).url
+  lazy val deferredMovementSubmitRoute = controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn, testDraftId)
 
   "DeferredMovement Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
+    "pre-draft" - {
 
-      running(application) {
-        val request = FakeRequest(GET, deferredMovementRoute)
+      "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
-        val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, deferredMovementPreDraftRoute)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode))(dataRequest(request), messages(application)).toString
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+
+        running(application) {
+          val request =
+            FakeRequest(POST, deferredMovementPreDraftSubmitRoute.url)
+              .withFormUrlEncodedBody(("value", "true"))
+
+          MockPreDraftService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(true))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+
+        running(application) {
+          val request =
+            FakeRequest(POST, deferredMovementPreDraftSubmitRoute.url)
+              .withFormUrlEncodedBody(("value", ""))
+
+          val boundForm = form.bind(Map("value" -> ""))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+        }
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+    "post-draft" - {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, deferredMovementRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
-        MockPreDraftService.set(emptyUserAnswers.set(DeferredMovementPage, true)).returns(Future.successful(true))
+        running(application) {
+          val request = FakeRequest(GET, deferredMovementRoute)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+      "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, deferredMovementRoute)
-            .withFormUrlEncodedBody(("value", ""))
+        running(application) {
+          val request =
+            FakeRequest(POST, deferredMovementSubmitRoute.url)
+              .withFormUrlEncodedBody(("value", "true"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+          MockUserAnswersService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(emptyUserAnswers))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode))(dataRequest(request), messages(application)).toString
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+
+        running(application) {
+          val request =
+            FakeRequest(POST, deferredMovementSubmitRoute.url)
+              .withFormUrlEncodedBody(("value", ""))
+
+          val boundForm = form.bind(Map("value" -> ""))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
+        }
       }
     }
   }

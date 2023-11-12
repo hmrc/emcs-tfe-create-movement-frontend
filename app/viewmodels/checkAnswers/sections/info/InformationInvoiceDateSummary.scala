@@ -30,7 +30,7 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage)
+    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage())
 
     val value: String = data match {
       case Some(invoiceDetailsPage) =>invoiceDetailsPage.date.formatDateForUIOutput()
@@ -44,7 +44,11 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url,
+            if(isOnPreDraftFlow) {
+              controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
+            } else {
+              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url
+            },
             id = "changeInvoiceDate")
             .withVisuallyHiddenText(messages("invoiceDetails.invoice-date.change.hidden"))
         )

@@ -125,10 +125,10 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationCheckAnswersPage" - {
 
-        "must go to test Only page" in {
+        "must go to tasklist page" in {
 
           navigator.nextPage(DestinationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

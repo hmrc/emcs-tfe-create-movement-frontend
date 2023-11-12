@@ -20,9 +20,9 @@ import models.sections.info.DispatchDetailsModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DispatchDetailsPage extends QuestionPage[DispatchDetailsModel] {
+case class DispatchDetailsPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[DispatchDetailsModel] {
 
-  override val path: JsPath = JsPath \ "info" \ toString
+  override val toString: String = "dispatchDetails"
+  override val path: JsPath = InfoSection.path \ toString
 
-  override def toString: String = "dispatchDetails"
 }

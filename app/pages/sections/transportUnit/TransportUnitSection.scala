@@ -29,17 +29,16 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
     val unitTypeAnswer = request.userAnswers.get(TransportUnitTypePage(transportUnitIndex))
     val identityAnswer = request.userAnswers.get(TransportUnitIdentityPage(transportUnitIndex))
     val sealChoiceAnswer = request.userAnswers.get(TransportSealChoicePage(transportUnitIndex))
-    val moreInformationChoiceAnswer = request.userAnswers.get(TransportUnitGiveMoreInformationChoicePage(transportUnitIndex))
 
-    (unitTypeAnswer, identityAnswer, sealChoiceAnswer, moreInformationChoiceAnswer) match {
-      case (Some(_), Some(_), Some(sca), Some(mica)) =>
-        if (sealPagesAreCompleted(sca) && moreInfoPagesAreCompleted(mica)) {
+    (unitTypeAnswer, identityAnswer, sealChoiceAnswer) match {
+      case (Some(_), Some(_), Some(sca)) =>
+        if (sealPagesAreCompleted(sca)) {
           Completed
         } else {
           InProgress
         }
       case _ =>
-        if(Seq(unitTypeAnswer, identityAnswer, sealChoiceAnswer, moreInformationChoiceAnswer).exists(_.nonEmpty)) {
+        if(Seq(unitTypeAnswer, identityAnswer, sealChoiceAnswer).exists(_.nonEmpty)) {
           InProgress
         } else {
           NotStarted
@@ -54,10 +53,6 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
       case _ => false
     }
 
-  private def moreInfoPagesAreCompleted(moreInfoChoiceAnswer: Boolean)(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(TransportUnitGiveMoreInformationPage(transportUnitIndex)) match {
-      case Some(_) if moreInfoChoiceAnswer => true
-      case _ if !moreInfoChoiceAnswer => true
-      case _ => false
-    }
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 }

@@ -20,14 +20,16 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.InvoiceDetailsFormProvider
-import models.Mode
+import models.{CheckMode, Mode}
 import models.requests.DataRequest
+import models.sections.info.InvoiceDetailsModel
 import navigation.InformationNavigator
+import pages.QuestionPage
 import pages.sections.info.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.PreDraftService
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import services.{PreDraftService, UserAnswersService}
 import utils.{DateTimeUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
@@ -45,6 +47,7 @@ class InvoiceDetailsController @Inject()(
                                           val requireData: DataRequiredAction,
                                           val userAllowList: UserAllowListAction,
                                           formProvider: InvoiceDetailsFormProvider,
+                                          val userAnswersService: UserAnswersService,
                                           val controllerComponents: MessagesControllerComponents,
                                           view: InvoiceDetailsView,
                                           timeMachine: TimeMachine
@@ -52,26 +55,66 @@ class InvoiceDetailsController @Inject()(
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      renderView(Ok, fillForm(InvoiceDetailsPage, formProvider()), mode)
+      renderView(
+        Ok,
+        InvoiceDetailsPage(isOnPreDraftFlow = true),
+        fillForm(InvoiceDetailsPage(isOnPreDraftFlow = true), formProvider()),
+        controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
+        mode
+      )
     }
 
   def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          renderView(BadRequest, formWithErrors, mode),
+          renderView(
+            BadRequest,
+            InvoiceDetailsPage(isOnPreDraftFlow = true),
+            formWithErrors,
+            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
+            mode
+          ),
         value =>
-          savePreDraftAndRedirect(InvoiceDetailsPage, value, mode)
+          savePreDraftAndRedirect(InvoiceDetailsPage(isOnPreDraftFlow = true), value, mode)
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      renderView(
+        Ok,
+        InvoiceDetailsPage(isOnPreDraftFlow = false),
+        fillForm(InvoiceDetailsPage(isOnPreDraftFlow = false), formProvider()),
+        controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, draftId),
+        CheckMode
+      )
+    }
+
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      formProvider().bindFromRequest().fold(
+        formWithErrors =>
+          renderView(
+            BadRequest,
+            InvoiceDetailsPage(isOnPreDraftFlow = false),
+            formWithErrors,
+            controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, draftId),
+            CheckMode
+          ),
+        value =>
+          saveAndRedirect(InvoiceDetailsPage(isOnPreDraftFlow = false), value, CheckMode)
+      )
+    }
+
+  private def renderView(status: Status, page: QuestionPage[InvoiceDetailsModel], form: Form[_], onSubmitCall: Call, mode: Mode)
+                        (implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
       status(view(
         form = form,
         currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
-        onSubmitCall = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
-        skipQuestionCall = navigator.nextPage(InvoiceDetailsPage, mode, request.userAnswers)
+        onSubmitCall = onSubmitCall,
+        skipQuestionCall = navigator.nextPage(page, mode, request.userAnswers)
       ))
     )
   }

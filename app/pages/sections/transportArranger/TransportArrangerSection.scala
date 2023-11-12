@@ -39,4 +39,6 @@ case object TransportArrangerSection extends Section[JsObject] {
       // answer not present yet
       NotStarted
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

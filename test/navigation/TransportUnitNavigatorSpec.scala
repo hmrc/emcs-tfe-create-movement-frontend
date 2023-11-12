@@ -152,7 +152,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
             .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.MoreToCome)
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
 
         "when user selects no more" in {
@@ -163,7 +163,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
             .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.NoMoreToCome)
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

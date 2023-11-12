@@ -22,7 +22,7 @@ import models.NormalMode
 import models.requests.DataRequest
 import models.sections.sad.SadAddToListModel
 import navigation.SadNavigator
-import pages.sections.sad.{SadAddToListPage, SadsSection}
+import pages.sections.sad.{SadAddToListPage, SadSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.SadCount
@@ -57,7 +57,7 @@ class SadAddToListController @Inject()(
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       onMax(
-        ifMax = Future.successful(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())),
+        ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))),
         ifNotMax = formProvider().bindFromRequest().fold(
           formWithErrors =>
             Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allSadSummary(), NormalMode))), {
@@ -76,7 +76,7 @@ class SadAddToListController @Inject()(
 
   private def onMax[D, T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
     dataRequest.userAnswers.get(SadCount) match {
-      case Some(value) if value >= SadsSection.MAX => ifMax
+      case Some(value) if value >= SadSection.MAX => ifMax
       case _ => ifNotMax
     }
   }

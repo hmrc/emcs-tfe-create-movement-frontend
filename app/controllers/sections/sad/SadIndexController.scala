@@ -18,8 +18,9 @@ package controllers.sections.sad
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models.{Index, NormalMode, NorthernIrelandRegisteredConsignor}
+import models.{Index, NormalMode}
 import navigation.SadNavigator
+import pages.sections.sad.SadSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.SadCount
 import services.UserAnswersService
@@ -38,7 +39,7 @@ class SadIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if(request.userTypeFromErn == NorthernIrelandRegisteredConsignor) {
+      if(SadSection.canBeCompletedForTraderAndDestinationType) {
         request.userAnswers.get(SadCount) match {
           case None | Some(0) => Redirect(
             controllers.sections.sad.routes.ImportNumberController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
@@ -48,8 +49,7 @@ class SadIndexController @Inject()(
           )
         }
       } else {
-        // TODO: Update to tasklist when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
       }
     }
 

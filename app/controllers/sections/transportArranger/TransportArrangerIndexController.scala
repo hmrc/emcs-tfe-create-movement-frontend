@@ -25,7 +25,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class TransportArrangerIndexController @Inject()(
                                                   override val userAnswersService: UserAnswersService,
@@ -38,15 +37,11 @@ class TransportArrangerIndexController @Inject()(
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+    authorisedDataRequest(ern, draftId) { implicit request =>
       if (TransportArrangerSection.isCompleted) {
-        Future.successful(
-          Redirect(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(ern, draftId))
-        )
+        Redirect(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(ern, draftId))
       } else {
-        Future.successful(
-          Redirect(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(ern, draftId, NormalMode))
-        )
+        Redirect(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 

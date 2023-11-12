@@ -31,4 +31,6 @@ case object DocumentsSection extends Section[JsObject] {
         NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

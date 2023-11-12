@@ -17,7 +17,9 @@
 package pages.sections.exportInformation
 
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk}
 import pages.sections.Section
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
 
@@ -31,4 +33,10 @@ case object ExportInformationSection extends Section[JsObject] {
       NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(DestinationTypePage) match {
+      case Some(value) if Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(value) => true
+      case _ => false
+    }
 }

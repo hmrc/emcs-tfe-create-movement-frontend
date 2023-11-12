@@ -142,9 +142,8 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       "for the CheckAnswersConsignee page" - {
         "must go to the tasklist" in {
-          // TODO: update to tasklist when built
           navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
     }

@@ -16,26 +16,27 @@
 
 package pages.sections.sad
 
+import models.Index
 import models.requests.DataRequest
-import models.sections.sad.SadAddToListModel
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import queries.SadCount
-import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
+import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
 
 
-case object SadsSection extends Section[JsObject] {
-  override val toString: String = "sad"
-  override val path: JsPath = JsPath \ toString
-  val MAX: Int = 99
+case class SadSectionItem(sadIndex: Index) extends Section[JsObject] {
+  override val path: JsPath = SadSectionDocuments.path \ sadIndex.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (SadSectionDocuments.status, request.userAnswers.get(SadAddToListPage), request.userAnswers.get(SadCount)) match {
-      case (Completed, _, Some(MAX)) => Completed
-      case (Completed, Some(SadAddToListModel.NoMoreToCome), _) => Completed
-      case (Completed, Some(SadAddToListModel.Yes) | None, _) => InProgress
-      case (InProgress, _, _) => InProgress
-      case (status, _, _) => status
+    val importNumberAnswer = request.userAnswers.get(ImportNumberPage(sadIndex))
+
+    importNumberAnswer match {
+      case Some(_) =>
+        Completed
+      case _ =>
+        NotStarted
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    SadSection.canBeCompletedForTraderAndDestinationType
 }

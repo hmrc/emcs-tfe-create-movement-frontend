@@ -30,4 +30,7 @@ case class DocumentsSectionIndex(index: Index) extends Section[JsArray] {
     // TODO: Update when CAM-DOC06 is built
     NotStarted
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    DocumentsSection.canBeCompletedForTraderAndDestinationType
 }

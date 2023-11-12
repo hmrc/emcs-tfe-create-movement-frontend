@@ -29,7 +29,7 @@ import utils.Logging
 
 import scala.concurrent.Future
 
-trait BasePreDraftNavigationController extends BaseController with Logging {
+trait BasePreDraftNavigationController extends BaseNavigationController with Logging {
 
   val preDraftService: PreDraftService
   val navigator: BaseNavigator
@@ -60,10 +60,14 @@ trait BasePreDraftNavigationController extends BaseController with Logging {
                              (implicit request: DataRequest[_], format: Format[A]): Future[UserAnswers] =
     savePreDraft(page, answer, request.userAnswers)
 
-  protected def withDeferredMovementAnswer(f: Boolean => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+  protected def withDeferredMovementAnswer(isOnPreDraftFlow: Boolean)(f: Boolean => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     withAnswerAsync(
-      page = DeferredMovementPage,
-      redirectRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, NormalMode)
+      page = DeferredMovementPage(isOnPreDraftFlow = isOnPreDraftFlow),
+      redirectRoute = if(isOnPreDraftFlow) {
+        controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, NormalMode)
+      } else {
+        controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern, request.draftId)
+      }
     ) {
       f(_)
     }

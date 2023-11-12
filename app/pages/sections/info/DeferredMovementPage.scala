@@ -19,7 +19,7 @@ package pages.sections.info
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DeferredMovementPage extends QuestionPage[Boolean] {
+case class DeferredMovementPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[Boolean] {
   override val toString: String = "deferredMovement"
-  override val path: JsPath = JsPath \ "info" \ toString
+  override val path: JsPath = InfoSection.path \ toString
 }

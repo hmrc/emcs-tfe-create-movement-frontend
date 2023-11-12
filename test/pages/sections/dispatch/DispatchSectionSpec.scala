@@ -18,7 +18,6 @@ package pages.sections.dispatch
 
 import base.SpecBase
 import models.requests.DataRequest
-import pages.sections.consignor.ConsignorAddressPage
 import play.api.test.FakeRequest
 
 class DispatchSectionSpec extends SpecBase {
@@ -28,7 +27,6 @@ class DispatchSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, true)
-          .set(ConsignorAddressPage, testUserAddress)
         )
         DispatchSection.isCompleted mustBe true
       }
@@ -51,13 +49,6 @@ class DispatchSectionSpec extends SpecBase {
       "when only DispatchWarehouseExcisePage is completed" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
-        )
-        DispatchSection.isCompleted mustBe false
-      }
-      "when Consignor details question is 'yes' and Consignor section is not completed" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchUseConsignorDetailsPage, true)
         )
         DispatchSection.isCompleted mustBe false
       }

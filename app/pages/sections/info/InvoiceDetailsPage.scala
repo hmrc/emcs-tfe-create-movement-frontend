@@ -20,7 +20,7 @@ import models.sections.info.InvoiceDetailsModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
+case class InvoiceDetailsPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[InvoiceDetailsModel] {
   override val toString: String = "invoiceDetails"
-  override val path: JsPath = JsPath \ "info" \ toString
+  override val path: JsPath = InfoSection.path \ toString
 }

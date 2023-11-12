@@ -54,9 +54,8 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
     case GuarantorAddressPage => (userAnswers: UserAnswers) =>
       controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    case GuarantorCheckAnswersPage => _ =>
-      //TODO: Update to route to next section when built
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case GuarantorCheckAnswersPage => (userAnswers: UserAnswers) =>
+      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
       (userAnswers: UserAnswers) =>

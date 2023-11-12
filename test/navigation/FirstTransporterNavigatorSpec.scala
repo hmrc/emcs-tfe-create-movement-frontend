@@ -67,7 +67,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       "must go to tasklist" in {
         navigator.nextPage(FirstTransporterCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          routes.DraftMovementController.onPageLoad(testErn, testDraftId)
       }
 
     }

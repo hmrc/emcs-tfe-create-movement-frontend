@@ -42,7 +42,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
         )
       )
 
-      Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(ern))
+      Redirect(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(ern))
     }
 
 }

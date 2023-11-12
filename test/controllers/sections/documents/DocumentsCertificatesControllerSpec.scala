@@ -112,14 +112,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
     "POST onSubmit" - {
 
-      "must redirect to the next page and not wipe answers when true is submitted" in new Setup(Some(
-        emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
-          .set(DocumentReferencePage(0), "reference")
-          .set(ReferenceAvailablePage(1), false)
-          .set(DocumentDescriptionPage(1), "description")
-          .set(DocumentsAddToListPage, DocumentsAddToList.No)
-      )) {
+      "must redirect to the next page when valid answer is submitted" in new Setup() {
 
         val updatedAnswers = startingUserAnswers.value
           .set(DocumentsCertificatesPage, true)
@@ -138,8 +131,31 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
         }
       }
 
-      "must redirect to the next page and not wipe answers when false is submitted" in new Setup(Some(
+      "must redirect to the next page and not update answers when the same answer submitted again" in new Setup(Some(
         emptyUserAnswers
+          .set(DocumentsCertificatesPage, true)
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+          .set(ReferenceAvailablePage(1), false)
+          .set(DocumentDescriptionPage(1), "description")
+          .set(DocumentsAddToListPage, DocumentsAddToList.No)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, documentsCertificatesRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page and wipe answers when a new answer is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentsCertificatesPage, true)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
           .set(ReferenceAvailablePage(1), false)

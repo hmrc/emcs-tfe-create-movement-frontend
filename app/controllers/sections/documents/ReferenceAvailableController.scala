@@ -65,13 +65,20 @@ class ReferenceAvailableController @Inject()(
       onSubmitCall = controllers.sections.documents.routes.ReferenceAvailableController.onSubmit(request.ern, request.draftId, idx, mode)
     ))
 
-  private def cleanseAndRedirect(answer: Boolean, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    val pageToCleanse = if(answer) DocumentDescriptionPage(idx) else DocumentReferencePage(idx)
-    saveAndRedirect(
-      page = ReferenceAvailablePage(idx),
-      answer = answer,
-      currentAnswers = request.userAnswers.remove(pageToCleanse),
-      mode = mode
-    )
+  private def cleanseAndRedirect(answer: Boolean, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(ReferenceAvailablePage(idx)).contains(answer)) {
+      Future(Redirect(navigator.nextPage(ReferenceAvailablePage(idx), mode, request.userAnswers)))
+    } else {
+
+      val updatedAnswers = request.userAnswers
+        .remove(DocumentDescriptionPage(idx))
+        .remove(DocumentReferencePage(idx))
+
+      saveAndRedirect(
+        page = ReferenceAvailablePage(idx),
+        answer = answer,
+        currentAnswers = updatedAnswers,
+        mode = mode
+      )
   }
 }

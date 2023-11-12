@@ -19,9 +19,9 @@ package controllers.sections.documents
 import controllers.actions._
 import forms.sections.documents.DocumentTypeFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, NormalMode}
 import navigation.DocumentsNavigator
-import pages.sections.documents.DocumentTypePage
+import pages.sections.documents._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -55,11 +55,11 @@ class DocumentTypeController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, idx, mode),
-        saveAndRedirect(DocumentTypePage(idx), _, mode)
+        cleanseAndRedirect(_, idx, mode)
       )
     }
 
-  def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     getDocumentTypesService.getDocumentTypes().map { documentTypes =>
 //      val selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
       status(view(
@@ -67,5 +67,23 @@ class DocumentTypeController @Inject()(
         onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
         documentTypes = documentTypes
       ))
+    }
+
+  private def cleanseAndRedirect(answer: String, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(DocumentTypePage(idx)).contains(answer)) {
+      Future(Redirect(navigator.nextPage(DocumentTypePage(idx), mode, request.userAnswers)))
+    } else {
+
+      val updatedAnswers = request.userAnswers
+        .remove(ReferenceAvailablePage(idx))
+        .remove(DocumentReferencePage(idx))
+        .remove(DocumentDescriptionPage(idx))
+
+      saveAndRedirect(
+        page = DocumentTypePage(idx),
+        answer = answer,
+        currentAnswers = updatedAnswers,
+        mode = NormalMode
+      )
     }
 }

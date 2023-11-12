@@ -112,11 +112,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
     "POST onSubmit" - {
 
-      "must redirect to the next page and cleanse the Description page when true is submitted" in new Setup(Some(
-        emptyUserAnswers
-          .set(ReferenceAvailablePage(0), false)
-          .set(DocumentDescriptionPage(0), "description")
-      )) {
+      "must redirect to the next page valid answer is submitted" in new Setup() {
 
         val expectedAnswers = emptyUserAnswers
           .set(ReferenceAvailablePage(0), true)
@@ -135,10 +131,29 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
         }
       }
 
-      "must redirect to the next page and cleanse the Description page when false is submitted" in new Setup(Some(
+      "must redirect to the next page and not update answers the same answer is submitted again" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), false)
+          .set(DocumentDescriptionPage(0), "description")
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page and wipe UserAnswers when new answer is submitted" in new Setup(Some(
         emptyUserAnswers
           .set(ReferenceAvailablePage(0), true)
-          .set(DocumentReferencePage(0), "description")
+          .set(DocumentReferencePage(0), "reference")
+          .set(DocumentDescriptionPage(0), "description")
       )) {
 
         val expectedAnswers = emptyUserAnswers

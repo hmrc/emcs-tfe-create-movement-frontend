@@ -41,15 +41,11 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case DocumentsCheckAnswersPage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case DocumentsCertificatesPage => documentsCertificatesRouting()
-    case DocumentTypePage(idx) => documentTypeRouting(idx)
-    case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
-    case DocumentsAddToListPage => documentsAddToListRouting()
     case _ =>
       (userAnswers: UserAnswers) => routes.DocumentsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
@@ -80,9 +76,9 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
     answers.get(DocumentTypePage(idx)) match {
       case Some(DocumentType.OtherCode) =>
-        controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
+        routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
       case _ =>
-        controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
+        routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
     }
 
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
@@ -101,8 +97,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
         testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       case _ =>
         val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
-        //TODO update with document type page when it's created
-        routes.ReferenceAvailableController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+        routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
 
     }
   }

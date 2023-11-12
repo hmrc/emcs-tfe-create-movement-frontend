@@ -139,10 +139,11 @@ class DocumentsNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.Yes)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+            routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
-        "to DocumentDescription when user selects No" in {
+        //TODO update when next page is made
+        "to UnderConstruction when user selects No" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
 
@@ -150,7 +151,8 @@ class DocumentsNavigatorSpec extends SpecBase {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad
         }
 
-        "to DocumentDescription when user selects MoreLater" in {
+        //TODO update when next page is made
+        "to UnderConstruction when user selects MoreLater" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
 
@@ -171,92 +173,7 @@ class DocumentsNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
-      "must go from DocumentsCertificatesPage" - {
-
-        "to CheckAnswersPage if no is selected" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, false)
-
-          navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
-            routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId)
-        }
-
-        "when yes is selected" - {
-
-          "when DocumentCount is less than 1" - {
-
-            "to DocumentAddToList page" in {
-
-              val userAnswers = emptyUserAnswers.set(DocumentsCertificatesPage, true)
-
-              navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
-                routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-            }
-          }
-
-          "when DocumentCount is at least than 1" - {
-
-            "to DocumentAddToList page" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DocumentsCertificatesPage, true)
-                .set(ReferenceAvailablePage(0), true)
-                .set(DocumentReferencePage(0), "reference")
-
-              navigator.nextPage(DocumentsCertificatesPage, CheckMode, userAnswers) mustBe
-                routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
-            }
-          }
-        }
-      }
-
-      "must go from DocumentsTypePage" - {
-
-        s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), DocumentType.OtherCode)
-
-          navigator.nextPage(DocumentTypePage(0), CheckMode, userAnswers) mustBe
-            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-
-        "to CAM-DOC05 DocumentReference page if yes is selected" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), "testCode")
-
-          navigator.nextPage(DocumentTypePage(0), CheckMode, userAnswers) mustBe
-            routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-      }
-
-      "must go from DocumentsAddToListPage" - {
-
-        "to DocumentReference when user selects Yes" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.Yes)
-
-          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
-            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-
-        "to DocumentDescription when user selects No" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
-
-          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad
-        }
-
-        "to DocumentDescription when user selects MoreLater" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
-
-          navigator.nextPage(DocumentsAddToListPage, CheckMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad
-        }
-      }
-
-      "must go from any other page" - {
+      "must go from page" - {
 
         "to DocumentsIndexController" in {
 

@@ -66,18 +66,20 @@ class DocumentsCertificatesController @Inject()(
       onSubmitCall = controllers.sections.documents.routes.DocumentsCertificatesController.onSubmit(request.ern, request.draftId, mode)
     ))
 
-  private def cleanseAndRedirect(answer: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    val cleansedAnswers = if(answer) request.userAnswers else {
-      request.userAnswers
+  private def cleanseAndRedirect(answer: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(DocumentsCertificatesPage).contains(answer)) {
+      Future(Redirect(navigator.nextPage(DocumentsCertificatesPage, mode, request.userAnswers)))
+    } else {
+
+      val cleansedAnswers = request.userAnswers
         .remove(DocumentsSectionUnits)
         .remove(DocumentsAddToListPage)
-    }
 
-    saveAndRedirect(
-      page = DocumentsCertificatesPage,
-      answer = answer,
-      currentAnswers = cleansedAnswers,
-      mode = mode
-    )
+      saveAndRedirect(
+        page = DocumentsCertificatesPage,
+        answer = answer,
+        currentAnswers = cleansedAnswers,
+        mode = mode
+      )
   }
 }

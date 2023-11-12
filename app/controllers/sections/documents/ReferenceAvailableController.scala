@@ -43,20 +43,24 @@ class ReferenceAvailableController @Inject()(
                                                  formProvider: ReferenceAvailableFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: ReferenceAvailableView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(ReferenceAvailablePage(idx), formProvider()), idx, mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        Future(renderView(Ok, fillForm(ReferenceAvailablePage(idx), formProvider()), idx, mode))
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, idx, mode)),
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future(renderView(BadRequest, formWithErrors, idx, mode)),
           cleanseAndRedirect(_, idx, mode)
-      )
+        )
+      }
     }
 
   def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Result =

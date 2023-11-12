@@ -16,11 +16,10 @@
 
 package controllers.sections.documents
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentReferenceFormProvider
-import models.{Index, Mode}
 import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentReferencePage
 import play.api.data.Form
@@ -43,20 +42,24 @@ class DocumentReferenceController @Inject()(
                                              formProvider: DocumentReferenceFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: DocumentReferenceView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DocumentReferencePage(idx), formProvider()), idx, mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        Future(renderView(Ok, fillForm(DocumentReferencePage(idx), formProvider()), idx, mode))
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, idx, mode)),
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future(renderView(BadRequest, formWithErrors, idx, mode)),
           saveAndRedirect(DocumentReferencePage(idx), _, mode)
-      )
+        )
+      }
     }
 
   def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Result =

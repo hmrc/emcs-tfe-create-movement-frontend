@@ -73,7 +73,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
     "GET onPageLoad" - {
 
-      "must return OK and the correct view for a GET" in new Setup() {
+      "must return OK and the correct view" in new Setup() {
 
         running(application) {
 
@@ -93,7 +93,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
+      "must populate the view correctly when the question has previously been answered" in new Setup(Some(
         emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
       )) {
 
@@ -119,7 +119,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a GET when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
+      "must redirect to DocumentsIndexController when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
 
         running(application) {
 
@@ -136,7 +136,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a GET when the idx is greater than the next document to valid document idx" in new Setup(Some(
+      "must redirect to DocumentsIndexController when the idx is greater than the next document to valid document idx" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(0), true)
@@ -158,7 +158,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a GET when the idx is less than 0" in new Setup(Some(
+      "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(0), true)
@@ -180,7 +180,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+      "must redirect to Journey Recovery if no existing data is found" in new Setup(None) {
 
         running(application) {
 
@@ -285,7 +285,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a POST when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
+      "must redirect to DocumentsIndexController when the idx is greater 0 and there are no current documents in UserAnswers" in new Setup() {
 
         running(application) {
 
@@ -302,7 +302,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a POST when the idx is greater than the next document to valid document idx" in new Setup(Some(
+      "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(0), true)
@@ -324,7 +324,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "must redirect to DocumentsIndexController for a POST when the idx is less than 0" in new Setup(Some(
+      "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(0), true)
@@ -346,7 +346,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         }
       }
 
-      "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
+      "redirect to Journey Recovery if no existing data is found" in new Setup(None) {
 
         val testDocumentType = "testDocumentType"
 

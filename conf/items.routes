@@ -1,7 +1,7 @@
 GET        /trader/:ern/draft/:draftId/items        controllers.sections.items.ItemsIndexController.onPageLoad(ern: String, draftId: String)
 
-GET        /trader/:ern/draft/:draftId/items/:idx/excise-product-code							  controllers.sections.items.ItemExciseProductCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/items/:idx/excise-product-code							  controllers.sections.items.ItemExciseProductCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/excise-product-code				controllers.sections.items.ItemExciseProductCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/excise-product-code				controllers.sections.items.ItemExciseProductCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/items/:idx/excise-product-code/change        controllers.sections.items.ItemExciseProductCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/excise-product-code/change        controllers.sections.items.ItemExciseProductCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
@@ -15,10 +15,10 @@ POST       /trader/:ern/draft/:draftId/items/:idx/alcohol-strength              
 GET        /trader/:ern/draft/:draftId/items/:idx/alcohol-strength/change           controllers.sections.items.ItemAlcoholStrengthController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/alcohol-strength/change           controllers.sections.items.ItemAlcoholStrengthController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/items/:idx/commercial-description                        controllers.sections.items.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/items/:idx/commercial-description                        controllers.sections.items.CommercialDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/items/:idx/commercial-description/change                  controllers.sections.items.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/items/:idx/commercial-description/change                  controllers.sections.items.CommercialDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/commercial-description            controllers.sections.items.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/commercial-description            controllers.sections.items.CommercialDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/commercial-description/change     controllers.sections.items.CommercialDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/commercial-description/change     controllers.sections.items.CommercialDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
 GET        /trader/:ern/draft/:draftId/items/:idx/quantity                          controllers.sections.items.ItemQuantityController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/quantity                          controllers.sections.items.ItemQuantityController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
@@ -34,3 +34,8 @@ GET        /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice
 POST       /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice                        controllers.sections.items.ItemGeographicalIndicationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice/change                 controllers.sections.items.ItemGeographicalIndicationChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice/change                 controllers.sections.items.ItemGeographicalIndicationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer        controllers.sections.items.ItemSmallIndependentProducerController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/small-independent-producer        controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change controllers.sections.items.ItemSmallIndependentProducerController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

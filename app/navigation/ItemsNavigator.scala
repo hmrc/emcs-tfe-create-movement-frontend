@@ -59,6 +59,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
+    case ItemSmallIndependentProducerPage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
+        case Some(true) =>
+          //TODO: Route to CAM-ITM11
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      }
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }

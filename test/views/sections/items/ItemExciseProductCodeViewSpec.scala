@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import viewmodels.helpers.ItemExciseProductCodeHelper
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -46,7 +46,10 @@ class ItemExciseProductCodeViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[ItemExciseProductCodeView]
-        val selectOptions = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(Seq(beerExciseProductCode))
+        val selectOptions = SelectItemHelper.constructSelectItems(
+          selectOptions = Seq(beerExciseProductCode),
+          defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
+        )
         val form = app.injector.instanceOf[ItemExciseProductCodeFormProvider].apply(Seq(beerExciseProductCode))
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, NormalMode).toString())

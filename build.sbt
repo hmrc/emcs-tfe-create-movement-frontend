@@ -52,7 +52,7 @@ lazy val root = (project in file("."))
         )),
       "javascripts/autocomplete.js" ->
         group(Seq(
-          "javascripts/accessible-autocomplete.js"
+          "javascripts/accessible-autocomplete-polyfill.js"
         ))
     ),
     // prevent removal of unused code which generates warning errors due to use of third-party libs

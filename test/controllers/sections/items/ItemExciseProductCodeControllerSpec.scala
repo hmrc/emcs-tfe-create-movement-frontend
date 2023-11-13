@@ -29,7 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{GetExciseProductCodesService, UserAnswersService}
-import viewmodels.helpers.ItemExciseProductCodeHelper
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 
 import scala.concurrent.Future
@@ -41,8 +41,6 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
   val action = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   val sampleEPCs = Seq(beerExciseProductCode, wineExciseProductCode)
-
-  val sampleEPCsSelectOptions = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(sampleEPCs)
 
   val form = new ItemExciseProductCodeFormProvider().apply(sampleEPCs)
 
@@ -56,6 +54,10 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
         bind[GetExciseProductCodesService].toInstance(mockGetExciseProductCodesService)
       )
       .build()
+
+    val sampleEPCsSelectOptions = SelectItemHelper.constructSelectItems(
+      selectOptions = sampleEPCs,
+      defaultTextMessageKey = "itemExciseProductCode.select.defaultValue")(messages(application))
   }
 
   "ItemExciseProductCode Controller" - {
@@ -109,9 +111,13 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      val sampleEPCsSelectOptionsWithBeerSelected = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(sampleEPCs, Some("B000"))
-
       running(application) {
+
+        val sampleEPCsSelectOptionsWithBeerSelected = SelectItemHelper.constructSelectItems(
+          selectOptions = sampleEPCs,
+          defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
+          existingAnswer = Some("B000"))(messages(application))
+
         val request = FakeRequest(GET, exciseProductCodeRoute())
 
         val view = application.injector.instanceOf[ItemExciseProductCodeView]
@@ -127,7 +133,9 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      MockUserAnswersService.set(
+        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
 
       running(application) {
         val request =

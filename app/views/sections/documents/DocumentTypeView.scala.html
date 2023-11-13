@@ -14,12 +14,12 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
-@import viewmodels.LegendSize
-@import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import controllers.sections.documents.routes
+@import models.requests.DataRequest
 @import models.sections.documents.DocumentType
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import views.html.helper.CSPNonce
 
 @this(
         layout: templates.Layout,
@@ -33,9 +33,14 @@
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], mode: Mode, documentTypes: Seq[DocumentType])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], mode: Mode, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("documentType.title")), additionalCss = autocompleteCss(), additionalScripts = autocompleteJavascript()) {
+@scripts = {
+  @autocompleteJavascript()
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@layout(pageTitle = title(form, messages("documentType.title")), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
@@ -53,9 +58,7 @@
                     isPageHeading = true,
                     content = Text(messages("documentType.heading"))
                 ),
-                items = Seq(SelectItem(text = "")) ++ documentTypes.map(documentType =>
-                    SelectItem(value = Some(documentType.code), text = documentType.displayName)
-                ),
+                items = selectOptions,
                 errorMessage = form.errors("document-type") match {
                     case Nil => None
                     case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))

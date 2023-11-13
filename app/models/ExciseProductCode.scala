@@ -21,7 +21,9 @@ import play.api.libs.json.{Format, Json}
 case class ExciseProductCode(code: String,
                              description: String,
                              category: String,
-                             categoryDescription: String)
+                             categoryDescription: String) extends SelectOption {
+  val displayName = s"$code: $description"
+}
 
 object ExciseProductCode {
   implicit val format: Format[ExciseProductCode] = Json.format[ExciseProductCode]

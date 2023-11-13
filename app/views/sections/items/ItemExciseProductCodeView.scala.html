@@ -15,6 +15,9 @@
  *@
 
 @import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import views.html.helper.CSPNonce
 
 @this(
     layout: templates.Layout,
@@ -26,12 +29,18 @@
     h1: components.h1,
     h2: components.h2,
     continueOrExit: components.continueOrExit,
-    autocomplete: components.autocomplete
+    autocompleteCss: HmrcAccessibleAutocompleteCss,
+    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, epcSelectItems: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemExciseProductCode.title"))) {
+@scripts = {
+  @autocompleteJavascript()
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title")), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 
@@ -41,21 +50,29 @@
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @autocomplete(
-            Select(
-                id = "excise-product-code",
-                name = "excise-product-code",
-                label = Label(
-                    classes = "govuk-label--l",
-                    isPageHeading = true,
-                    content = Text(messages("itemExciseProductCode.heading"))
-                ),
-                items = SelectItem(text = messages("itemExciseProductCode.select.defaultValue"), selected = true, disabled = true) +: epcSelectItems,
-                errorMessage = form.errors("excise-product-code") match {
-                  case Nil => None
-                  case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
-                },
-            ), defaultValue = "", noResultMessageKey = "site.noResultsFound")
+      @govukSelect(
+        Select(
+          id = "excise-product-code",
+          name = "excise-product-code",
+          label = Label(
+            classes = "govuk-label--l",
+            isPageHeading = true,
+            content = Text(messages("itemExciseProductCode.heading"))
+          ),
+          items = selectOptions,
+          errorMessage = form.errors("excise-product-code") match {
+          case Nil => None
+          case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+          }
+        ).asAccessibleAutocomplete(
+          Some(
+            AccessibleAutocomplete(
+              defaultValue = Some(""),
+              showAllValues = true
+            )
+          )
+        )
+      )
 
         @continueOrExit()
     }

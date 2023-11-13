@@ -16,10 +16,11 @@
 
 package models.sections.documents
 
+import models.SelectOption
 import play.api.libs.json.{Json, OFormat}
 
 
-case class DocumentType(code: String, description: String) {
+case class DocumentType(code: String, description: String) extends SelectOption {
   val displayName = s"$description ($code)"
 }
 

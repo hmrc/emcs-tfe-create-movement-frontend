@@ -23,7 +23,7 @@ import org.scalatest.matchers.must.Matchers
 import pages.sections.items.CommercialDescriptionPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -31,7 +31,6 @@ class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
   "CommercialDescriptionSummary" - {
 
     lazy val app = applicationBuilder().build()
-    implicit val link = app.injector.instanceOf[views.html.components.link]
 
     Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 

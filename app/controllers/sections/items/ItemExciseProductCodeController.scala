@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.ItemsCount
 import services.{GetExciseProductCodesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
-import viewmodels.helpers.ItemExciseProductCodeHelper
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 
 import javax.inject.Inject
@@ -53,9 +53,12 @@ class ItemExciseProductCodeController @Inject()(
 //      validateIndex(idx) { TODO: implement in CAM-ITM19
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes =>
-            val selectItems = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(exciseProductCodes,
-              request.userAnswers.get(ItemExciseProductCodePage(idx)))
-            renderView(Ok, fillForm(ItemExciseProductCodePage(idx), formProvider(exciseProductCodes)), idx, selectItems, mode)
+            val selectItems = SelectItemHelper.constructSelectItems(
+              selectOptions = exciseProductCodes,
+              defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
+              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx))
+            )
+            renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
 //      }
     }
@@ -65,7 +68,10 @@ class ItemExciseProductCodeController @Inject()(
 //      validateIndex(idx) { TODO: implement in CAM-ITM19
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            val selectItems = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(exciseProductCodes)
+            val selectItems = SelectItemHelper.constructSelectItems(
+              exciseProductCodes,
+              defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
+            )
             formProvider(exciseProductCodes).bindFromRequest().fold(
               renderView(BadRequest, _, idx, selectItems, mode),
               saveAndRedirect(ItemExciseProductCodePage(idx), _, mode)
@@ -90,7 +96,7 @@ class ItemExciseProductCodeController @Inject()(
     Future.successful(status(view(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-      epcSelectItems = selectItems,
+      selectOptions = selectItems,
       mode = mode
     )))
   }

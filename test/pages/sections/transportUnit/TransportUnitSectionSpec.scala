@@ -56,7 +56,7 @@ class TransportUnitSectionSpec extends SpecBase {
               .set(TransportSealChoicePage(testIndex1), true)
               .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("", None))
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-              .set(TransportUnitGiveMoreInformationPage(testIndex1), "")
+              .set(TransportUnitGiveMoreInformationPage(testIndex1), Some(""))
           )
         TransportUnitSection(Index(0)).isCompleted mustBe true
       }

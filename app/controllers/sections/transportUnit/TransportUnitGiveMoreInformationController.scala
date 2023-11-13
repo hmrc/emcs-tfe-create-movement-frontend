@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
+import utils.JsonOptionFormatter.optionFormat
 import views.html.sections.transportUnit.TransportUnitGiveMoreInformationView
 
 import javax.inject.Inject
@@ -49,7 +50,7 @@ class TransportUnitGiveMoreInformationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
-          renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage(idx), formProvider(transportUnitType)), idx, mode, transportUnitType)
+          renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage(idx), formProvider()), idx, mode, transportUnitType)
         }
       }
     }
@@ -58,8 +59,9 @@ class TransportUnitGiveMoreInformationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
-          formProvider(transportUnitType).bindFromRequest().fold(
-            renderView(BadRequest, _, idx, mode, transportUnitType),
+          submitAndTrimWhitespaceFromTextarea(TransportUnitGiveMoreInformationPage(idx), formProvider)(
+            renderView(BadRequest, _, idx, mode, transportUnitType)
+          )(
             saveAndRedirect(TransportUnitGiveMoreInformationPage(idx), _, mode)
           )
         }

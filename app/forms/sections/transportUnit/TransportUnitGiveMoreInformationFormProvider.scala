@@ -17,19 +17,17 @@
 package forms.sections.transportUnit
 
 import forms.mappings.Mappings
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
-import models.sections.transportUnit.TransportUnitType
+import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, XSS_REGEX}
 import play.api.data.Form
-import play.api.i18n.Messages
+import play.api.data.Forms.optional
 
 import javax.inject.Inject
 
-class TransportUnitGiveMoreInformationFormProvider @Inject() extends Mappings {
+class TransportUnitGiveMoreInformationFormProvider @Inject() extends BaseTextareaFormProvider[Option[String]] with Mappings {
 
-  def apply(transportUnitType: TransportUnitType)(implicit messages: Messages): Form[String] =
+  def apply(): Form[Option[String]] =
     Form(
-      "value" -> text("transportUnitGiveMoreInformation.error.required", args =
-        Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
+      "value" -> optional(text()
         .transform[String](
           _.replace("\n", " ")
             .replace("\r", " ")
@@ -40,5 +38,6 @@ class TransportUnitGiveMoreInformationFormProvider @Inject() extends Mappings {
         .verifying(maxLength(350, "transportUnitGiveMoreInformation.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"transportUnitGiveMoreInformation.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss"))
+      )
     )
 }

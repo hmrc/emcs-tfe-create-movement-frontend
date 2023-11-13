@@ -23,7 +23,7 @@ import models.sections.transportUnit.TransportSealTypeModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
 
-class TransportSealTypeFormProvider @Inject() extends Mappings {
+class TransportSealTypeFormProvider @Inject() extends BaseTextareaFormProvider[TransportSealTypeModel] with Mappings {
 
   def apply(): Form[TransportSealTypeModel] = Form(
     mapping(

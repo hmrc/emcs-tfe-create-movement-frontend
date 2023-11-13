@@ -205,7 +205,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         userAnswers = Some(
           emptyUserAnswers
             .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-            .set(TransportUnitGiveMoreInformationPage(testIndex1), "blah")
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("beans"))
             .set(TransportUnitTypePage(testIndex1), Container)
         )
       )

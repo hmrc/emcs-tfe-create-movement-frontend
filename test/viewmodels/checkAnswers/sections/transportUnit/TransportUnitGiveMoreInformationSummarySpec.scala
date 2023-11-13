@@ -61,7 +61,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), "value"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), Some("value")))
 
             TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(

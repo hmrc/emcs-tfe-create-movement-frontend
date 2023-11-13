@@ -31,7 +31,7 @@
 
 @(form: Form[_], indexOfDocument: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("documentsRemoveFromList.title", indexOfDocument.displayIndex))) {
+@layout(pageTitle = title(form, messages("documentsRemoveFromList.title", indexOfDocument.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.documents.routes.DocumentsRemoveFromListController.onSubmit(request.ern, request.draftId, indexOfDocument), 'autoComplete -> "off") {
 

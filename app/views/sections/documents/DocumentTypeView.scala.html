@@ -40,7 +40,7 @@
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form, messages("documentType.title")), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("documentType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

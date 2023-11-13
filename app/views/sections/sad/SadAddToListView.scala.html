@@ -34,7 +34,7 @@
 
 @(optionalForm: Option[Form[_]], sadDocuments: Seq[SummaryList], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = optionalForm.fold(titleNoForm(pluralSingular("sadAddToList.title", sadDocuments.size)))(form => title(form, pluralSingular("sadAddToList.title", sadDocuments.size)))) {
+@layout(pageTitle = optionalForm.fold(titleNoForm(pluralSingular("sadAddToList.title", sadDocuments.size)))(form => title(form, pluralSingular("sadAddToList.title", sadDocuments.size))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.sad.routes.SadAddToListController.onSubmit(request.ern, request.draftId), 'autoComplete -> "off") {
 

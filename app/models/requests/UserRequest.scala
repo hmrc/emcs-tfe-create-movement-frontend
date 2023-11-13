@@ -24,7 +24,8 @@ case class UserRequest[A](request: Request[A],
                           ern: String,
                           internalId: String,
                           credId: String,
-                          sessionId: String) extends WrappedRequest[A](request) with Logging {
+                          sessionId: String,
+                          hasMultipleErns: Boolean) extends WrappedRequest[A](request) with Logging {
 
   val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
 

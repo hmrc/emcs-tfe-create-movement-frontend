@@ -32,7 +32,7 @@
 
 @(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("destinationBusinessName.title"))) {
+@layout(pageTitle = title(form, messages("destinationBusinessName.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 

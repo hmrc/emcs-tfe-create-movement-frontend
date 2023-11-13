@@ -17,6 +17,8 @@
 @import config.AppConfig
 @import views.html.helper.CSPNonce
 @import views.html.templates.FullWidthMainContentTemplate
+@import views.html.components.activeTrader
+@import viewmodels.traderInfo.TraderInfo
 
 @this(
     appConfig: AppConfig,
@@ -32,11 +34,13 @@
     hmrcScripts: HmrcScripts,
     betaBanner: StandardBetaBanner,
     defaultMainContent: TwoThirdsMainContent,
-    fullWidthMainContent: FullWidthMainContentTemplate
+    fullWidthMainContent: FullWidthMainContentTemplate,
+    activeTrader: activeTrader
 )
 
 @(
         pageTitle: String,
+        maybeShowActiveTrader: Option[TraderInfo],
         showBackLink: Boolean = true,
         timeout: Boolean = true,
         showSignOut: Boolean = true,
@@ -72,6 +76,7 @@
 }
 
 @beforeContent = {
+    @{ activeTrader(maybeShowActiveTrader, appConfig) }
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
     }

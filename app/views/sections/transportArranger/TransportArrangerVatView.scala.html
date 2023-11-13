@@ -34,7 +34,7 @@
 
 @(form: Form[_], action: Call, arranger: TransportArranger)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"transportArrangerVat.$arranger.title"))) {
+@layout(pageTitle = title(form, messages(s"transportArrangerVat.$arranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 

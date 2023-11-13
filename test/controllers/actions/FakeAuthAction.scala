@@ -30,7 +30,7 @@ class FakeAuthAction @Inject()(bodyParsers: PlayBodyParsers) extends AuthAction 
     new ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] {
 
       override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] =
-        block(UserRequest(request, ern, testInternalId, testCredId, testSessionId))
+        block(UserRequest(request, ern, testInternalId, testCredId, testSessionId, false))
 
       override def parser: BodyParser[AnyContent] =
         bodyParsers.default

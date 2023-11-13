@@ -45,7 +45,7 @@
 }
 
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignor.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignor.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(submitAction) {
 

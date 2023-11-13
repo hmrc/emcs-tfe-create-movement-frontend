@@ -17,7 +17,7 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, StubAddressLookupJourney}
+import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy, StubAddressLookupJourney}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
@@ -67,6 +67,21 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
 
     }
 
+    ".emcsTfeHomeUrl" - {
+      "should generate the correct url" - {
+        s"when the $ReturnToLegacy feature switch is enabled" in {
+          enable(ReturnToLegacy)
+
+          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8080/emcs/trader"
+        }
+
+        s"when the $ReturnToLegacy feature switch is disabled" in {
+          disable(ReturnToLegacy)
+
+          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs-tfe"
+        }
+      }
+    }
 
     ".addressLookupFrontendUrl" - {
       "should generate the correct url" - {

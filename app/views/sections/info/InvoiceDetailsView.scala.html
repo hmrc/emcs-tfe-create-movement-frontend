@@ -34,7 +34,7 @@
 
 @(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("invoiceDetails.title"))) {
+@layout(pageTitle = title(form, messages("invoiceDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 
@@ -75,4 +75,3 @@
 @{
     //$COVERAGE-OFF$
 }
-

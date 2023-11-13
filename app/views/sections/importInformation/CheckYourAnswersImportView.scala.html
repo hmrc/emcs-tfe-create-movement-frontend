@@ -26,7 +26,7 @@
 
 @(ern: String, lrn: String, summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
-    @layout(pageTitle = titleNoForm(messages("checkYourAnswersImport.title"))) {
+    @layout(pageTitle = titleNoForm(messages("checkYourAnswersImport.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onSubmit(ern, lrn)) {
 

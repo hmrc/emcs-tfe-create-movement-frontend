@@ -14,25 +14,22 @@
  * limitations under the License.
  *@
 
-@this(
-    layout: templates.Layout,
-    govukButton: GovukButton
-)
+@import config.AppConfig
+@import viewmodels.traderInfo.TraderInfo
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+@this()
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title")), maybeShowActiveTrader = None) {
+@(maybeShowActiveTrader: Option[TraderInfo], appConfig: AppConfig)(implicit messages: Messages)
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
-
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
-
-    <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-                .asLink(continueUrl)
-        )
-    </p>
+@{
+    maybeShowActiveTrader match {
+        case Some(TraderInfo(traderName, ern)) =>
+            <div class="active-trader-info govuk-!-margin-bottom-0" aria-label="Organisation switcher">
+                <div class="active-trader-info__title">{ traderName } ({ ern })</div>
+                <a href={ appConfig.emcsTfeHomeUrl } class="active-trader-info__link">{ messages("activeTrader.link") }</a>
+            </div>
+        case None => ()
+    }
 }
 
 @{

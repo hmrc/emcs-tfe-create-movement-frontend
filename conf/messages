@@ -144,6 +144,8 @@ signedOut.heading = For your security, we signed you out
 signedOut.guidance.saved = We have saved your answers.
 signedOut.guidance.notSaved = We have not saved your answers.
 
+activeTrader.link = Change trader type
+
 lrn.subHeading = Create movement for {0}
 
 draftMovement.title = Draft movement

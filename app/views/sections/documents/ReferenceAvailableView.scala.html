@@ -30,7 +30,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("referenceAvailable.title"))) {
+@layout(pageTitle = title(form, messages("referenceAvailable.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.documents.routes.ReferenceAvailableController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

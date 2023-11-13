@@ -60,7 +60,12 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
   lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
-  lazy val emcsTfeHomeUrl: String = configuration.get[String]("urls.emcsTfeHome")
+  def emcsTfeHomeUrl: String =
+    if (isEnabled(ReturnToLegacy)) {
+      configuration.get[String]("urls.legacy.atAGlance")
+    } else {
+      configuration.get[String]("urls.emcsTfeHome")
+    }
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 

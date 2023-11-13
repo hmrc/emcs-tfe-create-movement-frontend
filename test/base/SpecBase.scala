@@ -51,7 +51,7 @@ trait SpecBase
   def messages(app: Application, lang: Lang): Messages = messagesApi(app).preferred(Seq(lang))
 
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
-    UserRequest(request, ern, testInternalId, testCredId, testSessionId)
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, false)
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
     DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
@@ -71,6 +71,3 @@ trait SpecBase
         bind[MongoComponent].to[FakePlayMongoComponent]
       )
 }
-
-
-

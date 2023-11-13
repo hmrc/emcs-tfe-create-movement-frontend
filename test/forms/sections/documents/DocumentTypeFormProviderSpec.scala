@@ -19,7 +19,6 @@ package forms.sections.documents
 import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.behaviours.OptionFieldBehaviours
-import models.sections.documents.DocumentType
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}

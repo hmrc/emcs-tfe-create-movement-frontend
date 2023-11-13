@@ -82,7 +82,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url
       }
     }
 

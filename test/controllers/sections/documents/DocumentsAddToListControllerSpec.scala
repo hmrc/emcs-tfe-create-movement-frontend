@@ -50,8 +50,8 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       )
       .build()
 
-    lazy val controllerRoute = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val onSubmitCall = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId, NormalMode)
+    lazy val controllerRoute = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url
+    lazy val onSubmitCall = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId)
 
     val formProvider = new DocumentsAddToListFormProvider()
     val form = formProvider()

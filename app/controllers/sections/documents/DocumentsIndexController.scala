@@ -52,7 +52,7 @@ class DocumentsIndexController @Inject()(
       case None | Some(0) =>
         Redirect(routes.DocumentsCertificatesController.onPageLoad(request.ern, request.draftId, NormalMode))
       case Some(_) =>
-        Redirect(routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId, NormalMode))
+        Redirect(routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId))
     }
   }
 }

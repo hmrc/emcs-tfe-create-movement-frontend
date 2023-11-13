@@ -65,7 +65,7 @@ class DocumentsIndexControllerSpec extends SpecBase {
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url)
+            redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url)
           }
         }
       }

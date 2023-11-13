@@ -71,7 +71,7 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
                 .set(DocumentReferencePage(0), "reference")
 
               navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
-                routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+                routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId)
             }
           }
         }
@@ -124,13 +124,13 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
       "must go from DocumentDescriptionPage to DocumentReferencePage" in {
 
         navigator.nextPage(DocumentDescriptionPage(0), NormalMode, emptyUserAnswers) mustBe
-          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId)
       }
 
       "must go from DocumentReferencePage to DocumentsAddToList" in {
 
         navigator.nextPage(DocumentReferencePage(0), NormalMode, emptyUserAnswers) mustBe
-          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode)
+          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId)
       }
 
       "must go from DocumentsAddToListPage" - {

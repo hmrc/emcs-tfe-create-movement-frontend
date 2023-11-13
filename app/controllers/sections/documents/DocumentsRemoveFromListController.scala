@@ -76,7 +76,7 @@ class DocumentsRemoveFromListController @Inject()(
       userAnswersService.set(cleansedAnswers).map { _ => Redirect(routes.DocumentsIndexController.onPageLoad(ern, draftId))
       }
     } else {
-      Future(Redirect(routes.DocumentsAddToListController.onPageLoad(ern, draftId, NormalMode)))
+      Future(Redirect(routes.DocumentsAddToListController.onPageLoad(ern, draftId)))
     }
   }
 }

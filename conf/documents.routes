@@ -25,10 +25,8 @@ POST       /trader/:ern/draft/:draftId/documents/:idx/document-reference        
 GET        /trader/:ern/draft/:draftId/documents/:idx/document-reference/change                 controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/documents/:idx/document-reference/change                 controllers.sections.documents.DocumentReferenceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/documents/add-to-list/change                             controllers.sections.documents.DocumentsAddToListController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/documents/add-to-list/change                             controllers.sections.documents.DocumentsAddToListController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onSubmit(ern: String, draftId: String)
 
 GET        /trader/:ern/draft/:draftId/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onPageLoad(ern: String, draftId: String)
 POST       /trader/:ern/draft/:draftId/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onSubmit(ern: String, draftId: String)

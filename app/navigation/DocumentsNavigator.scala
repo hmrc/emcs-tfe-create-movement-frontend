@@ -34,9 +34,9 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     case DocumentTypePage(idx) => documentTypeRouting(idx)
     case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
     case DocumentDescriptionPage(_) =>
-      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case DocumentReferencePage(_) =>
-      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case DocumentsAddToListPage => documentsAddToListRouting()
     case DocumentsCheckAnswersPage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -69,7 +69,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => userAnswers.get(DocumentsCount) match {
         case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, NormalMode)
-        case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
     }
 

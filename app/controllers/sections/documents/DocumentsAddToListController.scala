@@ -49,29 +49,29 @@ class DocumentsAddToListController @Inject()(
                                        addToListHelper: DocumentsAddToListHelper
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DocumentsAddToListPage, formProvider()), mode)
+      renderView(Ok, fillForm(DocumentsAddToListPage, formProvider()))
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors, mode)),
-        handleSubmissionRedirect(_, mode)
+        formWithErrors => Future(renderView(BadRequest, formWithErrors)),
+        handleSubmissionRedirect(_)
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+  private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Result = {
     status(view(
       form = form,
-      onSubmitCall = controllers.sections.documents.routes.DocumentsAddToListController.onSubmit(request.ern, request.draftId, mode),
+      onSubmitCall = controllers.sections.documents.routes.DocumentsAddToListController.onSubmit(request.ern, request.draftId),
       documents = addToListHelper.allDocumentsSummary(),
       showNoOption = DocumentsSectionUnits.status != InProgress
     ))
   }
 
-  private def handleSubmissionRedirect(answer: DocumentsAddToList, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+  private def handleSubmissionRedirect(answer: DocumentsAddToList)(implicit request: DataRequest[_]): Future[Result] =
     answer match {
       case DocumentsAddToList.Yes =>
         val answersWithDocumentAddToList = request.userAnswers
@@ -83,6 +83,6 @@ class DocumentsAddToListController @Inject()(
               userAnswers = answersWithDocumentAddToList
             ))
           }
-      case value => saveAndRedirect(DocumentsAddToListPage, value, mode)
+      case value => saveAndRedirect(DocumentsAddToListPage, value, NormalMode)
   }
 }

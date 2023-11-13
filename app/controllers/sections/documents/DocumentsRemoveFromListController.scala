@@ -18,9 +18,8 @@ package controllers.sections.documents
 
 import controllers.actions._
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
-import models.{Index, NormalMode}
+import models.Index
 import models.requests.DataRequest
-import models.sections.documents.DocumentsAddToList
 import navigation.TransportUnitNavigator
 import pages.sections.documents.{DocumentSection, DocumentsAddToListPage}
 import play.api.data.Form

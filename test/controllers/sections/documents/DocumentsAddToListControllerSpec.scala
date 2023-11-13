@@ -21,8 +21,8 @@ import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDocumentsAddToListHelper
+import models.UserAnswers
 import models.sections.documents.DocumentsAddToList
-import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._

@@ -17,7 +17,6 @@
 package navigation
 
 import controllers.sections.documents.routes
-import models.sections.documents.DocumentType
 import models.sections.documents.DocumentsAddToList
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page

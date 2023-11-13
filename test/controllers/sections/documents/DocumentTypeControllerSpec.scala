@@ -30,7 +30,6 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{GetDocumentTypesService, UserAnswersService}
-import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
@@ -41,8 +40,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
   class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     def onwardRoute = Call("GET", "/foo")
-
-    val mockGetDocumentTypesService = stub[GetDocumentTypesService]
 
     val application = applicationBuilder(userAnswers = userAnswers)
       .overrides(
@@ -81,7 +78,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(GET, documentTypeRoute())
@@ -103,7 +100,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
@@ -129,9 +126,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
-
           val request = FakeRequest(POST, documentTypeRoute(1))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
@@ -151,9 +145,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
-
           val request = FakeRequest(POST, documentTypeRoute(2))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
@@ -172,9 +163,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       )) {
 
         running(application) {
-
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute(-1))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
@@ -208,7 +196,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute())
@@ -230,7 +218,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute())
@@ -256,7 +244,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute())
@@ -272,7 +260,8 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
         running(application) {
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
+
+          MockGetDocumentTypesService.getDocumentTypes()
             .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute())
@@ -295,9 +284,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
-
           val request = FakeRequest(POST, documentTypeRoute(1))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
@@ -317,9 +303,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
         running(application) {
 
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
-
           val request = FakeRequest(POST, documentTypeRoute(2))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
@@ -338,9 +321,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       )) {
 
         running(application) {
-
-          (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
-            .returns(Future.successful(documentTypes))
 
           val request = FakeRequest(POST, documentTypeRoute(-1))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))

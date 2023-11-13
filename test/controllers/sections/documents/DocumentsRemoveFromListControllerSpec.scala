@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.documents.DocumentsAddToList
-import models.{Index, NormalMode, UserAnswers}
+import models.{Index, UserAnswers}
 import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.test.FakeRequest

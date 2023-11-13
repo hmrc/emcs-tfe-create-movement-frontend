@@ -18,7 +18,6 @@ package pages.sections.documents
 
 import models.Index
 import models.requests.DataRequest
-import models.sections.documents.DocumentType
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList._
@@ -42,5 +41,6 @@ case class DocumentSection(idx: Index) extends Section[JsObject] {
     }
   }
 
-  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    DocumentsSection.canBeCompletedForTraderAndDestinationType
 }

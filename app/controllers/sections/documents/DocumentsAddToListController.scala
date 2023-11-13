@@ -19,9 +19,9 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsAddToListFormProvider
+import models.NormalMode
 import models.requests.DataRequest
 import models.sections.documents.DocumentsAddToList
-import models.{Mode, NormalMode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentsAddToListPage, DocumentsSectionUnits}
 import play.api.data.Form
@@ -71,10 +71,13 @@ class DocumentsAddToListController @Inject()(
     ))
   }
 
-  private def handleSubmissionRedirect(answer: DocumentsAddToList)(implicit request: DataRequest[_]): Future[Result] =
+  private def handleSubmissionRedirect(answer: DocumentsAddToList)(implicit request: DataRequest[_]): Future[Result] = {
     answer match {
       case DocumentsAddToList.Yes =>
+
         val answersWithDocumentAddToList = request.userAnswers
+          .set(DocumentsAddToListPage, DocumentsAddToList.Yes)
+
         userAnswersService.set(request.userAnswers.remove(DocumentsAddToListPage))
           .map { _ =>
             Redirect(navigator.nextPage(
@@ -83,6 +86,8 @@ class DocumentsAddToListController @Inject()(
               userAnswers = answersWithDocumentAddToList
             ))
           }
-      case value => saveAndRedirect(DocumentsAddToListPage, value, NormalMode)
+      case value =>
+        saveAndRedirect(DocumentsAddToListPage, value, NormalMode)
+    }
   }
 }

@@ -19,7 +19,7 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsCertificatesFormProvider
-import models.Mode
+import models.{Mode, NormalMode}
 import models.requests.DataRequest
 import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentsAddToListPage, DocumentsCertificatesPage, DocumentsSectionUnits}
@@ -79,7 +79,7 @@ class DocumentsCertificatesController @Inject()(
         page = DocumentsCertificatesPage,
         answer = answer,
         currentAnswers = cleansedAnswers,
-        mode = mode
+        mode = NormalMode
       )
   }
 }

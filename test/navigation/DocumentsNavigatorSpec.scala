@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
 import models.sections.documents.{DocumentType, DocumentsAddToList}
-import models.{CheckMode, NormalMode, ReviewMode, UserAnswers}
+import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
 

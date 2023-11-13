@@ -24,6 +24,7 @@ import pages.sections.documents.DocumentTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{GetDocumentTypesService, UserAnswersService}
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
 import javax.inject.Inject
@@ -45,8 +46,8 @@ class DocumentTypeController @Inject()(
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request => for {
         documentTypes <- getDocumentTypesService.getDocumentTypes()
-      //NOTE: under current guidance the select element should not be pre-populated: https://design-system.service.gov.uk/components/select/#how-it-works
-      } yield Ok(view(formProvider(), mode, documentTypes))
+        selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
+      } yield Ok(view(formProvider(), mode, selectItems))
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
@@ -54,7 +55,8 @@ class DocumentTypeController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors => for {
           documentTypes <- getDocumentTypesService.getDocumentTypes()
-        } yield BadRequest(view(formWithErrors, mode, documentTypes)),
+          selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue")
+        } yield BadRequest(view(formWithErrors, mode, selectItems)),
         value =>
           saveAndRedirect(DocumentTypePage, value, mode)
       )

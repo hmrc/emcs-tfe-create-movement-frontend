@@ -25,6 +25,9 @@ object DocumentTypeMessages {
     val heading = "What type of document do you want to add?"
     val title = titleHelper(heading)
     val errorRequired = "Select the document you want to add"
+
+    val defaultSelectOption = "Choose document type"
+    val firstSelectionOption = "First selection (code)"
   }
 
   object English extends ViewMessages with BaseEnglish

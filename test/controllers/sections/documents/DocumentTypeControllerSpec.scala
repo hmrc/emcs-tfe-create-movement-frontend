@@ -18,9 +18,9 @@ package controllers.sections.documents
 
 import base.SpecBase
 import forms.sections.documents.DocumentTypeFormProvider
-import mocks.services.MockUserAnswersService
-import models.NormalMode
+import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
 import models.sections.documents.DocumentType
+import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.DocumentTypePage
@@ -30,11 +30,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{GetDocumentTypesService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
 import scala.concurrent.Future
 
-class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
+class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService with MockGetDocumentTypesService {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -44,19 +45,31 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
   val form = formProvider()
   val testDocumentType = DocumentType("testCode", "testDocumentType")
 
+  class Fixture(userAnswers: Option[UserAnswers]) {
+    val application = applicationBuilder(userAnswers = userAnswers)
+      .overrides(
+        bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
+        bind[GetDocumentTypesService].toInstance(mockGetDocumentTypesService)
+      )
+      .build()
+
+    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
+      selectOptions = Seq(testDocumentType),
+      defaultTextMessageKey = "documentType.select.defaultValue")(messages(application))
+  }
+
   implicit val hc = HeaderCarrier()
 
   "DocumentType Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-      val mockGetDocumentTypesService = stub[GetDocumentTypesService]
+    "must return OK and the correct view for a GET" in new Fixture(Some(
+      emptyUserAnswers
+    )) {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[GetDocumentTypesService].to(mockGetDocumentTypesService))
-        .build()
+      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
 
       running(application) {
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(testDocumentType)))
 
         val request = FakeRequest(GET, documentTypeRoute)
 
@@ -65,18 +78,22 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[DocumentTypeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Seq(testDocumentType))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, sampleDocumentTypesSelectOptions)(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(
+      emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)
+    )) {
 
-      val mockGetDocumentTypesService = stub[GetDocumentTypesService]
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[GetDocumentTypesService].to(mockGetDocumentTypesService)).build()
+      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
 
       running(application) {
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(testDocumentType)))
+
+        val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
+          selectOptions = Seq(testDocumentType),
+          defaultTextMessageKey = "documentType.select.defaultValue",
+          existingAnswer = Some(testDocumentType.code))(messages(application))
 
         val request = FakeRequest(GET, documentTypeRoute)
 
@@ -85,25 +102,20 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testDocumentType.code), NormalMode, Seq(testDocumentType))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(testDocumentType.code), NormalMode,
+          sampleDocumentTypesSelectOptionsWithPreFilledSelection)(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-      val mockGetDocumentTypesService = stub[GetDocumentTypesService]
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(
+      emptyUserAnswers
+    )) {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[GetDocumentTypesService].to(mockGetDocumentTypesService)
-          )
-          .build()
+      MockUserAnswersService.set(
+        emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)
+      ).returns(Future.successful(emptyUserAnswers.set(DocumentTypePage, testDocumentType.code)))
 
       running(application) {
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(testDocumentType)))
 
         val request =
           FakeRequest(POST, documentTypeRoute)
@@ -116,15 +128,13 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-      val mockGetDocumentTypesService = stub[GetDocumentTypesService]
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(
+      emptyUserAnswers
+    )) {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[GetDocumentTypesService].to(mockGetDocumentTypesService))
-        .build()
+      MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(Seq(testDocumentType)))
 
       running(application) {
-        (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*).returns(Future.successful(Seq(testDocumentType)))
 
         val request =
           FakeRequest(POST, documentTypeRoute)
@@ -137,7 +147,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Seq(testDocumentType))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, sampleDocumentTypesSelectOptions)(dataRequest(request), messages(application)).toString
       }
     }
 

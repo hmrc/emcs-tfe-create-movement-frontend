@@ -33,7 +33,7 @@
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, epcSelectItems: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
@@ -59,7 +59,7 @@
             isPageHeading = true,
             content = Text(messages("itemExciseProductCode.heading"))
           ),
-          items = SelectItem(text = messages("itemExciseProductCode.select.defaultValue"), selected = true, disabled = true) +: epcSelectItems,
+          items = selectOptions,
           errorMessage = form.errors("excise-product-code") match {
           case Nil => None
           case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))

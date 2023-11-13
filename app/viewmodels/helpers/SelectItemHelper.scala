@@ -16,20 +16,20 @@
 
 package viewmodels.helpers
 
-import base.SpecBase
-import fixtures.BaseFixtures
+import models.SelectOption
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
-class ItemExciseProductCodeHelperSpec extends SpecBase with BaseFixtures {
+object SelectItemHelper {
 
-  ".constructSelectItemsForEPCs" - {
-    "should return a list of select items" in {
-      val result = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(Seq(beerExciseProductCode, wineExciseProductCode))
-      result mustBe Seq(
-        SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
-        SelectItem(value = Some("W200"), text = "W200: Still wine and still fermented beverages other than wine and beer", selected = false)
+  def constructSelectItems(selectOptions: Seq[SelectOption], defaultTextMessageKey: String, existingAnswer: Option[String] = None)
+                          (implicit messages: Messages): Seq[SelectItem] = {
+    Seq(SelectItem(text = messages(defaultTextMessageKey), selected = existingAnswer.isEmpty, disabled = true)) ++ selectOptions.map { option =>
+      SelectItem(
+        value = Some(option.code),
+        text = option.displayName,
+        selected = existingAnswer.contains(option.code)
       )
     }
   }
-
 }

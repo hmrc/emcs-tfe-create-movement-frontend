@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package models
 
-import models.ExciseProductCode
-import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
-
-object ItemExciseProductCodeHelper {
-
-  def constructSelectItemsForEPCs(exciseProductCodes: Seq[ExciseProductCode]): Seq[SelectItem] = {
-    exciseProductCodes.map { epc =>
-      SelectItem(
-        value = Some(epc.code),
-        text = s"${epc.code}: ${epc.description}"
-      )
-    }
-  }
+trait SelectOption {
+  val code: String
+  val displayName: String
 }

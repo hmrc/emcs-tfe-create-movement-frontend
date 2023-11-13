@@ -21,16 +21,20 @@ import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.sections.documents.DocumentTypeFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.documents.DocumentType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
 class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+    def selectOption(nthChild: Int) = s"#document-type > option:nth-child($nthChild)"
+  }
 
   "Dispatch Business Name view" - {
 
@@ -42,13 +46,20 @@ class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
       val view = app.injector.instanceOf[DocumentTypeView]
       val form = app.injector.instanceOf[DocumentTypeFormProvider].apply()
 
-      implicit val doc: Document = Jsoup.parse(view(form, NormalMode, Seq.empty).toString())
+      val selectOptions = SelectItemHelper.constructSelectItems(
+        selectOptions = Seq(DocumentType("code", "First selection")),
+        defaultTextMessageKey = "documentType.select.defaultValue"
+      )
+
+      implicit val doc: Document = Jsoup.parse(view(form, NormalMode, selectOptions).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.h2(1) -> English.documentsSection,
         Selectors.hiddenText -> English.hiddenSectionContent,
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
+        Selectors.selectOption(1) -> English.defaultSelectOption,
+        Selectors.selectOption(2) -> English.firstSelectionOption,
         Selectors.button -> English.saveAndContinue,
         Selectors.link(1) -> English.returnToDraft
       ))

@@ -33,7 +33,7 @@
 
 @(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemBrandName.title", goodsType.fold(messages("site.item"))(_.toSingularOutput())))) {
+@layout(pageTitle = title(form, messages("itemBrandName.title", goodsType.fold(messages("site.item"))(_.toSingularOutput()))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off") {
 

@@ -29,7 +29,7 @@ object ImportNumberMessages {
     val alphanumeric = "Document reference must only contain letters and numbers"
     val errorRequired = "Enter the number of the Single Administrative Document"
     val checkYourAnswersLabel = "Number"
-    val changeHidden = "changeImportNumber"
+    val changeHidden = "import number"
   }
 
   object English extends ViewMessages with BaseEnglish

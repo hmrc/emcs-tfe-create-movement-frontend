@@ -16,26 +16,31 @@
 
 package navigation
 
-import controllers.sections.items.routes
-import models.GoodsTypeModel._
-import models._
+import controllers.sections.items.{routes => itemsRoutes}
+import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.items._
+import models.GoodsTypeModel._
+import models._
 import play.api.mvc.Call
 
 import javax.inject.Inject
 
+
 class ItemsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
 
-    case ItemBrandNamePage(_) => (_: UserAnswers) =>
-      //TODO: Update to route to next page in flow when built
-     testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemBrandNamePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.CommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)
+
+    case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
+      commercialDescriptionRouting(idx, userAnswers)
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -86,7 +91,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       case _ =>
-        routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
@@ -98,7 +103,32 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         //TODO: Route to CAM-ITM38 when implemented
         testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       case _ =>
-        controllers.sections.items.routes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
+  private def commercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
+    userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) =>
+        GoodsTypeModel(epc) match {
+          case Beer =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Spirits =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Wine =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Intermediate =>
+            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Tobacco =>
+            //TODO: Redirect to CAM-ITM22
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Energy =>
+            //TODO: Redirect to CAM-ITM19 or 33 depending on the EPC code
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            //TODO: Redirect to CAM-ITM09
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      case _ =>
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
 }

@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.sections.sad
+package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.sad.ImportNumberMessages
+import fixtures.messages.sections.items.CommercialDescriptionMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.sad.ImportNumberPage
+import pages.sections.items.CommercialDescriptionPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ImportNumberSummarySpec extends SpecBase with Matchers {
-  "ImportNumberSummary" - {
+class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
+  "CommercialDescriptionSummary" - {
 
     lazy val app = applicationBuilder().build()
+    implicit val link = app.injector.instanceOf[views.html.components.link]
 
-    Seq(ImportNumberMessages.English).foreach { messagesForLanguage =>
+    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -43,16 +44,16 @@ class ImportNumberSummarySpec extends SpecBase with Matchers {
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ImportNumberSummary.row(testIndex1) mustBe Some(
+            CommercialDescriptionSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.checkYourAnswersLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.sad.routes.ImportNumberController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeImportNumber1"
-                  ).withVisuallyHiddenText(messagesForLanguage.changeHidden)
+                    href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeCommercialDescription1"
+                  ).withVisuallyHiddenText(messagesForLanguage.changehidden)
                 )
 
               )
@@ -63,18 +64,18 @@ class ImportNumberSummarySpec extends SpecBase with Matchers {
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ImportNumberPage(testIndex1), "value"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "value"))
 
-            ImportNumberSummary.row(testIndex1) mustBe Some(
+            CommercialDescriptionSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
-                key = messagesForLanguage.checkYourAnswersLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.sad.routes.ImportNumberController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeImportNumber1"
-                  ).withVisuallyHiddenText(messagesForLanguage.changeHidden)
+                    href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeCommercialDescription1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
             )

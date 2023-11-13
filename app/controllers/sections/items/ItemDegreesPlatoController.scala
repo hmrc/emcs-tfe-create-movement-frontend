@@ -34,35 +34,33 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemDegreesPlatoController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         override val userAnswersService: UserAnswersService,
-                                         override val userAllowList: UserAllowListAction,
-                                         override val navigator: ItemsNavigator,
-                                         override val auth: AuthAction,
-                                         override val getData: DataRetrievalAction,
-                                         override val requireData: DataRequiredAction,
-                                         formProvider: ItemDegreesPlatoFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: ItemDegreesPlatoView
-                                       ) extends BaseItemsNavigationController with AuthActionHelper {
+                                            override val messagesApi: MessagesApi,
+                                            override val userAnswersService: UserAnswersService,
+                                            override val userAllowList: UserAllowListAction,
+                                            override val navigator: ItemsNavigator,
+                                            override val auth: AuthAction,
+                                            override val getData: DataRetrievalAction,
+                                            override val requireData: DataRequiredAction,
+                                            formProvider: ItemDegreesPlatoFormProvider,
+                                            val controllerComponents: MessagesControllerComponents,
+                                            view: ItemDegreesPlatoView
+                                          ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
-      //validateIndex(idx) {
-      renderView(Ok, fillForm(ItemDegreesPlatoPage(idx), formProvider()), idx, mode)
-      //}
+      validateIndex(idx) {
+        renderView(Ok, fillForm(ItemDegreesPlatoPage(idx), formProvider()), idx, mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      //TODO: Add back in when first page of Item section is built- commented out to allow JT to hit directly for now
-      //validateIndex(idx) {
-      formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, idx, mode),
-        handleSubmittedForm(_, idx, mode)
-      )
-      //}
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          renderView(BadRequest, _, idx, mode),
+          handleSubmittedForm(_, idx, mode)
+        )
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =

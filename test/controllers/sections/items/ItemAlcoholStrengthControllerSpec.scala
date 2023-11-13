@@ -56,8 +56,8 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
   }
 
   "ItemAlcoholStrength Controller" - {
-    //TODO: implement in CAM-ITM19
-    "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
+
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(GET, itemAlcoholStrengthRoute(testIndex2))
@@ -68,8 +68,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
       }
     }
 
-    //TODO: implement in CAM-ITM19
-    "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(POST, itemAlcoholStrengthRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))
@@ -87,7 +86,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Some(Wine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -103,7 +102,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         contentAsString(result) mustEqual view(
           form.fill(BigDecimal(1.5)),
           itemAlcoholStrengthSubmitAction(),
-          Some(Wine)
+          Wine
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -132,7 +131,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         contentAsString(result) mustEqual view(
           boundForm,
           itemAlcoholStrengthSubmitAction(),
-          Some(Wine)
+          Wine
         )(dataRequest(request), messages(application)).toString
       }
     }

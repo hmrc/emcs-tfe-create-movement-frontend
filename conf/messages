@@ -880,6 +880,12 @@ dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
 
+documentType.title = What type of document do you want to add?
+documentType.heading = What type of document do you want to add?
+documentType.checkYourAnswersLabel = What type of document do you want to add?
+documentType.error.required = Select the document you want to add
+documentType.change.hidden = DocumentType
+
 documentDescription.title = Enter a description for this document
 documentDescription.heading = Enter a description for this document
 documentDescription.error.required = Enter a description for this document
@@ -976,6 +982,16 @@ documentType.checkYourAnswersLabel = What type of document do you want to add?
 documentType.error.required = Select the document you want to add
 documentType.select.defaultValue = Choose document type
 documentType.change.hidden = DocumentType
+
+itemQuantity.title = How much {0} are you moving?
+itemQuantity.heading = How much {0} are you moving?
+itemQuantity.hint = Enter the total quantity in {0}.
+itemQuantity.error.required = Enter an amount
+itemQuantity.error.nonNumeric = Amount must be in numbers
+itemQuantity.error.range = Amount can be up to 15 digits long, with up to 3 decimal places
+itemQuantity.error.decimalPlaces = Amount can have up to 3 decimal places
+itemQuantity.checkYourAnswersLabel = Quantity
+itemQuantity.change.hidden = item quantity
 
 commercialDescription.title = Enter a commercial description for the {0}
 commercialDescription.heading = Enter a commercial description for the {0}

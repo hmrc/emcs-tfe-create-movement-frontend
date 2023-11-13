@@ -45,7 +45,7 @@ class ItemBrandNameViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[ItemBrandNameView]
         val form = app.injector.instanceOf[ItemBrandNameFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Beer)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),

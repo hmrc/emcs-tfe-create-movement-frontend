@@ -45,7 +45,7 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Beer)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
@@ -74,7 +74,7 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Wine)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
@@ -106,7 +106,7 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
         val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Some(Energy)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Energy).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Energy.toSingularOutput()),

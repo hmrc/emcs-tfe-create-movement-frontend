@@ -17,42 +17,44 @@
 package views.sections.items
 
 import base.ViewSpecBase
-import fixtures.messages.sections.items.ItemAlcoholStrengthMessages
-import forms.sections.items.ItemAlcoholStrengthFormProvider
-import models.GoodsTypeModel.Beer
+import fixtures.messages.UnitOfMeasureMessages
+import fixtures.messages.sections.items.ItemQuantityMessages
+import forms.sections.items.ItemQuantityFormProvider
+import models.GoodsTypeModel.Wine
+import models.UnitOfMeasure.Litres15
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.items.ItemAlcoholStrengthView
+import views.html.sections.items.ItemQuantityView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemAlcoholStrengthViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemQuantityViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Item Alcohol Strength view" - {
+  "ItemQuantity view" - {
 
-    Seq(ItemAlcoholStrengthMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemQuantityMessages.English -> UnitOfMeasureMessages.English).foreach { case (messagesForLanguage, unitOfMeasureMessages) =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemAlcoholStrengthView]
-        val form = app.injector.instanceOf[ItemAlcoholStrengthFormProvider].apply()
+        val view = app.injector.instanceOf[ItemQuantityView]
+        val form = app.injector.instanceOf[ItemQuantityFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine, Litres15).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
-          Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
+          Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
+          Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.hint -> messagesForLanguage.hint,
-          Selectors.inputSuffix -> messagesForLanguage.suffix,
+          Selectors.hint -> messagesForLanguage.hint(unitOfMeasureMessages.litres15Long),
+          Selectors.inputSuffix -> unitOfMeasureMessages.litres15Short,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

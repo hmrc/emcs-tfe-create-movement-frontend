@@ -118,7 +118,7 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
         "when GoodsType is one type of Tobacco " - {
-          //TODO: Update routing as part of future story when next page in flow is built
+          //TODO: Route to CAM-ITM22
           "to the Under Construction Page" in {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "T200")
@@ -127,25 +127,33 @@ class ItemsNavigatorSpec extends SpecBase {
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
         }
-        "when GoodsType is one type of Energy " - {
-          //TODO: Update routing as part of future story when next page in flow is built
-          "to the Under Construction Page" in {
-            val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "E200")
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          }
-        }
+        "when GoodsType is Energy " - {
 
-        "when GoodsType is other Energy code " - {
-          //TODO: Update routing as part of future story when next page in flow is built
-          "to the Under Construction Page" in {
-            val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "E470")
+          Seq("E470", "E500", "E600", "E930").foreach(epc => {
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            s"when the EPC is $epc" - {
+
+              "to the Item Quantity Page" in {
+                val userAnswers = emptyUserAnswers
+                  .set(ItemExciseProductCodePage(testIndex1), epc)
+
+                navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+                  itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+              }
+            }
+          })
+
+          s"when the EPC is anything else" - {
+
+            //TODO: Route to CAM-ITM33
+            "to the Under Construction Page" in {
+              val userAnswers = emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), "E200")
+
+              navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+                testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            }
           }
         }
       }
@@ -182,15 +190,14 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is Beer and GBWK or GBRC and ABV >= 8.5" - {
 
-          //TODO: Redirect to CAM-ITM19
-          "to the Under Construction Page" in {
+          "to the Item Quantity page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
               .set(ItemExciseProductCodePage(testIndex1), "B200")
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemQuantityController.onPageLoad(testGreatBritainErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -222,6 +229,16 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
       }
+
+      "must go from the Item Quantity page" - {
+
+        //TODO: Redirect to CAM-ITM21
+        "to the Under Construction Page" in {
+
+          navigator.nextPage(ItemQuantityPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {
@@ -240,24 +257,24 @@ class ItemsNavigatorSpec extends SpecBase {
           })
         }
 
-      //TODO: Route to CAM-ITM43 when implemented
-      "to CAM-ITM38 page" - {
-        "when the EPC has multiple commodity codes" in {
-          navigator.nextPage(
-            ItemExciseProductCodePage(testIndex1),
-            CheckMode,
-            emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        //TODO: Route to CAM-ITM43 when implemented
+        "to CAM-ITM38 page" - {
+          "when the EPC has multiple commodity codes" in {
+            navigator.nextPage(
+              ItemExciseProductCodePage(testIndex1),
+              CheckMode,
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
         }
-      }
 
-      "to the Items index page" - {
-        "when there is no answer" in {
-          navigator.nextPage(ItemExciseProductCodePage(testIndex1),
-            CheckMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+        "to the Items index page" - {
+          "when there is no answer" in {
+            navigator.nextPage(ItemExciseProductCodePage(testIndex1),
+              CheckMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
         }
       }
-    }
 
       "must go to CheckYourAnswersItemsController" in {
         //TODO: update to Items CYA when built

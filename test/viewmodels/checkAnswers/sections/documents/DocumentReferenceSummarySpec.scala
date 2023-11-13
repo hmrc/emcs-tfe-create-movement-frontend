@@ -55,7 +55,7 @@ class DocumentReferenceSummarySpec extends SpecBase with Matchers with DocumentT
       "must output the expected row WITH a change link when the document IS Completed" in {
 
         implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), answer)
         )

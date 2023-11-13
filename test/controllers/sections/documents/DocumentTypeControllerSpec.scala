@@ -57,10 +57,10 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
     def onSubmitCall(idx: Index = 0) =
       routes.DocumentTypeController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-    val formProvider = new DocumentTypeFormProvider()
-    val form = formProvider()
-
     val documentTypes = Seq(documentTypeModel, documentTypeOtherModel)
+
+    val formProvider = new DocumentTypeFormProvider()
+    val form = formProvider(documentTypes)
 
     val view = application.injector.instanceOf[DocumentTypeView]
 
@@ -94,7 +94,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       }
 
       "must populate the view correctly when the question has previously been answered" in new Setup(Some(
-        emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
+        emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel)
       )) {
 
         running(application) {
@@ -112,7 +112,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
-            form = form.fill(documentTypeModel.code),
+            form = form.fill(documentTypeModel),
             onSubmitCall = onSubmitCall(),
             documentTypes = documentTypes
           )(dataRequest(request), messages(application)).toString
@@ -138,7 +138,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next document to valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {
@@ -160,7 +160,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {
@@ -217,7 +217,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to the next page without changing the UserAnswers when the same answer is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {
@@ -239,12 +239,12 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to the next page update the UserAnswers when the answer is changed" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {
 
-        val expectedUserAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel.code)
+        val expectedUserAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel)
 
         MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
@@ -304,7 +304,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {
@@ -326,7 +326,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
       )) {

@@ -65,7 +65,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must return OK and the correct view" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -85,7 +85,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       "must populate the view correctly when the question has previously been answered" in new Setup(Some(
         emptyUserAnswers
           .set(ReferenceAvailablePage(0), true)
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -117,7 +117,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -133,7 +133,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -165,11 +165,11 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to the next page valid answer is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeModel.code)
+          .set(DocumentTypePage(0), documentTypeModel)
       )) {
 
         val expectedAnswers = emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeModel.code)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(ReferenceAvailablePage(0), true)
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
@@ -188,7 +188,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to the next page and not update answers the same answer is submitted again" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), false)
           .set(DocumentDescriptionPage(0), "description")
       )) {
@@ -231,7 +231,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must return a Bad Request and errors when invalid data is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -267,7 +267,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -284,7 +284,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {

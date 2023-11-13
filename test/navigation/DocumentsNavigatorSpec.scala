@@ -18,12 +18,13 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.documents.routes
+import fixtures.DocumentTypeFixtures
 import models.sections.documents.{DocumentType, DocumentsAddToList}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
 
-class DocumentsNavigatorSpec extends SpecBase {
+class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
   val navigator = new DocumentsNavigator
 
   "DocumentsNavigator" - {
@@ -80,7 +81,7 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), DocumentType.OtherCode)
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeOtherModel)
 
           navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
             routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
@@ -88,7 +89,7 @@ class DocumentsNavigatorSpec extends SpecBase {
 
         "to CAM-DOC05 DocumentReference page if yes is selected" in {
 
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), "testCode")
+          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel)
 
           navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)

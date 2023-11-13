@@ -71,7 +71,7 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(DocumentsCertificatesPage, true)
-            .set(DocumentTypePage(0), documentTypeOtherModel.code)
+            .set(DocumentTypePage(0), documentTypeOtherModel)
             .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference")
             .set(DocumentsAddToListPage, DocumentsAddToList.No)
@@ -92,7 +92,7 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(DocumentsCertificatesPage, true)
-              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(DocumentTypePage(0), documentTypeOtherModel)
               .set(ReferenceAvailablePage(0), true)
               .set(DocumentReferencePage(0), "reference")
               .set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
@@ -105,7 +105,7 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(DocumentsCertificatesPage, true)
-              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(DocumentTypePage(0), documentTypeOtherModel)
               .set(ReferenceAvailablePage(0), true)
               .set(DocumentReferencePage(0), "reference")
               .set(DocumentsAddToListPage, DocumentsAddToList.Yes)
@@ -118,7 +118,7 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(DocumentsCertificatesPage, true)
-              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(DocumentTypePage(0), documentTypeOtherModel)
               .set(ReferenceAvailablePage(0), true)
               .set(DocumentReferencePage(0), "reference")
             )
@@ -131,7 +131,7 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(DocumentsCertificatesPage, true)
-            .set(DocumentTypePage(0), documentTypeOtherModel.code)
+            .set(DocumentTypePage(0), documentTypeOtherModel)
             .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference")
             .set(ReferenceAvailablePage(1), false)

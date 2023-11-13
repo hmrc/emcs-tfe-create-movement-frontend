@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
 import fixtures.DocumentTypeFixtures
-import fixtures.messages.sections.documents.DocumentDescriptionMessages.English
+import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.{DocumentDescriptionPage, DocumentTypePage, ReferenceAvailablePage}
@@ -29,9 +29,9 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class DocumentDescriptionSummarySpec extends SpecBase with Matchers with DocumentTypeFixtures {
+class DocumentTypeSummarySpec extends SpecBase with Matchers with DocumentTypeFixtures {
 
-  "DocumentDescriptionSummary" - {
+  "DocumentTypeSummary" - {
 
     lazy val app = applicationBuilder().build()
 
@@ -43,32 +43,30 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers with Documen
 
         implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        DocumentDescriptionSummary.row(0) mustBe None
+        DocumentTypeSummary.row(0) mustBe None
       }
     }
 
     "when there's an answer" - {
-
-      val answer = "description"
 
       "must output the expected row WITH a change link when the document IS Completed" in {
 
         implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(ReferenceAvailablePage(0), false)
-          .set(DocumentDescriptionPage(0), answer)
+          .set(DocumentDescriptionPage(0), "description")
         )
 
-        DocumentDescriptionSummary.row(0) mustBe
+        DocumentTypeSummary.row(0) mustBe
           Some(
             SummaryListRowViewModel(
               key = English.cyaLabel,
-              value = Value(Text(answer)),
+              value = Value(Text(documentTypeOtherModel.description)),
               actions = Seq(
                 ActionItemViewModel(
                   content = English.change,
-                  href = controllers.sections.documents.routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                  id = "changeDocumentDescription-1"
+                  href = controllers.sections.documents.routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
+                  id = "changeDocumentType-1"
                 ).withVisuallyHiddenText(English.cyaChangeHidden)
               )
             )
@@ -78,14 +76,14 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers with Documen
       "must output the expected row WITHOUT a change link when the document is NOT Completed" in {
 
         implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DocumentDescriptionPage(0), answer)
+          .set(DocumentTypePage(0), documentTypeModel)
         )
 
-        DocumentDescriptionSummary.row(0) mustBe
+        DocumentTypeSummary.row(0) mustBe
           Some(
             SummaryListRowViewModel(
               key = English.cyaLabel,
-              value = Value(Text(answer))
+              value = Value(Text(documentTypeModel.description))
             )
           )
       }

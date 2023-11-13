@@ -33,7 +33,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
         "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(DocumentTypePage(0), documentTypeModel)
             .set(DocumentReferencePage(0), "reference")
           )
 
@@ -48,7 +48,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
           "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(DocumentTypePage(0), documentTypeOtherModel)
               .set(ReferenceAvailablePage(0), true)
               .set(DocumentReferencePage(0), "reference")
             )
@@ -62,7 +62,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
           "when DocumentDescriptionPage has been answered and DocumentReferencePage has NOT been answered" in {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(DocumentTypePage(0), documentTypeOtherModel)
               .set(ReferenceAvailablePage(0), false)
               .set(DocumentDescriptionPage(0), "description")
             )
@@ -90,7 +90,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
         "for DocumentTypePage" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(DocumentTypePage(0), documentTypeModel)
           )
 
           DocumentSection(0).status mustBe InProgress
@@ -129,7 +129,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
         "and ReferenceAvailablePage have been answered" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(DocumentTypePage(0), documentTypeModel)
             .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference")
             .set(DocumentDescriptionPage(0), "description")
@@ -141,7 +141,7 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
         "and DocumentDescription have been answered" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(DocumentTypePage(0), documentTypeModel)
             .set(DocumentReferencePage(0), "reference")
             .set(DocumentDescriptionPage(0), "description")
           )

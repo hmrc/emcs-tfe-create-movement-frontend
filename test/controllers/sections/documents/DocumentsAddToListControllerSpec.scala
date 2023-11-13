@@ -64,7 +64,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
     "GET onPageLoad" - {
 
       "must return OK and the correct view when there are NO InProgress items" in new Setup(Some(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeModel.code)
+        .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference")
       )) {
 
@@ -87,7 +87,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       }
 
       "must return OK and the correct view when there ARE InProgress items" in new Setup(Some(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeModel.code)
+        .set(DocumentTypePage(0), documentTypeModel)
       )) {
 
         running(application) {

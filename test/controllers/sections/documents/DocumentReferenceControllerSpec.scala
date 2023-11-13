@@ -62,7 +62,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must return OK and the correct view" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -81,7 +81,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must populate the view correctly when the question has previously been answered" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(DocumentReferencePage(0), "answer")
       )) {
 
@@ -114,7 +114,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -130,7 +130,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -162,7 +162,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must redirect to the next page when valid data is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -181,7 +181,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must return a Bad Request and errors when invalid data is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -217,7 +217,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {
@@ -234,7 +234,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel.code)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
       )) {
 
         running(application) {

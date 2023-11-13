@@ -16,7 +16,7 @@
 
 package forms.sections.transportUnit
 
-import forms.ONLY_ALPHANUMERIC_REGEX
+import forms.XSS_REGEX
 import forms.mappings.Mappings
 import models.sections.transportUnit.TransportUnitType
 import play.api.data.Form
@@ -29,7 +29,7 @@ class TransportUnitIdentityFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text(s"transportUnitIdentity.error.required.${transportUnitType.toString}")
         .verifying(maxLength(35, s"transportUnitIdentity.error.length.${transportUnitType.toString}"))
-        .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, s"transportUnitIdentity.error.invalidCharacters.${transportUnitType.toString}"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, s"transportUnitIdentity.error.invalidCharacters.${transportUnitType.toString}"))
     )
 
 }

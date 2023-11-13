@@ -16,7 +16,6 @@
 
 package pages.sections.documents
 
-import models.sections.documents.DocumentType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 

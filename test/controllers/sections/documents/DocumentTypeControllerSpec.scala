@@ -18,12 +18,11 @@ package controllers.sections.documents
 
 import base.SpecBase
 import forms.sections.documents.DocumentTypeFormProvider
-import forms.sections.documents.DocumentTypeFormProvider
 import mocks.services.MockUserAnswersService
+import models.NormalMode
 import models.sections.documents.DocumentType
-import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.{FakeDocumentsNavigator, FakeNavigator}
-import navigation.{DocumentsNavigator, Navigator}
+import navigation.DocumentsNavigator
+import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.DocumentTypePage
 import play.api.inject.bind
 import play.api.mvc.Call

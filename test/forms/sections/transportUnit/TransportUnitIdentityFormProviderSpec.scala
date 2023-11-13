@@ -16,7 +16,7 @@
 
 package forms.sections.transportUnit
 
-import forms.ONLY_ALPHANUMERIC_REGEX
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import models.sections.transportUnit.TransportUnitType
 import play.api.data.FormError
@@ -26,7 +26,6 @@ class TransportUnitIdentityFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "transportUnitIdentity.error.required"
   val lengthKey = "transportUnitIdentity.error.length"
   val maxLength = 35
-  val invalidCharactersKey = "transportUnitIdentity.error.invalidCharacters"
 
 
   ".value" - {
@@ -38,6 +37,8 @@ class TransportUnitIdentityFormProviderSpec extends StringFieldBehaviours {
       ("Container", TransportUnitType.Container, 1),
     ) foreach { case (name, transportUnitType, value) =>
       s"when bound for $name" - {
+
+        val invalidCharactersKey = s"transportUnitIdentity.error.invalidCharacters.$value"
 
         val form = new TransportUnitIdentityFormProvider()(transportUnitType)
 
@@ -62,10 +63,11 @@ class TransportUnitIdentityFormProviderSpec extends StringFieldBehaviours {
           requiredError = FormError(fieldName, s"$requiredKey.$value")
         )
 
-        "must not bind if non alphanumeric present" in {
-          val formResult = form.bind(Map("value" -> "*"))
-          formResult.errors mustBe Seq(FormError(fieldName, s"$invalidCharactersKey.$value", Seq(ONLY_ALPHANUMERIC_REGEX)))
-        }
+        behave like fieldWithXSSCharacters(
+          form,
+          fieldName,
+          FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
+        )
       }
     }
   }

@@ -21,12 +21,11 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
 object ItemExciseProductCodeHelper {
 
-  def constructSelectItemsForEPCs(exciseProductCodes: Seq[ExciseProductCode], existingAnswer: Option[String] = None): Seq[SelectItem] = {
+  def constructSelectItemsForEPCs(exciseProductCodes: Seq[ExciseProductCode]): Seq[SelectItem] = {
     exciseProductCodes.map { epc =>
       SelectItem(
         value = Some(epc.code),
-        text = s"${epc.code}: ${epc.description}",
-        selected = existingAnswer.contains(epc.code)
+        text = s"${epc.code}: ${epc.description}"
       )
     }
   }

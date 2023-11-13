@@ -53,9 +53,9 @@ class ItemExciseProductCodeController @Inject()(
 //      validateIndex(idx) { TODO: implement in CAM-ITM19
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes =>
-            val selectItems = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(exciseProductCodes,
-              request.userAnswers.get(ItemExciseProductCodePage(idx)))
-            renderView(Ok, fillForm(ItemExciseProductCodePage(idx), formProvider(exciseProductCodes)), idx, selectItems, mode)
+            val selectItems = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(exciseProductCodes)
+            //NOTE: under current guidance the select element should not be pre-populated: https://design-system.service.gov.uk/components/select/#how-it-works
+            renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
 //      }
     }

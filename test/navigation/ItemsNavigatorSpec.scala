@@ -18,10 +18,10 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, Index, NormalMode, ReviewMode}
-import pages.Page
 import controllers.sections.items.{routes => itemsRoutes}
 import models.sections.items.ItemBrandNameModel
+import models.{CheckMode, NormalMode, ReviewMode}
+import pages.Page
 import pages.sections.items._
 
 class ItemsNavigatorSpec extends SpecBase {

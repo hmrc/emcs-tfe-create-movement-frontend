@@ -45,7 +45,8 @@ class DocumentTypeController @Inject()(
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request => for {
         documentTypes <- getDocumentTypesService.getDocumentTypes()
-      } yield Ok(view(fillForm(DocumentTypePage, formProvider()), mode, documentTypes))
+      //NOTE: under current guidance the select element should not be pre-populated: https://design-system.service.gov.uk/components/select/#how-it-works
+      } yield Ok(view(formProvider(), mode, documentTypes))
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =

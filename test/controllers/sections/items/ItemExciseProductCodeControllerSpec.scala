@@ -23,7 +23,6 @@ import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import navigation.ItemsNavigator
-import pages.sections.items.ItemExciseProductCodePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -100,26 +99,6 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))
-    ) {
-
-      MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
-
-      val sampleEPCsSelectOptionsWithBeerSelected = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(sampleEPCs, Some("B000"))
-
-      running(application) {
-        val request = FakeRequest(GET, exciseProductCodeRoute())
-
-        val view = application.injector.instanceOf[ItemExciseProductCodeView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request), messages(application)).toString
       }
     }
 

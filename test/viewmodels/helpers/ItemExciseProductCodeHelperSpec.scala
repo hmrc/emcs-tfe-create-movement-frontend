@@ -23,19 +23,11 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 class ItemExciseProductCodeHelperSpec extends SpecBase with BaseFixtures {
 
   ".constructSelectItemsForEPCs" - {
-    "should return a list of select items (no pre-selection when there isn't an existing answer)" in {
+    "should return a list of select items" in {
       val result = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(Seq(beerExciseProductCode, wineExciseProductCode))
       result mustBe Seq(
         SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
         SelectItem(value = Some("W200"), text = "W200: Still wine and still fermented beverages other than wine and beer", selected = false)
-      )
-    }
-
-    "should return a list of select items (pre-selected when there is an existing answer)" in {
-      val result = ItemExciseProductCodeHelper.constructSelectItemsForEPCs(Seq(beerExciseProductCode, wineExciseProductCode), Some("W200"))
-      result mustBe Seq(
-        SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
-        SelectItem(value = Some("W200"), text = "W200: Still wine and still fermented beverages other than wine and beer", selected = true)
       )
     }
   }

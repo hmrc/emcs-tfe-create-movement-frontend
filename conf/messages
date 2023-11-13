@@ -972,6 +972,7 @@ documentType.title = What type of document do you want to add?
 documentType.heading = What type of document do you want to add?
 documentType.checkYourAnswersLabel = What type of document do you want to add?
 documentType.error.required = Select the document you want to add
+documentType.select.defaultValue = Choose document type
 documentType.change.hidden = DocumentType
 
 commercialDescription.title = Enter a commercial description for the {0}

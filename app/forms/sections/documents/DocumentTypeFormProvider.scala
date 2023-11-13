@@ -17,16 +17,32 @@
 package forms.sections.documents
 
 import forms.mappings.Mappings
+import models.sections.documents.DocumentType
 import play.api.data.Form
-import play.api.data.Forms.single
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import javax.inject.Inject
 
 class DocumentTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] = {
+  def apply(documentTypes: Seq[DocumentType]): Form[DocumentType] =
     Form(
-      single("document-type" -> text("documentType.error.required"))
+      "document-type" -> text("documentType.error.required")
+        .transform[Option[DocumentType]](codeToDocumentType(documentTypes), documentToCode())
+        .verifying(isValidCode())
+        .transform[DocumentType](_.getOrElse(throw new IllegalArgumentException("Invalid document type")), Some(_))
     )
-  }
+
+  private def codeToDocumentType(documentTypes: Seq[DocumentType]): String => Option[DocumentType] =
+    code => documentTypes.find(_.code == code)
+
+  private def documentToCode(): Option[DocumentType] => String =
+    document => document.fold("")(_.code)
+
+  private def isValidCode(): Constraint[Option[DocumentType]] =
+    Constraint {
+      case Some(_) => Valid
+      case _ => Invalid("documentType.error.required")
+    }
+
 }

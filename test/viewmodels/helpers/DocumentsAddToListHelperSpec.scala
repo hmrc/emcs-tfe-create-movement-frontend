@@ -55,7 +55,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
     "return required rows when all answers filled out" - {
 
       s"when the row is Complete and the DocumentType is NOT Other" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeModel.code)
+        .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference")
       ) {
 
@@ -83,7 +83,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
       }
 
       s"when the row is Complete with DocumentType is Other and ReferenceAvailable is true" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel.code)
+        .set(DocumentTypePage(0), documentTypeOtherModel)
         .set(ReferenceAvailablePage(0), true)
         .set(DocumentReferencePage(0), "reference")
       ) {
@@ -113,7 +113,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
       }
 
       s"when the row is Complete with DocumentType is Other and ReferenceAvailable is false" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel.code)
+        .set(DocumentTypePage(0), documentTypeOtherModel)
         .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
       ) {
@@ -143,7 +143,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
       }
 
       s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel.code)
+        .set(DocumentTypePage(0), documentTypeOtherModel)
         .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
         .set(ReferenceAvailablePage(1), true)

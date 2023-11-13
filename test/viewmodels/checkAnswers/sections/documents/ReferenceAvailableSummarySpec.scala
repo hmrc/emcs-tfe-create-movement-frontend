@@ -35,7 +35,7 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers with Document
 
     lazy val app = applicationBuilder().build()
 
-    s"when being rendered in lang code of '${English.lang.code}'" - {
+    s"when being rendered in lang code of '${English.lang}'" - {
 
       implicit lazy val msgs: Messages = messages(app, English.lang)
 
@@ -54,7 +54,7 @@ class ReferenceAvailableSummarySpec extends SpecBase with Matchers with Document
         "must output the expected row WITH a change link when the document IS Completed" in {
 
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeOtherModel.code)
+            .set(DocumentTypePage(0), documentTypeOtherModel)
             .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference")
           )

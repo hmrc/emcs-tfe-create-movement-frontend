@@ -75,7 +75,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
     answers.get(DocumentTypePage(idx)) match {
-      case Some(DocumentType.OtherCode) =>
+      case Some(doc) if doc.typeIsOther =>
         routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
       case _ =>
         routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)

@@ -22,6 +22,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class DocumentType(code: String, description: String) extends SelectOption {
   val displayName = s"$description ($code)"
+  val typeIsOther: Boolean = code == DocumentType.OtherCode
 }
 
 object DocumentType {

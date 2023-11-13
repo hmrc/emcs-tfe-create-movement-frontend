@@ -19,6 +19,7 @@ package controllers.sections.documents
 import controllers.actions._
 import forms.sections.documents.DocumentTypeFormProvider
 import models.requests.DataRequest
+import models.sections.documents.DocumentType
 import models.{Index, Mode, NormalMode}
 import navigation.DocumentsNavigator
 import pages.sections.documents._
@@ -50,31 +51,37 @@ class DocumentTypeController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        renderView(Ok, fillForm(DocumentTypePage(idx), formProvider()), idx, mode)
+        getDocumentTypesService.getDocumentTypes().flatMap { documentTypes =>
+          renderView(Ok, fillForm(DocumentTypePage(idx), formProvider(documentTypes)), documentTypes, idx, mode)
+        }
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-        formProvider().bindFromRequest().fold(
-          renderView(BadRequest, _, idx, mode),
-          cleanseAndRedirect(_, idx, mode)
-        )
+        getDocumentTypesService.getDocumentTypes().flatMap { documentTypes =>
+          formProvider(documentTypes).bindFromRequest().fold(
+            renderView(BadRequest, _, documentTypes, idx, mode),
+            cleanseAndRedirect(_, idx, mode)
+          )
+        }
       }
     }
 
-  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    getDocumentTypesService.getDocumentTypes().map { documentTypes =>
-//      val selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
-      status(view(
-        form = form,
-        onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
-        documentTypes = documentTypes
-      ))
-    }
+  private def renderView(status: Status, form: Form[_], documentTypes: Seq[DocumentType], idx: Index, mode: Mode)
+                        (implicit request: DataRequest[_]): Future[Result] = {
+    //      val selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
 
-  private def cleanseAndRedirect(answer: String, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future(status(view(
+      form = form,
+      onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
+      documentTypes = documentTypes
+    )))
+  }
+
+  private def cleanseAndRedirect(answer: DocumentType, idx: Index, mode: Mode)
+                                (implicit request: DataRequest[_]): Future[Result] =
     if (request.userAnswers.get(DocumentTypePage(idx)).contains(answer)) {
       Future(Redirect(navigator.nextPage(DocumentTypePage(idx), mode, request.userAnswers)))
     } else {

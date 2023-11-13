@@ -44,7 +44,7 @@ class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       val view = app.injector.instanceOf[DocumentTypeView]
-      val form = app.injector.instanceOf[DocumentTypeFormProvider].apply()
+      val form = app.injector.instanceOf[DocumentTypeFormProvider].apply(Seq.empty)
 
       val selectOptions = SelectItemHelper.constructSelectItems(
         selectOptions = Seq(DocumentType("code", "First selection")),

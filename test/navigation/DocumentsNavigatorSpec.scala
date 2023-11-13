@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
 import models.sections.documents.{DocumentType, DocumentsAddToList}
-import models.{CheckMode, NormalMode, ReviewMode}
+import models.{CheckMode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
 
@@ -143,22 +143,20 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
             routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
-        //TODO update when next page is made
         "to UnderConstruction when user selects No" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad
+            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
 
-        //TODO update when next page is made
         "to UnderConstruction when user selects MoreLater" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad
+            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
       }
 
@@ -167,7 +165,7 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
         "must go to task list page when built" in {
 
           navigator.nextPage(DocumentsCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.routes.DraftMovementController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
         }
       }
     }

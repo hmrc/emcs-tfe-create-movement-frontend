@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{GetDocumentTypesService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
+import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
 import scala.concurrent.Future
@@ -48,8 +49,10 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[GetDocumentTypesService].to(mockGetDocumentTypesService),
-    )
+      )
       .build()
+
+    implicit val msg = messages(application)
 
     def documentTypeRoute(idx: Index = 0): String =
       routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
@@ -64,9 +67,10 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
     val view = application.injector.instanceOf[DocumentTypeView]
 
-//    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
-//      selectOptions = Seq(testDocumentType),
-//      defaultTextMessageKey = "documentType.select.defaultValue")(messages(application))
+    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
+      selectOptions = documentTypes,
+      defaultTextMessageKey = "documentType.select.defaultValue"
+    )
   }
 
   "DocumentType Controller" - {
@@ -88,8 +92,8 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
           contentAsString(result) mustEqual view(
             form = form,
             onSubmitCall = onSubmitCall(),
-            documentTypes = documentTypes
-          )(dataRequest(request), messages(application)).toString
+            selectOptions = sampleDocumentTypesSelectOptions
+          )(dataRequest(request), msg).toString
         }
       }
 
@@ -101,10 +105,12 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
           (mockGetDocumentTypesService.getDocumentTypes()(_: HeaderCarrier)).when(*)
             .returns(Future.successful(documentTypes))
-//        val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
-//          selectOptions = Seq(documentTypeModel),
-//          defaultTextMessageKey = "documentType.select.defaultValue",
-//          existingAnswer = Some(testDocumentType.code))(messages(application))
+
+          val sampleDocumentTypesSelectOptionsWithPreFilledSelection = SelectItemHelper.constructSelectItems(
+            selectOptions = documentTypes,
+            defaultTextMessageKey = "documentType.select.defaultValue",
+            existingAnswer = Some(documentTypeModel.code)
+          )
 
           val request = FakeRequest(GET, documentTypeRoute())
 
@@ -114,8 +120,8 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
           contentAsString(result) mustEqual view(
             form = form.fill(documentTypeModel),
             onSubmitCall = onSubmitCall(),
-            documentTypes = documentTypes
-          )(dataRequest(request), messages(application)).toString
+            selectOptions = sampleDocumentTypesSelectOptionsWithPreFilledSelection
+          )(dataRequest(request), msg).toString
         }
       }
 
@@ -280,8 +286,8 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
           contentAsString(result) mustEqual view(
             form = boundForm,
             onSubmitCall = onSubmitCall(),
-            documentTypes = documentTypes
-          )(dataRequest(request), messages(application)).toString
+            selectOptions = sampleDocumentTypesSelectOptions
+          )(dataRequest(request), msg).toString
         }
       }
 

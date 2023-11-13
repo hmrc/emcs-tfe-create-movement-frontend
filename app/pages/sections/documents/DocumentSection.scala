@@ -41,4 +41,6 @@ case class DocumentSection(idx: Index) extends Section[JsObject] {
       case _ => InProgress
     }
   }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

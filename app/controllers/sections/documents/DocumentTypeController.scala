@@ -71,12 +71,17 @@ class DocumentTypeController @Inject()(
 
   private def renderView(status: Status, form: Form[_], documentTypes: Seq[DocumentType], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
-    //      val selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
+
+    val selectItems = SelectItemHelper.constructSelectItems(
+      selectOptions = documentTypes,
+      defaultTextMessageKey = "documentType.select.defaultValue",
+      existingAnswer = request.userAnswers.get(DocumentTypePage(idx)).map(_.code)
+    )
 
     Future(status(view(
       form = form,
       onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
-      documentTypes = documentTypes
+      selectOptions = selectItems
     )))
   }
 

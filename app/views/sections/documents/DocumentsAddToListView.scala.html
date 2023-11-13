@@ -32,7 +32,7 @@
 
 @(form: Form[_], onSubmitCall: Call, documents: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", documents.length))) {
+@layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", documents.length)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 

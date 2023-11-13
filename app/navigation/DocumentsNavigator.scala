@@ -94,7 +94,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     userAnswers.get(DocumentsAddToListPage) match {
       case Some(DocumentsAddToList.No | DocumentsAddToList.MoreLater) =>
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ =>
         val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
         routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)

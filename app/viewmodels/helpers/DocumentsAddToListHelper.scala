@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import queries.DocumentsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, ReferenceAvailableSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, DocumentTypeSummary, ReferenceAvailableSummary}
 import controllers.sections.documents.routes
 import pages.sections.documents.DocumentSection
 import viewmodels.govuk.summarylist._
@@ -42,6 +42,7 @@ class DocumentsAddToListHelper @Inject()() {
   private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
+        DocumentTypeSummary.row(idx),
         ReferenceAvailableSummary.row(idx),
         DocumentReferenceSummary.row(idx),
         DocumentDescriptionSummary.row(idx)
@@ -68,7 +69,7 @@ class DocumentsAddToListHelper @Inject()() {
       case InProgress =>
         Some(ActionItemViewModel(
           content = Text(messages("site.continueEditing")),
-          href = routes.ReferenceAvailableController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
+          href = routes.DocumentTypeController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
           id = s"editDocuments-${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))
       case _ => None

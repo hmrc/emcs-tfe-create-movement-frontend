@@ -17,22 +17,23 @@
 package pages.sections.documents
 
 import base.SpecBase
+import fixtures.DocumentTypeFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
-class DocumentSectionSpec extends SpecBase {
+class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
 
   "status" - {
 
     "return Complete" - {
 
-      "when ReferenceAvailablePage has been answered true" - {
+      "when DocumentType has been answered anything except Other" - {
 
         "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentTypePage(0), documentTypeModel.code)
             .set(DocumentReferencePage(0), "reference")
           )
 
@@ -40,16 +41,34 @@ class DocumentSectionSpec extends SpecBase {
         }
       }
 
-      "when ReferenceAvailablePage has been answered false" - {
+      "when DocumentType has been answered Other" - {
 
-        "when DocumentDescriptionPage has been answered and DocumentReferencePage has NOT been answered" in {
+        "when ReferenceAvailablePage has been answered true" - {
 
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ReferenceAvailablePage(0), false)
-            .set(DocumentDescriptionPage(0), "description")
-          )
+          "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
 
-          DocumentSection(0).status mustBe Completed
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(ReferenceAvailablePage(0), true)
+              .set(DocumentReferencePage(0), "reference")
+            )
+
+            DocumentSection(0).status mustBe Completed
+          }
+        }
+
+        "when ReferenceAvailablePage has been answered false" - {
+
+          "when DocumentDescriptionPage has been answered and DocumentReferencePage has NOT been answered" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DocumentTypePage(0), documentTypeOtherModel.code)
+              .set(ReferenceAvailablePage(0), false)
+              .set(DocumentDescriptionPage(0), "description")
+            )
+
+            DocumentSection(0).status mustBe Completed
+          }
         }
       }
     }
@@ -67,6 +86,15 @@ class DocumentSectionSpec extends SpecBase {
     "return InProgress" - {
 
       "when only ONE question has been answered" - {
+
+        "for DocumentTypePage" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentTypePage(0), documentTypeModel.code)
+          )
+
+          DocumentSection(0).status mustBe InProgress
+        }
 
         "for ReferenceAvailablePage" in {
 
@@ -89,6 +117,32 @@ class DocumentSectionSpec extends SpecBase {
         "for DocumentDescriptionPage" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentDescriptionPage(0), "description")
+          )
+
+          DocumentSection(0).status mustBe InProgress
+        }
+      }
+
+      "when BOTH DocumentTypePage" - {
+
+        "and ReferenceAvailablePage have been answered" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentReferencePage(0), "reference")
+            .set(DocumentDescriptionPage(0), "description")
+          )
+
+          DocumentSection(0).status mustBe InProgress
+        }
+
+        "and DocumentDescription have been answered" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentTypePage(0), documentTypeModel.code)
+            .set(DocumentReferencePage(0), "reference")
             .set(DocumentDescriptionPage(0), "description")
           )
 

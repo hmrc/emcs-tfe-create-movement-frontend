@@ -17,6 +17,7 @@
 package controllers.sections.documents
 
 import base.SpecBase
+import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDocumentsAddToListHelper
@@ -24,7 +25,7 @@ import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
+import pages.sections.documents._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,9 +36,7 @@ import views.html.sections.documents.DocumentsAddToListView
 
 import scala.concurrent.Future
 
-class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsAddToListHelper {
-
-
+class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsAddToListHelper with DocumentTypeFixtures {
 
   class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -50,6 +49,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
         bind[DocumentsAddToListHelper].toInstance(mockDocumentsAddToListHelper)
       )
       .build()
+
     lazy val controllerRoute = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId, NormalMode).url
     lazy val onSubmitCall = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId, NormalMode)
 
@@ -64,7 +64,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
     "GET onPageLoad" - {
 
       "must return OK and the correct view when there are NO InProgress items" in new Setup(Some(emptyUserAnswers
-        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentTypePage(0), documentTypeModel.code)
         .set(DocumentReferencePage(0), "reference")
       )) {
 
@@ -87,7 +87,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       }
 
       "must return OK and the correct view when there ARE InProgress items" in new Setup(Some(emptyUserAnswers
-        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentTypePage(0), documentTypeModel.code)
       )) {
 
         running(application) {

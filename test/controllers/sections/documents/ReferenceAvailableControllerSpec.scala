@@ -169,6 +169,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       )) {
 
         val expectedAnswers = emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeModel.code)
           .set(ReferenceAvailablePage(0), true)
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

@@ -18,18 +18,19 @@ package viewmodels.helpers
 
 import base.SpecBase
 import controllers.sections.documents.routes
+import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import models.{NormalMode, UserAnswers}
-import pages.sections.documents.{DocumentDescriptionPage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, ReferenceAvailableSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, DocumentTypeSummary, ReferenceAvailableSummary}
 import views.html.components.link
 
-class DocumentsAddToListHelperSpec extends SpecBase {
+class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
     lazy val app: Application = applicationBuilder().build()
@@ -53,7 +54,96 @@ class DocumentsAddToListHelperSpec extends SpecBase {
 
     "return required rows when all answers filled out" - {
 
+      s"when the row is Complete and the DocumentType is NOT Other" in new Setup(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeModel.code)
+        .set(DocumentReferencePage(0), "reference")
+      ) {
+
+        implicit lazy val msgs: Messages = messages(app, English.lang)
+
+        helper.allDocumentsSummary() mustBe Seq(
+          SummaryList(
+            card = Some(Card(
+              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              actions = Some(Actions(items = Seq(
+                ActionItem(
+                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
+                  content = Text(English.remove),
+                  visuallyHiddenText = Some(English.documentCardTitle(0)),
+                  attributes = Map("id" -> "removeDocuments-1")
+                )
+              )))
+            )),
+            rows = Seq(
+              DocumentTypeSummary.row(0).get,
+              DocumentReferenceSummary.row(0).get
+            )
+          )
+        )
+      }
+
+      s"when the row is Complete with DocumentType is Other and ReferenceAvailable is true" in new Setup(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeOtherModel.code)
+        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentReferencePage(0), "reference")
+      ) {
+
+        implicit lazy val msgs: Messages = messages(app, English.lang)
+
+        helper.allDocumentsSummary() mustBe Seq(
+          SummaryList(
+            card = Some(Card(
+              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              actions = Some(Actions(items = Seq(
+                ActionItem(
+                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
+                  content = Text(English.remove),
+                  visuallyHiddenText = Some(English.documentCardTitle(0)),
+                  attributes = Map("id" -> "removeDocuments-1")
+                )
+              )))
+            )),
+            rows = Seq(
+              DocumentTypeSummary.row(0).get,
+              ReferenceAvailableSummary.row(0).get,
+              DocumentReferenceSummary.row(0).get
+            )
+          )
+        )
+      }
+
+      s"when the row is Complete with DocumentType is Other and ReferenceAvailable is false" in new Setup(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeOtherModel.code)
+        .set(ReferenceAvailablePage(0), false)
+        .set(DocumentDescriptionPage(0), "description")
+      ) {
+
+        implicit lazy val msgs: Messages = messages(app, English.lang)
+
+        helper.allDocumentsSummary() mustBe Seq(
+          SummaryList(
+            card = Some(Card(
+              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              actions = Some(Actions(items = Seq(
+                ActionItem(
+                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
+                  content = Text(English.remove),
+                  visuallyHiddenText = Some(English.documentCardTitle(0)),
+                  attributes = Map("id" -> "removeDocuments-1")
+                )
+              )))
+            )),
+            rows = Seq(
+              DocumentTypeSummary.row(0).get,
+              ReferenceAvailableSummary.row(0).get,
+              DocumentDescriptionSummary.row(0).get
+            )
+          )
+        )
+      }
+
       s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeOtherModel.code)
         .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
         .set(ReferenceAvailablePage(1), true)
@@ -75,6 +165,7 @@ class DocumentsAddToListHelperSpec extends SpecBase {
               )))
             )),
             rows = Seq(
+              DocumentTypeSummary.row(0).get,
               ReferenceAvailableSummary.row(0).get,
               DocumentDescriptionSummary.row(0).get
             )
@@ -84,7 +175,7 @@ class DocumentsAddToListHelperSpec extends SpecBase {
               title = Some(CardTitle(Text(English.documentCardTitle(1)))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
-                  href = routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
+                  href = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
                   content = Text(English.continueEditing),
                   visuallyHiddenText = Some(English.documentCardTitle(1)),
                   attributes = Map("id" -> "editDocuments-2")

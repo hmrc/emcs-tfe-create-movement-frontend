@@ -17,20 +17,21 @@
 package pages.sections.documents
 
 import base.SpecBase
+import fixtures.DocumentTypeFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
-class DocumentsSectionUnitsSpec extends SpecBase {
+class DocumentsSectionUnitsSpec extends SpecBase with DocumentTypeFixtures {
 
   "status" - {
 
     "return Completed" - {
 
-      "when there is ONE documents added and Completed" in {
+      "when there is ONE document added and Completed" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel.code)
           .set(DocumentReferencePage(0), "reference")
         )
 
@@ -40,8 +41,9 @@ class DocumentsSectionUnitsSpec extends SpecBase {
       "when there are TWO documents added both Completed" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel.code)
           .set(DocumentReferencePage(0), "reference")
+          .set(DocumentTypePage(1), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(1), false)
           .set(DocumentDescriptionPage(1), "description")
         )
@@ -64,9 +66,10 @@ class DocumentsSectionUnitsSpec extends SpecBase {
       "when there are TWO documents added, one in Completed and one InProgress" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel.code)
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
-          .set(DocumentDescriptionPage(1), "description")
+          .set(DocumentTypePage(1), documentTypeOtherModel.code)
         )
 
         DocumentsSectionUnits.status mustBe InProgress

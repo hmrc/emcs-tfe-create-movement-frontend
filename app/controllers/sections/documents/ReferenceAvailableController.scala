@@ -16,11 +16,10 @@
 
 package controllers.sections.documents
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.ReferenceAvailableFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, NormalMode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
 import play.api.data.Form
@@ -75,14 +74,14 @@ class ReferenceAvailableController @Inject()(
     } else {
 
       val updatedAnswers = request.userAnswers
-        .remove(DocumentDescriptionPage(idx))
         .remove(DocumentReferencePage(idx))
+        .remove(DocumentDescriptionPage(idx))
 
       saveAndRedirect(
         page = ReferenceAvailablePage(idx),
         answer = answer,
         currentAnswers = updatedAnswers,
-        mode = mode
+        mode = NormalMode
       )
   }
 }

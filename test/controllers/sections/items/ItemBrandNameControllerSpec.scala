@@ -59,8 +59,8 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
   }
 
   "ItemBrandName Controller" - {
-    //TODO: implement in CAM-ITM19
-    "must redirect to Index of section when the idx is outside of bounds for a GET" ignore new Fixture() {
+
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(GET, itemBrandNameRoute(testIndex2))
@@ -71,8 +71,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    //TODO: implement in CAM-ITM19
-    "must redirect to Index of section when the idx is outside of bounds for a POST" ignore new Fixture() {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
       running(application) {
 
         val request = FakeRequest(POST, itemBrandNameRoute(testIndex2)).withFormUrlEncodedBody((hasBrandNameField, "false"))
@@ -90,7 +89,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemBrandNameSubmitAction(), Some(Wine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -106,7 +105,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
         contentAsString(result) mustEqual view(
           form.fill(ItemBrandNameModel(hasBrandName = true, Some("brand"))),
           itemBrandNameSubmitAction(),
-          Some(Wine)
+          Wine
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -135,7 +134,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemBrandNameSubmitAction(), Some(Wine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
       }
     }
 

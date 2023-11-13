@@ -52,3 +52,5 @@ case class DocumentTypesException(message: String) extends Exception(message) wi
 case class ExciseProductCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
+case class ReferenceDataException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

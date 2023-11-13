@@ -35,7 +35,11 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     )
   }
 
-  def withGoodsType(idx: Index)(f: Option[GoodsType] => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    f(request.userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply))
-
+  def withGoodsType(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) =>
+        f(GoodsTypeModel.apply(epc))
+      case None =>
+        Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
 }

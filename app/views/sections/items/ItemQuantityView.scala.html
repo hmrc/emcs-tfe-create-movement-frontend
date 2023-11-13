@@ -30,9 +30,9 @@
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, unitOfMeasure: UnitOfMeasure)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemAlcoholStrength.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemQuantity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 
@@ -45,11 +45,11 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("itemAlcoholStrength.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("itemQuantity.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large)
             )
-                    .withWidth(Fixed4)
-                    .withSuffix(PrefixOrSuffix(content = Text(messages("itemAlcoholStrength.suffix"))))
-                    .withHint(Hint(content = Text(messages("itemAlcoholStrength.hint"))))
+                    .withWidth(Fixed10)
+                    .withSuffix(PrefixOrSuffix(content = Text(unitOfMeasure.toShortFormatMessage())))
+                    .withHint(Hint(content = Text(messages("itemQuantity.hint", unitOfMeasure.toLongFormatMessage()))))
         )
 
         @continueOrExit()

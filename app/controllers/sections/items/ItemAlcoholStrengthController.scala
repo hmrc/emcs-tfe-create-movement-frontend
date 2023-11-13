@@ -46,19 +46,19 @@ class ItemAlcoholStrengthController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-//      validateIndex(idx) { TODO: implement in CAM-ITM19
+      validateIndex(idx) {
         renderView(Ok, fillForm(ItemAlcoholStrengthPage(idx), formProvider()), idx, mode)
-//      }
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-//      validateIndex(idx) { TODO: implement in CAM-ITM19
+      validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           saveAndRedirect(ItemAlcoholStrengthPage(idx), _, mode)
         )
-//      }
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =

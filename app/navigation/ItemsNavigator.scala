@@ -42,6 +42,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
       commercialDescriptionRouting(idx, userAnswers)
 
+    case ItemQuantityPage(_) => (_: UserAnswers) =>
+      //TODO: Route to CAM-ITM21
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
@@ -80,8 +84,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               //TODO: Redirect to CAM-ITM41
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
             } else {
-              //TODO: Redirect to CAM-ITM19
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
           case Spirits =>
             //TODO: Redirect to CAM-ITM08
@@ -110,19 +113,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         GoodsTypeModel(epc) match {
-          case Beer =>
-            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-          case Spirits =>
-            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-          case Wine =>
-            itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-          case Intermediate =>
+          case Beer | Spirits | Wine | Intermediate =>
             itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Tobacco =>
             //TODO: Redirect to CAM-ITM22
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Energy if Seq("E470", "E500", "E600", "E930").contains(epc) =>
+            itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy =>
-            //TODO: Redirect to CAM-ITM19 or 33 depending on the EPC code
+            //TODO: Redirect to CAM-ITM33
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ =>
             //TODO: Redirect to CAM-ITM09

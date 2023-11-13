@@ -50,7 +50,7 @@ class ItemExciseProductCodeController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-//      validateIndex(idx) { TODO: implement in CAM-ITM19
+      validateIndex(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes =>
             val selectItems = SelectItemHelper.constructSelectItems(
@@ -60,12 +60,12 @@ class ItemExciseProductCodeController @Inject()(
             )
             renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
-//      }
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-//      validateIndex(idx) { TODO: implement in CAM-ITM19
+      validateIndex(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
             val selectItems = SelectItemHelper.constructSelectItems(
@@ -78,7 +78,7 @@ class ItemExciseProductCodeController @Inject()(
             )
           }
         }
-//      }
+      }
     }
 
   override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =

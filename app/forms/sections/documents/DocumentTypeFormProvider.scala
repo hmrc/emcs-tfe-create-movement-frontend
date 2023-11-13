@@ -18,7 +18,7 @@ package forms.sections.documents
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import play.api.data.Forms.{nonEmptyText, single}
+import play.api.data.Forms.single
 
 import javax.inject.Inject
 

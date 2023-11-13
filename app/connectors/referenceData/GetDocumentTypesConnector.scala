@@ -17,7 +17,6 @@
 package connectors.referenceData
 
 import config.AppConfig
-import models.CountryModel
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import models.sections.documents.DocumentType
 import play.api.libs.json.JsResultException

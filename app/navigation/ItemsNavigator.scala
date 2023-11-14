@@ -46,6 +46,16 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: Route to CAM-ITM21
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
+    case ItemDegreesPlatoPage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemAlcoholStrengthPage(idx)) match {
+        case Some(abv) if abv <= 8.5 =>
+          //TODO: Redirect to CAM-ITM41
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          //TODO: Redirect to CAM-ITM19
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
@@ -78,8 +88,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         GoodsTypeModel(epc) match {
           case Beer =>
             if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
-              //TODO: Redirect to CAM-ITM07
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemDegreesPlatoController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else if (Seq(GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper).contains(UserType(userAnswers.ern)) && abv < 8.5) {
               //TODO: Redirect to CAM-ITM41
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()

@@ -730,7 +730,6 @@ destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
 destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
 destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
-destinationWarehouseVat.change.hidden = DestinationWarehouseVat
 destinationWarehouseVat.link.skip = Skip this question for now
 destinationWarehouseVat.checkYourAnswers.label = VAT number
 destinationWarehouseVat.change.hidden = VAT number
@@ -785,8 +784,8 @@ transportUnitGiveMoreInformationChoice.transportUnitType.5 = fixed transport ins
 transportUnitGiveMoreInformationChoice.error.required = Select yes if you know more information about this {0}
 transportUnitGiveMoreInformationChoice.hint = For example, the identity of the subsequent transporter or information about subsequent transport units.
 
-transportUnitGiveMoreInformation.title = Give more information about this {0}
-transportUnitGiveMoreInformation.heading = Give more information about this {0}
+transportUnitGiveMoreInformation.title = Give more information about this {0} (optional)
+transportUnitGiveMoreInformation.heading = Give more information about this {0} (optional)
 transportUnitGiveMoreInformation.hint.1 = You must give more information about the transport if you know it.
 transportUnitGiveMoreInformation.hint.2 = For example, the identity of the subsequent transporter or information about subsequent transport units.
 transportUnitGiveMoreInformation.checkYourAnswersLabel = More information
@@ -851,11 +850,6 @@ importCustomsOfficeCode.checkYourAnswers.label = Customs office code
 checkYourAnswersImport.heading = Check your answers
 checkYourAnswersImport.title = Check your answers
 checkYourAnswersImport.hidden = This section is:
-
-destinationCheckAnswers.title = Check your answers
-destinationCheckAnswers.heading = Check your answers
-destinationCheckAnswers.consignee.notProvided = Consignee section not complete
-destinationCheckAnswers.destination.notProvided = Not provided
 
 destinationCheckAnswers.title = Check your answers
 destinationCheckAnswers.heading = Check your answers

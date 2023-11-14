@@ -21,7 +21,6 @@ import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentTypeFormProvider
 import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
 import models.{Index, NormalMode, UserAnswers}
-import models.sections.documents.DocumentType
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection, ReferenceAvailablePage}

@@ -890,12 +890,6 @@ dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
 
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
-documentType.checkYourAnswersLabel = What type of document do you want to add?
-documentType.error.required = Select the document you want to add
-documentType.change.hidden = DocumentType
-
 documentReference.title = Enter a reference for this document
 documentReference.heading = Enter a reference for this document
 documentReference.error.required = Enter a reference for this document
@@ -1034,13 +1028,6 @@ itemGeographicalIndicationChoice.PGI.hint = For example, Mallorca has a protecte
 itemGeographicalIndicationChoice.GI = Yes - the product has a Geographical Indication (GI)
 itemGeographicalIndicationChoice.GI.hint = For example Irish Whiskey has a Geographical Indication (GI) protected spirit drink name.
 itemGeographicalIndicationChoice.None = No - I cannot confirm that the product has a geographical indication (GI)
-
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
-documentType.checkYourAnswersLabel = What type of document do you want to add?
-documentType.error.required = Select the document you want to add
-documentType.select.defaultValue = Choose document type
-documentType.change.hidden = DocumentType
 
 commercialDescription.title = Enter a commercial description for the {0}
 commercialDescription.heading = Enter a commercial description for the {0}

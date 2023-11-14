@@ -34,9 +34,9 @@
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemDegreesPlato.title", goodsType.fold(messages("site.item"))(_.toSingularOutput()))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemDegreesPlato.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off") {
 
@@ -62,7 +62,7 @@
                         content = Text(messages("site.no"))
                     )
                 ),
-                legend = LegendViewModel(Text(messages("itemDegreesPlato.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())))).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(Text(messages("itemDegreesPlato.heading", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
             )
         )
 

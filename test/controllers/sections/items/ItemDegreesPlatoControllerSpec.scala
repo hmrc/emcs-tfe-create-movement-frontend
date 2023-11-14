@@ -89,7 +89,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemDegreesPlatoSubmitAction(), Some(Wine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -105,7 +105,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         contentAsString(result) mustEqual view(
           form.fill(ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))),
           itemDegreesPlatoSubmitAction(),
-          Some(Wine)
+          Wine
         )(dataRequest(request), messages(application)).toString
       }
     }
@@ -123,6 +123,18 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
       }
     }
 
+    "must return a Bad Request and errors when invalid data is submitted (form provider validation fails)" in new Fixture() {
+      running(application) {
+
+        val request = FakeRequest(POST, itemDegreesPlatoRoute()).withFormUrlEncodedBody((hasDegreesPlatoField, ""))
+        val boundForm = form.bind(Map(hasDegreesPlatoField -> ""))
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted (no brand name supplied)" in new Fixture() {
       running(application) {
 
@@ -134,7 +146,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Some(Wine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
       }
     }
 

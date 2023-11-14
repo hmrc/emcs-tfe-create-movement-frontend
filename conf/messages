@@ -1002,6 +1002,14 @@ documentType.error.required = Select the document you want to add
 documentType.select.defaultValue = Choose document type
 documentType.change.hidden = Document type
 
+itemCommodityCode.title = Choose the commodity code for the {0}
+itemCommodityCode.heading = Choose the commodity code for the {0}
+itemCommodityCode.checkYourAnswersLabel = Choose the commodity code for the {0}
+itemCommodityCode.error.required = Choose a commodity code
+itemCommodityCode.change.hidden = ItemCommodityCode
+itemCommodityCode.hint.text = You can use the Trade Tariff tool to
+itemCommodityCode.hint.link = look up a commodity code (opens in new tab)
+
 itemQuantity.title = How much {0} are you moving?
 itemQuantity.heading = How much {0} are you moving?
 itemQuantity.hint = Enter the total quantity in {0}.

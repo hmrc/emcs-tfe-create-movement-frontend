@@ -278,7 +278,6 @@ class ItemsNavigatorSpec extends SpecBase {
 
       "must go from the Item Geographical Indication Choice page" - {
 
-        //TODO: redirect to CAM-ITM10
         "to the Geographical Indication Page" - {
           "when the answer is Yes (any option)" in {
 
@@ -286,7 +285,7 @@ class ItemsNavigatorSpec extends SpecBase {
               .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 

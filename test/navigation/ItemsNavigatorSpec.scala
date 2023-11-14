@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import models.sections.items.ItemBrandNameModel
+import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
@@ -215,15 +216,14 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is anything else (e.g. Wine)" - {
 
-          //TODO: Redirect to CAM-ITM09
-          "to the Under Construction Page" in {
+          "to the Geographical Indication Choice Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
               .set(ItemExciseProductCodePage(testIndex1), "W100")
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(testGreatBritainErn, testDraftId, testIndex1, NormalMode)
           }
         }
       }
@@ -263,6 +263,60 @@ class ItemsNavigatorSpec extends SpecBase {
 
             navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+      }
+
+      "must go from the Item Geographical Indication Choice page" - {
+
+        //TODO: redirect to CAM-ITM10
+        "to the Geographical Indication Page" - {
+          "when the answer is Yes (any option)" in {
+
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        //TODO: redirect to CAM-ITM41
+        "to the Small Independent Producer Page" - {
+          "when the answer is No (and the ABV is < 8.5)" in {
+
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Quantity Page" - {
+
+          "when the answer is No (and the ABV is >= 8.5)" in {
+
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+            ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        "to the Items index page" - {
+          "when the goods type is not spirits / wine / fermented / intermediate (e.g., Tobacco) and answered no" in {
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
+              .set(ItemExciseProductCodePage(testIndex1), "T200")
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+
+          "when there is no answers" in {
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
       }

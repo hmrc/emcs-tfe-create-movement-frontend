@@ -40,8 +40,7 @@ object TransportUnitType extends Enumerable.Implicits {
     Container, FixedTransport, Tractor, Trailer, Vehicle
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, _) =>
+  def options(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
       RadioItem(
         content = Text(messages(s"transportUnitType.${value.toString}")),
         value = Some(value.toString),

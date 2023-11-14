@@ -17,11 +17,11 @@
 package navigation
 
 import controllers.sections.items.{routes => itemsRoutes}
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import models.GoodsTypeModel._
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models._
 import pages.Page
 import pages.sections.items._
-import models.GoodsTypeModel._
-import models._
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -41,6 +41,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
       commercialDescriptionRouting(idx, userAnswers)
+
+    case ItemGeographicalIndicationChoicePage(idx) => (userAnswers: UserAnswers) =>
+      geographicalIndicationChoiceRouting(idx, userAnswers)
 
     case ItemQuantityPage(_) => (_: UserAnswers) =>
       //TODO: Route to CAM-ITM21
@@ -99,8 +102,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             //TODO: Redirect to CAM-ITM08
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ =>
-            //TODO: Redirect to CAM-ITM09
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -133,7 +135,31 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             //TODO: Redirect to CAM-ITM33
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           case _ =>
-            //TODO: Redirect to CAM-ITM09
+            itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        }
+      case _ =>
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
+
+  private def geographicalIndicationChoiceRouting(idx: Index, userAnswers: UserAnswers): Call =
+    (userAnswers.get(ItemGeographicalIndicationChoicePage(idx)),
+      userAnswers.get(ItemAlcoholStrengthPage(idx)),
+      userAnswers.get(ItemExciseProductCodePage(idx))) match {
+      case (Some(geographicalIndicationType), Some(alcoholStrength), Some(epc)) =>
+        geographicalIndicationType match {
+          case NoGeographicalIndication =>
+            val goodsType = GoodsTypeModel(epc)
+            val acceptableGoodsTypes = Seq(Spirits, Wine, Intermediate)
+            if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength < 8.5) {
+              //TODO: Redirect to CAM-ITM41
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            } else if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength >= 8.5) {
+              itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            } else {
+              itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            }
+          case _ =>
+            //TODO: Redirect to CAM-ITM10
             testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       case _ =>

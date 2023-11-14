@@ -33,7 +33,7 @@ trait BaseSelectors {
   val saveAndExitLink = "#save-and-exit"
   val label: String => String = forId => s"main label[for='$forId']"
   val legend = "main legend"
-    def radioButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > label"
+  def radioButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > label"
   def checkboxItem(index: Int) = s".govuk-checkboxes > div:nth-child($index) > label"
   val dateDay = s".govuk-date-input .govuk-date-input__item:nth-of-type(1)"
   val dateMonth = s".govuk-date-input .govuk-date-input__item:nth-of-type(2)"

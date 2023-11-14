@@ -41,7 +41,7 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
     )
 
     val orDivider = RadioItem(
-      divider = Some(messages(s"transportUnitsAddToList.divider"))
+      divider = Some(messages(s"site.divider"))
     )
 
     Seq(

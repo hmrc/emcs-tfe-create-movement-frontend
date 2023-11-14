@@ -51,7 +51,7 @@ class TransportUnitGiveMoreInformationViewSpec extends ViewSpecBase with ViewBeh
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
           val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
-          val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply(transportUnitTypeAndMessage._1)
+          val form = app.injector.instanceOf[TransportUnitGiveMoreInformationFormProvider].apply()
 
           implicit val doc: Document = Jsoup.parse(
             view(

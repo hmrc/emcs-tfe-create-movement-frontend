@@ -20,9 +20,9 @@ import base.ViewSpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import models.NormalMode
-import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.transportUnit._
@@ -57,7 +57,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
           .set(TransportSealChoicePage(testIndex1), true)
           .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), "more information for transport unit")
+          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
@@ -96,7 +96,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
           .set(TransportSealChoicePage(testIndex1), true)
           .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), "more information for transport unit")
+          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
@@ -137,13 +137,13 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
           .set(TransportSealChoicePage(testIndex1), true)
           .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), "more information for transport unit")
+          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
           .set(TransportUnitTypePage(testIndex2), FixedTransport)
           .set(TransportUnitIdentityPage(testIndex2), "wee2")
           .set(TransportSealChoicePage(testIndex2), true)
           .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex2), "more information for transport unit 2")
+          .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
@@ -183,13 +183,13 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
           .set(TransportSealChoicePage(testIndex1), true)
           .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), "more information for transport unit")
+          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
           .set(TransportUnitTypePage(testIndex2), FixedTransport)
           .set(TransportUnitIdentityPage(testIndex2), "wee2")
           .set(TransportSealChoicePage(testIndex2), true)
           .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex2), "more information for transport unit 2")
+          .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 

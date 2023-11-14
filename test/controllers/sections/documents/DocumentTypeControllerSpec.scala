@@ -18,13 +18,9 @@ package controllers.sections.documents
 
 import base.SpecBase
 import forms.sections.documents.DocumentTypeFormProvider
-import mocks.services.MockUserAnswersService
-import models.NormalMode
 import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
-import models.sections.documents.DocumentType
-import navigation.DocumentsNavigator
-import navigation.FakeNavigators.FakeDocumentsNavigator
 import models.{NormalMode, UserAnswers}
+import models.sections.documents.DocumentType
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.DocumentTypePage

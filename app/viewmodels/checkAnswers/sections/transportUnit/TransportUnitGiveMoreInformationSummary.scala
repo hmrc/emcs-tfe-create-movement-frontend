@@ -24,13 +24,14 @@ import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import utils.JsonOptionFormatter.optionFormat
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object TransportUnitGiveMoreInformationSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_],  messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
-    val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx))
+    val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,

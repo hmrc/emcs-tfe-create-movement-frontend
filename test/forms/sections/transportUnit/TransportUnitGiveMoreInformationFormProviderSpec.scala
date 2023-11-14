@@ -19,14 +19,12 @@ package forms.sections.transportUnit
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
-import models.sections.transportUnit.TransportUnitType
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
 
 class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
-  val requiredKey = "transportUnitGiveMoreInformation.error.required"
   val invalidCharacterKey = "transportUnitGiveMoreInformation.error.character"
   val lengthKey = "transportUnitGiveMoreInformation.error.length"
   val invalidCharactersKey = "transportUnitGiveMoreInformation.error.xss"
@@ -37,59 +35,33 @@ class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehavi
 
     val fieldName = "value"
     "display the correct error message" - {
-      TransportUnitType.values.foreach(
-        transportUnitType => {
-          s"the transport unit type is $transportUnitType" - {
-            val form = new TransportUnitGiveMoreInformationFormProvider()(transportUnitType)
+      val form = new TransportUnitGiveMoreInformationFormProvider()()
 
-            behave like fieldThatBindsValidData(
-              form,
-              fieldName,
-              "0" * maxLength
-            )
+      behave like fieldThatBindsValidData(
+        form,
+        fieldName,
+        "0" * maxLength
+      )
 
-            behave like fieldWithXSSCharacters(
-              form,
-              fieldName,
-              FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
-            )
+      behave like fieldWithXSSCharacters(
+        form,
+        fieldName,
+        FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
+      )
 
-            behave like fieldWithMaxLength(
-              form,
-              fieldName,
-              maxLength = maxLength,
-              lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-            )
+      behave like fieldWithMaxLength(
+        form,
+        fieldName,
+        maxLength = maxLength,
+        lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      )
 
-            behave like mandatoryField(
-              form,
-              fieldName,
-              requiredError = FormError(fieldName, requiredKey, Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
-            )
+      "alphanumeric characters aren't used" in {
+        val data = Map("value" -> "..")
+        val result = form.bind(data)
 
-            "alphanumeric characters aren't used" in {
-              val data = Map("value" -> "..")
-              val result = form.bind(data)
-
-              result.errors must contain only FormError("value", invalidCharacterKey, Seq(ALPHANUMERIC_REGEX))
-            }
-
-            "input is only whitespace" in {
-              val data = Map("value" ->
-                """
-                  |
-                  |
-                  |
-                  |
-                  |
-                  |
-                  |""".stripMargin)
-              val result = form.bind(data)
-
-              result.errors must contain only FormError("value", requiredKey, Seq(messages(s"transportUnitGiveMoreInformation.transportUnitType.$transportUnitType")))
-            }
-          }
-        })
+        result.errors must contain only FormError("value", invalidCharacterKey, Seq(ALPHANUMERIC_REGEX))
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class TransportUnitGiveMoreInformationPage(idx: Index) extends QuestionPage[String] {
+case class TransportUnitGiveMoreInformationPage(idx: Index) extends QuestionPage[Option[String]] {
   override val toString: String = "transportUnitGiveMoreInformation"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
 }

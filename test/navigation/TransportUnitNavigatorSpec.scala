@@ -123,7 +123,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
 
         navigator.nextPage(TransportUnitGiveMoreInformationPage(testIndex1), NormalMode, userAnswers) mustBe
           transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId)
@@ -136,7 +136,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
           val userAnswers = emptyUserAnswers
             .set(TransportUnitTypePage(testIndex1), Tractor)
-            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
             .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.Yes)
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
@@ -148,7 +148,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
           val userAnswers = emptyUserAnswers
             .set(TransportUnitTypePage(testIndex1), Tractor)
-            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
             .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.MoreToCome)
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
@@ -159,7 +159,7 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
           val userAnswers = emptyUserAnswers
             .set(TransportUnitTypePage(testIndex1), Tractor)
-            .set(TransportUnitGiveMoreInformationPage(testIndex1), "answer")
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
             .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.NoMoreToCome)
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe

@@ -103,33 +103,110 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the next page" - {
+      "when valid data is submitted" in {
+        val answer = Some("answer")
 
-      MockUserAnswersService
-        .set()
-        .returns(
-          Future.successful(
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Tractor)
-              .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))))
+        MockUserAnswersService
+          .set(emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), answer))
+          .returns(
+            Future.successful(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
-          .overrides(
-            bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
+            .overrides(
+              bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+              bind[UserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, transportUnit1GiveMoreInformationRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+        running(application) {
+          val request =
+            FakeRequest(POST, transportUnit1GiveMoreInformationRoute)
+              .withFormUrlEncodedBody(("value", "answer"))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+      "when empty data is submitted" in {
+        val answer = None
+
+        MockUserAnswersService
+          .set(emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), answer))
+          .returns(
+            Future.successful(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
+            .overrides(
+              bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+              bind[UserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, transportUnit1GiveMoreInformationRoute)
+              .withFormUrlEncodedBody(("value", ""))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+      "when only whitespace data is submitted" in {
+        val answer = None
+
+        MockUserAnswersService
+          .set(emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), answer))
+          .returns(
+            Future.successful(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)))
+            .overrides(
+              bind[TransportUnitNavigator].toInstance(new FakeTransportUnitNavigator(onwardRoute)),
+              bind[UserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, transportUnit1GiveMoreInformationRoute)
+              .withFormUrlEncodedBody(("value",
+                """
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |""".stripMargin))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
     }
 

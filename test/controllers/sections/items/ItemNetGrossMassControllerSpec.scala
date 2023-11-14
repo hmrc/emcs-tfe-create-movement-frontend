@@ -65,7 +65,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
   "ItemNetGrossMass Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -76,7 +76,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers
         .set(ItemNetGrossMassPage(testIndex1), testModel)
-        .set(ItemExciseProductCodePage(testIndex1), "B000")
+        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -94,7 +94,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
     )) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -112,7 +112,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
     )) {
       val boundForm = form.bind(Map("value" -> ""))
 

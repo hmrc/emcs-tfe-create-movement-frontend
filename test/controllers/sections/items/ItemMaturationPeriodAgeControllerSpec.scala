@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
 
   val formProvider = new ItemMaturationPeriodAgeFormProvider()
   val form = formProvider(Wine)(messages(Seq(ItemMaturationPeriodAgeMessages.English.lang)))

@@ -99,7 +99,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))
+      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000))
     ) {
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
@@ -121,8 +121,8 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
       MockUserAnswersService.set(
-        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
-      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
+        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
 

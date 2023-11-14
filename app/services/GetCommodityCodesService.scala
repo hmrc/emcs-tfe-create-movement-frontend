@@ -17,6 +17,7 @@
 package services
 
 import connectors.referenceData.GetCommodityCodesConnector
+import models.ExciseProductCode
 import models.response.CommodityCodesException
 import models.response.referenceData.CnCodeInformation
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,8 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class GetCommodityCodesService @Inject()(connector: GetCommodityCodesConnector)
                                         (implicit ec: ExecutionContext) {
 
-  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier): Future[Seq[CnCodeInformation]] = {
-    connector.getCommodityCodes(exciseProductCode).map {
+  def getCommodityCodes(exciseProductCode: ExciseProductCode)(implicit hc: HeaderCarrier): Future[Seq[CnCodeInformation]] = {
+    connector.getCommodityCodes(exciseProductCode.code).map {
       case Left(_) => throw CommodityCodesException("Invalid response from commodity code endpoint")
       case Right(commodityCodes) => commodityCodes
     }

@@ -30,6 +30,7 @@ import services.{GetCnCodeInformationService, GetExciseProductCodesService, User
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
+import models.ExciseProductCode.format
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -57,7 +58,7 @@ class ItemExciseProductCodeController @Inject()(
             val selectItems = SelectItemHelper.constructSelectItems(
               selectOptions = exciseProductCodes,
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
-              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx))
+              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx)).map(_.code)
             )
             renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
@@ -75,7 +76,12 @@ class ItemExciseProductCodeController @Inject()(
             )
             formProvider(exciseProductCodes).bindFromRequest().fold(
               renderView(BadRequest, _, idx, selectItems, mode),
-              saveAndRedirect(ItemExciseProductCodePage(idx), _, mode)
+              {answer =>
+                saveAndRedirect(
+                  page = ItemExciseProductCodePage(idx),
+                  answer = exciseProductCodes.filter(_.code == answer).head,
+                  mode = mode)
+              }
             )
           }
         }

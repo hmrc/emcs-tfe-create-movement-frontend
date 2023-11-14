@@ -18,8 +18,10 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
+import models.UnitOfMeasure.Kilograms
 import models.response.referenceData.CnCodeInformation
-import models.{GoodsTypeModel, Index, Mode}
+import models.response.referenceData.CnCodeInformation._
+import models.{ExciseProductCode, GoodsTypeModel, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
@@ -53,16 +55,18 @@ class ItemCommodityCodeController @Inject()(
       ) {
         itemExciseProductCode =>
           getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
-            case Nil =>
-              saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
+            case Nil =>{
+              val s500Code = CnCodeInformation(CnCodeInformation.defaultCnCode, "", itemExciseProductCode.code, itemExciseProductCode.description, Kilograms)
+              saveAndRedirect(ItemCommodityCodePage(idx), s500Code, mode)
+            }
             case singleCommodityCode :: Nil =>
-              saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode.cnCode, mode)
+              saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode, mode)
             case commodityCodes =>
               Future.successful(Ok(
                 view(
-                  form = fillForm(ItemCommodityCodePage(idx), formProvider()),
+                  form = request.userAnswers.get(ItemCommodityCodePage(idx)).fold(formProvider())(pageInfo => formProvider().fill(pageInfo.cnCode)),
                   action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                  goodsType = GoodsTypeModel(itemExciseProductCode),
+                  goodsType = GoodsTypeModel(itemExciseProductCode.code),
                   commodityCodes
                 )
               ))
@@ -72,27 +76,37 @@ class ItemCommodityCodeController @Inject()(
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          withAnswerAsync(
-            ItemExciseProductCodePage(idx),
-            redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
-          ) {
-            itemExciseProductCode =>
-              getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
-                commodityCodes =>
-                  BadRequest(
+      withAnswerAsync(
+        ItemExciseProductCodePage(idx),
+        redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
+      ) {
+        itemExciseProductCode =>
+          getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
+            commodityCodes =>
+              formProvider().bindFromRequest().fold(
+                formWithErrors =>
+                  Future.successful(BadRequest(
                     view(
                       form = formWithErrors,
                       action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                      goodsType = GoodsTypeModel(itemExciseProductCode),
+                      goodsType = GoodsTypeModel(itemExciseProductCode.code),
                       commodityCodes
                     )
-                  )
-              }
-          },
-        value =>
-          saveAndRedirect(ItemCommodityCodePage(idx), value, mode)
-      )
+                  )),
+                value =>{
+                  val cnCodeInfo = commodityCodes.filter(_.cnCode == value) match {
+                    case singleCommodityCode :: Nil => singleCommodityCode
+                    case _ => defaultCnCodeInformation(itemExciseProductCode)
+                  }
+
+                  saveAndRedirect(ItemCommodityCodePage(idx), cnCodeInfo, mode)
+                }
+
+              )
+          }
+      }
     }
+
+  private def defaultCnCodeInformation(exciseProductCode: ExciseProductCode) =
+    CnCodeInformation(CnCodeInformation.defaultCnCode, "", exciseProductCode.code, exciseProductCode.description, Kilograms)
 }

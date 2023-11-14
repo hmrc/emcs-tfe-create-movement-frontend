@@ -16,6 +16,7 @@
 
 package mocks.services
 
+import models.ExciseProductCode
 import models.response.referenceData.CnCodeInformation
 import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
@@ -30,8 +31,8 @@ trait MockGetCommodityCodesService extends MockFactory {
 
   object MockGetCommodityCodesService {
 
-    def getCommodityCodes(exciseProductCode: String): CallHandler2[String, HeaderCarrier, Future[Seq[CnCodeInformation]]] =
-      (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier))
+    def getCommodityCodes(exciseProductCode: ExciseProductCode): CallHandler2[ExciseProductCode, HeaderCarrier, Future[Seq[CnCodeInformation]]] =
+      (mockGetCommodityCodesService.getCommodityCodes(_: ExciseProductCode)(_: HeaderCarrier))
         .expects(exciseProductCode, *)
   }
 }

@@ -37,7 +37,7 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
   lazy val form: Form[String] = formProvider()
   lazy val view: ItemFiscalMarksView = app.injector.instanceOf[ItemFiscalMarksView]
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()

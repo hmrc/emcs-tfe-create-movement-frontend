@@ -38,7 +38,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), "W300")
+    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("VA", "Vat"))
 
   val itemPackagingQuantitySubmitAction: Call = routes.ItemPackagingQuantityController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
@@ -89,7 +89,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must redirect to Index of section when Select Packaging Type is missing" in new Fixture(
-      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300"))) {
+      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300))) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER

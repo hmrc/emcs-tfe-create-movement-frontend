@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.UnitOfMeasure.Kilograms
+import models.UnitOfMeasure.{Kilograms, Litres20}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode._
 import models.{ExciseProductCode, GoodsTypeModel}
@@ -103,7 +103,7 @@ trait ItemFixtures {
     cnCodeDescription = "Sparkling cider and perry",
     exciseProductCode = testEpcTobacco,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
-    unitOfMeasure = Kilograms
+    unitOfMeasure = Litres20
   )
 
   val testItemPackagingTypes: Seq[ItemPackaging] = Seq(

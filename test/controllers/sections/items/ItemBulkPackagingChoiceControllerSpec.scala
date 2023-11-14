@@ -66,7 +66,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
   "ItemBulkPackagingChoice Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
@@ -76,7 +76,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), "T200")
+        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
         .set(ItemBulkPackagingChoicePage(testIndex1), true)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
@@ -86,7 +86,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
     )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -111,14 +111,14 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
       redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the Index page for GET when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
+    "must redirect to the Index page for GET when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the Index page for POST when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
+    "must redirect to the Index page for POST when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
@@ -127,7 +127,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), "T200")
+        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
     )) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "")))
 

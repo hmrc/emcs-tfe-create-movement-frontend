@@ -37,7 +37,7 @@ class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAns
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), "W200")
+    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
     .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
 
   def itemGeographicalIndicationSubmitAction(idx: Index = testIndex1): Call =

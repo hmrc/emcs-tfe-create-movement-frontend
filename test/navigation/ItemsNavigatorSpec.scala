@@ -22,12 +22,69 @@ import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
-import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
+import models.{CheckMode, ExciseProductCode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
 
 class ItemsNavigatorSpec extends SpecBase {
   val navigator = new ItemsNavigator
+
+  val testExciseProductCodeS200: ExciseProductCode =
+    ExciseProductCode(
+      "S200",
+      "Spirituous beverages",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeE200: ExciseProductCode =
+    ExciseProductCode(
+      "E200",
+      "Vegetable and animal oils Products falling within CN codes 1507 to 1518, if these are intended for use as heating fuel or motor fuel (Article 20(1)(a))",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE470: ExciseProductCode =
+    ExciseProductCode(
+      "E470",
+      "Heavy fuel oil",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE500: ExciseProductCode =
+    ExciseProductCode(
+      "E500",
+      "Liquified Petroleum gases (LPG) Products falling within CN codes 2711 (except 2711 11, 2711 21 and 2711 29)",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE930: ExciseProductCode =
+    ExciseProductCode(
+      "E930",
+      "Additives falling within CN codes 3811 11, 3811 19 00 and 3811 90 00",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeW100: ExciseProductCode =
+    ExciseProductCode(
+      "W100",
+      "Test Description",
+      "W",
+      "Test Description"
+    )
+  val testExciseProductCodeS100: ExciseProductCode =
+    ExciseProductCode(
+      "S100",
+      "Test Description",
+      "S",
+      "Test Description"
+    )
+  val testExciseProductCodeI200: ExciseProductCode =
+    ExciseProductCode(
+      "I200",
+      "Test Description",
+      "I",
+      "Test Description"
+    )
 
   "ItemsNavigator" - {
     "in Normal mode" - {
@@ -43,7 +100,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ItemExciseProductCodePage(testIndex1),
               NormalMode,
-              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
             ) mustBe controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -71,7 +128,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "when GoodsType is Beer" - {
           "to the Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -80,7 +137,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "when GoodsType is Spirits" - {
           "to the  Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "S200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS200)
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -89,7 +146,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "when GoodsType is Wine" - {
           "to the Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -98,7 +155,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "when GoodsType is Intermediate" - {
           "to the Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "I200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeI200)
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -108,7 +165,7 @@ class ItemsNavigatorSpec extends SpecBase {
 
           "to the Item Fiscal Marks Choice Page" in {
             val userAnswers = emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -117,13 +174,10 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is Energy " - {
 
-          Seq("E470", "E500", "E600", "E930").foreach(epc => {
-
+          Seq(testExciseProductCodeE470, testExciseProductCodeE500, testExciseProductCodeE600, testExciseProductCodeE930).foreach(epc => {
             s"when the EPC is $epc" - {
-
               "to the Item Quantity Page" in {
-                val userAnswers = emptyUserAnswers
-                  .set(ItemExciseProductCodePage(testIndex1), epc)
+                val userAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc)
 
                 navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                   itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -136,7 +190,7 @@ class ItemsNavigatorSpec extends SpecBase {
             //TODO: Route to CAM-ITM33
             "to the Under Construction Page" in {
               val userAnswers = emptyUserAnswers
-                .set(ItemExciseProductCodePage(testIndex1), "E200")
+                .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeE200)
 
               navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                 testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -152,7 +206,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "to the Item Degrees Plato Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
-              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(1.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
@@ -165,7 +219,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "to the Small Independent Producer Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
-              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
@@ -178,7 +232,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "to the Item Quantity page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
-              .set(ItemExciseProductCodePage(testIndex1), "B200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
@@ -191,7 +245,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "to the Item Maturation Period Age Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
-              .set(ItemExciseProductCodePage(testIndex1), "S100")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS100)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
@@ -204,7 +258,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "to the Geographical Indication Choice Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
-              .set(ItemExciseProductCodePage(testIndex1), "W100")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW100)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
@@ -307,7 +361,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
             ) mustBe itemsRoutes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -318,7 +372,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
             ) mustBe itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -330,7 +384,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
             ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -340,7 +394,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
-              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
 
@@ -387,7 +441,7 @@ class ItemsNavigatorSpec extends SpecBase {
 
           "when the user answers yes" in {
             navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
               .set(ItemFiscalMarksChoicePage(testIndex1), true)
             ) mustBe itemsRoutes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
@@ -397,7 +451,7 @@ class ItemsNavigatorSpec extends SpecBase {
 
           "when the user answers no" in {
             navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
               .set(ItemFiscalMarksChoicePage(testIndex1), false)
             ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
@@ -406,7 +460,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Items Index page" - {
           "when there is no answer for ItemFiscalMarksChoicePage" in {
             navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
@@ -436,7 +490,7 @@ class ItemsNavigatorSpec extends SpecBase {
           //TODO: Redirect to CAM-ITM15
           "when the user answers no and EPC is wine" in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
@@ -447,7 +501,7 @@ class ItemsNavigatorSpec extends SpecBase {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(
               goodsType =>
                 navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
-                  .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
+                  .set(ItemExciseProductCodePage(testIndex1), ExciseProductCode(s"${goodsType.code}200","","",""))
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
                 ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
             )
@@ -463,7 +517,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "when the wine quantity is equal or over 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemQuantityPage(testIndex1), BigDecimal(60))
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
@@ -474,7 +528,7 @@ class ItemsNavigatorSpec extends SpecBase {
           "when the wine quantity is under 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemQuantityPage(testIndex1), BigDecimal(59.99))
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
@@ -486,7 +540,7 @@ class ItemsNavigatorSpec extends SpecBase {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
-                .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
+                .set(ItemExciseProductCodePage(testIndex1), ExciseProductCode(s"${goodsType.code}300","","",""))
               ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
             }
           }
@@ -501,7 +555,7 @@ class ItemsNavigatorSpec extends SpecBase {
 
           "when there is no answer for ItemQuantityPage when the EPC is Wine" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
@@ -511,7 +565,7 @@ class ItemsNavigatorSpec extends SpecBase {
       "must go from the ItemSelectPackagingPage" - {
         "to the Packaging Quantity page" in {
           navigator.nextPage(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
-            .set(ItemExciseProductCodePage(testIndex1), "W200")
+            .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
           ) mustBe itemsRoutes.ItemPackagingQuantityController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
         }
@@ -530,7 +584,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Wine More Information page" - {
           "when the user answers yes" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemWineMoreInformationChoicePage(testIndex1), true)
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
@@ -539,7 +593,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Select Packaging (Items Packaging Index) page" - {
           "when the user answers no and the item is not classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
             ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
@@ -550,7 +604,7 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Packaging Seal Choice page" - {
           "when the user answers no and the item is classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -560,14 +614,14 @@ class ItemsNavigatorSpec extends SpecBase {
         "to the Items Index page" - {
           "when the user has no answer for ItemWineMoreInformationChoicePage" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
 
           "when the user has no answer for ItemBulkPackagingChoicePage (when clicking no)" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
@@ -582,7 +636,7 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ItemExciseProductCodePage(testIndex1),
               CheckMode,
-              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")) mustBe
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)) mustBe
               controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
           }
         }

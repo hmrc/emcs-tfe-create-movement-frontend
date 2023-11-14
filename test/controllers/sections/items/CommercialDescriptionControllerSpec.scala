@@ -61,7 +61,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
 
   "CommercialDescription Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
+    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200))) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -69,7 +69,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), "W200")
+      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -77,7 +77,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(form.fill("answer"), itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
+    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200))) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -88,7 +88,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
     )) {
       val boundForm = form.bind(Map("value" -> ""))
 

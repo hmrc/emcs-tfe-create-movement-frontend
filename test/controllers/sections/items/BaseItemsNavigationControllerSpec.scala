@@ -55,7 +55,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
   "withItemPackaging" - {
     "must return the item packaging description when both the item and packaging indexes are valid" in new Test(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
         .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
     ) {
       val result: Future[Result] = controller.withItemPackaging(testIndex1, testPackagingIndex1)(itemPackagingSuccessFunction)
@@ -66,7 +66,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
     "must redirect to the packaging index" - {
       "when the item index is invalid" in new Test(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
       ) {
         val result: Future[Result] = controller.withItemPackaging(testIndex2, testPackagingIndex1)(itemPackagingSuccessFunction)
@@ -77,7 +77,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
 
       "when the packaging index is invalid" in new Test(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
       ) {
         val result: Future[Result] = controller.withItemPackaging(testIndex1, testPackagingIndex2)(itemPackagingSuccessFunction)
@@ -90,13 +90,13 @@ class BaseItemsNavigationControllerSpec extends SpecBase
 
   "withCnCodeInformation" - {
     "must redirect to the index controller" - {
-      "when EPC is missing" in new Test(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)) {
+      "when EPC is missing" in new Test(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)) {
         val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
-      "when CN Code is missing" in new Test(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)) {
+      "when CN Code is missing" in new Test(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)) {
         val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe SEE_OTHER
@@ -106,8 +106,8 @@ class BaseItemsNavigationControllerSpec extends SpecBase
     "must redirect to JourneyRecovery" - {
       "when both EPC and CN Code are in userAnswers and service returns an empty list" in new Test(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)
       ) {
         MockGetCnCodeInformationService
           .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
@@ -122,8 +122,8 @@ class BaseItemsNavigationControllerSpec extends SpecBase
     "must load the success function" - {
       "when both EPC and CN Code are in userAnswers and service returns a list with one item" in new Test(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)
       ) {
         val item: CnCodeInformationItem = CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)
 
@@ -137,8 +137,8 @@ class BaseItemsNavigationControllerSpec extends SpecBase
       }
       "when both EPC and CN Code are in userAnswers and service returns a list with multiple items" in new Test(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)
       ) {
         val item: CnCodeInformationItem = CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)
 

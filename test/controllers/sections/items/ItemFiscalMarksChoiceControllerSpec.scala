@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 

@@ -34,7 +34,7 @@ import scala.concurrent.Future
 class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
 
   def itemSmallIndependentProducerSubmitAction(idx: Index = testIndex1) =
     routes.ItemSmallIndependentProducerController.onSubmit(testErn, testDraftId, idx, NormalMode)

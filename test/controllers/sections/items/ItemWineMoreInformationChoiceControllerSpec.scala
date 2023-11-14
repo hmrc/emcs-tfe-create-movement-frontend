@@ -35,7 +35,7 @@ class ItemWineMoreInformationChoiceControllerSpec extends SpecBase with MockUser
   lazy val formProvider = new ItemWineMoreInformationChoiceFormProvider()
   lazy val form = formProvider()
   lazy val view = app.injector.instanceOf[ItemWineMoreInformationChoiceView]
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
 
   val action: Call = controllers.sections.items.routes.ItemWineMoreInformationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 

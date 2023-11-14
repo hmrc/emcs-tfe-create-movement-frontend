@@ -42,7 +42,7 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), "W300")
+    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
 
   class Test(val userAnswers: Option[UserAnswers]) {
@@ -66,7 +66,7 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
   "ItemPackagingShippingMarks Controller" - {
 
     "must redirect to Index of section when the packaging idx is outside of bounds for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
 
@@ -84,7 +84,7 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     }
 
     "must redirect to Index of section when the packaging idx is outside of bounds for a POST" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
     )) {
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 

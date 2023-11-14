@@ -47,7 +47,7 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
   lazy val form: Form[BulkPackagingType] = formProvider.apply(Wine, bulkPackagingTypes)(messages(request))
   lazy val view: ItemBulkPackagingSelectView = app.injector.instanceOf[ItemBulkPackagingSelectView]
 
-  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
 
   def submitRoute: Call = routes.ItemBulkPackagingSelectController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 

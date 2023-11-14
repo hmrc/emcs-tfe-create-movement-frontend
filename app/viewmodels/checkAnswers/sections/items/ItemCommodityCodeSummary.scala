@@ -17,28 +17,39 @@
 package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
+import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
-import models.{CheckMode, Index}
-import pages.sections.items.ItemCommodityCodePage
+import models.{Index, NormalMode, UserAnswers}
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ItemCommodityCodeSummary {
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, goodsType: GoodsType, userAnswers: UserAnswers)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     request.userAnswers.get(ItemCommodityCodePage(idx)).map { value =>
       SummaryListRowViewModel(
-        key = "itemCommodityCode.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemBrandName${idx.displayIndex}"
-          )
-            .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
-        )
+        key = messages("itemCommodityCode.checkYourAnswersLabel", goodsType.toSingularOutput()),
+        value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+          Html(value.cnCode + "<br>"),
+          Html(value.cnCodeDescription))))),
+        actions =
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(_.code) match {
+            case Some("S500" | "T300" | "S400" | "E600" | "E800" | "E910") =>
+              Seq.empty
+            case _ =>
+              Seq(
+                ActionItemViewModel(
+                  content = "site.change",
+                  routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, NormalMode).url,
+                  id = s"changeItemCommodityCode${idx.displayIndex}"
+                )
+                  .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
+              )
+          }
       )
     }
   }

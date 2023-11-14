@@ -38,7 +38,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase
   with MockGetCnCodeInformationService
   with ItemFixtures {
 
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
 
   lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
   lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -68,9 +68,9 @@ class ItemCommodityCodeControllerSpec extends SpecBase
 
   "ItemCommodityCode Controller" - {
     "must return OK and the correct view for a GET when a list of commodity codes are returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))
@@ -90,11 +90,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     "must return OK and the correct view with the previous answer for a GET when a list of commodity codes are returned" in new Fixture(
       userAnswers = Some(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco.cnCode)
+          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)
       )
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))
@@ -112,11 +112,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the confirmation page for a GET when a single commodity code is returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
         testCommodityCodeTobacco
       )))
 
@@ -127,11 +127,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the confirmation page for a GET when no commodity codes are returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Nil))
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Nil))
 
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -140,9 +140,13 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
+        testCommodityCodeTobacco
+      )))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("item-commodity-code", "answer")))
 
@@ -151,9 +155,9 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))

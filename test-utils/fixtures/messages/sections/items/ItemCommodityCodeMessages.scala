@@ -29,6 +29,8 @@ object ItemCommodityCodeMessages {
     val errorRequired = "Choose the commodity code for the beer"
     val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
     val defaultItem = "Choose commodity code"
+    val cyaLabel = "Commodity code"
+    val cyaChangeHidden = "itemCommodityCode"
   }
 
   object English extends ViewMessages with BaseEnglish

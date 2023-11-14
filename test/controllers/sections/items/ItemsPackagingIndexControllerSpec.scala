@@ -62,7 +62,7 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
     }
 
     "must redirect to the items select packaging controller" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
@@ -73,7 +73,7 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
 
     "must redirect to the items index controller" - {
       "when the items index is out of bounds" in new Test(Some(
-        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
       )) {
         val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
 

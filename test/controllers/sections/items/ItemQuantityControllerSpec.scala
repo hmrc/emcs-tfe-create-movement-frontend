@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemQuantityFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
@@ -35,14 +36,14 @@ import views.html.sections.items.ItemQuantityView
 
 import scala.concurrent.Future
 
-class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService with ItemFixtures {
 
-  val item: CnCodeInformationItem = CnCodeInformationItem("W200", "22042111")
+  val item: CnCodeInformationItem = CnCodeInformationItem("W200", "22060031")
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), item.productCode)
-    .set(ItemCommodityCodePage(testIndex1), item.cnCode)
+    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+    .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine)
 
   def itemQuantitySubmitAction(idx: Index = testIndex1): Call = routes.ItemQuantityController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
@@ -104,7 +105,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
 
     "must return OK and the correct view for a GET" in new Fixture() {
       MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
-        .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
+        .returns(Future.successful(Seq(item -> testCommodityCodeWine)))
 
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 

@@ -18,12 +18,12 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
-import models.CheckMode
+import models.NormalMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -31,9 +31,6 @@ import viewmodels.implicits._
 class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
 
   "ItemExciseProductCodeSummary" - {
-    val p = app.injector.instanceOf[views.html.components.p]
-
-    val summary = new ItemExciseProductCodeSummary(p)
 
     Seq(ItemExciseProductCodeMessages.English).foreach { messagesForLanguage =>
 
@@ -46,26 +43,26 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            summary.row(testIndex1, None) mustBe None
+            ItemExciseProductCodeSummary.row(testIndex1) mustBe None
           }
         }
 
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000))
 
-            summary.row(testIndex1, Some("Beer")) mustBe Some(
+            ItemExciseProductCodeSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                  p()(HtmlFormat.escape("B000")),
-                  p()(HtmlFormat.escape("Beer"))
+                  Html("B000" + "<br>"),
+                  Html("Beer")
                 )))),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
                     id = "changeItemExciseProductCode1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

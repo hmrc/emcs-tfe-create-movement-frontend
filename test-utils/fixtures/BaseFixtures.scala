@@ -16,7 +16,9 @@
 
 package fixtures
 
+import models.UnitOfMeasure.Litres20
 import models._
+import models.response.referenceData.CnCodeInformation
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.libs.json.{JsObject, Json}
@@ -52,6 +54,77 @@ trait BaseFixtures {
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
   val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))
   val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
+
+  val testExciseProductCodeW200: ExciseProductCode =
+    ExciseProductCode(
+      "W200",
+      "Still wine and still fermented beverages other than wine and beer",
+      "W",
+      "Wine and fermented beverages other than wine and beer"
+    )
+  val testExciseProductCodeW300: ExciseProductCode =
+    ExciseProductCode(
+      "W300",
+      "Still wine and still fermented beverages other than wine and beer",
+      "W",
+      "Wine and fermented beverages other than wine and beer"
+    )
+  val testExciseProductCodeB000: ExciseProductCode =
+    ExciseProductCode(
+      "B000",
+      "Beer",
+      "B",
+      "Beer"
+    )
+  val testExciseProductCodeE600: ExciseProductCode =
+    ExciseProductCode(
+      "E600",
+      "Saturated acyclic hydrocarbons Products falling within CN code 2901 10",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE800: ExciseProductCode =
+    ExciseProductCode(
+      "E800",
+      "Methanol (methyl alcohol) Products falling within CN code 2905 11 00, which are not of synthetic origin, if these are intended for use as heating fuel or motor fuel",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE910: ExciseProductCode =
+    ExciseProductCode(
+      "E910",
+      "Fatty-acid mono-alkyl esters, containing by volume 96,5 % or more of esters (FAMAE) falling within CN code 3824 90 99",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeS400: ExciseProductCode =
+    ExciseProductCode(
+      "S400",
+      "Partially denatured alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeS500: ExciseProductCode =
+    ExciseProductCode(
+      "S500",
+      "Other products containing ethyl alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeT200: ExciseProductCode =
+    ExciseProductCode(
+      "T200",
+      "Cigarettes",
+      "T",
+      "Manufactured tobacco products"
+    )
+  val testExciseProductCodeT300: ExciseProductCode =
+    ExciseProductCode(
+      "T300",
+      "Cigars &amp; cigarillos",
+      "T",
+      "Manufactured tobacco products"
+    )
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
@@ -120,5 +193,13 @@ trait BaseFixtures {
   val dispatchDetailsJson = Json.obj(
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
+  )
+
+  val testCommodityCodeBeer: CnCodeInformation = CnCodeInformation(
+    cnCode = "22030001",
+    cnCodeDescription = "Beer made from malt in bottles holding 10 litres or less",
+    exciseProductCode = testExciseProductCodeB000.code,
+    exciseProductCodeDescription = "Beer",
+    unitOfMeasure = Litres20
   )
 }

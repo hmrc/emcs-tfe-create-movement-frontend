@@ -63,18 +63,19 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   def withGoodsType(idx: Index)(f: GoodsType => Result)(implicit request: DataRequest[_]): Result =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        f(GoodsTypeModel.apply(epc))
+        f(GoodsTypeModel.apply(epc.code))
       case None =>
         Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
     }
 
-  def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+  def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
-      case Some(epc) =>
-        f(GoodsTypeModel.apply(epc))
+      case Some(exciseProductCode) =>
+        f(GoodsTypeModel.apply(exciseProductCode.code))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
+  }
 
   def withItemPackaging(itemIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)) match {
@@ -87,7 +88,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
       case (Some(epc), Some(commodityCode)) =>
-        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
+        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc.code, commodityCode.cnCode))).map { response =>
           response.headOption match {
             case Some((_, cnCodeInfo)) =>
               f(cnCodeInfo)

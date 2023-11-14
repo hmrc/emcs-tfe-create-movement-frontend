@@ -47,7 +47,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
   val action: Call = controllers.sections.items.routes.ItemSelectPackagingController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1),testExciseProductCodeW300)
 
   class Test(val userAnswers: Option[UserAnswers], callsService: Boolean = false) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()

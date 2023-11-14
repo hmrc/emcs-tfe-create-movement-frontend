@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package fixtures.messages.sections.items
 
-import models.Index
-import models.response.referenceData.CnCodeInformation
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case class ItemCommodityCodePage(idx: Index) extends QuestionPage[CnCodeInformation] {
-  override val toString: String = "itemCommodityCode"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+object ConfirmCommodityCodeMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    def heading() = "Review and confirm Excise Product Code and commodity code"
+    def title(): String = titleHelper(heading())
+
+    val caption: String = "Item information"
+    val exciseProductCode: String = "Excise Product Code"
+    val commodityCode: String = "Commodity code"
+  }
+
+  object English extends ViewMessages with BaseEnglish
+
 }

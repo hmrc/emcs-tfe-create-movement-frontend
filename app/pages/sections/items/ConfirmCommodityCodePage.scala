@@ -17,11 +17,8 @@
 package pages.sections.items
 
 import models.Index
-import models.response.referenceData.CnCodeInformation
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.Page
 
-case class ItemCommodityCodePage(idx: Index) extends QuestionPage[CnCodeInformation] {
-  override val toString: String = "itemCommodityCode"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+case class ConfirmCommodityCodePage(idx: Index) extends Page {
+  override val toString: String = "confirmCommodityCode"
 }

@@ -40,7 +40,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
   lazy val form: Form[ItemGeographicalIndicationType] = formProvider()
   lazy val view: ItemGeographicalIndicationChoiceView = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
 
   val action: Call = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 

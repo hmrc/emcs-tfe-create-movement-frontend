@@ -46,15 +46,19 @@ class ItemGeographicalIndicationChoiceController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(ItemGeographicalIndicationChoicePage(idx), formProvider()), idx, mode)
+      validateIndex(idx) {
+        renderView(Ok, fillForm(ItemGeographicalIndicationChoicePage(idx), formProvider()), idx, mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, idx, mode),
-        saveAndRedirect(ItemGeographicalIndicationChoicePage(idx), _, mode)
-      )
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          renderView(BadRequest, _, idx, mode),
+          saveAndRedirect(ItemGeographicalIndicationChoicePage(idx), _, mode)
+        )
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)

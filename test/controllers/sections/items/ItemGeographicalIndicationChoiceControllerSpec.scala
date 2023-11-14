@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Beer
-import models.NormalMode
+import models.{Index, NormalMode}
 import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import navigation.FakeNavigators.FakeItemsNavigator
 import navigation.ItemsNavigator
@@ -41,16 +41,59 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
 
   val action = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
-  lazy val itemGeographicalIndicationChoiceRoute = routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+  def itemGeographicalIndicationChoiceRoute(index: Index = testIndex1): String =
+    routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, index, NormalMode).url
 
   "ItemGeographicalIndicationChoice Controller" - {
+
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in {
+
+      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute(testIndex2))
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+    }
+
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in  {
+
+      val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
+
+      running(application) {
+
+        val request = FakeRequest(POST, itemGeographicalIndicationChoiceRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+    }
+
+    "must redirect to Index of section when Excise Product Code is missing" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute(testIndex1))
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+    }
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute)
+        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute())
 
         val result = route(application, request).value
 
@@ -68,7 +111,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute)
+        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute())
 
         val view = application.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
@@ -95,7 +138,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
 
       running(application) {
         val request =
-          FakeRequest(POST, itemGeographicalIndicationChoiceRoute)
+          FakeRequest(POST, itemGeographicalIndicationChoiceRoute())
             .withFormUrlEncodedBody(("value", "PGI"))
 
         val result = route(application, request).value
@@ -111,7 +154,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
 
       running(application) {
         val request =
-          FakeRequest(POST, itemGeographicalIndicationChoiceRoute)
+          FakeRequest(POST, itemGeographicalIndicationChoiceRoute())
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -130,7 +173,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute)
+        val request = FakeRequest(GET, itemGeographicalIndicationChoiceRoute())
 
         val result = route(application, request).value
 
@@ -145,7 +188,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
 
       running(application) {
         val request =
-          FakeRequest(POST, itemGeographicalIndicationChoiceRoute)
+          FakeRequest(POST, itemGeographicalIndicationChoiceRoute())
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value

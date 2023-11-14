@@ -24,7 +24,7 @@ import models.{Index, NormalMode, UserAnswers}
 import models.sections.documents.DocumentType
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection, ReferenceAvailablePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -304,6 +304,31 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         running(application) {
 
           val request = FakeRequest(POST, documentTypeRoute(2))
+            .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController when the idx is greater than the MAX index for documents" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeModel).set(DocumentReferencePage(0), "reference")
+          .set(DocumentTypePage(1), documentTypeModel).set(DocumentReferencePage(1), "reference")
+          .set(DocumentTypePage(2), documentTypeModel).set(DocumentReferencePage(2), "reference")
+          .set(DocumentTypePage(3), documentTypeModel).set(DocumentReferencePage(3), "reference")
+          .set(DocumentTypePage(4), documentTypeModel).set(DocumentReferencePage(4), "reference")
+          .set(DocumentTypePage(5), documentTypeModel).set(DocumentReferencePage(5), "reference")
+          .set(DocumentTypePage(6), documentTypeModel).set(DocumentReferencePage(6), "reference")
+          .set(DocumentTypePage(7), documentTypeModel).set(DocumentReferencePage(7), "reference")
+          .set(DocumentTypePage(8), documentTypeModel).set(DocumentReferencePage(8), "reference")
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, documentTypeRoute(DocumentsSection.MAX + 1))
             .withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
           val result = route(application, request).value

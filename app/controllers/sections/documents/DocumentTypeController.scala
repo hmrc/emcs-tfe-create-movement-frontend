@@ -105,7 +105,7 @@ class DocumentTypeController @Inject()(
     }
 
   override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    validateIndexForJourneyEntry(DocumentsCount, idx)(
+    validateIndexForJourneyEntry(DocumentsCount, idx, DocumentsSection.MAX)(
       onSuccess = f,
       onFailure = Future.successful(
         Redirect(

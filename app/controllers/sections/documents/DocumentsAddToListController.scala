@@ -23,10 +23,11 @@ import models.NormalMode
 import models.requests.DataRequest
 import models.sections.documents.DocumentsAddToList
 import navigation.DocumentsNavigator
-import pages.sections.documents.{DocumentsAddToListPage, DocumentsSectionUnits}
+import pages.sections.documents.{DocumentsAddToListPage, DocumentsSection, DocumentsSectionUnits}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.DocumentsCount
 import services.UserAnswersService
 import viewmodels.helpers.DocumentsAddToListHelper
 import viewmodels.taskList.InProgress
@@ -51,20 +52,29 @@ class DocumentsAddToListController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DocumentsAddToListPage, formProvider()))
+      val form = onMax(ifMax = None, ifNotMax = Some(fillForm(DocumentsAddToListPage, formProvider())))
+      renderView(Ok, form)
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors)),
-        handleSubmissionRedirect(_)
+      onMax(
+        ifMax = Future(Redirect(navigator.nextPage(
+          page = DocumentsAddToListPage,
+          mode = NormalMode,
+          userAnswers = request.userAnswers
+        ))),
+        ifNotMax =
+          formProvider().bindFromRequest().fold(
+            formWithErrors => Future(renderView(BadRequest, Some(formWithErrors))),
+            handleSubmissionRedirect(_)
+          )
       )
     }
 
-  private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Result = {
+  private def renderView(status: Status, form: Option[Form[_]])(implicit request: DataRequest[_]): Result = {
     status(view(
-      form = form,
+      formOpt = form,
       onSubmitCall = controllers.sections.documents.routes.DocumentsAddToListController.onSubmit(request.ern, request.draftId),
       documents = addToListHelper.allDocumentsSummary(),
       showNoOption = DocumentsSectionUnits.status != InProgress
@@ -88,6 +98,13 @@ class DocumentsAddToListController @Inject()(
           }
       case value =>
         saveAndRedirect(DocumentsAddToListPage, value, NormalMode)
+    }
+  }
+
+  private def onMax[T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
+    dataRequest.userAnswers.get(DocumentsCount) match {
+      case Some(value) if value >= DocumentsSection.MAX => ifMax
+      case _ => ifNotMax
     }
   }
 }

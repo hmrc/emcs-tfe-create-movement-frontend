@@ -59,6 +59,8 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
     val view = application.injector.instanceOf[DocumentsAddToListView]
   }
 
+
+
   "DocumentsAddToList Controller" - {
 
     "GET onPageLoad" - {
@@ -78,7 +80,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
-            form = form,
+            formOpt = Some(form),
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = true
@@ -100,7 +102,37 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
-            form = form,
+            formOpt = Some(form),
+            onSubmitCall = onSubmitCall,
+            documents = Seq.empty,
+            showNoOption = false
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must return OK and the correct view when there MAX documents already added" in new Setup(Some(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeModel).set(DocumentReferencePage(0), "reference")
+        .set(DocumentTypePage(1), documentTypeModel).set(DocumentReferencePage(1), "reference")
+        .set(DocumentTypePage(2), documentTypeModel).set(DocumentReferencePage(2), "reference")
+        .set(DocumentTypePage(3), documentTypeModel).set(DocumentReferencePage(3), "reference")
+        .set(DocumentTypePage(4), documentTypeModel).set(DocumentReferencePage(4), "reference")
+        .set(DocumentTypePage(5), documentTypeModel).set(DocumentReferencePage(5), "reference")
+        .set(DocumentTypePage(6), documentTypeModel).set(DocumentReferencePage(6), "reference")
+        .set(DocumentTypePage(7), documentTypeModel).set(DocumentReferencePage(7), "reference")
+        .set(DocumentTypePage(8), documentTypeModel).set(DocumentReferencePage(8), "reference")
+      )) {
+
+        running(application) {
+
+          MockDocumentsAddToListHelper.allDocumentsSummary()
+
+          val request = FakeRequest(GET, controllerRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            formOpt = None,
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = false
@@ -215,6 +247,29 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
         }
       }
 
+      "must redirect to the next page when submitted with MAX documents already added" in new Setup(Some(emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeModel).set(DocumentReferencePage(0), "reference")
+        .set(DocumentTypePage(1), documentTypeModel).set(DocumentReferencePage(1), "reference")
+        .set(DocumentTypePage(2), documentTypeModel).set(DocumentReferencePage(2), "reference")
+        .set(DocumentTypePage(3), documentTypeModel).set(DocumentReferencePage(3), "reference")
+        .set(DocumentTypePage(4), documentTypeModel).set(DocumentReferencePage(4), "reference")
+        .set(DocumentTypePage(5), documentTypeModel).set(DocumentReferencePage(5), "reference")
+        .set(DocumentTypePage(6), documentTypeModel).set(DocumentReferencePage(6), "reference")
+        .set(DocumentTypePage(7), documentTypeModel).set(DocumentReferencePage(7), "reference")
+        .set(DocumentTypePage(8), documentTypeModel).set(DocumentReferencePage(8), "reference")
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, controllerRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
       "must return a Bad Request and errors when invalid data is submitted" in new Setup() {
 
         running(application) {
@@ -230,7 +285,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(
-            form = boundForm,
+            formOpt = Some(boundForm),
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = true

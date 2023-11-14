@@ -67,7 +67,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
     userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => userAnswers.get(DocumentsCount) match {
-        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, NormalMode)
+        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, mode)
         case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
     }
@@ -75,9 +75,9 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
     answers.get(DocumentTypePage(idx)) match {
       case Some(doc) if doc.typeIsOther =>
-        routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
+        routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, mode)
       case _ =>
-        routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
+        routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, mode)
     }
 
   private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
@@ -92,12 +92,11 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     userAnswers.get(DocumentsAddToListPage) match {
-      case Some(DocumentsAddToList.No | DocumentsAddToList.MoreLater) =>
-        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-      case _ =>
+      case Some(DocumentsAddToList.Yes) =>
         val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
         routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
-
+      case _ =>
+        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
   }
 }

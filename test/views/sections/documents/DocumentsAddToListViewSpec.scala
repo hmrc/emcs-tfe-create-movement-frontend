@@ -59,7 +59,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
-        form = form,
+        formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
         documents = helper,
         showNoOption = true
@@ -98,7 +98,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
-        form = form,
+        formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
         documents = helper,
         showNoOption = true
@@ -118,6 +118,45 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       ))
     }
 
+    s"when being rendered with no form" - {
+
+      implicit val msgs: Messages = messages(app, English.lang)
+
+      val userAnswers = emptyUserAnswers
+        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentReferencePage(0), "reference1")
+        .set(ReferenceAvailablePage(0), false)
+        .set(DocumentDescriptionPage(1), "description2")
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+
+      val view = app.injector.instanceOf[DocumentsAddToListView]
+      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
+
+      implicit val doc: Document = Jsoup.parse(view(
+        formOpt = None,
+        onSubmitCall = testOnwardRoute,
+        documents = helper,
+        showNoOption = true
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title(2),
+        Selectors.h1 -> English.heading(2),
+        Selectors.cardTitle -> English.documentCardTitle(0),
+        Selectors.removeItemLink(1) -> English.removeDocument(0),
+        Selectors.button -> English.saveAndContinue,
+        Selectors.returnToDraftLink -> English.returnToDraft
+      ))
+
+      behave like pageWithElementsNotPresent(Seq(
+        Selectors.legendQuestion,
+        Selectors.radioButton(1),
+        Selectors.radioButton(2),
+        Selectors.radioButton(4)
+      ))
+    }
+
     s"when being rendered for an InProgress item" - {
 
       implicit val msgs: Messages = messages(app, English.lang)
@@ -132,7 +171,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
-        form = form,
+        formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
         documents = helper,
         showNoOption = false

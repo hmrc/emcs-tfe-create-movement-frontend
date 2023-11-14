@@ -20,10 +20,12 @@ import models.requests.DataRequest
 import models.sections.documents.DocumentsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
+import queries.DocumentsCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object DocumentsSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "documents"
+  val MAX: Int = 9
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     request.userAnswers.get(DocumentsCertificatesPage) match {
@@ -33,8 +35,9 @@ case object DocumentsSection extends Section[JsObject] {
     }
 
   private def documentListStatus(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(DocumentsAddToListPage) match {
-      case Some(DocumentsAddToList.No) => DocumentsSectionUnits.status
+    (request.userAnswers.get(DocumentsCount), request.userAnswers.get(DocumentsAddToListPage)) match {
+      case (_, Some(DocumentsAddToList.No)) => DocumentsSectionUnits.status
+      case (Some(count), _) if count >= MAX => DocumentsSectionUnits.status
       case _ => InProgress
     }
 

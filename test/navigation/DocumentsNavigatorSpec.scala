@@ -143,20 +143,26 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
             routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
 
-        "to UnderConstruction when user selects No" in {
+        "to DraftMovement when user selects No" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.No)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
 
-        "to UnderConstruction when user selects MoreLater" in {
+        "to DraftMovement when user selects MoreLater" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)
 
           navigator.nextPage(DocumentsAddToListPage, NormalMode, userAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+        }
+
+        "to DraftMovement when user has no answer to this page" in {
+
+          navigator.nextPage(DocumentsAddToListPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
         }
       }
 

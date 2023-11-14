@@ -79,6 +79,24 @@ class DocumentsSectionSpec extends SpecBase with DocumentTypeFixtures {
 
           DocumentsSection.status mustBe Completed
         }
+
+        "when every document has been Completed and the MAX amount of documents has been reached" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DocumentsCertificatesPage, true)
+            .set(DocumentTypePage(0), documentTypeModel).set(DocumentReferencePage(0), "reference")
+            .set(DocumentTypePage(1), documentTypeModel).set(DocumentReferencePage(1), "reference")
+            .set(DocumentTypePage(2), documentTypeModel).set(DocumentReferencePage(2), "reference")
+            .set(DocumentTypePage(3), documentTypeModel).set(DocumentReferencePage(3), "reference")
+            .set(DocumentTypePage(4), documentTypeModel).set(DocumentReferencePage(4), "reference")
+            .set(DocumentTypePage(5), documentTypeModel).set(DocumentReferencePage(5), "reference")
+            .set(DocumentTypePage(6), documentTypeModel).set(DocumentReferencePage(6), "reference")
+            .set(DocumentTypePage(7), documentTypeModel).set(DocumentReferencePage(7), "reference")
+            .set(DocumentTypePage(8), documentTypeModel).set(DocumentReferencePage(8), "reference")
+          )
+
+          DocumentsSection.status mustBe Completed
+        }
       }
     }
 

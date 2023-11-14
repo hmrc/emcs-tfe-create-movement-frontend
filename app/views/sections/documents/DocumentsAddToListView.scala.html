@@ -30,15 +30,23 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], onSubmitCall: Call, documents: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
+@(formOpt: Option[Form[_]], onSubmitCall: Call, documents: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, pluralSingular("documentsAddToList.title", documents.length)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(
+    pageTitle = formOpt.fold(titleNoForm(pluralSingular("documentsAddToList.title", documents.length))){
+        form => title(form, pluralSingular("documentsAddToList.title", documents.length))
+    },
+    maybeShowActiveTrader = maybeShowActiveTrader(request)
+) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+        @formOpt.map{ form =>
+            @if(form.errors.nonEmpty) {
+                @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            }
         }
+
 
         @h2(messages("documents.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(pluralSingular("documentsAddToList.heading", documents.length), classes = "govuk-heading-l")
@@ -47,13 +55,15 @@
             @govukSummaryList(document)
         }
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("documentsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
-                items  = DocumentsAddToList.options(documents.length, showNoOption)
+        @formOpt.map { form =>
+            @govukRadios(
+                RadiosViewModel(
+                    field  = form("value"),
+                    legend = LegendViewModel(Text(messages("documentsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
+                    items  = DocumentsAddToList.options(documents.length, showNoOption)
+                )
             )
-        )
+        }
 
         @continueOrExit()
 

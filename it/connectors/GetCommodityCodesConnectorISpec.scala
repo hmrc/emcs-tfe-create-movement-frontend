@@ -2,10 +2,11 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.GetDocumentTypesConnector
+import connectors.referenceData.{GetCommodityCodesConnector, GetDocumentTypesConnector}
 import fixtures.BaseFixtures
+import models.UnitOfMeasure.Kilograms
 import models.response.UnexpectedDownstreamResponseError
-import models.sections.documents.DocumentType
+import models.response.referenceData.CnCodeInformation
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -29,11 +30,26 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  def url(exciseproductCode: String) = s"/emcs-tfe-reference-data/oracle/commodity-codes/$exciseproductCode"
+  def url(exciseproductCode: String) = s"/emcs-tfe-reference-data/oracle/cn-codes/$exciseproductCode"
 
-  val documentTypesSeq: Seq[String] = Seq(
-
+  val commodityCodes: Seq[CnCodeInformation] = Seq(
+    CnCodeInformation(
+      cnCode = "T400",
+      cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+      exciseProductCode = testEpc,
+      exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
+      unitOfMeasure = Kilograms
+    ),
+    CnCodeInformation(
+      cnCode = "T401",
+      cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+      exciseProductCode = testEpc,
+      exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
+      unitOfMeasure = Kilograms
+    )
   )
+
+  lazy val testEpc: String = "24029000"
 
   ".getDocumentTypes" - {
 
@@ -43,42 +59,55 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
         .configure("features.stub-get-trader-known-facts" -> "false")
         .build()
 
-    lazy val connector: GetDocumentTypesConnector = app.injector.instanceOf[GetDocumentTypesConnector]
+    lazy val connector: GetCommodityCodesConnector = app.injector.instanceOf[GetCommodityCodesConnector]
 
-    "must return true when the server responds OK" in {
+    "must return the commodity codes when the server responds OK" in {
 
       server.stubFor(
-        get(urlEqualTo(url))
+        get(urlEqualTo(url(testEpc)))
           .willReturn(
             aResponse()
               .withStatus(OK)
               .withBody(Json.stringify(Json.arr(
-                Json.obj("code" -> "testCode1", "description" -> "testDescription1"),
-                Json.obj("code" -> "testCode2", "description" -> "testDescription2")
-              ))))
+                Json.obj(
+                  "cnCode" -> "T400",
+                  "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+                  "exciseProductCode" -> testEpc,
+                  "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
+                  "unitOfMeasureCode" -> 1
+                ),
+                Json.obj(
+                  "cnCode" -> "T401",
+                  "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+                  "exciseProductCode" -> testEpc,
+                  "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
+                  "unitOfMeasureCode" -> 1
+                ),
+              )))
+          )
       )
 
-      connector.getDocumentTypes().futureValue mustBe Right(documentTypesSeq)
+      connector.getCommodityCodes(testEpc).futureValue mustBe Right(commodityCodes)
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
-        get(urlEqualTo(url))
+        get(urlEqualTo(url(testEpc)))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getDocumentTypes().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCommodityCodes(testEpc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
 
       server.stubFor(
-        get(urlEqualTo(url))
+        get(urlEqualTo(url(testEpc)))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getDocumentTypes().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCommodityCodes(testEpc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

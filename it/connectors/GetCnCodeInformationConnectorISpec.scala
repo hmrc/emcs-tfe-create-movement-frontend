@@ -57,7 +57,9 @@ class GetCnCodeInformationConnectorISpec
           .withRequestBody(equalToJson(Json.stringify(requestJson)))
           .willReturn(aResponse().withStatus(OK).withBody(Json.stringify(Json.obj(
             "24029000" -> Json.obj(
+              "cnCode" -> "T400",
               "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+              "exciseProductCode" -> "24029000",
               "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
               "unitOfMeasureCode" -> 1
             )
@@ -66,7 +68,9 @@ class GetCnCodeInformationConnectorISpec
 
       connector.getCnCodeInformation(request).futureValue mustBe Right(CnCodeInformationResponse(data = Map(
         "24029000" -> CnCodeInformation(
+          cnCode = "T400",
           cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+          exciseProductCode = "24029000",
           exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
           unitOfMeasure = Kilograms
         )

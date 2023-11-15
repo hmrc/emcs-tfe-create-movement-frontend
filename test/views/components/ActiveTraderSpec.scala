@@ -18,7 +18,7 @@ package views.components
 
 import base.ViewSpecBase
 import config.AppConfig
-import fixtures.messages.TaskListStatusMessages
+import fixtures.messages.ActiveTraderMessages
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import viewmodels.traderInfo.TraderInfo
@@ -27,7 +27,7 @@ class ActiveTraderSpec extends ViewSpecBase {
 
   "ActiveTrader" - {
 
-    Seq(TaskListStatusMessages.English).foreach { messagesForLanguage =>
+    Seq(ActiveTraderMessages.English).foreach { messagesForLanguage =>
 
       implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
 
@@ -73,7 +73,7 @@ class ActiveTraderSpec extends ViewSpecBase {
 
           val link =  doc.select(linkSelector).first
 
-          (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs-tfe", "Change trader type")
+          (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs-tfe", messagesForLanguage.changeTraderType)
         }
 
       }

@@ -17,15 +17,14 @@
 package forms.sections.items
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
+import play.api.data.Forms.single
 
 class ItemCommodityCodeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("itemCommodityCode.error.required")
-        .verifying(maxLength(100, "itemCommodityCode.error.length"))
+      single("item-commodity-code" -> text("itemCommodityCode.error.required"))
     )
 }

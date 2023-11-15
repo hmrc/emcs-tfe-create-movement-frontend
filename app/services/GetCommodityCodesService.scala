@@ -30,7 +30,7 @@ class GetCommodityCodesService @Inject()(connector: GetCommodityCodesConnector)
 
   def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier): Future[Seq[CnCodeInformation]] = {
     connector.getCommodityCodes(exciseProductCode).map {
-      case Left(_) => throw CommodityCodesException("No commodity codes retrieved")
+      case Left(_) => throw CommodityCodesException("Invalid response from commodity code endpoint")
       case Right(commodityCodes) => commodityCodes
     }
   }

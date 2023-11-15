@@ -20,6 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.requests.DataRequest
+import models.response.referenceData.CnCodeInformation
 
 import javax.inject.Inject
 import models.{GoodsTypeModel, Index, Mode}
@@ -53,15 +54,20 @@ class ItemCommodityCodeController @Inject()(
       request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
         case Some(itemExciseProductCode) =>
           val goodsType = GoodsTypeModel(itemExciseProductCode)
-          getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
-            commodityCodes =>
-              Ok(
+          getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
+            case Nil =>
+              saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
+            case singleCommodityCode::Nil =>
+              saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode.cnCode, mode)
+            case commodityCodes =>
+              Future.successful(Ok(
                 view(
                   form = fillForm(ItemCommodityCodePage(idx), formProvider()),
                   action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
                   goodsType = goodsType,
                   commodityCodes
-                ))
+                )
+              ))
           }
         case None =>
           Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))

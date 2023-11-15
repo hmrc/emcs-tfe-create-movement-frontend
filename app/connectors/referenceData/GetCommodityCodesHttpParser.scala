@@ -33,7 +33,7 @@ trait GetCommodityCodesHttpParser extends BaseConnectorUtils[Seq[CnCodeInformati
       response.status match {
         case OK =>
           response.validateJson match {
-            case Some(valid: Seq[CnCodeInformation]) if valid.isDefinedAt(0) => Right(valid)
+            case Some(valid: Seq[CnCodeInformation]) => Right(valid)
             case _ =>
               logger.warn(s"[read] Bad JSON response from emcs-tfe-reference-data")
               Left(JsonValidationError)

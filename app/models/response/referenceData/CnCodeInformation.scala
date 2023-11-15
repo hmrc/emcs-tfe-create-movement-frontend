@@ -27,6 +27,7 @@ case class CnCodeInformation(cnCode: String,
                              unitOfMeasure: UnitOfMeasure)
 
 object CnCodeInformation {
+  val defaultCnCode: String = "10000000"
 
   implicit val reads: Reads[CnCodeInformation] = (
     (JsPath \ "cnCode").read[String] and

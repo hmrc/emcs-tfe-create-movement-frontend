@@ -20,7 +20,7 @@ import base.SpecBase
 import config.{AppConfig, EnrolmentKeys}
 import fixtures.BaseFixtures
 import models.requests.UserRequest
-import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
+import org.scalatest.BeforeAndAfterAll
 import play.api.Play
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
@@ -37,7 +37,7 @@ import javax.inject.Inject
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
-class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll with PrivateMethodTester {
+class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 

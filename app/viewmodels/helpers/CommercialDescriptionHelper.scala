@@ -16,113 +16,66 @@
 
 package viewmodels.helpers
 
+import models.GoodsTypeModel._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
-
 
 import javax.inject.Inject
 
 class CommercialDescriptionHelper @Inject()(p: views.html.components.p,
-                                            details: views.html.components.details) {
+                                            details: views.html.components.details,
+                                            bullets: views.html.components.bullets
+                                           ) {
 
-  def content(goodsType: String)(implicit messages: Messages): Html =
+  def content(goodsType: GoodsType)(implicit messages: Messages): Html =
 
-      if(goodsType == "beer") {
-        details("commercialDescription.summary")
-        {
-        HtmlFormat.fill(
-          Seq(  p()
-          {
-            Html(messages("commercialDescription.details.beer1"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.beer2"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.beer3"))
-          }))
+    goodsType match {
+      case Beer =>
+        details("commercialDescription.summary") {
+          HtmlFormat.fill(Seq(
+            p()(Html(messages("commercialDescription.details.beer.p"))),
+            bullets(Seq(
+              p()(Html(messages("commercialDescription.details.beer.b1"))),
+              p()(Html(messages("commercialDescription.details.beer.b2")))
+            ))
+          ))
         }
-      } else if (goodsType == "wine") {
-        details("commercialDescription.summary")
-        {
-          HtmlFormat.fill(
-            Seq(
-              p()
-          {
-            Html(messages("commercialDescription.details.wine1"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.wine2"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.wine3"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.wine4"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.wine5"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.wine6"))
-          }))
+      case Wine =>
+        details("commercialDescription.summary") {
+          HtmlFormat.fill(Seq(
+            p()(Html(messages("commercialDescription.details.wine.p"))),
+            bullets(Seq(
+              p()(Html(messages("commercialDescription.details.wine.b1"))),
+              p()(Html(messages("commercialDescription.details.wine.b2"))),
+              p()(Html(messages("commercialDescription.details.wine.b3"))),
+              p()(Html(messages("commercialDescription.details.wine.b4"))),
+              p()(Html(messages("commercialDescription.details.wine.b5")))
+            ))
+          ))
         }
-      } else if (goodsType == "tobacco") {
-        details("commercialDescription.summary")
-        {
-          HtmlFormat.fill(
-            Seq(
-              p()
-          {
-            Html(messages("commercialDescription.details.tobacco1"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.tobacco2"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.tobacco3"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.tobacco4"))
-          }))
+      case Tobacco =>
+        details("commercialDescription.summary") {
+          HtmlFormat.fill(Seq(
+            p()(Html(messages("commercialDescription.details.tobacco.p"))),
+            bullets(Seq(
+              p()(Html(messages("commercialDescription.details.tobacco.b1"))),
+              p()(Html(messages("commercialDescription.details.tobacco.b2"))),
+              p()(Html(messages("commercialDescription.details.tobacco.b3")))
+            ))
+          ))
         }
-      } else if (goodsType == "spirits") {
-        details("commercialDescription.summary")
-        {
-          HtmlFormat.fill(
-            Seq(
-              p()
-          {
-            Html(messages("commercialDescription.details.ethylAlcohol1"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.ethylAlcohol2"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.ethylAlcohol3"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.ethylAlcohol4"))
-          },
-          p()
-          {
-            Html(messages("commercialDescription.details.ethylAlcohol5"))
-          }))
+      case Spirits =>
+        details("commercialDescription.summary") {
+          HtmlFormat.fill(Seq(
+            p()(Html(messages("commercialDescription.details.ethylAlcohol.p"))),
+            bullets(Seq(
+              p()(Html(messages("commercialDescription.details.ethylAlcohol.b1"))),
+              p()(Html(messages("commercialDescription.details.ethylAlcohol.b2"))),
+              p()(Html(messages("commercialDescription.details.ethylAlcohol.b3"))),
+              p()(Html(messages("commercialDescription.details.ethylAlcohol.b4")))
+            ))
+          ))
         }
-      } else {Html("")}
-
-
+      case _ => Html("")
+    }
 }

@@ -53,7 +53,7 @@
             label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(HintViewModel(content = HtmlContent(
-            messages(s"commercialDescription.hint.${goodsType.toSingularOutput()}")
+            messages(s"commercialDescription.hint.${goodsType.code}")
             ))),
             errorMessage = form.errors("value") match {
                 case Nil => None
@@ -61,8 +61,7 @@
             }
         ))}
 
-
-     @helper.content(goodsType.toSingularOutput())
+        @helper.content(goodsType)
 
         @continueOrExit()
 

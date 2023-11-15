@@ -67,7 +67,11 @@
                 items = Seq(
                     SelectItem(text = messages("default key here"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>
-                    SelectItem(value = Some(commodityCode.cnCode), text = commodityCode.cnCodeDescription, selected = form.value.contains(commodityCode.cnCode))
+                    SelectItem(
+                        value = Some(commodityCode.cnCode),
+                        text = s"${commodityCode.cnCode}: ${commodityCode.cnCodeDescription}",
+                        selected = form.value.contains(commodityCode.cnCode)
+                    )
                 ),
                 errorMessage = form.errors("item-commodity-code") match {
                     case Nil => None

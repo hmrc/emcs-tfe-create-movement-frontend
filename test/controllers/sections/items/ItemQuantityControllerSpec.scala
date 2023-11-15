@@ -120,7 +120,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       running(application) {
 
         MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
-          .returns(Future.successful(Seq(item -> CnCodeInformation("Sparkling Wine", "Wine", Litres20))))
+          .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
 
         val request = FakeRequest(GET, itemQuantityRoute())
         val result = route(application, request).value
@@ -136,7 +136,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       running(application) {
 
         MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
-          .returns(Future.successful(Seq(item -> CnCodeInformation("Sparkling Wine", "Wine", Litres20))))
+          .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
 
         val request = FakeRequest(GET, itemQuantityRoute())
         val result = route(application, request).value
@@ -168,7 +168,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       running(application) {
 
         MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
-          .returns(Future.successful(Seq(item -> CnCodeInformation("Sparkling Wine", "Wine", Litres20))))
+          .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
 
         val request = FakeRequest(POST, itemQuantityRoute()).withFormUrlEncodedBody(("value", ""))
         val result = route(application, request).value

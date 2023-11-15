@@ -39,13 +39,17 @@ class CnCodeInformationHttpParserSpec extends SpecBase
       "when valid JSON is returned that can be parsed to the model" in {
 
         val cnCodeInformation = Map("24029000" -> CnCodeInformation(
+          cnCode = "T200",
           cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+          exciseProductCode = "24029000",
           exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
           unitOfMeasure = Kilograms
         ))
 
         val cnCodeInformationJson = Json.obj("24029000" -> Json.obj(
+          "cnCode" -> "T200",
           "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+          "exciseProductCode" -> "24029000",
           "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
           "unitOfMeasureCode" -> 1
         ))

@@ -17,9 +17,10 @@
 package forms.sections.items
 
 import fixtures.messages.sections.items.CommercialDescriptionMessages
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
-import play.api.data.FormError
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
 
 class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite{
@@ -53,7 +54,14 @@ class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours with G
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    behave like fieldWithXSSCharacters(
+      form,
+      fieldName,
+      FormError(fieldName, xssKey, Seq(XSS_REGEX))
+    )
   }
+
   "Error Messages" - {
 
     Seq(CommercialDescriptionMessages.English) foreach { messagesForLanguage =>
@@ -64,19 +72,19 @@ class CommercialDescriptionFormProviderSpec extends StringFieldBehaviours with G
 
         "have the correct error message for required" in {
 
-          messages("commercialDescription.error.required") mustBe
+          messages(requiredKey) mustBe
             messagesForLanguage.errorRequired
         }
 
         "have the correct error message for length" in {
 
-          messages("commercialDescription.error.length") mustBe
+          messages(lengthKey) mustBe
             messagesForLanguage.errorLength
         }
 
         "have the correct error message for xss" in {
 
-          messages("commercialDescription.error.invalidCharacter") mustBe
+          messages(xssKey) mustBe
             messagesForLanguage.errorXss
         }
 

@@ -53,9 +53,9 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintb,
           Selectors.summary(1) -> messagesForLanguage.summary,
-          Selectors.p(1) -> messagesForLanguage.detailsBeer1,
-          Selectors.p(2) -> messagesForLanguage.detailsBeer2,
-          Selectors.p(3) -> messagesForLanguage.detailsBeer3,
+          Selectors.bullet(1) -> messagesForLanguage.detailsBeer1,
+          Selectors.bullet(2) -> messagesForLanguage.detailsBeer2,
+          Selectors.bullet(3) -> messagesForLanguage.detailsBeer3,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
@@ -82,18 +82,19 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintw,
           Selectors.summary(1) -> messagesForLanguage.summary,
-          Selectors.p(1) -> messagesForLanguage.detailsWine1,
-          Selectors.p(2) -> messagesForLanguage.detailsWine2,
-          Selectors.p(3) -> messagesForLanguage.detailsWine3,
-          Selectors.p(4) -> messagesForLanguage.detailsWine4,
-          Selectors.p(5) -> messagesForLanguage.detailsWine5,
-          Selectors.p(6) -> messagesForLanguage.detailsWine6,
+          Selectors.bullet(1) -> messagesForLanguage.detailsWine1,
+          Selectors.bullet(2) -> messagesForLanguage.detailsWine2,
+          Selectors.bullet(3) -> messagesForLanguage.detailsWine3,
+          Selectors.bullet(4) -> messagesForLanguage.detailsWine4,
+          Selectors.bullet(5) -> messagesForLanguage.detailsWine5,
+          Selectors.bullet(6) -> messagesForLanguage.detailsWine6,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }
   }
+
   "CommercialDescriptionView for Energy" - {
 
     Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>

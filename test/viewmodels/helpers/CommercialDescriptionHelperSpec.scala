@@ -19,14 +19,16 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.sections.items.CommercialDescriptionFormProvider
+import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 
 class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite {
 
   lazy val helper = app.injector.instanceOf[CommercialDescriptionHelper]
   lazy val form = app.injector.instanceOf[CommercialDescriptionFormProvider]
   lazy val p = app.injector.instanceOf[views.html.components.p]
+  lazy val bullets = app.injector.instanceOf[views.html.components.bullets]
   lazy val details = app.injector.instanceOf[views.html.components.details]
 
   "CommercialDescriptionHelper" - {
@@ -42,9 +44,9 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
           "when the goodsType is beer" - {
 
             "must output the expected title" in {
-              helper.content(goodsType = "beer") mustBe
+              helper.content(Beer) mustBe
                 details(langMessages.summary) {
-                  HtmlFormat.fill(Seq(
+                  bullets(Seq(
                     p()(Html(langMessages.detailsBeer1)),
                     p()(Html(langMessages.detailsBeer2)),
                     p()(Html(langMessages.detailsBeer3))
@@ -56,9 +58,9 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
           "when the goodsType is Wine" - {
 
             "must output the expected title" in {
-              helper.content(goodsType = "wine") mustBe
+              helper.content(Wine) mustBe
                 details(langMessages.summary) {
-                  HtmlFormat.fill(Seq(
+                  bullets(Seq(
                     p()(Html(langMessages.detailsWine1)),
                     p()(Html(langMessages.detailsWine2)),
                     p()(Html(langMessages.detailsWine3)),
@@ -72,9 +74,9 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "when the goodsType is Spirits" - {
 
               "must output the expected title" in {
-                helper.content(goodsType = "spirits") mustBe
+                helper.content(Spirits) mustBe
                   details(langMessages.summary) {
-                    HtmlFormat.fill(Seq(
+                    bullets(Seq(
                       p()(Html(langMessages.detailsEthylAlcohol1)),
                       p()(Html(langMessages.detailsEthylAlcohol2)),
                       p()(Html(langMessages.detailsEthylAlcohol3)),
@@ -88,15 +90,29 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "when the goodsType is Tobacco" - {
 
               "must output the expected title" in {
-                helper.content(goodsType = "tobacco") mustBe
+                helper.content(Tobacco) mustBe
                   details(langMessages.summary) {
-                    HtmlFormat.fill(Seq(
+                    bullets(Seq(
                       p()(Html(langMessages.detailsTobacco1)),
                       p()(Html(langMessages.detailsTobacco2)),
                       p()(Html(langMessages.detailsTobacco3)),
                       p()(Html(langMessages.detailsTobacco4))
                     ))
                   }
+              }
+            }
+
+            "when the goodsType is Intermediate" - {
+
+              "must output the expected title" in {
+                helper.content(Intermediate) mustBe Html("")
+              }
+            }
+
+            "when the goodsType is Energy" - {
+
+              "must output the expected title" in {
+                helper.content(Energy) mustBe Html("")
               }
             }
           }

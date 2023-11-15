@@ -28,6 +28,6 @@ class CommercialDescriptionFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("commercialDescription.error.required")
         .verifying(maxLength(350, "commercialDescription.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "commercialDescription.error.xss"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "commercialDescription.error.invalidCharacter"))
     )
 }

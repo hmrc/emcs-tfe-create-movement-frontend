@@ -60,7 +60,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       }
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in  {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in {
 
       val application = applicationBuilder(userAnswers = Some(baseUserAnswers)).build()
 

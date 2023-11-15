@@ -118,13 +118,13 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
         "when GoodsType is one type of Tobacco " - {
-          //TODO: Route to CAM-ITM22
-          "to the Under Construction Page" in {
+
+          "to the Item Fiscal Marks Choice Page" in {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "T200")
 
             navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -342,6 +342,38 @@ class ItemsNavigatorSpec extends SpecBase {
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
+      }
+
+      "must go from the ItemFiscalMarksChoicePage" - {
+        //TODO: Redirect to CAM-ITM23
+        "to the Fiscal Marks page" - {
+
+          "when the user answers yes" in {
+            navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemFiscalMarksChoicePage(testIndex1), true)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Quantity page" - {
+
+          "when the user answers no" in {
+            navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "T200")
+              .set(ItemFiscalMarksChoicePage(testIndex1), false)
+            ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        "to the Items Index page" - {
+          "when there is no answer for ItemFiscalMarksChoicePage" in {
+            navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "T200")
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+
       }
     }
 

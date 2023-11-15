@@ -16,13 +16,13 @@
 
 package viewmodels.helpers
 
-import models.SelectOption
+import models.SelectOptionModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
 object SelectItemHelper {
 
-  def constructSelectItems(selectOptions: Seq[SelectOption], defaultTextMessageKey: String, existingAnswer: Option[String] = None)
+  def constructSelectItems(selectOptions: Seq[SelectOptionModel], defaultTextMessageKey: String, existingAnswer: Option[String] = None)
                           (implicit messages: Messages): Seq[SelectItem] = {
     Seq(SelectItem(text = messages(defaultTextMessageKey), selected = existingAnswer.isEmpty, disabled = true)) ++ selectOptions.map { option =>
       SelectItem(

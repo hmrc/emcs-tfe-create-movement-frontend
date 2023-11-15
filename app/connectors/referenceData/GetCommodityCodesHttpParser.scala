@@ -17,18 +17,15 @@
 package connectors.referenceData
 
 import connectors.BaseConnectorUtils
-import models.CnCodeInformation
+import models.response.referenceData.CnCodeInformation
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
-import models.sections.documents.CommodityCode
 import play.api.http.Status.OK
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-
-import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
 
 trait GetCommodityCodesHttpParser extends BaseConnectorUtils[Seq[CnCodeInformation]] {
 
-  implicit val reads: Reads[Seq[CnCodeInformation]] = Reads.seq(CnCodeInformation.format)
+  implicit val reads: Reads[Seq[CnCodeInformation]] = Reads.seq(CnCodeInformation.reads)
   def http: HttpClient
 
   implicit object GetCommodityCodesReads extends HttpReads[Either[ErrorResponse, Seq[CnCodeInformation]]] {
@@ -47,8 +44,4 @@ trait GetCommodityCodesHttpParser extends BaseConnectorUtils[Seq[CnCodeInformati
       }
     }
   }
-
-  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] =
-    http.GET[Either[ErrorResponse, Seq[CnCodeInformation]]](url = url)(new GetCommodityCodesReads(), hc, ec)
-
 }

@@ -17,9 +17,8 @@
 package connectors.referenceData
 
 import config.AppConfig
-import models.CNCode
+import models.response.referenceData.CnCodeInformation
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
-import models.sections.documents.CommodityCode
 import play.api.libs.json.JsResultException
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
@@ -34,8 +33,8 @@ class GetCommodityCodesConnector @Inject()(val http: HttpClient,
 
   def getCommodityCodes(exciseProductCode: String
                        )(implicit headerCarrier: HeaderCarrier,
-                         executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CNCode]]] =
-    http.GET[Either[ErrorResponse, Seq[CNCode]]](url = s"$baseUrl/oracle/cn-codes/$exciseProductCode")
+                         executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] =
+    http.GET[Either[ErrorResponse, Seq[CnCodeInformation]]](url = s"$baseUrl/oracle/cn-codes/$exciseProductCode")
       .recover {
         case JsResultException(errors) =>
           logger.warn(s"[getCommodityCodes] Bad JSON response from emcs-tfe-reference-data: " + errors)

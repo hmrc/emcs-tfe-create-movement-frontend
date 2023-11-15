@@ -22,14 +22,14 @@ import forms.sections.items.ItemCommodityCodeFormProvider
 import models.requests.DataRequest
 
 import javax.inject.Inject
-import models.{Index, Mode}
+import models.{GoodsTypeModel, Index, Mode}
 import navigation.{ItemsNavigator, Navigator}
-import pages.sections.items.ItemCommodityCodePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
-import services.UserAnswersService
+import services.{GetCommodityCodesService, UserAnswersService}
 import views.html.sections.items.ItemCommodityCodeView
 
 import scala.concurrent.Future
@@ -42,31 +42,55 @@ class ItemCommodityCodeController @Inject()(
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
                                              override val userAllowList: UserAllowListAction,
+                                             getCommodityCodesService: GetCommodityCodesService,
                                              formProvider: ItemCommodityCodeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: ItemCommodityCodeView
                                            ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(
-        form = fillForm(ItemCommodityCodePage(idx), formProvider()),
-        action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-        goodsType = getGoodsType(idx)
-      ))
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+        case Some(itemExciseProductCode) =>
+          val goodsType = GoodsTypeModel(itemExciseProductCode)
+          getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
+            commodityCodes =>
+              Ok(
+                view(
+                  form = fillForm(ItemCommodityCodePage(idx), formProvider()),
+                  action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
+                  goodsType = goodsType,
+                  commodityCodes
+                ))
+          }
+        case None =>
+          Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+      }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors => Future.successful(BadRequest(
-          view(
-            form = formWithErrors,
-            action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-            goodsType = getGoodsType(idx)
-          )
-        )),
-        value => saveAndRedirect(ItemCommodityCodePage(idx), value, mode)
+        formWithErrors =>
+          request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+            case Some(itemExciseProductCode) =>
+              val goodsType = GoodsTypeModel(itemExciseProductCode)
+              getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
+                commodityCodes =>
+                  BadRequest(
+                    view(
+                      form = formWithErrors,
+                      action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
+                      goodsType = goodsType,
+                      commodityCodes
+                    )
+                  )
+              }
+            case None =>
+              Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+          },
+        value =>
+          saveAndRedirect(ItemCommodityCodePage(idx), value, mode)
       )
     }
 }

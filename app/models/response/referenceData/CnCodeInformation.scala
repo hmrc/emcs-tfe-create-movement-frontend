@@ -20,13 +20,19 @@ import models.UnitOfMeasure
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads}
 
-case class CnCodeInformation(cnCodeDescription: String, exciseProductCodeDescription: String, unitOfMeasure: UnitOfMeasure)
+case class CnCodeInformation(cnCode: String,
+                             cnCodeDescription: String,
+                             exciseProductCode: String,
+                             exciseProductCodeDescription: String,
+                             unitOfMeasure: UnitOfMeasure)
 
 object CnCodeInformation {
 
   implicit val reads: Reads[CnCodeInformation] = (
-    (JsPath \ "cnCodeDescription").read[String] and
-    (JsPath \ "exciseProductCodeDescription").read[String] and
-    (JsPath \ "unitOfMeasureCode").read[Int].map(UnitOfMeasure.apply)
-  )(CnCodeInformation.apply _)
+    (JsPath \ "cnCode").read[String] and
+      (JsPath \ "cnCodeDescription").read[String] and
+      (JsPath \ "exciseProductCode").read[String] and
+      (JsPath \ "exciseProductCodeDescription").read[String] and
+      (JsPath \ "unitOfMeasureCode").read[Int].map(UnitOfMeasure.apply)
+    )(CnCodeInformation.apply _)
 }

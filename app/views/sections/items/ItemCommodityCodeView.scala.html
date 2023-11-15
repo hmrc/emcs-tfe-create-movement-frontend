@@ -1,46 +1,47 @@
 @*
- * Copyright 2023 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2023 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import controllers.sections.items.routes
 @import models.GoodsTypeModel.GoodsType
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import models.response.referenceData.CnCodeInformation
+@import pages.sections.items.ItemCommodityCodePage
 
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukSelect: GovukSelect,
-    govukButton: GovukButton,
-    h2: components.h2,
-    continueOrExit: components.continueOrExit,
-    autocompleteCss: HmrcAccessibleAutocompleteCss,
-    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukSelect: GovukSelect,
+        govukButton: GovukButton,
+        h2: components.h2,
+        continueOrExit: components.continueOrExit,
+        autocompleteCss: HmrcAccessibleAutocompleteCss,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, goodsType: Option[GoodsType])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
 
 @hint = {
-    @messages("itemCommodityCode.hint.text") <a href="https://www.trade-tariff.service.gov.uk/find_commodity" target=_blank>@messages("itemCommodityCode.hint.link")</a>
+@messages("itemCommodityCode.hint.text") <a href="https://www.trade-tariff.service.gov.uk/find_commodity" target=_blank>@messages("itemCommodityCode.hint.link")</a>
 }
 
-@layout(pageTitle = title(form, messages("itemCommodityCode.title", goodsType.fold(messages("site.item"))(_.toSingularOutput()))), additionalCss = autocompleteCss(), additionalScripts = autocompleteJavascript()) {
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = autocompleteJavascript(), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
         @if(form.errors.nonEmpty) {
@@ -55,14 +56,18 @@
                 label = Label(
                     classes = "govuk-label--l",
                     isPageHeading = true,
-                    content = Text(messages("itemCommodityCode.heading", goodsType.fold(messages("site.item"))(_.toSingularOutput())))
+                    content = Text(messages("itemCommodityCode.heading", goodsType.toSingularOutput()))
                 ),
                 hint = Some(Hint(
                     id = Some("commodity-code-hint"),
                     classes = "gov-uk-hint",
                     content = HtmlContent(hint)
                 )),
-                items = Seq(),
+                items = Seq(
+                    SelectItem(text = messages("default key here"), selected = form.value.isEmpty, disabled = true)
+                ) ++ commodityCodes.map(commodityCode =>
+                    SelectItem(value = Some(commodityCode.cnCode), text = commodityCode.cnCodeDescription, selected = form.value.contains(commodityCode.cnCode))
+                ),
                 errorMessage = form.errors("item-commodity-code") match {
                     case Nil => None
                     case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))

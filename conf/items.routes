@@ -25,10 +25,10 @@ POST       /trader/:ern/draft/:draftId/items/:idx/quantity                      
 GET        /trader/:ern/draft/:draftId/items/:idx/quantity/change                   controllers.sections.items.ItemQuantityController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/quantity/change                   controllers.sections.items.ItemQuantityController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/items/:idx/item-commodity-code               controllers.sections.items.ItemCommodityCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/items/:idx/item-commodity-code               controllers.sections.items.ItemCommodityCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/items/:idx/item-commodity-code/change        controllers.sections.items.ItemCommodityCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/items/:idx/item-commodity-code/change        controllers.sections.items.ItemCommodityCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/commodity-code                    controllers.sections.items.ItemCommodityCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/commodity-code                    controllers.sections.items.ItemCommodityCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/commodity-code/change             controllers.sections.items.ItemCommodityCodeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/commodity-code/change             controllers.sections.items.ItemCommodityCodeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
 GET        /trader/:ern/draft/:draftId/items/:idx/degree-plato                      controllers.sections.items.ItemDegreesPlatoController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/degree-plato                      controllers.sections.items.ItemDegreesPlatoController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)

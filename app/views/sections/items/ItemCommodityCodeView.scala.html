@@ -65,7 +65,7 @@
                     content = HtmlContent(hint)
                 )),
                 items = Seq(
-                    SelectItem(text = messages("default key here"), selected = form.value.isEmpty, disabled = true)
+                    SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>
                     SelectItem(
                         value = Some(commodityCode.cnCode),

@@ -127,7 +127,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(_) =>
-        itemsRoutes.ItemCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        itemsRoutes.ItemCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }

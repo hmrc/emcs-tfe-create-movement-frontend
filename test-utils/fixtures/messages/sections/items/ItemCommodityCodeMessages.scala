@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package forms.sections.items
+package fixtures.messages.sections.items
 
-import forms.behaviours.StringFieldBehaviours
-import play.api.data.FormError
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-class ItemCommodityCodeFormProviderSpec extends StringFieldBehaviours {
+object ItemCommodityCodeMessages {
 
-  val requiredKey = "itemCommodityCode.error.required"
-  val lengthKey = "itemCommodityCode.error.length"
-  val maxLength = 100
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-  val form = new ItemCommodityCodeFormProvider()()
-
-  ".value" - {
-
-    val fieldName = "item-commodity-code"
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+    val heading = "Choose the commodity code for the beer"
+    val title = titleHelper(heading)
+    val errorRequired = "Choose the commodity code for the beer"
+    val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
+    val defaultItem = "Choose commodity code"
   }
+
+  object English extends ViewMessages with BaseEnglish
 }

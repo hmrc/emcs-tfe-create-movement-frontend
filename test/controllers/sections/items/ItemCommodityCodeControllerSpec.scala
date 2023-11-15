@@ -19,12 +19,11 @@ package controllers.sections.items
 import base.SpecBase
 import forms.sections.items.ItemCommodityCodeFormProvider
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Wine
 import models.UnitOfMeasure.Kilograms
 import models.response.referenceData.CnCodeInformation
-import models.{NormalMode, UnitOfMeasure, UserAnswers}
-import navigation.FakeNavigators.{FakeItemsNavigator, FakeNavigator}
-import navigation.{ItemsNavigator, Navigator}
+import models.{GoodsTypeModel, NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeItemsNavigator
+import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.Application
 import play.api.inject.bind
@@ -33,7 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{GetCommodityCodesService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.sections.items.{ItemAlcoholStrengthView, ItemCommodityCodeView}
+import views.html.sections.items.ItemCommodityCodeView
 
 import scala.concurrent.Future
 
@@ -47,9 +46,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
   val form = formProvider()
 
   lazy val itemCommodityCodeRoute = routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
-  val submitCall = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  lazy val itemIndexRoute = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+  lazy val submitCall = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  val testEpc = "testEpc"
+  val testEpc: String = "T"
+  val testGoodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpc)
 
   val testCommodityCode1 = CnCodeInformation(
     cnCode = "testCnCode1",
@@ -98,7 +99,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[ItemCommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, submitCall, Wine, Seq(testCommodityCode1, testCommodityCode2))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, submitCall, testGoodsType, Seq(testCommodityCode1, testCommodityCode2))(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -122,7 +123,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[ItemCommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, submitCall, Wine, Seq(testCommodityCode1, testCommodityCode2))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(testCommodityCode1.cnCode), submitCall, testGoodsType, Seq(testCommodityCode1, testCommodityCode2))(dataRequest(request), messages(application)).toString
       }
     }
 
@@ -130,6 +131,8 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpc))
     ) {
       running(application) {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
         (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpc, *).returns(Future.successful(Seq(
           testCommodityCode1,
         )))
@@ -147,6 +150,8 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpc))
     ) {
       running(application) {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
         (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpc, *).returns(Future.successful(Nil))
 
         val request = FakeRequest(GET, itemCommodityCodeRoute)
@@ -158,57 +163,15 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
       }
     }
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemCommodityCodeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, submitCall, Wine, Seq())(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-      val testAnswer = "testAnswer"
-
-      val userAnswers = emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testAnswer)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
-
-        val view = application.injector.instanceOf[ItemCommodityCodeView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testAnswer), submitCall, Wine, Seq())(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new Fixture(
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpc))
+    ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
 
       running(application) {
         val request =
           FakeRequest(POST, itemCommodityCodeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("item-commodity-code", "answer"))
 
         val result = route(application, request).value
 
@@ -217,9 +180,13 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpc))
+    ) {
+      (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpc, *).returns(Future.successful(Seq(
+        testCommodityCode1,
+        testCommodityCode2
+      )))
 
       running(application) {
         val request =
@@ -233,37 +200,20 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, submitCall, Wine, Seq())(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, submitCall, testGoodsType, Seq(testCommodityCode1, testCommodityCode2))(dataRequest(request), messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Item Index Controller for a GET if no existing data is found" in new Fixture(
+      userAnswers = Some(emptyUserAnswers)
+    ) {
       running(application) {
         val request = FakeRequest(GET, itemCommodityCodeRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, itemCommodityCodeRoute)
-            .withFormUrlEncodedBody(("item-commodity-code", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual itemIndexRoute
       }
     }
   }

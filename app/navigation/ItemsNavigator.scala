@@ -51,12 +51,20 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemDegreesPlatoPage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemAlcoholStrengthPage(idx)) match {
-        case Some(abv) if abv <= 8.5 =>
-          //TODO: Redirect to CAM-ITM41
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(abv) if abv < 8.5 =>
+          itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
           //TODO: Redirect to CAM-ITM19
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    case ItemSmallIndependentProducerPage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
+        case Some(true) =>
+          //TODO: Route to CAM-ITM11
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
     case _ =>
@@ -93,8 +101,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
               itemsRoutes.ItemDegreesPlatoController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else if (Seq(GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper).contains(UserType(userAnswers.ern)) && abv < 8.5) {
-              //TODO: Redirect to CAM-ITM41
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
@@ -151,8 +158,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             val goodsType = GoodsTypeModel(epc)
             val acceptableGoodsTypes = Seq(Spirits, Wine, Intermediate)
             if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength < 8.5) {
-              //TODO: Redirect to CAM-ITM41
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength >= 8.5) {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else {

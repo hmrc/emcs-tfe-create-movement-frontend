@@ -1076,3 +1076,14 @@ itemDegreesPlato.amount.error.required = Enter the density in degrees plato
 itemDegreesPlato.amount.error.nonNumeric = Amount must only include numbers
 itemDegreesPlato.amount.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemDegreesPlato.amount.error.decimalPlaces = Amount can have up to 2 decimal places
+
+itemSmallIndependentProducer.title = Can you confirm that the producer of the {0} is certified as an independent small producer?
+itemSmallIndependentProducer.heading = Can you confirm that the producer of the {0} is certified as an independent small producer?
+itemSmallIndependentProducer.p1 = Certification and details of eligibility should be provided by those intending to claim Small Producer Relief on alcohol.
+itemSmallIndependentProducer.yes.beer = Yes - It is hereby certified that the product described has been produced by an independent small brewery
+itemSmallIndependentProducer.yes.spirits = Yes - It is hereby certified that the product described has been produced by an independent small distillery
+itemSmallIndependentProducer.yes.other = Yes - It is hereby certified that the product described has been produced by an independent small producer
+itemSmallIndependentProducer.error.required = Select ‘Yes’ if the product has been produced by a certified independent small producer
+#TODO: CYA content below needs to be reviewed when UX design is ready
+itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer
+itemSmallIndependentProducer.change.hidden = independent small producer

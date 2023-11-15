@@ -53,9 +53,9 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintb,
           Selectors.summary(1) -> messagesForLanguage.summary,
-          Selectors.bullet(1) -> messagesForLanguage.detailsBeer1,
-          Selectors.bullet(2) -> messagesForLanguage.detailsBeer2,
-          Selectors.bullet(3) -> messagesForLanguage.detailsBeer3,
+          Selectors.p(1) -> messagesForLanguage.detailsBeerP,
+          Selectors.bullet(1) -> messagesForLanguage.detailsBeerB1,
+          Selectors.bullet(2) -> messagesForLanguage.detailsBeerB2,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
@@ -82,12 +82,12 @@ class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
           Selectors.hint -> messagesForLanguage.hintw,
           Selectors.summary(1) -> messagesForLanguage.summary,
-          Selectors.bullet(1) -> messagesForLanguage.detailsWine1,
-          Selectors.bullet(2) -> messagesForLanguage.detailsWine2,
-          Selectors.bullet(3) -> messagesForLanguage.detailsWine3,
-          Selectors.bullet(4) -> messagesForLanguage.detailsWine4,
-          Selectors.bullet(5) -> messagesForLanguage.detailsWine5,
-          Selectors.bullet(6) -> messagesForLanguage.detailsWine6,
+          Selectors.p(1) -> messagesForLanguage.detailsWineP,
+          Selectors.bullet(1) -> messagesForLanguage.detailsWineB1,
+          Selectors.bullet(2) -> messagesForLanguage.detailsWineB2,
+          Selectors.bullet(3) -> messagesForLanguage.detailsWineB3,
+          Selectors.bullet(4) -> messagesForLanguage.detailsWineB4,
+          Selectors.bullet(5) -> messagesForLanguage.detailsWineB5,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))

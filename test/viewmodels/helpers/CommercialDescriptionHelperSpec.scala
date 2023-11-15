@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.sections.items.CommercialDescriptionFormProvider
 import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 
 class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -46,10 +46,12 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "must output the expected title" in {
               helper.content(Beer) mustBe
                 details(langMessages.summary) {
-                  bullets(Seq(
-                    p()(Html(langMessages.detailsBeer1)),
-                    p()(Html(langMessages.detailsBeer2)),
-                    p()(Html(langMessages.detailsBeer3))
+                  HtmlFormat.fill(Seq(
+                    p()(Html(langMessages.detailsBeerP)),
+                    bullets(Seq(
+                      p()(Html(langMessages.detailsBeerB1)),
+                      p()(Html(langMessages.detailsBeerB2))
+                    ))
                   ))
                 }
             }
@@ -60,13 +62,15 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
             "must output the expected title" in {
               helper.content(Wine) mustBe
                 details(langMessages.summary) {
-                  bullets(Seq(
-                    p()(Html(langMessages.detailsWine1)),
-                    p()(Html(langMessages.detailsWine2)),
-                    p()(Html(langMessages.detailsWine3)),
-                    p()(Html(langMessages.detailsWine4)),
-                    p()(Html(langMessages.detailsWine5)),
-                    p()(Html(langMessages.detailsWine6))
+                  HtmlFormat.fill(Seq(
+                    p()(Html(langMessages.detailsWineP)),
+                    bullets(Seq(
+                      p()(Html(langMessages.detailsWineB1)),
+                      p()(Html(langMessages.detailsWineB2)),
+                      p()(Html(langMessages.detailsWineB3)),
+                      p()(Html(langMessages.detailsWineB4)),
+                      p()(Html(langMessages.detailsWineB5))
+                    ))
                   ))
                 }
             }
@@ -76,12 +80,14 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
               "must output the expected title" in {
                 helper.content(Spirits) mustBe
                   details(langMessages.summary) {
-                    bullets(Seq(
-                      p()(Html(langMessages.detailsEthylAlcohol1)),
-                      p()(Html(langMessages.detailsEthylAlcohol2)),
-                      p()(Html(langMessages.detailsEthylAlcohol3)),
-                      p()(Html(langMessages.detailsEthylAlcohol4)),
-                      p()(Html(langMessages.detailsEthylAlcohol5))
+                    HtmlFormat.fill(Seq(
+                      p()(Html(langMessages.detailsEthylAlcoholP)),
+                      bullets(Seq(
+                        p()(Html(langMessages.detailsEthylAlcoholB1)),
+                        p()(Html(langMessages.detailsEthylAlcoholB2)),
+                        p()(Html(langMessages.detailsEthylAlcoholB3)),
+                        p()(Html(langMessages.detailsEthylAlcoholB4))
+                      ))
                     ))
                   }
               }
@@ -92,11 +98,13 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
               "must output the expected title" in {
                 helper.content(Tobacco) mustBe
                   details(langMessages.summary) {
-                    bullets(Seq(
-                      p()(Html(langMessages.detailsTobacco1)),
-                      p()(Html(langMessages.detailsTobacco2)),
-                      p()(Html(langMessages.detailsTobacco3)),
-                      p()(Html(langMessages.detailsTobacco4))
+                    HtmlFormat.fill(Seq(
+                      p()(Html(langMessages.detailsTobaccoP)),
+                      bullets(Seq(
+                        p()(Html(langMessages.detailsTobaccoB1)),
+                        p()(Html(langMessages.detailsTobaccoB2)),
+                        p()(Html(langMessages.detailsTobaccoB3))
+                      ))
                     ))
                   }
               }

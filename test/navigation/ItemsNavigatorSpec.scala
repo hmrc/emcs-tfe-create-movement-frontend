@@ -175,15 +175,14 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is Beer and GBWK or GBRC and ABV < 8.5" - {
 
-          //TODO: Redirect to CAM-ITM41
-          "to the Under Construction Page" in {
+          "to the Small Independent Producer Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
               .set(ItemExciseProductCodePage(testIndex1), "B200")
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
           }
         }
 
@@ -268,14 +267,13 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when Alcohol Strength is < 8.5 abv" - {
 
-          //TODO: Redirect to CAM-ITM41
-          "to the Under Construction Page" in {
+          "to the Small Independent Producer Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
 
             navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
           }
         }
 
@@ -307,7 +305,6 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
-        //TODO: redirect to CAM-ITM41
         "to the Small Independent Producer Page" - {
           "when the answer is No (and the ABV is < 8.5)" in {
 
@@ -315,7 +312,7 @@ class ItemsNavigatorSpec extends SpecBase {
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 

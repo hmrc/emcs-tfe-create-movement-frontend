@@ -24,8 +24,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.{RadioItem, Radios}
 import viewmodels.LegendSize
 import viewmodels.govuk.all._
 
-import javax.inject.Inject
-
 object ItemSmallIndependentProducerHelper {
 
   private def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages) = {

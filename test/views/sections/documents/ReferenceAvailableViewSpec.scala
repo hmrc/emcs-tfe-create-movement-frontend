@@ -19,7 +19,6 @@ package views.sections.documents
 import base.ViewSpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages
 import forms.sections.documents.ReferenceAvailableFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -48,7 +47,7 @@ class ReferenceAvailableViewSpec extends ViewSpecBase with ViewBehaviours {
         implicit val doc: Document =
           Jsoup.parse(view(
             form,
-            NormalMode
+            testOnwardRoute
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

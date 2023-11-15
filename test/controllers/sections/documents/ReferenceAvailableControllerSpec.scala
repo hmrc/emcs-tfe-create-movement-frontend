@@ -17,12 +17,13 @@
 package controllers.sections.documents
 
 import base.SpecBase
+import fixtures.DocumentTypeFixtures
 import forms.sections.documents.ReferenceAvailableFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
+import models.{Index, NormalMode, UserAnswers}
 import navigation.DocumentsNavigator
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.ReferenceAvailablePage
+import pages.sections.documents._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -32,122 +33,284 @@ import views.html.sections.documents.ReferenceAvailableView
 
 import scala.concurrent.Future
 
-class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersService {
+class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Setup(startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  val formProvider = new ReferenceAvailableFormProvider()
-  val form = formProvider()
+    def onwardRoute = Call("GET", "/foo")
 
-  lazy val referenceAvailableRoute = controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, NormalMode).url
+    val application = applicationBuilder(userAnswers = startingUserAnswers)
+      .overrides(
+        bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
+        bind[UserAnswersService].toInstance(mockUserAnswersService)
+      )
+      .build()
+
+    val formProvider = new ReferenceAvailableFormProvider()
+    val form = formProvider()
+
+    def referenceAvailableRoute(idx: Index): String =
+      routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+    def onSubmitCall(idx: Index): Call =
+      routes.ReferenceAvailableController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
+    val view = application.injector.instanceOf[ReferenceAvailableView]
+  }
+
 
   "ReferenceAvailable Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "GET onPageLoad" - {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "must return OK and the correct view" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
 
-      running(application) {
-        val request = FakeRequest(GET, referenceAvailableRoute)
+        running(application) {
 
-        val result = route(application, request).value
+          val request = FakeRequest(GET, referenceAvailableRoute(0))
 
-        val view = application.injector.instanceOf[ReferenceAvailableView]
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form,
+            onSubmitCall = onSubmitCall(0)
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must populate the view correctly when the question has previously been answered" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, referenceAvailableRoute(0))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form.fill(true),
+            onSubmitCall = onSubmitCall(0)
+          )(dataRequest(request), messages(application)).toString
+        }
+      }
+
+      "must redirect to DocumentsIndexController when there are no current documents in UserAnswers" in new Setup() {
+
+        running(application) {
+
+          val request = FakeRequest(GET, referenceAvailableRoute(1))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, referenceAvailableRoute(1))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, referenceAvailableRoute(-1))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to Journey Recovery if no existing data is found" in new Setup(None) {
+
+        running(application) {
+
+          val request = FakeRequest(GET, referenceAvailableRoute(0))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "POST onSubmit" - {
 
-      val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage, true)
+      "must redirect to the next page valid answer is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeModel)
+      )) {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val expectedAnswers = emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeModel)
+          .set(ReferenceAvailablePage(0), true)
 
-      running(application) {
-        val request = FakeRequest(GET, referenceAvailableRoute)
+        MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-        val view = application.injector.instanceOf[ReferenceAvailableView]
+        running(application) {
 
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(application)).toString
-      }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[DocumentsNavigator].toInstance(new FakeDocumentsNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
             .withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+      "must redirect to the next page and not update answers the same answer is submitted again" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+          .set(ReferenceAvailablePage(0), false)
+          .set(DocumentDescriptionPage(0), "description")
+      )) {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        running(application) {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
+            .withFormUrlEncodedBody(("value", "false"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must redirect to the next page and wipe UserAnswers when new answer is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
+          .set(DocumentDescriptionPage(0), "description")
+      )) {
+
+        val expectedAnswers = emptyUserAnswers
+          .set(ReferenceAvailablePage(0), false)
+
+        MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
+            .withFormUrlEncodedBody(("value", "false"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
             .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> ""))
+          val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[ReferenceAvailableView]
+          val result = route(application, request).value
 
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(
+            form = boundForm,
+            onSubmitCall = onSubmitCall(0)
+          )(dataRequest(request), messages(application)).toString
+        }
       }
-    }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      "must redirect to DocumentsIndexController when there are no current documents in UserAnswers" in new Setup() {
 
-      val application = applicationBuilder(userAnswers = None).build()
+        running(application) {
 
-      running(application) {
-        val request = FakeRequest(GET, referenceAvailableRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual  controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, referenceAvailableRoute)
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
             .withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual  controllers.routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute(1))
+            .withFormUrlEncodedBody(("value", "true"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
+        emptyUserAnswers
+          .set(DocumentTypePage(0), documentTypeOtherModel)
+      )) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute(-1))
+            .withFormUrlEncodedBody(("value", "true"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "must redirect to Journey Recovery if no existing data is found" in new Setup(None) {
+
+        running(application) {
+
+          val request = FakeRequest(POST, referenceAvailableRoute(0))
+            .withFormUrlEncodedBody(("value", "true"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

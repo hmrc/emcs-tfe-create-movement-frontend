@@ -16,21 +16,11 @@
 
 package pages.sections.documents
 
-import models.Index
-import models.requests.DataRequest
-import pages.sections.Section
-import play.api.libs.json.{JsArray, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import models.sections.documents.DocumentsAddToList
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class DocumentsSectionIndex(index: Index) extends Section[JsArray] {
-
-  override val path: JsPath = DocumentsSection.path \ index.position
-
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-DOC06 is built
-    NotStarted
-  }
-
-  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    DocumentsSection.canBeCompletedForTraderAndDestinationType
+case object DocumentsAddToListPage extends QuestionPage[DocumentsAddToList] {
+  override val toString: String = "documentsAddToList"
+  override val path: JsPath = DocumentsSection.path \ toString
 }

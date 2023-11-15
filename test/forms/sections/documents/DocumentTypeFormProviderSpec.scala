@@ -16,36 +16,57 @@
 
 package forms.sections.documents
 
+import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.behaviours.OptionFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
 
-class DocumentTypeFormProviderSpec extends OptionFieldBehaviours with GuiceOneAppPerSuite {
+class DocumentTypeFormProviderSpec extends OptionFieldBehaviours with GuiceOneAppPerSuite with DocumentTypeFixtures {
 
-  val form = new DocumentTypeFormProvider()()
+  val documentTypes = Seq(documentTypeModel, documentTypeOtherModel)
+  val form = new DocumentTypeFormProvider()(documentTypes)
 
-  ".value" - {
+  ".document-type" - {
 
     val fieldName = "document-type"
     val requiredKey = "documentType.error.required"
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
+    "succeed when value is one of the DocumentType" in {
 
-  "Error Messages" - {
+      val data = Map(fieldName -> documentTypeModel.code)
+      val result = form.bind(data)
 
-    implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+      result.errors mustBe Seq.empty
+      result.value.value mustBe documentTypeModel
+    }
 
-    "have the correct error message for required" in {
+    "error when value is not given" in {
 
-      messages("documentType.error.required") mustBe
-        English.errorRequired
+      val data = Map(fieldName -> "")
+      val result = form.bind(data)
+
+      result.errors must contain only FormError(fieldName, requiredKey)
+    }
+
+    "error when submitted value is not one of the DocumentType" in {
+
+      val data = Map(fieldName -> "invalidCode")
+      val result = form.bind(data)
+
+      result.errors must contain only FormError(fieldName, requiredKey)
+    }
+
+    "Error Messages" - {
+
+      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+
+      "have the correct error message for required" in {
+
+        messages(requiredKey) mustBe
+          English.errorRequired
+      }
     }
   }
 }

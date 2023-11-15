@@ -16,14 +16,15 @@
 
 package controllers.sections.documents
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.ReferenceAvailableFormProvider
-import models.Mode
+import models.requests.DataRequest
+import models.{Index, Mode, NormalMode}
 import navigation.DocumentsNavigator
-import pages.sections.documents.ReferenceAvailablePage
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.documents.ReferenceAvailableView
 
@@ -41,20 +42,46 @@ class ReferenceAvailableController @Inject()(
                                                  formProvider: ReferenceAvailableFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: ReferenceAvailableView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                     ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(ReferenceAvailablePage, formProvider()), mode))
-    }
-
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(ReferenceAvailablePage, value, mode)
-      )
+      validateIndex(idx) {
+        Future(renderView(Ok, fillForm(ReferenceAvailablePage(idx), formProvider()), idx, mode))
+      }
     }
+
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future(renderView(BadRequest, formWithErrors, idx, mode)),
+          cleanseAndRedirect(_, idx, mode)
+        )
+      }
+    }
+
+  def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Result =
+    status(view(
+      form = form,
+      onSubmitCall = controllers.sections.documents.routes.ReferenceAvailableController.onSubmit(request.ern, request.draftId, idx, mode)
+    ))
+
+  private def cleanseAndRedirect(answer: Boolean, idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(ReferenceAvailablePage(idx)).contains(answer)) {
+      Future(Redirect(navigator.nextPage(ReferenceAvailablePage(idx), mode, request.userAnswers)))
+    } else {
+
+      val updatedAnswers = request.userAnswers
+        .remove(DocumentReferencePage(idx))
+        .remove(DocumentDescriptionPage(idx))
+
+      saveAndRedirect(
+        page = ReferenceAvailablePage(idx),
+        answer = answer,
+        currentAnswers = updatedAnswers,
+        mode = NormalMode
+      )
+  }
 }

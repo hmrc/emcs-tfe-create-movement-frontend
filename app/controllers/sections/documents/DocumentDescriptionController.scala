@@ -16,11 +16,10 @@
 
 package controllers.sections.documents
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentDescriptionFormProvider
-import models.Mode
 import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.DocumentDescriptionPage
 import play.api.data.Form
@@ -42,25 +41,28 @@ class DocumentDescriptionController @Inject()(override val messagesApi: Messages
                                               formProvider: DocumentDescriptionFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: DocumentDescriptionView
-                                             ) extends BaseNavigationController with AuthActionHelper {
+                                             ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DocumentDescriptionPage, formProvider()), mode)
-    }
-
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors, mode)),
-        saveAndRedirect(DocumentDescriptionPage, _, mode)
-      )
+      validateIndex(idx) {
+        Future(renderView(Ok, fillForm(DocumentDescriptionPage(idx), formProvider()), idx, mode))
+      }
     }
 
-  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors => Future(renderView(BadRequest, formWithErrors, idx, mode)),
+          saveAndRedirect(DocumentDescriptionPage(idx), _, mode)
+        )
+      }
+    }
+
+  def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Result =
     status(view(
       form = form,
-      onSubmitCall = controllers.sections.documents.routes.DocumentDescriptionController.onSubmit(request.ern, request.draftId, mode)
+      onSubmitCall = controllers.sections.documents.routes.DocumentDescriptionController.onSubmit(request.ern, request.draftId, idx, mode)
     ))
-
 }

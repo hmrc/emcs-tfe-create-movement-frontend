@@ -25,6 +25,9 @@ case class Index(position: Int) {
 }
 
 object Index {
+
+  implicit def intToIndex(int: Int): Index = Index(int)
+
   implicit val pathBindable: PathBindable[Index] = new PathBindable[Index] {
     override def bind(key: String, value: String): Either[String, Index] = Try(value.toInt) match {
       case Failure(_) => Left("could not parse index")

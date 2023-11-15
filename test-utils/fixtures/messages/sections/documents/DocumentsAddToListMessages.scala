@@ -17,17 +17,29 @@
 package fixtures.messages.sections.documents
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
-object DocumentReferenceMessages {
+object DocumentsAddToListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Enter a reference for this document"
-    val title = titleHelper(heading)
-    val errorRequired = "Enter a reference for this document"
-    val errorLength = "Document reference must be 35 characters or less"
-    val errorXss = "Document reference must not contain < and > and : and ;"
-    val cyaLabel = "Document reference"
-    val cyaChangeHidden = "Document reference"
+
+    val heading: Int => String = {
+      case 1 => "You have given information for 1 document"
+      case idx => s"You have given information for $idx documents"
+    }
+
+    val title: Int => String = idx => titleHelper(heading(idx))
+
+    def documentCardTitle(idx: Index) = s"Document ${idx.displayIndex}"
+    def removeDocument(idx: Index): String = s"Remove ${documentCardTitle(idx)}"
+
+    def editDocument(idx: Index): String = s"Continue editing ${documentCardTitle(idx)}"
+
+    val h2 = "Do you need to add another document?"
+    val no1 = "No, this is the only document"
+    val no2 = "No, these are the only documents in this movement"
+    val moreLater = "I will add more documents later"
+    val errorRequired = "Select yes if you need to add another document"
   }
 
   object English extends ViewMessages with BaseEnglish

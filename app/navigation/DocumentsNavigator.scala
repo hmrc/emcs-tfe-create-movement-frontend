@@ -17,59 +17,36 @@
 package navigation
 
 import controllers.sections.documents.routes
-import models.sections.documents.DocumentType
-import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
+import models.sections.documents.DocumentsAddToList
+import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.documents._
 import play.api.mvc.Call
+import queries.DocumentsCount
 
 import javax.inject.Inject
 
 class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case DocumentsCertificatesPage =>
-      (answers: UserAnswers) =>
-        answers.get(DocumentsCertificatesPage) match {
-          case Some(false) =>
-            controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ =>
-            controllers.sections.documents.routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        }
-    case DocumentTypePage =>
-      (answers: UserAnswers) =>
-        answers.get(DocumentTypePage) match {
-          case Some(DocumentType.OtherCode) =>
-            controllers.sections.documents.routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-          case _ =>
-            controllers.sections.documents.routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, NormalMode)
-        }
-    case ReferenceAvailablePage =>
-      referenceAvailableRouting()
-    case DocumentDescriptionPage =>
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-    case DocumentReferencePage =>
-      //TODO update with next page when finished
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-
+    case DocumentsCertificatesPage => documentsCertificatesRouting()
+    case DocumentTypePage(idx) => documentTypeRouting(idx)
+    case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
+    case DocumentDescriptionPage(_) =>
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case DocumentReferencePage(_) =>
+      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case DocumentsAddToListPage => documentsAddToListRouting()
     case DocumentsCheckAnswersPage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case DocumentsCertificatesPage =>
-      (answers) =>
-        answers.get(DocumentsCertificatesPage) match {
-          case Some(false) => controllers.sections.documents.routes.DocumentsCheckAnswersController.onPageLoad(answers.ern, answers.draftId)
-          case _ => //TODO redirect to CAM-DOC02 or CAM-DOC06 when built
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        }
     case _ =>
-      // TODO: update to Add to List CAM-DOC06 page when built as only one option goes to CYA Page
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => routes.DocumentsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
@@ -86,13 +63,40 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
       reviewRouteMap(page)(userAnswers)
   }
 
-  private def referenceAvailableRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
-    userAnswers.get(ReferenceAvailablePage) match {
+  private def documentsCertificatesRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(DocumentsCertificatesPage) match {
+      case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      case _ => userAnswers.get(DocumentsCount) match {
+        case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, mode)
+        case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+    }
+
+  private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
+    answers.get(DocumentTypePage(idx)) match {
+      case Some(doc) if doc.typeIsOther =>
+        routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, mode)
+      case _ =>
+        routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, mode)
+    }
+
+  private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(ReferenceAvailablePage(idx)) match {
       case Some(true) =>
-        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case Some(false) =>
-        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }
+
+  private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+    userAnswers.get(DocumentsAddToListPage) match {
+      case Some(DocumentsAddToList.Yes) =>
+        val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
+        routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+      case _ =>
+        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
+  }
 }

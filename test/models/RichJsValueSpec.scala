@@ -308,4 +308,18 @@ class RichJsValueSpec extends AnyFreeSpec with Matchers with OptionValues {
       )
     )
   }
+
+  "NOT remove delete last value when value given doesn't match value in array" in {
+    val input = Json.obj(
+      "key" -> JsArray(Seq(Json.obj("key2" -> 1)))
+    )
+
+    val path = JsPath \ "key" \ 0 \ "key3"
+
+    input.remove(path) mustBe JsSuccess(
+      Json.obj(
+        "key" -> JsArray(Seq(Json.obj("key2" -> 1)))
+      )
+    )
+  }
 }

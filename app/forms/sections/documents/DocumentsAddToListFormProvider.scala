@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package models.sections.documents
+package forms.sections.documents
 
-import models.SelectOption
-import play.api.libs.json.{Json, OFormat}
+import forms.mappings.Mappings
+import models.sections.documents.DocumentsAddToList
+import play.api.data.Form
 
+import javax.inject.Inject
 
-case class DocumentType(code: String, description: String) extends SelectOption {
-  val displayName = s"$description ($code)"
-  val typeIsOther: Boolean = code == DocumentType.OtherCode
-}
+class DocumentsAddToListFormProvider @Inject() extends Mappings {
 
-object DocumentType {
-  implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
-
-  final val OtherCode: String = "0"
+  def apply(): Form[DocumentsAddToList] =
+    Form(
+      "value" -> enumerable[DocumentsAddToList]("documentsAddToList.error.required")
+    )
 }

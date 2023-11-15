@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
-import fixtures.messages.sections.documents.DocumentsCertificatesMessages
+import fixtures.messages.sections.documents.DocumentsCertificatesMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.DocumentsCertificatesPage
@@ -34,63 +34,60 @@ class DocumentsCertificatesSummarySpec extends SpecBase with Matchers {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(DocumentsCertificatesMessages.English).foreach { messagesForLanguage =>
+    s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit lazy val msgs: Messages = messages(app, English.lang)
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      "when there's no answer" - {
 
-        "when there's no answer" - {
+        "must output no row" in {
 
-          "must output no row" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          DocumentsCertificatesSummary.row() mustBe None
+        }
+      }
 
-            DocumentsCertificatesSummary.row() mustBe None
-          }
+      "when there's an answer" - {
+
+        "must output the expected row when user answers yes" in {
+
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, true))
+
+          DocumentsCertificatesSummary.row() mustBe
+            Some(
+              SummaryListRowViewModel(
+                key = English.cyaLabel,
+                value = Value(Text(English.yes)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = English.change,
+                    href = controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    id = "changeDocumentsCertificates"
+                  ).withVisuallyHiddenText(English.cyaChangeHidden)
+                )
+              )
+            )
         }
 
-        "when there's an answer" - {
+        "must output the expected row when user answers no" in {
 
-          "must output the expected row when user answers yes" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, true))
-
-            DocumentsCertificatesSummary.row() mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.yes)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDocumentsCertificates"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+          DocumentsCertificatesSummary.row() mustBe
+            Some(
+              SummaryListRowViewModel(
+                key = English.cyaLabel,
+                value = Value(Text(English.no)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = English.change,
+                    href = controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    id = "changeDocumentsCertificates"
+                  ).withVisuallyHiddenText(English.cyaChangeHidden)
                 )
               )
-          }
-
-          "must output the expected row when user answers no" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
-
-            DocumentsCertificatesSummary.row() mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.no)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDocumentsCertificates"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              )
-          }
+            )
         }
       }
     }

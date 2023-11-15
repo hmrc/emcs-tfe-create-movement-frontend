@@ -147,7 +147,7 @@ package object models {
       Try(array.value(idx.idx)).toOption match {
         case Some(obj) =>
           val jsObj = obj.as[JsObject]
-          if (jsObj.keys.size == 1) {
+          if (jsObj.keys.size == 1 && jsObj.keys.headOption.contains(pageKey)) {
             removeIndexNode(idx, array)
           } else {
             JsSuccess(JsArray(

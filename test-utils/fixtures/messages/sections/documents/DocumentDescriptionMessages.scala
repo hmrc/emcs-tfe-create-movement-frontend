@@ -26,6 +26,8 @@ object DocumentDescriptionMessages {
     val errorRequired = "Enter a description for this document"
     val errorLength = "Document description must be 350 characters or less"
     val errorXss = "Document description must not contain < and > and : and ;"
+    val cyaLabel = "Document description"
+    val cyaChangeHidden = "Document description"
   }
 
   object English extends ViewMessages with BaseEnglish

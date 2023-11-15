@@ -19,7 +19,6 @@ package views.sections.documents
 import base.ViewSpecBase
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.sections.documents.DocumentTypeFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import models.sections.documents.DocumentType
 import org.jsoup.Jsoup
@@ -44,14 +43,14 @@ class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       val view = app.injector.instanceOf[DocumentTypeView]
-      val form = app.injector.instanceOf[DocumentTypeFormProvider].apply()
+      val form = app.injector.instanceOf[DocumentTypeFormProvider].apply(Seq.empty)
 
       val selectOptions = SelectItemHelper.constructSelectItems(
         selectOptions = Seq(DocumentType("code", "First selection")),
         defaultTextMessageKey = "documentType.select.defaultValue"
       )
 
-      implicit val doc: Document = Jsoup.parse(view(form, NormalMode, selectOptions).toString())
+      implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.h2(1) -> English.documentsSection,

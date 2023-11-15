@@ -2,6 +2,7 @@ service.name = Excise Movement and Control System
 
 site.back = Back
 site.remove = Remove
+site.continueEditing = Continue editing
 site.change = Change
 site.no = No
 site.yes = Yes
@@ -889,27 +890,36 @@ dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
 
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
-documentType.checkYourAnswersLabel = What type of document do you want to add?
-documentType.error.required = Select the document you want to add
-documentType.change.hidden = DocumentType
+documentReference.title = Enter a reference for this document
+documentReference.heading = Enter a reference for this document
+documentReference.error.required = Enter a reference for this document
+documentReference.error.length = Document reference must be 35 characters or less
+documentReference.error.xss = Document reference must not contain < and > and : and ;
+documentReference.change.hidden = Document reference
+documentReference.checkYourAnswersLabel = Document reference
 
 documentDescription.title = Enter a description for this document
 documentDescription.heading = Enter a description for this document
 documentDescription.error.required = Enter a description for this document
 documentDescription.error.length = Document description must be 350 characters or less
 documentDescription.error.xss = Document description must not contain < and > and : and ;
-documentDescription.change.hidden = documentDescription
-documentDescription.checkYourAnswersLabel = documentDescription
+documentDescription.change.hidden = Document description
+documentDescription.checkYourAnswersLabel = Document description
 
-documentReference.title = Enter a reference for this document
-documentReference.heading = Enter a reference for this document
-documentReference.error.required = Enter a reference for this document
-documentReference.error.length = Document reference must be 35 characters or less
-documentReference.error.xss = Document reference must not contain < and > and : and ;
-documentReference.change.hidden = documentReference
-documentReference.checkYourAnswersLabel = documentReference
+documentsAddToList.title.singular = You have given information for 1 document
+documentsAddToList.title.plural = You have given information for {0} documents
+documentsAddToList.heading.singular = You have given information for 1 document
+documentsAddToList.heading.plural = You have given information for {0} documents
+
+documentsAddToList.documentCardTitle = Document {0}
+
+documentsAddToList.h2 = Do you need to add another document?
+documentsAddToList.1 = Yes
+documentsAddToList.2.singular = No, this is the only document
+documentsAddToList.2.plural = No, these are the only documents in this movement
+documentsAddToList.divider = or
+documentsAddToList.3 = I will add more documents later
+documentsAddToList.error.required = Select yes if you need to add another document
 
 documentsCheckAnswers.title = Check your answers
 documentsCheckAnswers.heading = Check your answers
@@ -985,6 +995,13 @@ itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
 itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places
 
+documentType.title = What type of document do you want to add?
+documentType.heading = What type of document do you want to add?
+documentType.checkYourAnswersLabel = Document type
+documentType.error.required = Select the document you want to add
+documentType.select.defaultValue = Choose document type
+documentType.change.hidden = Document type
+
 itemQuantity.title = How much {0} are you moving?
 itemQuantity.heading = How much {0} are you moving?
 itemQuantity.hint = Enter the total quantity in {0}.
@@ -1011,13 +1028,6 @@ itemGeographicalIndicationChoice.PGI.hint = For example, Mallorca has a protecte
 itemGeographicalIndicationChoice.GI = Yes - the product has a Geographical Indication (GI)
 itemGeographicalIndicationChoice.GI.hint = For example Irish Whiskey has a Geographical Indication (GI) protected spirit drink name.
 itemGeographicalIndicationChoice.None = No - I cannot confirm that the product has a geographical indication (GI)
-
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
-documentType.checkYourAnswersLabel = What type of document do you want to add?
-documentType.error.required = Select the document you want to add
-documentType.select.defaultValue = Choose document type
-documentType.change.hidden = DocumentType
 
 commercialDescription.title = Enter a commercial description for the {0}
 commercialDescription.heading = Enter a commercial description for the {0}

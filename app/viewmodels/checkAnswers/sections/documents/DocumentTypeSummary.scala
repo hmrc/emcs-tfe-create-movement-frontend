@@ -17,37 +17,41 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
-import models.{CheckMode, UserAnswers}
-import pages.sections.documents.DocumentTypePage
+import models.requests.DataRequest
+import models.{CheckMode, Index}
+import pages.sections.documents.{DocumentSection, DocumentTypePage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.taskList.Completed
 
 object DocumentTypeSummary  {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DocumentTypePage).map {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(DocumentTypePage(idx)).map {
       answer =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"documentType.$answer"))
-          )
-        )
-
-        SummaryListRowViewModel(
-          key     = "documentType.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DocumentTypeController.onPageLoad(answers.ern, answers.draftId, CheckMode).url,
-              id = "changeDocumentType"
-            ).withVisuallyHiddenText(messages("documentType.change.hidden"))
-          )
-        )
+        DocumentSection(idx).status match {
+          case Completed =>
+            SummaryListRowViewModel(
+              key = "documentType.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer.description).toString),
+              actions = Seq(changeLink(idx))
+            )
+          case _ =>
+            SummaryListRowViewModel(
+              key = "documentType.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer.description).toString)
+            )
+        }
     }
+
+  private def changeLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): ActionItem = {
+    ActionItemViewModel(
+      content = "site.change",
+      routes.DocumentTypeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+      id = s"changeDocumentType-${idx.displayIndex}"
+    ).withVisuallyHiddenText(messages("documentType.change.hidden"))
+  }
 }

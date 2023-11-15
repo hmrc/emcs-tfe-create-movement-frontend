@@ -16,10 +16,12 @@
 
 package pages.sections.documents
 
+import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DocumentDescriptionPage extends QuestionPage[String] {
+case class DocumentDescriptionPage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "documentDescription"
-  override val path: JsPath = DocumentsSection.path \ toString
+  override val path: JsPath = DocumentSection(idx).path \ toString
 }
+

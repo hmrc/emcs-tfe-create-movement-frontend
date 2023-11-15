@@ -16,13 +16,13 @@
 
 package pages.sections.documents
 
+import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object ReferenceAvailablePage extends QuestionPage[Boolean] {
+case class ReferenceAvailablePage(idx: Index) extends QuestionPage[Boolean] {
 
   override val toString: String = "referenceAvailable"
 
-  override val path: JsPath = DocumentsSection.path \ toString
-
+  override val path: JsPath = DocumentSection(idx).path \ toString
 }

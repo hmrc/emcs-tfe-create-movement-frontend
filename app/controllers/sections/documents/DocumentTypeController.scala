@@ -18,16 +18,21 @@ package controllers.sections.documents
 
 import controllers.actions._
 import forms.sections.documents.DocumentTypeFormProvider
-import models.Mode
+import models.requests.DataRequest
+import models.sections.documents.DocumentType
+import models.{Index, Mode, NormalMode}
 import navigation.DocumentsNavigator
-import pages.sections.documents.DocumentTypePage
+import pages.sections.documents._
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.DocumentsCount
 import services.{GetDocumentTypesService, UserAnswersService}
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DocumentTypeController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -43,22 +48,69 @@ class DocumentTypeController @Inject()(
                                        view: DocumentTypeView
                                      ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request => for {
-        documentTypes <- getDocumentTypesService.getDocumentTypes()
-        selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue", request.userAnswers.get(DocumentTypePage))
-      } yield Ok(view(formProvider(), mode, selectItems))
+  def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndex(idx) {
+        getDocumentTypesService.getDocumentTypes().flatMap { documentTypes =>
+          renderView(Ok, fillForm(DocumentTypePage(idx), formProvider(documentTypes)), documentTypes, idx, mode)
+        }
+      }
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => for {
-          documentTypes <- getDocumentTypesService.getDocumentTypes()
-          selectItems = SelectItemHelper.constructSelectItems(documentTypes, "documentType.select.defaultValue")
-        } yield BadRequest(view(formWithErrors, mode, selectItems)),
-        value =>
-          saveAndRedirect(DocumentTypePage, value, mode)
+      validateIndex(idx) {
+        getDocumentTypesService.getDocumentTypes().flatMap { documentTypes =>
+          formProvider(documentTypes).bindFromRequest().fold(
+            renderView(BadRequest, _, documentTypes, idx, mode),
+            cleanseAndRedirect(_, idx, mode)
+          )
+        }
+      }
+    }
+
+  private def renderView(status: Status, form: Form[_], documentTypes: Seq[DocumentType], idx: Index, mode: Mode)
+                        (implicit request: DataRequest[_]): Future[Result] = {
+
+    val selectItems = SelectItemHelper.constructSelectItems(
+      selectOptions = documentTypes,
+      defaultTextMessageKey = "documentType.select.defaultValue",
+      existingAnswer = request.userAnswers.get(DocumentTypePage(idx)).map(_.code)
+    )
+
+    Future(status(view(
+      form = form,
+      onSubmitCall = routes.DocumentTypeController.onSubmit(request.ern, request.draftId, idx, mode),
+      selectOptions = selectItems
+    )))
+  }
+
+  private def cleanseAndRedirect(answer: DocumentType, idx: Index, mode: Mode)
+                                (implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(DocumentTypePage(idx)).contains(answer)) {
+      Future(Redirect(navigator.nextPage(DocumentTypePage(idx), mode, request.userAnswers)))
+    } else {
+
+      val updatedAnswers = request.userAnswers
+        .remove(ReferenceAvailablePage(idx))
+        .remove(DocumentReferencePage(idx))
+        .remove(DocumentDescriptionPage(idx))
+
+      saveAndRedirect(
+        page = DocumentTypePage(idx),
+        answer = answer,
+        currentAnswers = updatedAnswers,
+        mode = NormalMode
       )
     }
+
+  override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    validateIndexForJourneyEntry(DocumentsCount, idx, DocumentsSection.MAX)(
+      onSuccess = f,
+      onFailure = Future.successful(
+        Redirect(
+          routes.DocumentsIndexController.onPageLoad(request.ern, request.draftId)
+        )
+      )
+    )
 }

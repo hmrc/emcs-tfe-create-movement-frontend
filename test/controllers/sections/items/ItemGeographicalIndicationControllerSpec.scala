@@ -82,6 +82,17 @@ class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAns
       }
     }
 
+    "must return SEE OTHER and redirect when no Goods Type exists" in new Fixture(Some(emptyUserAnswers)) {
+      running(application) {
+
+        val request = FakeRequest(GET, itemGeographicalIndicationRoute())
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+    }
+
     "must return OK and the correct view for a GET" in new Fixture() {
       running(application) {
 

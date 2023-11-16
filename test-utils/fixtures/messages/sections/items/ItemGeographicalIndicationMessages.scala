@@ -34,6 +34,7 @@ object ItemGeographicalIndicationMessages {
     val errorRequired = "Enter details of the geographical indication"
     val errorLength = "Geographical indication must be 350 characters or less"
     val errorXss = "Geographical indication must not contain < and > and : and ;"
+    val errorAlphanumeric = "Geographical indication must contain letters and numbers"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -17,12 +17,12 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import forms.{TEXTAREA_MAX_LENGTH, XSS_REGEX}
+import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, TEXTAREA_MAX_LENGTH, XSS_REGEX}
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class ItemGeographicalIndicationFormProvider @Inject() extends Mappings {
+class ItemGeographicalIndicationFormProvider @Inject() extends BaseTextareaFormProvider[String] with Mappings {
 
   def apply(): Form[String] =
     Form(
@@ -36,5 +36,6 @@ class ItemGeographicalIndicationFormProvider @Inject() extends Mappings {
         )
         .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"itemGeographicalIndication.error.length"))
         .verifying(regexp(XSS_REGEX, s"itemGeographicalIndication.error.xss"))
+        .verifying(regexp(ALPHANUMERIC_REGEX, s"itemGeographicalIndication.error.alphanumeric"))
     )
 }

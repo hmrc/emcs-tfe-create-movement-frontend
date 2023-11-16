@@ -17,7 +17,7 @@
 package forms.sections.items
 
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
-import forms.XSS_REGEX
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
@@ -28,6 +28,7 @@ class ItemGeographicalIndicationFormProviderSpec extends StringFieldBehaviours w
   val requiredKey = "itemGeographicalIndication.error.required"
   val lengthKey = "itemGeographicalIndication.error.length"
   val xssKey = "itemGeographicalIndication.error.xss"
+  val alphanumericKey = "itemGeographicalIndication.error.alphanumeric"
   val maxLength = 350
 
   val form = new ItemGeographicalIndicationFormProvider()()
@@ -60,6 +61,12 @@ class ItemGeographicalIndicationFormProviderSpec extends StringFieldBehaviours w
       fieldName,
       requiredError = FormError(fieldName, xssKey, Seq(XSS_REGEX))
     )
+
+    behave like fieldWithAtLeastOneAlphanumeric(
+      form,
+      fieldName,
+      error = FormError(fieldName, alphanumericKey, Seq(ALPHANUMERIC_REGEX))
+    )
   }
 
   "Error Messages" - {
@@ -86,6 +93,12 @@ class ItemGeographicalIndicationFormProviderSpec extends StringFieldBehaviours w
 
           messages("itemGeographicalIndication.error.xss") mustBe
             messagesForLanguage.errorXss
+        }
+
+        "have the correct error message for alphanumeric" in {
+
+          messages("itemGeographicalIndication.error.alphanumeric") mustBe
+            messagesForLanguage.errorAlphanumeric
         }
       }
     }

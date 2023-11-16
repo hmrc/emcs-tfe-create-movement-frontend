@@ -1093,5 +1093,6 @@ itemGeographicalIndication.hint.GI = Enter the name of the Geographical Indicati
 itemGeographicalIndication.error.required = Enter details of the geographical indication
 itemGeographicalIndication.error.length = Geographical indication must be 350 characters or less
 itemGeographicalIndication.error.xss = Geographical indication must not contain < and > and : and ;
+itemGeographicalIndication.error.alphanumeric = Geographical indication must contain letters and numbers
 itemGeographicalIndication.checkYourAnswersLabel = Designation of origin details
 itemGeographicalIndication.change.hidden = protected designation

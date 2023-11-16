@@ -41,4 +41,14 @@ trait StringFieldBehaviours extends FieldBehaviours {
       result.errors must contain only requiredError
     }
   }
+
+  def fieldWithAtLeastOneAlphanumeric(form: Form[_],
+                                      fieldName: String,
+                                      error: FormError): Unit = {
+
+    s"not bind strings that do not contain alphanumerics" in {
+      val result = form.bind(Map(fieldName -> "!!!")).apply(fieldName)
+      result.errors must contain only error
+    }
+  }
 }

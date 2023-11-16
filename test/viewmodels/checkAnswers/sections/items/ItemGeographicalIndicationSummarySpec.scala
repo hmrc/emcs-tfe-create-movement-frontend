@@ -29,7 +29,7 @@ import viewmodels.implicits._
 
 class ItemGeographicalIndicationSummarySpec extends SpecBase with Matchers {
 
-  "ItemGeographicalIndicationSummarySummary" - {
+  "ItemGeographicalIndicationSummary" - {
 
     lazy val app = applicationBuilder().build()
 

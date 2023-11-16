@@ -17,7 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType.Tractor
@@ -63,11 +63,11 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
       mockUserAnswersService,
-      new FakeUserAllowListAction,
+      fakeUserAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
-      new FakeAuthAction(Helpers.stubPlayBodyParsers),
+      fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
-      app.injector.instanceOf[DataRequiredAction],
+      dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,

@@ -17,64 +17,69 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
-import models.NormalMode
 import models.sections.transportUnit.TransportUnitType
+import models.{NormalMode, UserAnswers}
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
-import play.api.test.FakeRequest
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import queries.TransportUnitsCount
 
 class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-  lazy val transportUnitIndexRoute = controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+  class Test(userAnswers: Option[UserAnswers]) {
+    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    //    lazy val messages: Messages = messagesApi.preferred(request)
+
+    lazy val controller = new TransportUnitIndexController(
+      messagesApi,
+      mockUserAnswersService,
+      app.injector.instanceOf[TransportUnitNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
 
   "transportUnitIndex Controller" - {
 
-    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in {
+    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, transportUnitIndexRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe
+        Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
     }
 
-    "must redirect to the transport unit type page (CAM-TU01) when there is an empty transport unit list" in {
+    "must redirect to the transport unit type page (CAM-TU01) when there is an empty transport unit list" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitsCount, Seq.empty)
+    )) {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitsCount, Seq.empty))).build()
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, transportUnitIndexRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe
+        controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
     }
 
-    "must redirect to the add to list page (CAM-TU07) when any answer is present" in {
+    "must redirect to the add to list page (CAM-TU07) when any answer is present" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, transportUnitIndexRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe
+        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url)
     }
   }
 }

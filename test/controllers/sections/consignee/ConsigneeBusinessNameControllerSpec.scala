@@ -47,7 +47,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
       mockUserAnswersService,
       new FakeConsigneeNavigator(onwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(Some(emptyUserAnswers), Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeUserAllowListAction,
       formProvider,
@@ -74,12 +74,12 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(form.fill("answer"), consigneeBusinessNameSubmit)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val request = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url

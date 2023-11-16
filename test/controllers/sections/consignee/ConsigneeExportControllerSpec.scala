@@ -21,16 +21,13 @@ import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExportFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import navigation.ConsigneeNavigator
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.{ConsigneeExportPage, ConsigneeExportVatPage}
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.consignee.ConsigneeExportView
 
 import scala.concurrent.Future

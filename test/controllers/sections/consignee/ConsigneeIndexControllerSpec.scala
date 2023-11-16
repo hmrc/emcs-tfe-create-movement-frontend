@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, _}
+import play.api.test.Helpers._
 
 class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService {
 

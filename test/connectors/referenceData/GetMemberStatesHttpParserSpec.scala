@@ -29,7 +29,7 @@ class GetMemberStatesHttpParserSpec extends SpecBase with GetMemberStatesHttpPar
 
   "GetMemberStatesReads" - {
 
-    "should return a Seq[countryModels]"- {
+    "should return a Seq[countryModels]" - {
 
       s"when an OK (${Status.OK}) response is retrieved" in {
 

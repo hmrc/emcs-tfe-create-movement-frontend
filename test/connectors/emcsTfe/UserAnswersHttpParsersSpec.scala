@@ -28,6 +28,7 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
 
   lazy val httpParser = new UserAnswersHttpParsers {
     override implicit val reads: Reads[UserAnswers] = UserAnswers.format
+
     override def http: HttpClient = mockHttpClient
   }
 

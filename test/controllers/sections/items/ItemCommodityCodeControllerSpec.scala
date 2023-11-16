@@ -79,7 +79,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[ItemCommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -103,7 +103,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[ItemCommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testCommodityCodeTobacco.cnCode), submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(testCommodityCodeTobacco.cnCode), submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -180,7 +180,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(request)).toString
       }
     }
 

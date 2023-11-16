@@ -20,8 +20,8 @@ import config.AppConfig
 import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
 import connectors.referenceData._
 import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
-import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
 import controllers.actions._
+import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
 import fixtures.BaseFixtures
 import models.requests.{DataRequest, UserRequest}
 import models.{TraderKnownFacts, UserAnswers}

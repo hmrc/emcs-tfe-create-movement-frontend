@@ -17,81 +17,79 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
 import handlers.ErrorHandler
 import mocks.viewmodels.MockCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import play.api.{Application, inject}
+import play.api.test.{FakeRequest, Helpers}
 import viewmodels.govuk.SummaryListFluency
-import viewmodels.helpers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with MockCheckAnswersHelper {
 
   class Fixture(userAnswers: Option[UserAnswers]) {
-    val application: Application =
-      applicationBuilder(userAnswers)
-        .overrides(
-          inject.bind[CheckAnswersHelper].toInstance(mockCheckAnswersHelper),
-          inject.bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute))
-        )
-        .build()
+    def onwardRoute: Call = Call("GET", "/foo")
 
-    lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]
-    val view: CheckYourAnswersView = application.injector.instanceOf[CheckYourAnswersView]
+    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val messages: Messages = messagesApi.preferred(request)
+
+    lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
+    val view: CheckYourAnswersView = app.injector.instanceOf[CheckYourAnswersView]
+
+    val controller = new CheckYourAnswersController(
+      messagesApi,
+      app.injector.instanceOf[FakeAuthAction],
+      app.injector.instanceOf[FakeUserAllowListAction],
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      app.injector.instanceOf[DataRequiredAction],
+      Helpers.stubMessagesControllerComponents(),
+      new FakeNavigator(testOnwardRoute),
+      view,
+      mockCheckAnswersHelper
+    )
   }
 
   "Check Your Answers Controller" - {
 
     ".onPageLoad" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId).url)
-
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
-        running(application) {
+        val list = SummaryListViewModel(Seq.empty)
 
-          val list = SummaryListViewModel(Seq.empty)
+        MockCheckAnswersHelper.summaryList(Seq()).returns(list)
 
-          MockCheckAnswersHelper.summaryList(Seq()).returns(list)
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustBe OK
-          contentAsString(result) mustBe
-            view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages(request)).toString
-        }
+        status(result) mustBe OK
+        contentAsString(result) mustBe
+          view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages).toString
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-        running(application) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
     ".onSubmit" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(testErn, testDraftId).url)
-
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
 
-        running(application) {
+        val result = controller.onSubmit(testErn, testDraftId)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe testOnwardRoute.url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe testOnwardRoute.url
       }
     }
   }

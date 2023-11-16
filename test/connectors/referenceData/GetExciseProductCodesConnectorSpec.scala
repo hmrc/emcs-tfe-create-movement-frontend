@@ -38,9 +38,9 @@ class GetExciseProductCodesConnectorSpec extends SpecBase
   lazy val connector = new GetExciseProductCodesConnectorImpl(mockHttpClient, appConfig)
 
   "getExciseProductCodes" - {
-    
+
     "should return a successful response" - {
-      
+
       "when downstream call is successful" in {
 
         val expectedResult = Right(Seq(beerExciseProductCodeJson, wineExciseProductCodeJson))
@@ -56,7 +56,7 @@ class GetExciseProductCodesConnectorSpec extends SpecBase
     }
 
     "should return an error response" - {
-      
+
       "when downstream call fails" in {
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)

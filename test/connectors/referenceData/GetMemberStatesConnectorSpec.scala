@@ -38,9 +38,9 @@ class GetMemberStatesConnectorSpec extends SpecBase
   lazy val connector = new GetMemberStatesConnectorImpl(mockHttpClient, appConfig)
 
   "getMemberStates" - {
-    
+
     "should return a successful response" - {
-      
+
       "when downstream call is successful" in {
 
         val expectedResult = Right(Seq(memberStateJsonAT, memberStateJsonBE))
@@ -56,7 +56,7 @@ class GetMemberStatesConnectorSpec extends SpecBase
     }
 
     "should return an error response" - {
-      
+
       "when downstream call fails" in {
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)

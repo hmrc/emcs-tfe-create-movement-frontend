@@ -1126,3 +1126,9 @@ declaration.p1 = By submitting this draft movement you are confirming that:
 declaration.bullet1 = to the best of your knowledge, the details you are providing are correct
 declaration.bullet2 = you understand this movement cannot be recalled or changed after submission
 declaration.submit = Submit draft movement
+
+itemBulkPackagingChoice.title = Is the {0} being moved in bulk?
+itemBulkPackagingChoice.heading = Is the {0} being moved in bulk?
+itemBulkPackagingChoice.checkYourAnswersLabel = Bulk packaging 
+itemBulkPackagingChoice.error.required = Select yes if the {0} are being moved in bulk
+itemBulkPackagingChoice.change.hidden = bulk packaging

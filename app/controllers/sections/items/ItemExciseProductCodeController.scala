@@ -50,7 +50,7 @@ class ItemExciseProductCodeController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes =>
             val selectItems = SelectItemHelper.constructSelectItems(
@@ -65,7 +65,7 @@ class ItemExciseProductCodeController @Inject()(
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
             val selectItems = SelectItemHelper.constructSelectItems(
@@ -81,7 +81,7 @@ class ItemExciseProductCodeController @Inject()(
       }
     }
 
-  override def validateIndex(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+  override def validateIndexAsync(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     validateIndexForJourneyEntry(ItemsCount, idx, ItemsSection.MAX)(
       onSuccess = f,
       onFailure = Future.successful(

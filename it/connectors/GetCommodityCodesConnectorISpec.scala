@@ -2,7 +2,7 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.{GetCommodityCodesConnector, GetDocumentTypesConnector}
+import connectors.referenceData.GetCommodityCodesConnector
 import fixtures.BaseFixtures
 import models.UnitOfMeasure.Kilograms
 import models.response.UnexpectedDownstreamResponseError

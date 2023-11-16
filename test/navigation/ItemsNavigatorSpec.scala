@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
-import models.{CheckMode, NormalMode, ReviewMode}
+import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
 
@@ -402,6 +402,41 @@ class ItemsNavigatorSpec extends SpecBase {
           navigator.nextPage(ItemFiscalMarksPage(testIndex1), NormalMode, emptyUserAnswers
             .set(ItemFiscalMarksPage(testIndex1), "some fiscal mark")
           ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
+      "must go from the ItemBulkPackagingChoicePage" - {
+        //TODO: Redirect to CAM-ITM45
+        "to the Packaging Bulk Select page" - {
+
+          "when the user answers yes" in {
+            navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Imported Wine Choice page" - {
+          //TODO: Redirect to CAM-ITM15
+          "when the user answers no and EPC is wine" in {
+            navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Items Index page" - {
+          //TODO: Redirect to CAM-ITM45
+          "when the user answers no and EPC is not wine" in {
+            GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(
+              goodsType =>
+                navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+                  .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            )
+          }
         }
 
       }

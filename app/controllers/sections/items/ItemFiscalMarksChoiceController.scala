@@ -47,8 +47,8 @@ class ItemFiscalMarksChoiceController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        withGoodsType(idx) { goodsType =>
+      validateIndexAsync(idx) {
+        withGoodsTypeAsync(idx) { goodsType =>
           renderView(Ok, fillForm(ItemFiscalMarksChoicePage(idx), formProvider(goodsType)), idx, goodsType, mode)
         }
       }
@@ -56,8 +56,8 @@ class ItemFiscalMarksChoiceController @Inject()(
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        withGoodsType(idx) { goodsType =>
+      validateIndexAsync(idx) {
+        withGoodsTypeAsync(idx) { goodsType =>
           formProvider(goodsType).bindFromRequest().fold(
             renderView(BadRequest, _, idx, goodsType, mode),
             saveAndRedirect(ItemFiscalMarksChoicePage(idx), _, mode)

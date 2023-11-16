@@ -54,4 +54,6 @@ object GoodsTypeModel {
     case Intermediate.code => Intermediate
     case invalid => throw new IllegalArgumentException(s"Invalid argument of '$invalid' received which can not be mapped to a GoodsType")
   }
+
+  val values: Seq[GoodsType] = Seq(Beer, Wine, Energy, Spirits, Tobacco, Intermediate)
 }

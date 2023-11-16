@@ -18,8 +18,8 @@ package navigation
 
 import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models._
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -89,6 +89,22 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemFiscalMarksPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+    case ItemBulkPackagingChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemBulkPackagingChoicePage(idx)) match {
+        case Some(true) =>
+          //TODO: Redirect to CAM-ITM45
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
+            case Some(Wine) =>
+              //TODO: Redirect to CAM-ITM15
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            case _ =>
+              //TODO: Redirect to CAM-ITM24
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+      }
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

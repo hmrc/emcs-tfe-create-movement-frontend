@@ -17,33 +17,31 @@
 package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{CheckMode, Index}
-import pages.sections.items.ItemGeographicalIndicationChoicePage
+import pages.sections.items.ItemFiscalMarksPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemGeographicalIndicationChoiceSummary {
+object ItemFiscalMarksSummary  {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
-    answers.get(ItemGeographicalIndicationChoicePage(idx)).flatMap {
+    answers.get(ItemFiscalMarksPage(idx)).map {
       answer =>
-        if(answer == NoGeographicalIndication) None else {
-          Some(SummaryListRowViewModel(
-            key = "itemGeographicalIndicationChoice.checkYourAnswersLabel",
-            value = ValueViewModel(messages(s"itemGeographicalIndicationChoice.checkYourAnswers.value.$answer")),
-            actions = Seq(
-              ActionItemViewModel(
-                content = "site.change",
-                href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-                id = s"changeItemGeographicalIndicationChoice${idx.displayIndex}"
-              ).withVisuallyHiddenText(messages("itemGeographicalIndicationChoice.change.hidden"))
-            )
-          ))
-        }
+        SummaryListRowViewModel(
+          key = "itemFiscalMarks.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              id = s"changeItemFiscalMarks${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages("itemFiscalMarks.change.hidden"))
+          )
+        )
     }
   }
 }

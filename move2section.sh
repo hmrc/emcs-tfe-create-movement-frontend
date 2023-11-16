@@ -22,8 +22,9 @@ do
   echo "updating package of $DIR/sections/$SECTION/$FILE setting to *.sections.$SECTION"
   sed -i '' -e "/^package/ s/$/.sections.$SECTION/" $DIR/sections/$SECTION/$FILE
 
-  # Reminder for actions not carried out
-  echo "Manually move your routes from the app.routes file to $SECTION.routes file"
-  echo "and update the location of the controller in the creation routes"
-  echo "Add your page to the relevant navigation file"
 done
+
+# Reminder for actions not carried out
+echo "Manually move your routes from the app.routes file to $SECTION.routes file"
+echo "and update the location of the controller in the creation routes"
+echo "Add your page to the relevant navigation file"

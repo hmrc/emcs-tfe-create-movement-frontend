@@ -44,7 +44,7 @@ class ItemExciseProductCodeSummary @Inject()(p: views.html.components.p) {
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"itemExciseProductCode${idx.displayIndex}"
+              id = s"changeItemExciseProductCode${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
           )
         )

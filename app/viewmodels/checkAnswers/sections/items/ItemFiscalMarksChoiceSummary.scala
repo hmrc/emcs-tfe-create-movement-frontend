@@ -40,7 +40,7 @@ object ItemFiscalMarksChoiceSummary  {
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"itemFiscalMarksChoice${idx.displayIndex}"
+              id = s"changeItemFiscalMarksChoice${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemFiscalMarksChoice.change.hidden"))
           )
         )

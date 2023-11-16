@@ -69,12 +69,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemFiscalMarksChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemFiscalMarksChoicePage(idx)) match {
-        case Some(true) =>
-          //TODO: Redirect to CAM-ITM23
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(true) => itemsRoutes.ItemFiscalMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case Some(false) => itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
+
+    case ItemFiscalMarksPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

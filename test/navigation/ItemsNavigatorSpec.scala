@@ -330,14 +330,13 @@ class ItemsNavigatorSpec extends SpecBase {
       }
 
       "must go from the ItemFiscalMarksChoicePage" - {
-        //TODO: Redirect to CAM-ITM23
         "to the Fiscal Marks page" - {
 
           "when the user answers yes" in {
             navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "T200")
               .set(ItemFiscalMarksChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -357,6 +356,16 @@ class ItemsNavigatorSpec extends SpecBase {
               .set(ItemExciseProductCodePage(testIndex1), "T200")
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
+        }
+
+      }
+
+      "must go from the ItemFiscalMarksPage" - {
+
+        "to the Quantity page" in {
+          navigator.nextPage(ItemFiscalMarksPage(testIndex1), NormalMode, emptyUserAnswers
+            .set(ItemFiscalMarksPage(testIndex1), "some fiscal mark")
+          ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
 
       }

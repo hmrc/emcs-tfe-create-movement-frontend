@@ -1075,3 +1075,12 @@ itemFiscalMarksChoice.heading = Does the {0} have any fiscal marks?
 itemFiscalMarksChoice.checkYourAnswersLabel = Fiscal marks
 itemFiscalMarksChoice.error.required = Select yes if the {0} has fiscal marks
 itemFiscalMarksChoice.change.hidden = fiscal marks
+
+itemFiscalMarks.title = Give information about the fiscal marks on the tobacco
+itemFiscalMarks.heading = Give information about the fiscal marks on the tobacco
+itemFiscalMarks.checkYourAnswersLabel = Fiscal marks details
+itemFiscalMarks.error.required = Enter more information about the fiscal marks
+itemFiscalMarks.error.character = Information must include letters and numbers
+itemFiscalMarks.error.length = Information must be 350 characters or less
+itemFiscalMarks.error.xss = Information must not contain < and > and : and ;
+itemFiscalMarks.change.hidden = fiscal marks details

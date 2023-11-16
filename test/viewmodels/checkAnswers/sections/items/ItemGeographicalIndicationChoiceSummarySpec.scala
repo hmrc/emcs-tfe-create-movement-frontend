@@ -59,7 +59,7 @@ class ItemGeographicalIndicationChoiceSummarySpec extends SpecBase with Matchers
               ActionItemViewModel(
                 content = messagesForLanguage.change,
                 href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                id = "itemGeographicalIndicationChoice1"
+                id = "changeItemGeographicalIndicationChoice1"
               ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
             )
           )

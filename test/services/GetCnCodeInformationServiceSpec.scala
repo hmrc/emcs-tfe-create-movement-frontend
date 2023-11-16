@@ -44,14 +44,18 @@ class GetCnCodeInformationServiceSpec extends SpecBase with MockGetCnCodeInforma
       "when Connector returns success from downstream" in {
         MockGetCnCodeInformationConnector.getCnCodeInformation(request).returns(Future.successful(Right(CnCodeInformationResponse(data = Map(
           "24029000" -> CnCodeInformation(
+            cnCode = "T400",
             cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+            exciseProductCode = "24029000",
             exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
             unitOfMeasure = Kilograms
           )
         )))))
 
         testService.getCnCodeInformation(items)(hc).futureValue mustBe Seq((items.head, CnCodeInformation(
+          cnCode = "T400",
           cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+          exciseProductCode = "24029000",
           exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
           unitOfMeasure = Kilograms
         )))
@@ -80,12 +84,16 @@ class GetCnCodeInformationServiceSpec extends SpecBase with MockGetCnCodeInforma
 
         MockGetCnCodeInformationConnector.getCnCodeInformation(request).returns(Future.successful(Right(CnCodeInformationResponse(data = Map(
           "24029000" -> CnCodeInformation(
+            cnCode = "T400",
             cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+            exciseProductCode = "24029000",
             exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
             unitOfMeasure = Kilograms
           ),
           "24029001" -> CnCodeInformation(
+            cnCode = "T401",
             cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+            exciseProductCode = "24029001",
             exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
             unitOfMeasure = Kilograms
           )

@@ -49,6 +49,8 @@ case class MemberStatesException(message: String) extends Exception(message) wit
 
 case class DocumentTypesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
+case class CommodityCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class ExciseProductCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

@@ -126,12 +126,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
-      case Some("S500" | "T300" | "S400" | "E600" | "E800" | "E910") =>
-        //TODO: Route to CAM-ITM43 when implemented
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       case Some(_) =>
-        //TODO: Route to CAM-ITM38 when implemented
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        itemsRoutes.ItemCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }

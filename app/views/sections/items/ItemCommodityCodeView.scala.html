@@ -39,7 +39,7 @@
 @(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
 
 @hint = {
-@messages("itemCommodityCode.hint.text") <a href="https://www.trade-tariff.service.gov.uk/find_commodity" target=_blank>@messages("itemCommodityCode.hint.link")</a>
+@messages("itemCommodityCode.hint.text") <a href="https://www.trade-tariff.service.gov.uk/find_commodity" class="govuk-link" target=_blank>@messages("itemCommodityCode.hint.link")</a>
 }
 
 @layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = autocompleteJavascript(), maybeShowActiveTrader = maybeShowActiveTrader(request)) {

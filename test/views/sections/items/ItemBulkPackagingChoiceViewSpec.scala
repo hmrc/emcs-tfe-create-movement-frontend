@@ -56,6 +56,7 @@ class ItemBulkPackagingChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
                 Selectors.title -> messagesForLanguage.title(goodsType.toSingularOutput()),
                 Selectors.h1 -> messagesForLanguage.heading(goodsType.toSingularOutput()),
                 Selectors.h2(1) -> messagesForLanguage.caption,
+                Selectors.hint -> messagesForLanguage.hint,
                 Selectors.radioButton(1) -> messagesForLanguage.yes,
                 Selectors.radioButton(2) -> messagesForLanguage.no,
                 Selectors.button -> messagesForLanguage.saveAndContinue,

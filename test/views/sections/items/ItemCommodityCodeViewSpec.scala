@@ -47,7 +47,7 @@ class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
       val view = app.injector.instanceOf[ItemCommodityCodeView]
       val form = app.injector.instanceOf[ItemCommodityCodeFormProvider].apply()
       val submitRoute = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-      val testEpc = "testEpc"
+      val testEpc = "testEpcTobacco"
 
       val testCommodityCode1 = CnCodeInformation(
         cnCode = "testCnCode1",
@@ -58,7 +58,7 @@ class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
       )
 
       val testCommodityCode2 = CnCodeInformation(
-        cnCode = "testCnCode2",
+        cnCode = "testCnCodeWine",
         cnCodeDescription = "testCnCodeDescription2",
         exciseProductCode = testEpc,
         exciseProductCodeDescription = "testExciseProductCodeDescription",

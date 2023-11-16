@@ -43,7 +43,7 @@
             RadiosViewModel.yesNo(
                 field = form("value"),
                 legend = LegendViewModel(Text(messages("itemBulkPackagingChoice.heading", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
-            )
+            ).withHint(HintViewModel(messages("itemBulkPackagingChoice.hint")))
         )
 
         @continueOrExit()

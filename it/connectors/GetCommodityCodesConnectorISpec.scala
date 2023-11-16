@@ -34,22 +34,20 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
 
   val commodityCodes: Seq[CnCodeInformation] = Seq(
     CnCodeInformation(
-      cnCode = "T400",
+      cnCode = testCnCodeTobacco,
       cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
-      exciseProductCode = testEpc,
+      exciseProductCode = testEpcTobacco,
       exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
       unitOfMeasure = Kilograms
     ),
     CnCodeInformation(
-      cnCode = "T401",
+      cnCode = testCnCodeTobacco2,
       cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
-      exciseProductCode = testEpc,
+      exciseProductCode = testEpcTobacco,
       exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
       unitOfMeasure = Kilograms
     )
   )
-
-  lazy val testEpc: String = "24029000"
 
   ".getDocumentTypes" - {
 
@@ -64,22 +62,22 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
     "must return the commodity codes when the server responds OK" in {
 
       server.stubFor(
-        get(urlEqualTo(url(testEpc)))
+        get(urlEqualTo(url(testEpcTobacco)))
           .willReturn(
             aResponse()
               .withStatus(OK)
               .withBody(Json.stringify(Json.arr(
                 Json.obj(
-                  "cnCode" -> "T400",
+                  "cnCode" -> testCnCodeTobacco,
                   "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
-                  "exciseProductCode" -> testEpc,
+                  "exciseProductCode" -> testEpcTobacco,
                   "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
                   "unitOfMeasureCode" -> 1
                 ),
                 Json.obj(
-                  "cnCode" -> "T401",
+                  "cnCode" -> testCnCodeTobacco2,
                   "cnCodeDescription" -> "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
-                  "exciseProductCode" -> testEpc,
+                  "exciseProductCode" -> testEpcTobacco,
                   "exciseProductCodeDescription" -> "Fine-cut tobacco for the rolling of cigarettes",
                   "unitOfMeasureCode" -> 1
                 ),
@@ -87,27 +85,27 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
           )
       )
 
-      connector.getCommodityCodes(testEpc).futureValue mustBe Right(commodityCodes)
+      connector.getCommodityCodes(testEpcTobacco).futureValue mustBe Right(commodityCodes)
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
-        get(urlEqualTo(url(testEpc)))
+        get(urlEqualTo(url(testEpcTobacco)))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getCommodityCodes(testEpc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCommodityCodes(testEpcTobacco).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
 
       server.stubFor(
-        get(urlEqualTo(url(testEpc)))
+        get(urlEqualTo(url(testEpcTobacco)))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getCommodityCodes(testEpc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCommodityCodes(testEpcTobacco).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

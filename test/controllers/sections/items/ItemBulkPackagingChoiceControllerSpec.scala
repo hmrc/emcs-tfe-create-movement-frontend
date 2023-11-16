@@ -24,7 +24,7 @@ import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
@@ -71,7 +71,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
   "ItemBulkPackagingChoice Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
@@ -100,6 +100,38 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url
+    }
+
+    "must redirect to the Index page for GET when no Goods Type" in new Test(Some(
+      emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), "12345768")
+    )) {
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to the Index page for POST when no Goods Type" in new Test(Some(
+      emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), "12345768")
+    )) {
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to the Index page for GET when no Item" in new Test(Some(emptyUserAnswers)) {
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to the Index page for POST when no Item" in new Test(Some(emptyUserAnswers)) {
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(

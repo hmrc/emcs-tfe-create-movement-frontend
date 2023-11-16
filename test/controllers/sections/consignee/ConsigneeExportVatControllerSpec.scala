@@ -17,152 +17,112 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExportVatFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
 import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
-import navigation.ConsigneeNavigator
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExportVatPage
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.consignee.ConsigneeExportVatView
 
 import scala.concurrent.Future
 
 class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val onwardRoute = Call("GET", "/foo")
 
-  lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
 
-  val formProvider = new ConsigneeExportVatFormProvider()
-  val form = formProvider()
+    val formProvider = new ConsigneeExportVatFormProvider()
+    val form = formProvider()
+    val request = FakeRequest(GET, consigneeExportVatRoute)
+    lazy val view = app.injector.instanceOf[ConsigneeExportVatView]
+
+    object TestController extends ConsigneeExportVatController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeConsigneeNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
+  }
 
   "ConsigneeExportVat Controller" - {
+    "must return OK and the correct view for a GET" in new Fixture() {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, consigneeExportVatRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ConsigneeExportVatView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
+      Some(emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))))) {
 
-      val questionAnswered = ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val userAnswers = emptyUserAnswers.set(ConsigneeExportVatPage, questionAnswered)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, consigneeExportVatRoute)
-
-        val view = application.injector.instanceOf[ConsigneeExportVatView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(questionAnswered), NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form.fill(ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))),
+        NormalMode
+      )(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(
         Future.successful(
-          emptyUserAnswers
-            .set(ConsigneeExportVatPage,ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890")))
+          emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890")))
         )
       )
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val req = FakeRequest().withFormUrlEncodedBody(
+        ("exportType", YesEoriNumber.toString),
+        ("eoriNumber", "EORI1234567890")
+      )
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExportVatRoute)
-            .withFormUrlEncodedBody(
-              ("exportType", YesEoriNumber.toString),
-              ("eoriNumber", "EORI1234567890")
-            )
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual onwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+      val req = FakeRequest().withFormUrlEncodedBody(("exportType", "invalid value"))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val boundForm = form.bind(Map("exportType" -> "invalid value"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExportVatRoute)
-            .withFormUrlEncodedBody(("exportType", "invalid value"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val boundForm = form.bind(Map("exportType" -> "invalid value"))
-
-        val view = application.injector.instanceOf[ConsigneeExportVatView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(req), messages(req)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, consigneeExportVatRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
+    "redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest().withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExportVatRoute)
-            .withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
+      status(result) mustEqual SEE_OTHER
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

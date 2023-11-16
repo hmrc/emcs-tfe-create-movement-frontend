@@ -17,10 +17,11 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExportFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -36,186 +37,114 @@ import scala.concurrent.Future
 
 class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  val userAnswers = emptyUserAnswers.set(ConsigneeExportPage, true)
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val onwardRoute = Call("GET", "/foo")
+    val formProvider = new ConsigneeExportFormProvider()
+    val form = formProvider()
+    val request = FakeRequest()
+    lazy val view = app.injector.instanceOf[ConsigneeExportView]
 
-  val formProvider = new ConsigneeExportFormProvider()
-  val form = formProvider()
+    object TestController extends ConsigneeExportController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeConsigneeNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
+  }
 
-  lazy val consigneeExportRoute = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testDraftId, NormalMode).url
 
   "ConsigneeExport Controller" - {
-
     "onPageLoad" - {
-      "must return OK and the correct view for a GET" in {
+      "must return OK and the correct view for a GET" in new Fixture() {
+        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-        running(application) {
-          val request = FakeRequest(GET, consigneeExportRoute)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[ConsigneeExportView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
       }
 
-      "must populate the view correctly on a GET when the question has previously been answered" in {
+      "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswers)) {
+        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val userAnswers = emptyUserAnswers.set(ConsigneeExportPage, true)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        running(application) {
-          val request = FakeRequest(GET, consigneeExportRoute)
-
-          val view = application.injector.instanceOf[ConsigneeExportView]
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
     "onSubmit" - {
 
-      "must redirect to the next page when valid data is submitted - data is new" in {
+      "must redirect to the next page when valid data is submitted - data is new" in new Fixture() {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(
-              bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-              bind[UserAnswersService].toInstance(mockUserAnswersService)
-            )
-            .build()
+        val req = FakeRequest().withFormUrlEncodedBody(("value", "true"))
 
-        running(application) {
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-          val request =
-            FakeRequest(POST, consigneeExportRoute)
-              .withFormUrlEncodedBody(("value", "true"))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
       }
 
-      "must redirect to the next page when valid data is submitted - data has changed" in {
+      val userAnswersChanged = emptyUserAnswers
+        .set(ConsigneeExportPage, true)
+        .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
 
-        val userAnswers = emptyUserAnswers
-          .set(ConsigneeExportPage, true)
-          .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
+      "must redirect to the next page when valid data is submitted - data has changed" in new Fixture(Some(userAnswersChanged)) {
+        MockUserAnswersService.set(emptyUserAnswers.set(ConsigneeExportPage, false)).returns(Future.successful(emptyUserAnswers))
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-              bind[UserAnswersService].toInstance(mockUserAnswersService)
-            )
-            .build()
+        val req = FakeRequest().withFormUrlEncodedBody(("value", "false"))
 
-        running(application) {
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          MockUserAnswersService.set(emptyUserAnswers.set(ConsigneeExportPage, false)).returns(Future.successful(emptyUserAnswers))
-
-          val request =
-            FakeRequest(POST, consigneeExportRoute)
-              .withFormUrlEncodedBody(("value", "false"))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
       }
 
-      "must redirect to the next page when valid data is submitted - data has not changed" in {
+      "must redirect to the next page when valid data is submitted - data has not changed" in new Fixture(Some(userAnswers)) {
+        val req = FakeRequest().withFormUrlEncodedBody(("value", "true"))
 
-        val userAnswers = emptyUserAnswers.set(ConsigneeExportPage, true)
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-              bind[UserAnswersService].toInstance(mockUserAnswersService)
-            )
-            .build()
-
-        running(application) {
-
-          val request =
-            FakeRequest(POST, consigneeExportRoute)
-              .withFormUrlEncodedBody(("value", "true"))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
       }
 
-      "must return a Bad Request and errors when invalid data is submitted" in {
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+        val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        val boundForm = form.bind(Map("value" -> ""))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, consigneeExportRoute)
-              .withFormUrlEncodedBody(("value", ""))
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          val boundForm = form.bind(Map("value" -> ""))
-
-          val view = application.injector.instanceOf[ConsigneeExportView]
-
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(req), messages(req)).toString
       }
 
     }
 
     "must redirect to Journey Recovery" - {
 
-      "for a GET if no existing data is found" in {
+      "for a GET if no existing data is found" in new Fixture(None) {
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          val request = FakeRequest(GET, consigneeExportRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
 
-      "for a POST if no existing data is found" in {
+      "for a POST if no existing data is found" in new Fixture(None) {
+        val req = FakeRequest().withFormUrlEncodedBody(("value", "true"))
 
-        val application = applicationBuilder(userAnswers = None).build()
+        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        running(application) {
-          val request =
-            FakeRequest(POST, consigneeExportRoute)
-              .withFormUrlEncodedBody(("value", "true"))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
-
     }
+
   }
 }

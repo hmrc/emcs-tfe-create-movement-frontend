@@ -32,7 +32,7 @@ import views.html.sections.consignee.ConsigneeExciseView
 
 class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     val formProvider = new ConsigneeExciseFormProvider()
     lazy val consigneeExciseRoute = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
@@ -45,7 +45,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeConsigneeNavigator(testOnwardRoute),
       mockUserAnswersService,

@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
 
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     val testSelectItems: Seq[SelectItem] = Seq(
       SelectItem(
@@ -74,7 +74,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeUserAllowListAction,
       formProvider,

@@ -25,7 +25,6 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AddressView
@@ -36,8 +35,6 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    def onwardRoute = Call("GET", "/foo")
 
     val formProvider = new AddressFormProvider()
     val form = formProvider()
@@ -103,7 +100,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

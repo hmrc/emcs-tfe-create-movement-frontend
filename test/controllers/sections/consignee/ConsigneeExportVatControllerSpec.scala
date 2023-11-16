@@ -26,7 +26,6 @@ import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExportVatPage
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeExportVatView
@@ -36,8 +35,6 @@ import scala.concurrent.Future
 class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val onwardRoute = Call("GET", "/foo")
-
     lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
     lazy val consigneeExportVatRouteSubmit = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(testErn, testDraftId, NormalMode).url
 
@@ -95,7 +92,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

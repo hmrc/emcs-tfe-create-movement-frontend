@@ -25,7 +25,6 @@ import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.{ConsigneeExportPage, ConsigneeExportVatPage}
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeExportView
@@ -36,7 +35,6 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
 
   val userAnswers = emptyUserAnswers.set(ConsigneeExportPage, true)
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val onwardRoute = Call("GET", "/foo")
     val formProvider = new ConsigneeExportFormProvider()
     val form = formProvider()
     lazy val consigneeExportRoute = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testLrn, NormalMode).url
@@ -86,7 +84,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
         val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       val userAnswersChanged = emptyUserAnswers
@@ -101,7 +99,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
         val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must redirect to the next page when valid data is submitted - data has not changed" in new Fixture(Some(userAnswers)) {
@@ -110,7 +108,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
         val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

@@ -46,7 +46,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
     object TestController extends ConsigneeBusinessNameController(
       messagesApi,
       mockUserAnswersService,
-      new FakeConsigneeNavigator(onwardRoute),
+      new FakeConsigneeNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,

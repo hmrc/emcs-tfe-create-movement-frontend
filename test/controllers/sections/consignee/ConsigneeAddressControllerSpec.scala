@@ -51,7 +51,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     object TestController extends ConsigneeAddressController(
       messagesApi,
       mockUserAnswersService,
-      new FakeConsigneeNavigator(onwardRoute),
+      new FakeConsigneeNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,

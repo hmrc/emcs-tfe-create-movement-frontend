@@ -16,21 +16,25 @@
 
 package viewmodels.helpers
 
-import models.{Index, NormalMode}
+import controllers.sections.documents.routes
 import models.requests.DataRequest
+import models.{Index, NormalMode}
+import pages.sections.documents.DocumentSection
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import queries.DocumentsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, DocumentTypeSummary, ReferenceAvailableSummary}
-import controllers.sections.documents.routes
-import pages.sections.documents.DocumentSection
+import viewmodels.checkAnswers.sections.documents._
+import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
 import viewmodels.taskList.InProgress
 
 import javax.inject.Inject
 
-class DocumentsAddToListHelper @Inject()() {
+class DocumentsAddToListHelper @Inject()(tag: views.html.components.tag, span: views.html.components.span) extends TagFluency {
+
 
   def allDocumentsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
     request.userAnswers.get(DocumentsCount) match {
@@ -48,12 +52,26 @@ class DocumentsAddToListHelper @Inject()() {
         DocumentDescriptionSummary.row(idx)
       ).flatten
     ).copy(card = Some(Card(
-      title = Some(CardTitle(Text(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))),
+      title = Some(cardTitle(idx)),
       actions = Some(Actions(items = Seq(
         continueEditingLink(idx),
         Some(removeLink(idx))
       ).flatten))
     )))
+  }
+
+  private def cardTitle(idx: Index)(implicit request: DataRequest[_], messages: Messages): CardTitle = {
+
+    DocumentSection(idx).status match {
+      case InProgress => CardTitle(HtmlContent(HtmlFormat.fill(Seq(
+        span(messages("documentsAddToList.documentCardTitle", idx.displayIndex), Some("govuk-!-margin-right-2")),
+        tag(
+          message = messages("taskListStatus.incomplete"),
+          colour = "red"
+        )
+      ))))
+      case _ => CardTitle(HtmlContent(span(messages("documentsAddToList.documentCardTitle", idx.displayIndex))))
+    }
   }
 
   private def removeLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): ActionItem = {

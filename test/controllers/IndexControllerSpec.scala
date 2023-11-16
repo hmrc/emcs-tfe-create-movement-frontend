@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import mocks.services.MockPreDraftService
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
 import navigation.FakeNavigators.FakeInfoNavigator
 import navigation.InformationNavigator
@@ -29,29 +29,26 @@ import services.PreDraftService
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with MockPreDraftService {
+class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService {
 
   "Index Controller" - {
-
-    lazy val application: Application =
-      applicationBuilder(userAnswers = None)
-        .overrides(
-          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
-          bind[PreDraftService].toInstance(mockPreDraftService)
-        )
-        .build()
-
     "must redirect to the info Index controller" in {
-      running(application) {
+      object TestController extends IndexController(
+        messagesApi,
+        mockPreDraftService,
+        mockUserAnswersService,
+        fakeAuthAction,
+        fakeUserAllowListAction,
+        messagesControllerComponents
+      )
 
-        MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
+      MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
 
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad(testNorthernIrelandErn).url)
-        val result = route(application, request).value
+      val request = FakeRequest()
+      val result = TestController.onPageLoad(testNorthernIrelandErn)(request)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
     }
   }
 }

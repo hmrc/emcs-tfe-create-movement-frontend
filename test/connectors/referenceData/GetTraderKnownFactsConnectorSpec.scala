@@ -33,12 +33,10 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase
   with MockHttpClient
   with BeforeAndAfterAll {
 
-  lazy val app = applicationBuilder(userAnswers = None).build()
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
   lazy val connector = new GetTraderKnownFactsConnectorImpl(mockHttpClient, appConfig)
 
   "check" - {

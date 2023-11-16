@@ -43,8 +43,6 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   implicit val fakeRequest = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
 
-  lazy val app = applicationBuilder(userAnswers = None).build()
-
   override def beforeAll(): Unit = {
     Play.start(app)
   }

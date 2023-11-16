@@ -25,12 +25,12 @@ import viewmodels.helpers.CheckYourAnswersConsigneeHelper
 
 trait MockConsigneeCheckYourAnswersHelper extends MockFactory {
 
-  lazy val MockConsigneeCheckYourAnswersHelper: CheckYourAnswersConsigneeHelper = mock[CheckYourAnswersConsigneeHelper]
+  lazy val mockConsigneeCheckYourAnswersHelper: CheckYourAnswersConsigneeHelper = mock[CheckYourAnswersConsigneeHelper]
 
   object MockConsigneeCheckAnswersHelper {
 
     def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (MockConsigneeCheckYourAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
+      (mockConsigneeCheckYourAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
   }
 
 }

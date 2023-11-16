@@ -63,7 +63,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
           status(result) mustBe OK
           contentAsString(result) mustBe
-            view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages(application)).toString
+            view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages(request)).toString
         }
       }
 

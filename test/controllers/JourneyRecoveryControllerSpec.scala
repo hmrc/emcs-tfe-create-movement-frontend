@@ -25,64 +25,41 @@ import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 class JourneyRecoveryControllerSpec extends SpecBase {
 
   "JourneyRecovery Controller" - {
+    val request = FakeRequest()
+    lazy val continueView = app.injector.instanceOf[JourneyRecoveryContinueView]
+    lazy val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
+
+    object TestController extends JourneyRecoveryController(messagesControllerComponents, continueView, startAgainView)
 
     "when a relative continue Url is supplied" - {
-
       "must return OK and the continue view" in {
+        val continueUrl = RedirectUrl("/foo")
+        val result = TestController.onPageLoad(Some(continueUrl))(request)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          val continueUrl = RedirectUrl("/foo")
-          val request     = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
-
-          val result = route(application, request).value
-
-          val continueView = application.injector.instanceOf[JourneyRecoveryContinueView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(request, messages(request)).toString
       }
     }
 
     "when an absolute continue Url is supplied" - {
-
       "must return OK and the start again view" in {
+        val continueUrl = RedirectUrl("https://foo.com")
+        val result = TestController.onPageLoad(Some(continueUrl))(request)
 
-        val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val continueUrl = RedirectUrl("https://foo.com")
-          val request     = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
-
-          val result = route(application, request).value
-
-          val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual startAgainView()(request, messages(request)).toString
       }
     }
 
     "when no continue Url is supplied" - {
-
       "must return OK and the start again view" in {
+        val result = TestController.onPageLoad(None)(request)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad().url)
-
-          val result = route(application, request).value
-
-          val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual startAgainView()(request, messages(request)).toString
       }
     }
   }
+
 }

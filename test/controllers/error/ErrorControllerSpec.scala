@@ -17,7 +17,6 @@
 package controllers.error
 
 import base.SpecBase
-import config.AppConfig
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.auth.errors._
@@ -27,122 +26,74 @@ class ErrorControllerSpec extends SpecBase {
   class Fixture
 
   "Unauthorised Controller" - {
+    lazy val unauthorisedView = app.injector.instanceOf[UnauthorisedView]
+    lazy val notAnOrganisationView = app.injector.instanceOf[NotAnOrganisationView]
+    lazy val noEnrolmentView = app.injector.instanceOf[NoEnrolmentView]
+    lazy val inactiveEnrolmentView = app.injector.instanceOf[InactiveEnrolmentView]
+    lazy val notOnPrivateBetaView = app.injector.instanceOf[NotOnPrivateBetaView]
+
+    val request = FakeRequest()
+
+    object TestController extends ErrorController(
+      messagesControllerComponents,
+      unauthorisedView,
+      notAnOrganisationView,
+      noEnrolmentView,
+      inactiveEnrolmentView,
+      notOnPrivateBetaView
+    )(appConfig)
 
     "when calling .unauthorised" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.unauthorised()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.unauthorised().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[UnauthorisedView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual unauthorisedView()(request, messages(request)).toString
       }
     }
 
     "when calling .notAnOrganisation" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.notAnOrganisation()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.notAnOrganisation().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[NotAnOrganisationView]
-          val config = application.injector.instanceOf[AppConfig]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application), config).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual notAnOrganisationView()(request, messages(request), appConfig).toString
       }
     }
 
     "when calling .inactiveEnrolment" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.inactiveEnrolment()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.inactiveEnrolment().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[InactiveEnrolmentView]
-          val config = application.injector.instanceOf[AppConfig]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application), config).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual inactiveEnrolmentView()(request, messages(request), appConfig).toString
       }
     }
 
     "when calling .noEnrolment" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.noEnrolment()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.noEnrolment().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[NoEnrolmentView]
-          val config = application.injector.instanceOf[AppConfig]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application), config).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual noEnrolmentView()(request, messages(request), appConfig).toString
       }
     }
 
     "when calling .notOnPrivateBeta" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.notOnPrivateBeta()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.notOnPrivateBeta().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[NotOnPrivateBetaView]
-          val config = application.injector.instanceOf[AppConfig]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application), config).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual notOnPrivateBetaView()(request, messages(request), appConfig).toString
       }
     }
 
     "when calling .wrongArc" - {
-
       "must return OK and the correct view for a GET" in {
+        val result = TestController.wrongArc()(request)
 
-        val application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.ErrorController.wrongArc().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[UnauthorisedView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual unauthorisedView()(request, messages(request)).toString
       }
     }
   }

@@ -24,54 +24,32 @@ import views.html.auth.SignedOutView
 class SignedOutControllerSpec extends SpecBase {
 
   "SignedOut Controller" - {
+    val request = FakeRequest()
+    val view = app.injector.instanceOf[SignedOutView]
+    object TestController extends SignedOutController(messagesControllerComponents, appConfig, view)
 
-    "must return OK and the correct view for a none saved signout" in {
+    "must return OK and the correct view for a none saved sign out" in {
+      val result = TestController.signOutNotSaved(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.signOutNotSaved().url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[SignedOutView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(application)).toString
-        await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(request)).toString
+      await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
     }
 
     "must return OK and the correct view for a saved signed out" in {
+      val result = TestController.signOutSaved(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.signOutSaved().url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[SignedOutView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(application)).toString
-        await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(request)).toString
+      await(result).session(request).get(REFERER_SESSION_KEY) mustBe None
     }
 
     "must return OK and the correct view for a feedback signed out" in {
+      val result = TestController.signOutWithSurvey()(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.signOutWithSurvey().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some("http://localhost:9514/feedback/emcstfe/beta")
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some("http://localhost:9514/feedback/emcstfe/beta")
     }
-
   }
+
 }

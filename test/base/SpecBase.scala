@@ -16,45 +16,44 @@
 
 package base
 
+import config.AppConfig
 import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
 import connectors.referenceData._
 import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
-import controllers.actions._
 import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
+import controllers.actions._
 import fixtures.BaseFixtures
 import models.requests.{DataRequest, UserRequest}
 import models.{TraderKnownFacts, UserAnswers}
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import play.api.Application
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Play.materializer
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Request
-import play.api.test.FakeRequest
+import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.test.Helpers.stubPlayBodyParsers
 import repositories.SessionRepository
 import repository.{FakePlayMongoComponent, FakeSessionRepository}
 import uk.gov.hmrc.mongo.MongoComponent
 
-trait SpecBase
-  extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
-    with BaseFixtures {
+trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
 
-  def messagesApi(app: Application): MessagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val messagesControllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val dataRequiredAction: DataRequiredAction = app.injector.instanceOf[DataRequiredAction]
 
-  def messages(app: Application): Messages = messagesApi(app).preferred(FakeRequest())
+  def messages(request: Request[_]): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  def messages(app: Application, lang: Lang): Messages = messagesApi(app).preferred(Seq(lang))
+  val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
+  val fakeUserAllowListAction = new FakeUserAllowListAction()
 
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
-    UserRequest(request, ern, testInternalId, testCredId, testSessionId, false)
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
     DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)

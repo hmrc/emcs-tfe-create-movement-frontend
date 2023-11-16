@@ -24,8 +24,6 @@ import play.twirl.api.Html
 
 trait ViewSpecBase extends SpecBase with BeforeAndAfterAll {
 
-  lazy val app = applicationBuilder().build()
-
   override def beforeAll(): Unit = {
     super.beforeAll()
     Play.start(app)

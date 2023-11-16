@@ -17,19 +17,17 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import fixtures.OrganisationDetailsFixtures
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
-import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{GetMemberStatesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
@@ -59,8 +57,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     implicit val hc = HeaderCarrier()
     implicit val ec = ExecutionContext.global
 
-    def onwardRoute = Call("GET", "/foo")
-
+    val onwardRoute = Call("GET", "/foo")
     val formProvider = new ConsigneeExemptOrganisationFormProvider()
     val form = formProvider()
 
@@ -69,125 +66,100 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
     lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[GetMemberStatesService].toInstance(mockGetMemberStatesService)
-      )
-      .build()
+    lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
+    val request = FakeRequest()
 
-    val view = application.injector.instanceOf[ConsigneeExemptOrganisationView]
+    object TestController extends ConsigneeExemptOrganisationController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeConsigneeNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view,
+      mockGetMemberStatesService
+    )
+
   }
 
 
   "ConsigneeExemptOrganisation Controller" - {
-
     "must return OK and the correct view for a GET" in new Fixture() {
+      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-      running(application) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
-
-        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form,
-          items = testSelectItems,
-          call = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form,
+        items = testSelectItems,
+        call = onSubmitCall
+      )(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(ConsigneeExemptOrganisationPage, exemptOrganisationDetailsModel)
-    )) {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
+      Some(emptyUserAnswers.set(ConsigneeExemptOrganisationPage, exemptOrganisationDetailsModel))) {
 
-      running(application) {
+      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form.fill(exemptOrganisationDetailsModel),
-          items = testSelectItems,
-          call = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form.fill(exemptOrganisationDetailsModel),
+        items = testSelectItems,
+        call = onSubmitCall
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val req = FakeRequest().withFormUrlEncodedBody(
+        ("memberState", "answer"),
+        ("certificateSerialNumber", "answer")
+      )
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExemptOrganisationRoute)
-            .withFormUrlEncodedBody(
-              ("memberState", "answer"),
-              ("certificateSerialNumber", "answer")
-            )
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual onwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+      val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExemptOrganisationRoute)
-            .withFormUrlEncodedBody(("value", ""))
+      val boundForm = form.bind(Map("value" -> ""))
 
-        val boundForm = form.bind(Map("value" -> ""))
+      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-        MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          form = boundForm,
-          items = testSelectItems,
-          call = onSubmitCall
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(
+        form = boundForm,
+        items = testSelectItems,
+        call = onSubmitCall
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeExemptOrganisationRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

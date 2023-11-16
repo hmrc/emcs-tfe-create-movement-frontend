@@ -22,7 +22,7 @@ import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.exportInformation.ExportCustomsOfficeView
@@ -32,7 +32,7 @@ class ExportCustomsOfficeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, euExport: Boolean) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
     val view = app.injector.instanceOf[ExportCustomsOfficeView]

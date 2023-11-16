@@ -31,10 +31,9 @@ class CheckAnswersImportHelperSpec extends SpecBase {
 
   class Setup(ern: String = testErn) {
     lazy val checkAnswersImportHelper = new CheckYourAnswersImportHelper()
-    lazy val app: Application = applicationBuilder().build()
     val userAnswers: UserAnswers = UserAnswers(ern, testDraftId).set(ImportCustomsOfficeCodePage, "AB123456")
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-    implicit val msgs: Messages = messagesApi(app).preferred(fakeDataRequest)
+    implicit val msgs: Messages = messages(fakeDataRequest)
   }
 
   "CheckAnswersConsigneeHelper" - {

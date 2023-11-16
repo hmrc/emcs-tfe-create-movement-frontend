@@ -22,7 +22,7 @@ import fixtures.messages.sections.dispatch.DispatchUseConsignorDetailsMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -31,13 +31,11 @@ class DispatchUseConsignorDetailsSummarySpec extends SpecBase with Matchers with
 
   "DispatchUseConsignorDetailsSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DispatchUseConsignorDetailsMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

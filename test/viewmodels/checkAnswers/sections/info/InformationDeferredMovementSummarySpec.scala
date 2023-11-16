@@ -21,7 +21,7 @@ import fixtures.messages.sections.info.DeferredMovementMessages
 import fixtures.messages.sections.info.DeferredMovementMessages.ViewMessages
 import models.CheckMode
 import pages.sections.info.DeferredMovementPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -30,9 +30,6 @@ import viewmodels.govuk.summarylist._
 
 
 class InformationDeferredMovementSummarySpec extends SpecBase {
-
-  lazy val app = applicationBuilder().build()
-
   private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
@@ -51,7 +48,7 @@ class InformationDeferredMovementSummarySpec extends SpecBase {
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the DeferredMovementPage" - {
         "then must return a not provided row" in {

@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor, UserType}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
@@ -33,7 +33,7 @@ class ImportCustomsOfficeCodeViewSpec extends ViewSpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, userType: UserType) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
     val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]

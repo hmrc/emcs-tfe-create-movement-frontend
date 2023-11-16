@@ -22,7 +22,7 @@ import fixtures.messages.sections.sad.SadAddToListMessages
 import models.UserAnswers
 import pages.sections.sad._
 import play.api.Application
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -32,7 +32,6 @@ import views.html.components.link
 class SadAddToListHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
 
@@ -43,7 +42,7 @@ class SadAddToListHelperSpec extends SpecBase {
     Seq(SadAddToListMessages.English).foreach{ msg =>
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Nil
         }

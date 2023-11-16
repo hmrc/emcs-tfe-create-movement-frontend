@@ -21,7 +21,7 @@ import fixtures.messages.sections.firstTransporter.FirstTransporterAddressMessag
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.firstTransporter.FirstTransporterAddressPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -33,14 +33,11 @@ import viewmodels.implicits._
 class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
   "FirstTransporterAddressSummary" - {
-
-    lazy val app = applicationBuilder().build()
-
     Seq(FirstTransporterAddressMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when the show action link boolean is true" - {
 

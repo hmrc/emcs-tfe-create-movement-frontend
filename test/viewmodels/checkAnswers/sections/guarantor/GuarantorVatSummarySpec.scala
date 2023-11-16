@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -34,8 +34,6 @@ import viewmodels.govuk.summarylist._
 class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
   "GuarantorVatSummary" - {
-
-    lazy val app = applicationBuilder().build()
 
     def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
       Some(
@@ -54,7 +52,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
     Seq(GuarantorVatMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {

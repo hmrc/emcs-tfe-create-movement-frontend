@@ -27,11 +27,11 @@ import scala.concurrent.ExecutionContext
 
 class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[UserAnswers] with CleanMongoCollectionSupport {
 
-  implicit val ec: ExecutionContext = applicationBuilder().injector.instanceOf[ExecutionContext]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val repository: SessionRepositoryImpl = new SessionRepositoryImpl(
     mongoComponent = mongoComponent,
-    appConfig = applicationBuilder().injector.instanceOf[AppConfig]
+    appConfig = appConfig
   )
 
   val userAnswers = emptyUserAnswers

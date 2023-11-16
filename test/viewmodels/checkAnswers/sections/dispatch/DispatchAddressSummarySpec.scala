@@ -24,7 +24,7 @@ import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -37,13 +37,11 @@ class DispatchAddressSummarySpec extends SpecBase with Matchers with UserAddress
 
   "DispatchBusinessAddressSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DispatchCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "must output no row" - {
           "when there's no answer for DispatchUseConsignorDetailsPage" in new Test(emptyUserAnswers) {

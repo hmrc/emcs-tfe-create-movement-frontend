@@ -31,10 +31,9 @@ class CheckAnswersDocumentsHelperSpec extends SpecBase {
 
   class Setup(answers: UserAnswers = emptyUserAnswers) {
     lazy val checkAnswersDocumentsHelper = new CheckYourAnswersDocumentsHelper()
-    lazy val app: Application = applicationBuilder().build()
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
     implicit val testUserRequest = userRequest(fakeDataRequest)
-    implicit val msgs: Messages = messagesApi(app).preferred(fakeDataRequest)
+    implicit val msgs: Messages = messages(fakeDataRequest)
   }
 
   "CheckYourAnswersDocumentsHelper" - {

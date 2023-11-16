@@ -26,7 +26,7 @@ import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.transportUnit._
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import viewmodels.helpers.TransportUnitsAddToListHelper
@@ -49,7 +49,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -88,7 +88,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item with error" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -129,7 +129,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -175,7 +175,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items and no form" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)

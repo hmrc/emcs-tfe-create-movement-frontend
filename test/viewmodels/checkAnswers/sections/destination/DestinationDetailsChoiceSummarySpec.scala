@@ -23,7 +23,7 @@ import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationDetailsChoicePage
 import pages.sections.info.DestinationTypePage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -34,13 +34,11 @@ class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
 
   "DestinationDetailsChoiceSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DestinationDetailsChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

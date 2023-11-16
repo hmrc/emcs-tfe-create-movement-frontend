@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.documents.DocumentsCertificatesPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import viewmodels.helpers.CheckYourAnswersDocumentsHelper
@@ -36,7 +36,7 @@ class DocumentsCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
   trait Fixture {
 
     val messagesForLanguage = DocumentsCheckAnswersMessages.English
-    implicit val msgs: Messages = messages(app, DocumentsCheckAnswersMessages.English.lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(DocumentsCheckAnswersMessages.English.lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
     val summaryListHelper = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()
 

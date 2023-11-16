@@ -22,7 +22,7 @@ import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.firstTransporter.FirstTransporterVatView
@@ -32,7 +32,7 @@ class FirstTransporterVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
     val view = app.injector.instanceOf[FirstTransporterVatView]

@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.info.DestinationTypeView
@@ -42,7 +42,7 @@ class DestinationTypeViewSpec extends ViewSpecBase with ViewBehaviours {
         Seq("GBWK", "XIWK").foreach {
           ern =>
             s"for ERN starting with $ern" - {
-              implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+              implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
               val view = app.injector.instanceOf[DestinationTypeView]
@@ -61,7 +61,7 @@ class DestinationTypeViewSpec extends ViewSpecBase with ViewBehaviours {
         Seq("GBRC", "XIRC").foreach {
           ern =>
             s"for ERN starting with $ern" - {
-              implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+              implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
               val view = app.injector.instanceOf[DestinationTypeView]

@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.Application
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -35,7 +35,6 @@ import views.html.components.link
 
 class TransportSealInformationSummarySpec extends SpecBase with Matchers with TransportUnitFixtures {
 
-  lazy val app: Application = applicationBuilder().build()
   implicit lazy val link: link = app.injector.instanceOf[link]
 
   "TransportSealInformationSummary" - {
@@ -44,7 +43,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

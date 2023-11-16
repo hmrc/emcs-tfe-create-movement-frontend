@@ -23,14 +23,13 @@ import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.scalamock.scalatest.MockFactory
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 
 class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory {
 
   trait Test {
-    lazy val app = applicationBuilder().build()
-    implicit lazy val msgs: Messages = messages(app, TransportArrangerMessages.English.lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(TransportArrangerMessages.English.lang))
     val helper = new TransportArrangerCheckAnswersHelper()
   }
 

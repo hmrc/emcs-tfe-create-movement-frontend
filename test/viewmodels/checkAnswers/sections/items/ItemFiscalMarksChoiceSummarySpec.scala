@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.ItemFiscalMarksChoiceMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemFiscalMarksChoicePage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
@@ -31,13 +31,11 @@ class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
 
   "ItemFiscalMarksChoiceSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(ItemFiscalMarksChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

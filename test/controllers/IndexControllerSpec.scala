@@ -19,13 +19,8 @@ package controllers
 import base.SpecBase
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
-import navigation.FakeNavigators.FakeInfoNavigator
-import navigation.InformationNavigator
-import play.api.Application
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.PreDraftService
 
 import scala.concurrent.Future
 

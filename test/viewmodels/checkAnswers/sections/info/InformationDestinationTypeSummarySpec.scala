@@ -22,7 +22,7 @@ import fixtures.messages.sections.info.DestinationTypeMessages.ViewMessages
 import models.CheckMode
 import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
 import pages.sections.info.DestinationTypePage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -30,8 +30,6 @@ import viewmodels.govuk.summarylist._
 
 
 class InformationDestinationTypeSummarySpec extends SpecBase {
-
-  lazy val app = applicationBuilder().build()
 
   private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
@@ -51,7 +49,7 @@ class InformationDestinationTypeSummarySpec extends SpecBase {
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the DestinationTypePage" - {
         "then must not return a row" in {

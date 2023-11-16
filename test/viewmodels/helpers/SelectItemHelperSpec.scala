@@ -18,18 +18,17 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.BaseFixtures
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
 class SelectItemHelperSpec extends SpecBase with BaseFixtures {
-
-  lazy val app = applicationBuilder().build()
-
+  implicit lazy val messages = app.injector.instanceOf[Messages]
   ".constructSelectItems" - {
     "should return a list of select items" in {
       val result = SelectItemHelper.constructSelectItems(
         selectOptions = Seq(beerExciseProductCode, wineExciseProductCode),
         defaultTextMessageKey = "default",
-        existingAnswer = None)(messages(app))
+        existingAnswer = None)
       result mustBe Seq(
         SelectItem(selected = true, disabled = true, text = "default"),
         SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
@@ -41,7 +40,7 @@ class SelectItemHelperSpec extends SpecBase with BaseFixtures {
       val result = SelectItemHelper.constructSelectItems(
         selectOptions = Seq(beerExciseProductCode, wineExciseProductCode),
         defaultTextMessageKey = "default",
-        existingAnswer = Some("W200"))(messages(app))
+        existingAnswer = Some("W200"))
       result mustBe Seq(
         SelectItem(selected = false, disabled = true, text = "default"),
         SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),

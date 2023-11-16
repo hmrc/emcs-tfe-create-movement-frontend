@@ -39,7 +39,7 @@ import views.html.sections.consignee.CheckYourAnswersConsigneeView
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
+  class Fixture(optUserAnswers: Option[UserAnswers]) {
 
     val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
     val msgs = messages(testDataRequest)
@@ -82,7 +82,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,
       new FakeConsigneeNavigator(testOnwardRoute),

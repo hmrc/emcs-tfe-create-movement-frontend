@@ -22,8 +22,6 @@ import java.time.{LocalDateTime, ZoneId, ZoneOffset}
 
 class TimeMachineSpec extends SpecBase {
 
-  lazy val app = applicationBuilder().build()
-
   "TimeMachine" - {
 
     "Return UTC time now" in {

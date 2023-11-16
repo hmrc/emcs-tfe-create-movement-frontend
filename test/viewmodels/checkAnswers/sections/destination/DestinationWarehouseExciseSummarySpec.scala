@@ -21,7 +21,7 @@ import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationWarehouseExcisePage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -32,13 +32,11 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
   "DestinationWarehouseExciseSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DestinationWarehouseExciseMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

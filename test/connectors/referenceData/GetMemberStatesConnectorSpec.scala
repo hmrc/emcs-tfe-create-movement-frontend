@@ -17,7 +17,6 @@
 package connectors.referenceData
 
 import base.SpecBase
-import config.AppConfig
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.BeforeAndAfterAll

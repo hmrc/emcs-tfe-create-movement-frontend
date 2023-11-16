@@ -21,7 +21,7 @@ import fixtures.messages.sections.journeyType.JourneyTimeDaysMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.journeyType.JourneyTimeDaysPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
@@ -30,15 +30,13 @@ import viewmodels.implicits._
 
 class JourneyTimeDaysSummarySpec extends SpecBase with Matchers {
 
-  lazy val app = applicationBuilder().build()
-
   ".row" - {
 
     Seq(JourneyTimeDaysMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

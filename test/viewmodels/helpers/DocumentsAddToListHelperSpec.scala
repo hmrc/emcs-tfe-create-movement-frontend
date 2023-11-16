@@ -23,7 +23,7 @@ import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import models.{NormalMode, UserAnswers}
 import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.Application
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
@@ -34,7 +34,6 @@ import views.html.components.{link, span, tag}
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
     implicit lazy val span = app.injector.instanceOf[span]
@@ -49,7 +48,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
       s"when no answers specified for '${English.lang.code}'" in new Setup() {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Nil
       }

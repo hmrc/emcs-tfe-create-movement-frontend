@@ -28,7 +28,7 @@ import views.html.ConfirmationView
 
 class ConfirmationControllerSpec extends SpecBase {
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
+  class Fixture(optUserAnswers: Option[UserAnswers]) {
     val view = app.injector.instanceOf[ConfirmationView]
     val errorHandler = app.injector.instanceOf[ErrorHandler]
     val request = FakeRequest()
@@ -37,7 +37,7 @@ class ConfirmationControllerSpec extends SpecBase {
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,
       view,

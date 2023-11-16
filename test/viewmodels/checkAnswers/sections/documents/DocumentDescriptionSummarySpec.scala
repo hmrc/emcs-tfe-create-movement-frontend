@@ -22,7 +22,7 @@ import fixtures.messages.sections.documents.DocumentDescriptionMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.{DocumentDescriptionPage, DocumentTypePage, ReferenceAvailablePage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -33,9 +33,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers with Documen
 
   "DocumentDescriptionSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
-    implicit lazy val msgs: Messages = messages(app, English.lang)
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
     "when there's no answer" - {
 

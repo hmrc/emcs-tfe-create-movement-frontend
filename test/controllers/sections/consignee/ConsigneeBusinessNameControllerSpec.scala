@@ -17,140 +17,109 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.NormalMode
-import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.consignee.ConsigneeBusinessNameView
 
 import scala.concurrent.Future
 
 class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
-
+  val onwardRoute = Call("GET", "/foo")
   val formProvider = new ConsigneeBusinessNameFormProvider()
   val form = formProvider()
+  val request = FakeRequest()
+  val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val view = app.injector.instanceOf[ConsigneeBusinessNameView]
 
-  lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
-  lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+  object TestController extends ConsigneeBusinessNameController(
+    messagesApi,
+    mockUserAnswersService,
+    new FakeConsigneeNavigator(onwardRoute),
+    fakeAuthAction,
+    new FakeDataRetrievalAction(Some(emptyUserAnswers), Some(testMinTraderKnownFacts)),
+    dataRequiredAction,
+    fakeUserAllowListAction,
+    formProvider,
+    messagesControllerComponents,
+    view
+  )
 
   "ConsigneeBusinessName Controller" - {
-
     "must return OK and the correct view for a GET" in {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
-        val request = FakeRequest(GET, consigneeBusinessNameRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ConsigneeBusinessNameView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, consigneeBusinessNameSubmit)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val userAnswers = emptyUserAnswers.set(ConsigneeBusinessNamePage, "answer")
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      object TestController extends ConsigneeBusinessNameController(
+        messagesApi,
+        mockUserAnswersService,
+        new FakeConsigneeNavigator(onwardRoute),
+        fakeAuthAction,
+        new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
+        dataRequiredAction,
+        fakeUserAllowListAction,
+        new ConsigneeBusinessNameFormProvider(),
+        messagesControllerComponents,
+        view
+      )
 
-      running(application) {
-        val request = FakeRequest(GET, consigneeBusinessNameRoute)
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val view = application.injector.instanceOf[ConsigneeBusinessNameView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill("answer"), consigneeBusinessNameSubmit)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val request = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeBusinessNameRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual onwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val request = FakeRequest().withFormUrlEncodedBody(("value", ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val boundForm = form.bind(Map("value" -> ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeBusinessNameRoute)
-            .withFormUrlEncodedBody(("value", ""))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[ConsigneeBusinessNameView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, consigneeBusinessNameSubmit)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, consigneeBusinessNameSubmit)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, consigneeBusinessNameRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
+      val request = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, consigneeBusinessNameRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

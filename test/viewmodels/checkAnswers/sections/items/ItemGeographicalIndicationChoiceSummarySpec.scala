@@ -22,7 +22,7 @@ import models.CheckMode
 import models.sections.items.ItemGeographicalIndicationType._
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemGeographicalIndicationChoicePage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
@@ -32,13 +32,11 @@ class ItemGeographicalIndicationChoiceSummarySpec extends SpecBase with Matchers
 
   "ItemGeographicalIndicationChoiceSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(ItemGeographicalIndicationChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

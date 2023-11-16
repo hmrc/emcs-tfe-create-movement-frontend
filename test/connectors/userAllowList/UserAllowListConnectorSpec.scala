@@ -17,7 +17,6 @@
 package connectors.userAllowList
 
 import base.SpecBase
-import config.AppConfig
 import mocks.connectors.MockHttpClient
 import models.requests.CheckUserAllowListRequest
 import models.response.UnexpectedDownstreamResponseError

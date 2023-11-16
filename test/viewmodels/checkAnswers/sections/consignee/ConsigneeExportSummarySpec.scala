@@ -21,7 +21,7 @@ import fixtures.messages.sections.consignee.ConsigneeExportMessages
 import models.NormalMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -31,13 +31,12 @@ import viewmodels.implicits._
 class ConsigneeExportSummarySpec extends SpecBase with Matchers {
   "ConsigneeExportSummary" - {
 
-    lazy val app = applicationBuilder().build()
 
     Seq(ConsigneeExportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

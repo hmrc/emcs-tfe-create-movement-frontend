@@ -22,7 +22,7 @@ import fixtures.messages.sections.transportUnit.TransportUnitIdentityMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.TransportUnitIdentityPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -33,13 +33,11 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
   "TransportUnitIdentitySummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(TransportUnitIdentityMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

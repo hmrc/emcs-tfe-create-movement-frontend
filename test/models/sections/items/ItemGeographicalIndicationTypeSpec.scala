@@ -35,7 +35,7 @@ class ItemGeographicalIndicationTypeSpec extends SpecBase {
 
     ".options" - {
       "return all the radio options for geographical indications" in {
-        implicit val msgs: Messages = messages(applicationBuilder().build())
+        implicit val msgs: Messages = app.injector.instanceOf[Messages]
 
         ItemGeographicalIndicationType.options mustBe Seq(
           RadioItem(

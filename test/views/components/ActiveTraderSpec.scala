@@ -20,7 +20,7 @@ import base.ViewSpecBase
 import config.AppConfig
 import fixtures.messages.ActiveTraderMessages
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import viewmodels.traderInfo.TraderInfo
 
 class ActiveTraderSpec extends ViewSpecBase {
@@ -29,7 +29,7 @@ class ActiveTraderSpec extends ViewSpecBase {
 
     Seq(ActiveTraderMessages.English).foreach { messagesForLanguage =>
 
-      implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       val activeTrader = app.injector.instanceOf[views.html.components.activeTrader]
 

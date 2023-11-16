@@ -41,20 +41,19 @@ import pages.sections.journeyType.JourneyTypeSection
 import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
 
 class DraftMovementHelperSpec extends SpecBase {
-  lazy val app = applicationBuilder().build()
 
   lazy val helper = new DraftMovementHelper()
 
   Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
-      lazy val app = applicationBuilder().build()
-      implicit lazy val msgs = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       def dataRequest(ern: String, userAnswers: UserAnswers) = DataRequest(
         userRequest(FakeRequest(), ern), testDraftId, userAnswers, testMinTraderKnownFacts

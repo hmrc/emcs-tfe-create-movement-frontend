@@ -21,7 +21,7 @@ import fixtures.messages.sections.destination.DestinationConsigneeDetailsMessage
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationConsigneeDetailsPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -32,13 +32,11 @@ class DestinationConsigneeDetailsSummarySpec extends SpecBase with Matchers {
 
   "DestinationConsigneeDetailsSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DestinationConsigneeDetailsMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

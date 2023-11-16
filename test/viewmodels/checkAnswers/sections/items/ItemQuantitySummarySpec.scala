@@ -23,7 +23,7 @@ import models.CheckMode
 import models.UnitOfMeasure.Kilograms
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemQuantityPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
@@ -33,13 +33,11 @@ class ItemQuantitySummarySpec extends SpecBase with Matchers {
 
   "ItemQuantitySummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(ItemQuantityMessages.English -> UnitOfMeasureMessages.English).foreach { case (messagesForLanguage, unitOfMeasure) =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

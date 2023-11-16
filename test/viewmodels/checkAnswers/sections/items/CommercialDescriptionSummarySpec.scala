@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.CommercialDescriptionMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.CommercialDescriptionPage
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
@@ -30,13 +30,11 @@ import viewmodels.implicits._
 class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
   "CommercialDescriptionSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

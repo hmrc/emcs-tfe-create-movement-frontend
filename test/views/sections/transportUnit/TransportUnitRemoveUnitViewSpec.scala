@@ -22,7 +22,7 @@ import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitRemoveUnitView
@@ -37,7 +37,7 @@ class TransportUnitRemoveUnitViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
         val view = app.injector.instanceOf[TransportUnitRemoveUnitView]

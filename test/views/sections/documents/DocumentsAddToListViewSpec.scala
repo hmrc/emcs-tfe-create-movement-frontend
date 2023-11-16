@@ -23,8 +23,8 @@ import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, DocumentsCertificatesPage, ReferenceAvailablePage}
-import play.api.i18n.Messages
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import viewmodels.helpers.DocumentsAddToListHelper
@@ -47,7 +47,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for singular item" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeOtherModel)
@@ -85,7 +85,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for multiple items" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
@@ -124,7 +124,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered with no form" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
@@ -164,7 +164,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for an InProgress item" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentDescriptionPage(0), "description")

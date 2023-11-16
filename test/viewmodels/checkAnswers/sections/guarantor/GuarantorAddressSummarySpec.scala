@@ -25,7 +25,7 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsO
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -52,13 +52,11 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
   "GuarantorAddressSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(GuarantorAddressMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         Seq(GoodsOwner, Transporter).foreach { arranger =>
           s"when the Guarantor is ${arranger.getClass.getSimpleName.stripSuffix("$")}" - {

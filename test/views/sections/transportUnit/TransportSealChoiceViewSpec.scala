@@ -26,7 +26,7 @@ import models.sections.transportUnit.TransportUnitType._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.transportUnit.TransportUnitTypePage
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportSealChoiceView
@@ -46,7 +46,7 @@ class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
           s"for $transportUnitType" - {
 
-            implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))
             val view = app.injector.instanceOf[TransportSealChoiceView]

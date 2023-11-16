@@ -22,7 +22,7 @@ import forms.sections.info.DispatchDetailsFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import utils.DateTimeUtils
@@ -41,7 +41,7 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
 
         "and is a deferred movement" - {
 
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
           val view = app.injector.instanceOf[DispatchDetailsView]
@@ -76,7 +76,7 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
 
         "and is not a deferred movement" - {
 
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
           val view = app.injector.instanceOf[DispatchDetailsView]

@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
@@ -35,7 +35,7 @@ class CheckYourAnswersImportViewSpec extends ViewSpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
 
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456"))
 
     val view = app.injector.instanceOf[CheckYourAnswersImportView]

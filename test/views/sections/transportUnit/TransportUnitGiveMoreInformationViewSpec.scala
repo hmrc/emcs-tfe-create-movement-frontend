@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitGiveMoreInformationView
@@ -47,7 +47,7 @@ class TransportUnitGiveMoreInformationViewSpec extends ViewSpecBase with ViewBeh
 
         s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: ${transportUnitTypeAndMessage._2}" - {
 
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
           val view = app.injector.instanceOf[TransportUnitGiveMoreInformationView]

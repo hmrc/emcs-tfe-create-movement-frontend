@@ -21,13 +21,13 @@ import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformation
 import forms.behaviours.BooleanFieldBehaviours
 import models.sections.transportUnit.TransportUnitType
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
 class TransportUnitGiveMoreInformationChoiceFormProviderSpec extends BooleanFieldBehaviours with SpecBase {
 
   val requiredKey = "transportUnitGiveMoreInformationChoice.error.required"
   val invalidKey = "error.boolean"
-  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(TransportUnitGiveMoreInformationChoiceMessages.English.lang))
+  implicit val messages: Messages = messages(Seq(TransportUnitGiveMoreInformationChoiceMessages.English.lang))
 
   ".value" - {
 

@@ -18,7 +18,7 @@ package utils
 
 import base.SpecBase
 import fixtures.messages.MonthMessages
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
 import java.time.{LocalDate, LocalTime}
 
@@ -32,7 +32,7 @@ class DateTimeUtilsSpec extends SpecBase with DateTimeUtils {
         s"for month: `$month and language: '${messagesForLanguage.lang.code}'" - {
 
           "must format it correctly" in {
-            implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             LocalDate.of(2023, month, 1).formatDateForUIOutput() mustBe
               s"1 ${messagesForLanguage.month(month)} 2023"
           }

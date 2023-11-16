@@ -23,7 +23,7 @@ import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 import views.{BaseSelectors, ViewBehaviours}
@@ -38,7 +38,7 @@ class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
         val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]

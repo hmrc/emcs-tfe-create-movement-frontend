@@ -31,7 +31,7 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Request}
@@ -48,6 +48,7 @@ trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValue
   lazy val dataRequiredAction: DataRequiredAction = app.injector.instanceOf[DataRequiredAction]
 
   def messages(request: Request[_]): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+  def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
   val fakeUserAllowListAction = new FakeUserAllowListAction()

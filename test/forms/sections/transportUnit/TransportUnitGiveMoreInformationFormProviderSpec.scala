@@ -21,7 +21,7 @@ import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformation
 import forms.behaviours.StringFieldBehaviours
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
 class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehaviours with SpecBase {
 
@@ -29,7 +29,7 @@ class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehavi
   val lengthKey = "transportUnitGiveMoreInformation.error.length"
   val invalidCharactersKey = "transportUnitGiveMoreInformation.error.xss"
   val maxLength = 350
-  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(TransportUnitGiveMoreInformationMessages.English.lang))
+  implicit val messages: Messages = messages(Seq(TransportUnitGiveMoreInformationMessages.English.lang))
 
   ".value" - {
 

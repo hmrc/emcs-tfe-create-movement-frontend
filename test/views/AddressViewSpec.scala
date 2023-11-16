@@ -31,14 +31,14 @@ import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.guarantor.GuarantorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
 import views.html.AddressView
 
 class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
     val view = app.injector.instanceOf[AddressView]

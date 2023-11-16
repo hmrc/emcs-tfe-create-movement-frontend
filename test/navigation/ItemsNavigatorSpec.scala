@@ -328,6 +328,37 @@ class ItemsNavigatorSpec extends SpecBase {
         }
       }
 
+      "must go from the Item Geographical Indication page" - {
+
+        "to the Small Independent Producer Page" - {
+
+          "when the alcoholic strength is < 8.5" in {
+
+            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
+            ) mustBe itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        "to the Quantity Page" - {
+
+          "when the alcoholic strength is >= 8.5" in {
+
+            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+            ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        "to the Items index page" - {
+
+          "when there is no answers" in {
+            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
       "must go from the ItemFiscalMarksChoicePage" - {
         "to the Fiscal Marks page" - {
 

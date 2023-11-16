@@ -23,7 +23,6 @@ import navigation.Navigator
 import pages.CheckAnswersPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.AddressLookupFrontendService
 import viewmodels.helpers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
@@ -38,33 +37,15 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
                                            view: CheckYourAnswersView,
-                                           checkAnswersHelper: CheckAnswersHelper,
-                                           addressLookupFrontendService: AddressLookupFrontendService
+                                           checkAnswersHelper: CheckAnswersHelper
                                           ) extends BaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, id: Option[String] = None): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-
-      id match {
-        case Some(identifier) =>
-          addressLookupFrontendService.retrieveAddress(identifier).map {
-            case Right(address) =>
-              Ok(view(
-                routes.CheckYourAnswersController.onSubmit(ern, draftId),
-                checkAnswersHelper.summaryList(Seq.empty),
-                address
-              ))
-            case _ => Ok(view(
-              routes.CheckYourAnswersController.onSubmit(ern, draftId),
-              checkAnswersHelper.summaryList(Seq.empty)
-            ))
-          }
-        case None =>
-          Future.successful(Ok(view(
-            routes.CheckYourAnswersController.onSubmit(ern, draftId),
-            checkAnswersHelper.summaryList(Seq.empty)
-          )))
-      }
+      Future.successful(Ok(view(
+        routes.CheckYourAnswersController.onSubmit(ern, draftId),
+        checkAnswersHelper.summaryList(Seq.empty)
+      )))
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =

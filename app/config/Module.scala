@@ -17,7 +17,6 @@
 package config
 
 import com.google.inject.AbstractModule
-import connectors.addressLookupFrontend.{AddressLookupFrontendConnector, AddressLookupFrontendConnectorImpl}
 import connectors.emcsTfe.{UserAnswersConnector, UserAnswersConnectorImpl}
 import connectors.referenceData._
 import connectors.userAllowList.{UserAllowListConnector, UserAllowListConnectorImpl}
@@ -38,7 +37,6 @@ class Module extends AbstractModule {
     bind(classOf[UserAllowListAction]).to(classOf[UserAllowListActionImpl]).asEagerSingleton()
     bind(classOf[TimeMachine]).to(classOf[TimeMachineImpl]).asEagerSingleton()
     bind(classOf[SessionRepository]).to(classOf[SessionRepositoryImpl]).asEagerSingleton()
-    bind(classOf[AddressLookupFrontendConnector]).to(classOf[AddressLookupFrontendConnectorImpl]).asEagerSingleton()
     bind(classOf[UserAnswersConnector]).to(classOf[UserAnswersConnectorImpl]).asEagerSingleton()
     bind(classOf[GetMemberStatesConnector]).to(classOf[GetMemberStatesConnectorImpl]).asEagerSingleton()
     bind(classOf[GetExciseProductCodesConnector]).to(classOf[GetExciseProductCodesConnectorImpl]).asEagerSingleton()

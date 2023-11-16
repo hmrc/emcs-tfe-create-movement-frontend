@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import models.addressLookupFrontend.Address
 @import models.requests.DataRequest
 
 @this(
@@ -25,15 +24,13 @@
         saveAndContinue: components.saveAndContinue
 )
 
-@(submitAction: Call, list: SummaryList, optAddress: Option[Address] = None)(implicit request: DataRequest[_], messages: Messages)
+@(submitAction: Call, list: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(submitAction) {
 
      @h1("checkYourAnswers.heading", Some(messages("lrn.subHeading", request.draftId)), "govuk-heading-l")
-
-     @optAddress.getOrElse("")
 
      @govukSummaryList(list)
 

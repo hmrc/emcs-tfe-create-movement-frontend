@@ -16,7 +16,6 @@
 
 package fixtures
 
-import models.addressLookupFrontend._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import models.{CountryModel, ExciseProductCode, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
@@ -50,48 +49,6 @@ trait BaseFixtures {
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT","12345")
   val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber,None, Some("1234"))
   val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
-
-  val testAlfJourneyConfig: AddressLookupFrontendJourneyConfig =
-    AddressLookupFrontendJourneyConfig(
-      version = 2,
-      options = JourneyOptions(
-        continueUrl = "testContinueUrl",
-        homeNavHref = None,
-        accessibilityFooterUrl = None,
-        deskProServiceName = None,
-        showPhaseBanner = None,
-        alphaPhase = None,
-        showBackButtons = None,
-        includeHMRCBranding = None,
-        selectPageConfig = None,
-        confirmPageConfig = None,
-        timeoutConfig = None,
-        disableTranslations = None
-      ),
-      labels = JourneyLabels(en = None, cy = None)
-    )
-
-  val testAlfAddressJson: JsObject =
-    Json.obj(
-      "auditRef" -> "bed4bd24-72da-42a7-9338-f43431b7ed72",
-      "ern" -> "GB990091234524",
-      "address" -> Json.obj(
-        "lines" -> Json.arr("10 Other Place", "Some District", "Anytown"),
-        "postcode" -> "ZZ1 1ZZ",
-        "country" -> Json.obj(
-          "code" -> "GB",
-          "name" -> "United Kingdom"
-        )
-      )
-    )
-
-  val testAlfAddress: Address =
-    Address(
-      lines = Seq("10 Other Place", "Some District", "Anytown"),
-      postcode = Some("ZZ1 1ZZ"),
-      country = Some(Country("GB", "United Kingdom")),
-      auditRef = Some("bed4bd24-72da-42a7-9338-f43431b7ed72")
-    )
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,

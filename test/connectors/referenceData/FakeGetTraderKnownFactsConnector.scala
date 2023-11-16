@@ -15,9 +15,9 @@
  */
 
 package connectors.referenceData
+
 import models.TraderKnownFacts
 import models.response.ErrorResponse
-import models.sections.documents.DocumentType
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

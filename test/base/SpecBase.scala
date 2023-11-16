@@ -16,7 +16,6 @@
 
 package base
 
-import connectors.addressLookupFrontend.{AddressLookupFrontendConnector, FakeAddressLookupFrontendConnector}
 import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
 import connectors.referenceData._
 import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
@@ -71,7 +70,6 @@ trait SpecBase
         bind[UserAllowListAction].to[FakeUserAllowListAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
         bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts)),
-        bind[AddressLookupFrontendConnector].toInstance(new FakeAddressLookupFrontendConnector()),
         bind[UserAnswersConnector].toInstance(new FakeUserAnswersConnector()),
         bind[GetCnCodeInformationConnector].toInstance(new FakeGetCnCodeInformationConnector()),
         bind[GetDocumentTypesConnector].toInstance(new FakeGetDocumentTypesConnector()),

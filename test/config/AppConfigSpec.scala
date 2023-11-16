@@ -17,7 +17,7 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy, StubAddressLookupJourney}
+import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
@@ -25,11 +25,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.GET
 
 class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching with MockFactory {
-
-  override def afterEach(): Unit = {
-    disable(StubAddressLookupJourney)
-    super.afterEach()
-  }
 
   lazy val app: Application = applicationBuilder().build()
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
@@ -79,21 +74,6 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
           disable(ReturnToLegacy)
 
           appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs-tfe"
-        }
-      }
-    }
-
-    ".addressLookupFrontendUrl" - {
-      "should generate the correct url" - {
-        s"when the $StubAddressLookupJourney feature switch is enabled" in {
-          enable(StubAddressLookupJourney)
-
-          appConfig.addressLookupFrontendUrl mustBe "http://localhost:8308"
-        }
-        s"when the $StubAddressLookupJourney feature switch is disabled" in {
-          disable(StubAddressLookupJourney)
-
-          appConfig.addressLookupFrontendUrl mustBe "http://localhost:9028"
         }
       }
     }

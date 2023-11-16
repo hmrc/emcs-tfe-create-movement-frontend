@@ -57,6 +57,8 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           Selectors.title -> messagesForLanguage.title("container"),
           Selectors.h1 -> messagesForLanguage.heading("container"),
           Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -82,6 +84,8 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           Selectors.title -> messagesForLanguage.title("fixed transport installation"),
           Selectors.h1 -> messagesForLanguage.heading("fixed transport installation"),
           Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -107,6 +111,8 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           Selectors.title -> messagesForLanguage.title("tractor"),
           Selectors.h1 -> messagesForLanguage.heading("tractor"),
           Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -132,6 +138,8 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           Selectors.title -> messagesForLanguage.title("trailer"),
           Selectors.h1 -> messagesForLanguage.heading("trailer"),
           Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
@@ -157,6 +165,8 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
           Selectors.title -> messagesForLanguage.title("vehicle"),
           Selectors.h1 -> messagesForLanguage.heading("vehicle"),
           Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

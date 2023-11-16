@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package models.sections.documents
+package fixtures.messages.sections.items
 
-import models.SelectOptionModel
-import play.api.libs.json.{Json, OFormat}
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
+object ItemFiscalMarksChoiceMessages {
 
-case class DocumentType(code: String, description: String) extends SelectOptionModel {
-  val displayName = s"$description ($code)"
-  val typeIsOther: Boolean = code == DocumentType.OtherCode
-}
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    def heading(goodsType: String) = s"Does the $goodsType have any fiscal marks?"
+    def title(goodsType: String): String = titleHelper(heading(goodsType))
 
-object DocumentType {
-  implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
+    val cyaLabel = "Fiscal marks"
+    val cyaChangeHidden = "fiscal marks"
+  }
 
-  final val OtherCode: String = "0"
+  object English extends ViewMessages with BaseEnglish
+
 }

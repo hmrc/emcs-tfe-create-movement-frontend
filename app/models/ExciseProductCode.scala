@@ -21,7 +21,7 @@ import play.api.libs.json.{Format, Json}
 case class ExciseProductCode(code: String,
                              description: String,
                              category: String,
-                             categoryDescription: String) extends SelectOption {
+                             categoryDescription: String) extends SelectOptionModel {
   val displayName = s"$code: $description"
 }
 

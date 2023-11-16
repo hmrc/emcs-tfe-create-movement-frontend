@@ -67,6 +67,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
+    case ItemFiscalMarksChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemFiscalMarksChoicePage(idx)) match {
+        case Some(true) =>
+          //TODO: Redirect to CAM-ITM23
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case Some(false) => itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
@@ -134,8 +143,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           case Beer | Spirits | Wine | Intermediate =>
             itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Tobacco =>
-            //TODO: Redirect to CAM-ITM22
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy if Seq("E470", "E500", "E600", "E930").contains(epc) =>
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy =>

@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package models.sections.documents
+package models
 
-import models.SelectOptionModel
-import play.api.libs.json.{Json, OFormat}
-
-
-case class DocumentType(code: String, description: String) extends SelectOptionModel {
-  val displayName = s"$description ($code)"
-  val typeIsOther: Boolean = code == DocumentType.OtherCode
-}
-
-object DocumentType {
-  implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
-
-  final val OtherCode: String = "0"
+trait SelectOptionModel {
+  val code: String
+  val displayName: String
 }

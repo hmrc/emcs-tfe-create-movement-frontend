@@ -1087,3 +1087,9 @@ itemSmallIndependentProducer.error.required = Select ‘Yes’ if the product ha
 #TODO: CYA content below needs to be reviewed when UX design is ready
 itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer
 itemSmallIndependentProducer.change.hidden = independent small producer
+
+itemFiscalMarksChoice.title = Does the {0} have any fiscal marks?
+itemFiscalMarksChoice.heading = Does the {0} have any fiscal marks?
+itemFiscalMarksChoice.checkYourAnswersLabel = Fiscal marks
+itemFiscalMarksChoice.error.required = Select yes if the {0} has fiscal marks
+itemFiscalMarksChoice.change.hidden = fiscal marks

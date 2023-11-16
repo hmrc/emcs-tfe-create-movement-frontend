@@ -39,3 +39,8 @@ GET        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer    
 POST       /trader/:ern/draft/:draftId/items/:idx/small-independent-producer        controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change controllers.sections.items.ItemSmallIndependentProducerController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice		                                controllers.sections.items.ItemFiscalMarksChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice		                                controllers.sections.items.ItemFiscalMarksChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice/change                             controllers.sections.items.ItemFiscalMarksChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice/change                             controllers.sections.items.ItemFiscalMarksChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

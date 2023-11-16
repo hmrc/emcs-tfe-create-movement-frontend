@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package models.sections.documents
+package pages.sections.items
 
-import models.SelectOptionModel
-import play.api.libs.json.{Json, OFormat}
+import models.Index
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-
-case class DocumentType(code: String, description: String) extends SelectOptionModel {
-  val displayName = s"$description ($code)"
-  val typeIsOther: Boolean = code == DocumentType.OtherCode
-}
-
-object DocumentType {
-  implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
-
-  final val OtherCode: String = "0"
+case class ItemFiscalMarksChoicePage(idx: Index) extends QuestionPage[Boolean] {
+  override val toString: String = "itemFiscalMarksChoice"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

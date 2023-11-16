@@ -1059,7 +1059,7 @@ commercialDescription.details.ethylAlcohol.b4 = if the spirit drink is dry, blen
 commercialDescription.details.tobacco.p = Include any information that will help to identify the goods, such as:
 commercialDescription.details.tobacco.b1 = the number of the lowest level of packaging used, such as individual cigarette packets or cigar boxes
 commercialDescription.details.tobacco.b2 = if transporting multipacks state both the number of multipacks and number of individual units. For example: 200 x multipacks of 5 x 20 cigarettes
-commercialDescription.details.tobacco.b3 = if transporting hand rolling or pipe tobacco state the number and weight of individual packets.
+commercialDescription.details.tobacco.b3 = if transporting hand rolling or pipe tobacco state the number and weight of individual packets
 commercialDescription.summary = Help with commercial description
 commercialDescription.error.invalidCharacter = Description cannot contain < and > and : and ;
 

@@ -39,7 +39,7 @@ class GetMemberStatesConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new GetMemberStatesConnector(mockHttpClient, appConfig)
+  lazy val connector = new GetMemberStatesConnectorImpl(mockHttpClient, appConfig)
 
   "getMemberStates" - {
     

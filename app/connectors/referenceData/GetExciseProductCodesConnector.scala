@@ -25,9 +25,15 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait GetExciseProductCodesConnector {
+  def baseUrl: String
+
+  def getExciseProductCodes()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[ExciseProductCode]]]
+}
+
 @Singleton
-class GetExciseProductCodesConnector @Inject()(val http: HttpClient,
-                                               config: AppConfig) extends GetExciseProductCodesHttpParser {
+class GetExciseProductCodesConnectorImpl @Inject()(val http: HttpClient,
+                                               config: AppConfig) extends GetExciseProductCodesHttpParser with GetExciseProductCodesConnector {
 
   def baseUrl: String = config.referenceDataBaseUrl
 

@@ -25,10 +25,16 @@ import uk.gov.hmrc.http._
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait AddressLookupFrontendConnector {
+  def retrieveAddress(id: String)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Option[Address]]]
+
+  def initialiseJourney(config: AddressLookupFrontendJourneyConfig)(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, String]]
+}
+
 @Singleton
-class AddressLookupFrontendConnector @Inject()(val http: HttpClient,
+class AddressLookupFrontendConnectorImpl @Inject()(val http: HttpClient,
                                                appConfig: AppConfig
-                                              )(implicit ec: ExecutionContext) extends AddressLookupFrontendHttpParsers {
+                                              )(implicit ec: ExecutionContext) extends AddressLookupFrontendHttpParsers with AddressLookupFrontendConnector {
 
   override implicit val reads: Reads[Address] = Address.reads
 

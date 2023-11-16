@@ -34,7 +34,7 @@ class AddressLookupFrontendConnectorSpec extends SpecBase with Status with MimeT
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-  lazy val connector: AddressLookupFrontendConnector = new AddressLookupFrontendConnector(mockHttpClient, appConfig)
+  lazy val connector: AddressLookupFrontendConnector = new AddressLookupFrontendConnectorImpl(mockHttpClient, appConfig)
 
   ".retrieveAddress()" - {
     "should return a successful response" - {

@@ -33,7 +33,7 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   lazy val appConfig = app.injector.instanceOf[AppConfig]
 
-  lazy val connector = new UserAnswersConnector(mockHttpClient, appConfig)
+  lazy val connector = new UserAnswersConnectorImpl(mockHttpClient, appConfig)
 
   ".get()" - {
 

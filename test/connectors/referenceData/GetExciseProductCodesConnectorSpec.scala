@@ -39,7 +39,7 @@ class GetExciseProductCodesConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new GetExciseProductCodesConnector(mockHttpClient, appConfig)
+  lazy val connector = new GetExciseProductCodesConnectorImpl(mockHttpClient, appConfig)
 
   "getExciseProductCodes" - {
     

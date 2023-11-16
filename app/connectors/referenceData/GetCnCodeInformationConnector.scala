@@ -26,9 +26,15 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait GetCnCodeInformationConnector {
+  def getCnCodeInformation(request: CnCodeInformationRequest)
+                          (implicit headerCarrier: HeaderCarrier,
+                           executionContext: ExecutionContext): Future[Either[ErrorResponse, CnCodeInformationResponse]]
+}
+
 @Singleton
-class GetCnCodeInformationConnector @Inject()(val http: HttpClient,
-                                              config: AppConfig) extends CnCodeInformationHttpParser {
+class GetCnCodeInformationConnectorImpl @Inject()(val http: HttpClient,
+                                              config: AppConfig) extends CnCodeInformationHttpParser with GetCnCodeInformationConnector {
 
   lazy val baseUrl: String = config.referenceDataBaseUrl
 

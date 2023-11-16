@@ -25,9 +25,15 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait GetDocumentTypesConnector {
+  def baseUrl: String
+
+  def getDocumentTypes()(implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[DocumentType]]]
+}
+
 @Singleton
-class GetDocumentTypesConnector @Inject()(val http: HttpClient,
-                                          config: AppConfig) extends GetDocumentTypesHttpParser {
+class GetDocumentTypesConnectorImpl @Inject()(val http: HttpClient,
+                                          config: AppConfig) extends GetDocumentTypesHttpParser with GetDocumentTypesConnector {
 
   def baseUrl: String = config.referenceDataBaseUrl
 

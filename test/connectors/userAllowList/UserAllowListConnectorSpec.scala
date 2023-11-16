@@ -36,7 +36,7 @@ class UserAllowListConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new UserAllowListConnector(mockHttpClient, appConfig)
+  lazy val connector = new UserAllowListConnectorImpl(mockHttpClient, appConfig)
 
   "check" - {
 

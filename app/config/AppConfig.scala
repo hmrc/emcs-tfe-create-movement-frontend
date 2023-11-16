@@ -86,14 +86,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
-  def addressLookupFrontendUrl: String = {
-    if (isEnabled(StubAddressLookupJourney)) {
-      servicesConfig.baseUrl("emcs-tfe-stub")
-    } else {
-      servicesConfig.baseUrl("address-lookup-frontend")
-    }
-  }
-
   private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {
       servicesConfig.baseUrl("emcs-tfe-reference-data-stub")

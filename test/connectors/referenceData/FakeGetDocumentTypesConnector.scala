@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.addressLookupFrontend
+package connectors.referenceData
+import models.response.ErrorResponse
+import models.sections.documents.DocumentType
+import uk.gov.hmrc.http.HeaderCarrier
 
-import play.api.libs.json.{Json, OFormat}
+import scala.concurrent.{ExecutionContext, Future}
 
-case class Country(code: String, name: String)
+class FakeGetDocumentTypesConnector extends GetDocumentTypesConnector {
+  override def baseUrl: String = ""
 
-object Country {
-  implicit val format: OFormat[Country] = Json.format[Country]
+  override def getDocumentTypes()(implicit headerCarrier: HeaderCarrier,
+                                  executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[DocumentType]]] =
+    Future.successful(Right(Seq.empty))
 }

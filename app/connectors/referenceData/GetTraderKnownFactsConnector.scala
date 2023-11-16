@@ -25,9 +25,17 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait GetTraderKnownFactsConnector {
+  def baseUrl: String
+
+  def getTraderKnownFacts(ern: String)
+                         (implicit headerCarrier: HeaderCarrier,
+                          executionContext: ExecutionContext): Future[Either[ErrorResponse, Option[TraderKnownFacts]]]
+}
+
 @Singleton
-class GetTraderKnownFactsConnector @Inject()(val http: HttpClient,
-                                              config: AppConfig) extends GetTraderKnownFactsHttpParser {
+class GetTraderKnownFactsConnectorImpl @Inject()(val http: HttpClient,
+                                              config: AppConfig) extends GetTraderKnownFactsHttpParser with GetTraderKnownFactsConnector {
 
   def baseUrl: String = config.traderKnownFactsReferenceDataBaseUrl
 

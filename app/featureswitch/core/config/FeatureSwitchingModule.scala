@@ -25,18 +25,13 @@ import javax.inject.Singleton
 @Singleton
 class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
-  val switches: Seq[FeatureSwitch] = Seq(StubAddressLookupJourney, AllowListEnabled, StubGetTraderKnownFacts, RedirectToFeedbackSurvey)
+  val switches: Seq[FeatureSwitch] = Seq(AllowListEnabled, StubGetTraderKnownFacts, RedirectToFeedbackSurvey)
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     Seq(
       bind[FeatureSwitchRegistry].to(this).eagerly()
     )
   }
-}
-
-case object StubAddressLookupJourney extends FeatureSwitch {
-  override val configName: String = "features.stub-address-lookup-journey"
-  override val displayName: String = "Use stub for Address Lookup journey"
 }
 
 case object AllowListEnabled extends FeatureSwitch {

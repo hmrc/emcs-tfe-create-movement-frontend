@@ -18,7 +18,7 @@ GET         /trader/:ern                                      controllers.IndexC
 
 GET         /trader/:ern/draft/:draftId/draft-movement        controllers.DraftMovementController.onPageLoad(ern: String, draftId: String)
 
-GET         /trader/:ern/draft/:draftId/check-answers         controllers.CheckYourAnswersController.onPageLoad(ern: String, draftId: String, id: Option[String] ?= None)
+GET         /trader/:ern/draft/:draftId/check-answers         controllers.CheckYourAnswersController.onPageLoad(ern: String, draftId: String)
 POST        /trader/:ern/draft/:draftId/check-answers         controllers.CheckYourAnswersController.onSubmit(ern: String, draftId: String)
 
 GET         /trader/:ern/draft/:draftId/confirmation          controllers.ConfirmationController.onPageLoad(ern: String, draftId: String)

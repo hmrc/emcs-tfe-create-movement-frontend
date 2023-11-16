@@ -39,7 +39,7 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new GetTraderKnownFactsConnector(mockHttpClient, appConfig)
+  lazy val connector = new GetTraderKnownFactsConnectorImpl(mockHttpClient, appConfig)
 
   "check" - {
     "should return a successful response" - {

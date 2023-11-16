@@ -16,6 +16,9 @@
 
 package base
 
+import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
+import connectors.referenceData._
+import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
 import controllers.actions._
 import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
 import fixtures.BaseFixtures
@@ -67,7 +70,15 @@ trait SpecBase
         bind[UserAllowListAction].to[FakeUserAllowListAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
         bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts)),
+        bind[UserAnswersConnector].toInstance(new FakeUserAnswersConnector()),
+        bind[GetCnCodeInformationConnector].toInstance(new FakeGetCnCodeInformationConnector()),
+        bind[GetDocumentTypesConnector].toInstance(new FakeGetDocumentTypesConnector()),
+        bind[GetTraderKnownFactsConnector].toInstance(new FakeGetTraderKnownFactsConnector()),
+        bind[GetExciseProductCodesConnector].toInstance(new FakeGetExciseProductCodesConnector()),
+        bind[GetMemberStatesConnector].toInstance(new FakeGetMemberStatesConnector()),
+        bind[UserAllowListConnector].toInstance(new FakeUserAllowListConnector()),
         bind[SessionRepository].toInstance(new FakeSessionRepository()),
-        bind[MongoComponent].to[FakePlayMongoComponent]
+        bind[GetCommodityCodesConnector].toInstance(new FakeGetCommodityCodesConnector()),
+        bind[MongoComponent].to[FakePlayMongoComponent].eagerly()
       )
 }

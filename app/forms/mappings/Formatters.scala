@@ -79,6 +79,27 @@ trait Formatters {
         baseFormatter.unbind(key, value.toString)
     }
 
+  private[mappings] def bigDecimalFormatter(requiredKey: String, nonNumericKey: String,
+                                        args: Seq[String] = Seq.empty): Formatter[BigDecimal] =
+    new Formatter[BigDecimal] {
+
+      private val baseFormatter = stringFormatter(requiredKey, args)
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
+        baseFormatter
+          .bind(key, data)
+          .map(_.replace(",", "").replaceAll(" ", ""))
+          .flatMap {
+            s =>
+              nonFatalCatch
+                .either(BigDecimal(s))
+                .left.map(_ => Seq(FormError(key, nonNumericKey, args)))
+          }
+
+      override def unbind(key: String, value: BigDecimal): Map[String, String] =
+        baseFormatter.unbind(key, value.toString)
+    }
+
   private[mappings] def intFormatter(requiredKey: String, wholeNumberKey: String, nonNumericKey: String, args: Seq[String] = Seq.empty): Formatter[Int] =
     new Formatter[Int] {
 

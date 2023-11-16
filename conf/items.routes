@@ -60,3 +60,8 @@ POST       /trader/:ern/draft/:draftId/items/:idx/geographical-indication       
 GET        /trader/:ern/draft/:draftId/items/:idx/geographical-indication/change                 controllers.sections.items.ItemGeographicalIndicationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/geographical-indication/change                 controllers.sections.items.ItemGeographicalIndicationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
+
+GET        /trader/:ern/draft/:draftId/items/:idx/net-gross-mass                         controllers.sections.items.ItemNetGrossMassController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/net-gross-mass                         controllers.sections.items.ItemNetGrossMassController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/net-gross-mass/change                   controllers.sections.items.ItemNetGrossMassController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/net-gross-mass/change                   controllers.sections.items.ItemNetGrossMassController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

@@ -63,7 +63,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val view = application.injector.instanceOf[TransportUnitGiveMoreInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form(), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form(), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -84,7 +84,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual
-          view(form().fill(Some("answer")), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+          view(form().fill(Some("answer")), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -226,7 +226,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 

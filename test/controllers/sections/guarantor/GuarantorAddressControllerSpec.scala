@@ -75,7 +75,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
               addressPage = GuarantorAddressPage,
               call = addressOnSubmit,
               headingKey = Some(s"guarantorAddress.$guarantorArranger")
-            )(dataRequest(request), messages(application)).toString
+            )(dataRequest(request), messages(request)).toString
           }
         }
 
@@ -114,7 +114,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
               addressPage = GuarantorAddressPage,
               call = addressOnSubmit,
               headingKey = Some(s"guarantorAddress.$guarantorArranger")
-            )(dataRequest(request), messages(application)).toString
+            )(dataRequest(request), messages(request)).toString
           }
         }
       }

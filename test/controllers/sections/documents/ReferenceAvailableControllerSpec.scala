@@ -78,7 +78,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(result) mustEqual view(
             form = form,
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -98,7 +98,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(result) mustEqual view(
             form = form.fill(true),
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -247,7 +247,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(result) mustEqual view(
             form = boundForm,
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

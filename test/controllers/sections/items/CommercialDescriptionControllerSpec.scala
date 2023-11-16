@@ -57,7 +57,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
         val view = application.injector.instanceOf[CommercialDescriptionView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"),itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"),itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -119,7 +119,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm,itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm,itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 

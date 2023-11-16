@@ -68,7 +68,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
         contentAsString(result) mustEqual view(
           list = list,
           submitAction = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -57,7 +57,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
             testDraftId,
             testUserAddress,
             testMinTraderKnownFacts
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
 
           status(result) mustBe OK
           contentAsString(result) mustBe viewAsString

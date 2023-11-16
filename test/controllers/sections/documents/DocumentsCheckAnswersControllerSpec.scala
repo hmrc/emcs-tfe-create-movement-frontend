@@ -35,7 +35,7 @@ class DocumentsCheckAnswersControllerSpec extends SpecBase {
       running(application) {
         val request = FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
         implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
-        implicit val msgs = messages(application)
+        implicit val msgs = messages(request)
 
         val result = route(application, fakeDataRequest).value
 

@@ -71,7 +71,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
         contentAsString(result) mustEqual view(
           list = list,
           submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

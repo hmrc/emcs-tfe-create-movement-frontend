@@ -85,7 +85,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
         contentAsString(result) mustEqual view(
           list = list,
           onSubmitCall = destinationCheckAnswersOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

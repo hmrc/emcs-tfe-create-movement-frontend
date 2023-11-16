@@ -55,7 +55,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[ImportNumberView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -73,7 +73,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -117,7 +117,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

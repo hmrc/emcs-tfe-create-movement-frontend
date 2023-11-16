@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
 import fixtures.DocumentTypeFixtures
+import fixtures.messages.sections.documents.DocumentDescriptionMessages
 import fixtures.messages.sections.documents.DocumentDescriptionMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -33,7 +34,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers with Documen
 
   "DocumentDescriptionSummary" - {
 
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(DocumentDescriptionMessages.English.lang))
 
     "when there's no answer" - {
 

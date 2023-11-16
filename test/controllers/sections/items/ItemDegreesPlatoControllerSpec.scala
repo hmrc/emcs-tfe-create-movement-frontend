@@ -89,7 +89,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -106,7 +106,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
           form.fill(ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))),
           itemDegreesPlatoSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -131,7 +131,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -146,7 +146,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 

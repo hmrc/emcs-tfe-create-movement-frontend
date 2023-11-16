@@ -25,6 +25,7 @@ import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsAddToListPage}
 import play.api.Play.materializer
 import play.api.data.Form
@@ -56,13 +57,15 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
     lazy val view: TransportUnitsAddToListView = app.injector.instanceOf[TransportUnitsAddToListView]
 
-    val helper = app.injector.instanceOf[TransportUnitsAddToListHelper]
+    lazy val helper = app.injector.instanceOf[TransportUnitsAddToListHelper]
+
+    lazy val fullCheckAnswers = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers)), messages)
 
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
       mockUserAnswersService,
       new FakeUserAllowListAction,
-      new FakeTransportUnitNavigator(onwardRoute),
+      app.injector.instanceOf[TransportUnitNavigator],
       new FakeAuthAction(Helpers.stubPlayBodyParsers),
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
@@ -99,7 +102,6 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .foldLeft(emptyUserAnswers)((answers, int) => answers.set(TransportUnitTypePage(Index(int)), Tractor))
         .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
     )) {
-      val fullCheckAnswers = helper.allTransportUnitsSummary()(dataRequest(request), messages)
 
       val result = controller.onPageLoad(testErn, testDraftId)(request)
 
@@ -114,7 +116,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> TransportUnitsAddToListModel.Yes.toString))
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> TransportUnitsAddToListModel.Yes.toString))
 
       status(result) mustEqual SEE_OTHER
 

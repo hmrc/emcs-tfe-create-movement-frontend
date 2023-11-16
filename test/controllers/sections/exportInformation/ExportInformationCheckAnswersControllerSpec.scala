@@ -71,7 +71,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
         contentAsString(result) mustEqual view(
           list = list,
           submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

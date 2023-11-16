@@ -66,7 +66,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
         contentAsString(result) mustEqual view(
           list = SummaryList(Seq.empty).withCssClass("govuk-!-margin-bottom-9"),
           onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

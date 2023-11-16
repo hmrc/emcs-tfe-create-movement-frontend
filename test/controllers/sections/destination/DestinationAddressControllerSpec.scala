@@ -67,7 +67,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
           addressPage = DestinationAddressPage,
           call = destinationAddressOnSubmit,
           headingKey = Some("destinationAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -107,7 +107,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
           addressPage = DestinationAddressPage,
           call = destinationAddressOnSubmit,
           headingKey = Some("destinationAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

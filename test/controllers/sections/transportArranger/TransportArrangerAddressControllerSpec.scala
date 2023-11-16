@@ -72,7 +72,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
             addressPage = TransportArrangerAddressPage,
             call = transportArrangerAddressOnSubmit,
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -95,7 +95,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
             addressPage = TransportArrangerAddressPage,
             call = transportArrangerAddressOnSubmit,
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -137,7 +137,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
           addressPage = TransportArrangerAddressPage,
           call = transportArrangerAddressOnSubmit,
           headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationChoiceMessages
 import forms.behaviours.BooleanFieldBehaviours
 import models.sections.transportUnit.TransportUnitType
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
 

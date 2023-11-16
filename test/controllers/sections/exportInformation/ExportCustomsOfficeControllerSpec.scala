@@ -64,7 +64,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -77,7 +77,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -102,7 +102,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -61,7 +61,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
 
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -74,7 +74,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -99,7 +99,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
       }
     }
 

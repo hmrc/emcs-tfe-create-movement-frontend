@@ -57,7 +57,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
         val view = application.injector.instanceOf[FirstTransporterVatView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -142,7 +142,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, firstTransporterVatSubmitAction)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
       }
     }
 

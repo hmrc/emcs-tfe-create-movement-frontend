@@ -23,7 +23,6 @@ import models.CheckMode
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
-import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

@@ -67,7 +67,7 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
           addressPage = DispatchAddressPage,
           call = dispatchAddressOnSubmit,
           headingKey = Some("dispatchAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -107,7 +107,7 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
           addressPage = DispatchAddressPage,
           call = dispatchAddressOnSubmit,
           headingKey = Some("dispatchAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

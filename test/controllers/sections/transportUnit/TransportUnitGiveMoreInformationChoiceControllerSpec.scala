@@ -55,7 +55,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))).build()
 
-      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
+      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(FakeRequest()))
 
       running(application) {
         val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
@@ -65,7 +65,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val view = application.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form(Tractor), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form(Tractor), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
+      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(FakeRequest()))
 
       running(application) {
         val request = FakeRequest(GET, transportUnit1GiveMoreInformationChoiceRoute)
@@ -85,7 +85,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form(Tractor).fill(true), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form(Tractor).fill(true), testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -227,7 +227,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))).build()
 
-      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(application))
+      def form(transportUnitType: TransportUnitType): Form[Boolean] = formProvider(transportUnitType)(messages(FakeRequest()))
 
       running(application) {
         val request =
@@ -241,7 +241,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request), messages(request)).toString
       }
     }
 

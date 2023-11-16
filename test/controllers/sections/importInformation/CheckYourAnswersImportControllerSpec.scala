@@ -55,7 +55,7 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
           bind[CheckYourAnswersImportHelper].toInstance(MockCheckYourAnswersImportHelper))
         .build()
 
-    implicit val msgs: Messages = messages(application)
+    implicit val msgs: Messages = messages(request)
 
 
     val summaryList: SummaryList = SummaryListViewModel(
@@ -83,7 +83,7 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
             testErn,
             testDraftId,
             summaryList
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
 
           status(result) mustBe OK
           contentAsString(result) mustBe viewAsString

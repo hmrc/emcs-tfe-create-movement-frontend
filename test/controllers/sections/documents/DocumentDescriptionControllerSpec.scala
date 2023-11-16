@@ -78,7 +78,7 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
           contentAsString(result) mustEqual view(
             form = form,
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -99,7 +99,7 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
           contentAsString(result) mustEqual view(
             form = form.fill("answer"),
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -201,7 +201,7 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
           contentAsString(result) mustEqual view(
             form = boundForm,
             onSubmitCall = onSubmitCall(0)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

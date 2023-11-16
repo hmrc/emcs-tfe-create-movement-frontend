@@ -57,7 +57,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[TransportArrangerView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TransportArranger.values.head), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(TransportArranger.values.head), NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -119,7 +119,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

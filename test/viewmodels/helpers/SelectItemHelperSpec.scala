@@ -18,11 +18,12 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.BaseFixtures
-import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
 class SelectItemHelperSpec extends SpecBase with BaseFixtures {
-  implicit lazy val messages = app.injector.instanceOf[Messages]
+  implicit lazy val msgs = messages(FakeRequest())
+
   ".constructSelectItems" - {
     "should return a list of select items" in {
       val result = SelectItemHelper.constructSelectItems(

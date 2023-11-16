@@ -76,7 +76,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
           form = form,
           transportUnitType = TransportUnitType.Container,
           onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -95,7 +95,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
           form = form.fill(transportSealTypeModelMax),
           transportUnitType = TransportUnitType.Container,
           onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -114,7 +114,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
           form = form.fill(transportSealTypeModelMin),
           transportUnitType = TransportUnitType.Container,
           onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -169,7 +169,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
           form = boundForm,
           transportUnitType = TransportUnitType.Container,
           onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -86,7 +86,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -103,7 +103,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
           form.fill(BigDecimal(1.5)),
           itemAlcoholStrengthSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -132,7 +132,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
           boundForm,
           itemAlcoholStrengthSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

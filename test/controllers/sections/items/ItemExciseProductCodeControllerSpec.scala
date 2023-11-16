@@ -57,7 +57,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
     val sampleEPCsSelectOptions = SelectItemHelper.constructSelectItems(
       selectOptions = sampleEPCs,
-      defaultTextMessageKey = "itemExciseProductCode.select.defaultValue")(messages(application))
+      defaultTextMessageKey = "itemExciseProductCode.select.defaultValue")(messages(FakeRequest()))
   }
 
   "ItemExciseProductCode Controller" - {
@@ -100,7 +100,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
         val view = application.injector.instanceOf[ItemExciseProductCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -112,19 +112,19 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
       running(application) {
 
+        val request = FakeRequest(GET, exciseProductCodeRoute())
+
         val sampleEPCsSelectOptionsWithBeerSelected = SelectItemHelper.constructSelectItems(
           selectOptions = sampleEPCs,
           defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
-          existingAnswer = Some("B000"))(messages(application))
-
-        val request = FakeRequest(GET, exciseProductCodeRoute())
+          existingAnswer = Some("B000"))(messages(request))
 
         val view = application.injector.instanceOf[ItemExciseProductCodeView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -164,7 +164,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

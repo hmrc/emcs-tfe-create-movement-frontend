@@ -57,7 +57,7 @@ class DispatchBusinessNameControllerSpec extends SpecBase with MockUserAnswersSe
         val view = application.injector.instanceOf[DispatchBusinessNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, dispatchBusinessNameSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, dispatchBusinessNameSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class DispatchBusinessNameControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), dispatchBusinessNameSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), dispatchBusinessNameSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -119,7 +119,7 @@ class DispatchBusinessNameControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, dispatchBusinessNameSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, dispatchBusinessNameSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 

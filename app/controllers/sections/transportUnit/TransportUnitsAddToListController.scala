@@ -34,18 +34,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class TransportUnitsAddToListController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: TransportUnitNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: TransportUnitsAddToListFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TransportUnitsAddToListView,
-                                       summaryHelper: TransportUnitsAddToListHelper
-                                     ) extends BaseTransportUnitNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val userAllowList: UserAllowListAction,
+                                                   override val navigator: TransportUnitNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   formProvider: TransportUnitsAddToListFormProvider,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: TransportUnitsAddToListView,
+                                                   summaryHelper: TransportUnitsAddToListHelper
+                                                 ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
@@ -57,10 +57,11 @@ class TransportUnitsAddToListController @Inject()(
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       onMax(
-        ifMax    = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))),
+        ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))),
         ifNotMax = formProvider().bindFromRequest().fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allTransportUnitsSummary(), NormalMode))), {
+            Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allTransportUnitsSummary(), NormalMode))),
+          {
             case TransportUnitsAddToListModel.Yes =>
               userAnswersService.set(request.userAnswers.remove(TransportUnitsAddToListPage))
                 .map { ua =>
@@ -69,15 +70,16 @@ class TransportUnitsAddToListController @Inject()(
                 }
             case value =>
               saveAndRedirect(TransportUnitsAddToListPage, value, NormalMode)
-          })
+          }
+        )
       )
 
     }
 
   private def onMax[D, T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
     dataRequest.userAnswers.get(TransportUnitsCount) match {
-      case Some(value) if value >= TransportUnitsSection.MAX  => ifMax
-      case _                                                  => ifNotMax
+      case Some(value) if value >= TransportUnitsSection.MAX => ifMax
+      case _ => ifNotMax
     }
   }
 }

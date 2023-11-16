@@ -51,7 +51,7 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
         val view = application.injector.instanceOf[SadRemoveDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -176,7 +176,7 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(request)).toString
       }
     }
 

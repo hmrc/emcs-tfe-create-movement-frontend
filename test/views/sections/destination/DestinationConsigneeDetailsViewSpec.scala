@@ -61,7 +61,7 @@ class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered with form not answered error in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
         val view = app.injector.instanceOf[DestinationConsigneeDetailsView]

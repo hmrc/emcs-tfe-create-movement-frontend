@@ -45,7 +45,7 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
         bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
         bind[UserAnswersService].toInstance(mockUserAnswersService)
       ).build()
-    implicit val msgs: Messages = messages(application)
+    implicit val msgs: Messages = messages(FakeRequest())
     val form = formProvider(Tobacco)
   }
 
@@ -114,7 +114,7 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
         val view = application.injector.instanceOf[ItemFiscalMarksChoiceView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, action, Tobacco)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, action, Tobacco)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -130,7 +130,7 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), action, Tobacco)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), action, Tobacco)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -168,7 +168,7 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, action, Tobacco)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, action, Tobacco)(dataRequest(request), messages(request)).toString
       }
     }
 

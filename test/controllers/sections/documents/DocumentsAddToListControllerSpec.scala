@@ -84,7 +84,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = true
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -106,7 +106,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = false
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -136,7 +136,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = false
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -289,7 +289,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
             onSubmitCall = onSubmitCall,
             documents = Seq.empty,
             showNoOption = true
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

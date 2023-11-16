@@ -52,7 +52,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         val view = application.injector.instanceOf[TransportUnitRemoveUnitView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -177,7 +177,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(request)).toString
       }
     }
 

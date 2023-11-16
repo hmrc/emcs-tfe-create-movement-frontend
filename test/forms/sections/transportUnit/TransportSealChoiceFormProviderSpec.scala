@@ -21,7 +21,7 @@ import forms.behaviours.BooleanFieldBehaviours
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType._
 import play.api.data.FormError
-import play.api.i18n.Messages
+import play.api.test.FakeRequest
 
 class TransportSealChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
@@ -32,7 +32,7 @@ class TransportSealChoiceFormProviderSpec extends SpecBase with BooleanFieldBeha
   val requiredKeyTrailer = "Select yes if there is a commercial seal on this trailer"
   val invalidKey = "error.boolean"
 
-  def form(transportUnitType: TransportUnitType) = new TransportSealChoiceFormProvider()(transportUnitType)(app.injector.instanceOf[Messages])
+  def form(transportUnitType: TransportUnitType) = new TransportSealChoiceFormProvider()(transportUnitType)(messages(FakeRequest()))
 
   Map(Tractor -> requiredKeyTractor,
     Container -> requiredKeyContainer,

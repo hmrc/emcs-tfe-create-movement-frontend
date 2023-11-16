@@ -65,7 +65,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -80,7 +80,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), destinationBusinessNameOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -114,7 +114,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, destinationBusinessNameOnSubmit)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
       }
     }
 

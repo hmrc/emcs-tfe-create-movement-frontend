@@ -82,7 +82,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(form, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -114,7 +114,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
           val result = route(application, request).value
 
           status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(boundForm, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -129,7 +129,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(form, deferredMovementSubmitRoute)(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -161,7 +161,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
           val result = route(application, request).value
 
           status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(boundForm, deferredMovementSubmitRoute)(dataRequest(request), messages(request)).toString
         }
       }
     }

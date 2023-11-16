@@ -68,7 +68,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
         contentAsString(result) mustEqual view(
           list = list,
           submitAction = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

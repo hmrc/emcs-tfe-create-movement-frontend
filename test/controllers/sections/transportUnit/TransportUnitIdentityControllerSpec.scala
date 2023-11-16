@@ -63,7 +63,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual
-          view(form, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+          view(form, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -84,7 +84,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual
-          view(form.fill("answer"), TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+          view(form.fill("answer"), TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -149,7 +149,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual
-          view(boundForm, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(application)).toString
+          view(boundForm, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

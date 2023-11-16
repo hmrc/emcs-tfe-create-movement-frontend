@@ -20,7 +20,6 @@ import base.SpecBase
 import models.UserAnswers
 import models.requests.DataRequest
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

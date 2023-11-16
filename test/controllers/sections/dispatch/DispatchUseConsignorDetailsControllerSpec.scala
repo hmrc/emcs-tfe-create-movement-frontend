@@ -63,7 +63,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(form, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -76,7 +76,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill(true), dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(form.fill(true), dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -132,7 +132,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
           val result = route(application, request).value
 
           status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(application)).toString
+          contentAsString(result) mustEqual view(boundForm, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(request)).toString
         }
       }
 

@@ -74,7 +74,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
           contentAsString(result) mustEqual view(
             form = form,
             onSubmitCall = onSubmitCall
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -92,7 +92,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
           contentAsString(result) mustEqual view(
             form = form.fill(true),
             onSubmitCall = onSubmitCall
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -197,7 +197,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
           contentAsString(result) mustEqual view(
             form = boundForm,
             onSubmitCall = onSubmitCall
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

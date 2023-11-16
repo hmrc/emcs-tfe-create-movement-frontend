@@ -96,7 +96,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
                   deferredMovement = deferredMovement,
                   onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
                   skipQuestionCall = testOnwardRoute
-                )(dataRequest(request), messages(application)).toString
+                )(dataRequest(request), messages(request)).toString
               }
             }
           }
@@ -170,7 +170,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
                   deferredMovement = deferredMovement,
                   onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
                   skipQuestionCall = testOnwardRoute
-                )(dataRequest(request), messages(application)).toString
+                )(dataRequest(request), messages(request)).toString
               }
             }
 
@@ -211,7 +211,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
                   deferredMovement = deferredMovement,
                   onSubmitCall = dispatchDetailsSubmitRoute,
                   skipQuestionCall = testOnwardRoute
-                )(dataRequest(request), messages(application)).toString
+                )(dataRequest(request), messages(request)).toString
               }
             }
           }
@@ -285,7 +285,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
                   deferredMovement = deferredMovement,
                   onSubmitCall = dispatchDetailsSubmitRoute,
                   skipQuestionCall = testOnwardRoute
-                )(dataRequest(request), messages(application)).toString
+                )(dataRequest(request), messages(request)).toString
               }
             }
 

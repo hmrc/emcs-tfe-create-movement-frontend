@@ -52,7 +52,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
         val view = application.injector.instanceOf[DispatchWarehouseExciseView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -70,7 +70,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -114,7 +114,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -134,7 +134,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

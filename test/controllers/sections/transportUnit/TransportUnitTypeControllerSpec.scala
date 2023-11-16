@@ -20,19 +20,16 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
 import models.sections.transportUnit.TransportUnitType
-import navigation.FakeNavigators.{FakeNavigator, FakeTransportUnitNavigator}
-import navigation.TransportUnitNavigator
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportUnitTypeView
 
 import scala.concurrent.Future

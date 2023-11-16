@@ -81,7 +81,7 @@ class InformationCheckAnswersControllerSpec extends SpecBase
           contentAsString(result) mustEqual view(
             list = list,
             submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -115,7 +115,7 @@ class InformationCheckAnswersControllerSpec extends SpecBase
           contentAsString(result) mustEqual view(
             list = list,
             submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(testErn, testDraftId)
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

@@ -56,7 +56,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[GuarantorNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, GoodsOwner, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -76,7 +76,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), GoodsOwner, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -122,7 +122,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, GoodsOwner, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

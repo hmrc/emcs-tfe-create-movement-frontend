@@ -68,7 +68,7 @@ class TransportArrangerCheckAnswersControllerSpec extends SpecBase with SummaryL
         contentAsString(result) mustEqual view(
           list = list,
           submitAction = controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

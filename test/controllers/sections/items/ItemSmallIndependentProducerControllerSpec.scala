@@ -86,7 +86,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemSmallIndependentProducerSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemSmallIndependentProducerSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -103,7 +103,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
           form.fill(true),
           itemSmallIndependentProducerSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -132,7 +132,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
           boundForm,
           itemSmallIndependentProducerSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

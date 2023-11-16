@@ -82,7 +82,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
             currentDate = testLocalDate.formatDateNumbersOnly(),
             onSubmitCall = invoiceDetailsPreDraftSubmitRoute,
             skipQuestionCall = testOnwardRoute
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -128,7 +128,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
             currentDate = testLocalDate.formatDateNumbersOnly(),
             onSubmitCall = invoiceDetailsPreDraftSubmitRoute,
             skipQuestionCall = testOnwardRoute
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -149,7 +149,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
             currentDate = testLocalDate.formatDateNumbersOnly(),
             onSubmitCall = invoiceDetailsSubmitRoute,
             skipQuestionCall = testOnwardRoute
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -195,7 +195,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
             currentDate = testLocalDate.formatDateNumbersOnly(),
             onSubmitCall = invoiceDetailsSubmitRoute,
             skipQuestionCall = testOnwardRoute
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
     }

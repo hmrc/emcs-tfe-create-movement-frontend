@@ -100,7 +100,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
         val view = application.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, action, Beer)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, action, Beer)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -118,7 +118,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ProtectedDesignationOfOrigin), action, Beer)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ProtectedDesignationOfOrigin), action, Beer)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -164,7 +164,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, action, Beer)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, action, Beer)(dataRequest(request), messages(request)).toString
       }
     }
 

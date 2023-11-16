@@ -47,7 +47,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
    val formProvider = new TransportSealChoiceFormProvider()
 
-   val form = formProvider(Container)(messages(application))
+   val form = formProvider(Container)(messages(FakeRequest()))
 
    def onwardRoute = Call("GET", "/foo")
 
@@ -82,7 +82,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
           mode = NormalMode,
           transportUnitType = Container,
           onSubmitCall = transportSealChoiceOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -103,7 +103,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
           mode = NormalMode,
           transportUnitType = Container,
           onSubmitCall = transportSealChoiceOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -183,7 +183,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
           mode = NormalMode,
           transportUnitType = Container,
           onSubmitCall = transportSealChoiceOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -89,7 +89,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -106,7 +106,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
           form.fill(ItemBrandNameModel(hasBrandName = true, Some("brand"))),
           itemBrandNameSubmitAction(),
           Wine
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -134,7 +134,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, itemBrandNameSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -126,7 +126,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemQuantitySubmitAction(), Wine, Litres20)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, itemQuantitySubmitAction(), Wine, Litres20)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -147,7 +147,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
           itemQuantitySubmitAction(),
           Wine,
           Litres20
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -180,7 +180,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
           itemQuantitySubmitAction(),
           Wine,
           Litres20
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

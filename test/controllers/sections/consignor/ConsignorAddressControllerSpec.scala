@@ -72,7 +72,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           form = form,
           addressPage = ConsignorAddressPage,
           call = consignorAddressOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -92,7 +92,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           form = form.fill(userAddressModelMax),
           addressPage = ConsignorAddressPage,
           call = consignorAddressOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -135,7 +135,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           form = boundForm,
           addressPage = ConsignorAddressPage,
           call = consignorAddressOnSubmit
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

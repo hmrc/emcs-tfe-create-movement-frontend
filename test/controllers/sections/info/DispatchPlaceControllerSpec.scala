@@ -68,7 +68,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
             val result = route(application, request).value
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(application)).toString
+            contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
           }
         }
       }
@@ -108,7 +108,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
             val result = route(application, request).value
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(application)).toString
+            contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
           }
         }
 

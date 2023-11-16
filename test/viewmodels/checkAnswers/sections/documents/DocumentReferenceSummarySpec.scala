@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.documents
 import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
+import fixtures.messages.sections.documents.DocumentReferenceMessages
 import fixtures.messages.sections.documents.DocumentReferenceMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -34,7 +35,7 @@ class DocumentReferenceSummarySpec extends SpecBase with Matchers with DocumentT
 
   "DocumentReferenceSummary" - {
 
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(DocumentReferenceMessages.English.lang))
 
     "when there's no answer" - {
 

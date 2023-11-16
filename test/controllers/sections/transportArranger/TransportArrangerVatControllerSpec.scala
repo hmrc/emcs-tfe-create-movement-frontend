@@ -64,7 +64,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -90,7 +90,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -115,7 +115,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
       }
     }
 

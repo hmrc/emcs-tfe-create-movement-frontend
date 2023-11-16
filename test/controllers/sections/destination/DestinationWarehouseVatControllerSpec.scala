@@ -78,7 +78,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
             action = destinationWarehouseVatOnSubmit,
             movementScenario = RegisteredConsignee,
             skipQuestionCall = destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 
@@ -97,7 +97,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
             action = destinationWarehouseVatOnSubmit,
             movementScenario = RegisteredConsignee,
             skipQuestionCall = destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual expectedView
@@ -154,7 +154,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
             RegisteredConsignee, destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
+          )(dataRequest(request), messages(request)).toString
         }
       }
 

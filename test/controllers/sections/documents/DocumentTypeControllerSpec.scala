@@ -48,7 +48,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       )
       .build()
 
-    implicit val msg = messages(application)
+    implicit val msg = messages(FakeRequest())
 
     def documentTypeRoute(idx: Index = 0): String =
       routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url

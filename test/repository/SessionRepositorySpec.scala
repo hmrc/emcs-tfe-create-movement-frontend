@@ -17,7 +17,6 @@
 package repository
 
 import base.SpecBase
-import config.AppConfig
 import models.UserAnswers
 import pages.sections.info.DeferredMovementPage
 import repositories.SessionRepositoryImpl

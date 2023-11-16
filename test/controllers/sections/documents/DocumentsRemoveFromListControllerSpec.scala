@@ -59,7 +59,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(formProvider(0), 0)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(formProvider(0), 0)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -133,7 +133,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, 0)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, 0)(dataRequest(request), messages(request)).toString
       }
     }
 

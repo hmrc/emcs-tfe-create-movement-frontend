@@ -65,7 +65,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testDraftId, NormalMode)
 
     val formProvider: DestinationDetailsChoiceFormProvider = new DestinationDetailsChoiceFormProvider()
-    lazy val form: Form[Boolean] = formProvider(RegisteredConsignee)(messages(application))
+    lazy val form: Form[Boolean] = formProvider(RegisteredConsignee)(messages(FakeRequest()))
 
   }
 
@@ -81,7 +81,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         val result = route(application, request).value
 
-        val expectedView = view(form, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(application)).toString
+        val expectedView = view(form, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual expectedView
@@ -99,7 +99,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         val result = route(application, request).value
 
-        val expectedView = view(form.fill(true), destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(application)).toString
+        val expectedView = view(form.fill(true), destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual expectedView
@@ -183,7 +183,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
         val result = route(application, request).value
 
-        val expectedView = view(boundForm, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(application)).toString
+        val expectedView = view(boundForm, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual expectedView

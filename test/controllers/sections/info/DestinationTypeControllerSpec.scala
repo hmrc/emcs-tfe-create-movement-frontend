@@ -97,31 +97,31 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
         "when the request contains a GBRC ERN" in new Fixture(None, ern = "GBRC123") {
           running(application) {
             status(getResult) mustEqual OK
-            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBRC123", NormalMode))(getRequest, messages(application)).toString
+            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBRC123", NormalMode))(getRequest, messages(getRequest)).toString
           }
         }
         "when the request contains a GBWK ERN" in new Fixture(None, ern = "GBWK123") {
           running(application) {
             status(getResult) mustEqual OK
-            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBWK123", NormalMode))(getRequest, messages(application)).toString
+            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBWK123", NormalMode))(getRequest, messages(getRequest)).toString
           }
         }
         "when the request contains a XIRC ERN" in new Fixture(None, ern = "XIRC123") {
           running(application) {
             status(getResult) mustEqual OK
-            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIRC123", NormalMode))(getRequest, messages(application)).toString
+            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIRC123", NormalMode))(getRequest, messages(getRequest)).toString
           }
         }
         "when the request contains a XIWK ERN and dispatchPlace is GreatBritain" in new Fixture(dispatchPlace = Some(GreatBritain), ern = "XIWK123") {
           running(application) {
             status(getResult) mustEqual OK
-            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode))(getRequest, messages(application)).toString
+            contentAsString(getResult) mustEqual view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode))(getRequest, messages(getRequest)).toString
           }
         }
         "when the request contains a XIWK ERN and dispatchPlace is NorthernIreland" in new Fixture(dispatchPlace = Some(NorthernIreland), ern = "XIWK123") {
           running(application) {
             status(getResult) mustEqual OK
-            contentAsString(getResult) mustEqual view(NorthernIreland, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode))(getRequest, messages(application)).toString
+            contentAsString(getResult) mustEqual view(NorthernIreland, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode))(getRequest, messages(getRequest)).toString
           }
         }
       }
@@ -152,7 +152,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
           val boundForm = form.bind(Map("value" -> ""))
 
           status(postResult) mustEqual BAD_REQUEST
-          contentAsString(postResult) mustEqual view(GreatBritain, boundForm, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode))(postRequest, messages(application)).toString
+          contentAsString(postResult) mustEqual view(GreatBritain, boundForm, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode))(postRequest, messages(postRequest)).toString
         }
       }
     }

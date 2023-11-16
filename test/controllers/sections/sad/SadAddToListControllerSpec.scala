@@ -56,7 +56,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val view = application.injector.instanceOf[SadAddToListView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(Some(form), Nil, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(form), Nil, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -74,7 +74,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(Some(form.fill(SadAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(form.fill(SadAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -138,7 +138,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(Some(boundForm), Nil,  NormalMode)(dataRequest(request), messages(application)).toString
+        contentAsString(result) mustEqual view(Some(boundForm), Nil,  NormalMode)(dataRequest(request), messages(request)).toString
       }
     }
 

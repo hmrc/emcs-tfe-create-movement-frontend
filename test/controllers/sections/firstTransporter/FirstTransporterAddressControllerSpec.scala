@@ -67,7 +67,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
           addressPage = FirstTransporterAddressPage,
           call = firstTransporterAddressOnSubmit,
           headingKey = Some("firstTransporterAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -107,7 +107,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
           addressPage = FirstTransporterAddressPage,
           call = firstTransporterAddressOnSubmit,
           headingKey = Some("firstTransporterAddress")
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -75,7 +75,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
         contentAsString(result) mustEqual view(
           form = form,
           onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -93,7 +93,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill("answer"),
           onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -133,7 +133,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm,
           onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
-        )(dataRequest(request), messages(application)).toString
+        )(dataRequest(request), messages(request)).toString
       }
     }
 

@@ -78,7 +78,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                 val result = route(application, request).value
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+                contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
               }
             }
           }
@@ -167,7 +167,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                   val result = route(application, request).value
 
                   status(result) mustEqual BAD_REQUEST
-                  contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
+                  contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
                 }
               }
           }
@@ -251,7 +251,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                 val result = route(application, request).value
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberSubmitRoute)(dataRequest(request), messages(application)).toString
+                contentAsString(result) mustEqual view(isDeferred = false, form, localReferenceNumberSubmitRoute)(dataRequest(request), messages(request)).toString
               }
             }
           }
@@ -322,7 +322,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                   val result = route(application, request).value
 
                   status(result) mustEqual BAD_REQUEST
-                  contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberSubmitRoute)(dataRequest(request), messages(application)).toString
+                  contentAsString(result) mustEqual view(isDeferred = false, boundForm, localReferenceNumberSubmitRoute)(dataRequest(request), messages(request)).toString
                 }
               }
           }

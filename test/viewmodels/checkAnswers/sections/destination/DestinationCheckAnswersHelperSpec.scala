@@ -33,7 +33,7 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
 
   class Setup(userAnswers: UserAnswers) {
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-    implicit val msgs: Messages = app.injector.instanceOf[Messages]
+    implicit val msgs: Messages = messages(FakeRequest())
     lazy val dispatchCheckAnswersSummary = new DestinationCheckAnswersHelper()
   }
 

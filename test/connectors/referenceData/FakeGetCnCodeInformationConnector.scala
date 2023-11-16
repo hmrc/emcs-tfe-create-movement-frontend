@@ -15,6 +15,7 @@
  */
 
 package connectors.referenceData
+
 import models.UnitOfMeasure.Kilograms
 import models.requests.CnCodeInformationRequest
 import models.response.ErrorResponse
@@ -26,7 +27,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class FakeGetCnCodeInformationConnector extends GetCnCodeInformationConnector {
   val fakeResponse = CnCodeInformationResponse(data = Map(
     "24029000" -> CnCodeInformation(
+      cnCode = "T400",
       cnCodeDescription = "Cigars, cheroots, cigarillos and cigarettes not containing tobacco",
+      exciseProductCode = "24029000",
       exciseProductCodeDescription = "Fine-cut tobacco for the rolling of cigarettes",
       unitOfMeasure = Kilograms
     )

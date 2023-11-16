@@ -78,6 +78,7 @@ trait SpecBase
         bind[GetMemberStatesConnector].toInstance(new FakeGetMemberStatesConnector()),
         bind[UserAllowListConnector].toInstance(new FakeUserAllowListConnector()),
         bind[SessionRepository].toInstance(new FakeSessionRepository()),
+        bind[GetCommodityCodesConnector].toInstance(new FakeGetCommodityCodesConnector()),
         bind[MongoComponent].to[FakePlayMongoComponent].eagerly()
       )
 }

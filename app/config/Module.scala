@@ -44,5 +44,7 @@ class Module extends AbstractModule {
     bind(classOf[GetDocumentTypesConnector]).to(classOf[GetDocumentTypesConnectorImpl]).asEagerSingleton()
     bind(classOf[GetCnCodeInformationConnector]).to(classOf[GetCnCodeInformationConnectorImpl]).asEagerSingleton()
     bind(classOf[UserAllowListConnector]).to(classOf[UserAllowListConnectorImpl]).asEagerSingleton()
+    bind(classOf[GetCommodityCodesConnector]).to(classOf[GetCommodityCodesConnectorImpl]).asEagerSingleton()
+
   }
 }

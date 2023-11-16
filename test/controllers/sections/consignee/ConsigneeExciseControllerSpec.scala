@@ -39,7 +39,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     lazy val consigneeExciseSubmit = controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testDraftId, NormalMode)
     lazy val view = app.injector.instanceOf[ConsigneeExciseView]
     val form = formProvider(true)
-    val request = FakeRequest()
+    val request = FakeRequest(GET, consigneeExciseRoute)
 
     object TestController extends ConsigneeExciseController(
       messagesApi,
@@ -90,7 +90,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", testErn))
+      val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testErn))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -99,7 +99,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
+      val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
       override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
@@ -119,7 +119,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

@@ -41,25 +41,28 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
-    val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-    val msgs = messages(testDataRequest)
+    implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+      FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+    )
+
+    implicit val msgs = messages(testDataRequest)
 
     val ernList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeExciseSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeAddressSummary.row(showActionLinks = true)(testDataRequest, msgs)
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExciseSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val exemptedList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeExemptOrganisationSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeAddressSummary.row(showActionLinks = true)(testDataRequest, msgs)
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val vatEoriList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeExportVatSummary.row(showActionLinks = true)(testDataRequest, msgs),
-      ConsigneeAddressSummary.row(showActionLinks = true)(testDataRequest, msgs)
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExportVatSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val ernSummaryList: SummaryList = SummaryListViewModel(
@@ -196,8 +199,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
-
-
         val result = TestController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
         status(result) mustBe SEE_OTHER
@@ -208,7 +209,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
   ".onSubmit" - {
     "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
-
       val result = TestController.onSubmit(testErn, testDraftId)(FakeRequest())
 
       status(result) mustBe SEE_OTHER

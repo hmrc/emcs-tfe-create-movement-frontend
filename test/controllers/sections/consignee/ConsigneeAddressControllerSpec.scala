@@ -41,12 +41,12 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     val onwardRoute: Call = Call("GET", "/foo")
     val formProvider: AddressFormProvider = new AddressFormProvider()
     val form: Form[UserAddress] = formProvider()
-    val view: AddressView = app.injector.instanceOf[AddressView]
-
+    lazy val view: AddressView = app.injector.instanceOf[AddressView]
+    lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
     lazy val consigneeAddressOnSubmit: Call =
       controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
-    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, consigneeAddressRoute)
 
     object TestController extends ConsigneeAddressController(
       messagesApi,
@@ -90,12 +90,12 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
-          ("property", userAddressModelMax.property.value),
-          ("street", userAddressModelMax.street),
-          ("town", userAddressModelMax.town),
-          ("postcode", userAddressModelMax.postcode)
-        )
+      val req: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, consigneeAddressOnSubmit.url).withFormUrlEncodedBody(
+        ("property", userAddressModelMax.property.value),
+        ("street", userAddressModelMax.street),
+        ("town", userAddressModelMax.town),
+        ("postcode", userAddressModelMax.postcode)
+      )
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -104,7 +104,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
+      val req = FakeRequest(POST, consigneeAddressRoute).withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -119,7 +119,6 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-
       val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
@@ -127,7 +126,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, consigneeAddressOnSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

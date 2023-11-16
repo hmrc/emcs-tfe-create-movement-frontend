@@ -39,6 +39,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     val onwardRoute = Call("GET", "/foo")
 
     lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+    lazy val consigneeExportVatRouteSubmit = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(testErn, testDraftId, NormalMode).url
 
     val formProvider = new ConsigneeExportVatFormProvider()
     val form = formProvider()
@@ -86,7 +87,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
         )
       )
 
-      val req = FakeRequest().withFormUrlEncodedBody(
+      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(
         ("exportType", YesEoriNumber.toString),
         ("eoriNumber", "EORI1234567890")
       )
@@ -98,7 +99,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest().withFormUrlEncodedBody(("exportType", "invalid value"))
+      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(("exportType", "invalid value"))
 
       val boundForm = form.bind(Map("exportType" -> "invalid value"))
 
@@ -116,7 +117,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest().withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
+      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

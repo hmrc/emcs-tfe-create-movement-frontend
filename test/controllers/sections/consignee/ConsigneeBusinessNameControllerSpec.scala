@@ -38,8 +38,9 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
     val onwardRoute = Call("GET", "/foo")
     val formProvider = new ConsigneeBusinessNameFormProvider()
     val form = formProvider()
-    val request = FakeRequest()
-    val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+    val request = FakeRequest(GET, consigneeBusinessNameRoute)
+    lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
+    lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
     lazy val view = app.injector.instanceOf[ConsigneeBusinessNameView]
 
     object TestController extends ConsigneeBusinessNameController(
@@ -77,7 +78,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, consigneeBusinessNameSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -86,7 +87,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
+      val req = FakeRequest(POST, consigneeBusinessNameSubmit.url).withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -104,7 +105,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, consigneeBusinessNameSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

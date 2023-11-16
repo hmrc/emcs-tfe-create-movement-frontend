@@ -17,91 +17,81 @@
 package controllers.sections.consignor
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import handlers.ErrorHandler
 import models.UserAnswers
-import navigation.ConsignorNavigator
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, inject}
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 
 class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
-    val application: Application =
-      applicationBuilder(userAnswers)
-        .overrides(inject.bind[ConsignorNavigator].toInstance(new FakeConsignorNavigator(testOnwardRoute)))
-        .build()
+  class Fixture(optUserAnswers: Option[UserAnswers]) {
 
-    lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]
-    val view: CheckYourAnswersConsignorView = application.injector.instanceOf[CheckYourAnswersConsignorView]
+    object TestController extends CheckYourAnswersConsignorController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      new FakeConsignorNavigator(testOnwardRoute),
+      view
+    )
+
+    lazy val route = controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url
+    lazy val submitRoute = controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId).url
+
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, route)
+
+    lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
+    lazy val view: CheckYourAnswersConsignorView = app.injector.instanceOf[CheckYourAnswersConsignorView]
   }
 
   "Check Your Answers Consignor Controller" - {
     ".onPageLoad" - {
-
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url)
-
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
+        val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
+          testErn,
+          testDraftId,
+          testUserAddress,
+          testMinTraderKnownFacts
+        )(dataRequest(request), messages(request)).toString
 
-          val result = route(application, request).value
-
-          val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
-            testErn,
-            testDraftId,
-            testUserAddress,
-            testMinTraderKnownFacts
-          )(dataRequest(request), messages(request)).toString
-
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to /consignor if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url
-        }
-      }
-    }
-
-    ".onSubmit" - {
-
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId).url)
-
-      "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
-
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe testOnwardRoute.url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
   }
-}
 
+  ".onSubmit" - {
+    "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
+      val req: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, submitRoute)
+
+      val result = TestController.onSubmit(testErn, testDraftId)(req)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe testOnwardRoute.url
+    }
+  }
+}

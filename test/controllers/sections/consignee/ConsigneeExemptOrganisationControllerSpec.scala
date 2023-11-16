@@ -67,7 +67,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
 
     lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
-    val request = FakeRequest()
+    val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
 
     object TestController extends ConsigneeExemptOrganisationController(
       messagesApi,
@@ -118,7 +118,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-      val req = FakeRequest().withFormUrlEncodedBody(
+      val req = FakeRequest(POST, onSubmitCall.url).withFormUrlEncodedBody(
         ("memberState", "answer"),
         ("certificateSerialNumber", "answer")
       )
@@ -130,7 +130,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", ""))
+      val req = FakeRequest(POST, onSubmitCall.url).withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -154,7 +154,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest().withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, onSubmitCall.url).withFormUrlEncodedBody(("value", "answer"))
 
       val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

@@ -24,7 +24,6 @@ import models.sections.transportUnit.TransportUnitType.Tractor
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
 import models.{Index, NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeTransportUnitNavigator
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsAddToListPage}
 import play.api.Play.materializer

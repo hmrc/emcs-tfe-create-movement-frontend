@@ -31,7 +31,8 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = userRequest(FakeRequest()).copy(ern = testErn)
+    val route = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
+    val request = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
 
     object TestController extends ConsigneeIndexController(
       messagesApi,
@@ -95,7 +96,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest()).copy(ern = ern)
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
               val result = TestController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
@@ -117,7 +118,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest()).copy(ern = ern)
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
               val result = TestController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
@@ -132,7 +133,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
           Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
 
-          val req = userRequest(FakeRequest()).copy(ern = ern)
+          val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
           val result = TestController.onPageLoad(ern, testDraftId)(req)
 
           status(result) mustBe SEE_OTHER
@@ -151,7 +152,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest()).copy(ern = ern)
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
               val result = TestController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
@@ -172,7 +173,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest()).copy(ern = ern)
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
               val result = TestController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
@@ -187,7 +188,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in new Fixture(
         Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
 
-        val req = userRequest(FakeRequest()).copy(ern = testErn)
+        val req = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
         val result = TestController.onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustBe SEE_OTHER

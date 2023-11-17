@@ -17,102 +17,81 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckYourAnswersJourneyTypeHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
-import navigation.JourneyTypeNavigator
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.SummaryListFluency
-import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
 
 class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckYourAnswersJourneyTypeHelper with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Test(val userAnswers: Option[UserAnswers]) {
 
-  class Fixtures(userAnswers: Option[UserAnswers]) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url
-
-    lazy val view = application.injector.instanceOf[CheckYourAnswersJourneyTypeView]
+    val view = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
 
     val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[JourneyTypeNavigator].toInstance(new FakeJourneyTypeNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[CheckYourAnswersJourneyTypeHelper].toInstance(MockCheckYourAnswersJourneyTypeHelper)
-      )
-      .build()
+    lazy val controller = new CheckYourAnswersJourneyTypeController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeJourneyTypeNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      MockCheckYourAnswersJourneyTypeHelper,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
   }
 
   "CheckYourAnswersJourneyType Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)){
+    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
 
-      running(application) {
+      MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
 
-        implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          list = list,
-          submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        list = list,
+        submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
+      )(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)){
+    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, checkYourAnswersJourneyTypeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixtures(None) {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      running(application) {
-        val request = FakeRequest(GET, checkYourAnswersJourneyTypeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixtures(None) {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
 
-      running(application) {
-        val request =
-          FakeRequest(POST, checkYourAnswersJourneyTypeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

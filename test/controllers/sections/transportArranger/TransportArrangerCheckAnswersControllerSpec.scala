@@ -17,99 +17,79 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockTransportArrangerCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
-import navigation.TransportArrangerNavigator
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.transportArranger.TransportArrangerCheckAnswersHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.sections.transportArranger.TransportArrangerCheckAnswersView
 
 class TransportArrangerCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockTransportArrangerCheckAnswersHelper with MockUserAnswersService {
 
-  class Fixtures(userAnswers: Option[UserAnswers]) {
+  class Fixtures(val userAnswers: Option[UserAnswers]) {
 
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId).url
+    lazy val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
 
-    lazy val view = application.injector.instanceOf[TransportArrangerCheckAnswersView]
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+    lazy val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[TransportArrangerNavigator].toInstance(new FakeTransportArrangerNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[TransportArrangerCheckAnswersHelper].toInstance(MockTransportArrangerCheckAnswersHelper)
-      )
-      .build()
+    lazy val controller = new TransportArrangerCheckAnswersController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeTransportArrangerNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      MockTransportArrangerCheckAnswersHelper,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
   }
 
   "TransportArrangerCheckAnswers Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)){
+    "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
 
-      running(application) {
+      MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
 
-        implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          list = list,
-          submitAction = controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        list = list,
+        submitAction = controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onSubmit(testErn, testDraftId)
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)){
+    "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, checkYourAnswersJourneyTypeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixtures(None) {
 
-      running(application) {
-        val request = FakeRequest(GET, checkYourAnswersJourneyTypeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixtures(None) {
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, checkYourAnswersJourneyTypeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

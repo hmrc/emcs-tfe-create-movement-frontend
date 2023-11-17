@@ -17,50 +17,55 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.Consignor
-import models.{NormalMode, UserAddress}
+import models.{NormalMode, UserAddress, UserAnswers}
+import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger._
 import play.api.http.Status.SEE_OTHER
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
-class TransportArrangerIndexControllerSpec extends SpecBase {
+class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new TransportArrangerIndexController(
+      mockUserAnswersService,
+      new FakeTransportArrangerNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
 
   "TransportArrangerIndexController" - {
     "when TransportArrangerSection.isCompleted" - {
-      "must redirect to the CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
+      "must redirect to the CYA controller" in new Test(Some(
+        emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
-        )).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
-      }
-    }
-    "must redirect to the transportArranger controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+      )) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
+    "must redirect to the transportArranger controller" in new Test() {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe
+        Some(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url)
+    }
   }
-
 }

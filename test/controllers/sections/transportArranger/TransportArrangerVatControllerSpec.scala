@@ -17,17 +17,16 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.GoodsOwner
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
-import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportArranger.TransportArrangerVatView
 
 import scala.concurrent.Future
@@ -41,104 +40,85 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     val formProvider = new TransportArrangerVatFormProvider()
     val form = formProvider()
 
-    lazy val transportArrangerVatRoute = routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val transportArrangerNonGbVatRoute = routes.TransportArrangerVatController.onNonGbVAT(testErn, testDraftId).url
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
     lazy val transportArrangerVatSubmitAction = routes.TransportArrangerVatController.onSubmit(testErn, testDraftId, NormalMode)
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[TransportArrangerNavigator].toInstance(new FakeTransportArrangerNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
+    val view = app.injector.instanceOf[TransportArrangerVatView]
 
-    val view = application.injector.instanceOf[TransportArrangerVatView]
+    lazy val controller = new TransportArrangerVatController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeTransportArrangerNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
   }
 
   "TransportArrangerVat Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, transportArrangerVatRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect for a GET onNonGbVAT" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
 
-        MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
+      val result = controller.onNonGbVAT(testErn, testDraftId)(request)
 
-        val request = FakeRequest(GET, transportArrangerNonGbVatRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(goodsOwnerUserAnswers.set(TransportArrangerVatPage, "answer"))
     ) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, transportArrangerVatRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form.fill("answer"), transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
 
-        MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-        val request = FakeRequest(POST, transportArrangerVatRoute).withFormUrlEncodedBody(("value", "answer"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      running(application) {
+      val boundForm = form.bind(Map("value" -> ""))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-        val request = FakeRequest(POST, transportArrangerVatRoute).withFormUrlEncodedBody(("value", ""))
-        val boundForm = form.bind(Map("value" -> ""))
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual
+        view(boundForm, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, transportArrangerVatRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-        val request = FakeRequest(POST, transportArrangerVatRoute).withFormUrlEncodedBody(("value", "answer"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

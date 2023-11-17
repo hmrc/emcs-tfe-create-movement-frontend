@@ -53,6 +53,8 @@ case class CommodityCodesException(message: String) extends Exception(message) w
 
 case class ExciseProductCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
+case class PackagingTypesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class ReferenceDataException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

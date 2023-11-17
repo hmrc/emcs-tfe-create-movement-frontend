@@ -46,7 +46,7 @@ class GetExciseProductCodesConnectorISpec extends AnyFreeSpec
 
     lazy val connector: GetExciseProductCodesConnector = app.injector.instanceOf[GetExciseProductCodesConnector]
 
-    "must return true when the server responds OK" in {
+    s"must return Right(Seq[ExciseProductCode]) when the server responds OK" in {
 
       server.stubFor(
         get(urlEqualTo(url))

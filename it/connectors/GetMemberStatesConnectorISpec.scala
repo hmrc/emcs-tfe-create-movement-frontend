@@ -46,7 +46,7 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
 
     lazy val connector: GetMemberStatesConnector = app.injector.instanceOf[GetMemberStatesConnector]
 
-    "must return true when the server responds OK" in {
+    "must return Right(Seq[CountryModel]) when the server responds OK" in {
 
       server.stubFor(
         get(urlEqualTo(url))

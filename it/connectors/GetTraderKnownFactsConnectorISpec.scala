@@ -51,7 +51,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
 
       lazy val connector: GetTraderKnownFactsConnector = app.injector.instanceOf[GetTraderKnownFactsConnector]
 
-      "must return true when the server responds OK" in {
+      "must return Right(Seq[TraderKnownFacts]) when the server responds OK" in {
 
         server.stubFor(
           get(urlEqualTo(url(testErn)))
@@ -64,7 +64,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
         connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
       }
 
-      "must return false when the server responds NO_CONTENT" in {
+      "must return Right(None) when the server responds NO_CONTENT" in {
 
         server.stubFor(
           get(urlEqualTo(url(testErn)))

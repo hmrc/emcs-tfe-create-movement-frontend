@@ -17,197 +17,125 @@
 package controllers.sections.sad
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.sad.SadRemoveDocumentFormProvider
 import mocks.services.MockUserAnswersService
+import models.UserAnswers
+import navigation.SadNavigator
 import pages.sections.sad.ImportNumberPage
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.sad.SadRemoveDocumentView
 
 import scala.concurrent.Future
 
 class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val formProvider = new SadRemoveDocumentFormProvider()
-  val form = formProvider()
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  lazy val sadRemoveDocumentRoute = controllers.sections.sad.routes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url
+    lazy val formProvider = new SadRemoveDocumentFormProvider()
+    lazy val form = formProvider()
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    val view = app.injector.instanceOf[SadRemoveDocumentView]
+
+    lazy val controller = new SadRemoveDocumentController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      app.injector.instanceOf[SadNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
+  }
 
   "SadRemoveDocument Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-      val application = applicationBuilder(userAnswers =
-        Some(emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer"))
-      ).build()
-
-      running(application) {
-        val request = FakeRequest(GET, sadRemoveDocumentRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[SadRemoveDocumentView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the index controller when index is out of bounds (for GET)" in {
+    "must redirect to the index controller when index is out of bounds (for GET)" in new Test(Some(
+      emptyUserAnswers
+        .set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "answer")
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex2).url)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to add to list when the user answers no" in {
+    "must redirect to add to list when the user answers no" in new Test(Some(
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer1")
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "false")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer1")
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, sadRemoveDocumentRoute)
-            .withFormUrlEncodedBody(("value", "false"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual
-          controllers.sections.sad.routes.SadAddToListController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual
+        controllers.sections.sad.routes.SadAddToListController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the index controller when the user answers yes (removing the Sad Document)" in {
+    "must redirect to the index controller when the user answers yes (removing the Sad Document)" in new Test(Some(
+      emptyUserAnswers
+        .set(ImportNumberPage(testIndex1), "answer1")
+        .set(ImportNumberPage(testIndex2), "answer2")
+    )) {
 
       MockUserAnswersService.set(
         emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer2")
       ).returns(Future.successful(
         emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer2")
       ))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "answer1")
-            .set(ImportNumberPage(testIndex2), "answer2")
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, sadRemoveDocumentRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the index controller when index is out of bounds (for POST)" in {
+    "must redirect to the index controller when index is out of bounds (for POST)" in new Test(Some(
+      emptyUserAnswers
+        .set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2)(request.withFormUrlEncodedBody(("value", "true")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "answer")
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex2).url)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val application = applicationBuilder(userAnswers = Some(
-        emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
-      )).build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, sadRemoveDocumentRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[SadRemoveDocumentView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, sadRemoveDocumentRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, sadRemoveDocumentRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

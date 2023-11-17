@@ -17,95 +17,89 @@
 package controllers.sections.sad
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{NormalMode, UserAnswers}
+import navigation.SadNavigator
 import pages.sections.sad.ImportNumberPage
 import play.api.http.Status.SEE_OTHER
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
-class SadIndexControllerSpec extends SpecBase {
+class SadIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new SadIndexController(
+      mockUserAnswersService,
+      app.injector.instanceOf[SadNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
+
   "SadIndexController" - {
 
     "for XIRC traders" - {
       val ern = "XIRC123"
       "when SadSectionItem.isCompleted is true" - {
-        "must redirect to the CYA controller" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ImportNumberPage(testIndex1), "beans"))).build()
+        "must redirect to the CYA controller" in new Test(Some(
+          emptyUserAnswers.set(ImportNumberPage(testIndex1), "beans")
+        )) {
+          val result = controller.onPageLoad(ern, testDraftId)(request)
 
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(controllers.sections.sad.routes.SadAddToListController.onPageLoad(ern, testDraftId).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.sad.routes.SadAddToListController.onPageLoad(ern, testDraftId).url)
         }
-      }
 
-      "when SadSectionItem.isCompleted is false" - {
-        "must redirect to the sad import number controller" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-            val result = route(application, request).value
+        "when SadSectionItem.isCompleted is false" - {
+          "must redirect to the sad import number controller" in new Test(Some(emptyUserAnswers)) {
+            val result = controller.onPageLoad(ern, testDraftId)(request)
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustBe Some(controllers.sections.sad.routes.ImportNumberController.onPageLoad(ern, testDraftId, testIndex1, NormalMode).url)
           }
         }
       }
-
     }
+
     "for GBRC traders" - {
       val ern = "GBRC123"
       "when SadSectionItem.isCompleted is true" - {
-        "must redirect to the CYA controller" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ImportNumberPage(testIndex1), "beans"))).build()
+        "must redirect to the CYA controller" in new Test(Some(
+          emptyUserAnswers.set(ImportNumberPage(testIndex1), "beans")
+        )) {
+          val result = controller.onPageLoad(ern, testDraftId)(request)
 
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(controllers.sections.sad.routes.SadAddToListController.onPageLoad(ern, testDraftId).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.sad.routes.SadAddToListController.onPageLoad(ern, testDraftId).url)
         }
       }
 
       "when SadSectionItem.isCompleted is false" - {
-        "must redirect to the sad import number controller" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        "must redirect to the sad import number controller" in new Test(Some(emptyUserAnswers)) {
+          val result = controller.onPageLoad(ern, testDraftId)(request)
 
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(controllers.sections.sad.routes.ImportNumberController.onPageLoad(ern, testDraftId, testIndex1, NormalMode).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.sections.sad.routes.ImportNumberController.onPageLoad(ern, testDraftId, testIndex1, NormalMode).url)
         }
       }
-
     }
+
     "for any other traders" - {
       Seq("XIWK123", "GBWK123").foreach {
         ern =>
-          s"must redirect to the tasklist for traders starting with ${ern.take(4)}" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          s"must redirect to the tasklist for traders starting with ${ern.take(4)}" in new Test(Some(emptyUserAnswers)) {
+            val result = controller.onPageLoad(ern, testDraftId)(request)
 
-            running(application) {
-
-              val request = FakeRequest(GET, controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, testDraftId).url)
-              val result = route(application, request).value
-
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-            }
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
           }
       }
     }

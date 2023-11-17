@@ -17,159 +17,117 @@
 package controllers.sections.sad
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.sad.SadAddToListFormProvider
 import mocks.services.MockUserAnswersService
-import models.{Index, NormalMode}
+import models.requests.DataRequest
 import models.sections.sad.SadAddToListModel
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import models.{Index, NormalMode, UserAnswers}
+import navigation.SadNavigator
 import pages.sections.sad.{ImportNumberPage, SadAddToListPage}
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.helpers.SadAddToListHelper
 import views.html.sections.sad.SadAddToListView
 
 import scala.concurrent.Future
 
 class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  object FakeHelper extends SadAddToListHelper {
+    override def allSadSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = Nil
+  }
 
-  val formProvider = new SadAddToListFormProvider()
-  val form = formProvider()
+  class Test(val userAnswers: Option[UserAnswers]) {
 
-  lazy val sadAddToListRoute = routes.SadAddToListController.onPageLoad(testErn, testDraftId).url
+    lazy val formProvider = new SadAddToListFormProvider()
+    lazy val form = formProvider()
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    val view = app.injector.instanceOf[SadAddToListView]
+
+    lazy val controller = new SadAddToListController(
+      messagesApi,
+      mockUserAnswersService,
+      app.injector.instanceOf[SadNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      FakeHelper
+    )
+  }
 
   "SadAddToList Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, sadAddToListRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[SadAddToListView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(Some(form), Nil, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(Some(form), Nil, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
+      emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.values.head)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      val userAnswers = emptyUserAnswers.set(SadAddToListPage, SadAddToListModel.values.head)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, sadAddToListRoute)
-
-        val view = application.injector.instanceOf[SadAddToListView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(Some(form.fill(SadAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(Some(form.fill(SadAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", SadAddToListModel.NoMoreToCome.toString)))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, sadAddToListRoute)
-            .withFormUrlEncodedBody(("value", SadAddToListModel.NoMoreToCome.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual
-          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual
+        controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to task list page CAM-02 if Transport units is 99 for POST" in {
-      val fullUserAnswers = (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers.set(ImportNumberPage(Index(int)), ""))
+    "must redirect to task list page CAM-02 if Transport units is 99 for POST" in new Test(Some(
+      (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers.set(ImportNumberPage(Index(int)), ""))
+        .set(SadAddToListPage, SadAddToListModel.Yes)
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", SadAddToListModel.Yes.toString)))
 
-      val userAnswers = fullUserAnswers.set(SadAddToListPage, SadAddToListModel.Yes)
+      status(result) mustEqual SEE_OTHER
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(POST, sadAddToListRoute)
-          .withFormUrlEncodedBody("value" -> SadAddToListModel.Yes.toString)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
-      }
+      redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, sadAddToListRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
-
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[SadAddToListView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(Some(boundForm), Nil,  NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(Some(boundForm), Nil, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, sadAddToListRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, sadAddToListRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

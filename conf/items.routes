@@ -49,3 +49,8 @@ GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice		         
 POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice		                                controllers.sections.items.ItemFiscalMarksChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice/change                             controllers.sections.items.ItemFiscalMarksChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice/change                             controllers.sections.items.ItemFiscalMarksChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks		                                        controllers.sections.items.ItemFiscalMarksController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks		                                        controllers.sections.items.ItemFiscalMarksController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks/change                                    controllers.sections.items.ItemFiscalMarksController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/fiscal-marks/change                                    controllers.sections.items.ItemFiscalMarksController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

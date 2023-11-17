@@ -17,23 +17,23 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemFiscalMarksChoiceMessages
+import fixtures.messages.sections.items.ItemFiscalMarksMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemFiscalMarksChoicePage
+import pages.sections.items.ItemFiscalMarksPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
+class ItemFiscalMarksSummarySpec extends SpecBase with Matchers {
 
-  "ItemFiscalMarksChoiceSummary" - {
+  "ItemFiscalMarksSummary" - {
 
     lazy val app = applicationBuilder().build()
 
-    Seq(ItemFiscalMarksChoiceMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemFiscalMarksMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -44,7 +44,7 @@ class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
           "must output None" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemFiscalMarksChoiceSummary.row(testIndex1) mustBe None
+            ItemFiscalMarksSummary.row(testIndex1) mustBe None
           }
 
         }
@@ -53,19 +53,19 @@ class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(
-              ItemFiscalMarksChoicePage(testIndex1), true)
+              ItemFiscalMarksPage(testIndex1), "value")
             )
 
-            ItemFiscalMarksChoiceSummary.row(testIndex1) mustBe
+            ItemFiscalMarksSummary.row(testIndex1) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("Yes")),
+                  value = Value(Text("value")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemFiscalMarksChoice1"
+                      href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      id = "changeItemFiscalMarks1"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )

@@ -68,7 +68,7 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
                     href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "itemExciseProductCode1"
+                    id = "changeItemExciseProductCode1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )

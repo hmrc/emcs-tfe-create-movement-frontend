@@ -17,155 +17,108 @@
 package controllers.sections.dispatch
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
-import navigation.DispatchNavigator
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchWarehouseExcisePage
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.dispatch.DispatchWarehouseExciseView
 
 import scala.concurrent.Future
 
 class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val formProvider = new DispatchWarehouseExciseFormProvider()
-  val form = formProvider()
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val formProvider = new DispatchWarehouseExciseFormProvider()
+    val form = formProvider()
 
-  lazy val dispatchWarehouseExciseRoute = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+    val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
+
+    lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
+
+    lazy val dispatchWarehouseExciseRoute = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+
+    object TestController extends DispatchWarehouseExciseController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeDispatchNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
+  }
 
   "DispatchWarehouseExcise Controller" - {
+    "must return OK and the correct view for a GET" in new Fixture() {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[DispatchWarehouseExciseView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
+      Some(emptyUserAnswers.set(DispatchWarehouseExcisePage, "answer"))) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val userAnswers = emptyUserAnswers.set(DispatchWarehouseExcisePage, "answer")
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
-
-        val view = application.injector.instanceOf[DispatchWarehouseExciseView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[DispatchNavigator].toInstance(new FakeDispatchNavigator(testOnwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GBWK123456789012"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchWarehouseExciseRoute)
-            .withFormUrlEncodedBody(("value", "GBWK123456789012"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val boundForm = form.bind(Map("value" -> ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchWarehouseExciseRoute)
-            .withFormUrlEncodedBody(("value", ""))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[DispatchWarehouseExciseView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must return a Bad Request and errors when more than 16 chars are submitted" in {
+    "must return a Bad Request and errors when more than 16 chars are submitted" in new Fixture() {
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GB123456789012345"))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val boundForm = form.bind(Map("value" -> "GB123456789012345"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchWarehouseExciseRoute)
-            .withFormUrlEncodedBody(("value", "GB123456789012345"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val boundForm = form.bind(Map("value" -> "GB123456789012345"))
 
-        val view = application.injector.instanceOf[DispatchWarehouseExciseView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchWarehouseExciseRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

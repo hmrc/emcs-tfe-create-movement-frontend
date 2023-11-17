@@ -17,46 +17,53 @@
 package controllers.sections.dispatch
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class DispatchIndexControllerSpec extends SpecBase {
+class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
+
+
+    object TestController extends DispatchIndexController(
+      mockUserAnswersService,
+      new FakeDispatchNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
+  }
+
   "DispatchIndexController" - {
-
     "when DispatchSection.isCompleted" - {
-      "must redirect to the CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchUseConsignorDetailsPage, true)
-          .set(ConsignorAddressPage, testUserAddress)
-        )).build()
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
+        .set(DispatchWarehouseExcisePage, "beans")
+        .set(DispatchUseConsignorDetailsPage, true)
+        .set(ConsignorAddressPage, testUserAddress)
+      )) {
 
-        running(application) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-          val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
 
-    "must redirect to the dispatch warehouse excise controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must redirect to the dispatch warehouse excise controller" in new Fixture() {
+      val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
     }
   }
 }

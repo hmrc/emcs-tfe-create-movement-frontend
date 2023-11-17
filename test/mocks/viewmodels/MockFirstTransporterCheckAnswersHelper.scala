@@ -25,11 +25,11 @@ import viewmodels.checkAnswers.sections.firstTransporter.FirstTransporterCheckAn
 
 trait MockFirstTransporterCheckAnswersHelper extends MockFactory {
 
-  lazy val MockFirstTransporterCheckAnswersHelper: FirstTransporterCheckAnswersHelper = mock[FirstTransporterCheckAnswersHelper]
+  lazy val mockFirstTransporterCheckAnswersHelper: FirstTransporterCheckAnswersHelper = mock[FirstTransporterCheckAnswersHelper]
 
-  object MockCheckAnswersJourneyTypeHelper {
+  object MockFirstTransporterCheckAnswersHelper {
 
     def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (MockFirstTransporterCheckAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
+      (mockFirstTransporterCheckAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
   }
 }

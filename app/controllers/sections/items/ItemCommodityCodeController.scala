@@ -16,23 +16,18 @@
 
 package controllers.sections.items
 
-import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
-import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-
-import javax.inject.Inject
 import models.{GoodsTypeModel, Index, Mode}
-import navigation.{ItemsNavigator, Navigator}
+import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
-import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import services.{GetCommodityCodesService, UserAnswersService}
 import views.html.sections.items.ItemCommodityCodeView
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemCommodityCodeController @Inject()(

@@ -32,7 +32,7 @@ object ItemGrossMassSummary  {
       answer =>
         SummaryListRowViewModel(
           key     = "itemNetGrossMass.grossMass.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer.grossMass.toString()).toString),
+          value   = ValueViewModel(HtmlFormat.escape(s"${answer.grossMass.toString()} kg").toString),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

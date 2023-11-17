@@ -18,14 +18,10 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.{CheckMode, Index, UserAnswers}
-import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemCommodityCodePage}
+import models.{CheckMode, Index}
+import pages.sections.items.ItemCommodityCodePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.checkAnswers.sections.items.ItemBrandNameSummary.getValue
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

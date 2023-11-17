@@ -44,19 +44,18 @@ class ItemNetGrossMassController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        Future.successful(Ok(view(fillForm(ItemNetGrossMassPage(idx), formProvider()), idx, mode)))
+      withGoodsType(idx) { goodsType =>
+        Future.successful(Ok(view(fillForm(ItemNetGrossMassPage(idx), formProvider.form), idx, goodsType, mode)))
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        formProvider().bindFromRequest().fold(
+      withGoodsType(idx) { goodsType =>
+        formProvider.enhancedBindFromRequest().fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, idx, mode))),
-          value =>
-            saveAndRedirect(ItemNetGrossMassPage(idx), value, mode)
+            Future.successful(BadRequest(view(formWithErrors, idx, goodsType, mode))),
+          value => saveAndRedirect(ItemNetGrossMassPage(idx), value, mode)
         )
       }
     }

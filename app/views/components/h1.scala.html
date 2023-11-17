@@ -22,14 +22,15 @@
         headingMsg: String,
         captionMsg: Option[String] = None,
         classes: String = "govuk-heading-l govuk-!-margin-bottom-2",
-        hiddenContent: Option[String] = None
+        hiddenContent: Option[String] = None,
+        args: Seq[Any] = Nil
 )(implicit messages: Messages)
 
 @captionMsg.map { caption =>
  @h2(caption, "govuk-caption-xl", hiddenContent = hiddenContent)
 }
 
-<h1 class="@classes">@messages(headingMsg)</h1>
+<h1 class="@classes">@messages(headingMsg, args:_*)</h1>
 
 @{
     //$COVERAGE-OFF$

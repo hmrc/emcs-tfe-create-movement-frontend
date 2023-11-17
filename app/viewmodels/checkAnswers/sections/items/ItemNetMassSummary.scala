@@ -31,8 +31,8 @@ object ItemNetMassSummary  {
     request.userAnswers.get(ItemNetGrossMassPage(idx)).map {
       answer =>
         SummaryListRowViewModel(
-          key     = "itemNetGrossMass.netMase.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer.netMass.toString()).toString),
+          key     = "itemNetGrossMass.netMass.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlFormat.escape(s"${answer.netMass.toString()} kg").toString),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

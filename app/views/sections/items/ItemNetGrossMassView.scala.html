@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import models.GoodsTypeModel.GoodsType
 @import viewmodels.InputWidth._
 
 @this(
@@ -28,9 +29,9 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], idx: Index, goodsType: GoodsType, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemNetGrossMass.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemNetGrossMass.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.items.routes.ItemNetGrossMassController.onSubmit(request.ern, request.draftId, idx, mode)) {
 
@@ -38,7 +39,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1("itemNetGrossMass.heading", Some(messages("items.subHeading", request.draftId)), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(
+            "itemNetGrossMass.heading",
+            Some(messages("items.subHeading", request.draftId)),
+            "govuk-heading-l",
+            hiddenContent = Some(messages("subHeading.hidden")),
+            args = Seq(goodsType.toSingularOutput())
+        )
 
         @govukInput(
             InputViewModel(
@@ -62,10 +69,6 @@
 
         @continueOrExit()
     }
-}
-
-@heading = {
-    @h1("itemNetGrossMass.heading", Some(messages("draftId.subHeading", request.draftId)), "govuk-heading-l")
 }
 
 @{

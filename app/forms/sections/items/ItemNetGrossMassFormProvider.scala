@@ -19,26 +19,39 @@ package forms.sections.items
 import forms.mappings.Mappings
 import models.sections.items.ItemNetGrossMassModel
 import play.api.data.Forms.mapping
-import play.api.data.{Form, Mapping}
+import play.api.data.{Form, FormBinding, Mapping}
+import play.api.mvc.Request
 
 import javax.inject.Inject
 
 
 class ItemNetGrossMassFormProvider @Inject() extends Mappings {
 
+  private[items] val maxDecimalPlaces = 6
+  private[items] val max = 9999999999999999L
+  private[items] val minExclusive = 0L
+  private[items] val grossMassField = "grossMass"
+  private[items] val netMassField = "netMass"
 
-  private def bigDecimalMapping(name: String): (String, Mapping[BigDecimal]) =
-    name -> bigDecimal(s"itemNetGrossMass.$name.error.required", s"itemNetGrossMass.$name.error.invalid")
-      .verifying(s"itemNetGrossMass.$name.error.high", _ < BigDecimal("9999999999999999"))
-      .verifying(s"itemNetGrossMass.$name.error.low", _ > BigDecimal("0"))
-      .verifying(s"itemNetGrossMass.$name.error.decimals", _.scale <= 6)
+  private def bigDecimalMapping(field: String): (String, Mapping[BigDecimal]) =
+    field -> bigDecimal(s"itemNetGrossMass.$field.error.required", s"itemNetGrossMass.$field.error.invalid")
+      .verifying(s"itemNetGrossMass.$field.error.high", _ <= BigDecimal(max))
+      .verifying(s"itemNetGrossMass.$field.error.low", _ > BigDecimal(minExclusive))
+      .verifying(maxDecimalPlaces(maxDecimalPlaces, s"itemNetGrossMass.$field.error.decimals"))
 
-  def apply(): Form[ItemNetGrossMassModel] =
+  val form: Form[ItemNetGrossMassModel] =
     Form(
       mapping(
-        bigDecimalMapping("netMass"),
-        bigDecimalMapping("grossMass")
+        bigDecimalMapping(netMassField),
+        bigDecimalMapping(grossMassField)
       )(ItemNetGrossMassModel.apply)(ItemNetGrossMassModel.unapply)
-        .verifying(model => model.netMass > model.grossMass)
     )
+
+  def enhancedBindFromRequest()(implicit request: Request[_], formBinding: FormBinding): Form[ItemNetGrossMassModel] = {
+    form.bindFromRequest().fold(identity, {
+      case netGrossModel if netGrossModel.grossMass < netGrossModel.netMass  =>
+        form.fill(netGrossModel).withError(grossMassField, "itemNetGrossMass.grossMass.error.lessThanNetMass")
+      case netGrossMass => form.fill(netGrossMass)
+    })
+  }
 }

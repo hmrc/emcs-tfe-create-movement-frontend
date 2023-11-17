@@ -31,7 +31,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
 
-    object TestController extends DocumentsIndexController(
+    lazy val testController = new DocumentsIndexController(
       mockUserAnswersService,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
@@ -45,7 +45,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
   "DocumentsIndexController" - {
     "when DocumentsCertificate is false" - {
       "must redirect to the DocumentsCheckAnswers page" in new Fixture(Some(emptyUserAnswers.set(DocumentsCertificatesPage, false))) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
@@ -60,7 +60,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
             .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference"))) {
 
-          val result = TestController.onPageLoad(testErn, testDraftId)(request)
+          val result = testController.onPageLoad(testErn, testDraftId)(request)
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url)
@@ -69,7 +69,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
       "when DocumentsCount is 0" - {
         "must redirect to the DocumentReference page" in new Fixture(Some(emptyUserAnswers.set(DocumentsCertificatesPage, true))) {
-          val result = TestController.onPageLoad(testErn, testDraftId)(request)
+          val result = testController.onPageLoad(testErn, testDraftId)(request)
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
@@ -79,7 +79,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "when DocumentsCertificate is not answered" - {
       "must redirect to the DocumentsCheckAnswers page" in new Fixture() {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)

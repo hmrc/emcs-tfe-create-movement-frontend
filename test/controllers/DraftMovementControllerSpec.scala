@@ -31,7 +31,7 @@ class DraftMovementControllerSpec extends SpecBase {
     val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
     lazy val view = app.injector.instanceOf[DraftMovementView]
 
-    object TestController extends DraftMovementController(
+    lazy val testController = new DraftMovementController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -44,7 +44,7 @@ class DraftMovementControllerSpec extends SpecBase {
     lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
 
     "must render the page" in {
-      lazy val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
 
 
       status(result) mustEqual OK

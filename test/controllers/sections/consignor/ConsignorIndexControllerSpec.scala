@@ -31,7 +31,7 @@ class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url)
 
-    object TestController extends ConsignorIndexController(
+    lazy val testController = new ConsignorIndexController(
       mockUserAnswersService,
       new FakeConsignorNavigator(testOnwardRoute),
       fakeAuthAction,
@@ -45,14 +45,14 @@ class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService 
   "ConsignorIndexController" - {
     "when ConsignorSection.isCompleted" - {
       "must redirect to the consignor CYA controller" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to the guarantor required controller" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url)

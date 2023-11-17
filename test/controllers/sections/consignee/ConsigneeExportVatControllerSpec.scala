@@ -43,7 +43,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     val request = FakeRequest(GET, consigneeExportVatRoute)
     lazy val view = app.injector.instanceOf[ConsigneeExportVatView]
 
-    object TestController extends ConsigneeExportVatController(
+    lazy val testController = new ConsigneeExportVatController(
       messagesApi,
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
@@ -59,7 +59,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
 
   "ConsigneeExportVat Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
@@ -68,7 +68,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))))) {
 
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -89,7 +89,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
         ("eoriNumber", "EORI1234567890")
       )
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -100,14 +100,14 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
 
       val boundForm = form.bind(Map("exportType" -> "invalid value"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(req), messages(req)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -116,7 +116,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     "redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
 

@@ -46,7 +46,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
     val view = app.injector.instanceOf[DestinationWarehouseVatView]
 
-    object TestController extends DestinationWarehouseVatController(
+    lazy val testController = new DestinationWarehouseVatController(
       messagesApi,
       mockUserAnswersService,
       new FakeDestinationNavigator(testOnwardRoute),
@@ -68,7 +68,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form,
@@ -82,7 +82,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         .set(DestinationWarehouseVatPage, "answer")
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         val expectedView = view(
           form = form.fill("answer"),
@@ -96,7 +96,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -111,7 +111,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
         val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -124,7 +124,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
         val boundForm = form.bind(Map("value" -> "12345678901234567890"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
@@ -136,7 +136,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       "must redirect to Journey Recovery for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
         .set(DispatchPlacePage, GreatBritain)
       )) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -147,7 +147,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       )) {
         val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -157,7 +157,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
         val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -177,7 +177,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
         val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
 
-        val result = TestController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
+        val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -197,7 +197,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
         val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
 
-        val result = TestController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
+        val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -207,7 +207,7 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
     "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
 
-      val result = TestController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
+      val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

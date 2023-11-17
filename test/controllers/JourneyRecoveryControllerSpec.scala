@@ -29,12 +29,12 @@ class JourneyRecoveryControllerSpec extends SpecBase {
     lazy val continueView = app.injector.instanceOf[JourneyRecoveryContinueView]
     lazy val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
-    object TestController extends JourneyRecoveryController(messagesControllerComponents, continueView, startAgainView)
+    lazy val testController = new JourneyRecoveryController(messagesControllerComponents, continueView, startAgainView)
 
     "when a relative continue Url is supplied" - {
       "must return OK and the continue view" in {
         val continueUrl = RedirectUrl("/foo")
-        val result = TestController.onPageLoad(Some(continueUrl))(request)
+        val result = testController.onPageLoad(Some(continueUrl))(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(request, messages(request)).toString
@@ -44,7 +44,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
     "when an absolute continue Url is supplied" - {
       "must return OK and the start again view" in {
         val continueUrl = RedirectUrl("https://foo.com")
-        val result = TestController.onPageLoad(Some(continueUrl))(request)
+        val result = testController.onPageLoad(Some(continueUrl))(request)
 
 
         status(result) mustEqual OK
@@ -54,7 +54,7 @@ class JourneyRecoveryControllerSpec extends SpecBase {
 
     "when no continue Url is supplied" - {
       "must return OK and the start again view" in {
-        val result = TestController.onPageLoad(None)(request)
+        val result = testController.onPageLoad(None)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual startAgainView()(request, messages(request)).toString

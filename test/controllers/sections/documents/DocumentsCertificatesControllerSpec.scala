@@ -47,7 +47,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
     val request = FakeRequest(GET, documentsCertificatesRoute)
 
-    object TestController extends DocumentsCertificatesController(
+    lazy val testController = new DocumentsCertificatesController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -65,7 +65,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
   "DocumentsCertificates Controller" - {
     "GET onPageLoad" - {
       "must return OK and the correct view for a GET" in new Setup() {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -77,7 +77,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       "must populate the view correctly on a GET when the question has previously been answered" in new Setup(
         Some(emptyUserAnswers.set(DocumentsCertificatesPage, true))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -87,7 +87,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -102,7 +102,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
         val req = FakeRequest(POST, documentsCertificatesRoute).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -120,7 +120,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       )) {
         val req = FakeRequest(POST, documentsCertificatesRoute).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -142,7 +142,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
         val req = FakeRequest(POST, documentsCertificatesRoute).withFormUrlEncodedBody(("value", "false"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -153,7 +153,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
@@ -166,7 +166,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
 
         val req = FakeRequest(POST, documentsCertificatesRoute).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

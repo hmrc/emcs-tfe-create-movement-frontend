@@ -46,7 +46,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
     val request = FakeRequest(GET, controllerRoute)
 
-    object TestController extends DocumentsAddToListController(
+    lazy val testController = new DocumentsAddToListController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -72,7 +72,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         MockDocumentsAddToListHelper.allDocumentsSummary()
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -88,7 +88,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         MockDocumentsAddToListHelper.allDocumentsSummary()
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
 
         status(result) mustEqual OK
@@ -114,7 +114,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         MockDocumentsAddToListHelper.allDocumentsSummary()
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -126,7 +126,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -143,7 +143,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", DocumentsAddToList.Yes.toString))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -164,7 +164,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", DocumentsAddToList.Yes.toString))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -181,7 +181,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", DocumentsAddToList.No.toString))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -198,7 +198,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", DocumentsAddToList.MoreLater.toString))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -217,7 +217,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       )) {
         val req = FakeRequest(POST, controllerRoute)
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -230,7 +230,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
@@ -244,7 +244,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
         val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", DocumentsAddToList.values.head.toString))
 
-        val result = TestController.onSubmit(testErn, testDraftId)(req)
+        val result = testController.onSubmit(testErn, testDraftId)(req)
 
         status(result) mustEqual SEE_OTHER
 

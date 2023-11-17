@@ -58,7 +58,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
     val testNavigator = new FakeNavigator(onwardRoute)
 
-    object TestController extends BaseNavigationController with BaseController {
+    lazy val testController = new BaseNavigationController with BaseController {
       override val userAnswersService: UserAnswersService = mockUserAnswersService
       override val navigator: BaseNavigator = testNavigator
 
@@ -75,7 +75,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
 
           val answer: Future[Result] =
-            TestController.saveAndRedirect(page, value, emptyUserAnswers, NormalMode)
+            testController.saveAndRedirect(page, value, emptyUserAnswers, NormalMode)
 
           redirectLocation(answer) mustBe Some(onwardRoute.url)
         }
@@ -88,7 +88,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           MockUserAnswersService.set().never()
 
           val answer: Future[Result] =
-            TestController.saveAndRedirect(page, value, newUserAnswers, NormalMode)
+            testController.saveAndRedirect(page, value, newUserAnswers, NormalMode)
 
           redirectLocation(answer) mustBe Some(onwardRoute.url)
         }
@@ -102,7 +102,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
         MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
 
         val answer: Future[Result] =
-          TestController.saveAndRedirect(page, value, NormalMode)(dataRequest(FakeRequest()), implicitly)
+          testController.saveAndRedirect(page, value, NormalMode)(dataRequest(FakeRequest()), implicitly)
 
         redirectLocation(answer) mustBe Some(onwardRoute.url)
       }
@@ -119,7 +119,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must run the cleansing function" - {
       "when current UserAnswers contains the input page but the answer is different" in new Test {
         val result: UserAnswers =
-          TestController.cleanseUserAnswersIfValueHasChanged(
+          testController.cleanseUserAnswersIfValueHasChanged(
             page = page,
             newAnswer = "bar",
             cleansingFunction = cleansingFunction
@@ -131,7 +131,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must not run the cleansing function" - {
       "when current UserAnswers contains the input page but the answer is the same" in new Test {
         val result: UserAnswers =
-          TestController.cleanseUserAnswersIfValueHasChanged(
+          testController.cleanseUserAnswersIfValueHasChanged(
             page = page,
             newAnswer = value,
             cleansingFunction = cleansingFunction
@@ -142,7 +142,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
       "when current UserAnswers doesn't contain the input page" in new Test {
 
         val result: UserAnswers =
-          TestController.cleanseUserAnswersIfValueHasChanged(
+          testController.cleanseUserAnswersIfValueHasChanged(
             page = page2,
             newAnswer = value,
             cleansingFunction = cleansingFunction
@@ -157,14 +157,14 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must run the onSuccess function" - {
       "when no user answers present and value is Index(0)" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+          testController.validateIndexForJourneyEntry(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
 
         result mustBe true
       }
 
       "when index is for a new page where index exists in previous items" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(
+          testController.validateIndexForJourneyEntry(
             TestDerivable, Index(2)
           )(
             true, false
@@ -182,7 +182,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
       "when index is for a new page where index is one more than previous page" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(
+          testController.validateIndexForJourneyEntry(
             TestDerivable, Index(1)
           )(
             true, false
@@ -196,14 +196,14 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must run the onFailure function" - {
       "when no user answers present and index position is more than 0" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(TestDerivable, Index(2))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+          testController.validateIndexForJourneyEntry(TestDerivable, Index(2))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
 
         result mustBe false
       }
 
       "when index larger than max value - 1" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(
+          testController.validateIndexForJourneyEntry(
             TestDerivable, Index(2), max = 2
           )(
             true, false
@@ -219,7 +219,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
       "when index is for a new page where index is greater than one more than previous page" in new Test {
         val result: Boolean =
-          TestController.validateIndexForJourneyEntry(
+          testController.validateIndexForJourneyEntry(
             TestDerivable, Index(2)
           )(
             true, false
@@ -237,7 +237,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must run the onSuccess function" - {
       "when index is for a new page where index exists in previous items" in new Test {
         val result: Boolean =
-          TestController.validateIndex(
+          testController.validateIndex(
             TestDerivable, Index(2)
           )(
             true, false
@@ -256,14 +256,14 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     "must run the onFailure function" - {
       "when no user answers present and value is Index(0)" in new Test {
         val result: Boolean =
-          TestController.validateIndex(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
+          testController.validateIndex(TestDerivable, Index(0))(true, false)(dataRequest(FakeRequest(), emptyUserAnswers), implicitly)
 
         result mustBe false
       }
 
       "when index is greater than last index in user answers" in new Test {
         val result: Boolean =
-          TestController.validateIndex(
+          testController.validateIndex(
             TestDerivable, Index(2)
           )(
             true, false

@@ -48,7 +48,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
     val request = FakeRequest(GET, referenceAvailableRoute(0))
 
-    object TestController extends ReferenceAvailableController(
+    lazy val testController = new ReferenceAvailableController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -69,7 +69,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       "must return OK and the correct view" in new Setup(
         Some(emptyUserAnswers.set(DocumentTypePage(0), documentTypeOtherModel))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -83,7 +83,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
           .set(ReferenceAvailablePage(0), true)
           .set(DocumentTypePage(0), documentTypeOtherModel))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -95,7 +95,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       "must redirect to DocumentsIndexController when there are no current documents in UserAnswers" in new Setup() {
         val req = FakeRequest(GET, referenceAvailableRoute(1))
 
-        val result = TestController.onPageLoad(testErn, testDraftId, 1, NormalMode)(req)
+        val result = testController.onPageLoad(testErn, testDraftId, 1, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -106,7 +106,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(GET, referenceAvailableRoute(1))
 
-        val result = TestController.onPageLoad(testErn, testDraftId, 1, NormalMode)(req)
+        val result = testController.onPageLoad(testErn, testDraftId, 1, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -117,14 +117,14 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(GET, referenceAvailableRoute(-1))
 
-        val result = TestController.onPageLoad(testErn, testDraftId, -1, NormalMode)(req)
+        val result = testController.onPageLoad(testErn, testDraftId, -1, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Setup(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -143,7 +143,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, referenceAvailableRoute(0)).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -158,7 +158,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, referenceAvailableRoute(0)).withFormUrlEncodedBody(("value", "false"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -177,7 +177,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, referenceAvailableRoute(0)).withFormUrlEncodedBody(("value", "false"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -190,7 +190,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
@@ -202,7 +202,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       "must redirect to DocumentsIndexController when there are no current documents in UserAnswers" in new Setup() {
         val req = FakeRequest(POST, referenceAvailableRoute(0)).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -213,7 +213,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
 
         val req = FakeRequest(POST, referenceAvailableRoute(1)).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 1, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 1, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -223,7 +223,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
         Some(emptyUserAnswers.set(DocumentTypePage(0), documentTypeOtherModel))) {
         val req = FakeRequest(POST, referenceAvailableRoute(-1)).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, -1, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, -1, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -232,7 +232,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
       "must redirect to Journey Recovery if no existing data is found" in new Setup(None) {
         val req = FakeRequest(POST, referenceAvailableRoute(0)).withFormUrlEncodedBody(("value", "true"))
 
-        val result = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

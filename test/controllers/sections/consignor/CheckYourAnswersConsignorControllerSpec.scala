@@ -32,7 +32,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
-    object TestController extends CheckYourAnswersConsignorController(
+    lazy val testController = new CheckYourAnswersConsignorController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -55,7 +55,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
   "Check Your Answers Consignor Controller" - {
     ".onPageLoad" - {
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
           testErn,
@@ -69,14 +69,14 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to /consignor if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url
@@ -88,7 +88,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
     "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
       val req: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, submitRoute)
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe testOnwardRoute.url

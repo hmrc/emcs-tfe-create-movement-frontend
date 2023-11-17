@@ -44,7 +44,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
 
     val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
 
-    object TestController extends DispatchUseConsignorDetailsController(
+    lazy val testController = new DispatchUseConsignorDetailsController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -62,7 +62,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
   "DispatchUseConsignorDetails Controller" - {
     "onPageLoad" - {
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(request)).toString
@@ -71,7 +71,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
         Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
       ) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
 
         status(result) mustEqual OK
@@ -84,7 +84,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -96,7 +96,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "false"))
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -106,7 +106,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
         Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
       ) {
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -115,7 +115,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", ""))
         val boundForm = form.bind(Map("value" -> ""))
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, dispatchUseConsignorDetailsSubmitAction)(dataRequest(request), messages(request)).toString
@@ -124,7 +124,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
 
     "must redirect to Journey Recovery" - {
       "for a GET if no existing data is found" in new Fixture(None) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -132,7 +132,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
 
       "for a POST if no existing data is found" in new Fixture(None) {
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
-        val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

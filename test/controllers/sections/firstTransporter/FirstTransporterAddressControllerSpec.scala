@@ -45,7 +45,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
 
     val request = FakeRequest(GET, firstTransporterAddressRoute)
 
-    object TestController extends FirstTransporterAddressController(
+    lazy val testController = new FirstTransporterAddressController(
       messagesApi,
       mockUserAnswersService,
       new FakeFirstTransporterNavigator(testOnwardRoute),
@@ -61,7 +61,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
 
   "FirstTransporterAddress Controller" - {
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -82,7 +82,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
         ("postcode", userAddressModelMax.postcode)
       )
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -92,7 +92,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       val req = FakeRequest(POST, firstTransporterAddressRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -104,7 +104,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -112,7 +112,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, firstTransporterAddressRoute).withFormUrlEncodedBody(("value", "answer"))
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

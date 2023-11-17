@@ -34,7 +34,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
 
-    object TestController extends GuarantorIndexController(
+    lazy val testController = new GuarantorIndexController(
       mockUserAnswersService,
       new FakeGuarantorNavigator(testOnwardRoute),
       fakeAuthAction,
@@ -55,14 +55,14 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(GuarantorArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to the guarantor required controller" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url)

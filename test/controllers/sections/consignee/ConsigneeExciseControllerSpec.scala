@@ -41,7 +41,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     val form = formProvider(true)
     val request = FakeRequest(GET, consigneeExciseRoute)
 
-    object TestController extends ConsigneeExciseController(
+    lazy val testController = new ConsigneeExciseController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -62,14 +62,14 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {
       "when Destination type is TemporaryRegisteredConsignee and Northern Irish" in new Fixture(Some(userAnswersWithDestinationType)) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = true)(dataRequest(request), messages(request)).toString
       }
 
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
@@ -79,7 +79,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
-        val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
@@ -92,7 +92,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testErn))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -105,14 +105,14 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -121,7 +121,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

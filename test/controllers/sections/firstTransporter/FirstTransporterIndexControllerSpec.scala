@@ -32,7 +32,7 @@ class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
   val request = FakeRequest(GET, controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url)
 
-  object TestController extends FirstTransporterIndexController(
+  lazy val testController = new FirstTransporterIndexController(
     mockUserAnswersService,
     new FakeFirstTransporterNavigator(testOnwardRoute),
     fakeAuthAction,
@@ -52,7 +52,7 @@ class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
           .set(FirstTransporterVatPage, "")
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
@@ -60,7 +60,7 @@ class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
       }
 
       "must redirect to the first transporter name controller" in new Fixture() {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe

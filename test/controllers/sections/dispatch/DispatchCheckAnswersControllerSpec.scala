@@ -44,7 +44,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
 
-    object TestController extends DispatchCheckAnswersController(
+    lazy val testController = new DispatchCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -63,7 +63,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     "must return OK and the correct view for a GET" in new Test() {
       MockDispatchCheckAnswersHelper.summaryList().returns(list)
 
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -75,14 +75,14 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     "must redirect to the next page when valid data is submitted" in new Test() {
       val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -91,7 +91,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
       val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

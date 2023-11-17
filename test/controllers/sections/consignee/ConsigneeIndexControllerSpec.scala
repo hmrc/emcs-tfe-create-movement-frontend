@@ -34,7 +34,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
     val route = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
     val request = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
 
-    object TestController extends ConsigneeIndexController(
+    lazy val testController = new ConsigneeIndexController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -56,7 +56,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
@@ -67,7 +67,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       s"when destination is $ExemptedOrganisation" in new Fixture(
         Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
@@ -80,7 +80,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           s"when destination is $movementScenario" in new Fixture(
             Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-            val result = TestController.onPageLoad(testErn, testDraftId)(request)
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
 
             status(result) mustBe SEE_OTHER
             redirectLocation(result) mustBe
@@ -97,7 +97,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
               val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = TestController.onPageLoad(ern, testDraftId)(req)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -119,7 +119,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
               val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = TestController.onPageLoad(ern, testDraftId)(req)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -134,7 +134,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
 
           val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-          val result = TestController.onPageLoad(ern, testDraftId)(req)
+          val result = testController.onPageLoad(ern, testDraftId)(req)
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe
@@ -153,7 +153,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
               val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = TestController.onPageLoad(ern, testDraftId)(req)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -174,7 +174,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
               val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = TestController.onPageLoad(ern, testDraftId)(req)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -189,7 +189,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
 
         val req = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
-        val result = TestController.onPageLoad(testErn, testDraftId)(req)
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe

@@ -45,7 +45,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
     val request = FakeRequest(GET, documentsRemoveUnitRoute())
 
-    object TestController extends DocumentsRemoveFromListController(
+    lazy val testController = new DocumentsRemoveFromListController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -62,7 +62,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
   "DocumentsRemoveFromList Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId, 0)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, 0)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(formProvider(0), 0)(dataRequest(request), messages(request)).toString
@@ -70,7 +70,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to the index controller when index is out of bounds (for GET)" in new Fixture() {
       val req = FakeRequest(GET, documentsRemoveUnitRoute(1))
-      val result = TestController.onPageLoad(testErn, testDraftId, 1)(req)
+      val result = testController.onPageLoad(testErn, testDraftId, 1)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -78,7 +78,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Add to List when the user answers POSTs an answer of no" in new Fixture() {
       val req = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", "false"))
-      val result = TestController.onSubmit(testErn, testDraftId, 0)(req)
+      val result = testController.onSubmit(testErn, testDraftId, 0)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
@@ -101,7 +101,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
       MockUserAnswersService.set(answersAfterRemoval).returns(Future.successful(answersAfterRemoval))
 
       val req = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", "true"))
-      val result = TestController.onSubmit(testErn, testDraftId, 0)(req)
+      val result = testController.onSubmit(testErn, testDraftId, 0)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -111,7 +111,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
       val req = FakeRequest(POST, routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url)
         .withFormUrlEncodedBody(("value", "true"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, 1)(req)
+      val result = testController.onSubmit(testErn, testDraftId, 1)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url
@@ -120,14 +120,14 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
       val req = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", ""))
       val boundForm = formProvider(0).bind(Map("value" -> ""))
-      val result = TestController.onSubmit(testErn, testDraftId, 0)(req)
+      val result = testController.onSubmit(testErn, testDraftId, 0)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, 0)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, 0)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, 0)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -135,7 +135,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, documentsRemoveUnitRoute()).withFormUrlEncodedBody(("value", "true"))
-      val result = TestController.onSubmit(testErn, testDraftId, 0)(req)
+      val result = testController.onSubmit(testErn, testDraftId, 0)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

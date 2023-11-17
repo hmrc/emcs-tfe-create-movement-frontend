@@ -46,7 +46,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
     val view = app.injector.instanceOf[DestinationWarehouseExciseView]
 
-    object TestController extends DestinationWarehouseExciseController(
+    lazy val testController = new DestinationWarehouseExciseController(
       messagesApi,
       mockUserAnswersService,
       new FakeDestinationNavigator(testOnwardRoute),
@@ -67,7 +67,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, DirectDelivery))) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -79,7 +79,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
       .set(DestinationWarehouseExcisePage, "answer").set(DestinationTypePage, DirectDelivery))) {
 
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"),
@@ -94,7 +94,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
       val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -107,7 +107,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm,
@@ -117,14 +117,14 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
     "must redirect to destination type Page for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
       .set(DispatchPlacePage, GreatBritain))) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -133,7 +133,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

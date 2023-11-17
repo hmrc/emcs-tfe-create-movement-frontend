@@ -42,7 +42,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
 
     implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
 
-    object TestController extends FirstTransporterCheckAnswersController(
+    lazy val testController = new FirstTransporterCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
       new FakeFirstTransporterNavigator(testOnwardRoute),
@@ -61,7 +61,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
     "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
       MockFirstTransporterCheckAnswersHelper.summaryList().returns(list)
 
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -73,14 +73,14 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
     "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
       val req = FakeRequest(POST, checkYourAnswersJourneyTypeRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixtures(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -89,7 +89,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixtures(None) {
       val req = FakeRequest(POST, checkYourAnswersJourneyTypeRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

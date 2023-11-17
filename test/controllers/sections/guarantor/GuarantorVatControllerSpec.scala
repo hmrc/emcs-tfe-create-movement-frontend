@@ -43,7 +43,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     lazy val guarantorVatRoute = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode).url
     lazy val guarantorVatSubmitRoute = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(testErn, testDraftId, NormalMode).url
 
-    object TestController extends GuarantorVatController(
+    lazy val testController = new GuarantorVatController(
       messagesApi,
       mockUserAnswersService,
       new FakeGuarantorNavigator(testOnwardRoute),
@@ -62,7 +62,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter))) {
 
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, Transporter, NormalMode)(dataRequest(request), messages(request)).toString
@@ -74,7 +74,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       .set(GuarantorArrangerPage, Transporter)
       .set(GuarantorVatPage, "answer"))) {
 
-    val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+    val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), Transporter, NormalMode)(dataRequest(request), messages(request)).toString
@@ -91,7 +91,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
       val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-    val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+    val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -108,7 +108,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
       val req = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testDraftId, NormalMode).url)
 
-    val result = TestController.onNonGbVAT(testErn, testDraftId, NormalMode)(req)
+    val result = testController.onNonGbVAT(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -118,7 +118,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     Some(emptyUserAnswers
     .set(GuarantorRequiredPage, true))) {
 
-    val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+    val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
@@ -131,7 +131,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
       val req = FakeRequest(POST, guarantorVatSubmitRoute)
 
-    val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+    val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
@@ -145,14 +145,14 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-    val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+    val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, Transporter, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
   "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-    val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+    val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -161,7 +161,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
   "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-    val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+    val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

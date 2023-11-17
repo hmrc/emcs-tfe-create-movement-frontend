@@ -34,7 +34,7 @@ class ErrorControllerSpec extends SpecBase {
 
     val request = FakeRequest()
 
-    object TestController extends ErrorController(
+    lazy val testController = new ErrorController(
       messagesControllerComponents,
       unauthorisedView,
       notAnOrganisationView,
@@ -45,7 +45,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .unauthorised" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.unauthorised()(request)
+        val result = testController.unauthorised()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual unauthorisedView()(request, messages(request)).toString
@@ -54,7 +54,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .notAnOrganisation" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.notAnOrganisation()(request)
+        val result = testController.notAnOrganisation()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual notAnOrganisationView()(request, messages(request), appConfig).toString
@@ -63,7 +63,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .inactiveEnrolment" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.inactiveEnrolment()(request)
+        val result = testController.inactiveEnrolment()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual inactiveEnrolmentView()(request, messages(request), appConfig).toString
@@ -72,7 +72,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .noEnrolment" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.noEnrolment()(request)
+        val result = testController.noEnrolment()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual noEnrolmentView()(request, messages(request), appConfig).toString
@@ -81,7 +81,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .notOnPrivateBeta" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.notOnPrivateBeta()(request)
+        val result = testController.notOnPrivateBeta()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual notOnPrivateBetaView()(request, messages(request), appConfig).toString
@@ -90,7 +90,7 @@ class ErrorControllerSpec extends SpecBase {
 
     "when calling .wrongArc" - {
       "must return OK and the correct view for a GET" in {
-        val result = TestController.wrongArc()(request)
+        val result = testController.wrongArc()(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual unauthorisedView()(request, messages(request)).toString

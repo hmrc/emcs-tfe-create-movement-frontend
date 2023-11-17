@@ -26,10 +26,10 @@ class SignedOutControllerSpec extends SpecBase {
   "SignedOut Controller" - {
     val request = FakeRequest()
     val view = app.injector.instanceOf[SignedOutView]
-    object TestController extends SignedOutController(messagesControllerComponents, appConfig, view)
+    lazy val testController = new SignedOutController(messagesControllerComponents, appConfig, view)
 
     "must return OK and the correct view for a none saved sign out" in {
-      val result = TestController.signOutNotSaved(request)
+      val result = testController.signOutNotSaved(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(guidance = "signedOut.guidance.notSaved")(request, messages(request)).toString
@@ -37,7 +37,7 @@ class SignedOutControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a saved signed out" in {
-      val result = TestController.signOutSaved(request)
+      val result = testController.signOutSaved(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(guidance = "signedOut.guidance.saved")(request, messages(request)).toString
@@ -45,7 +45,7 @@ class SignedOutControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a feedback signed out" in {
-      val result = TestController.signOutWithSurvey()(request)
+      val result = testController.signOutWithSurvey()(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some("http://localhost:9514/feedback/emcstfe/beta")

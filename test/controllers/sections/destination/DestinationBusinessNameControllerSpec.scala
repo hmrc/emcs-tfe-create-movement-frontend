@@ -41,7 +41,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
 
     lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
 
-    object TestController extends DestinationBusinessNameController(
+    lazy val testController = new DestinationBusinessNameController(
       messagesApi,
       mockUserAnswersService,
       new FakeDestinationNavigator(testOnwardRoute),
@@ -61,7 +61,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
   "DestinationBusinessName Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
@@ -70,7 +70,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
       .set(DestinationBusinessNamePage, "answer")
     )) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
@@ -81,7 +81,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
 
       val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -92,14 +92,14 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -108,7 +108,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

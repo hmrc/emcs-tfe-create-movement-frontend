@@ -33,7 +33,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
     val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
 
 
-    object TestController extends DispatchIndexController(
+    lazy val testController = new DispatchIndexController(
       mockUserAnswersService,
       new FakeDispatchNavigator(testOnwardRoute),
       fakeAuthAction,
@@ -52,7 +52,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
         .set(ConsignorAddressPage, testUserAddress)
       )) {
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
@@ -60,7 +60,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
     }
 
     "must redirect to the dispatch warehouse excise controller" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)

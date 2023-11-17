@@ -41,7 +41,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
 
     implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
 
-    object TestController extends ExportInformationCheckAnswersController(
+    lazy val testController = new ExportInformationCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
       new FakeExportInformationNavigator(testOnwardRoute),
@@ -60,7 +60,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
     "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
       MockCheckAnswersExportInformationHelper.summaryList().returns(list)
 
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -72,7 +72,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
     "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
       val req = FakeRequest(POST, checkYourAnswersExportInformationRoute)
 
-      val result = TestController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

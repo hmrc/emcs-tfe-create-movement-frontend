@@ -28,7 +28,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
 
   "Index Controller" - {
     "must redirect to the info Index controller" in {
-      object TestController extends IndexController(
+      lazy val testController = new IndexController(
         messagesApi,
         mockPreDraftService,
         mockUserAnswersService,
@@ -40,7 +40,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
       MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
 
       val request = FakeRequest()
-      val result = TestController.onPageLoad(testNorthernIrelandErn)(request)
+      val result = testController.onPageLoad(testNorthernIrelandErn)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)

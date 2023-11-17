@@ -24,9 +24,9 @@ class KeepAliveControllerSpec extends SpecBase {
 
   "keepAlive" - {
     "must return NO_CONTENT" in {
-      object TestController extends KeepAliveController(messagesControllerComponents)
+      lazy val testController = new KeepAliveController(messagesControllerComponents)
 
-      val result = TestController.keepAlive()(FakeRequest())
+      val result = testController.keepAlive()(FakeRequest())
 
       status(result) mustEqual NO_CONTENT
     }

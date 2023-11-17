@@ -33,7 +33,7 @@ class ConfirmationControllerSpec extends SpecBase {
     val errorHandler = app.injector.instanceOf[ErrorHandler]
     val request = FakeRequest()
 
-    object TestController extends ConfirmationController(
+    lazy val testController = new ConfirmationController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -57,7 +57,7 @@ class ConfirmationControllerSpec extends SpecBase {
           answers = emptyUserAnswers
         )
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(req)
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(testConfirmationReference)(req, messages(req)).toString
@@ -70,7 +70,7 @@ class ConfirmationControllerSpec extends SpecBase {
 
         val req = dataRequest(request, emptyUserAnswers)
 
-        val result = TestController.onPageLoad(testErn, testDraftId)(req)
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual errorHandler.badRequestTemplate(req).toString

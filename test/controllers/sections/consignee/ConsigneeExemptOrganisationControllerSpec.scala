@@ -69,7 +69,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
     val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
 
-    object TestController extends ConsigneeExemptOrganisationController(
+    lazy val testController = new ConsigneeExemptOrganisationController(
       messagesApi,
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
@@ -90,7 +90,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must return OK and the correct view for a GET" in new Fixture() {
       MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -105,7 +105,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
       MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -123,7 +123,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
         ("certificateSerialNumber", "answer")
       )
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url
@@ -136,7 +136,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
       MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -147,7 +147,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -156,7 +156,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, onSubmitCall.url).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

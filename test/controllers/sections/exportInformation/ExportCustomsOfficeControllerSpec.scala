@@ -47,7 +47,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
 
     val request = FakeRequest(GET, exportCustomsOfficeRoute)
 
-    object TestController extends ExportCustomsOfficeController(
+    lazy val testController = new ExportCustomsOfficeController(
       messagesApi,
       mockUserAnswersService,
       new FakeExportInformationNavigator(testOnwardRoute),
@@ -63,7 +63,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
 
   "ExportCustomsOffice Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
@@ -72,7 +72,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(defaultUserAnswers.set(ExportCustomsOfficePage, "answer"))
     ) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
@@ -82,7 +82,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val req = FakeRequest(POST, exportCustomsOfficeRoute).withFormUrlEncodedBody(("value", "AB123456"))
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -91,14 +91,14 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
       val req = FakeRequest(POST, exportCustomsOfficeRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, exportCustomsOfficeSubmitAction, euExport = true)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -106,7 +106,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, exportCustomsOfficeRoute).withFormUrlEncodedBody(("value", "answer"))
-      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

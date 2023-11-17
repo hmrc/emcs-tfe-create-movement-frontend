@@ -31,7 +31,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(testErn, testDraftId).url)
 
-    object TestController extends ExportInformationIndexController(
+    lazy val testController = new ExportInformationIndexController(
       mockUserAnswersService,
       new FakeExportInformationNavigator(testOnwardRoute),
       fakeAuthAction,
@@ -46,7 +46,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
   "ExportInformationIndexController" - {
     "when ExportInformationSection.isCompleted" - {
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.set(ExportCustomsOfficePage, ""))) {
-        val result = TestController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
@@ -55,7 +55,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
     }
 
     "must redirect to the export customs office controller" in new Fixture() {
-      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe

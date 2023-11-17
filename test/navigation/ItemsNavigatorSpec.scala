@@ -264,14 +264,13 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when Alcohol Strength is >= 8.5 abv" - {
 
-          //TODO: Redirect to CAM-ITM19
-          "to the Under Construction Page" in {
+          "to the Item Quantity Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemQuantityController.onPageLoad(testNorthernIrelandErn, testDraftId, testIndex1, NormalMode)
           }
         }
       }

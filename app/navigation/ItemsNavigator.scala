@@ -64,8 +64,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(abv) if abv < 8.5 =>
           itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          //TODO: Redirect to CAM-ITM19
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
     case ItemSmallIndependentProducerPage(idx) => (userAnswers: UserAnswers) =>

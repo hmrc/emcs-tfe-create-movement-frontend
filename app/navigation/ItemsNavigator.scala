@@ -45,6 +45,16 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemGeographicalIndicationChoicePage(idx) => (userAnswers: UserAnswers) =>
       geographicalIndicationChoiceRouting(idx, userAnswers)
 
+    case ItemGeographicalIndicationPage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemAlcoholStrengthPage(idx)) match {
+        case Some(abv) if abv < 8.5 =>
+          itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        case Some(_) =>
+          itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        case _ =>
+          itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+
     case ItemQuantityPage(_) => (_: UserAnswers) =>
       //TODO: Route to CAM-ITM21
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -170,8 +180,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
             }
           case _ =>
-            //TODO: Redirect to CAM-ITM10
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemGeographicalIndicationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)

@@ -1084,3 +1084,15 @@ itemFiscalMarks.error.character = Information must include letters and numbers
 itemFiscalMarks.error.length = Information must be 350 characters or less
 itemFiscalMarks.error.xss = Information must not contain < and > and : and ;
 itemFiscalMarks.change.hidden = fiscal marks details
+
+itemGeographicalIndication.title = What is the geographical indication for the {0}?
+itemGeographicalIndication.heading = What is the geographical indication for the {0}?
+itemGeographicalIndication.hint.PDO = Enter the name of the Protected Designation of Origin (PDO) for the product. Include a register number if you have one.
+itemGeographicalIndication.hint.PGI = Enter the name of the Protected Geographical Indication (PGI) for the product. Include a register number if you have one.
+itemGeographicalIndication.hint.GI = Enter the name of the Geographical Indication (GI) for the product. Include a register number if you have one.
+itemGeographicalIndication.error.required = Enter details of the geographical indication
+itemGeographicalIndication.error.length = Geographical indication must be 350 characters or less
+itemGeographicalIndication.error.xss = Geographical indication must not contain < and > and : and ;
+itemGeographicalIndication.error.alphanumeric = Geographical indication must contain letters and numbers
+itemGeographicalIndication.checkYourAnswersLabel = Designation of origin details
+itemGeographicalIndication.change.hidden = protected designation

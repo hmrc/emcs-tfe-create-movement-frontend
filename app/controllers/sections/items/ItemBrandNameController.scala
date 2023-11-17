@@ -19,6 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemBrandNameFormProvider._
+import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.sections.items.ItemBrandNameModel
 import models.{Index, Mode}
@@ -27,7 +28,7 @@ import pages.sections.items.ItemBrandNamePage
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemBrandNameView
 
 import javax.inject.Inject
@@ -43,7 +44,9 @@ class ItemBrandNameController @Inject()(
                                          override val requireData: DataRequiredAction,
                                          formProvider: ItemBrandNameFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
-                                         view: ItemBrandNameView
+                                         view: ItemBrandNameView,
+                                         override val cnCodeInformationService: GetCnCodeInformationService,
+                                         override val errorHandler: ErrorHandler
                                        ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

@@ -18,13 +18,14 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
+import handlers.ErrorHandler
 import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GetCommodityCodesService, UserAnswersService}
+import services.{GetCnCodeInformationService, GetCommodityCodesService, UserAnswersService}
 import views.html.sections.items.ItemCommodityCodeView
 
 import javax.inject.Inject
@@ -41,18 +42,23 @@ class ItemCommodityCodeController @Inject()(
                                              getCommodityCodesService: GetCommodityCodesService,
                                              formProvider: ItemCommodityCodeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
-                                             view: ItemCommodityCodeView
+                                             view: ItemCommodityCodeView,
+                                             override val cnCodeInformationService: GetCnCodeInformationService,
+                                             override val errorHandler: ErrorHandler
                                            ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
-        case Some(itemExciseProductCode) =>
+      withAnswerAsync(
+        ItemExciseProductCodePage(idx),
+        redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
+      ) {
+        itemExciseProductCode =>
           val goodsType = GoodsTypeModel(itemExciseProductCode)
           getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
             case Nil =>
               saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
-            case singleCommodityCode::Nil =>
+            case singleCommodityCode :: Nil =>
               saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode.cnCode, mode)
             case commodityCodes =>
               Future.successful(Ok(
@@ -64,8 +70,6 @@ class ItemCommodityCodeController @Inject()(
                 )
               ))
           }
-        case None =>
-          Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
       }
     }
 
@@ -73,8 +77,11 @@ class ItemCommodityCodeController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
-            case Some(itemExciseProductCode) =>
+          withAnswerAsync(
+            ItemExciseProductCodePage(idx),
+            redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
+          ) {
+            itemExciseProductCode =>
               val goodsType = GoodsTypeModel(itemExciseProductCode)
               getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
                 commodityCodes =>
@@ -87,8 +94,6 @@ class ItemCommodityCodeController @Inject()(
                     )
                   )
               }
-            case None =>
-              Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
           },
         value =>
           saveAndRedirect(ItemCommodityCodePage(idx), value, mode)

@@ -18,7 +18,6 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import controllers.sections.consignee.ConsigneeIndexController
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator

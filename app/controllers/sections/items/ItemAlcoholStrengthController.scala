@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemAlcoholStrengthFormProvider
+import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
@@ -25,7 +26,7 @@ import pages.sections.items.ItemAlcoholStrengthPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemAlcoholStrengthView
 
 import javax.inject.Inject
@@ -41,7 +42,9 @@ class ItemAlcoholStrengthController @Inject()(
                                        override val userAllowList: UserAllowListAction,
                                        formProvider: ItemAlcoholStrengthFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: ItemAlcoholStrengthView
+                                       view: ItemAlcoholStrengthView,
+                                       override val cnCodeInformationService: GetCnCodeInformationService,
+                                       override val errorHandler: ErrorHandler
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

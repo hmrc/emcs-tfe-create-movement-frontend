@@ -17,42 +17,50 @@
 package controllers.sections.items
 
 import base.SpecBase
-import models.{Index, NormalMode}
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{Index, NormalMode, UserAnswers}
+import navigation.ItemsNavigator
 import play.api.http.Status.SEE_OTHER
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
-class ItemsIndexControllerSpec extends SpecBase {
+class ItemsIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new ItemsIndexController(
+      mockUserAnswersService,
+      app.injector.instanceOf[ItemsNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
+
   "ItemsIndexController" - {
 
     "when ItemsSection.isCompleted" - {
       // TODO: remove ignore when CYA page is built
-      "must redirect to the CYA controller" ignore {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "must redirect to the CYA controller" ignore new Test(Some(emptyUserAnswers)) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
       }
     }
 
-    "must redirect to the items excise product code controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must redirect to the items excise product code controller" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe
-          controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, Index(0), NormalMode).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe
+        controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, Index(0), NormalMode).url
     }
   }
 }

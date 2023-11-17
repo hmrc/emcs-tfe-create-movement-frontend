@@ -16,33 +16,36 @@
 
 package controllers.sections.items
 
-import models.requests.DataRequest
 import controllers.actions._
 import forms.sections.items.CommercialDescriptionFormProvider
-import javax.inject.Inject
+import handlers.ErrorHandler
+import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.CommercialDescriptionPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.CommercialDescriptionView
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 class CommercialDescriptionController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: CommercialDescriptionFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: CommercialDescriptionView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                 override val messagesApi: MessagesApi,
+                                                 override val userAnswersService: UserAnswersService,
+                                                 override val userAllowList: UserAllowListAction,
+                                                 override val navigator: ItemsNavigator,
+                                                 override val auth: AuthAction,
+                                                 override val getData: DataRetrievalAction,
+                                                 override val requireData: DataRequiredAction,
+                                                 formProvider: CommercialDescriptionFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: CommercialDescriptionView,
+                                                 override val cnCodeInformationService: GetCnCodeInformationService,
+                                                 override val errorHandler: ErrorHandler
+                                               ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -54,7 +57,7 @@ class CommercialDescriptionController @Inject()(
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        withGoodsTypeAsync(idx) { goodsType =>
+        withGoodsTypeAsync(idx) { _ =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode),
             saveAndRedirect(CommercialDescriptionPage(idx), _, mode)

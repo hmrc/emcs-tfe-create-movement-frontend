@@ -21,7 +21,6 @@ import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.dispatch.DispatchCheckAnswersHelper
 import viewmodels.helpers.CheckYourAnswersDocumentsHelper
 
 trait MockDocumentsCheckAnswersHelper extends MockFactory {

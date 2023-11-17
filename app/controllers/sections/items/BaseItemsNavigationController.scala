@@ -17,16 +17,22 @@
 package controllers.sections.items
 
 import controllers.BaseNavigationController
+import handlers.ErrorHandler
 import models.GoodsTypeModel.GoodsType
+import models.requests.{CnCodeInformationItem, DataRequest}
+import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, Index}
-import models.requests.DataRequest
-import pages.sections.items.ItemExciseProductCodePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.mvc.Result
 import queries.ItemsCount
+import services.GetCnCodeInformationService
 
 import scala.concurrent.Future
 
 trait BaseItemsNavigationController extends BaseNavigationController {
+
+  val cnCodeInformationService: GetCnCodeInformationService
+  val errorHandler: ErrorHandler
 
   def validateIndex(index: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
     super.validateIndex(ItemsCount, index)(
@@ -57,4 +63,22 @@ trait BaseItemsNavigationController extends BaseNavigationController {
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
+
+  def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
+    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
+      case (Some(epc), Some(commodityCode)) =>
+        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
+          response.headOption match {
+            case Some((_, cnCodeInfo)) =>
+              f(cnCodeInfo)
+            case _ =>
+              logger.warn(s"[onPageLoad] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
+              InternalServerError(errorHandler.internalServerErrorTemplate)
+          }
+        }
+      case _ =>
+        logger.warn(s"[onPageLoad] productCode or commodityCode missing from UserAnswers")
+        Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+  }
 }

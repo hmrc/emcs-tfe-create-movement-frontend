@@ -18,18 +18,13 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import controllers.sections.consignee.ConsigneeExportVatController
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
-import navigation.FirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterVatPage
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.firstTransporter.FirstTransporterVatView
 
 import scala.concurrent.Future

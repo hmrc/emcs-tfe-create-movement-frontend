@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
+import handlers.ErrorHandler
 import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode}
@@ -26,7 +27,7 @@ import pages.sections.items.ItemFiscalMarksChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemFiscalMarksChoiceView
 
 import javax.inject.Inject
@@ -42,7 +43,9 @@ class ItemFiscalMarksChoiceController @Inject()(
                                                  override val requireData: DataRequiredAction,
                                                  formProvider: ItemFiscalMarksChoiceFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: ItemFiscalMarksChoiceView
+                                                 view: ItemFiscalMarksChoiceView,
+                                                 override val cnCodeInformationService: GetCnCodeInformationService,
+                                                 override val errorHandler: ErrorHandler
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

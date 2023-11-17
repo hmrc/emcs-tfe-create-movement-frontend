@@ -17,80 +17,72 @@
 package controllers.sections.documents
 
 import base.SpecBase
-import models.requests.DataRequest
-import play.api.mvc.AnyContentAsEmpty
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import mocks.viewmodels.MockDocumentsCheckAnswersHelper
+import models.UserAnswers
+import navigation.FakeNavigators.FakeDocumentsNavigator
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.helpers.CheckYourAnswersDocumentsHelper
 import views.html.sections.documents.DocumentsCheckAnswersView
 
-class DocumentsCheckAnswersControllerSpec extends SpecBase {
+class DocumentsCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsCheckAnswersHelper {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    implicit val request = dataRequest(FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url))
+    implicit val msgs = messages(request)
+    val view = app.injector.instanceOf[DocumentsCheckAnswersView]
+    val summaryList = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()(request, msgs)
+
+    object TestController extends DocumentsCheckAnswersController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeDocumentsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      view,
+      mockDocumentsCheckAnswersHelper
+    )
+  }
 
   "DocumentsCheckAnswers Controller" - {
+    "must return OK and the correct view for a GET" in new Fixture() {
+      MockDocumentsCheckAnswersHelper.summaryList().returns(summaryList)
 
-    "must return OK and the correct view for a GET" in {
+      val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
-        implicit val msgs = messages(request)
-
-        val result = route(application, fakeDataRequest).value
-
-        val view = application.injector.instanceOf[DocumentsCheckAnswersView]
-        val summaryList = application.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(summaryList).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(summaryList).toString
     }
 
-    "must redirect to task list for POST" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "must redirect to task list for POST" in new Fixture() {
+      val req = dataRequest(FakeRequest(POST, routes.DocumentsCheckAnswersController.onSubmit(testErn, testDraftId).url))
 
-      running(application) {
-        val request = FakeRequest(POST, routes.DocumentsCheckAnswersController.onSubmit(testErn, testDraftId).url)
-        implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
+      val result = TestController.onSubmit(testErn, testDraftId)(req)
 
-        val result = route(application, fakeDataRequest).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual
-          controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
-
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None){
+      val req = FakeRequest(POST, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url).withFormUrlEncodedBody(("value", "true"))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = TestController.onSubmit(testErn, testDraftId)(req)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

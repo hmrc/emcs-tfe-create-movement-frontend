@@ -17,93 +17,72 @@
 package controllers.sections.documents
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentsCertificatesPage, ReferenceAvailablePage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class DocumentsIndexControllerSpec extends SpecBase {
+class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
+
+    object TestController extends DocumentsIndexController(
+      mockUserAnswersService,
+      new FakeDocumentsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
+  }
 
   "DocumentsIndexController" - {
-
     "when DocumentsCertificate is false" - {
+      "must redirect to the DocumentsCheckAnswers page" in new Fixture(Some(emptyUserAnswers.set(DocumentsCertificatesPage, false))) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-      "must redirect to the DocumentsCheckAnswers page" in {
-
-        val application = applicationBuilder(userAnswers = Some(
-          emptyUserAnswers.set(DocumentsCertificatesPage, false)
-        )).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
 
     "when DocumentsCertificate is true" - {
-
       "when DocumentsCount is > 0" - {
+        "must redirect to the DocumentReference page" in new Fixture(Some(
+          emptyUserAnswers
+            .set(DocumentsCertificatesPage, true)
+            .set(ReferenceAvailablePage(0), true)
+            .set(DocumentReferencePage(0), "reference"))) {
 
-        "must redirect to the DocumentReference page" in {
+          val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-          val application = applicationBuilder(userAnswers = Some(
-            emptyUserAnswers
-              .set(DocumentsCertificatesPage, true)
-              .set(ReferenceAvailablePage(0), true)
-              .set(DocumentReferencePage(0), "reference")
-          )).build()
-
-          running(application) {
-
-            val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url)
         }
       }
 
       "when DocumentsCount is 0" - {
+        "must redirect to the DocumentReference page" in new Fixture(Some(emptyUserAnswers.set(DocumentsCertificatesPage, true))) {
+          val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-        "must redirect to the DocumentReference page" in {
-
-          val application = applicationBuilder(userAnswers = Some(
-            emptyUserAnswers.set(DocumentsCertificatesPage, true)
-          )).build()
-
-          running(application) {
-
-            val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
         }
       }
     }
 
     "when DocumentsCertificate is not answered" - {
+      "must redirect to the DocumentsCheckAnswers page" in new Fixture() {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-      "must redirect to the DocumentsCheckAnswers page" in {
-
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, routes.DocumentsIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
     }
   }

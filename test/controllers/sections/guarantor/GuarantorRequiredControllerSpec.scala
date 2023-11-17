@@ -17,193 +17,132 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.guarantor.GuarantorRequiredFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
 import models.sections.guarantor.GuarantorArranger.Transporter
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
-import navigation.GuarantorNavigator
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.guarantor.GuarantorRequiredView
 
 import scala.concurrent.Future
 
 class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def onwardRoute = Call("GET", "/foo")
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  val formProvider = new GuarantorRequiredFormProvider()
-  val form = formProvider()
+    val formProvider = new GuarantorRequiredFormProvider()
+    val form = formProvider()
+    val request = FakeRequest(GET, guarantorRequiredRoute)
 
-  lazy val guarantorRequiredRoute = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url
+    val view = app.injector.instanceOf[GuarantorRequiredView]
+
+    lazy val guarantorRequiredRoute = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url
+
+    object TestController extends GuarantorRequiredController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeGuarantorNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
+
+  }
 
   "GuarantorRequired Controller" - {
+    "must return OK and the correct view for a GET" in new Fixture() {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, guarantorRequiredRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[GuarantorRequiredView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
+      Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
 
-      val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, guarantorRequiredRoute)
-
-        val view = application.injector.instanceOf[GuarantorRequiredView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, guarantorRequiredRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", ""))
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, guarantorRequiredRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[GuarantorRequiredView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, guarantorRequiredRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      running(application) {
-        val request =
-          FakeRequest(POST, guarantorRequiredRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must cleanse the guarantor section when answering no" in {
+    "must cleanse the guarantor section when answering no" in new Fixture(
+      Some(emptyUserAnswers
+        .set(GuarantorRequiredPage, true)
+        .set(GuarantorArrangerPage, Transporter)
+        .set(GuarantorNamePage, "a name"))) {
+
       val expectedAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-      val application = applicationBuilder(
-        userAnswers = Some(
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, Transporter)
-            .set(GuarantorNamePage, "a name")
-        )
-      )
-        .overrides(
-          bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "false"))
 
-
-      val request = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "false"))
-
-      val result = route(application, request).value
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
     }
 
-    "must cleanse the guarantor section when answering yes" in {
+    "must cleanse the guarantor section when answering yes" in new Fixture(
+      Some(emptyUserAnswers
+        .set(GuarantorRequiredPage, false)
+        .set(GuarantorArrangerPage, Transporter)
+        .set(GuarantorNamePage, "a name"))) {
+
       val expectedAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-      val application = applicationBuilder(
-        userAnswers = Some(
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, false)
-            .set(GuarantorArrangerPage, Transporter)
-            .set(GuarantorNamePage, "a name")
-        )
-      )
-        .overrides(
-          bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
 
-
-      val request = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
-
-      val result = route(application, request).value
+      val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
     }
-
   }
 }

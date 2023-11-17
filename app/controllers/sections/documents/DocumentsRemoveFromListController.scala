@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import models.Index
 import models.requests.DataRequest
-import navigation.{DocumentsNavigator, TransportUnitNavigator}
+import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentSection, DocumentsAddToListPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi

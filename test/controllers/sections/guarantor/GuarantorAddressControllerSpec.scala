@@ -17,6 +17,7 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -24,19 +25,16 @@ import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
-import navigation.GuarantorNavigator
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.AddressView
 
 import scala.concurrent.Future
 
 class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     val formProvider = new AddressFormProvider()
     val form = formProvider()
@@ -44,14 +42,23 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     lazy val addressRoute = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
     lazy val addressOnSubmit = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[GuarantorNavigator].toInstance(new FakeGuarantorNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
+    val view = app.injector.instanceOf[AddressView]
 
-    val view = application.injector.instanceOf[AddressView]
+    val request = FakeRequest(GET, addressRoute)
+
+    object TestController extends GuarantorAddressController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeGuarantorNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      new AddressFormProvider(),
+      messagesControllerComponents,
+      view
+    )
+
   }
 
   Seq(GoodsOwner, Transporter).foreach(
@@ -62,60 +69,47 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
         .set(GuarantorArrangerPage, guarantorArranger)
 
       s"with a Guarantor Arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" - {
-
         "must return OK and the correct view for a GET" in new Fixture(Some(answersSoFar)) {
-          running(application) {
+          val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-            val request = FakeRequest(GET, addressRoute)
-            val result = route(application, request).value
-
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(
-              form = form,
-              addressPage = GuarantorAddressPage,
-              call = addressOnSubmit,
-              headingKey = Some(s"guarantorAddress.$guarantorArranger")
-            )(dataRequest(request), messages(request)).toString
-          }
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form = form,
+            addressPage = GuarantorAddressPage,
+            call = addressOnSubmit,
+            headingKey = Some(s"guarantorAddress.$guarantorArranger")
+          )(dataRequest(request), messages(request)).toString
         }
 
         "must redirect to the next page when valid data is submitted" in new Fixture(Some(answersSoFar)) {
-
           MockUserAnswersService.set().returns(Future.successful(answersSoFar))
 
-          running(application) {
-            val request =
-              FakeRequest(POST, addressRoute)
-                .withFormUrlEncodedBody(
-                  ("property", userAddressModelMax.property.value),
-                  ("street", userAddressModelMax.street),
-                  ("town", userAddressModelMax.town),
-                  ("postcode", userAddressModelMax.postcode)
-                )
+          val req = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(
+            ("property", userAddressModelMax.property.value),
+            ("street", userAddressModelMax.street),
+            ("town", userAddressModelMax.town),
+            ("postcode", userAddressModelMax.postcode)
+          )
 
-            val result = route(application, request).value
+          val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual testOnwardRoute.url
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
         }
 
         "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(answersSoFar)) {
+          val req = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(("value", ""))
+          val boundForm = form.bind(Map("value" -> ""))
 
-          running(application) {
+          val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-            val request = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(("value", ""))
-            val boundForm = form.bind(Map("value" -> ""))
-            val result = route(application, request).value
-
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(
-              form = boundForm,
-              addressPage = GuarantorAddressPage,
-              call = addressOnSubmit,
-              headingKey = Some(s"guarantorAddress.$guarantorArranger")
-            )(dataRequest(request), messages(request)).toString
-          }
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(
+            form = boundForm,
+            addressPage = GuarantorAddressPage,
+            call = addressOnSubmit,
+            headingKey = Some(s"guarantorAddress.$guarantorArranger")
+          )(dataRequest(request), messages(request)).toString
         }
       }
     }
@@ -123,40 +117,25 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
   "must redirect to the guarantor index if user hasn't answered that yet" in
     new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
-
-      running(application) {
-
-        val request = FakeRequest(GET, addressRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
-      }
-    }
-
-
-  "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-
-    running(application) {
-
-      val request = FakeRequest(GET, addressRoute)
-      val result = route(application, request).value
+      val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
     }
+
+  "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+    val result = TestController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
   }
 
   "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+    val req = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(("value", "answer"))
+    val result = TestController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-    running(application) {
-
-      val request = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(("value", "answer"))
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-    }
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
   }
 
 }

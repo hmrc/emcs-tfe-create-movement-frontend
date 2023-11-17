@@ -17,43 +17,49 @@
 package controllers.sections.exportInformation
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeExportInformationNavigator
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class ExportInformationIndexControllerSpec extends SpecBase {
+class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val request = FakeRequest(GET, controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(testErn, testDraftId).url)
+
+    object TestController extends ExportInformationIndexController(
+      mockUserAnswersService,
+      new FakeExportInformationNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
+
+  }
+
   "ExportInformationIndexController" - {
-
     "when ExportInformationSection.isCompleted" - {
-      "must redirect to the CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ExportCustomsOfficePage, ""))).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
-      }
-    }
-
-    "must redirect to the export customs office controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.set(ExportCustomsOfficePage, ""))) {
+        val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
+    }
+
+    "must redirect to the export customs office controller" in new Fixture() {
+      val result = TestController.onPageLoad(testErn, testDraftId)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe
+        Some(controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url)
     }
   }
 }

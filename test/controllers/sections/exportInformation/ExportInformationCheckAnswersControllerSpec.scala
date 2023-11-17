@@ -17,74 +17,65 @@
 package controllers.sections.exportInformation
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckAnswersExportInformationHelper
 import models.UserAnswers
-import navigation.ExportInformationNavigator
 import navigation.FakeNavigators.FakeExportInformationNavigator
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.exportInformation.ExportInformationCheckAnswersHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.sections.exportInformation.ExportInformationCheckAnswersView
 
 class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckAnswersExportInformationHelper with MockUserAnswersService {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  class Fixtures(userAnswers: Option[UserAnswers]) {
+  class Fixtures(optUserAnswers: Option[UserAnswers]) {
 
     lazy val checkYourAnswersExportInformationRoute =
       controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
-    lazy val view = application.injector.instanceOf[ExportInformationCheckAnswersView]
+    lazy val view = app.injector.instanceOf[ExportInformationCheckAnswersView]
 
     val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ExportInformationNavigator].toInstance(new FakeExportInformationNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[ExportInformationCheckAnswersHelper].toInstance(mockExportInformationCheckAnswersHelper)
-      )
-      .build()
+    implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
+
+    object TestController extends ExportInformationCheckAnswersController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeExportInformationNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      mockExportInformationCheckAnswersHelper,
+      messagesControllerComponents,
+      view
+    )
+
   }
 
   "CheckYourAnswersExportInformation Controller" - {
-
     "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
+      MockCheckAnswersExportInformationHelper.summaryList().returns(list)
 
-      running(application) {
+      val result = TestController.onPageLoad(testErn, testDraftId)(request)
 
-        implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
-
-        MockCheckAnswersExportInformationHelper.summaryList().returns(list)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          list = list,
-          submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        list = list,
+        submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testDraftId)
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
+      val req = FakeRequest(POST, checkYourAnswersExportInformationRoute)
 
-      running(application) {
-        val request = FakeRequest(POST, checkYourAnswersExportInformationRoute)
+      val result = TestController.onSubmit(testErn, testDraftId)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
   }
 }

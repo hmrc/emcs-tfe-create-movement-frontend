@@ -54,7 +54,7 @@
             )
             .withHint(Hint(content = Text(messages("itemNetGrossMass.netMass.hint"))))
             .withSuffix(PrefixOrSuffix(content = Text(messages("unitOfMeasure.kilograms.short"))))
-            .withWidth(Fixed5)
+            .withWidth(Fixed10)
         )
 
         @govukInput(
@@ -64,7 +64,7 @@
             )
             .withHint(Hint(content = Text(messages("itemNetGrossMass.grossMass.hint"))))
             .withSuffix(PrefixOrSuffix(content = Text(messages("unitOfMeasure.kilograms.short"))))
-            .withWidth(Fixed5)
+            .withWidth(Fixed10)
         )
 
         @continueOrExit()

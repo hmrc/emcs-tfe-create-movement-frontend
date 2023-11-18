@@ -44,6 +44,14 @@ class NavigatorSpec extends SpecBase {
             routes.ConfirmationController.onPageLoad(testErn, testDraftId)
         }
       }
+      "for the Declaration page" - {
+
+        "must go to the Confirmation page" in {
+
+          navigator.nextPage(DeclarationPage, NormalMode, emptyUserAnswers) mustBe
+            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+        }
+      }
     }
 
     "in Check mode" - {

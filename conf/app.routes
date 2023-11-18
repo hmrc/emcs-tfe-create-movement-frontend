@@ -23,6 +23,9 @@ POST        /trader/:ern/draft/:draftId/check-answers         controllers.CheckY
 
 GET         /trader/:ern/draft/:draftId/confirmation          controllers.ConfirmationController.onPageLoad(ern: String, draftId: String)
 
+GET         /trader/:ern/draft/:draftId/declaration           controllers.DeclarationController.onPageLoad(ern: String, draftId: String)
+POST        /trader/:ern/draft/:draftId/declaration           controllers.DeclarationController.onSubmit(ern: String, draftId: String)
+
 ->          /                                                 info.Routes
 ->          /                                                 consignor.Routes
 ->          /                                                 consignee.Routes

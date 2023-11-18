@@ -1098,6 +1098,14 @@ itemGeographicalIndication.error.alphanumeric = Geographical indication must con
 itemGeographicalIndication.checkYourAnswersLabel = Designation of origin details
 itemGeographicalIndication.change.hidden = protected designation
 
+declaration.title = Declaration
+declaration.heading = Declaration
+declaration.caption = Draft Movement
+declaration.p1 = By submitting this draft movement you are confirming that:
+declaration.bullet1 = to the best of your knowledge, the details you are providing are correct
+declaration.bullet2 = you understand this movement cannot be recalled or changed after submission
+declaration.submit = Submit draft movement
+
 itemNetGrossMass.title = What is the net and gross mass of the {0}?
 itemNetGrossMass.heading = What is the net and gross mass of the {0}?
 itemNetGrossMass.netMass = Net mass

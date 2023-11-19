@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationChoiceMessages
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import models.GoodsTypeModel.Wine
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemGeographicalIndicationChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemGeographicalIndicationChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemGeographicalIndicationChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def radioHint(index: Int) = s".govuk-radios > div:nth-child($index) > div"

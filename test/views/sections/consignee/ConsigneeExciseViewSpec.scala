@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExciseMessages
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExciseViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Consignee Excise view" - {

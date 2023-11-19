@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationConsigneeDetailsMessages
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationConsigneeDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationConsigneeDetailsViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child(${index})"
     val errorField: String = "p.govuk-error-message"

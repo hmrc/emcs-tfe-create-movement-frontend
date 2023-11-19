@@ -16,7 +16,7 @@
 
 package views.sections.guarantor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.guarantor.GuarantorArrangerView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
+class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "GuarantorArrangerView" - {

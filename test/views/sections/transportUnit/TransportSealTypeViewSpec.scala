@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import forms.sections.transportUnit.TransportSealTypeFormProvider
 import models.requests.DataRequest
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportSealTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportSealTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportSealTypeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportSealTypeView" - {

@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
 import models.GoodsTypeModel.Beer
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemSmallIndependentProducerView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemSmallIndependentProducerViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

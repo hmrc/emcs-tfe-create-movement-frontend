@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
 import forms.sections.consignee.ConsigneeExportVatFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExportVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExportVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExportVatViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "ConsigneeExportVatView" - {

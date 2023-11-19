@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemAlcoholStrengthMessages
 import forms.sections.items.ItemAlcoholStrengthFormProvider
 import models.GoodsTypeModel.Beer
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemAlcoholStrengthView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemAlcoholStrengthViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemAlcoholStrengthViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

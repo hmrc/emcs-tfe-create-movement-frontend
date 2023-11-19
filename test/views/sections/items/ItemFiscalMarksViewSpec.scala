@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksMessages
 import forms.sections.items.ItemFiscalMarksFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemFiscalMarksView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemFiscalMarksViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemFiscalMarksViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "ItemFiscalMarksView" - {

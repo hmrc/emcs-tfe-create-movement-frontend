@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.UnitOfMeasureMessages
 import fixtures.messages.sections.items.ItemQuantityMessages
 import forms.sections.items.ItemQuantityFormProvider
@@ -31,7 +31,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemQuantityView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemQuantityViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemQuantityViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

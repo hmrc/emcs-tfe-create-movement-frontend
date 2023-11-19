@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -33,7 +33,7 @@ import viewmodels.checkAnswers.sections.consignee._
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"

@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import views.html.sections.destination.DestinationWarehouseVatView
 import views.{BaseSelectors, ViewBehaviours}
 
 
-class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationWarehouseVatViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "DestinationWarehouseVatView" - {

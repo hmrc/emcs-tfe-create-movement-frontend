@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentDescriptionMessages
 import forms.sections.documents.DocumentDescriptionFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.DocumentDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentDescriptionViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Business Name view" - {

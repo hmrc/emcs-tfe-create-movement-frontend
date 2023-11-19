@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.ImportNumberMessages
 import forms.sections.sad.ImportNumberFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.sad.ImportNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportNumberViewSpec extends ViewSpecBase with ViewBehaviours {
+class ImportNumberViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

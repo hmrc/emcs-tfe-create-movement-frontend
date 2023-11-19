@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchBusinessNameMessages
 import forms.sections.dispatch.DispatchBusinessNameFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchBusinessNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchBusinessNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Business Name view" - {

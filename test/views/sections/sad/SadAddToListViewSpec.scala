@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.SadAddToListMessages
 import forms.sections.sad.SadAddToListFormProvider
 import models.NormalMode
@@ -31,7 +31,7 @@ import viewmodels.helpers.SadAddToListHelper
 import views.html.sections.sad.SadAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
+class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
     val cardTitle: String = ".govuk-summary-card__title-wrapper > .govuk-summary-card__title"

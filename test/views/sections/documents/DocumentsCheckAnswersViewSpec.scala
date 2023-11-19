@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCheckAnswersMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import viewmodels.helpers.CheckYourAnswersDocumentsHelper
 import views.html.sections.documents.DocumentsCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentsCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   trait Fixture {

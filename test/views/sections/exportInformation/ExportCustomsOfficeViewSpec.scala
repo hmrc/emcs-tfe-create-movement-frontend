@@ -16,7 +16,7 @@
 
 package views.sections.exportInformation
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ExportCustomsOfficeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, euExport: Boolean) {
 

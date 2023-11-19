@@ -16,7 +16,7 @@
 
 package views.sections.consignor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignor.CheckYourAnswersConsignorMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"

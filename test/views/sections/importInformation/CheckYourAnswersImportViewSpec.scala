@@ -16,7 +16,7 @@
 
 package views.sections.importInformation
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.importInformation.CheckYourAnswersImportMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -31,7 +31,7 @@ import viewmodels.checkAnswers.sections.importInformation.ImportCustomsOfficeCod
 import views.html.sections.importInformation.CheckYourAnswersImportView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersImportViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersImportViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
 

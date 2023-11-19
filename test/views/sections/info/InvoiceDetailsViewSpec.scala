@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.sections.info.InvoiceDetailsFormProvider
 import models.requests.DataRequest
@@ -31,7 +31,7 @@ import views.{BaseSelectors, ViewBehaviours}
 
 import java.time.LocalDate
 
-class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
+class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
 

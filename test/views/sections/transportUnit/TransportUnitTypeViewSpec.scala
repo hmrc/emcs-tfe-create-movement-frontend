@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportUnitTypeView" - {

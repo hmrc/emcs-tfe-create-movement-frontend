@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.info.LocalReferenceNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
-class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
+class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
 
   val view = app.injector.instanceOf[LocalReferenceNumberView]
   val form = app.injector.instanceOf[LocalReferenceNumberFormProvider]

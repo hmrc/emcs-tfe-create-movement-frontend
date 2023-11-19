@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import views.html.sections.destination.DestinationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Destination Business Name view" - {

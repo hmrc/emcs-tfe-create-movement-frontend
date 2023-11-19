@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
@@ -31,7 +31,7 @@ import viewmodels.helpers.DocumentsAddToListHelper
 import views.html.sections.documents.DocumentsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with DocumentTypeFixtures {
+class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentTypeFixtures {
 
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"

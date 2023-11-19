@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.DeferredMovementMessages
 import forms.sections.info.DeferredMovementFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.info.DeferredMovementView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DeferredMovementViewSpec extends ViewSpecBase with ViewBehaviours {
+class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

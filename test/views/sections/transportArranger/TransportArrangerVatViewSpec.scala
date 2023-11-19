@@ -16,7 +16,7 @@
 
 package views.sections.transportArranger
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportArranger.TransportArrangerVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportArrangerVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(arranger: TransportArranger, lang: Lang) {
 

@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchWarehouseExciseMessages
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchWarehouseExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "DispatchWarehouseExciseView" - {

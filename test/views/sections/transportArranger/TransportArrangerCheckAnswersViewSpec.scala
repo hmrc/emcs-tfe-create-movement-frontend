@@ -16,7 +16,7 @@
 
 package views.sections.transportArranger
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.sections.transportArranger.TransportArrangerCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportArrangerCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

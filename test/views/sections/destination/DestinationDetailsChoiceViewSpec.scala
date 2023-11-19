@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationDetailsChoiceMessages
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationDetailsChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationDetailsChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationDetailsChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

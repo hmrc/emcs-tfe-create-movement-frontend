@@ -16,7 +16,7 @@
 
 package views.sections.journeyType
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.journeyType.HowMovementTransportedView
 import views.{BaseSelectors, ViewBehaviours}
 
-class HowMovementTransportedViewSpec extends ViewSpecBase with ViewBehaviours {
+class HowMovementTransportedViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

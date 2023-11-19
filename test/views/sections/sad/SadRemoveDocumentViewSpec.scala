@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.SadRemoveDocumentMessages
 import forms.sections.sad.SadRemoveDocumentFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.sad.SadRemoveDocumentView
 import views.{BaseSelectors, ViewBehaviours}
 
-class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
+class SadRemoveDocumentViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "SadRemoveDocumentView" - {

@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
 import forms.sections.items.ItemGeographicalIndicationFormProvider
 import models.GoodsTypeModel.Beer
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemGeographicalIndicationView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemGeographicalIndicationViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemGeographicalIndicationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

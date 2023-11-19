@@ -17,137 +17,105 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import controllers.sections.importInformation.ImportCustomsOfficeCodeController
+import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import forms.sections.items.CommercialDescriptionFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
-import models.{Index, NormalMode}
-import navigation.FakeNavigators.FakeItemsNavigator
+import models.{Index, NormalMode, UserAnswers}
+import navigation.FakeNavigators.{FakeImportInformationNavigator, FakeItemsNavigator}
 import navigation.ItemsNavigator
 import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
 import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
 import services.UserAnswersService
+import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 import views.html.sections.items.CommercialDescriptionView
 
 import scala.concurrent.Future
 
-class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService {
+class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
-  val formProvider = new CommercialDescriptionFormProvider()
-  val form = formProvider()
+  def itemCommercialDescriptionSubmitAction(idx: Index = testIndex1): Call =
+    routes.CommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-  lazy val commercialDescriptionRoute = routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
-  def itemCommercialDescriptionSubmitAction(idx: Index = testIndex1) = routes.CommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
+  class Test(val userAnswers: Option[UserAnswers]) {
+    lazy val formProvider = new CommercialDescriptionFormProvider()
+    lazy val form = formProvider()
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    val view = app.injector.instanceOf[CommercialDescriptionView]
+
+    lazy val controller = new CommercialDescriptionController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
+  }
 
   "CommercialDescription Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))).build()
-
-      running(application) {
-        val request = FakeRequest(GET, commercialDescriptionRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[CommercialDescriptionView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
+      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), "W200")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val userAnswers = emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), "W200")
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, commercialDescriptionRoute)
-
-        val view = application.injector.instanceOf[CommercialDescriptionView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"),itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill("answer"), itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
-          .overrides(
-            bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, commercialDescriptionRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+    )) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))).build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, commercialDescriptionRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[CommercialDescriptionView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm,itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, commercialDescriptionRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, commercialDescriptionRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

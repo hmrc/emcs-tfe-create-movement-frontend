@@ -16,7 +16,7 @@
 
 package views.sections.guarantor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorVatMessages
 import forms.sections.guarantor.GuarantorVatFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.guarantor.GuarantorVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "GuarantorVatView" - {

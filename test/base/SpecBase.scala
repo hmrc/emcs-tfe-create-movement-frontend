@@ -17,31 +17,23 @@
 package base
 
 import config.AppConfig
-import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
-import connectors.referenceData._
-import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
 import controllers.actions._
-import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
+import controllers.actions.predraft.PreDraftDataRequiredAction
 import fixtures.BaseFixtures
 import handlers.ErrorHandler
+import models.UserAnswers
 import models.requests.{DataRequest, UserRequest}
-import models.{TraderKnownFacts, UserAnswers}
+import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.Helpers.stubPlayBodyParsers
-import repositories.SessionRepository
-import repository.{FakePlayMongoComponent, FakeSessionRepository}
-import uk.gov.hmrc.mongo.MongoComponent
 
-trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
+trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
 
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -51,6 +43,7 @@ trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValue
   lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
 
   def messages(request: Request[_]): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+
   def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
@@ -61,28 +54,4 @@ trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValue
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
     DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
-
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
-                                   optTraderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .configure(
-        "play.filters.csp.nonce.enabled" -> false
-      )
-      .overrides(
-        bind[AuthAction].to[FakeAuthAction],
-        bind[UserAllowListAction].to[FakeUserAllowListAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
-        bind[PreDraftDataRetrievalAction].toInstance(new FakePreDraftRetrievalAction(userAnswers, optTraderKnownFacts)),
-        bind[UserAnswersConnector].toInstance(new FakeUserAnswersConnector()),
-        bind[GetCnCodeInformationConnector].toInstance(new FakeGetCnCodeInformationConnector()),
-        bind[GetDocumentTypesConnector].toInstance(new FakeGetDocumentTypesConnector()),
-        bind[GetTraderKnownFactsConnector].toInstance(new FakeGetTraderKnownFactsConnector()),
-        bind[GetExciseProductCodesConnector].toInstance(new FakeGetExciseProductCodesConnector()),
-        bind[GetBulkPackagingTypesConnector].toInstance(new FakeGetBulkPackagingTypesConnector()),
-        bind[GetMemberStatesConnector].toInstance(new FakeGetMemberStatesConnector()),
-        bind[UserAllowListConnector].toInstance(new FakeUserAllowListConnector()),
-        bind[SessionRepository].toInstance(new FakeSessionRepository()),
-        bind[GetCommodityCodesConnector].toInstance(new FakeGetCommodityCodesConnector()),
-        bind[MongoComponent].to[FakePlayMongoComponent].eagerly()
-      )
 }

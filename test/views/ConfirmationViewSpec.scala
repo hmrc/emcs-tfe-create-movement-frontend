@@ -16,7 +16,7 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.ConfirmationMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,7 +26,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ConfirmationView
 
-class ConfirmationViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

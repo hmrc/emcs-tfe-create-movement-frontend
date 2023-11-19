@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.InformationCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.sections.info.InformationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class InformationCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

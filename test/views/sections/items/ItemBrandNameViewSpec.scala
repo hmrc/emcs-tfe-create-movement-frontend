@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.sections.items.ItemBrandNameFormProvider
 import models.GoodsTypeModel.Beer
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemBrandNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemBrandNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemBrandNameViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

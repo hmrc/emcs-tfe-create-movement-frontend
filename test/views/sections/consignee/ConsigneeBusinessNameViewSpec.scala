@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeBusinessNameMessages
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeBusinessNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeBusinessNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Deferred Movement view" - {

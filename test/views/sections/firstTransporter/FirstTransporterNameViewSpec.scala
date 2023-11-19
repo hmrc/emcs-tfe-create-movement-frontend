@@ -16,7 +16,7 @@
 
 package views.sections.firstTransporter
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterNameMessages
 import forms.sections.firstTransporter.FirstTransporterNameFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.firstTransporter.FirstTransporterNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class FirstTransporterNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class FirstTransporterNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Deferred Movement view" - {

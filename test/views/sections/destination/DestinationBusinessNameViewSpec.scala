@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationBusinessNameMessages
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationBusinessNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Destination Business Name view" - {

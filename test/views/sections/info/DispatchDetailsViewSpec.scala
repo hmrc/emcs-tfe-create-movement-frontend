@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.DispatchDetailsMessages
 import forms.sections.info.DispatchDetailsFormProvider
 import models.requests.DataRequest
@@ -29,7 +29,7 @@ import utils.DateTimeUtils
 import views.html.sections.info.DispatchDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
+class DispatchDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
 

@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import forms.sections.items.ItemExciseProductCodeFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemExciseProductCodeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemExciseProductCodeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#excise-product-code > option:nth-child($nthChild)"

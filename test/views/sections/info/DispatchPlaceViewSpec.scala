@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.DispatchPlaceMessages
 import forms.sections.info.DispatchPlaceFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.info.DispatchPlaceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchPlaceViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchPlaceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

@@ -16,7 +16,7 @@
 
 package views.sections.firstTransporter
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterVatMessages
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.firstTransporter.FirstTransporterVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class FirstTransporterVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class FirstTransporterVatViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
 

@@ -16,13 +16,13 @@
 
 package views.components
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.TaskListStatusMessages
 import org.jsoup.Jsoup
 import play.api.i18n.{Messages, MessagesApi}
 import viewmodels.taskList._
 
-class TaskListSpec extends ViewSpecBase {
+class TaskListSpec extends SpecBase {
 
   "TaskList" - {
 

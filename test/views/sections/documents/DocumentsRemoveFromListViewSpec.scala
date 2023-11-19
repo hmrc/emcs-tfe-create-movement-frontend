@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsRemoveFromListMessages
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.DocumentsRemoveFromListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsRemoveFromListViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentsRemoveFromListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Documents Remove from List view" - {

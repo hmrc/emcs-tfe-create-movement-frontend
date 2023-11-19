@@ -16,7 +16,7 @@
 
 package views.sections.importInformation
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.importInformation.ImportCustomsOfficeCodeMessages
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import models.requests.DataRequest
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportCustomsOfficeCodeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, userType: UserType) {
 

@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import views.html.sections.dispatch.DispatchCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Business Name view" - {

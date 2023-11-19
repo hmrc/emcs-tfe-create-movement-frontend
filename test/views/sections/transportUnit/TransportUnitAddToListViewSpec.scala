@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import models.NormalMode
@@ -33,7 +33,7 @@ import viewmodels.helpers.TransportUnitsAddToListHelper
 import views.html.sections.transportUnit.TransportUnitsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
     val cardTitle: String = ".govuk-summary-card__title-wrapper > .govuk-summary-card__title"

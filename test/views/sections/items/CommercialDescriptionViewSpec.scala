@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.sections.items.CommercialDescriptionFormProvider
 import models.GoodsTypeModel.{Beer, Energy, Wine}
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.CommercialDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CommercialDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
+class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

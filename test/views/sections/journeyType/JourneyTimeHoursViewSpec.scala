@@ -16,7 +16,7 @@
 
 package views.sections.journeyType
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.journeyType.JourneyTimeHoursMessages
 import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.journeyType.JourneyTimeHoursView
 import views.{BaseSelectors, ViewBehaviours}
 
-class JourneyTimeHoursViewSpec extends ViewSpecBase with ViewBehaviours {
+class JourneyTimeHoursViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

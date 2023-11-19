@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentReferenceMessages.English
 import forms.sections.documents.DocumentReferenceFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.DocumentReferenceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentReferenceViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentReferenceViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "DocumentReferenceView" - {

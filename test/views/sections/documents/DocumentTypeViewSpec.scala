@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.sections.documents.DocumentTypeFormProvider
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentTypeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#document-type > option:nth-child($nthChild)"
   }

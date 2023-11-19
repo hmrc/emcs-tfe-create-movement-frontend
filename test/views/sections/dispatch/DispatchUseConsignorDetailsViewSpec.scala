@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchUseConsignorDetailsMessages
 import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchUseConsignorDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchUseConsignorDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchUseConsignorDetailsViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Use Consignor Details view" - {

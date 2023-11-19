@@ -16,7 +16,7 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.CheckYourAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

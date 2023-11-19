@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitIdentityMessages
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
 import models.NormalMode
@@ -31,7 +31,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitIdentityView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitIdentityViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitIdentityViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child(${index})"
     val errorField: String = "p.govuk-error-message"

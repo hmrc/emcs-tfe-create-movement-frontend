@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.CountryMessages
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemDegreesPlatoView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemDegreesPlatoViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

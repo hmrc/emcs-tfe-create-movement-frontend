@@ -16,14 +16,14 @@
 
 package views.components
 
-import base.ViewSpecBase
+import base.SpecBase
 import config.AppConfig
 import fixtures.messages.ActiveTraderMessages
 import org.jsoup.Jsoup
 import play.api.i18n.{Messages, MessagesApi}
 import viewmodels.traderInfo.TraderInfo
 
-class ActiveTraderSpec extends ViewSpecBase {
+class ActiveTraderSpec extends SpecBase {
 
   "ActiveTrader" - {
 

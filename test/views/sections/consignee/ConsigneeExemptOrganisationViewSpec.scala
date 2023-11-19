@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExemptOrganisationMessages
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import models.NormalMode
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExemptOrganisationViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
 

@@ -26,7 +26,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import javax.inject.Inject
 
 class InfoIndexController @Inject()(override val messagesApi: MessagesApi,
-                                    authAction: AuthAction,
                                     val userAllowList: UserAllowListAction,
                                     val getData: DataRetrievalAction,
                                     val requireData: DataRequiredAction,
@@ -35,7 +34,7 @@ class InfoIndexController @Inject()(override val messagesApi: MessagesApi,
                                     val controllerComponents: MessagesControllerComponents) extends BaseController with AuthActionHelper {
 
   def onPreDraftPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowList) { implicit request =>
+    (auth(ern) andThen userAllowList) { implicit request =>
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
         Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, NormalMode))
       } else {

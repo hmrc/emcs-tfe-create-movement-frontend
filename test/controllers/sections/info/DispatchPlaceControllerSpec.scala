@@ -17,17 +17,17 @@
 package controllers.sections.info
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.DispatchPlaceFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchPlace
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
-import navigation.InformationNavigator
 import pages.sections.info.DispatchPlacePage
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.{PreDraftService, UserAnswersService}
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.info.DispatchPlaceView
 
 import scala.concurrent.Future
@@ -35,96 +35,83 @@ import scala.concurrent.Future
 class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val application =
-      applicationBuilder(userAnswers)
-        .overrides(
-          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[PreDraftService].toInstance(mockPreDraftService)
-        )
-        .build()
+    lazy val formProvider = new DispatchPlaceFormProvider()
+    lazy val form = formProvider()
 
-    val view = application.injector.instanceOf[DispatchPlaceView]
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val view = app.injector.instanceOf[DispatchPlaceView]
+
+    lazy val controller = new DispatchPlaceController(
+      messagesApi,
+      mockPreDraftService,
+      mockUserAnswersService,
+      new FakeInfoNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      preDraftDataRequiredAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      fakeUserAllowListAction
+    )
   }
 
-  val formProvider = new DispatchPlaceFormProvider()
-  val form = formProvider()
-
+  val northernIrelandUserAnswers: UserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
+  val greatBritainUserAnswers: UserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
 
   "DispatchPlace Controller" - {
 
-    ".onPageLoad()" - {
+    ".onPreDraftPageLoad()" - {
 
       "with a Northern Ireland ERN" - {
-        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
-
-        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
-          running(application) {
+          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode)(request)
 
-            val request = FakeRequest(GET, dispatchPlaceRoute)
-            val result = route(application, request).value
-
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
-          }
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
         }
       }
 
       "with a Great Britain ERN" - {
-        val greatBritainUserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
-
-        lazy val dispatchPlaceRoute = controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url
         lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode).url
 
         "must redirect to the destination type page (CAM-INFO08)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
-          running(application) {
+          val result = controller.onPreDraftPageLoad(testGreatBritainErn, NormalMode)(request)
 
-            val request = FakeRequest(GET, dispatchPlaceRoute)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(destinationTypeRoute)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(destinationTypeRoute)
         }
       }
     }
 
-    ".onSubmit()" - {
+    ".onPreDraftSubmit()" - {
 
       "with a Northern Ireland ERN" - {
-        val northernIrelandUserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
-
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return a Bad Request and errors when invalid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
-          running(application) {
+          val boundForm = form.bind(Map("value" -> ""))
+          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-            val request = FakeRequest(POST, dispatchPlaceSubmitAction.url).withFormUrlEncodedBody(("value", ""))
-
-            val boundForm = form.bind(Map("value" -> ""))
-            val result = route(application, request).value
-
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
-          }
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
         }
 
         "must redirect to the next page when valid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
-          running(application) {
-            val validDispatchPlaceValue = DispatchPlace.values.head
+          val validDispatchPlaceValue = DispatchPlace.values.head
 
-            MockPreDraftService.set(northernIrelandUserAnswers.set(DispatchPlacePage, validDispatchPlaceValue )).returns(Future.successful(true))
+          MockPreDraftService.set(northernIrelandUserAnswers.set(DispatchPlacePage, validDispatchPlaceValue)).returns(Future.successful(true))
 
-            val request = FakeRequest(POST, dispatchPlaceSubmitAction.url).withFormUrlEncodedBody(("value", validDispatchPlaceValue.toString))
-            val result = route(application, request).value
+          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)(request.withFormUrlEncodedBody(("value", validDispatchPlaceValue.toString)))
 
-            status(result) mustEqual SEE_OTHER
+          status(result) mustEqual SEE_OTHER
 
-            redirectLocation(result).value mustEqual testOnwardRoute.url
-          }
+          redirectLocation(result).value mustEqual testOnwardRoute.url
         }
 
       }

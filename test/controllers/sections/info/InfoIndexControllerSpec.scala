@@ -33,11 +33,29 @@
 package controllers.sections.info
 
 import base.SpecBase
-import models.NormalMode
-import play.api.test.FakeRequest
+import controllers.actions.FakeDataRetrievalAction
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeInfoNavigator
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
 class InfoIndexControllerSpec extends SpecBase {
+
+  class Test(userAnswers: Option[UserAnswers]) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new InfoIndexController(
+      messagesApi,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      new FakeInfoNavigator(testOnwardRoute),
+      fakeAuthAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
 
   "InfoIndex Controller" - {
 
@@ -45,55 +63,34 @@ class InfoIndexControllerSpec extends SpecBase {
 
       "with a Northern Ireland Warehouse Keeper ERN" - {
 
-        "must redirect to the Dispatch place page (CAM-INFO01)" in {
+        "must redirect to the Dispatch place page (CAM-INFO01)" in new Test(None) {
+          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn)(request)
 
-          val application = applicationBuilder(userAnswers = None).build()
-
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe
-              Some(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode).url)
         }
       }
 
       "with any other ERN" - {
 
-        "must redirect to the Destination Type page (CAM-INFO08)" in {
+        "must redirect to the Destination Type page (CAM-INFO08)" in new Test(None) {
+          val result = controller.onPreDraftPageLoad(testGreatBritainErn)(request)
 
-          val application = applicationBuilder(userAnswers = None).build()
-
-          running(application) {
-
-            val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testGreatBritainErn).url)
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe
-              Some(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testGreatBritainErn, NormalMode).url)
         }
       }
     }
 
     "post-draft" - {
-      "must redirect to CYA" in {
+      "must redirect to CYA" in new Test(Some(emptyUserAnswers)) {
+        val result = controller.onPageLoad(testGreatBritainErn, testDraftId)(request)
 
-        val application = applicationBuilder(Some(emptyUserAnswers)).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.info.routes.InfoIndexController.onPageLoad(testGreatBritainErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testGreatBritainErn, testDraftId).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testGreatBritainErn, testDraftId).url)
       }
     }
   }

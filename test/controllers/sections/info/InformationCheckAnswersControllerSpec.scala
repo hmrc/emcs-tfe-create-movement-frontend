@@ -17,19 +17,18 @@
 package controllers.sections.info
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.predraft.FakePreDraftRetrievalAction
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import mocks.viewmodels.MockInformationCheckAnswersHelper
 import models.UserAnswers
 import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
 import navigation.FakeNavigators.FakeInfoNavigator
-import navigation.InformationNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.{PreDraftService, UserAnswersService}
+import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.info.InformationCheckAnswersHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.sections.info.InformationCheckAnswersView
 
@@ -41,26 +40,29 @@ class InformationCheckAnswersControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockPreDraftService {
 
-  lazy val checkYourAnswersPreDraftRoute = controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(testErn).url
-  lazy val checkYourAnswersPreDraftSubmitRoute = controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn).url
-  lazy val checkYourAnswersRoute = controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
-  lazy val checkYourAnswersSubmitRoute = controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(testErn, testDraftId).url
-
   class Fixtures(userAnswers: Option[UserAnswers]) {
-
-
-    lazy val view = application.injector.instanceOf[InformationCheckAnswersView]
 
     val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
-        bind[InformationCheckAnswersHelper].toInstance(MockInformationCheckAnswersHelper),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[PreDraftService].toInstance(mockPreDraftService)
-      )
-      .build()
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val view = app.injector.instanceOf[InformationCheckAnswersView]
+
+    lazy val controller = new InformationCheckAnswersController(
+      messagesApi,
+      mockPreDraftService,
+      mockUserAnswersService,
+      new FakeInfoNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      preDraftDataRequiredAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      MockInformationCheckAnswersHelper,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
   }
 
   "InformationCheckAnswers Controller" - {
@@ -69,66 +71,46 @@ class InformationCheckAnswersControllerSpec extends SpecBase
 
     "pre-draft" - {
       "must return OK and the correct view for a GET" in new Fixtures(Some(userAnswers)) {
-        running(application) {
+        MockCheckAnswersJourneyTypeHelper.summaryList(deferredMovement = true).returns(list)
 
-          MockCheckAnswersJourneyTypeHelper.summaryList(deferredMovement = true).returns(list)
+        val result = controller.onPreDraftPageLoad(testErn)(request)
 
-          implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersPreDraftRoute))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            list = list,
-            submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn)
-          )(dataRequest(request), messages(request)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          list = list,
+          submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn)
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to the next page when submitting the page" in new Fixtures(Some(userAnswers)) {
-        running(application) {
+        MockUserAnswersService.set().returns(Future.successful(userAnswers))
+        MockPreDraftService.clear(testErn, testSessionId).returns(Future.successful(true))
 
-          MockUserAnswersService.set().returns(Future.successful(userAnswers))
-          MockPreDraftService.clear(testErn, testSessionId).returns(Future.successful(true))
+        val result = controller.onPreDraftSubmit(testErn)(request)
 
-          val request = FakeRequest(POST, checkYourAnswersPreDraftSubmitRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 
     "post-draft" - {
       "must return OK and the correct view for a GET" in new Fixtures(Some(userAnswers)) {
-        running(application) {
+        MockCheckAnswersJourneyTypeHelper.summaryList(deferredMovement = true).returns(list)
 
-          MockCheckAnswersJourneyTypeHelper.summaryList(deferredMovement = true).returns(list)
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-          implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersRoute))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            list = list,
-            submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(testErn, testDraftId)
-          )(dataRequest(request), messages(request)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          list = list,
+          submitAction = controllers.sections.info.routes.InformationCheckAnswersController.onSubmit(testErn, testDraftId)
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to the next page when submitting the page" in new Fixtures(Some(userAnswers)) {
-        running(application) {
+        val result = controller.onSubmit(testErn, testDraftId)(request)
 
-          val request = FakeRequest(POST, checkYourAnswersSubmitRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
   }

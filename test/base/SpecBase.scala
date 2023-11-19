@@ -21,7 +21,7 @@ import connectors.emcsTfe.{FakeUserAnswersConnector, UserAnswersConnector}
 import connectors.referenceData._
 import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnector}
 import controllers.actions._
-import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
+import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import fixtures.BaseFixtures
 import handlers.ErrorHandler
 import models.requests.{DataRequest, UserRequest}
@@ -46,6 +46,7 @@ trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValue
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   lazy val messagesControllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val preDraftDataRequiredAction: PreDraftDataRequiredAction = app.injector.instanceOf[PreDraftDataRequiredAction]
   lazy val dataRequiredAction: DataRequiredAction = app.injector.instanceOf[DataRequiredAction]
   lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
 

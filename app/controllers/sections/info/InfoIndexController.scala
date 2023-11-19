@@ -17,19 +17,15 @@
 package controllers.sections.info
 
 import controllers.BaseController
-import controllers.actions.{AuthAction, AuthActionHelper, DataRequiredAction, DataRetrievalAction, UserAllowListAction}
+import controllers.actions._
 import models.{NormalMode, NorthernIrelandWarehouseKeeper}
-import navigation.InformationNavigator
-import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
 
-class InfoIndexController @Inject()(override val messagesApi: MessagesApi,
-                                    val userAllowList: UserAllowListAction,
+class InfoIndexController @Inject()(val userAllowList: UserAllowListAction,
                                     val getData: DataRetrievalAction,
                                     val requireData: DataRequiredAction,
-                                    val navigator: InformationNavigator,
                                     val auth: AuthAction,
                                     val controllerComponents: MessagesControllerComponents) extends BaseController with AuthActionHelper {
 

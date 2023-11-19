@@ -28,15 +28,15 @@ case class DataRequest[A](request: UserRequest[A],
                           userAnswers: UserAnswers,
                           traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging {
 
-  val internalId: String = request.internalId
-  val ern: String = request.ern
+  lazy val internalId: String = request.internalId
+  lazy val ern: String = request.ern
 
-  val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
+  lazy val isNorthernIrelandErn: Boolean = request.isNorthernIrelandErn
 
-  val userTypeFromErn: UserType = UserType(ern)
+  lazy val userTypeFromErn: UserType = request.userTypeFromErn
 
-  val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
-  val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+  lazy val isWarehouseKeeper: Boolean = request.isWarehouseKeeper
+  lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
 
   def dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage) match {
     case Some(dp) if dp == GreatBritain => Some(GreatBritain)

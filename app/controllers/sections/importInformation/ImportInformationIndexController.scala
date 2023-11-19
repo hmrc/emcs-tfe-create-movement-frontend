@@ -16,32 +16,28 @@
 
 package controllers.sections.importInformation
 
-import controllers.BaseNavigationController
+import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
-import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportInformationSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersService
 
 import javax.inject.Inject
 
 class ImportInformationIndexController @Inject()(
-                                                  override val userAnswersService: UserAnswersService,
-                                                  override val navigator: ImportInformationNavigator,
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
                                                   override val userAllowList: UserAllowListAction,
                                                   val controllerComponents: MessagesControllerComponents
-                                                ) extends BaseNavigationController with AuthActionHelper {
+                                                ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       if (ImportInformationSection.isCompleted) {
         Redirect(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(ern, draftId))
       } else {
-        Redirect(controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern,draftId, NormalMode))
+        Redirect(controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 

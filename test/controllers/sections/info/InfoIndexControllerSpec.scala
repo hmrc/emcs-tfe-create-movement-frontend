@@ -35,7 +35,6 @@ package controllers.sections.info
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeInfoNavigator
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -47,11 +46,9 @@ class InfoIndexControllerSpec extends SpecBase {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new InfoIndexController(
-      messagesApi,
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeInfoNavigator(testOnwardRoute),
       fakeAuthAction,
       Helpers.stubMessagesControllerComponents()
     )

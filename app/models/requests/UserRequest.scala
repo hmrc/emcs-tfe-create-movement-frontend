@@ -27,21 +27,11 @@ case class UserRequest[A](request: Request[A],
                           sessionId: String,
                           hasMultipleErns: Boolean) extends WrappedRequest[A](request) with Logging {
 
-  val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
+  lazy val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
 
-  private val ERN_PREFIX_LENGTH = 4
+  lazy val userTypeFromErn: UserType = UserType(ern)
 
-  val userTypeFromErn: UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
-    case "GBRC" => GreatBritainRegisteredConsignor
-    case "XIRC" => NorthernIrelandRegisteredConsignor
-    case "GBWK" => GreatBritainWarehouseKeeper
-    case "XIWK" => NorthernIrelandWarehouseKeeper
-    case "XI00" => NorthernIrelandWarehouse
-    case "GB00" => GreatBritainWarehouse
-    case _ => Unknown
-  }
-
-  val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
-  val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+  lazy val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
+  lazy val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
 
 }

@@ -25,7 +25,7 @@ import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 
@@ -47,44 +47,47 @@ class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: Mess
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        userType match {
+        getValidUserType match {
           case Some(user) =>
             renderView(Ok, fillForm(ImportCustomsOfficeCodePage, formProvider()), mode, user)
           case _ =>
-            Future(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+            redirectToTaskList()
         }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            userType match {
-              case Some(user) =>
+        getValidUserType match {
+          case Some(user) =>
+            formProvider().bindFromRequest().fold(
+              formWithErrors =>
                 renderView(BadRequest, formWithErrors, mode, user)
-              case _ =>
-                Future(Redirect(controllers.error.routes.ErrorController.unauthorised()))
-            },
-          customsOfficeCode =>
-            saveAndRedirect(ImportCustomsOfficeCodePage, customsOfficeCode, mode)
-        )
+              ,
+              customsOfficeCode =>
+                saveAndRedirect(ImportCustomsOfficeCodePage, customsOfficeCode, mode)
+            )
+          case _ =>
+            redirectToTaskList()
+        }
     }
 
-  def renderView(status: Status, form: Form[_], mode: Mode, user: UserType)(implicit request: DataRequest[_]) = {
-        Future.successful(status(view(
-          form = form,
-          action = routes.ImportCustomsOfficeCodeController.onSubmit(request.ern, request.draftId, mode),
-          userType = user
-        )))
-    }
+  private def renderView(status: Status, form: Form[_], mode: Mode, user: UserType)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(
+      form = form,
+      action = routes.ImportCustomsOfficeCodeController.onSubmit(request.ern, request.draftId, mode),
+      userType = user
+    )))
+
+  private def redirectToTaskList()(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
 
 
-  private def userType(implicit request: DataRequest[_]): Option[UserType] =
-    if (request.request.isRegisteredConsignor && request.request.isNorthernIrelandErn) {
+  private def getValidUserType(implicit request: DataRequest[_]): Option[UserType] =
+    if (request.isRegisteredConsignor && request.isNorthernIrelandErn) {
       Some(NorthernIrelandRegisteredConsignor)
     }
-    else if (request.request.isRegisteredConsignor) {
+    else if (request.isRegisteredConsignor) {
       Some(GreatBritainRegisteredConsignor)
     }
     else {

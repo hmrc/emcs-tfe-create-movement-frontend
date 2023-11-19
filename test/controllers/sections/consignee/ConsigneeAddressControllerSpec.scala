@@ -38,7 +38,6 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val onwardRoute: Call = Call("GET", "/foo")
     val formProvider: AddressFormProvider = new AddressFormProvider()
     val form: Form[UserAddress] = formProvider()
     lazy val view: AddressView = app.injector.instanceOf[AddressView]
@@ -100,7 +99,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

@@ -17,91 +17,83 @@
 package controllers.sections.items
 
 import base.SpecBase
-import fixtures.BaseFixtures
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemExciseProductCodeFormProvider
-import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
-import models.{Index, NormalMode, UserAnswers}
+import mocks.services.{MockGetCnCodeInformationService, MockGetExciseProductCodesService, MockUserAnswersService}
+import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import services.{GetExciseProductCodesService, UserAnswersService}
+import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 
 import scala.concurrent.Future
 
-class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersService with MockGetExciseProductCodesService with BaseFixtures {
+class ItemExciseProductCodeControllerSpec extends SpecBase
+  with MockUserAnswersService
+  with MockGetExciseProductCodesService
+  with MockGetCnCodeInformationService {
 
-  def onwardRoute = Call("GET", "/foo")
+  val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
-  val action = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
-  val sampleEPCs = Seq(beerExciseProductCode, wineExciseProductCode)
+  class Fixture(val userAnswers: Option[UserAnswers]) {
+    lazy val formProvider = new ItemExciseProductCodeFormProvider()
+    lazy val form = formProvider.apply(sampleEPCs)
 
-  val form = new ItemExciseProductCodeFormProvider().apply(sampleEPCs)
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  def exciseProductCodeRoute(index: Index = testIndex1): String = routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, index, NormalMode).url
+    lazy val view = app.injector.instanceOf[ItemExciseProductCodeView]
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
-    val application = applicationBuilder(userAnswers = userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[GetExciseProductCodesService].toInstance(mockGetExciseProductCodesService)
-      )
-      .build()
+    lazy val controller = new ItemExciseProductCodeController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      mockGetExciseProductCodesService,
+      view,
+      mockGetCnCodeInformationService
+    )
 
-    val sampleEPCsSelectOptions = SelectItemHelper.constructSelectItems(
+    val sampleEPCsSelectOptions: Seq[SelectItem] = SelectItemHelper.constructSelectItems(
       selectOptions = sampleEPCs,
       defaultTextMessageKey = "itemExciseProductCode.select.defaultValue")(messages(FakeRequest()))
   }
 
   "ItemExciseProductCode Controller" - {
 
-    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(
-      Some(emptyUserAnswers)
-    ) {
-      running(application) {
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
-        val request = FakeRequest(GET, exciseProductCodeRoute(testIndex2))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(
-      Some(emptyUserAnswers)
-    ) {
-      running(application) {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(emptyUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
 
-        val request = FakeRequest(POST, exciseProductCodeRoute(testIndex2)).withFormUrlEncodedBody("excise-product-code" -> "B000")
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
     }
 
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      running(application) {
-        val request = FakeRequest(GET, exciseProductCodeRoute())
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemExciseProductCodeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -110,22 +102,16 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      running(application) {
+      val sampleEPCsSelectOptionsWithBeerSelected = SelectItemHelper.constructSelectItems(
+        selectOptions = sampleEPCs,
+        defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
+        existingAnswer = Some("B000"))(messages(request))
 
-        val request = FakeRequest(GET, exciseProductCodeRoute())
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val sampleEPCsSelectOptionsWithBeerSelected = SelectItemHelper.constructSelectItems(
-          selectOptions = sampleEPCs,
-          defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
-          existingAnswer = Some("B000"))(messages(request))
-
-        val view = application.injector.instanceOf[ItemExciseProductCodeView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
@@ -136,66 +122,38 @@ class ItemExciseProductCodeControllerSpec extends SpecBase with MockUserAnswersS
         emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
       ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, exciseProductCodeRoute())
-            .withFormUrlEncodedBody(("excise-product-code", "W200"))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
-      
-      running(application) {
-        val request =
-          FakeRequest(POST, exciseProductCodeRoute())
-            .withFormUrlEncodedBody(("excise-product-code", ""))
 
-        val boundForm = form.bind(Map("excise-product-code" -> ""))
+      val boundForm = form.bind(Map("excise-product-code" -> ""))
 
-        val view = application.injector.instanceOf[ItemExciseProductCodeView]
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "")))
 
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual
+        view(boundForm, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-      running(application) {
-        val request = FakeRequest(GET, exciseProductCodeRoute())
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-      
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, exciseProductCodeRoute())
-            .withFormUrlEncodedBody(("excise-product-code", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

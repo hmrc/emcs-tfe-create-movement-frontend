@@ -26,7 +26,7 @@ import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit._
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportSealChoiceView
@@ -43,8 +43,6 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    def onwardRoute = Call("GET", "/foo")
-
     lazy val transportSealChoiceOnSubmit =
       controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
@@ -54,7 +52,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
-      new FakeTransportUnitNavigator(onwardRoute),
+      new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
@@ -115,7 +113,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must cleanse the transport seal type (TU04) when answering no" in new Setup(Some(
@@ -134,7 +132,7 @@ class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersSer
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
 
     }
 

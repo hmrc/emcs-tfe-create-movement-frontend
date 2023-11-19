@@ -18,7 +18,6 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
-import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
@@ -43,8 +42,7 @@ class ItemGeographicalIndicationChoiceController @Inject()(
                                        formProvider: ItemGeographicalIndicationChoiceFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: ItemGeographicalIndicationChoiceView,
-                                       override val cnCodeInformationService: GetCnCodeInformationService,
-                                       override val errorHandler: ErrorHandler
+                                       override val cnCodeInformationService: GetCnCodeInformationService
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

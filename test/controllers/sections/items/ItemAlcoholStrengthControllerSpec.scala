@@ -17,145 +17,120 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemAlcoholStrengthFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemAlcoholStrengthPage, ItemExciseProductCodePage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemAlcoholStrengthView
 
 import scala.concurrent.Future
 
-class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersService {
+class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  val formProvider = new ItemAlcoholStrengthFormProvider()
-  val form = formProvider()
-
-  def itemAlcoholStrengthRoute(idx: Index = testIndex1) = routes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
   def itemAlcoholStrengthSubmitAction(idx: Index = testIndex1) = routes.ItemAlcoholStrengthController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
+    lazy val formProvider = new ItemAlcoholStrengthFormProvider()
+    lazy val form = formProvider()
 
-    val view = application.injector.instanceOf[ItemAlcoholStrengthView]
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val view = app.injector.instanceOf[ItemAlcoholStrengthView]
+
+    lazy val controller = new ItemAlcoholStrengthController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
   }
 
   "ItemAlcoholStrength Controller" - {
 
     "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemAlcoholStrengthRoute(testIndex2))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
-        val request = FakeRequest(POST, itemAlcoholStrengthRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemAlcoholStrengthRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, itemAlcoholStrengthSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(defaultUserAnswers.set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(1.5)))
     ) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemAlcoholStrengthRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(BigDecimal(1.5)),
-          itemAlcoholStrengthSubmitAction(),
-          Wine
-        )(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form.fill(BigDecimal(1.5)),
+        itemAlcoholStrengthSubmitAction(),
+        Wine
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
-        val request = FakeRequest(POST, itemAlcoholStrengthRoute()).withFormUrlEncodedBody(("value", "1"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must render BadRequest when invalid data is submitted" in new Fixture() {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val boundForm = form.bind(Map("value" -> ""))
 
-        val request = FakeRequest(POST, itemAlcoholStrengthRoute()).withFormUrlEncodedBody(("value", ""))
-        val result = route(application, request).value
-        val boundForm = form.bind(Map("value" -> ""))
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          boundForm,
-          itemAlcoholStrengthSubmitAction(),
-          Wine
-        )(dataRequest(request), messages(request)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(
+        boundForm,
+        itemAlcoholStrengthSubmitAction(),
+        Wine
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemAlcoholStrengthRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
-        val request = FakeRequest(POST, itemAlcoholStrengthRoute()).withFormUrlEncodedBody(("value", "true"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

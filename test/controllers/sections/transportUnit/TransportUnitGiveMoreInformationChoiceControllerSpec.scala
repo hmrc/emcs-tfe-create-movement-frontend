@@ -26,7 +26,7 @@ import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportUnitGiveMoreInformationChoiceView
@@ -36,8 +36,6 @@ import scala.concurrent.Future
 class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Test(val userAnswers: Option[UserAnswers]) {
-    def onwardRoute: Call = Call("GET", "/foo")
-
     lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()

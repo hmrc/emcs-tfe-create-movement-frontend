@@ -17,7 +17,6 @@
 package controllers.sections.items
 
 import controllers.BaseNavigationController
-import handlers.ErrorHandler
 import models.GoodsTypeModel.GoodsType
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
@@ -32,7 +31,6 @@ import scala.concurrent.Future
 trait BaseItemsNavigationController extends BaseNavigationController {
 
   val cnCodeInformationService: GetCnCodeInformationService
-  val errorHandler: ErrorHandler
 
   def validateIndex(index: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
     super.validateIndex(ItemsCount, index)(
@@ -73,7 +71,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
               f(cnCodeInfo)
             case _ =>
               logger.warn(s"[onPageLoad] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
-              InternalServerError(errorHandler.internalServerErrorTemplate)
+              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           }
         }
       case _ =>

@@ -18,7 +18,6 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
-import handlers.ErrorHandler
 import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode}
@@ -44,8 +43,7 @@ class ItemFiscalMarksChoiceController @Inject()(
                                                  formProvider: ItemFiscalMarksChoiceFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: ItemFiscalMarksChoiceView,
-                                                 override val cnCodeInformationService: GetCnCodeInformationService,
-                                                 override val errorHandler: ErrorHandler
+                                                 override val cnCodeInformationService: GetCnCodeInformationService
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

@@ -19,7 +19,6 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemBrandNameFormProvider._
-import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.sections.items.ItemBrandNameModel
 import models.{Index, Mode}
@@ -45,8 +44,7 @@ class ItemBrandNameController @Inject()(
                                          formProvider: ItemBrandNameFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: ItemBrandNameView,
-                                         override val cnCodeInformationService: GetCnCodeInformationService,
-                                         override val errorHandler: ErrorHandler
+                                         override val cnCodeInformationService: GetCnCodeInformationService
                                        ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

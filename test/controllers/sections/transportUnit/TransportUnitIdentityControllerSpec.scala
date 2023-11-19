@@ -27,7 +27,7 @@ import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportUnitIdentityView
@@ -37,8 +37,6 @@ import scala.concurrent.Future
 class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Test(userAnswers: Option[UserAnswers]) {
-    def onwardRoute: Call = Call("GET", "/foo")
-
     implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -54,7 +52,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
     lazy val controller = new TransportUnitIdentityController(
       messagesApi,
       mockUserAnswersService,
-      new FakeTransportUnitNavigator(onwardRoute),
+      new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
@@ -100,7 +98,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to index route when no TrasnportUnitType has been answered" in new Test(Some(

@@ -19,7 +19,6 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
-import handlers.ErrorHandler
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Beer
 import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
@@ -50,8 +49,6 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
 
     lazy val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
-    lazy val errorHandler = app.injector.instanceOf[ErrorHandler]
-
     lazy val controller = new ItemGeographicalIndicationChoiceController(
       messagesApi,
       mockUserAnswersService,
@@ -63,8 +60,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
-      mockGetCnCodeInformationService,
-      errorHandler
+      mockGetCnCodeInformationService
     )
   }
 

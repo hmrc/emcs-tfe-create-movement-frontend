@@ -27,7 +27,7 @@ import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportUnitTypeView
@@ -37,8 +37,6 @@ import scala.concurrent.Future
 class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Test(userAnswers: Option[UserAnswers]) {
-    def onwardRoute: Call = Call("GET", "/foo")
-
     implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -55,7 +53,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
-      new FakeTransportUnitNavigator(onwardRoute),
+      new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
@@ -94,7 +92,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
         controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the index controller if index is not next in index list for GET" in new Test(Some(emptyUserAnswers)) {

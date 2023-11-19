@@ -25,7 +25,6 @@ import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
@@ -35,7 +34,6 @@ import views.html.sections.consignee.ConsigneeExemptOrganisationView
 import scala.concurrent.{ExecutionContext, Future}
 
 class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
-
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -57,7 +55,6 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     implicit val hc = HeaderCarrier()
     implicit val ec = ExecutionContext.global
 
-    val onwardRoute = Call("GET", "/foo")
     val formProvider = new ConsigneeExemptOrganisationFormProvider()
     val form = formProvider()
 
@@ -126,7 +123,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

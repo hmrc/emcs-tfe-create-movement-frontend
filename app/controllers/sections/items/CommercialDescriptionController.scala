@@ -18,7 +18,6 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.CommercialDescriptionFormProvider
-import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
@@ -43,8 +42,7 @@ class CommercialDescriptionController @Inject()(
                                                  formProvider: CommercialDescriptionFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: CommercialDescriptionView,
-                                                 override val cnCodeInformationService: GetCnCodeInformationService,
-                                                 override val errorHandler: ErrorHandler
+                                                 override val cnCodeInformationService: GetCnCodeInformationService
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

@@ -19,7 +19,6 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemQuantityFormProvider
-import handlers.ErrorHandler
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.UnitOfMeasure.Litres20
@@ -55,8 +54,6 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
 
     lazy val view = app.injector.instanceOf[ItemQuantityView]
 
-    lazy val errorHandler = app.injector.instanceOf[ErrorHandler]
-
     lazy val controller = new ItemQuantityController(
       messagesApi,
       mockUserAnswersService,
@@ -68,8 +65,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
-      mockGetCnCodeInformationService,
-      errorHandler
+      mockGetCnCodeInformationService
     )
   }
 
@@ -158,14 +154,14 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must render Ise when no data retrieved from Reference Data for CN Code Information" in new Fixture() {
+    "must redirect when no data retrieved from Reference Data for CN Code Information" in new Fixture() {
       MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
         .returns(Future.successful(Seq()))
 
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      status(result) mustEqual INTERNAL_SERVER_ERROR
-      contentAsString(result) mustEqual errorHandler.internalServerErrorTemplate(request).toString
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

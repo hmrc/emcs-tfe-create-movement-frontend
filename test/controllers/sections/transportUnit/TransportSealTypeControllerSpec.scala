@@ -26,7 +26,7 @@ import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit._
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportSealTypeView
@@ -36,8 +36,6 @@ import scala.concurrent.Future
 class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersService with TransportUnitFixtures {
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    def onwardRoute = Call("GET", "/foo")
 
     val formProvider = new TransportSealTypeFormProvider()
     val form = formProvider()
@@ -50,7 +48,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
-      new FakeTransportUnitNavigator(onwardRoute),
+      new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
@@ -124,7 +122,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(

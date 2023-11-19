@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.QuestionPage
 import play.api.libs.json.{JsObject, JsPath, __}
-import play.api.mvc.{Call, MessagesControllerComponents, Result}
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import queries.Derivable
@@ -54,9 +54,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
       override val path: JsPath = JsPath \ "something"
     }
 
-    def onwardRoute = Call("GET", "/foo")
-
-    val testNavigator = new FakeNavigator(onwardRoute)
+    val testNavigator = new FakeNavigator(testOnwardRoute)
 
     lazy val testController = new BaseNavigationController with BaseController {
       override val userAnswersService: UserAnswersService = mockUserAnswersService
@@ -77,7 +75,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           val answer: Future[Result] =
             testController.saveAndRedirect(page, value, emptyUserAnswers, NormalMode)
 
-          redirectLocation(answer) mustBe Some(onwardRoute.url)
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
         }
       }
 
@@ -90,7 +88,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           val answer: Future[Result] =
             testController.saveAndRedirect(page, value, newUserAnswers, NormalMode)
 
-          redirectLocation(answer) mustBe Some(onwardRoute.url)
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
         }
       }
     }
@@ -104,7 +102,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
         val answer: Future[Result] =
           testController.saveAndRedirect(page, value, NormalMode)(dataRequest(FakeRequest()), implicitly)
 
-        redirectLocation(answer) mustBe Some(onwardRoute.url)
+        redirectLocation(answer) mustBe Some(testOnwardRoute.url)
       }
     }
   }

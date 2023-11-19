@@ -18,7 +18,6 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
-import handlers.ErrorHandler
 import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, Index, Mode}
 import navigation.ItemsNavigator
@@ -43,8 +42,7 @@ class ItemCommodityCodeController @Inject()(
                                              formProvider: ItemCommodityCodeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: ItemCommodityCodeView,
-                                             override val cnCodeInformationService: GetCnCodeInformationService,
-                                             override val errorHandler: ErrorHandler
+                                             override val cnCodeInformationService: GetCnCodeInformationService
                                            ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -54,7 +52,6 @@ class ItemCommodityCodeController @Inject()(
         redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
       ) {
         itemExciseProductCode =>
-          val goodsType = GoodsTypeModel(itemExciseProductCode)
           getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
             case Nil =>
               saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
@@ -65,7 +62,7 @@ class ItemCommodityCodeController @Inject()(
                 view(
                   form = fillForm(ItemCommodityCodePage(idx), formProvider()),
                   action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                  goodsType = goodsType,
+                  goodsType = GoodsTypeModel(itemExciseProductCode),
                   commodityCodes
                 )
               ))
@@ -82,14 +79,13 @@ class ItemCommodityCodeController @Inject()(
             redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
           ) {
             itemExciseProductCode =>
-              val goodsType = GoodsTypeModel(itemExciseProductCode)
               getCommodityCodesService.getCommodityCodes(itemExciseProductCode).map {
                 commodityCodes =>
                   BadRequest(
                     view(
                       form = formWithErrors,
                       action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                      goodsType = goodsType,
+                      goodsType = GoodsTypeModel(itemExciseProductCode),
                       commodityCodes
                     )
                   )

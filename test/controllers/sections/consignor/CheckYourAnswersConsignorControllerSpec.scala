@@ -19,7 +19,6 @@ package controllers.sections.consignor
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
-import handlers.ErrorHandler
 import models.UserAnswers
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
@@ -48,7 +47,6 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, route)
 
-    lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
     lazy val view: CheckYourAnswersConsignorView = app.injector.instanceOf[CheckYourAnswersConsignorView]
   }
 

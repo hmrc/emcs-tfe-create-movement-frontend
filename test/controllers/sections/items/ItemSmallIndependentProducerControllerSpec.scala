@@ -19,7 +19,6 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import handlers.ErrorHandler
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
@@ -60,8 +59,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
-      mockGetCnCodeInformationService,
-      app.injector.instanceOf[ErrorHandler]
+      mockGetCnCodeInformationService
     )
   }
 

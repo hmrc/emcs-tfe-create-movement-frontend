@@ -19,7 +19,6 @@ package controllers.sections.consignee
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
-import handlers.ErrorHandler
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
 import models.UserAnswers
@@ -77,8 +76,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       rows = vatEoriList
     ).withCssClass("govuk-!-margin-bottom-9")
 
-
-    lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
     val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
     lazy val testController = new CheckYourAnswersConsigneeController(

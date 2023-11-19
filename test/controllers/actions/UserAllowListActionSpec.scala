@@ -18,7 +18,6 @@ package controllers.actions
 
 import base.SpecBase
 import config.AppConfig
-import handlers.ErrorHandler
 import mocks.connectors.MockUserAllowListConnector
 import models.requests.{CheckUserAllowListRequest, UserRequest}
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
@@ -37,7 +36,6 @@ class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAll
   implicit val hc = HeaderCarrier()
   implicit lazy val request = UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)
 
-  lazy val errorHandler = app.injector.instanceOf[ErrorHandler]
   lazy val mockAppConfig = mock[AppConfig]
 
   lazy val userAllowListAction = new UserAllowListActionImpl(

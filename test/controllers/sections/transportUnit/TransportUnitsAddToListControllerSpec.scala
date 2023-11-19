@@ -40,8 +40,6 @@ import scala.concurrent.Future
 class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Test(userAnswers: Option[UserAnswers]) {
-    def onwardRoute: Call = Call("GET", "/foo")
-
     def submitRoute: Call = routes.TransportUnitsAddToListController.onSubmit(testErn, testDraftId)
 
     implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

@@ -25,7 +25,7 @@ import pages.sections.items.{ItemGeographicalIndicationChoicePage, ItemGeographi
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemGeographicalIndicationView
 
 import javax.inject.Inject
@@ -41,7 +41,8 @@ class ItemGeographicalIndicationController @Inject()(
                                                override val userAllowList: UserAllowListAction,
                                                formProvider: ItemGeographicalIndicationFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
-                                               view: ItemGeographicalIndicationView
+                                               view: ItemGeographicalIndicationView,
+                                               override val cnCodeInformationService: GetCnCodeInformationService
                                              ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

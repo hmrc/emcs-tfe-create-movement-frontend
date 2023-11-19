@@ -17,118 +17,95 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemFiscalMarksFormProvider
-import mocks.services.MockUserAnswersService
-import models.{Index, NormalMode, UserAnswers}
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksPage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemFiscalMarksView
 
 import scala.concurrent.Future
 
-class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService {
-  
+class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+
   val formProvider = new ItemFiscalMarksFormProvider()
   val form = formProvider()
 
   val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
-    val application = applicationBuilder(userAnswers = userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      ).build()
-  }
-  
-  val action = controllers.sections.items.routes.ItemFiscalMarksController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  class Fixture(val userAnswers: Option[UserAnswers]) {
+    lazy val formProvider = new ItemFiscalMarksFormProvider()
+    lazy val form = formProvider()
 
-  def itemFiscalMarksRoute(index: Index = testIndex1): String =
-    routes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, index, NormalMode).url
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
+
+    lazy val controller = new ItemFiscalMarksController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
+  }
+
+  val action = controllers.sections.items.routes.ItemFiscalMarksController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   "ItemFiscalMarks Controller" - {
 
     "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(baseUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, itemFiscalMarksRoute(testIndex2))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(baseUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-
-        val request = FakeRequest(POST, itemFiscalMarksRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when Excise Product Code is missing (for GET)" in new Fixture(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, itemFiscalMarksRoute(testIndex1))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when Excise Product Code is missing (for POST)" in new Fixture(Some(emptyUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-
-        val request = FakeRequest(POST, itemFiscalMarksRoute(testIndex1))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return OK and the correct view for a GET" in new Fixture(Some(baseUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, itemFiscalMarksRoute(testIndex1))
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemFiscalMarksView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, action)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, action)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(baseUserAnswers.set(ItemFiscalMarksPage(testIndex1), "answer"))
     ) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, itemFiscalMarksRoute(testIndex1))
-
-        val view = application.injector.instanceOf[ItemFiscalMarksView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), action)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill("answer"), action)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(baseUserAnswers)) {
@@ -138,61 +115,34 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
       ).returns(Future.successful(
         baseUserAnswers.set(ItemFiscalMarksPage(testIndex1), "answer")
       ))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemFiscalMarksRoute(testIndex1))
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(baseUserAnswers)) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemFiscalMarksRoute(testIndex1))
-            .withFormUrlEncodedBody(("value", ""))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[ItemFiscalMarksView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, action)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, action)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-      running(application) {
-        val request = FakeRequest(GET, itemFiscalMarksRoute(testIndex1))
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemFiscalMarksRoute(testIndex1))
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

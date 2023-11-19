@@ -25,7 +25,6 @@ import navigation.FakeNavigators.FakeItemsNavigator
 import navigation.ItemsNavigator
 import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -34,8 +33,6 @@ import views.html.sections.items.CommercialDescriptionView
 import scala.concurrent.Future
 
 class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new CommercialDescriptionFormProvider()
   val form = formProvider()
@@ -86,7 +83,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
           .overrides(
-            bind[ItemsNavigator].toInstance(new FakeItemsNavigator(onwardRoute)),
+            bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
@@ -99,7 +96,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 

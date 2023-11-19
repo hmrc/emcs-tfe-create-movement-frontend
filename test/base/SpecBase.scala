@@ -23,6 +23,7 @@ import connectors.userAllowList.{FakeUserAllowListConnector, UserAllowListConnec
 import controllers.actions._
 import controllers.actions.predraft.{FakePreDraftRetrievalAction, PreDraftDataRetrievalAction}
 import fixtures.BaseFixtures
+import handlers.ErrorHandler
 import models.requests.{DataRequest, UserRequest}
 import models.{TraderKnownFacts, UserAnswers}
 import org.scalatest.concurrent.ScalaFutures
@@ -46,6 +47,7 @@ trait SpecBase extends AnyFreeSpec with Matchers with TryValues with OptionValue
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   lazy val messagesControllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   lazy val dataRequiredAction: DataRequiredAction = app.injector.instanceOf[DataRequiredAction]
+  lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
 
   def messages(request: Request[_]): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
   def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)

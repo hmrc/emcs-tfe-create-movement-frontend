@@ -31,13 +31,11 @@ class ItemFiscalMarksSummarySpec extends SpecBase with Matchers {
 
   "ItemFiscalMarksSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(ItemFiscalMarksMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

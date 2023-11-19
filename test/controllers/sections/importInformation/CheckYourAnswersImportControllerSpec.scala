@@ -18,7 +18,6 @@ package controllers.sections.importInformation
 
 import base.SpecBase
 import controllers.routes
-import handlers.ErrorHandler
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckYourAnswersImportHelper
 import models.requests.DataRequest
@@ -62,7 +61,6 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
       rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 
-    lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]
     val view: CheckYourAnswersImportView = application.injector.instanceOf[CheckYourAnswersImportView]
   }
 

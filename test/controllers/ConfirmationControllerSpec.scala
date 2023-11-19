@@ -19,7 +19,6 @@ package controllers
 import base.SpecBase
 import config.SessionKeys
 import controllers.actions.FakeDataRetrievalAction
-import handlers.ErrorHandler
 import models.UserAnswers
 import play.api.Play.materializer
 import play.api.test.FakeRequest
@@ -30,7 +29,6 @@ class ConfirmationControllerSpec extends SpecBase {
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
     val view = app.injector.instanceOf[ConfirmationView]
-    val errorHandler = app.injector.instanceOf[ErrorHandler]
     val request = FakeRequest()
 
     lazy val testController = new ConfirmationController(

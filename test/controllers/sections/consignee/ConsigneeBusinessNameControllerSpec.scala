@@ -24,7 +24,6 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeBusinessNameView
@@ -35,7 +34,6 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val onwardRoute = Call("GET", "/foo")
     val formProvider = new ConsigneeBusinessNameFormProvider()
     val form = formProvider()
     val request = FakeRequest(GET, consigneeBusinessNameRoute)
@@ -83,7 +81,7 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {

@@ -546,7 +546,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 TaskListSectionRow(
                   taskName = messagesForLanguage.reviewAndSubmit,
                   id = "submit",
-                  link = Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url),
+                  link = Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.draftId).url),
                   section = None,
                   status = None
                 )

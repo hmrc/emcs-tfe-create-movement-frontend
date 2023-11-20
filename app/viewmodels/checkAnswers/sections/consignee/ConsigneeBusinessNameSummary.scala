@@ -26,16 +26,16 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 
-object ConsigneeBusinessNameSummary  {
+object ConsigneeBusinessNameSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeBusinessNamePage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "consigneeBusinessName.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = if(!showActionLinks) Seq() else Seq(
+          key = "consigneeBusinessName.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,

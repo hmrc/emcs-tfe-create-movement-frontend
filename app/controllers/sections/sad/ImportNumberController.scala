@@ -19,36 +19,35 @@ package controllers.sections.sad
 import controllers.actions._
 import forms.sections.sad.ImportNumberFormProvider
 import models.requests.DataRequest
-
-import javax.inject.Inject
 import models.{Index, Mode}
 import navigation.SadNavigator
 import pages.sections.sad.{ImportNumberPage, SadSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.SadCount
 import services.UserAnswersService
 import views.html.sections.sad.ImportNumberView
-import queries.SadCount
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 class ImportNumberController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: SadNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: ImportNumberFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ImportNumberView
-                                     ) extends BaseSadNavigationController with AuthActionHelper {
+                                        override val messagesApi: MessagesApi,
+                                        override val userAnswersService: UserAnswersService,
+                                        override val navigator: SadNavigator,
+                                        override val auth: AuthAction,
+                                        override val getData: DataRetrievalAction,
+                                        override val requireData: DataRequiredAction,
+                                        override val userAllowList: UserAllowListAction,
+                                        formProvider: ImportNumberFormProvider,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        view: ImportNumberView
+                                      ) extends BaseSadNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndex(idx) {
-          Future.successful(Ok(view(fillForm(ImportNumberPage(idx), formProvider()), idx, mode)))
+        Future.successful(Ok(view(fillForm(ImportNumberPage(idx), formProvider()), idx, mode)))
       }
     }
 

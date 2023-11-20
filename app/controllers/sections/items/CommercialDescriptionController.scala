@@ -48,7 +48,7 @@ class CommercialDescriptionController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-          renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider()), idx, mode)
       }
     }
 

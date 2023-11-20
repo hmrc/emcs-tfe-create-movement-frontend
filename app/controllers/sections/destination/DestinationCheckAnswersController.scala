@@ -41,7 +41,7 @@ class DestinationCheckAnswersController @Inject()(
                                                    val destinationCheckAnswersHelper: DestinationCheckAnswersHelper,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationCheckAnswersView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

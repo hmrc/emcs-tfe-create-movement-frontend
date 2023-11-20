@@ -31,7 +31,7 @@ object ItemGeographicalIndicationChoiceSummary {
     val answers = request.userAnswers
     answers.get(ItemGeographicalIndicationChoicePage(idx)).flatMap {
       answer =>
-        if(answer == NoGeographicalIndication) None else {
+        if (answer == NoGeographicalIndication) None else {
           Some(SummaryListRowViewModel(
             key = "itemGeographicalIndicationChoice.checkYourAnswersLabel",
             value = ValueViewModel(messages(s"itemGeographicalIndicationChoice.checkYourAnswers.value.$answer")),

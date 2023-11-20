@@ -33,30 +33,30 @@ import views.html.AddressView
 
 import javax.inject.Inject
 
-class DispatchAddressController  @Inject()(override val messagesApi: MessagesApi,
-                                                     override val userAnswersService: UserAnswersService,
-                                                     override val navigator: DispatchNavigator,
-                                                     override val auth: AuthAction,
-                                                     override val getData: DataRetrievalAction,
-                                                     override val requireData: DataRequiredAction,
-                                                     override val userAllowList: UserAllowListAction,
-                                                     override val formProvider: AddressFormProvider,
-                                                     override val controllerComponents: MessagesControllerComponents,
-                                                     override val view: AddressView
-                                                    ) extends AddressControllerBase {
+class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
+                                          override val userAnswersService: UserAnswersService,
+                                          override val navigator: DispatchNavigator,
+                                          override val auth: AuthAction,
+                                          override val getData: DataRetrievalAction,
+                                          override val requireData: DataRequiredAction,
+                                          override val userAllowList: UserAllowListAction,
+                                          override val formProvider: AddressFormProvider,
+                                          override val controllerComponents: MessagesControllerComponents,
+                                          override val view: AddressView
+                                         ) extends AddressControllerBase {
 
-    override val addressPage: QuestionPage[UserAddress] = DispatchAddressPage
+  override val addressPage: QuestionPage[UserAddress] = DispatchAddressPage
 
-    override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
-      controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
+  override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
+    controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
 
-    override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-      status(view(
-        form = form,
-        addressPage = addressPage,
-        call = onwardCall(mode),
-        headingKey = Some("dispatchAddress")
-      ))
+  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+    status(view(
+      form = form,
+      addressPage = addressPage,
+      call = onwardCall(mode),
+      headingKey = Some("dispatchAddress")
+    ))
 
-    }
+  }
 }

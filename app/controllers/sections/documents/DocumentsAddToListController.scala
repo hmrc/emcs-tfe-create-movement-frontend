@@ -37,18 +37,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class DocumentsAddToListController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: DocumentsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: DocumentsAddToListFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DocumentsAddToListView,
-                                       addToListHelper: DocumentsAddToListHelper
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                              override val messagesApi: MessagesApi,
+                                              override val userAnswersService: UserAnswersService,
+                                              override val userAllowList: UserAllowListAction,
+                                              override val navigator: DocumentsNavigator,
+                                              override val auth: AuthAction,
+                                              override val getData: DataRetrievalAction,
+                                              override val requireData: DataRequiredAction,
+                                              formProvider: DocumentsAddToListFormProvider,
+                                              val controllerComponents: MessagesControllerComponents,
+                                              view: DocumentsAddToListView,
+                                              addToListHelper: DocumentsAddToListHelper
+                                            ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

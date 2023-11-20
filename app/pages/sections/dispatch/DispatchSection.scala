@@ -16,8 +16,8 @@
 
 package pages.sections.dispatch
 
-import models.{GreatBritainWarehouseKeeper, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
+import models.{GreatBritainWarehouseKeeper, NorthernIrelandWarehouseKeeper}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList._

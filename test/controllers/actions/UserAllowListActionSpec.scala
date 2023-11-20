@@ -48,7 +48,7 @@ class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAll
 
     (() => mockAppConfig.allowListEnabled).expects().returns(enabled).anyNumberOfTimes()
 
-    if(enabled) {
+    if (enabled) {
       MockUserAllowListConnector.check(CheckUserAllowListRequest(testErn))
         .returns(Future.successful(connectorResponse))
     }

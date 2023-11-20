@@ -42,7 +42,7 @@ class DocumentReferenceController @Inject()(
                                              formProvider: DocumentReferenceFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: DocumentReferenceView
-                                     ) extends BaseDocumentsNavigationController with AuthActionHelper {
+                                           ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

@@ -40,7 +40,7 @@ object InformationDeferredMovementSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            if(isOnPreDraftFlow) {
+            if (isOnPreDraftFlow) {
               controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(ern = request.ern, CheckMode).url
             } else {
               controllers.sections.info.routes.DeferredMovementController.onPageLoad(ern = request.ern, request.draftId).url

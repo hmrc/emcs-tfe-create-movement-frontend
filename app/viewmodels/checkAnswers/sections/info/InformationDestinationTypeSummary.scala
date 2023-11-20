@@ -35,7 +35,7 @@ object InformationDestinationTypeSummary {
       SummaryListRowViewModel(
         key = "destinationType.checkYourAnswersLabel",
         value = ValueViewModel(value),
-        actions = if(isOnPreDraftFlow) {
+        actions = if (isOnPreDraftFlow) {
           Seq(
             ActionItemViewModel(
               "site.change",

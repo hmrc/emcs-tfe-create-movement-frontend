@@ -40,7 +40,7 @@ object InformationLocalReferenceNumberSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            if(isOnPreDraftFlow) {
+            if (isOnPreDraftFlow) {
               controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(ern = request.ern, CheckMode).url
             } else {
               controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId).url

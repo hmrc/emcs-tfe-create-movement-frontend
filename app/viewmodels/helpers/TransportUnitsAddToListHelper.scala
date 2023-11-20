@@ -16,6 +16,7 @@
 
 package viewmodels.helpers
 
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.Index
 import models.requests.DataRequest
 import play.api.i18n.Messages
@@ -24,7 +25,6 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList}
 import viewmodels.checkAnswers.sections.transportUnit._
 import viewmodels.govuk.summarylist._
-import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 
 import javax.inject.Inject
 
@@ -47,12 +47,12 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: views.html.componen
         TransportSealInformationSummary.row(idx),
         TransportUnitGiveMoreInformationSummary.row(idx)
       ).flatten
-    ).copy(card =  Some(Card(
+    ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex)))),
-      actions = Some(Actions( items = Seq(
+      actions = Some(Actions(items = Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
-          href    = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
+          href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
           id = s"removeTransportUnit${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex))
       ))))

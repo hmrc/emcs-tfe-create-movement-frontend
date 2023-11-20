@@ -33,8 +33,8 @@ object DispatchWarehouseExciseSummary {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "dispatchWarehouseExcise.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "dispatchWarehouseExcise.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

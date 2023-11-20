@@ -48,8 +48,8 @@ case object ConsigneeSection extends Section[JsObject] {
 
   /**
    * @param pageGetResult result from request.userAnswers.get(Whatever)
-   * @param request DataRequest
-   * @param rds unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportVatPage)
+   * @param request       DataRequest
+   * @param rds           unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportVatPage)
    * @tparam A type used for pageGetResult and rds
    * @return
    */

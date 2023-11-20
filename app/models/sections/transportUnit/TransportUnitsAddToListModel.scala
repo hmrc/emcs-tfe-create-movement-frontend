@@ -26,7 +26,9 @@ sealed trait TransportUnitsAddToListModel
 object TransportUnitsAddToListModel extends Enumerable.Implicits {
 
   case object Yes extends WithName("1") with TransportUnitsAddToListModel
+
   case object MoreToCome extends WithName("2") with TransportUnitsAddToListModel
+
   case object NoMoreToCome extends WithName("3") with TransportUnitsAddToListModel
 
   val values: Seq[TransportUnitsAddToListModel] = Seq(

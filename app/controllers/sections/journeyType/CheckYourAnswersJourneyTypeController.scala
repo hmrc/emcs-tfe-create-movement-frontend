@@ -40,7 +40,7 @@ class CheckYourAnswersJourneyTypeController @Inject()(
                                                        val checkYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper,
                                                        val controllerComponents: MessagesControllerComponents,
                                                        view: CheckYourAnswersJourneyTypeView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                                     ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

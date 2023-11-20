@@ -17,37 +17,44 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
+import mocks.services.MockUserAnswersService
 import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.bind
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import views.html.DeclarationView
 
+import scala.concurrent.Future
 
-class DeclarationControllerSpec extends SpecBase with GuiceOneAppPerSuite {
-  override lazy val app: Application =
-    applicationBuilder(userAnswers = Some(emptyUserAnswers))
-      .overrides(
-        bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute))
-      ).build()
 
-  lazy val controller: DeclarationController = app.injector.instanceOf[DeclarationController]
+class DeclarationControllerSpec extends SpecBase with MockUserAnswersService {
+
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
-  lazy val getRoute = routes.DeclarationController.onPageLoad(testErn, testDraftId)
   lazy val submitRoute = routes.DeclarationController.onSubmit(testErn, testDraftId)
-  implicit lazy val messagesInstance = messages(app)
+  implicit val request = dataRequest(
+    FakeRequest(),
+    emptyUserAnswers
+  )
+  implicit lazy val messagesInstance = messages(request)
+
+  trait Test {
+    val controller: DeclarationController = new DeclarationController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(Some(emptyUserAnswers), Some(testMinTraderKnownFacts)),
+      app.injector.instanceOf[DataRequiredAction],
+      Helpers.stubMessagesControllerComponents(),
+      mockUserAnswersService,
+      new FakeNavigator(testOnwardRoute),
+      view
+    )
+  }
+
 
   "DeclarationController" - {
     "for GET onPageLoad" - {
-      "must return the declaration page" in {
-        implicit val request = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-        )
-
+      "must return the declaration page" in new Test {
         val res = controller.onPageLoad(testErn, testDraftId)(request)
 
         status(res) mustBe OK
@@ -56,11 +63,8 @@ class DeclarationControllerSpec extends SpecBase with GuiceOneAppPerSuite {
     }
 
     "for POST submit" - {
-      "must save the timestamp and redirect" in {
-        implicit val request = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-        )
+      "must save the timestamp and redirect" in new Test {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
         val res = controller.onSubmit(testErn, testDraftId)(request)
 

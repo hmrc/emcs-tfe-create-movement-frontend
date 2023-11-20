@@ -28,7 +28,7 @@ import views.html.ConfirmationView
 class ConfirmationControllerSpec extends SpecBase {
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
-   lazy val view = app.injector.instanceOf[ConfirmationView]
+    lazy val view = app.injector.instanceOf[ConfirmationView]
     val request = FakeRequest()
 
     lazy val testController = new ConfirmationController(

@@ -19,18 +19,11 @@ package connectors.referenceData
 import base.SpecBase
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
-import org.scalatest.BeforeAndAfterAll
-import play.api.http.{HeaderNames, MimeTypes, Status}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetTraderKnownFactsConnectorSpec extends SpecBase
-  with Status
-  with MimeTypes
-  with HeaderNames
-  with MockHttpClient
-  with BeforeAndAfterAll {
+class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
 
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()

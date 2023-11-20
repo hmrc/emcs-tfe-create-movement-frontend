@@ -17,183 +17,123 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import forms.sections.items.ItemNetGrossMassFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.sections.items.ItemNetGrossMassModel
-import models.{GoodsTypeModel, NormalMode}
+import models.{GoodsTypeModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemNetGrossMassPage}
 import play.api.data.Form
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemNetGrossMassView
 
 import scala.concurrent.Future
 
-class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersService {
-
-  def onwardRoute: Call = Call("GET", "/foo")
+class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   val testModel: ItemNetGrossMassModel = ItemNetGrossMassModel(BigDecimal("1234"), BigDecimal("4523"))
 
-  val formProvider = new ItemNetGrossMassFormProvider()
+  val formProvider: ItemNetGrossMassFormProvider = new ItemNetGrossMassFormProvider()
   val form: Form[ItemNetGrossMassModel] = formProvider.form
 
   lazy val itemNetGrossMassRoute: String =
     routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
 
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+  lazy val view: ItemNetGrossMassView = app.injector.instanceOf[ItemNetGrossMassView]
+
+  class Test(val userAnswers: Option[UserAnswers]) {
+    lazy val controller = new ItemNetGrossMassController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      app.injector.instanceOf[DataRequiredAction],
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
+  }
+
   "ItemNetGrossMass Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemNetGrossMassRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemNetGrossMassView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers
+    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
+      emptyUserAnswers
         .set(ItemNetGrossMassPage(testIndex1), testModel)
         .set(ItemExciseProductCodePage(testIndex1), "B000")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemNetGrossMassRoute)
-
-        val view = application.injector.instanceOf[ItemNetGrossMassView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(testModel), testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(application)
-        ).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form.fill(testModel), testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request, userAnswers.get), messages(request)
+      ).toString
     }
 
-    "must return Redirect to index controller if no EPC found for GET" in {
+    "must return Redirect to index controller if no EPC found for GET" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemNetGrossMassRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+    )) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")))
-          .overrides(
-            bind[ItemsNavigator].toInstance(new FakeItemsNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody("netMass" -> "123", "grossMass" -> "124"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemNetGrossMassRoute)
-            .withFormUrlEncodedBody("netMass" -> "123", "grossMass" -> "124")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return Redirect to index controller if no EPC found for POST" in {
+    "must return Redirect to index controller if no EPC found for POST" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody("netMass" -> "123", "grossMass" -> "124"))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ItemsNavigator].toInstance(new FakeItemsNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, itemNetGrossMassRoute)
-            .withFormUrlEncodedBody("netMass" -> "123", "grossMass" -> "124")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+    )) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))).build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemNetGrossMassRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[ItemNetGrossMassView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, itemNetGrossMassRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody("netMass" -> "123", "grossMass" -> "124"))
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, itemNetGrossMassRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

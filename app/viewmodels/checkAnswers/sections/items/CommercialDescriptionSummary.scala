@@ -32,20 +32,20 @@ object CommercialDescriptionSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-  Some(SummaryListRowViewModel(
-    key = "commercialDescription.checkYourAnswersLabel",
-    value = ValueViewModel(getValue(idx)),
-    actions = {
-      Seq(
-        ActionItemViewModel(
-          content = "site.change",
-          routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-          id = s"changeCommercialDescription${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("commercialDescription.change.hidden"))
-      )
-    }
-  ))
-}
+    Some(SummaryListRowViewModel(
+      key = "commercialDescription.checkYourAnswersLabel",
+      value = ValueViewModel(getValue(idx)),
+      actions = {
+        Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            id = s"changeCommercialDescription${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("commercialDescription.change.hidden"))
+        )
+      }
+    ))
+  }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
     request.userAnswers.get(CommercialDescriptionPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())

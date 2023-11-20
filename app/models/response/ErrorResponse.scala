@@ -39,8 +39,11 @@ case class BadRequestError(msg: String) extends ErrorResponse {
 }
 
 case class SubmitCreateAMovementException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class UserAnswersException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class MissingMandatoryPage(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class MissingHeaderError(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class TraderKnownFactsException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

@@ -63,7 +63,7 @@ trait BasePreDraftNavigationController extends BaseNavigationController with Log
   protected def withDeferredMovementAnswer(isOnPreDraftFlow: Boolean)(f: Boolean => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     withAnswerAsync(
       page = DeferredMovementPage(isOnPreDraftFlow = isOnPreDraftFlow),
-      redirectRoute = if(isOnPreDraftFlow) {
+      redirectRoute = if (isOnPreDraftFlow) {
         controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, NormalMode)
       } else {
         controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern, request.draftId)

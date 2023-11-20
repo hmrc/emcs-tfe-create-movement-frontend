@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemBrandNameSummary  {
+object ItemBrandNameSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
@@ -37,11 +37,11 @@ object ItemBrandNameSummary  {
       value = ValueViewModel(getValue(idx)),
       actions = {
         Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              routes.ItemBrandNameController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeItemBrandName${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemBrandName.change.hidden"))
+          ActionItemViewModel(
+            content = "site.change",
+            routes.ItemBrandNameController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            id = s"changeItemBrandName${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("itemBrandName.change.hidden"))
         )
       }
     ))

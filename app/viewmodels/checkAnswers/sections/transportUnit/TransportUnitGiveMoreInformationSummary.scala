@@ -30,7 +30,7 @@ import viewmodels.implicits._
 
 object TransportUnitGiveMoreInformationSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_],  messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
     val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",

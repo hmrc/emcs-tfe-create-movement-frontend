@@ -43,7 +43,7 @@ class DestinationIndexController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
-          if(DestinationSection.isCompleted) {
+          if (DestinationSection.isCompleted) {
             Redirect(routes.DestinationCheckAnswersController.onPageLoad(ern, draftId))
           } else {
             if (shouldRedirectToDestinationWarehouseExcise) {

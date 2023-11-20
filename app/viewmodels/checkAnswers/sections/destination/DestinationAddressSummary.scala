@@ -26,7 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Summa
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DestinationAddressSummary  {
+object DestinationAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 

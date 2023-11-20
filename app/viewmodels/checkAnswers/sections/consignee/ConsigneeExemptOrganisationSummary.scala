@@ -25,16 +25,16 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 
-object ConsigneeExemptOrganisationSummary  {
+object ConsigneeExemptOrganisationSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeExemptOrganisationPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "consigneeExemptOrganisation.checkYourAnswersLabel",
-          value   = ValueViewModel(s"${answer.memberState}:${answer.certificateSerialNumber}"),
-          actions = if(!showActionLinks) Seq() else Seq(
+          key = "consigneeExemptOrganisation.checkYourAnswersLabel",
+          value = ValueViewModel(s"${answer.memberState}:${answer.certificateSerialNumber}"),
+          actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(request.ern, request.draftId, CheckMode).url,

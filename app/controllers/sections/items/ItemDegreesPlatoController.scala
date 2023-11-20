@@ -75,7 +75,7 @@ class ItemDegreesPlatoController @Inject()(
 
   private def handleSubmittedForm(degreesPlatoModel: ItemDegreesPlatoModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
 
-    if(degreesPlatoModel.hasDegreesPlato && degreesPlatoModel.degreesPlato.isEmpty) {
+    if (degreesPlatoModel.hasDegreesPlato && degreesPlatoModel.degreesPlato.isEmpty) {
       renderView(
         status = BadRequest,
         form =

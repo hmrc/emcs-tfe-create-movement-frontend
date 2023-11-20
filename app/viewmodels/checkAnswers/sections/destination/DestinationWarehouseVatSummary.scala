@@ -27,7 +27,7 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 
-object DestinationWarehouseVatSummary  {
+object DestinationWarehouseVatSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 

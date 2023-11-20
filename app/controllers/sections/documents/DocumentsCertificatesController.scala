@@ -19,8 +19,8 @@ package controllers.sections.documents
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.documents.DocumentsCertificatesFormProvider
-import models.{Mode, NormalMode}
 import models.requests.DataRequest
+import models.{Mode, NormalMode}
 import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentsAddToListPage, DocumentsCertificatesPage, DocumentsSectionUnits}
 import play.api.data.Form
@@ -43,7 +43,7 @@ class DocumentsCertificatesController @Inject()(
                                                  formProvider: DocumentsCertificatesFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: DocumentsCertificatesView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
@@ -81,5 +81,5 @@ class DocumentsCertificatesController @Inject()(
         currentAnswers = cleansedAnswers,
         mode = NormalMode
       )
-  }
+    }
 }

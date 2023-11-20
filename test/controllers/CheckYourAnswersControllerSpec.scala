@@ -37,7 +37,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
     lazy val messages: Messages = messagesApi.preferred(request)
 
-   lazy val view: CheckYourAnswersView = app.injector.instanceOf[CheckYourAnswersView]
+    lazy val view: CheckYourAnswersView = app.injector.instanceOf[CheckYourAnswersView]
 
     val controller = new CheckYourAnswersController(
       messagesApi,

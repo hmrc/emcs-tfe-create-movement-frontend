@@ -29,10 +29,10 @@ import viewmodels.implicits._
 
 object TransportUnitIdentitySummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_],  messages: Messages): Option[SummaryListRow] =
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     Some(SummaryListRowViewModel(
-      key     = "transportUnitIdentity.checkYourAnswersLabel",
-      value   = ValueViewModel(getValue(idx)),
+      key = "transportUnitIdentity.checkYourAnswersLabel",
+      value = ValueViewModel(getValue(idx)),
       actions = Seq(
         ActionItemViewModel(
           "site.change",

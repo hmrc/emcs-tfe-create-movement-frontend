@@ -30,6 +30,7 @@ trait AuthActionHelper {
 
   private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
     auth(ern) andThen userAllowList
+
   private def authorisedWithData(ern: String, draftId: String): ActionBuilder[DataRequest, AnyContent] =
     authorised(ern) andThen getData(draftId) andThen requireData
 

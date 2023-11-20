@@ -38,7 +38,7 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
           InProgress
         }
       case _ =>
-        if(Seq(unitTypeAnswer, identityAnswer, sealChoiceAnswer).exists(_.nonEmpty)) {
+        if (Seq(unitTypeAnswer, identityAnswer, sealChoiceAnswer).exists(_.nonEmpty)) {
           InProgress
         } else {
           NotStarted

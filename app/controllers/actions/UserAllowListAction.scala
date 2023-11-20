@@ -32,13 +32,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserAllowListActionImpl @Inject()(userAllowListConnector: UserAllowListConnector,
                                         errorHandler: ErrorHandler,
                                         config: AppConfig)
-                                      (implicit val executionContext: ExecutionContext) extends UserAllowListAction {
+                                       (implicit val executionContext: ExecutionContext) extends UserAllowListAction {
 
   override protected def refine[A](request: UserRequest[A]): Future[Either[Result, UserRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    if(config.allowListEnabled) {
+    if (config.allowListEnabled) {
       userAllowListConnector.check(CheckUserAllowListRequest(request.ern)) map {
         case Right(true) => Right(request)
         case Right(false) =>

@@ -24,6 +24,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+
 object GiveInformationOtherTransportSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =

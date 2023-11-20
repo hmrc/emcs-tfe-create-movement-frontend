@@ -40,8 +40,12 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
     implicit val request = userRequest(FakeRequest(GET, "/foo/bar"))
 
-    val page = new QuestionPage[String] { override val path: JsPath = __ \ "page1" }
-    val page2 = new QuestionPage[String] { override val path: JsPath = __ \ "page2" }
+    val page = new QuestionPage[String] {
+      override val path: JsPath = __ \ "page1"
+    }
+    val page2 = new QuestionPage[String] {
+      override val path: JsPath = __ \ "page2"
+    }
     val value = "foo"
 
     case class TestIndexPage(index: Index) extends QuestionPage[String] {

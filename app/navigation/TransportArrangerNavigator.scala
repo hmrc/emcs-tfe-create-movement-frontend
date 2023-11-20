@@ -52,16 +52,16 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ => (userAnswers: UserAnswers) =>
-        controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
     case TransportArrangerPage => (userAnswers: UserAnswers) =>
       if (
         (userAnswers.get(TransportArrangerPage).contains(GoodsOwner) || userAnswers.get(TransportArrangerPage).contains(Other)) &&
-        userAnswers.get(TransportArrangerNamePage).isEmpty ||
-        userAnswers.get(TransportArrangerVatPage).isEmpty ||
-        userAnswers.get(TransportArrangerAddressPage).isEmpty
+          userAnswers.get(TransportArrangerNamePage).isEmpty ||
+          userAnswers.get(TransportArrangerVatPage).isEmpty ||
+          userAnswers.get(TransportArrangerAddressPage).isEmpty
       ) {
         normalRoutes(TransportArrangerPage)(userAnswers)
       } else {

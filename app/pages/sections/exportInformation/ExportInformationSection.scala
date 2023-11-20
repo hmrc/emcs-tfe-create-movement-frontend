@@ -27,7 +27,7 @@ case object ExportInformationSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "exportInformation"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if(request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
+    if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
       Completed
     } else {
       NotStarted

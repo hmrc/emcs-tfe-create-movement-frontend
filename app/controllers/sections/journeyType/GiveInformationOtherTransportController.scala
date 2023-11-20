@@ -55,7 +55,7 @@ class GiveInformationOtherTransportController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, mode)))
       )(
         value =>
-        saveAndRedirect(GiveInformationOtherTransportPage, value, mode)
+          saveAndRedirect(GiveInformationOtherTransportPage, value, mode)
       )
     }
 }

@@ -44,7 +44,7 @@ object InformationDateOfDispatchSummary extends DateTimeUtils {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            if(isOnPreDraftFlow) {
+            if (isOnPreDraftFlow) {
               controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
               controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId).url

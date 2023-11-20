@@ -77,7 +77,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-        (__ \ "ern").read[String] and
+      (__ \ "ern").read[String] and
         (__ \ "draftId").read[String] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
@@ -89,7 +89,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-        (__ \ "ern").write[String] and
+      (__ \ "ern").write[String] and
         (__ \ "draftId").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)

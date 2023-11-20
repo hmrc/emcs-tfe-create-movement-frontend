@@ -33,7 +33,7 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
     val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage())
 
     val value: String = data match {
-      case Some(invoiceDetailsPage) =>invoiceDetailsPage.date.formatDateForUIOutput()
+      case Some(invoiceDetailsPage) => invoiceDetailsPage.date.formatDateForUIOutput()
       case None => messages("site.notProvided")
     }
 
@@ -44,7 +44,7 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            if(isOnPreDraftFlow) {
+            if (isOnPreDraftFlow) {
               controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
               controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url

@@ -21,7 +21,7 @@ import controllers.sections.journeyType.{routes => jtRoutes}
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.{CheckYourAnswersJourneyTypePage, GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
+import pages.sections.journeyType._
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}

@@ -21,7 +21,9 @@ import play.api.mvc.JavascriptLiteral
 sealed trait Mode
 
 case object CheckMode extends Mode
+
 case object NormalMode extends Mode
+
 case object ReviewMode extends Mode
 
 object Mode {

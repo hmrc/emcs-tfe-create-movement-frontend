@@ -22,17 +22,21 @@ sealed trait TaskListStatus {
   val msgKey: String
   val tagClass: Option[String] = None
 }
+
 case object Completed extends TaskListStatus {
   override val msgKey: String = "taskListStatus.completed"
 }
+
 case object InProgress extends TaskListStatus {
   override val msgKey: String = "taskListStatus.inProgress"
   override val tagClass = Some("govuk-tag--blue")
 }
+
 case object NotStarted extends TaskListStatus {
   override val msgKey: String = "taskListStatus.notStarted"
   override val tagClass = Some("govuk-tag--grey")
 }
+
 case object CannotStartYet extends TaskListStatus {
   override val msgKey: String = "taskListStatus.cannotStartYet"
   override val tagClass = Some("govuk-tag--grey")

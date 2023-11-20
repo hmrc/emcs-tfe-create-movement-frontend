@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemBulkPackagingChoiceMessages
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import models.GoodsTypeModel
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemBulkPackagingChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemBulkPackagingChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemBulkPackagingChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -43,7 +43,7 @@ class ItemBulkPackagingChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
           goodsType =>
             s"when being rendered for GoodsType code ${goodsType.code}" - {
 
-              implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+              implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
               val view = app.injector.instanceOf[ItemBulkPackagingChoiceView]

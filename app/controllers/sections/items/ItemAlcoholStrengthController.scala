@@ -32,18 +32,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemAlcoholStrengthController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: ItemAlcoholStrengthFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemAlcoholStrengthView,
-                                       override val cnCodeInformationService: GetCnCodeInformationService
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                               override val messagesApi: MessagesApi,
+                                               override val userAnswersService: UserAnswersService,
+                                               override val navigator: ItemsNavigator,
+                                               override val auth: AuthAction,
+                                               override val getData: DataRetrievalAction,
+                                               override val requireData: DataRequiredAction,
+                                               override val userAllowList: UserAllowListAction,
+                                               formProvider: ItemAlcoholStrengthFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: ItemAlcoholStrengthView,
+                                               override val cnCodeInformationService: GetCnCodeInformationService
+                                             ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

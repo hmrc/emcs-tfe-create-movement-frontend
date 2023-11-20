@@ -19,10 +19,10 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerFormProvider
-import models.{Mode, UserAnswers}
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
+import models.{Mode, UserAnswers}
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.MessagesApi

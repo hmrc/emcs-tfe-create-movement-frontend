@@ -75,7 +75,7 @@ class ItemBrandNameController @Inject()(
 
   private def handleSubmittedForm(brandNameModel: ItemBrandNameModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
 
-    if(brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
+    if (brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
       renderView(
         status = BadRequest,
         form =

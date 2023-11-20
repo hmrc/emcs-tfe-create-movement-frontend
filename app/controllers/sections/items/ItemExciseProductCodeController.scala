@@ -47,7 +47,7 @@ class ItemExciseProductCodeController @Inject()(
                                                  exciseProductCodesService: GetExciseProductCodesService,
                                                  view: ItemExciseProductCodeView,
                                                  override val cnCodeInformationService: GetCnCodeInformationService
-                                           ) extends BaseItemsNavigationController with AuthActionHelper {
+                                               ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

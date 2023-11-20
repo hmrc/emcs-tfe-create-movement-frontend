@@ -62,7 +62,7 @@ object ConsigneeExportVatType extends Enumerable.Implicits {
           errorMessage = {
             form.error(fieldName).flatMap { error =>
               Some(
-                ErrorMessage(content = HtmlContent(Html( messages(error.message))))
+                ErrorMessage(content = HtmlContent(Html(messages(error.message))))
               )
             }
           }

@@ -21,7 +21,7 @@ import fixtures.messages.sections.documents.DocumentsCertificatesMessages.Englis
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.documents.DocumentsCertificatesPage
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -33,7 +33,7 @@ class DocumentsCertificatesSummarySpec extends SpecBase with Matchers {
   "DocumentsCertificatesSummary" - {
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       "when there's no answer" - {
 

@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitGiveMoreInformationChoiceView
@@ -39,7 +39,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
@@ -66,7 +66,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Fixed transport installation" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
@@ -93,7 +93,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Tractor" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
@@ -120,7 +120,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Trailer" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
@@ -147,7 +147,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Vehicle" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]

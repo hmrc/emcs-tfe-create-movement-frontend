@@ -23,7 +23,7 @@ import models.sections.transportArranger.TransportArranger.{Consignee, Consignor
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -39,7 +39,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when the TransportArranger is GoodsOwner or Other" - {
 

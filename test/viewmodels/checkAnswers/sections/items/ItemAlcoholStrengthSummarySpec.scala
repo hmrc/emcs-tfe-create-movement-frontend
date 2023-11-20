@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.ItemAlcoholStrengthMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemAlcoholStrengthPage
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
@@ -35,7 +35,7 @@ class ItemAlcoholStrengthSummarySpec extends SpecBase with Matchers {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

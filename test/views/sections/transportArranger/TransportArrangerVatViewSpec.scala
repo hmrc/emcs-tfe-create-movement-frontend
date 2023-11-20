@@ -24,7 +24,7 @@ import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.transportArranger.TransportArrangerVatView
@@ -34,7 +34,7 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(arranger: TransportArranger, lang: Lang) {
 
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
    lazy val view = app.injector.instanceOf[TransportArrangerVatView]

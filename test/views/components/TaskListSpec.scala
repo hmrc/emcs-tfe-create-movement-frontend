@@ -19,7 +19,7 @@ package views.components
 import base.SpecBase
 import fixtures.messages.TaskListStatusMessages
 import org.jsoup.Jsoup
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import viewmodels.taskList._
 
 class TaskListSpec extends SpecBase {
@@ -32,7 +32,7 @@ class TaskListSpec extends SpecBase {
 
         "Should render the task list component as expected" - {
 
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
           val taskList = app.injector.instanceOf[views.html.components.taskList]
 

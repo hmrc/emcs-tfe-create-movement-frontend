@@ -16,13 +16,13 @@
 
 package forms.sections.sad
 
+import base.SpecBase
 import fixtures.messages.sections.sad.ImportNumberMessages
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class ImportNumberFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite{
+class ImportNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "importNumber.error.required"
   val lengthKey = "importNumber.error.length"
@@ -59,25 +59,25 @@ class ImportNumberFormProviderSpec extends StringFieldBehaviours with GuiceOneAp
 
     Seq(ImportNumberMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required" in {
 
-          messages("importNumber.error.required") mustBe
+          msgs("importNumber.error.required") mustBe
             messagesForLanguage.errorRequired
         }
 
         "have the correct error message for length" in {
 
-          messages("importNumber.error.length") mustBe
+          msgs("importNumber.error.length") mustBe
             messagesForLanguage.errorLength
         }
 
         "have the correct error message for xss" in {
 
-          messages("importNumber.error.invalidCharacter") mustBe
+          msgs("importNumber.error.invalidCharacter") mustBe
             messagesForLanguage.errorXss
         }
 

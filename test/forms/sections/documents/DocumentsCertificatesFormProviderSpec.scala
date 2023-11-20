@@ -16,13 +16,13 @@
 
 package forms.sections.documents
 
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCertificatesMessages
 import forms.behaviours.BooleanFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class DocumentsCertificatesFormProviderSpec extends BooleanFieldBehaviours with GuiceOneAppPerSuite {
+class DocumentsCertificatesFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "documentsCertificates.error.required"
   val invalidKey = "error.boolean"
@@ -49,13 +49,13 @@ class DocumentsCertificatesFormProviderSpec extends BooleanFieldBehaviours with 
 
     Seq(DocumentsCertificatesMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required" in {
 
-          messages("documentsCertificates.error.required") mustBe
+          msgs("documentsCertificates.error.required") mustBe
             messagesForLanguage.errorRequired
         }
 

@@ -16,13 +16,13 @@
 
 package forms.sections.info
 
+import base.SpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class LocalReferenceNumberFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val fieldName = "value"
   val maxLength = 22
@@ -89,27 +89,27 @@ class LocalReferenceNumberFormProviderSpec extends StringFieldBehaviours with Gu
 
     Seq(LocalReferenceNumberMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required (deferred)" in {
-          messages("localReferenceNumber.deferred.error.required") mustBe
+          msgs("localReferenceNumber.deferred.error.required") mustBe
             messagesForLanguage.deferredErrorRequired
         }
 
         "have the correct error message for required (new)" in {
-          messages("localReferenceNumber.new.error.required") mustBe
+          msgs("localReferenceNumber.new.error.required") mustBe
             messagesForLanguage.newErrorRequired
         }
 
         "have the correct error message for length (deferred)" in {
-          messages("localReferenceNumber.deferred.error.length") mustBe
+          msgs("localReferenceNumber.deferred.error.length") mustBe
             messagesForLanguage.deferredErrorLength
         }
 
         "have the correct error message for length (new)" in {
-          messages("localReferenceNumber.new.error.length") mustBe
+          msgs("localReferenceNumber.new.error.length") mustBe
             messagesForLanguage.newErrorLength
         }
       }

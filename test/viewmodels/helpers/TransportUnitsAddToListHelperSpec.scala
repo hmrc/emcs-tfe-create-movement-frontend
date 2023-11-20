@@ -23,7 +23,7 @@ import models.UserAnswers
 import models.sections.transportUnit.TransportSealTypeModel
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import pages.sections.transportUnit._
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -43,7 +43,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
     Seq(TransportUnitAddToListMessages.English).foreach { msg =>
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Nil
         }
@@ -58,7 +58,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
             .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
             .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
             .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
-          implicit lazy val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Seq(
             SummaryList(
@@ -97,7 +97,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
           .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
           .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))) {
-          implicit lazy val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Seq(
             SummaryList(

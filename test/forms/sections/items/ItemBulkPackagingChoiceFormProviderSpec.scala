@@ -16,19 +16,19 @@
 
 package forms.sections.items
 
+import base.SpecBase
 import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.behaviours.BooleanFieldBehaviours
 import models.GoodsTypeModel.Tobacco
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class ItemBulkPackagingChoiceFormProviderSpec extends BooleanFieldBehaviours with GuiceOneAppPerSuite {
+class ItemBulkPackagingChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "itemBulkPackagingChoice.error.required"
   val invalidKey = "error.boolean"
 
-  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(ItemBrandNameMessages.English.lang))
+  implicit val msgs: Messages = messages(Seq(ItemBrandNameMessages.English.lang))
 
   val form = new ItemBulkPackagingChoiceFormProvider().apply(Tobacco)
 

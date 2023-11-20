@@ -22,7 +22,7 @@ import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
 import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.LegendSize
@@ -36,7 +36,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with BaseFixtures 
 
     Seq(ItemSmallIndependentProducerMessages.English).foreach { langMessages =>
 
-      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(langMessages.lang))
+      implicit val msgs: Messages = messages(Seq(langMessages.lang))
 
       s"when running for language code of '${langMessages.lang.code}'" - {
 

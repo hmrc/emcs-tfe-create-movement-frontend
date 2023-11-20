@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCertificatesMessages
 import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
 class GoodsTypeModelSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -45,7 +45,7 @@ class GoodsTypeModelSpec extends SpecBase with GuiceOneAppPerSuite {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "must output the correct messages" in {
 

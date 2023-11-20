@@ -23,11 +23,11 @@ import models.sections.transportUnit.TransportUnitType
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class TransportUnitGiveMoreInformationChoiceFormProviderSpec extends BooleanFieldBehaviours with SpecBase {
+class TransportUnitGiveMoreInformationChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "transportUnitGiveMoreInformationChoice.error.required"
   val invalidKey = "error.boolean"
-  implicit val messages: Messages = messages(Seq(TransportUnitGiveMoreInformationChoiceMessages.English.lang))
+  implicit val msgs: Messages = messages(Seq(TransportUnitGiveMoreInformationChoiceMessages.English.lang))
 
   ".value" - {
 
@@ -43,13 +43,13 @@ class TransportUnitGiveMoreInformationChoiceFormProviderSpec extends BooleanFiel
             behave like booleanField(
               form,
               fieldName,
-              invalidError = FormError(fieldName, invalidKey, Seq(messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
+              invalidError = FormError(fieldName, invalidKey, Seq(msgs(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
             )
 
             behave like mandatoryField(
               form,
               fieldName,
-              requiredError = FormError(fieldName, requiredKey, Seq(messages(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
+              requiredError = FormError(fieldName, requiredKey, Seq(msgs(s"transportUnitGiveMoreInformationChoice.transportUnitType.$transportUnitType")))
             )
           }
         }

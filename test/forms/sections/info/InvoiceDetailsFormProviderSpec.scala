@@ -16,14 +16,13 @@
 
 package forms.sections.info
 
-import fixtures.BaseFixtures
+import base.SpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixtures with GuiceOneAppPerSuite {
+class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val referenceField = "invoice-reference"
   val dateField = "value"
@@ -243,37 +242,37 @@ class InvoiceDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixt
 
     Seq(InvoiceDetailsMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for no reference" in {
 
-          messages("invoiceDetails.invoice-reference.error.required") mustBe
+          msgs("invoiceDetails.invoice-reference.error.required") mustBe
             messagesForLanguage.referenceErrorRequired
         }
 
         "have the correct error message for length error" in {
 
-          messages("invoiceDetails.invoice-reference.error.length") mustBe
+          msgs("invoiceDetails.invoice-reference.error.length") mustBe
             messagesForLanguage.referenceErrorLength
         }
 
         "have the correct error message for no date" in {
 
-          messages("invoiceDetails.value.error.required.all") mustBe
+          msgs("invoiceDetails.value.error.required.all") mustBe
             messagesForLanguage.dateErrorRequiredAll
         }
 
         "have the correct error message for one missing date field" in {
 
-          messages("invoiceDetails.value.error.required", "year") mustBe
+          msgs("invoiceDetails.value.error.required", "year") mustBe
             messagesForLanguage.dateErrorRequired("year")
         }
 
         "have the correct error message for two missing date fields" in {
 
-          messages("invoiceDetails.value.error.required.two", "day", "month") mustBe
+          msgs("invoiceDetails.value.error.required.two", "day", "month") mustBe
             messagesForLanguage.dateErrorRequiredTwo("day", "month")
         }
       }

@@ -25,7 +25,7 @@ import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -53,7 +53,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
     Seq(GuarantorNameMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
-        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {

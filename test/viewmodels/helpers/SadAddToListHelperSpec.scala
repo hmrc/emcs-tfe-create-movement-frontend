@@ -21,7 +21,7 @@ import controllers.sections.sad.{routes => sadRoutes}
 import fixtures.messages.sections.sad.SadAddToListMessages
 import models.UserAnswers
 import pages.sections.sad._
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -41,7 +41,7 @@ class SadAddToListHelperSpec extends SpecBase {
     Seq(SadAddToListMessages.English).foreach { msg =>
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Nil
         }
@@ -51,7 +51,7 @@ class SadAddToListHelperSpec extends SpecBase {
         s"when all answers entered '${msg.lang.code}' and single Sad" in new Setup(
           emptyUserAnswers
             .set(ImportNumberPage(testIndex1), "wee")) {
-          implicit lazy val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Seq(
             SummaryList(
@@ -75,7 +75,7 @@ class SadAddToListHelperSpec extends SpecBase {
         s"when all answers entered '${msg.lang.code}' and multiple Sads" in new Setup(emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
           .set(ImportNumberPage(testIndex2), "wee2")) {
-          implicit lazy val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(msg.lang))
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Seq(
             SummaryList(

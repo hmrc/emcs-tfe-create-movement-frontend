@@ -23,7 +23,7 @@ import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import models.{NorthernIrelandWarehouse, Unknown}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -33,7 +33,7 @@ class DestinationTypeHelperSpec extends SpecBase {
 
   Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
-      implicit lazy val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       Seq("GBWK", "XIWK").foreach {
         ern =>

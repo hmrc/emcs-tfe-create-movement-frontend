@@ -23,12 +23,12 @@ import models.GoodsTypeModel.Tobacco
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class ItemFiscalMarksChoiceFormProviderSpec extends BooleanFieldBehaviours with SpecBase {
+class ItemFiscalMarksChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "itemFiscalMarksChoice.error.required"
   val invalidKey = "error.boolean"
 
-  implicit val messages: Messages = messages(Seq(ItemFiscalMarksChoiceMessages.English.lang))
+  implicit val msgs: Messages = messages(Seq(ItemFiscalMarksChoiceMessages.English.lang))
 
   val form = new ItemFiscalMarksChoiceFormProvider().apply(Tobacco)
 

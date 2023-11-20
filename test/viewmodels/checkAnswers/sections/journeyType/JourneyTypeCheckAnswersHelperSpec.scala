@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.AirTransport
 import org.scalamock.scalatest.MockFactory
 import pages.sections.journeyType._
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 
@@ -32,7 +32,7 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
   val hours = 12
 
   trait Test {
-    implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(CheckYourAnswersJourneyTypeMessages.English.lang))
+    implicit val msgs: Messages = messages(Seq(CheckYourAnswersJourneyTypeMessages.English.lang))
     val helper = new CheckYourAnswersJourneyTypeHelper()
   }
 

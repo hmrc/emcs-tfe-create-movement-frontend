@@ -16,14 +16,14 @@
 
 package forms.sections.documents
 
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentDescriptionMessages
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class DocumentDescriptionFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class DocumentDescriptionFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "documentDescription.error.required"
   val lengthKey = "documentDescription.error.length"
@@ -66,25 +66,25 @@ class DocumentDescriptionFormProviderSpec extends StringFieldBehaviours with Gui
 
     Seq(DocumentDescriptionMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required" in {
 
-          messages("documentDescription.error.required") mustBe
+          msgs("documentDescription.error.required") mustBe
             messagesForLanguage.errorRequired
         }
 
         "have the correct error message for length" in {
 
-          messages("documentDescription.error.length") mustBe
+          msgs("documentDescription.error.length") mustBe
             messagesForLanguage.errorLength
         }
 
         "have the correct error message for xss" in {
 
-          messages("documentDescription.error.xss") mustBe
+          msgs("documentDescription.error.xss") mustBe
             messagesForLanguage.errorXss
         }
       }

@@ -16,13 +16,13 @@
 
 package forms.sections.documents
 
+import base.SpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages
 import forms.behaviours.BooleanFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class ReferenceAvailableFormProviderSpec extends BooleanFieldBehaviours with GuiceOneAppPerSuite {
+class ReferenceAvailableFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "referenceAvailable.error.required"
   val invalidKey = "error.boolean"
@@ -49,13 +49,13 @@ class ReferenceAvailableFormProviderSpec extends BooleanFieldBehaviours with Gui
 
     Seq(ReferenceAvailableMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required" in {
 
-          messages("referenceAvailable.error.required") mustBe
+          msgs("referenceAvailable.error.required") mustBe
             messagesForLanguage.errorRequired
         }
 

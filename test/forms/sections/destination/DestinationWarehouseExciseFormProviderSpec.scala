@@ -16,14 +16,14 @@
 
 package forms.sections.destination
 
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
@@ -64,25 +64,25 @@ class DestinationWarehouseExciseFormProviderSpec extends StringFieldBehaviours w
 
   "Error Messages" - {
 
-    implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+    implicit val msgs: Messages = messages(Seq(English.lang))
 
     s"when output for language code '${English.lang.code}'" - {
 
       "have the correct required error message" in {
 
-        messages(requiredKey) mustBe
+        msgs(requiredKey) mustBe
           English.errorRequired
       }
 
       "have the correct length error message" in {
 
-        messages(lengthKey) mustBe
+        msgs(lengthKey) mustBe
           English.errorLength
       }
 
       "have the correct invalidCharacters error message" in {
 
-        messages(invalidCharactersKey) mustBe
+        msgs(invalidCharactersKey) mustBe
           English.errorInvalidCharacters
       }
     }

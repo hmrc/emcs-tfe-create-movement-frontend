@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,26 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        h2: components.h2
-)
+package pages.sections.items
 
-@(
-        headingMsg: String,
-        captionMsg: Option[String] = None,
-        classes: String = "govuk-heading-l govuk-!-margin-bottom-2",
-        hiddenContent: Option[String] = None,
-        args: Seq[Any] = Nil
-)(implicit messages: Messages)
+import models.Index
+import models.sections.items.ItemNetGrossMassModel
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-@captionMsg.map { caption =>
- @h2(caption, "govuk-caption-xl", hiddenContent = hiddenContent)
-}
-
-<h1 class="@classes">@messages(headingMsg, args:_*)</h1>
-
-@{
-    //$COVERAGE-OFF$
+case class ItemNetGrossMassPage(idx: Index) extends QuestionPage[ItemNetGrossMassModel] {
+  override val toString: String = "itemNetGrossMass"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

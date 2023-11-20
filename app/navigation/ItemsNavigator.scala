@@ -55,8 +55,12 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
 
-    case ItemQuantityPage(_) => (_: UserAnswers) =>
+    case ItemQuantityPage(idx) => (userAnswers: UserAnswers) =>
       //TODO: Route to CAM-ITM21
+      itemsRoutes.ItemNetGrossMassController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+    case ItemNetGrossMassPage(_) => (_: UserAnswers) =>
+      //TODO: Route to CAM-ITM44
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case ItemDegreesPlatoPage(idx) => (userAnswers: UserAnswers) =>

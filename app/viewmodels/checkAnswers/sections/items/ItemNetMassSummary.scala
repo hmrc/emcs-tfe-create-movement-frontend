@@ -16,30 +16,31 @@
 
 package viewmodels.checkAnswers.sections.items
 
-import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemCommodityCodePage
+import pages.sections.items.ItemNetGrossMassPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemCommodityCodeSummary {
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(ItemCommodityCodePage(idx)).map { value =>
-      SummaryListRowViewModel(
-        key = "itemCommodityCode.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemBrandName${idx.displayIndex}"
+object ItemNetMassSummary  {
+
+  def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
+    request.userAnswers.get(ItemNetGrossMassPage(idx)).map {
+      answer =>
+        SummaryListRowViewModel(
+          key     = "itemNetGrossMass.netMass.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlFormat.escape(s"${answer.netMass.toString()} kg").toString),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              "changeNetMass"
+            )
+              .withVisuallyHiddenText(messages("itemNetGrossMass.netMass.change.hidden"))
           )
-            .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
         )
-      )
     }
-  }
 }

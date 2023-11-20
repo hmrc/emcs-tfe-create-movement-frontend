@@ -18,8 +18,8 @@ package navigation
 
 import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models._
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -59,9 +59,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: Route to CAM-ITM21
       itemsRoutes.ItemNetGrossMassController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
-    case ItemNetGrossMassPage(_) => (_: UserAnswers) =>
-      //TODO: Route to CAM-ITM44
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemNetGrossMassPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemBulkPackagingChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemDegreesPlatoPage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemAlcoholStrengthPage(idx)) match {
@@ -89,6 +88,22 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemFiscalMarksPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+    case ItemBulkPackagingChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemBulkPackagingChoicePage(idx)) match {
+        case Some(true) =>
+          //TODO: Redirect to CAM-ITM45
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
+            case Some(Wine) =>
+              //TODO: Redirect to CAM-ITM15
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            case _ =>
+              //TODO: Redirect to CAM-ITM24
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+      }
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

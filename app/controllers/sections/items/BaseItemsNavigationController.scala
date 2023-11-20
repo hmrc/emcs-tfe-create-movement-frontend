@@ -28,14 +28,29 @@ import scala.concurrent.Future
 
 trait BaseItemsNavigationController extends BaseNavigationController {
 
-  def validateIndex(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def validateIndex(index: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
+    super.validateIndex(ItemsCount, index)(
+      onSuccess,
+      Redirect(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
+    )
+  }
+
+  def validateIndexAsync(index: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     super.validateIndex(ItemsCount, index)(
       onSuccess,
       Future.successful(Redirect(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     )
   }
 
-  def withGoodsType(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+  def withGoodsType(idx: Index)(f: GoodsType => Result)(implicit request: DataRequest[_]): Result =
+    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) =>
+        f(GoodsTypeModel.apply(epc))
+      case None =>
+        Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
+    }
+
+  def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         f(GoodsTypeModel.apply(epc))

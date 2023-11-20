@@ -32,22 +32,22 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemFiscalMarksController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemFiscalMarksFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemFiscalMarksView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                           override val messagesApi: MessagesApi,
+                                           override val userAnswersService: UserAnswersService,
+                                           override val userAllowList: UserAllowListAction,
+                                           override val navigator: ItemsNavigator,
+                                           override val auth: AuthAction,
+                                           override val getData: DataRetrievalAction,
+                                           override val requireData: DataRequiredAction,
+                                           formProvider: ItemFiscalMarksFormProvider,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: ItemFiscalMarksView
+                                         ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        withGoodsType(idx) { _ => //NOTE: not necessarily needed however good to have the guard
+      validateIndexAsync(idx) {
+        withGoodsTypeAsync(idx) { _ => //NOTE: not necessarily needed however good to have the guard
           renderView(Ok, fillForm(ItemFiscalMarksPage(idx), formProvider()), idx, mode)
         }
       }
@@ -55,8 +55,8 @@ class ItemFiscalMarksController @Inject()(
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        withGoodsType(idx) { _ =>
+      validateIndexAsync(idx) {
+        withGoodsTypeAsync(idx) { _ =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode),
             saveAndRedirect(ItemFiscalMarksPage(idx), _, mode)

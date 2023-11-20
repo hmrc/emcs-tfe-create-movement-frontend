@@ -21,9 +21,7 @@ import fixtures.messages.sections.items.ItemCommodityCodeMessages.English
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.GoodsTypeModel.Beer
 import models.NormalMode
-import models.UnitOfMeasure.Kilograms
 import models.requests.DataRequest
-import models.response.referenceData.CnCodeInformation
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -47,23 +45,10 @@ class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
       val view = app.injector.instanceOf[ItemCommodityCodeView]
       val form = app.injector.instanceOf[ItemCommodityCodeFormProvider].apply()
       val submitRoute = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-      val testEpc = "testEpc"
 
-      val testCommodityCode1 = CnCodeInformation(
-        cnCode = "testCnCode1",
-        cnCodeDescription = "testCnCodeDescription1",
-        exciseProductCode = testEpc,
-        exciseProductCodeDescription = "testExciseProductCodeDescription",
-        unitOfMeasure = Kilograms
-      )
+      val testCommodityCode1 = testCommodityCodeTobacco
 
-      val testCommodityCode2 = CnCodeInformation(
-        cnCode = "testCnCode2",
-        cnCodeDescription = "testCnCodeDescription2",
-        exciseProductCode = testEpc,
-        exciseProductCodeDescription = "testExciseProductCodeDescription",
-        unitOfMeasure = Kilograms
-      )
+      val testCommodityCode2 = testCommodityCodeWine
 
 
       implicit val doc: Document = Jsoup.parse(view(form, submitRoute, Beer, Seq(testCommodityCode1, testCommodityCode2)).toString())

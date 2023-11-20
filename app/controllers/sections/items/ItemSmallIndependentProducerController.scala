@@ -46,14 +46,14 @@ class ItemSmallIndependentProducerController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         renderView(Ok, fillForm(ItemSmallIndependentProducerPage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           saveAndRedirect(ItemSmallIndependentProducerPage(idx), _, mode)
@@ -62,7 +62,7 @@ class ItemSmallIndependentProducerController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    withGoodsType(idx) { goodsType =>
+    withGoodsTypeAsync(idx) { goodsType =>
       Future.successful(status(view(
         form = form,
         action = routes.ItemSmallIndependentProducerController.onSubmit(request.ern, request.draftId, idx, mode),

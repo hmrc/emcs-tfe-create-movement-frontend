@@ -46,15 +46,15 @@ class CommercialDescriptionController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
           renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
-        withGoodsType(idx) { goodsType =>
+      validateIndexAsync(idx) {
+        withGoodsTypeAsync(idx) { goodsType =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode),
             saveAndRedirect(CommercialDescriptionPage(idx), _, mode)
@@ -65,7 +65,7 @@ class CommercialDescriptionController @Inject()(
 
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    withGoodsType(idx) { goodsType =>
+    withGoodsTypeAsync(idx) { goodsType =>
       Future.successful(status(view(
         form = form,
         action = routes.CommercialDescriptionController.onSubmit(request.ern, request.draftId, idx, mode),

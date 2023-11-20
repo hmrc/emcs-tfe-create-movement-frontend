@@ -46,14 +46,14 @@ class ItemGeographicalIndicationChoiceController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         renderView(Ok, fillForm(ItemGeographicalIndicationChoicePage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           saveAndRedirect(ItemGeographicalIndicationChoicePage(idx), _, mode)
@@ -63,7 +63,7 @@ class ItemGeographicalIndicationChoiceController @Inject()(
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
-    withGoodsType(idx) { goodsType =>
+    withGoodsTypeAsync(idx) { goodsType =>
       Future.successful(status(view(
         form = form,
         action = routes.ItemGeographicalIndicationChoiceController.onSubmit(request.ern, request.draftId, idx, mode),

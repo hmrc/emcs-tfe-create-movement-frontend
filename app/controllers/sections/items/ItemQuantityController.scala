@@ -49,14 +49,14 @@ class ItemQuantityController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         renderView(Ok, fillForm(ItemQuantityPage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validateIndex(idx) {
+      validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           saveAndRedirect(ItemQuantityPage(idx), _, mode)
@@ -65,7 +65,7 @@ class ItemQuantityController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    withGoodsType(idx) { goodsType =>
+    withGoodsTypeAsync(idx) { goodsType =>
       (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
         case (Some(epc), Some(commodityCode)) =>
           cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>

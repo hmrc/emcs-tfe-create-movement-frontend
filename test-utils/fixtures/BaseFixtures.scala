@@ -16,9 +16,11 @@
 
 package fixtures
 
+import models.UnitOfMeasure.Kilograms
+import models.response.referenceData.CnCodeInformation
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import models.{CountryModel, ExciseProductCode, ExemptOrganisationDetailsModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
+import models.{CountryModel, ExciseProductCode, ExemptOrganisationDetailsModel, GoodsTypeModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -46,8 +48,8 @@ trait BaseFixtures {
   val testIndex1: Index = Index(0)
   val testIndex2: Index = Index(1)
 
-  val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT","12345")
-  val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber,None, Some("1234"))
+  val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
+  val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))
   val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
@@ -91,7 +93,9 @@ trait BaseFixtures {
 
 
   val testConsigneeBusinessNameJson: JsObject = Json.obj("consignee" -> Json.obj("businessName" -> "testBusinessName"))
+
   def testConsigneeExciseJson(ern: String): JsObject = Json.obj("consignee" -> Json.obj("exciseRegistrationNumber" -> ern))
+
   val testConsigneeAddressJson: JsObject = Json.obj("consignee" -> Json.obj("consigneeAddress" -> testUserAddress))
   val testConsigneeExemptOrganisationJson: JsObject = Json.obj("consignee" -> Json.obj("exemptOrganisation" -> testExemptedOrganisation))
   val testConsigneeVatJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testVat))
@@ -109,7 +113,7 @@ trait BaseFixtures {
 
   val dispatchDetailsModel = DispatchDetailsModel(
     date = LocalDate.of(2020, 2, 2),
-    time = LocalTime.of(7,25)
+    time = LocalTime.of(7, 25)
   )
 
   val dispatchDetailsJson = Json.obj(
@@ -143,5 +147,28 @@ trait BaseFixtures {
     "description" -> "Still wine and still fermented beverages other than wine and beer",
     "category" -> "W",
     "categoryDescription" -> "Wine and fermented beverages other than wine and beer"
+  )
+
+  val testEpcTobacco: String = "T200"
+  val testGoodsTypeTobacco: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcTobacco)
+  val testCnCodeTobacco: String = "24022090"
+  val testCnCodeTobacco2: String = "24029000"
+  val testCommodityCodeTobacco: CnCodeInformation = CnCodeInformation(
+    cnCode = testCnCodeTobacco,
+    cnCodeDescription = "Cigarettes containing tobacco / other",
+    exciseProductCode = testEpcTobacco,
+    exciseProductCodeDescription = "Cigarettes",
+    unitOfMeasure = Kilograms
+  )
+
+  val testEpcWine: String = "W200"
+  val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
+  val testCnCodeWine: String = "22060031"
+  val testCommodityCodeWine: CnCodeInformation = CnCodeInformation(
+    cnCode = testCnCodeWine,
+    cnCodeDescription = "Sparkling cider and perry",
+    exciseProductCode = testEpcTobacco,
+    exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
+    unitOfMeasure = Kilograms
   )
 }

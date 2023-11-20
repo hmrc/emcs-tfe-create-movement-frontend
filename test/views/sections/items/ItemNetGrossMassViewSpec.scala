@@ -33,7 +33,7 @@ import views.{BaseSelectors, ViewBehaviours}
 class ItemNetGrossMassViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
-    def questionTitle(i: Int): String = s".govuk-form-group:nth-of-type($i) > label > h2"
+    def questionTitle(i: Int): String = s".govuk-form-group:nth-of-type($i) > label"
     def questionHint(i: Int): String = s".govuk-form-group:nth-of-type($i) > .govuk-hint"
     def questionSuffix(i: Int): String = s".govuk-form-group:nth-of-type($i) > * > .govuk-input__suffix"
   }

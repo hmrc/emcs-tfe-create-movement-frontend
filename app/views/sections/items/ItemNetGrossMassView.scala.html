@@ -50,7 +50,7 @@
         @govukInput(
             InputViewModel(
                 field = form("netMass"),
-                label = LabelViewModel(HtmlContent(h2(messages("itemNetGrossMass.netMass"))))
+                label = LabelViewModel(Text(messages("itemNetGrossMass.netMass"))).withCssClass("govuk-label--m")
             )
             .withHint(Hint(content = Text(messages("itemNetGrossMass.netMass.hint"))))
             .withSuffix(PrefixOrSuffix(content = Text(messages("unitOfMeasure.kilograms.short"))))
@@ -60,7 +60,7 @@
         @govukInput(
             InputViewModel(
                 field = form("grossMass"),
-                label = LabelViewModel(HtmlContent(h2(messages("itemNetGrossMass.grossMass"))))
+                label = LabelViewModel(Text(messages("itemNetGrossMass.grossMass"))).withCssClass("govuk-label--m")
             )
             .withHint(Hint(content = Text(messages("itemNetGrossMass.grossMass.hint"))))
             .withSuffix(PrefixOrSuffix(content = Text(messages("unitOfMeasure.kilograms.short"))))

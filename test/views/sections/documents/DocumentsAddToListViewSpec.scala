@@ -17,12 +17,13 @@
 package views.sections.documents
 
 import base.ViewSpecBase
+import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, DocumentsCertificatesPage, ReferenceAvailablePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -30,7 +31,7 @@ import viewmodels.helpers.DocumentsAddToListHelper
 import views.html.sections.documents.DocumentsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with DocumentTypeFixtures {
 
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
@@ -49,6 +50,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val msgs: Messages = messages(app, English.lang)
 
       val userAnswers = emptyUserAnswers
+        .set(DocumentTypePage(0), documentTypeOtherModel)
         .set(ReferenceAvailablePage(0), false)
         .set(DocumentDescriptionPage(0), "description")
 
@@ -86,10 +88,11 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val msgs: Messages = messages(app, English.lang)
 
       val userAnswers = emptyUserAnswers
-        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference1")
-        .set(ReferenceAvailablePage(0), false)
-        .set(DocumentDescriptionPage(1), "description2")
+        .set(DocumentTypePage(1), documentTypeModel)
+        .set(ReferenceAvailablePage(1), true)
+        .set(DocumentReferencePage(1), "reference1")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
@@ -107,6 +110,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title(2),
         Selectors.h1 -> English.heading(2),
+//        Selectors.cardTitle -> s"${English.documentCardTitle(0)} ${English.incomplete}",
         Selectors.cardTitle -> English.documentCardTitle(0),
         Selectors.removeItemLink(1) -> English.removeDocument(0),
         Selectors.legendQuestion -> English.h2,
@@ -123,9 +127,10 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
       implicit val msgs: Messages = messages(app, English.lang)
 
       val userAnswers = emptyUserAnswers
-        .set(ReferenceAvailablePage(0), true)
+        .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference1")
-        .set(ReferenceAvailablePage(0), false)
+        .set(DocumentTypePage(1), documentTypeOtherModel)
+        .set(ReferenceAvailablePage(1), false)
         .set(DocumentDescriptionPage(1), "description2")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
@@ -182,7 +187,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
         Selectors.hiddenText -> English.hiddenSectionContent,
         Selectors.title -> English.title(1),
         Selectors.h1 -> English.heading(1),
-        Selectors.cardTitle -> English.documentCardTitle(0),
+        Selectors.cardTitle -> s"${English.documentCardTitle(0)} ${English.incomplete}",
         Selectors.removeItemLink(1) -> English.removeDocument(0),
         Selectors.editItemLink(1) -> English.editDocument(0),
         Selectors.legendQuestion -> English.h2,

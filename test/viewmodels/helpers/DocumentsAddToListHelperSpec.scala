@@ -25,10 +25,11 @@ import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage,
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, DocumentTypeSummary, ReferenceAvailableSummary}
-import views.html.components.link
+import views.html.components.{link, span, tag}
 
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
@@ -36,6 +37,8 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
     lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
+    implicit lazy val span = app.injector.instanceOf[span]
+    implicit lazy val tag = app.injector.instanceOf[tag]
 
     lazy val helper: DocumentsAddToListHelper = app.injector.instanceOf[DocumentsAddToListHelper]
   }
@@ -64,7 +67,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
             card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
                   href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
@@ -93,7 +96,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
             card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
                   href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
@@ -123,7 +126,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
             card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
                   href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
@@ -154,7 +157,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
             card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(0)))),
+              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
                   href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
@@ -172,7 +175,10 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
           ),
           SummaryList(
             card = Some(Card(
-              title = Some(CardTitle(Text(English.documentCardTitle(1)))),
+              title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
+                span(English.documentCardTitle(1), Some("govuk-!-margin-right-2")),
+                tag(English.incomplete, "red")
+              ))))),
               actions = Some(Actions(items = Seq(
                 ActionItem(
                   href = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,

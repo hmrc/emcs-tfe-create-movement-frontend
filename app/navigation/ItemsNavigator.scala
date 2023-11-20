@@ -59,9 +59,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: Route to CAM-ITM21
       itemsRoutes.ItemNetGrossMassController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
-    case ItemNetGrossMassPage(_) => (_: UserAnswers) =>
-      //TODO: Route to CAM-ITM44
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemNetGrossMassPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemBulkPackagingChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemDegreesPlatoPage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemAlcoholStrengthPage(idx)) match {

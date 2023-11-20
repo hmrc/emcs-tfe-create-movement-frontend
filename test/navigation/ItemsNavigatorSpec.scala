@@ -249,9 +249,8 @@ class ItemsNavigatorSpec extends SpecBase {
       "must go from the Item Net Gross Mass Page" - {
 
         "to the bulk-packaging-choice page" in {
-          //TODO change when CAM-ITM44 made
           navigator.nextPage(ItemNetGrossMassPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 

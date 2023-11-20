@@ -16,7 +16,7 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import fixtures.messages.ConfirmationMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,7 +26,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ConfirmationView
 
-class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
+import java.time.format.DateTimeFormatter
+
+class ConfirmationViewSpec extends ViewSpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -38,18 +40,34 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
 
         "when movement was Satisfactory" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-         lazy val view = app.injector.instanceOf[ConfirmationView]
+          val view = app.injector.instanceOf[ConfirmationView]
 
-          implicit val doc: Document = Jsoup.parse(view(testConfirmationReference).toString())
+          implicit val doc: Document = Jsoup.parse(view(testConfirmationReference, testSubmissionDate.toLocalDate).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.p(1) -> messagesForLanguage.reference(testConfirmationReference)
+            Selectors.h2(1) -> messagesForLanguage.movementInformationHeader,
+            Selectors.p(1) -> messagesForLanguage.printText,
+            Selectors.h2(2) -> messagesForLanguage.whatHappensNextHeader,
+            Selectors.p(2) -> messagesForLanguage.p1,
+            Selectors.p(3) -> messagesForLanguage.p2,
+            Selectors.p(4) -> messagesForLanguage.p3,
+            Selectors.p(5) -> messagesForLanguage.p4,
+            Selectors.p(6) -> messagesForLanguage.returnToAccountLink,
+            Selectors.p(7) -> messagesForLanguage.feedbackLink,
           ))
+
+          "have correct summary list" in {
+            val summaryList = doc.getElementsByClass("govuk-summary-list").first
+            summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe messagesForLanguage.localReferenceNumber
+            summaryList.getElementsByClass("govuk-summary-list__value").get(0).text mustBe testConfirmationReference
+            summaryList.getElementsByClass("govuk-summary-list__key").get(1).text mustBe messagesForLanguage.dateOfSubmission
+            summaryList.getElementsByClass("govuk-summary-list__value").get(1).text mustBe testSubmissionDate.toLocalDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))
+          }
         }
       }
     }

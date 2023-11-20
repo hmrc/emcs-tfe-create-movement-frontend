@@ -19,12 +19,14 @@ package controllers
 import config.SessionKeys.SUBMISSION_RECEIPT_REFERENCE
 import controllers.actions._
 import handlers.ErrorHandler
+import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
 import views.html.ConfirmationView
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 class ConfirmationController @Inject()(
@@ -40,10 +42,10 @@ class ConfirmationController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      request.session.get(SUBMISSION_RECEIPT_REFERENCE) match {
-        case Some(reference) =>
-          Ok(view(reference))
-        case None =>
+      (request.session.get(SUBMISSION_RECEIPT_REFERENCE), request.userAnswers.get(DeclarationPage)) match { //TODO Update Submission Reference
+        case (Some(submissionReference), Some(submissionTimestamp)) =>
+          Ok(view(submissionReference, submissionTimestamp.toLocalDate))
+        case req =>
           logger.warn("[onPageLoad] Could not retrieve submission receipt reference from Users session")
           BadRequest(errorHandler.badRequestTemplate)
       }

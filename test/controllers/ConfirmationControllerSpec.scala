@@ -18,57 +18,57 @@ package controllers
 
 import base.SpecBase
 import config.SessionKeys
-import controllers.actions.FakeDataRetrievalAction
-import models.UserAnswers
-import play.api.Play.materializer
+import handlers.ErrorHandler
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import pages.DeclarationPage
+import play.api.Application
+import play.api.i18n.Messages
+import play.api.inject.bind
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.ConfirmationView
 
-class ConfirmationControllerSpec extends SpecBase {
+class ConfirmationControllerSpec extends SpecBase with GuiceOneAppPerSuite {
+  val testUserAnswers = emptyUserAnswers.set(DeclarationPage, testSubmissionDate)
 
-  class Fixture(optUserAnswers: Option[UserAnswers]) {
-    lazy val view = app.injector.instanceOf[ConfirmationView]
-    val request = FakeRequest()
+  override lazy val app: Application =
+    applicationBuilder(userAnswers = Some(testUserAnswers))
+      .overrides(
+        bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute))
+      ).build()
 
-    lazy val testController = new ConfirmationController(
-      messagesApi,
-      fakeAuthAction,
-      fakeUserAllowListAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
-      dataRequiredAction,
-      messagesControllerComponents,
-      view,
-      errorHandler
-    )
-
-  }
+  val view: ConfirmationView = app.injector.instanceOf[ConfirmationView]
+  val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
+  val controller: ConfirmationController = app.injector.instanceOf[ConfirmationController]
+  implicit lazy val messagesInstance: Messages = messages(app)
 
   "Confirmation Controller" - {
 
     "when the confirmation receipt reference is held in session" - {
 
-      "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-
-        val req = dataRequest(
+      "must return OK and the correct view for a GET" in {
+        implicit val req = dataRequest(
           request = request.withSession(SessionKeys.SUBMISSION_RECEIPT_REFERENCE -> testConfirmationReference),
-          answers = emptyUserAnswers
+          answers = testUserAnswers
         )
 
-        val result = testController.onPageLoad(testErn, testDraftId)(req)
+        val result = controller.onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(testConfirmationReference)(req, messages(req)).toString
+        contentAsString(result) mustEqual view(testConfirmationReference, testSubmissionDate.toLocalDate).toString()
       }
     }
 
     "when NO confirmation receipt reference is held in session" - {
 
-      "must return BadRequests" in new Fixture(Some(emptyUserAnswers)) {
-
+      "must return BadRequests" in {
         val req = dataRequest(request, emptyUserAnswers)
 
-        val result = testController.onPageLoad(testErn, testDraftId)(req)
+        val result = route(app, request).value
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual errorHandler.badRequestTemplate(req).toString

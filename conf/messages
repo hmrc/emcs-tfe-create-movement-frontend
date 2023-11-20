@@ -204,10 +204,6 @@ checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
 checkYourAnswers.submit.button = Submit movement
 
-confirmation.title = Movement submitted
-confirmation.heading = Movement submitted
-confirmation.reference = Your reference is
-
 deferredMovement.title = Is this a deferred movement?
 deferredMovement.heading = Is this a deferred movement?
 deferredMovement.caption = Movement information
@@ -1161,3 +1157,21 @@ itemMaturationPeriodAge.error.maturationPeriodAge.invalid = Maturation age must 
 #TODO: No Design exists for this yet, to be confirmed and updated
 itemMaturationPeriodAge.checkYourAnswersLabel = Maturation age
 itemMaturationPeriodAge.change.hidden = the maturation age
+
+confirmation.title = Draft movement submitted
+confirmation.heading = Draft movement submitted
+confirmation.movementInformation = Movement information
+confirmation.localReferenceNumber = Local Reference Number
+confirmation.dateOfSubmission = Date of submission
+confirmation.printLink = Print this screen
+confirmation.printMessage = to make a record of your submission.
+confirmation.whatHappensNext = What happens next
+confirmation.p1 = If the submission is successful you’ll receive a 21 digit administrative reference code (ARC). This can take up to 15 minutes.
+confirmation.p2.beforeLink = If unsuccessful, you’ll get an error which you must correct and resubmit until you get an ARC.
+confirmation.p2.link = Contact the HMRC excise helpline
+confirmation.p2.afterLink = if you need more help or information about excise duties.
+confirmation.p3 = Goods must not be dispatched before an ARC has been allocated.
+confirmation.p4 = The ARC must be visible on either a printed eAD or any other commercial document, and must come with the goods.
+confirmation.returnToAccountLink = Return to account
+confirmation.feedbackLink = What did you think of this service?
+confirmation.feedbackText = (takes 30 seconds)

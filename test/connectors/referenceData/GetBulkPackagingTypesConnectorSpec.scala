@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetPackagingTypesConnectorSpec extends SpecBase
+class GetBulkPackagingTypesConnectorSpec extends SpecBase
   with Status
   with MimeTypes
   with HeaderNames
@@ -40,9 +40,9 @@ class GetPackagingTypesConnectorSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-  lazy val connector = new GetPackagingTypesConnectorImpl(mockHttpClient, appConfig)
+  lazy val connector = new GetBulkPackagingTypesConnectorImpl(mockHttpClient, appConfig)
 
-  "getPackagingTypes" - {
+  "getBulkPackagingTypes" - {
 
     "should return a successful response" - {
 
@@ -55,7 +55,7 @@ class GetPackagingTypesConnectorSpec extends SpecBase
           body = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
         ).returns(Future.successful(expectedResult))
 
-        val actualResult = connector.getPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue
+        val actualResult = connector.getBulkPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue
 
         actualResult mustBe expectedResult
       }
@@ -72,7 +72,7 @@ class GetPackagingTypesConnectorSpec extends SpecBase
           body = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
         ).returns(Future.successful(expectedResult))
 
-        val actualResult = connector.getPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue
+        val actualResult = connector.getBulkPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue
 
         actualResult mustBe expectedResult
       }

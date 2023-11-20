@@ -26,28 +26,28 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-trait GetPackagingTypesConnector {
+trait GetBulkPackagingTypesConnector {
   def baseUrl: String
 
-  def getPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode]
+  def getBulkPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode]
                        )(implicit headerCarrier: HeaderCarrier,
                          executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]]
 }
 
-class GetPackagingTypesConnectorImpl @Inject()(val http: HttpClient,
-                                           config: AppConfig) extends GetPackagingTypesHttpParser with GetPackagingTypesConnector {
+class GetBulkPackagingTypesConnectorImpl @Inject()(val http: HttpClient,
+                                                   config: AppConfig) extends GetBulkPackagingTypesHttpParser with GetBulkPackagingTypesConnector {
 
   override def baseUrl: String = config.referenceDataBaseUrl
 
-  override def getPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode])
+  override def getBulkPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode])
                                 (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]] = {
     post(baseUrl + "/oracle/packaging-types", packagingCodes)
       .recover {
         case JsResultException(errors) =>
-          logger.warn(s"[getPackagingTypes] Bad JSON response from emcs-tfe-reference-data: " + errors)
+          logger.warn(s"[getBulkPackagingTypes] Bad JSON response from emcs-tfe-reference-data: " + errors)
           Left(JsonValidationError)
         case error =>
-          logger.warn(s"[getPackagingTypes] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
+          logger.warn(s"[getBulkPackagingTypes] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
   }

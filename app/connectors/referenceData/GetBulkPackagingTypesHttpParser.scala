@@ -26,12 +26,12 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait GetPackagingTypesHttpParser extends BaseConnectorUtils[Seq[BulkPackagingType]] {
+trait GetBulkPackagingTypesHttpParser extends BaseConnectorUtils[Seq[BulkPackagingType]] {
 
   implicit val reads: Reads[Seq[BulkPackagingType]] = BulkPackagingType.seqReads
   def http: HttpClient
 
-  class GetPackagingTypesReads extends HttpReads[Either[ErrorResponse, Seq[BulkPackagingType]]] {
+  class GetBulkPackagingTypesReads extends HttpReads[Either[ErrorResponse, Seq[BulkPackagingType]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[BulkPackagingType]] = {
       response.status match {
         case OK =>
@@ -52,6 +52,6 @@ trait GetPackagingTypesHttpParser extends BaseConnectorUtils[Seq[BulkPackagingTy
           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]] =
     http.POST[Seq[ItemBulkPackagingCode], Either[ErrorResponse, Seq[BulkPackagingType]]](
       url, packagingCodes
-    )(Writes.seq(ItemBulkPackagingCode.writes), new GetPackagingTypesReads, hc, ec)
+    )(Writes.seq(ItemBulkPackagingCode.writes), new GetBulkPackagingTypesReads, hc, ec)
 
 }

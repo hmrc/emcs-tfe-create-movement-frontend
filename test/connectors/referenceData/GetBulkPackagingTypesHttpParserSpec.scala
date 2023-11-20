@@ -23,11 +23,11 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 
-class GetPackagingTypesHttpParserSpec extends SpecBase with GetPackagingTypesHttpParser with MockHttpClient {
+class GetBulkPackagingTypesHttpParserSpec extends SpecBase with GetBulkPackagingTypesHttpParser with MockHttpClient {
 
   override def http: HttpClient = mockHttpClient
 
-  "GetPackagingTypesReads" - {
+  "GetBulkPackagingTypesReads" - {
 
     "should return a Seq[BulkPackagingType]"- {
 
@@ -35,7 +35,7 @@ class GetPackagingTypesHttpParserSpec extends SpecBase with GetPackagingTypesHtt
 
         val expectedResult = Right(bulkPackagingTypes)
 
-        val actualResult = new GetPackagingTypesReads().read("", "", HttpResponse(Status.OK, bulkPackagingTypesJson.toString()))
+        val actualResult = new GetBulkPackagingTypesReads().read("", "", HttpResponse(Status.OK, bulkPackagingTypesJson.toString()))
 
         actualResult mustBe expectedResult
       }
@@ -52,7 +52,7 @@ class GetPackagingTypesHttpParserSpec extends SpecBase with GetPackagingTypesHtt
           Json.obj("is" -> "incorrect")
         )
 
-        val actualResult = new GetPackagingTypesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
+        val actualResult = new GetBulkPackagingTypesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
 
         actualResult mustBe expectedResult
       }
@@ -64,7 +64,7 @@ class GetPackagingTypesHttpParserSpec extends SpecBase with GetPackagingTypesHtt
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)
 
-        val actualResult = new GetPackagingTypesReads().read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, ""))
+        val actualResult = new GetBulkPackagingTypesReads().read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, ""))
 
         actualResult mustBe expectedResult
       }

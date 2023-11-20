@@ -18,7 +18,6 @@ package models.response
 
 import base.SpecBase
 import models.response.referenceData.BulkPackagingType
-import models.sections.items.ItemBulkPackagingCode
 import play.api.libs.json._
 
 class BulkPackagingTypeSpec extends SpecBase {

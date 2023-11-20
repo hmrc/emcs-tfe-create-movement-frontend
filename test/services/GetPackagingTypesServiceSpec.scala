@@ -17,8 +17,7 @@
 package services
 
 import base.SpecBase
-import mocks.connectors.MockGetPackagingTypesConnector
-import models.WithName
+import mocks.connectors.MockGetBulkPackagingTypesConnector
 import models.response.{PackagingTypesException, UnexpectedDownstreamResponseError}
 import models.sections.items.ItemBulkPackagingCode
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
@@ -27,16 +26,16 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetPackagingTypesServiceSpec extends SpecBase with MockGetPackagingTypesConnector {
+class GetPackagingTypesServiceSpec extends SpecBase with MockGetBulkPackagingTypesConnector {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global
 
-  lazy val testService = new GetPackagingTypesService(mockGetPackagingTypesConnector)
+  lazy val testService = new GetPackagingTypesService(mockGetBulkPackagingTypesConnector)
 
   val packagingCodes: Seq[ItemBulkPackagingCode] = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
 
-  ".getPackagingTypes" - {
+  ".getBulkPackagingTypes" - {
 
     "should return Seq[BulkPackagingType]" - {
 
@@ -44,9 +43,9 @@ class GetPackagingTypesServiceSpec extends SpecBase with MockGetPackagingTypesCo
 
         val expectedResult = bulkPackagingTypes
 
-        MockGetPackagingTypesConnector.getPackagingTypes().returns(Future.successful(Right(bulkPackagingTypes)))
+        MockGetBulkPackagingTypesConnector.getBulkPackagingTypes().returns(Future.successful(Right(bulkPackagingTypes)))
 
-        val actualResults = testService.getPackagingTypes(packagingCodes).futureValue
+        val actualResults = testService.getBulkPackagingTypes(packagingCodes).futureValue
 
         actualResults mustBe expectedResult
       }
@@ -58,9 +57,9 @@ class GetPackagingTypesServiceSpec extends SpecBase with MockGetPackagingTypesCo
 
         val expectedResult = "Invalid response from packaging types code endpoint"
 
-        MockGetPackagingTypesConnector.getPackagingTypes().returns(Future(Left(UnexpectedDownstreamResponseError)))
+        MockGetBulkPackagingTypesConnector.getBulkPackagingTypes().returns(Future(Left(UnexpectedDownstreamResponseError)))
 
-        val actualResult = intercept[PackagingTypesException](await(testService.getPackagingTypes(packagingCodes))).getMessage
+        val actualResult = intercept[PackagingTypesException](await(testService.getBulkPackagingTypes(packagingCodes))).getMessage
 
         actualResult mustBe expectedResult
       }

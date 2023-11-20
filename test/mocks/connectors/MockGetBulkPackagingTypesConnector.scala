@@ -16,7 +16,7 @@
 
 package mocks.connectors
 
-import connectors.referenceData.GetPackagingTypesConnector
+import connectors.referenceData.GetBulkPackagingTypesConnector
 import models.response.ErrorResponse
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
@@ -26,14 +26,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockGetPackagingTypesConnector extends MockFactory {
+trait MockGetBulkPackagingTypesConnector extends MockFactory {
 
-  lazy val mockGetPackagingTypesConnector: GetPackagingTypesConnector = mock[GetPackagingTypesConnector]
+  lazy val mockGetBulkPackagingTypesConnector: GetBulkPackagingTypesConnector = mock[GetBulkPackagingTypesConnector]
 
-  object MockGetPackagingTypesConnector {
+  object MockGetBulkPackagingTypesConnector {
 
-    def getPackagingTypes(): CallHandler3[Seq[ItemBulkPackagingCode], HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[BulkPackagingType]]]] =
-      (mockGetPackagingTypesConnector.getPackagingTypes(_: Seq[ItemBulkPackagingCode])(_: HeaderCarrier, _: ExecutionContext)).expects(*, *, *)
+    def getBulkPackagingTypes(): CallHandler3[Seq[ItemBulkPackagingCode], HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[BulkPackagingType]]]] =
+      (mockGetBulkPackagingTypesConnector.getBulkPackagingTypes(_: Seq[ItemBulkPackagingCode])(_: HeaderCarrier, _: ExecutionContext)).expects(*, *, *)
   }
 
 }

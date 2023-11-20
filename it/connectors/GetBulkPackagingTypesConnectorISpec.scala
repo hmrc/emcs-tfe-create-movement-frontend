@@ -2,10 +2,9 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, post, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.GetPackagingTypesConnector
+import connectors.referenceData.GetBulkPackagingTypesConnector
 import fixtures.BaseFixtures
 import models.response.UnexpectedDownstreamResponseError
-import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -19,7 +18,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetPackagingTypesConnectorISpec extends AnyFreeSpec
+class GetBulkPackagingTypesConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
@@ -32,9 +31,9 @@ class GetPackagingTypesConnectorISpec extends AnyFreeSpec
 
   val url = "/emcs-tfe-reference-data/oracle/packaging-types"
 
-  val packagingCodes: Seq[ItemBulkPackagingCode] = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
+  val bulkPackagingCodes: Seq[ItemBulkPackagingCode] = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
 
-  ".getPackagingTypes" - {
+  ".getBulkPackagingTypes" - {
 
     def app: Application =
       new GuiceApplicationBuilder()
@@ -42,7 +41,7 @@ class GetPackagingTypesConnectorISpec extends AnyFreeSpec
         .configure("features.stub-get-trader-known-facts" -> "false")
         .build()
 
-    lazy val connector: GetPackagingTypesConnector = app.injector.instanceOf[GetPackagingTypesConnector]
+    lazy val connector: GetBulkPackagingTypesConnector = app.injector.instanceOf[GetBulkPackagingTypesConnector]
 
     s"must return Right(Seq[BulkPackagingType]) when the server responds OK" in {
 
@@ -54,7 +53,7 @@ class GetPackagingTypesConnectorISpec extends AnyFreeSpec
               .withBody(bulkPackagingTypesJson.toString()))
       )
 
-      connector.getPackagingTypes(packagingCodes).futureValue mustBe Right(bulkPackagingTypes)
+      connector.getBulkPackagingTypes(bulkPackagingCodes).futureValue mustBe Right(bulkPackagingTypes)
     }
 
     "must fail when the server responds with any other status" in {
@@ -64,7 +63,7 @@ class GetPackagingTypesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getPackagingTypes(packagingCodes).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getBulkPackagingTypes(bulkPackagingCodes).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -74,7 +73,7 @@ class GetPackagingTypesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getPackagingTypes(packagingCodes).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getBulkPackagingTypes(bulkPackagingCodes).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

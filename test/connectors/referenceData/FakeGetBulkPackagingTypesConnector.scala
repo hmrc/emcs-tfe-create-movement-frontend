@@ -23,10 +23,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeGetPackagingTypesConnector extends GetPackagingTypesConnector {
+class FakeGetBulkPackagingTypesConnector extends GetBulkPackagingTypesConnector {
   override def baseUrl: String = ""
 
-  override def getPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode])
+  override def getBulkPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode])
                                 (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]] =
     Future.successful(Right(Seq.empty))
 }

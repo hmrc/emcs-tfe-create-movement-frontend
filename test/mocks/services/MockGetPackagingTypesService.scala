@@ -31,8 +31,8 @@ trait MockGetPackagingTypesService extends MockFactory {
 
   object MockGetPackagingTypesService {
 
-    def getPackagingTypes(): CallHandler2[Seq[ItemBulkPackagingCode], HeaderCarrier, Future[Seq[BulkPackagingType]]] = {
-      (mockGetPackagingTypesService.getPackagingTypes(_: Seq[ItemBulkPackagingCode])(_: HeaderCarrier)).expects(*, *)
+    def getBulkPackagingTypes(): CallHandler2[Seq[ItemBulkPackagingCode], HeaderCarrier, Future[Seq[BulkPackagingType]]] = {
+      (mockGetPackagingTypesService.getBulkPackagingTypes(_: Seq[ItemBulkPackagingCode])(_: HeaderCarrier)).expects(*, *)
     }
   }
 }

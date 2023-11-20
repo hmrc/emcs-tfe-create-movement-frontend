@@ -425,7 +425,7 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
-        "to the Items Index page" - {
+        "to the Packaging Select page" - {
           //TODO: Redirect to CAM-ITM24
           "when the user answers no and EPC is not wine" in {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(

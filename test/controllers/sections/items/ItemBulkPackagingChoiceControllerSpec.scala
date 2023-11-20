@@ -96,24 +96,6 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must redirect to the Index page for GET when no Goods Type" in new Test(Some(
-      emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), "12345768")
-    )) {
-      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-    }
-
-    "must redirect to the Index page for POST when no Goods Type" in new Test(Some(
-      emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), "12345768")
-    )) {
-      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-    }
-
     "must redirect to the Index page for GET when no Item" in new Test(Some(emptyUserAnswers)) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 

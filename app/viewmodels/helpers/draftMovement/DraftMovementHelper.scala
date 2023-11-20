@@ -268,7 +268,7 @@ class DraftMovementHelper @Inject()() extends Logging {
       rows = Seq(TaskListSectionRow(
         taskName = messages("draftMovement.section.submit.reviewAndSubmit"),
         id = "submit",
-        link = if (completed) Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url) else None,
+        link = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.draftId).url) else None,
         section = None,
         status = if (completed) None else Some(CannotStartYet)
       ))

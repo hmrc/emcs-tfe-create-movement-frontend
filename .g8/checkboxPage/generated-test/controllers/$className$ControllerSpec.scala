@@ -47,7 +47,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set($className$Page, "answer")
+      emptyUserAnswers.set($className$Page, $className$.values.toSet)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
@@ -59,7 +59,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", $className$.values.toSet)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

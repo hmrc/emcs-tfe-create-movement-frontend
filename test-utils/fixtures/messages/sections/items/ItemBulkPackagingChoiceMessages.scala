@@ -24,7 +24,6 @@ object ItemBulkPackagingChoiceMessages {
     _: i18n =>
     val heading: String => String = goodsType => s"Is the $goodsType being moved in bulk?"
     val title: String => String = goodsType => titleHelper(heading(goodsType))
-    val caption = "This section is Item information"
     val hint = "Moving goods in bulk means that the goods are loaded directly into a vessel in large quantity, " +
       "and not packaged. For example, transporting liquids in a tanker."
     val cyaLabel: String = "Bulk packaging"

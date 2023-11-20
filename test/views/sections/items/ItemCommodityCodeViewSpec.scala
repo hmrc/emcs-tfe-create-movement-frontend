@@ -21,9 +21,7 @@ import fixtures.messages.sections.items.ItemCommodityCodeMessages.English
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.GoodsTypeModel.Beer
 import models.NormalMode
-import models.UnitOfMeasure.Kilograms
 import models.requests.DataRequest
-import models.response.referenceData.CnCodeInformation
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages

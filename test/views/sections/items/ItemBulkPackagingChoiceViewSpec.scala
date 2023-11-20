@@ -23,7 +23,6 @@ import models.GoodsTypeModel
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -55,7 +54,7 @@ class ItemBulkPackagingChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.title(goodsType.toSingularOutput()),
                 Selectors.h1 -> messagesForLanguage.heading(goodsType.toSingularOutput()),
-                Selectors.h2(1) -> messagesForLanguage.caption,
+                Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
                 Selectors.hint -> messagesForLanguage.hint,
                 Selectors.radioButton(1) -> messagesForLanguage.yes,
                 Selectors.radioButton(2) -> messagesForLanguage.no,

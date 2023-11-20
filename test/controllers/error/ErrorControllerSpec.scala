@@ -23,8 +23,6 @@ import views.html.auth.errors._
 
 class ErrorControllerSpec extends SpecBase {
 
-  class Fixture
-
   "Unauthorised Controller" - {
     lazy val unauthorisedView = app.injector.instanceOf[UnauthorisedView]
     lazy val notAnOrganisationView = app.injector.instanceOf[NotAnOrganisationView]

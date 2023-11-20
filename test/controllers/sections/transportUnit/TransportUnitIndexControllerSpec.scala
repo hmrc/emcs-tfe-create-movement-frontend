@@ -23,7 +23,6 @@ import models.sections.transportUnit.TransportUnitType
 import models.{NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
-import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -32,11 +31,7 @@ import queries.TransportUnitsCount
 class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Test(userAnswers: Option[UserAnswers]) {
-    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    //    lazy val messages: Messages = messagesApi.preferred(request)
 
     lazy val controller = new TransportUnitIndexController(
       messagesApi,

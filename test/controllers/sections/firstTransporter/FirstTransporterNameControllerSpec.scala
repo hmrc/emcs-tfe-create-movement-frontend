@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterNamePage
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.firstTransporter.FirstTransporterNameView
@@ -31,13 +32,15 @@ import scala.concurrent.Future
 
 class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new FirstTransporterNameFormProvider()
-    val form = formProvider()
-    val request = FakeRequest(GET, firstTransporterNameRoute)
-    val view = app.injector.instanceOf[FirstTransporterNameView]
+  lazy val formProvider: FirstTransporterNameFormProvider = new FirstTransporterNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: FirstTransporterNameView = app.injector.instanceOf[FirstTransporterNameView]
 
-    lazy val firstTransporterNameRoute = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val firstTransporterNameRoute: String =
+    controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val request = FakeRequest(GET, firstTransporterNameRoute)
 
     lazy val testController = new FirstTransporterNameController(
       messagesApi,

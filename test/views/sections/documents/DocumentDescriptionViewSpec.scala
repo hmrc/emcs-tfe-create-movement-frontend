@@ -40,7 +40,7 @@ class DocumentDescriptionViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DocumentDescriptionView]
+       lazy val view = app.injector.instanceOf[DocumentDescriptionView]
         val form = app.injector.instanceOf[DocumentDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

@@ -39,21 +39,19 @@ import scala.concurrent.Future
 
 class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures with JsonOptionFormatter {
 
+  lazy val formProvider: DestinationDetailsChoiceFormProvider = new DestinationDetailsChoiceFormProvider()
+  lazy val form: Form[Boolean] = formProvider(RegisteredConsignee)(messages(FakeRequest()))
+  lazy val view: DestinationDetailsChoiceView = app.injector.instanceOf[DestinationDetailsChoiceView]
+
+  lazy val destinationDetailsChoiceRoute: String =
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationDetailsChoiceRouteCheckMode: String =
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url
+  lazy val destinationDetailsChoiceSubmit: Call =
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val view = app.injector.instanceOf[DestinationDetailsChoiceView]
-
-    lazy val destinationDetailsChoiceRoute: String =
-      controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode).url
-
-    lazy val destinationDetailsChoiceRouteCheckMode: String =
-      controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url
-
-    lazy val destinationDetailsChoiceSubmit: Call =
-      controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val formProvider: DestinationDetailsChoiceFormProvider = new DestinationDetailsChoiceFormProvider()
-    lazy val form: Form[Boolean] = formProvider(RegisteredConsignee)(messages(FakeRequest()))
     val request = FakeRequest(GET, destinationDetailsChoiceRoute)
 
     lazy val testController = new DestinationDetailsChoiceController(

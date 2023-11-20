@@ -22,18 +22,31 @@ import controllers.routes
 import fixtures.OrganisationDetailsFixtures
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
-import models.{NormalMode, UserAnswers}
+import models.{ExemptOrganisationDetailsModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
+
+  implicit val ec = ExecutionContext.global
+
+  lazy val formProvider: ConsigneeExemptOrganisationFormProvider = new ConsigneeExemptOrganisationFormProvider()
+  lazy val form: Form[ExemptOrganisationDetailsModel] = formProvider()
+  lazy val view: ConsigneeExemptOrganisationView = app.injector.instanceOf[ConsigneeExemptOrganisationView]
+
+  lazy val consigneeExemptOrganisationRoute: String =
+    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val onSubmitCall: Call =
+    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
+
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -51,19 +64,6 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
         text = "three"
       )
     )
-
-    implicit val hc = HeaderCarrier()
-    implicit val ec = ExecutionContext.global
-
-    val formProvider = new ConsigneeExemptOrganisationFormProvider()
-    val form = formProvider()
-
-    lazy val consigneeExemptOrganisationRoute =
-      controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url
-
-    lazy val onSubmitCall = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
-
-    lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
     val request = FakeRequest(GET, consigneeExemptOrganisationRoute)
 
     lazy val testController = new ConsigneeExemptOrganisationController(

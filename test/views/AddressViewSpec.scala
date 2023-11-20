@@ -41,7 +41,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[AddressView]
+   lazy val view = app.injector.instanceOf[AddressView]
     val form = app.injector.instanceOf[AddressFormProvider].apply()
   }
 

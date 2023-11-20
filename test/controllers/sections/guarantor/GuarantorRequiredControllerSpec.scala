@@ -25,6 +25,7 @@ import models.sections.guarantor.GuarantorArranger.Transporter
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.guarantor.GuarantorRequiredView
@@ -33,15 +34,14 @@ import scala.concurrent.Future
 
 class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: GuarantorRequiredFormProvider = new GuarantorRequiredFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: GuarantorRequiredView = app.injector.instanceOf[GuarantorRequiredView]
+
+  lazy val guarantorRequiredRoute: String = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new GuarantorRequiredFormProvider()
-    val form = formProvider()
     val request = FakeRequest(GET, guarantorRequiredRoute)
-
-    val view = app.injector.instanceOf[GuarantorRequiredView]
-
-    lazy val guarantorRequiredRoute = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url
 
     lazy val testController = new GuarantorRequiredController(
       messagesApi,

@@ -41,7 +41,7 @@ class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[GuarantorArrangerView]
+       lazy val view = app.injector.instanceOf[GuarantorArrangerView]
         val form = app.injector.instanceOf[GuarantorArrangerFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

@@ -26,6 +26,8 @@ import models.UserAnswers
 import models.sections.documents.DocumentsAddToList
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.documents.DocumentsAddToListView
@@ -34,15 +36,14 @@ import scala.concurrent.Future
 
 class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsAddToListHelper with DocumentTypeFixtures {
 
+  lazy val formProvider: DocumentsAddToListFormProvider = new DocumentsAddToListFormProvider()
+  lazy val form: Form[DocumentsAddToList] = formProvider()
+  lazy val view: DocumentsAddToListView = app.injector.instanceOf[DocumentsAddToListView]
+
+  lazy val controllerRoute: String = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url
+  lazy val onSubmitCall: Call = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId)
+
   class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val controllerRoute = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url
-    lazy val onSubmitCall = routes.DocumentsAddToListController.onSubmit(testErn, testDraftId)
-
-    val formProvider = new DocumentsAddToListFormProvider()
-    val form = formProvider()
-
-    val view = app.injector.instanceOf[DocumentsAddToListView]
 
     val request = FakeRequest(GET, controllerRoute)
 

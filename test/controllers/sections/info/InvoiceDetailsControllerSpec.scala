@@ -25,34 +25,31 @@ import models.sections.info.InvoiceDetailsModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.InvoiceDetailsPage
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import utils.{DateTimeUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
 
-  val testLocalDate = LocalDate.of(2023, 2, 9)
+  val testLocalDate: LocalDate = LocalDate.of(2023, 2, 9)
 
-  val timeMachine = new TimeMachine {
-    override def now(): LocalDateTime = testLocalDate.atStartOfDay()
-  }
+  val timeMachine: TimeMachine = () => testLocalDate.atStartOfDay()
+
+  lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
+  lazy val invoiceDetailsSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId)
+
+  lazy val formProvider = new InvoiceDetailsFormProvider()
+  lazy val form: Form[InvoiceDetailsModel] = formProvider()
+  lazy val view: InvoiceDetailsView = app.injector.instanceOf[InvoiceDetailsView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val invoiceDetailsPreDraftSubmitRoute = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
-    lazy val invoiceDetailsSubmitRoute = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId)
-
-    lazy val formProvider = new InvoiceDetailsFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[InvoiceDetailsView]
 
     lazy val controller = new InvoiceDetailsController(
       messagesApi,

@@ -41,7 +41,7 @@ class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitTypeView]
+       lazy val view = app.injector.instanceOf[TransportUnitTypeView]
         val form = app.injector.instanceOf[TransportUnitTypeFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

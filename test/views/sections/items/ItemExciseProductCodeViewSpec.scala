@@ -45,7 +45,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemExciseProductCodeView]
+       lazy val view = app.injector.instanceOf[ItemExciseProductCodeView]
         val selectOptions = SelectItemHelper.constructSelectItems(
           selectOptions = Seq(beerExciseProductCode),
           defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"

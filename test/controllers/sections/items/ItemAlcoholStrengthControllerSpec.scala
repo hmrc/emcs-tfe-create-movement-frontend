@@ -24,7 +24,8 @@ import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemAlcoholStrengthPage, ItemExciseProductCodePage}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemAlcoholStrengthView
@@ -34,18 +35,16 @@ import scala.concurrent.Future
 class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  def itemAlcoholStrengthSubmitAction(idx: Index = testIndex1) = routes.ItemAlcoholStrengthController.onSubmit(testErn, testDraftId, idx, NormalMode)
+  def itemAlcoholStrengthSubmitAction(idx: Index = testIndex1): Call = routes.ItemAlcoholStrengthController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
+  lazy val formProvider: ItemAlcoholStrengthFormProvider = new ItemAlcoholStrengthFormProvider()
+  lazy val form: Form[BigDecimal] = formProvider()
+  lazy val view: ItemAlcoholStrengthView = app.injector.instanceOf[ItemAlcoholStrengthView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-
-    lazy val formProvider = new ItemAlcoholStrengthFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemAlcoholStrengthView]
 
     lazy val controller = new ItemAlcoholStrengthController(
       messagesApi,

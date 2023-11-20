@@ -42,7 +42,7 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours {
       implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-      val view = app.injector.instanceOf[ItemCommodityCodeView]
+     lazy val view = app.injector.instanceOf[ItemCommodityCodeView]
       val form = app.injector.instanceOf[ItemCommodityCodeFormProvider].apply()
       val submitRoute = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
 

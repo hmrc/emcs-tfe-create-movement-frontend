@@ -25,6 +25,7 @@ import models.sections.info.DispatchPlace
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.DispatchPlacePage
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -34,13 +35,12 @@ import scala.concurrent.Future
 
 class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
+  lazy val formProvider: DispatchPlaceFormProvider = new DispatchPlaceFormProvider()
+  lazy val form: Form[DispatchPlace] = formProvider()
+  lazy val view: DispatchPlaceView = app.injector.instanceOf[DispatchPlaceView]
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    lazy val formProvider = new DispatchPlaceFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[DispatchPlaceView]
 
     lazy val controller = new DispatchPlaceController(
       messagesApi,

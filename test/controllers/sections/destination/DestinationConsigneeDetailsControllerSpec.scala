@@ -24,6 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination._
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.destination.DestinationConsigneeDetailsView
@@ -32,16 +33,16 @@ import scala.concurrent.Future
 
 class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: DestinationConsigneeDetailsFormProvider = new DestinationConsigneeDetailsFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: DestinationConsigneeDetailsView = app.injector.instanceOf[DestinationConsigneeDetailsView]
+
+  lazy val destinationConsigneeDetailsRoute: String =
+    routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationConsigneeDetailsRouteCheckMode: String =
+    routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
+
   class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new DestinationConsigneeDetailsFormProvider()
-
-    val form = formProvider()
-
-    val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
-
-    lazy val destinationConsigneeDetailsRoute = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationConsigneeDetailsRouteCheckMode = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
-
     lazy val testController = new DestinationConsigneeDetailsController(
       messagesApi,
       mockUserAnswersService,

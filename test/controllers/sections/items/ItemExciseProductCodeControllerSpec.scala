@@ -23,6 +23,7 @@ import mocks.services.{MockGetCnCodeInformationService, MockGetExciseProductCode
 import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
+import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -41,13 +42,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
   val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
+  lazy val formProvider: ItemExciseProductCodeFormProvider = new ItemExciseProductCodeFormProvider()
+  lazy val form: Form[String] = formProvider.apply(sampleEPCs)
+  lazy val view: ItemExciseProductCodeView = app.injector.instanceOf[ItemExciseProductCodeView]
+
   class Fixture(val userAnswers: Option[UserAnswers]) {
-    lazy val formProvider = new ItemExciseProductCodeFormProvider()
-    lazy val form = formProvider.apply(sampleEPCs)
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemExciseProductCodeView]
 
     lazy val controller = new ItemExciseProductCodeController(
       messagesApi,

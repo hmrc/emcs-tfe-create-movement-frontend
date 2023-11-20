@@ -24,6 +24,7 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.guarantor.GuarantorNameView
@@ -32,15 +33,14 @@ import scala.concurrent.Future
 
 class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: GuarantorNameFormProvider = new GuarantorNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: GuarantorNameView = app.injector.instanceOf[GuarantorNameView]
+
+  lazy val guarantorNameRoute: String = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new GuarantorNameFormProvider()
-    val form = formProvider()
-    val request = FakeRequest(GET, GuarantorNameRoute)
-
-    val view = app.injector.instanceOf[GuarantorNameView]
-
-    lazy val GuarantorNameRoute = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+    val request = FakeRequest(GET, guarantorNameRoute)
 
     lazy val testController = new GuarantorNameController(
       messagesApi,
@@ -78,7 +78,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorArrangerPage, GoodsOwner))) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(GuarantorArrangerPage, GoodsOwner)))
 
-      val req = FakeRequest(POST, GuarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -87,7 +87,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorArrangerPage, GoodsOwner))) {
-      val req = FakeRequest(POST, GuarantorNameRoute).withFormUrlEncodedBody(("value", ""))
+      val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -121,8 +121,8 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
     }
 
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in  new Fixture(None) {
-      val req = FakeRequest(POST, GuarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

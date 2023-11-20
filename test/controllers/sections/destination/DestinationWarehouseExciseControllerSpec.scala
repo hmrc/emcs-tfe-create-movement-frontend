@@ -27,6 +27,8 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationWarehouseExcisePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.destination.DestinationWarehouseExciseView
@@ -35,17 +37,16 @@ import scala.concurrent.Future
 
 class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DestinationWarehouseExciseFormProvider = new DestinationWarehouseExciseFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DestinationWarehouseExciseView = app.injector.instanceOf[DestinationWarehouseExciseView]
+
+  lazy val destinationWarehouseExciseRoute: String =
+    controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationWarehouseExciseOnSubmit: Call =
+    controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new DestinationWarehouseExciseFormProvider()
-    val form = formProvider()
-
-    lazy val destinationWarehouseExciseRoute = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationWarehouseExciseOnSubmit = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[DestinationWarehouseExciseView]
-
     lazy val testController = new DestinationWarehouseExciseController(
       messagesApi,
       mockUserAnswersService,
@@ -60,7 +61,6 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
     )
 
     val request = FakeRequest(GET, destinationWarehouseExciseRoute)
-
   }
 
   "DestinationWarehouseExcise Controller" - {

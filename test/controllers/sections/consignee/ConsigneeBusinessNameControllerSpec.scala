@@ -24,6 +24,8 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeBusinessNamePage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeBusinessNameView
@@ -32,14 +34,17 @@ import scala.concurrent.Future
 
 class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  lazy val formProvider: ConsigneeBusinessNameFormProvider = new ConsigneeBusinessNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ConsigneeBusinessNameView = app.injector.instanceOf[ConsigneeBusinessNameView]
 
-    val formProvider = new ConsigneeBusinessNameFormProvider()
-    val form = formProvider()
+  lazy val consigneeBusinessNameRoute: String =
+    controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeBusinessNameSubmit: Call =
+    controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, consigneeBusinessNameRoute)
-    lazy val consigneeBusinessNameRoute = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consigneeBusinessNameSubmit = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
-    lazy val view = app.injector.instanceOf[ConsigneeBusinessNameView]
 
     lazy val testController = new ConsigneeBusinessNameController(
       messagesApi,

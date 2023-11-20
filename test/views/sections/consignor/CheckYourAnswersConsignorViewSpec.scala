@@ -44,7 +44,7 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),

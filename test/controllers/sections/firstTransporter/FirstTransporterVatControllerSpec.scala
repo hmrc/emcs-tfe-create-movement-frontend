@@ -23,6 +23,8 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterVatPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.firstTransporter.FirstTransporterVatView
@@ -31,17 +33,19 @@ import scala.concurrent.Future
 
 class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: FirstTransporterVatFormProvider = new FirstTransporterVatFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: FirstTransporterVatView = app.injector.instanceOf[FirstTransporterVatView]
+
+  lazy val firstTransporterVatRoute: String =
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val firstTransporterVatSubmitAction: Call =
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val firstTransporterVatNonGBVATRoute: String =
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testDraftId).url
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new FirstTransporterVatFormProvider()
-    val form = formProvider()
-
-    lazy val firstTransporterVatRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val firstTransporterVatSubmitAction = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testDraftId, NormalMode)
-    lazy val firstTransporterVatNonGBVATRoute = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testDraftId).url
-
     val request = FakeRequest(GET, firstTransporterVatRoute)
-
-    val view = app.injector.instanceOf[FirstTransporterVatView]
 
     lazy val testController = new FirstTransporterVatController(
       messagesApi,

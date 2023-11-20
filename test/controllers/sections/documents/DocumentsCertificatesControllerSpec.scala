@@ -24,6 +24,8 @@ import models.sections.documents.DocumentsAddToList
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.documents.DocumentsCertificatesView
@@ -32,19 +34,17 @@ import scala.concurrent.Future
 
 class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DocumentsCertificatesFormProvider = new DocumentsCertificatesFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: DocumentsCertificatesView = app.injector.instanceOf[DocumentsCertificatesView]
+
+  lazy val documentsCertificatesRoute: String =
+    routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url
+
+  lazy val onSubmitCall: Call =
+    routes.DocumentsCertificatesController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Setup(val startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new DocumentsCertificatesFormProvider()
-    val form = formProvider()
-
-    lazy val documentsCertificatesRoute =
-      routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, NormalMode).url
-
-    lazy val onSubmitCall =
-      routes.DocumentsCertificatesController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[DocumentsCertificatesView]
-
     val request = FakeRequest(GET, documentsCertificatesRoute)
 
     lazy val testController = new DocumentsCertificatesController(

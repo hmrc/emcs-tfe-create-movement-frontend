@@ -40,7 +40,7 @@ class DispatchBusinessNameViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DispatchBusinessNameView]
+       lazy val view = app.injector.instanceOf[DispatchBusinessNameView]
         val form = app.injector.instanceOf[DispatchBusinessNameFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

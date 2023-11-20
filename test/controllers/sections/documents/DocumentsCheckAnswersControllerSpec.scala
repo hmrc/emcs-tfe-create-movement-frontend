@@ -21,21 +21,25 @@ import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDocumentsCheckAnswersHelper
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.FakeNavigators.FakeDocumentsNavigator
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.helpers.CheckYourAnswersDocumentsHelper
 import views.html.sections.documents.DocumentsCheckAnswersView
 
 class DocumentsCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDocumentsCheckAnswersHelper {
 
+  implicit val request: DataRequest[AnyContentAsEmpty.type] =
+    dataRequest(FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url))
+  implicit val msgs: Messages = messages(request)
+  lazy val view: DocumentsCheckAnswersView = app.injector.instanceOf[DocumentsCheckAnswersView]
+  val summaryList: SummaryList = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()(request, msgs)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    implicit val request = dataRequest(FakeRequest(GET, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url))
-    implicit val msgs = messages(request)
-    val view = app.injector.instanceOf[DocumentsCheckAnswersView]
-    val summaryList = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()(request, msgs)
-
     lazy val testController = new DocumentsCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
@@ -76,7 +80,7 @@ class DocumentsCheckAnswersControllerSpec extends SpecBase with MockUserAnswersS
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None){
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, routes.DocumentsCheckAnswersController.onPageLoad(testErn, testDraftId).url).withFormUrlEncodedBody(("value", "true"))
 
       val result = testController.onSubmit(testErn, testDraftId)(req)

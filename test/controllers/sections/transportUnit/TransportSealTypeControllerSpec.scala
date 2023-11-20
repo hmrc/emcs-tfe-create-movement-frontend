@@ -26,6 +26,7 @@ import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit._
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -35,14 +36,12 @@ import scala.concurrent.Future
 
 class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersService with TransportUnitFixtures {
 
+  lazy val formProvider: TransportSealTypeFormProvider = new TransportSealTypeFormProvider()
+  lazy val form: Form[TransportSealTypeModel] = formProvider()
+  lazy val view: TransportSealTypeView = app.injector.instanceOf[TransportSealTypeView]
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new TransportSealTypeFormProvider()
-    val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[TransportSealTypeView]
 
     lazy val controller = new TransportSealTypeController(
       messagesApi,

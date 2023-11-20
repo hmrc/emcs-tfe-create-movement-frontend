@@ -22,9 +22,11 @@ import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterAddressPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AddressView
@@ -33,16 +35,16 @@ import scala.concurrent.Future
 
 class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+
+  lazy val firstTransporterAddressRoute: String =
+    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val firstTransporterAddressOnSubmit: Call =
+    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new AddressFormProvider()
-    val form = formProvider()
-
-    lazy val firstTransporterAddressRoute = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val firstTransporterAddressOnSubmit = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[AddressView]
-
     val request = FakeRequest(GET, firstTransporterAddressRoute)
 
     lazy val testController = new FirstTransporterAddressController(

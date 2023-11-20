@@ -26,7 +26,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val view = app.injector.instanceOf[$className$View]
+   lazy val view = app.injector.instanceOf[$className$View]
 
     lazy val controller = new $className$Controller(
       messagesApi,

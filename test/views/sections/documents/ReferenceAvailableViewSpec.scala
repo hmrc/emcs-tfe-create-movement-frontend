@@ -41,7 +41,7 @@ class ReferenceAvailableViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ReferenceAvailableView]
+       lazy val view = app.injector.instanceOf[ReferenceAvailableView]
         val form = app.injector.instanceOf[ReferenceAvailableFormProvider].apply()
 
         implicit val doc: Document =

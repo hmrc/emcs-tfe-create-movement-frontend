@@ -40,7 +40,7 @@ class DispatchCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DispatchCheckAnswersView]
+       lazy val view = app.injector.instanceOf[DispatchCheckAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq.empty), testOnwardRoute).toString())
 

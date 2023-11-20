@@ -26,7 +26,6 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -36,18 +35,14 @@ import scala.concurrent.Future
 
 class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: TransportUnitIdentityFormProvider = new TransportUnitIdentityFormProvider()
+
+  lazy val form: Form[String] = formProvider(TransportUnitType.FixedTransport)
+
+  lazy val view: TransportUnitIdentityView = app.injector.instanceOf[TransportUnitIdentityView]
+
   class Test(userAnswers: Option[UserAnswers]) {
-    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val messages: Messages = messagesApi.preferred(request)
-
-    lazy val formProvider = new TransportUnitIdentityFormProvider()
-
-    lazy val form: Form[String] = formProvider(TransportUnitType.FixedTransport)
-
-    lazy val view: TransportUnitIdentityView = app.injector.instanceOf[TransportUnitIdentityView]
 
     lazy val controller = new TransportUnitIdentityController(
       messagesApi,
@@ -72,7 +67,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages).toString
+        view(form, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered and transport unit type is answered" in new Test(Some(
@@ -86,7 +81,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual
         view(form.fill("answer"), TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request, emptyUserAnswers
           .set(TransportUnitIdentityPage(testIndex1), "answer")
-          .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)), messages).toString
+          .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
@@ -121,7 +116,7 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
         view(boundForm, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request, emptyUserAnswers
-          .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)), messages).toString
+          .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)), messages(request)).toString
     }
 
     "must redirect to transport unit index controller for a GET if the index in the url is not valid" in new Test(Some(

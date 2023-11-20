@@ -25,6 +25,7 @@ import models.sections.items.ItemGeographicalIndicationType.ProtectedDesignation
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage, ItemGeographicalIndicationPage}
+import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -35,21 +36,19 @@ import scala.concurrent.Future
 class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), "W200")
     .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
 
   def itemGeographicalIndicationSubmitAction(idx: Index = testIndex1): Call =
     routes.ItemGeographicalIndicationController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
+  lazy val formProvider: ItemGeographicalIndicationFormProvider = new ItemGeographicalIndicationFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ItemGeographicalIndicationView = app.injector.instanceOf[ItemGeographicalIndicationView]
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-
-    lazy val formProvider = new ItemGeographicalIndicationFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemGeographicalIndicationView]
 
     lazy val controller = new ItemGeographicalIndicationController(
       messagesApi,

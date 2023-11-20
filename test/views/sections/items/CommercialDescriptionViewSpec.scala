@@ -42,7 +42,7 @@ class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CommercialDescriptionView]
+       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
@@ -71,7 +71,7 @@ class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CommercialDescriptionView]
+       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine).toString())
@@ -104,7 +104,7 @@ class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CommercialDescriptionView]
+       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
         val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Energy).toString())

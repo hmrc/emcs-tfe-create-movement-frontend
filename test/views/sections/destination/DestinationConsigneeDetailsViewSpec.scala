@@ -45,7 +45,7 @@ class DestinationConsigneeDetailsViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
+       lazy val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
         val form = app.injector.instanceOf[DestinationConsigneeDetailsFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
@@ -64,7 +64,7 @@ class DestinationConsigneeDetailsViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
+       lazy val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
         val form = app.injector.instanceOf[DestinationConsigneeDetailsFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form.bind(Map("value" -> "")), NormalMode).toString())

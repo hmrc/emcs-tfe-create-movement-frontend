@@ -23,10 +23,11 @@ import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.AddressView
@@ -35,17 +36,15 @@ import scala.concurrent.Future
 
 class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+
+  lazy val transportArrangerAddressOnSubmit: Call =
+    controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val formProvider = new AddressFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val transportArrangerAddressOnSubmit =
-      controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[AddressView]
 
     lazy val controller = new TransportArrangerAddressController(
       messagesApi,

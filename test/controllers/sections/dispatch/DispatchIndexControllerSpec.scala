@@ -32,7 +32,6 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
 
-
     lazy val testController = new DispatchIndexController(
       mockUserAnswersService,
       new FakeDispatchNavigator(testOnwardRoute),

@@ -45,7 +45,7 @@ class TransportSealTypeViewSpec extends SpecBase with ViewBehaviours {
             implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            val view = app.injector.instanceOf[TransportSealTypeView]
+           lazy val view = app.injector.instanceOf[TransportSealTypeView]
             val form = app.injector.instanceOf[TransportSealTypeFormProvider].apply()
 
             implicit val doc: Document = Jsoup.parse(

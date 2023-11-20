@@ -32,13 +32,14 @@ import views.html.sections.firstTransporter.FirstTransporterCheckAnswersView
 class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockFirstTransporterCheckAnswersHelper with MockUserAnswersService {
 
+  lazy val checkYourAnswersJourneyTypeRoute: String =
+    controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testDraftId).url
+
+  lazy val view: FirstTransporterCheckAnswersView = app.injector.instanceOf[FirstTransporterCheckAnswersView]
+
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
   class Fixtures(optUserAnswers: Option[UserAnswers]) {
-
-    lazy val checkYourAnswersJourneyTypeRoute = controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testDraftId).url
-
-    lazy val view = app.injector.instanceOf[FirstTransporterCheckAnswersView]
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
     implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
 

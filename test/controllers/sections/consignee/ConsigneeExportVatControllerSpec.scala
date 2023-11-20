@@ -26,6 +26,7 @@ import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExportVatPage
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeExportVatView
@@ -34,14 +35,17 @@ import scala.concurrent.Future
 
 class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    lazy val consigneeExportVatRoute = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val consigneeExportVatRouteSubmit = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(testErn, testDraftId, NormalMode).url
+  lazy val formProvider: ConsigneeExportVatFormProvider = new ConsigneeExportVatFormProvider()
+  lazy val form: Form[ConsigneeExportVat] = formProvider()
+  lazy val view: ConsigneeExportVatView = app.injector.instanceOf[ConsigneeExportVatView]
 
-    val formProvider = new ConsigneeExportVatFormProvider()
-    val form = formProvider()
+  lazy val consigneeExportVatRoute: String =
+    controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val consigneeExportVatRouteSubmit: String =
+    controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(testErn, testDraftId, NormalMode).url
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, consigneeExportVatRoute)
-    lazy val view = app.injector.instanceOf[ConsigneeExportVatView]
 
     lazy val testController = new ConsigneeExportVatController(
       messagesApi,

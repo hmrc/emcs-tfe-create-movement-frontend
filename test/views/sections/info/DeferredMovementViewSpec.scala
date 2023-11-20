@@ -42,7 +42,7 @@ class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[DeferredMovementView]
+       lazy val view = app.injector.instanceOf[DeferredMovementView]
         val form = app.injector.instanceOf[DeferredMovementFormProvider].apply()
 
         implicit val doc: Document =

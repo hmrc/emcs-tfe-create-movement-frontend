@@ -42,7 +42,7 @@ class JourneyTimeDaysViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[JourneyTimeDaysView]
+       lazy val view = app.injector.instanceOf[JourneyTimeDaysView]
         val form = app.injector.instanceOf[JourneyTimeDaysFormProvider].apply(45)
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

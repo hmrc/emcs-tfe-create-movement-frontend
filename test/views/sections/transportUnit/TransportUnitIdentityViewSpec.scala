@@ -56,7 +56,7 @@ class TransportUnitIdentityViewSpec extends SpecBase with ViewBehaviours {
             implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-            val view = app.injector.instanceOf[TransportUnitIdentityView]
+           lazy val view = app.injector.instanceOf[TransportUnitIdentityView]
             val form = app.injector.instanceOf[TransportUnitIdentityFormProvider].apply(transportUnitType)
 
             implicit val doc: Document = Jsoup.parse(
@@ -88,7 +88,7 @@ class TransportUnitIdentityViewSpec extends SpecBase with ViewBehaviours {
                 implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
                 implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-                val view = app.injector.instanceOf[TransportUnitIdentityView]
+               lazy val view = app.injector.instanceOf[TransportUnitIdentityView]
                 val form = app.injector.instanceOf[TransportUnitIdentityFormProvider]
                   .apply(transportUnitType)
                   .bind(Map("value" -> input))

@@ -32,16 +32,17 @@ import scala.concurrent.Future
 
 class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DocumentsRemoveFromListFormProvider = new DocumentsRemoveFromListFormProvider()
+
+  def documentsRemoveUnitRoute(idx: Index = 0): String =
+    controllers.sections.documents.routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, idx).url
+
+  lazy val view: DocumentsRemoveFromListView = app.injector.instanceOf[DocumentsRemoveFromListView]
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers
     .set(ReferenceAvailablePage(0), true)
     .set(DocumentReferencePage(0), "reference")
   )) {
-    val formProvider = new DocumentsRemoveFromListFormProvider()
-
-    def documentsRemoveUnitRoute(idx: Index = 0) =
-      controllers.sections.documents.routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, idx).url
-
-    val view = app.injector.instanceOf[DocumentsRemoveFromListView]
 
     val request = FakeRequest(GET, documentsRemoveUnitRoute())
 

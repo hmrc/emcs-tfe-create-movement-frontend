@@ -42,7 +42,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[DestinationWarehouseExciseView]
+       lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
         val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
 
         implicit val doc: Document =

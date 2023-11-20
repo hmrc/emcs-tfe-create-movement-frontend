@@ -57,7 +57,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeExcisePage, testErn)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -108,7 +108,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(DestinationTypePage, ExemptedOrganisation)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -159,7 +159,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -210,7 +210,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),

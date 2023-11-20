@@ -32,17 +32,16 @@ import views.html.sections.dispatch.DispatchCheckAnswersView
 
 class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDispatchCheckAnswersHelper {
 
+  lazy val view: DispatchCheckAnswersView = app.injector.instanceOf[DispatchCheckAnswersView]
+
+  lazy val dispatchCheckAnswersRoute: String =
+    controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url
+
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
   class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    lazy val dispatchCheckAnswersRoute = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url
-
-    lazy val view = app.injector.instanceOf[DispatchCheckAnswersView]
-
     val request = FakeRequest(GET, dispatchCheckAnswersRoute)
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
-
 
     lazy val testController = new DispatchCheckAnswersController(
       messagesApi,

@@ -26,7 +26,8 @@ import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit._
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportSealChoiceView
@@ -34,19 +35,16 @@ import views.html.sections.transportUnit.TransportSealChoiceView
 import scala.concurrent.Future
 
 class TransportSealChoiceControllerSpec extends SpecBase with MockUserAnswersService {
+
+  lazy val formProvider: TransportSealChoiceFormProvider = new TransportSealChoiceFormProvider()
+  lazy val form: Form[Boolean] = formProvider(Container)(messages(FakeRequest()))
+  lazy val view: TransportSealChoiceView = app.injector.instanceOf[TransportSealChoiceView]
+
+  lazy val transportSealChoiceOnSubmit: Call =
+    controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+
   class Setup(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-
-    val formProvider = new TransportSealChoiceFormProvider()
-
-    val form = formProvider(Container)(messages(FakeRequest()))
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val transportSealChoiceOnSubmit =
-      controllers.sections.transportUnit.routes.TransportSealChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-
-    val view = app.injector.instanceOf[TransportSealChoiceView]
 
     lazy val controller = new TransportSealChoiceController(
       messagesApi,

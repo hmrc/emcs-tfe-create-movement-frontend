@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchWarehouseExcisePage
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.dispatch.DispatchWarehouseExciseView
@@ -31,15 +32,15 @@ import scala.concurrent.Future
 
 class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DispatchWarehouseExciseFormProvider = new DispatchWarehouseExciseFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DispatchWarehouseExciseView = app.injector.instanceOf[DispatchWarehouseExciseView]
+
+  lazy val dispatchWarehouseExciseRoute: String =
+    controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new DispatchWarehouseExciseFormProvider()
-    val form = formProvider()
-
     val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
-
-    lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
-
-    lazy val dispatchWarehouseExciseRoute = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
 
     lazy val testController = new DispatchWarehouseExciseController(
       messagesApi,

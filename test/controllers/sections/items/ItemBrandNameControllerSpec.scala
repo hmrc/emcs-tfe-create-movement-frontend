@@ -27,6 +27,7 @@ import models.sections.items.ItemBrandNameModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemBrandNamePage, ItemExciseProductCodePage}
+import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -37,18 +38,16 @@ import scala.concurrent.Future
 class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
   def itemBrandNameSubmitAction(idx: Index = testIndex1): Call = routes.ItemBrandNameController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
+  lazy val formProvider: ItemBrandNameFormProvider = new ItemBrandNameFormProvider()
+  lazy val form: Form[ItemBrandNameModel] = formProvider()
+  lazy val view: ItemBrandNameView = app.injector.instanceOf[ItemBrandNameView]
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-
-    lazy val formProvider = new ItemBrandNameFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemBrandNameView]
 
     lazy val controller = new ItemBrandNameController(
       messagesApi,

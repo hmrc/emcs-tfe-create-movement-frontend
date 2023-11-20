@@ -22,9 +22,11 @@ import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchAddressPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AddressView
@@ -33,16 +35,16 @@ import scala.concurrent.Future
 
 class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+
+  lazy val dispatchAddressRoute: String =
+    controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val dispatchAddressOnSubmit: Call =
+    controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new AddressFormProvider()
-    val form = formProvider()
-
-    lazy val dispatchAddressRoute = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val dispatchAddressOnSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[AddressView]
-
     lazy val testController = new DispatchAddressController(
       messagesApi,
       mockUserAnswersService,
@@ -57,7 +59,6 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
     )
 
     val request = FakeRequest(GET, dispatchAddressRoute)
-
   }
 
   "DispatchAddress Controller" - {

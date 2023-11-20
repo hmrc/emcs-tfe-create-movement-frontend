@@ -22,9 +22,11 @@ import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AddressView
@@ -33,16 +35,17 @@ import scala.concurrent.Future
 
 class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+
+  lazy val consignorAddressRoute: String =
+    controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val consignorAddressOnSubmit: Call =
+    controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new AddressFormProvider()
-    val form = formProvider()
-
-    lazy val consignorAddressRoute = controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val consignorAddressOnSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(testErn, testDraftId, NormalMode)
     val request = FakeRequest(GET, consignorAddressRoute)
-    lazy val view = app.injector.instanceOf[AddressView]
 
     lazy val testController = new ConsignorAddressController(
       messagesApi,
@@ -56,7 +59,6 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       messagesControllerComponents,
       view
     )
-
   }
 
 

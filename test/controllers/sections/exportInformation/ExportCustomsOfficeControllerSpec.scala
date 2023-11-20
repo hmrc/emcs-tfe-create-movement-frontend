@@ -25,6 +25,8 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeExportInformationNavigator
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.info.DestinationTypePage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.exportInformation.ExportCustomsOfficeView
@@ -33,18 +35,17 @@ import scala.concurrent.Future
 
 class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val defaultUserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu)
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu)
+
+  lazy val formProvider: ExportCustomsOfficeFormProvider = new ExportCustomsOfficeFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ExportCustomsOfficeView = app.injector.instanceOf[ExportCustomsOfficeView]
+
+  lazy val exportCustomsOfficeRoute: String = routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val exportCustomsOfficeSubmitAction: Call = routes.ExportCustomsOfficeController.onSubmit(testErn, testDraftId, NormalMode)
+
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-
-    val formProvider = new ExportCustomsOfficeFormProvider()
-    val form = formProvider()
-
-    lazy val exportCustomsOfficeRoute = routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val exportCustomsOfficeSubmitAction = routes.ExportCustomsOfficeController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[ExportCustomsOfficeView]
-
     val request = FakeRequest(GET, exportCustomsOfficeRoute)
 
     lazy val testController = new ExportCustomsOfficeController(

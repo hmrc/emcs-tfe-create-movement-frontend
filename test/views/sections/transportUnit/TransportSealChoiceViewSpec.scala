@@ -49,7 +49,7 @@ class TransportSealChoiceViewSpec extends SpecBase with ViewBehaviours {
             implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))
-            val view = app.injector.instanceOf[TransportSealChoiceView]
+           lazy val view = app.injector.instanceOf[TransportSealChoiceView]
             val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(transportUnitType)
 
             implicit val doc: Document = Jsoup.parse(view(form, NormalMode, transportUnitType, testOnwardRoute).toString())

@@ -36,7 +36,7 @@ class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
+   lazy val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
     val form = app.injector.instanceOf[ImportCustomsOfficeCodeFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(

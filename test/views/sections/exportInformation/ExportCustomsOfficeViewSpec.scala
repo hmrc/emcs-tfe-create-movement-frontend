@@ -35,7 +35,7 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[ExportCustomsOfficeView]
+   lazy val view = app.injector.instanceOf[ExportCustomsOfficeView]
     val form = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(

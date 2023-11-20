@@ -41,7 +41,7 @@ class TransportArrangerViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportArrangerView]
+       lazy val view = app.injector.instanceOf[TransportArrangerView]
         val form = app.injector.instanceOf[TransportArrangerFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

@@ -40,7 +40,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExciseView]
+       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = false).toString())
@@ -59,7 +59,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExciseView]
+       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = true).toString())

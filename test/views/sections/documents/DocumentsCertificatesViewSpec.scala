@@ -41,7 +41,7 @@ class DocumentsCertificatesViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[DocumentsCertificatesView]
+       lazy val view = app.injector.instanceOf[DocumentsCertificatesView]
         val form = app.injector.instanceOf[DocumentsCertificatesFormProvider].apply()
 
         implicit val doc: Document =

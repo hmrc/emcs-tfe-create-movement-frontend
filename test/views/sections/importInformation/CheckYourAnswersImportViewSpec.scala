@@ -38,7 +38,7 @@ class CheckYourAnswersImportViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456"))
 
-    val view = app.injector.instanceOf[CheckYourAnswersImportView]
+   lazy val view = app.injector.instanceOf[CheckYourAnswersImportView]
 
     implicit val doc: Document = Jsoup.parse(view(
       testErn,

@@ -28,21 +28,21 @@ import play.api.test.Helpers._
 
 class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-  val request = FakeRequest(GET, controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url)
+    val request = FakeRequest(GET, controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url)
 
-  lazy val testController = new FirstTransporterIndexController(
-    mockUserAnswersService,
-    new FakeFirstTransporterNavigator(testOnwardRoute),
-    fakeAuthAction,
-    new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
-    dataRequiredAction,
-    fakeUserAllowListAction,
-    messagesControllerComponents
-  )
+    lazy val testController = new FirstTransporterIndexController(
+      mockUserAnswersService,
+      new FakeFirstTransporterNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
 
-}
+  }
 
   "FirstTransporterIndexController" - {
     "when FirstTransporterSection.isCompleted" - {

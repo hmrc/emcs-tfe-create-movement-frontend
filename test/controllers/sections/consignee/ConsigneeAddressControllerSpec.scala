@@ -35,15 +35,17 @@ import scala.concurrent.Future
 
 class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+
+  lazy val consigneeAddressRoute: String =
+    controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
+  lazy val consigneeAddressOnSubmit: Call =
+    controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testDraftId, NormalMode)
+
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider: AddressFormProvider = new AddressFormProvider()
-    val form: Form[UserAddress] = formProvider()
-    lazy val view: AddressView = app.injector.instanceOf[AddressView]
-    lazy val consigneeAddressRoute = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
-    lazy val consigneeAddressOnSubmit: Call =
-      controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, consigneeAddressRoute)
 

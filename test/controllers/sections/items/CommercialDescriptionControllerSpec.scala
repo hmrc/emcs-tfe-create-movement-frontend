@@ -24,6 +24,7 @@ import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
+import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -36,13 +37,12 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
   def itemCommercialDescriptionSubmitAction(idx: Index = testIndex1): Call =
     routes.CommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
+  lazy val formProvider: CommercialDescriptionFormProvider = new CommercialDescriptionFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: CommercialDescriptionView = app.injector.instanceOf[CommercialDescriptionView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-    lazy val formProvider = new CommercialDescriptionFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[CommercialDescriptionView]
 
     lazy val controller = new CommercialDescriptionController(
       messagesApi,

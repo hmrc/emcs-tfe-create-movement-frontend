@@ -24,6 +24,8 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchBusinessNamePage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.dispatch.DispatchBusinessNameView
@@ -32,16 +34,16 @@ import scala.concurrent.Future
 
 class DispatchBusinessNameControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DispatchBusinessNameFormProvider = new DispatchBusinessNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DispatchBusinessNameView = app.injector.instanceOf[DispatchBusinessNameView]
+
+  lazy val dispatchBusinessNameRoute: String =
+    controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val dispatchBusinessNameSubmit: Call =
+    controllers.sections.dispatch.routes.DispatchBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new DispatchBusinessNameFormProvider()
-    val form = formProvider()
-
-    lazy val dispatchBusinessNameRoute = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val dispatchBusinessNameSubmit = controllers.sections.dispatch.routes.DispatchBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[DispatchBusinessNameView]
-
     val request = FakeRequest(GET, dispatchBusinessNameRoute)
 
     lazy val testController = new DispatchBusinessNameController(

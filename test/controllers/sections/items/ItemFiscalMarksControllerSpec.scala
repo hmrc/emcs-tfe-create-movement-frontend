@@ -23,6 +23,7 @@ import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksPage}
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -32,18 +33,14 @@ import scala.concurrent.Future
 
 class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
-  val formProvider = new ItemFiscalMarksFormProvider()
-  val form = formProvider()
+  lazy val formProvider: ItemFiscalMarksFormProvider = new ItemFiscalMarksFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ItemFiscalMarksView = app.injector.instanceOf[ItemFiscalMarksView]
 
-  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
-    lazy val formProvider = new ItemFiscalMarksFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
 
     lazy val controller = new ItemFiscalMarksController(
       messagesApi,

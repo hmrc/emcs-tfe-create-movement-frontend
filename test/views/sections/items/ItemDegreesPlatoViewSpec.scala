@@ -43,7 +43,7 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemDegreesPlatoView]
+       lazy val view = app.injector.instanceOf[ItemDegreesPlatoView]
         val form = app.injector.instanceOf[ItemDegreesPlatoFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())

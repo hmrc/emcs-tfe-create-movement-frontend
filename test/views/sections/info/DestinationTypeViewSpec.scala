@@ -45,7 +45,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-              val view = app.injector.instanceOf[DestinationTypeView]
+             lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
               implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
@@ -64,7 +64,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-              val view = app.injector.instanceOf[DestinationTypeView]
+             lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
               implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())

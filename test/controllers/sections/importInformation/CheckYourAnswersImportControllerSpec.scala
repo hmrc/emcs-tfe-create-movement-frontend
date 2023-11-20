@@ -37,13 +37,17 @@ import views.html.sections.importInformation.CheckYourAnswersImportView
 class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckYourAnswersImportHelper with MockUserAnswersService {
 
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
+  implicit val msgs: Messages = messages(request)
+
+  lazy val view: CheckYourAnswersImportView = app.injector.instanceOf[CheckYourAnswersImportView]
+
+  val summaryList: SummaryList = SummaryListViewModel(
+    rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
+  ).withCssClass("govuk-!-margin-bottom-9")
+
   class Fixture(userAnswers: Option[UserAnswers]) {
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-    implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
-    implicit val msgs: Messages = messages(request)
-
-    val view = app.injector.instanceOf[CheckYourAnswersImportView]
-
     lazy val controller = new CheckYourAnswersImportController(
       messagesApi,
       fakeAuthAction,
@@ -55,10 +59,6 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
       MockCheckYourAnswersImportHelper,
       view
     )
-
-    val summaryList: SummaryList = SummaryListViewModel(
-      rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
   }
 
   "CheckYourAnswersImportController" - {
@@ -68,7 +68,7 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
         MockCheckAnswersImportHelper.summaryList().returns(summaryList)
         val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        val viewAsString = view(
+        lazy val viewAsString = view(
           testErn,
           testDraftId,
           summaryList

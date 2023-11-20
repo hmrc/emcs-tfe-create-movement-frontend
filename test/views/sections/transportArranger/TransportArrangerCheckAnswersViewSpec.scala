@@ -41,7 +41,7 @@ class TransportArrangerCheckAnswersViewSpec extends SpecBase with ViewBehaviours
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
+       lazy val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),

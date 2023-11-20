@@ -25,6 +25,7 @@ import models.sections.sad.SadAddToListModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.SadNavigator
 import pages.sections.sad.{ImportNumberPage, SadAddToListPage}
+import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -41,14 +42,12 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
     override def allSadSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = Nil
   }
 
+  lazy val formProvider: SadAddToListFormProvider = new SadAddToListFormProvider()
+  lazy val form: Form[SadAddToListModel] = formProvider()
+  lazy val view: SadAddToListView = app.injector.instanceOf[SadAddToListView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new SadAddToListFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[SadAddToListView]
 
     lazy val controller = new SadAddToListController(
       messagesApi,

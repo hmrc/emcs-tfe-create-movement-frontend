@@ -23,6 +23,8 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.destination.DestinationBusinessNameView
@@ -31,15 +33,17 @@ import scala.concurrent.Future
 
 class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DestinationBusinessNameFormProvider = new DestinationBusinessNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DestinationBusinessNameView = app.injector.instanceOf[DestinationBusinessNameView]
+
+  lazy val destinationBusinessNameRoute: String =
+    controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationBusinessNameOnSubmit: Call =
+    controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val formProvider = new DestinationBusinessNameFormProvider()
-    val form = formProvider()
-
-    lazy val destinationBusinessNameRoute = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationBusinessNameOnSubmit = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(testErn, testDraftId, NormalMode)
-
-    lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
 
     lazy val testController = new DestinationBusinessNameController(
       messagesApi,

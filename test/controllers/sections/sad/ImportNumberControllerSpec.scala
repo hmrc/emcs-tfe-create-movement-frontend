@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeSadNavigator
 import pages.sections.sad.ImportNumberPage
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -32,14 +33,12 @@ import scala.concurrent.Future
 
 class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: ImportNumberFormProvider = new ImportNumberFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ImportNumberView = app.injector.instanceOf[ImportNumberView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new ImportNumberFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[ImportNumberView]
 
     lazy val controller = new ImportNumberController(
       messagesApi,

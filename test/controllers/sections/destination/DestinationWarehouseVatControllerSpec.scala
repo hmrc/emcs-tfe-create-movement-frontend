@@ -27,6 +27,8 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.destination.DestinationWarehouseVatView
@@ -35,17 +37,18 @@ import scala.concurrent.Future
 
 class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DestinationWarehouseVatFormProvider = new DestinationWarehouseVatFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DestinationWarehouseVatView = app.injector.instanceOf[DestinationWarehouseVatView]
+
+  lazy val destinationWarehouseVatRoute: String =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationWarehouseVatOnSubmit: Call =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val destinationWarehouseSkipQuestion: Call =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.skipThisQuestion(testErn, testDraftId, NormalMode)
+
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testDraftId, NormalMode)
-    lazy val destinationWarehouseSkipQuestion = controllers.sections.destination.routes.DestinationWarehouseVatController.skipThisQuestion(testErn, testDraftId, NormalMode)
-
-    val formProvider = new DestinationWarehouseVatFormProvider()
-
-    val form = formProvider()
-
-    val view = app.injector.instanceOf[DestinationWarehouseVatView]
-
     lazy val testController = new DestinationWarehouseVatController(
       messagesApi,
       mockUserAnswersService,

@@ -33,13 +33,12 @@ import views.html.sections.transportArranger.TransportArrangerCheckAnswersView
 class TransportArrangerCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockTransportArrangerCheckAnswersHelper with MockUserAnswersService {
 
+  lazy val view: TransportArrangerCheckAnswersView = app.injector.instanceOf[TransportArrangerCheckAnswersView]
+
+  lazy val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
   class Fixtures(val userAnswers: Option[UserAnswers]) {
-
-    lazy val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
     lazy val controller = new TransportArrangerCheckAnswersController(
       messagesApi,

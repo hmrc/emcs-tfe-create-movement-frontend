@@ -41,7 +41,7 @@ class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DispatchWarehouseExciseView]
+       lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
         val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

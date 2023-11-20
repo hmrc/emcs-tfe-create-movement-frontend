@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.JourneyTimeHoursPage
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -34,14 +35,12 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
 
   val validAnswer = 1
 
+  lazy val formProvider: JourneyTimeHoursFormProvider = new JourneyTimeHoursFormProvider()
+  lazy val form: Form[Int] = formProvider()
+  lazy val view: JourneyTimeHoursView = app.injector.instanceOf[JourneyTimeHoursView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new JourneyTimeHoursFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[JourneyTimeHoursView]
 
     lazy val controller = new JourneyTimeHoursController(
       messagesApi,

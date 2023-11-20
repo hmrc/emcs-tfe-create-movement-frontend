@@ -41,7 +41,7 @@ class ConsigneeExemptOrganisationViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
+       lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
         val form = app.injector.instanceOf[ConsigneeExemptOrganisationFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(

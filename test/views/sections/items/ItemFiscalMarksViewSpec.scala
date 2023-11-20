@@ -40,7 +40,7 @@ class ItemFiscalMarksViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemFiscalMarksView]
+       lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
         val form = app.injector.instanceOf[ItemFiscalMarksFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

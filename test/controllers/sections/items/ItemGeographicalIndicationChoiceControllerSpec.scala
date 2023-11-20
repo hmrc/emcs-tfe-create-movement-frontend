@@ -21,11 +21,13 @@ import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Beer
+import models.sections.items.ItemGeographicalIndicationType
 import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemGeographicalIndicationChoiceView
@@ -34,20 +36,16 @@ import scala.concurrent.Future
 
 class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
-  val formProvider = new ItemGeographicalIndicationChoiceFormProvider()
-  val form = formProvider()
-  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+  lazy val formProvider: ItemGeographicalIndicationChoiceFormProvider = new ItemGeographicalIndicationChoiceFormProvider()
+  lazy val form: Form[ItemGeographicalIndicationType] = formProvider()
+  lazy val view: ItemGeographicalIndicationChoiceView = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
-  val action = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000")
+
+  val action: Call = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new ItemGeographicalIndicationChoiceFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
 
     lazy val controller = new ItemGeographicalIndicationChoiceController(
       messagesApi,

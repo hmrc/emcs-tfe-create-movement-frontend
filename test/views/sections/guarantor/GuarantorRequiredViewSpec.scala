@@ -42,7 +42,7 @@ class GuarantorRequiredViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[GuarantorRequiredView]
+       lazy val view = app.injector.instanceOf[GuarantorRequiredView]
         val form = app.injector.instanceOf[GuarantorRequiredFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

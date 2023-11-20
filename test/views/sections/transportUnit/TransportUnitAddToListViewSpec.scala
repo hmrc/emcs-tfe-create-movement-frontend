@@ -61,7 +61,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -100,7 +100,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -147,7 +147,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -193,7 +193,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
         implicit val doc: Document = Jsoup.parse(

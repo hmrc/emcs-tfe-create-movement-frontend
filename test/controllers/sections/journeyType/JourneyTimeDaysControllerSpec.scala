@@ -24,6 +24,7 @@ import models.sections.journeyType.HowMovementTransported
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTimeDaysPage}
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -35,14 +36,12 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
 
   val validAnswer = 1
 
+  lazy val formProvider: JourneyTimeDaysFormProvider = new JourneyTimeDaysFormProvider()
+  lazy val form: Form[Int] = formProvider(40)
+  lazy val view: JourneyTimeDaysView = app.injector.instanceOf[JourneyTimeDaysView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new JourneyTimeDaysFormProvider()
-    lazy val form = formProvider(40)
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[JourneyTimeDaysView]
 
     lazy val controller = new JourneyTimeDaysController(
       messagesApi,

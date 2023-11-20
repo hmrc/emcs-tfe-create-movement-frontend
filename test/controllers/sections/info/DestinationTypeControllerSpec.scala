@@ -54,6 +54,9 @@ import scala.concurrent.Future
 
 class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
+  lazy val formProvider: DestinationTypeFormProvider = new DestinationTypeFormProvider()
+  lazy val view: DestinationTypeView = app.injector.instanceOf[DestinationTypeView]
+
   class Fixture(
                  dispatchPlace: Option[DispatchPlace],
                  ern: String = testGreatBritainErn,
@@ -71,10 +74,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
     implicit lazy val getRequest = dataRequest(FakeRequest(GET, destinationTypeGetRoute), ern = ern)
     implicit lazy val postRequest = dataRequest(FakeRequest(POST, destinationTypePostRoute).withFormUrlEncodedBody(("value", value)), ern = ern)
 
-    lazy val formProvider: DestinationTypeFormProvider = new DestinationTypeFormProvider()
     lazy val form: Form[MovementScenario] = formProvider()(getRequest)
-
-    lazy val view = app.injector.instanceOf[DestinationTypeView]
 
     lazy val controller = new DestinationTypeController(
       messagesApi,

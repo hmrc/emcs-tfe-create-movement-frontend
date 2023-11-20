@@ -25,6 +25,7 @@ import models.sections.transportArranger.TransportArranger.{Consignee, GoodsOwne
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -34,14 +35,12 @@ import scala.concurrent.Future
 
 class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: TransportArrangerNameFormProvider = new TransportArrangerNameFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: TransportArrangerNameView = app.injector.instanceOf[TransportArrangerNameView]
+
   class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new TransportArrangerNameFormProvider()
-    val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[TransportArrangerNameView]
 
     lazy val controller = new TransportArrangerNameController(
       messagesApi,

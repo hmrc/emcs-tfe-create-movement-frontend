@@ -42,7 +42,7 @@ class GiveInformationOtherTransportViewSpec extends SpecBase with ViewBehaviours
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[GiveInformationOtherTransportView]
+       lazy val view = app.injector.instanceOf[GiveInformationOtherTransportView]
         val form = app.injector.instanceOf[GiveInformationOtherTransportFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

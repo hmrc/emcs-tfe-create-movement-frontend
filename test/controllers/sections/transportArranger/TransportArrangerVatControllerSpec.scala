@@ -24,7 +24,8 @@ import models.sections.transportArranger.TransportArranger.GoodsOwner
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportArranger.TransportArrangerVatView
@@ -33,18 +34,16 @@ import scala.concurrent.Future
 
 class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val goodsOwnerUserAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
+  val goodsOwnerUserAnswers: UserAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
+
+  lazy val formProvider: TransportArrangerVatFormProvider = new TransportArrangerVatFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: TransportArrangerVatView = app.injector.instanceOf[TransportArrangerVatView]
+
+  lazy val transportArrangerVatSubmitAction: Call = routes.TransportArrangerVatController.onSubmit(testErn, testDraftId, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(goodsOwnerUserAnswers)) {
-
-    val formProvider = new TransportArrangerVatFormProvider()
-    val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val transportArrangerVatSubmitAction = routes.TransportArrangerVatController.onSubmit(testErn, testDraftId, NormalMode)
-
-    val view = app.injector.instanceOf[TransportArrangerVatView]
 
     lazy val controller = new TransportArrangerVatController(
       messagesApi,

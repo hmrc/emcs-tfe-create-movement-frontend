@@ -28,10 +28,10 @@ import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsAddToListPage}
 import play.api.Play.materializer
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.helpers.TransportUnitsAddToListHelper
 import views.html.sections.transportUnit.TransportUnitsAddToListView
 
@@ -39,24 +39,20 @@ import scala.concurrent.Future
 
 class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
+  def submitRoute: Call = routes.TransportUnitsAddToListController.onSubmit(testErn, testDraftId)
+
+  lazy val formProvider: TransportUnitsAddToListFormProvider = new TransportUnitsAddToListFormProvider()
+
+  lazy val form: Form[TransportUnitsAddToListModel] = formProvider()
+
+  lazy val view: TransportUnitsAddToListView = app.injector.instanceOf[TransportUnitsAddToListView]
+
+  lazy val helper: TransportUnitsAddToListHelper = app.injector.instanceOf[TransportUnitsAddToListHelper]
+
   class Test(userAnswers: Option[UserAnswers]) {
-    def submitRoute: Call = routes.TransportUnitsAddToListController.onSubmit(testErn, testDraftId)
-
-    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val messages: Messages = messagesApi.preferred(request)
-
-    lazy val formProvider = new TransportUnitsAddToListFormProvider()
-
-    lazy val form: Form[TransportUnitsAddToListModel] = formProvider()
-
-    lazy val view: TransportUnitsAddToListView = app.injector.instanceOf[TransportUnitsAddToListView]
-
-    lazy val helper = app.injector.instanceOf[TransportUnitsAddToListHelper]
-
-    lazy val fullCheckAnswers = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers)), messages)
+    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers)), messages(request))
 
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
@@ -81,7 +77,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(Some(form), Nil, NormalMode)(dataRequest(request), messages).toString
+        view(Some(form), Nil, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -91,7 +87,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(Some(form.fill(TransportUnitsAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages).toString
+        view(Some(form.fill(TransportUnitsAddToListModel.values.head)), Nil, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must have no form populated if Transport units is 99 for GET" in new Test(Some(
@@ -104,7 +100,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(None, fullCheckAnswers, NormalMode)(dataRequest(request), messages).toString
+        view(None, fullCheckAnswers, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to task list page CAM-02 if Transport units is 99 for POST" in new Test(Some(
@@ -185,7 +181,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
       val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "invalid value")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(Some(boundForm), Nil, NormalMode)(dataRequest(request), messages).toString
+      contentAsString(result) mustEqual view(Some(boundForm), Nil, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

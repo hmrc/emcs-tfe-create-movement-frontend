@@ -25,6 +25,7 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsO
 import models.{CheckMode, NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor._
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.guarantor.GuarantorArrangerView
@@ -33,18 +34,15 @@ import scala.concurrent.Future
 
 class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val guarantorArrangerRoute: String = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val guarantorArrangerRouteCheckMode: String = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url
+
+  lazy val formProvider: GuarantorArrangerFormProvider = new GuarantorArrangerFormProvider()
+  lazy val form: Form[GuarantorArranger] = formProvider()
+  lazy val view: GuarantorArrangerView = app.injector.instanceOf[GuarantorArrangerView]
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val guarantorArrangerRoute = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val guarantorArrangerRouteCheckMode = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url
-
-    val formProvider = new GuarantorArrangerFormProvider()
-    val form = formProvider()
-
     val request = FakeRequest(GET, guarantorArrangerRoute)
-
-    val view = app.injector.instanceOf[GuarantorArrangerView]
 
     lazy val testController = new GuarantorArrangerController(
       messagesApi,

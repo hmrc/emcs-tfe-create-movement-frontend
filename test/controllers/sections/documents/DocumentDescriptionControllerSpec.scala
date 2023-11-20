@@ -24,6 +24,8 @@ import mocks.services.MockUserAnswersService
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.documents.DocumentDescriptionView
@@ -32,18 +34,17 @@ import scala.concurrent.Future
 
 class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures {
 
+  lazy val formProvider: DocumentDescriptionFormProvider = new DocumentDescriptionFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DocumentDescriptionView = app.injector.instanceOf[DocumentDescriptionView]
+
+  def onPageLoadRoute(idx: Index): String =
+    routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+  def onSubmitCall(idx: Index): Call =
+    routes.DocumentDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new DocumentDescriptionFormProvider()
-    val form = formProvider()
-
-    def onPageLoadRoute(idx: Index) =
-      routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-
-    def onSubmitCall(idx: Index) =
-      routes.DocumentDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
-
-    val view = app.injector.instanceOf[DocumentDescriptionView]
-
     val request = FakeRequest(GET, onPageLoadRoute(0))
 
     lazy val testController = new DocumentDescriptionController(
@@ -58,7 +59,6 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
       messagesControllerComponents,
       view
     )
-
   }
 
   "DocumentDescription Controller" - {
@@ -80,7 +80,7 @@ class DocumentDescriptionControllerSpec extends SpecBase with MockUserAnswersSer
           .set(DocumentTypePage(0), documentTypeOtherModel)
           .set(DocumentDescriptionPage(0), "answer"))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId, 0,NormalMode)(request)
+        val result = testController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(

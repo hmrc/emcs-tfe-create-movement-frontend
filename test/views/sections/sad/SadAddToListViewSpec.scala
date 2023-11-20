@@ -55,7 +55,7 @@ class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -89,7 +89,7 @@ class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -126,7 +126,7 @@ class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -161,7 +161,7 @@ class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
         implicit val doc: Document = Jsoup.parse(

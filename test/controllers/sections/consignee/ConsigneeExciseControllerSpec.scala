@@ -26,20 +26,26 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeExciseView
 
 class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  lazy val formProvider: ConsigneeExciseFormProvider = new ConsigneeExciseFormProvider()
+  lazy val view: ConsigneeExciseView = app.injector.instanceOf[ConsigneeExciseView]
 
-    val formProvider = new ConsigneeExciseFormProvider()
-    lazy val consigneeExciseRoute = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val consigneeExciseSubmit = controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testDraftId, NormalMode)
-    lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-    val form = formProvider(true)
+  lazy val consigneeExciseRoute: String =
+    controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val consigneeExciseSubmit: Call =
+    controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testDraftId, NormalMode)
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, consigneeExciseRoute)
+
+    lazy val form: Form[String] = formProvider(true)
 
     lazy val testController = new ConsigneeExciseController(
       messagesApi,
@@ -71,7 +77,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+        override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(request)).toString
@@ -81,7 +87,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+        override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
 
         status(result) mustEqual OK
@@ -101,7 +107,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
-      override val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+      override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
       val boundForm = form.bind(Map("value" -> ""))
 

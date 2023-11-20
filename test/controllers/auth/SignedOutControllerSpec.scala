@@ -25,7 +25,7 @@ class SignedOutControllerSpec extends SpecBase {
 
   "SignedOut Controller" - {
     val request = FakeRequest()
-    val view = app.injector.instanceOf[SignedOutView]
+   lazy val view = app.injector.instanceOf[SignedOutView]
     lazy val testController = new SignedOutController(messagesControllerComponents, appConfig, view)
 
     "must return OK and the correct view for a none saved sign out" in {

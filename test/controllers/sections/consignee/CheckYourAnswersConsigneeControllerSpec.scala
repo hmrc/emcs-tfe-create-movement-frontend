@@ -38,13 +38,15 @@ import views.html.sections.consignee.CheckYourAnswersConsigneeView
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
 
+  lazy val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+
+  implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+  )
+
+  implicit val msgs = messages(testDataRequest)
+
   class Fixture(optUserAnswers: Option[UserAnswers]) {
-
-    implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
-      FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
-    )
-
-    implicit val msgs = messages(testDataRequest)
 
     val ernList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
@@ -75,8 +77,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
     val vatEoriSummaryList: SummaryList = SummaryListViewModel(
       rows = vatEoriList
     ).withCssClass("govuk-!-margin-bottom-9")
-
-    val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
     lazy val testController = new CheckYourAnswersConsigneeController(
       messagesApi,
@@ -109,7 +109,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-        val viewAsString = view(
+        lazy val viewAsString = view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
@@ -134,7 +134,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-        val viewAsString = view(
+        lazy val viewAsString = view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
@@ -159,7 +159,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-        val viewAsString = view(
+        lazy val viewAsString = view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
@@ -184,7 +184,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-        val viewAsString = view(
+        lazy val viewAsString = view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,

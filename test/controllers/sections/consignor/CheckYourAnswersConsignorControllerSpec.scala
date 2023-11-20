@@ -29,6 +29,13 @@ import views.html.sections.consignor.CheckYourAnswersConsignorView
 
 class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
+  lazy val view: CheckYourAnswersConsignorView = app.injector.instanceOf[CheckYourAnswersConsignorView]
+
+  lazy val route: String =
+    controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url
+  lazy val submitRoute: String =
+    controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId).url
+
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
     lazy val testController = new CheckYourAnswersConsignorController(
@@ -42,12 +49,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
       view
     )
 
-    lazy val route = controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url
-    lazy val submitRoute = controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId).url
-
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, route)
-
-    lazy val view: CheckYourAnswersConsignorView = app.injector.instanceOf[CheckYourAnswersConsignorView]
   }
 
   "Check Your Answers Consignor Controller" - {
@@ -55,7 +57,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-        val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
+        lazy val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
           testUserAddress,

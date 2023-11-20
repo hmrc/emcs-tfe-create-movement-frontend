@@ -24,6 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._
+import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,19 +34,17 @@ import scala.concurrent.Future
 
 class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures {
 
+  lazy val formProvider: ReferenceAvailableFormProvider = new ReferenceAvailableFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: ReferenceAvailableView = app.injector.instanceOf[ReferenceAvailableView]
+
+  def referenceAvailableRoute(idx: Index): String =
+    routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+  def onSubmitCall(idx: Index): Call =
+    routes.ReferenceAvailableController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
   class Setup(startingUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new ReferenceAvailableFormProvider()
-    val form = formProvider()
-
-    def referenceAvailableRoute(idx: Index): String =
-      routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-
-    def onSubmitCall(idx: Index): Call =
-      routes.ReferenceAvailableController.onSubmit(testErn, testDraftId, idx, NormalMode)
-
-    val view = app.injector.instanceOf[ReferenceAvailableView]
-
     val request = FakeRequest(GET, referenceAvailableRoute(0))
 
     lazy val testController = new ReferenceAvailableController(

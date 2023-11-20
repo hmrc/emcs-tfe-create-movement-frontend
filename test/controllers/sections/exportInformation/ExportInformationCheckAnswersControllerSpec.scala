@@ -30,15 +30,15 @@ import views.html.sections.exportInformation.ExportInformationCheckAnswersView
 
 class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckAnswersExportInformationHelper with MockUserAnswersService {
+
+  lazy val checkYourAnswersExportInformationRoute: String =
+    controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
+
+  lazy val view: ExportInformationCheckAnswersView = app.injector.instanceOf[ExportInformationCheckAnswersView]
+
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
   class Fixtures(optUserAnswers: Option[UserAnswers]) {
-
-    lazy val checkYourAnswersExportInformationRoute =
-      controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
-
-    lazy val view = app.injector.instanceOf[ExportInformationCheckAnswersView]
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
-
     implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
 
     lazy val testController = new ExportInformationCheckAnswersController(

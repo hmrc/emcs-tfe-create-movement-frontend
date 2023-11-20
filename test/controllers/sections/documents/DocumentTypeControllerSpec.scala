@@ -21,11 +21,15 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.DocumentTypeFixtures
 import forms.sections.documents.DocumentTypeFormProvider
 import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
+import models.sections.documents.DocumentType
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection, ReferenceAvailablePage}
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.govukfrontend.views.Aliases
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 
@@ -33,26 +37,26 @@ import scala.concurrent.Future
 
 class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures with MockGetDocumentTypesService {
 
+  implicit val msg = messages(FakeRequest())
+
+  def documentTypeRoute(idx: Index = 0): String =
+    routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+  def onSubmitCall(idx: Index = 0): Call =
+    routes.DocumentTypeController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
+  val documentTypes: Seq[DocumentType] = Seq(documentTypeModel, documentTypeOtherModel)
+
+  lazy val formProvider: DocumentTypeFormProvider = new DocumentTypeFormProvider()
+  lazy val form: Form[DocumentType] = formProvider(documentTypes)
+  lazy val view: DocumentTypeView = app.injector.instanceOf[DocumentTypeView]
+
+  val sampleDocumentTypesSelectOptions: Seq[Aliases.SelectItem] = SelectItemHelper.constructSelectItems(
+    selectOptions = documentTypes,
+    defaultTextMessageKey = "documentType.select.defaultValue"
+  )
+
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    implicit val msg = messages(FakeRequest())
-
-    def documentTypeRoute(idx: Index = 0): String =
-      routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-
-    def onSubmitCall(idx: Index = 0) =
-      routes.DocumentTypeController.onSubmit(testErn, testDraftId, idx, NormalMode)
-
-    val documentTypes = Seq(documentTypeModel, documentTypeOtherModel)
-
-    val formProvider = new DocumentTypeFormProvider()
-    val form = formProvider(documentTypes)
-
-    val view = app.injector.instanceOf[DocumentTypeView]
-
-    val sampleDocumentTypesSelectOptions = SelectItemHelper.constructSelectItems(
-      selectOptions = documentTypes,
-      defaultTextMessageKey = "documentType.select.defaultValue"
-    )
 
     val request = FakeRequest(GET, documentTypeRoute())
 

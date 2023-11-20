@@ -40,14 +40,13 @@ class InformationCheckAnswersControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockPreDraftService {
 
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+  lazy val view: InformationCheckAnswersView = app.injector.instanceOf[InformationCheckAnswersView]
+
   class Fixtures(userAnswers: Option[UserAnswers]) {
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
-
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[InformationCheckAnswersView]
-
     lazy val controller = new InformationCheckAnswersController(
       messagesApi,
       mockPreDraftService,

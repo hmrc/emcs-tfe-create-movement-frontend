@@ -25,7 +25,8 @@ import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemCommodityCodeView
@@ -36,13 +37,13 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
 
   val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  lazy val itemIndexRoute = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-  lazy val submitCall = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+  lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   val testEpc: String = "T200"
   val testGoodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpc)
 
-  val testCommodityCode1 = CnCodeInformation(
+  val testCommodityCode1: CnCodeInformation = CnCodeInformation(
     cnCode = "testCnCode1",
     cnCodeDescription = "testCnCodeDescription1",
     exciseProductCode = testEpc,
@@ -50,7 +51,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
     unitOfMeasure = Kilograms
   )
 
-  val testCommodityCode2 = CnCodeInformation(
+  val testCommodityCode2: CnCodeInformation = CnCodeInformation(
     cnCode = "testCnCode2",
     cnCodeDescription = "testCnCodeDescription2",
     exciseProductCode = testEpc,
@@ -58,13 +59,12 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
     unitOfMeasure = Kilograms
   )
 
+  lazy val formProvider: ItemCommodityCodeFormProvider = new ItemCommodityCodeFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ItemCommodityCodeView = app.injector.instanceOf[ItemCommodityCodeView]
+
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-    lazy val formProvider = new ItemCommodityCodeFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemCommodityCodeView]
 
     lazy val controller = new ItemCommodityCodeController(
       messagesApi,

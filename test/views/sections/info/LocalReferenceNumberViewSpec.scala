@@ -31,7 +31,7 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
 
-  val view = app.injector.instanceOf[LocalReferenceNumberView]
+ lazy val view = app.injector.instanceOf[LocalReferenceNumberView]
   val form = app.injector.instanceOf[LocalReferenceNumberFormProvider]
 
   object Selectors extends BaseSelectors

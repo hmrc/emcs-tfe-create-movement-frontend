@@ -40,7 +40,7 @@ class DocumentsRemoveFromListViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DocumentsRemoveFromListView]
+       lazy val view = app.injector.instanceOf[DocumentsRemoveFromListView]
         val form = app.injector.instanceOf[DocumentsRemoveFromListFormProvider].apply(testIndex1)
 
         implicit val doc: Document = Jsoup.parse(view(form, testIndex1).toString())

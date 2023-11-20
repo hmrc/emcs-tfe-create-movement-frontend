@@ -24,6 +24,8 @@ import mocks.services.MockUserAnswersService
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents._
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.documents.DocumentReferenceView
@@ -32,16 +34,15 @@ import scala.concurrent.Future
 
 class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures {
 
+  lazy val formProvider: DocumentReferenceFormProvider = new DocumentReferenceFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DocumentReferenceView = app.injector.instanceOf[DocumentReferenceView]
+
+  def controllerRoute(idx: Index): String = routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
+  def onSubmitCall(idx: Index): Call = routes.DocumentReferenceController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val formProvider = new DocumentReferenceFormProvider()
-    val form = formProvider()
-
-    def controllerRoute(idx: Index) = routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-
-    def onSubmitCall(idx: Index) = routes.DocumentReferenceController.onSubmit(testErn, testDraftId, idx, NormalMode)
-
-    val view = app.injector.instanceOf[DocumentReferenceView]
-
     val request = FakeRequest(GET, controllerRoute(0))
 
     lazy val testController = new DocumentReferenceController(

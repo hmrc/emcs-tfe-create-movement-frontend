@@ -46,7 +46,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val view = app.injector.instanceOf[ItemSmallIndependentProducerView]
+    lazy val view = app.injector.instanceOf[ItemSmallIndependentProducerView]
 
     lazy val controller = new ItemSmallIndependentProducerController(
       messagesApi,

@@ -33,13 +33,12 @@ import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
 class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckYourAnswersJourneyTypeHelper with MockUserAnswersService {
 
+  lazy val view: CheckYourAnswersJourneyTypeView = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
+
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
     lazy val controller = new CheckYourAnswersJourneyTypeController(
       messagesApi,

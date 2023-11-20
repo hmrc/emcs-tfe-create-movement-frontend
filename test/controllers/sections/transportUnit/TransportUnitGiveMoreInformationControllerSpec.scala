@@ -26,7 +26,6 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
 import pages.sections.transportUnit.{TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -36,18 +35,14 @@ import scala.concurrent.Future
 
 class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: TransportUnitGiveMoreInformationFormProvider = new TransportUnitGiveMoreInformationFormProvider()
+
+  lazy val form: Form[Option[String]] = formProvider()
+
+  lazy val view: TransportUnitGiveMoreInformationView = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val messages: Messages = messagesApi.preferred(request)
-
-    lazy val formProvider = new TransportUnitGiveMoreInformationFormProvider()
-
-    lazy val form: Form[Option[String]] = formProvider()
-
-    lazy val view: TransportUnitGiveMoreInformationView = app.injector.instanceOf[TransportUnitGiveMoreInformationView]
 
     lazy val controller = new TransportUnitGiveMoreInformationController(
       messagesApi,
@@ -71,7 +66,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages).toString
+      contentAsString(result) mustEqual view(form, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -83,7 +78,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(Some("answer")), testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages).toString
+        view(form.fill(Some("answer")), testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to journey recovery for a GET if there is not a transport unit type found in the users answers" in new Test(Some(
@@ -174,7 +169,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", """<script>alert("hi")</script>""")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages).toString
+      contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to journey recovery for a POST if there is not a transport unit type found" in new Test(Some(

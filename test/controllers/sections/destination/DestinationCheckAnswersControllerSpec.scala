@@ -25,6 +25,7 @@ import models.UserAnswers
 import models.sections.info.movementScenario.MovementScenario
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.info.DestinationTypePage
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -35,17 +36,16 @@ import views.html.sections.destination.DestinationCheckAnswersView
 
 class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDestinationCheckAnswersHelper {
 
+  lazy val destinationCheckAnswersRoute: String =
+    controllers.sections.destination.routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url
+  lazy val destinationCheckAnswersOnSubmit: Call =
+    controllers.sections.destination.routes.DestinationCheckAnswersController.onSubmit(testErn, testDraftId)
+
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
+
+  lazy val view: DestinationCheckAnswersView = app.injector.instanceOf[DestinationCheckAnswersView]
+
   class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val destinationCheckAnswersRoute =
-      controllers.sections.destination.routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url
-
-    lazy val destinationCheckAnswersOnSubmit =
-      controllers.sections.destination.routes.DestinationCheckAnswersController.onSubmit(testErn, testDraftId)
-
-    val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
-
-    lazy val view = app.injector.instanceOf[DestinationCheckAnswersView]
 
     val request = FakeRequest(GET, destinationCheckAnswersRoute)
 

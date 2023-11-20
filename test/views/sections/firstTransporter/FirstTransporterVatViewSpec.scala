@@ -35,7 +35,7 @@ class FirstTransporterVatViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[FirstTransporterVatView]
+   lazy val view = app.injector.instanceOf[FirstTransporterVatView]
     val form = app.injector.instanceOf[FirstTransporterVatFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

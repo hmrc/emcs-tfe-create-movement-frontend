@@ -42,7 +42,7 @@ class ImportNumberViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ImportNumberView]
+       lazy val view = app.injector.instanceOf[ImportNumberView]
         val form = app.injector.instanceOf[ImportNumberFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testIndex1, NormalMode).toString())

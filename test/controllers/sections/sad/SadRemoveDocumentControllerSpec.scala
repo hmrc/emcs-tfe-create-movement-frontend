@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import navigation.SadNavigator
 import pages.sections.sad.ImportNumberPage
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -32,14 +33,12 @@ import scala.concurrent.Future
 
 class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: SadRemoveDocumentFormProvider = new SadRemoveDocumentFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: SadRemoveDocumentView = app.injector.instanceOf[SadRemoveDocumentView]
+
   class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    lazy val formProvider = new SadRemoveDocumentFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[SadRemoveDocumentView]
 
     lazy val controller = new SadRemoveDocumentController(
       messagesApi,

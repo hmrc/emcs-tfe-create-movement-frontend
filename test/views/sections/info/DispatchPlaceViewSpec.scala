@@ -42,7 +42,7 @@ class DispatchPlaceViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[DispatchPlaceView]
+       lazy val view = app.injector.instanceOf[DispatchPlaceView]
         val form = app.injector.instanceOf[DispatchPlaceFormProvider].apply()
 
         implicit val doc: Document =

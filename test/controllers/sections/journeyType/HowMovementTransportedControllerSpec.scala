@@ -25,6 +25,7 @@ import models.sections.journeyType.HowMovementTransported
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
+import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -34,14 +35,12 @@ import scala.concurrent.Future
 
 class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: HowMovementTransportedFormProvider = new HowMovementTransportedFormProvider()
+  lazy val form: Form[HowMovementTransported] = formProvider()
+  lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new HowMovementTransportedFormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    val view = app.injector.instanceOf[HowMovementTransportedView]
 
     lazy val controller = new HowMovementTransportedController(
       messagesApi,

@@ -46,7 +46,7 @@ class ItemGeographicalIndicationChoiceViewSpec extends SpecBase with ViewBehavio
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
+       lazy val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
         val form = app.injector.instanceOf[ItemGeographicalIndicationChoiceFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine).toString())

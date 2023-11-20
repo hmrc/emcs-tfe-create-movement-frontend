@@ -23,6 +23,8 @@ import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.dispatch.DispatchUseConsignorDetailsView
@@ -31,17 +33,16 @@ import scala.concurrent.Future
 
 class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider: DispatchUseConsignorDetailsFormProvider = new DispatchUseConsignorDetailsFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: DispatchUseConsignorDetailsView = app.injector.instanceOf[DispatchUseConsignorDetailsView]
+
+  lazy val dispatchUseConsignorDetailsRoute: String =
+    routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val dispatchUseConsignorDetailsSubmitAction: Call =
+    routes.DispatchUseConsignorDetailsController.onSubmit(testErn, testDraftId, NormalMode)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-
-    val formProvider = new DispatchUseConsignorDetailsFormProvider()
-    val form = formProvider()
-
-    lazy val dispatchUseConsignorDetailsRoute = routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val dispatchUseConsignorDetailsSubmitAction = routes.DispatchUseConsignorDetailsController.onSubmit(testErn, testDraftId, NormalMode)
-
-    lazy val view = app.injector.instanceOf[DispatchUseConsignorDetailsView]
-
     val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
 
     lazy val testController = new DispatchUseConsignorDetailsController(
@@ -56,7 +57,6 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
       messagesControllerComponents,
       view
     )
-
   }
 
   "DispatchUseConsignorDetails Controller" - {

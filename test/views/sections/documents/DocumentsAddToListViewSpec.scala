@@ -56,7 +56,7 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
@@ -96,7 +96,7 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
@@ -135,7 +135,7 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -171,7 +171,7 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 

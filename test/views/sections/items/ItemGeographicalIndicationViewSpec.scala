@@ -43,7 +43,7 @@ class ItemGeographicalIndicationViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemGeographicalIndicationView]
+       lazy val view = app.injector.instanceOf[ItemGeographicalIndicationView]
         val form = app.injector.instanceOf[ItemGeographicalIndicationFormProvider].apply()
 
         "when being rendered for PDO" - {

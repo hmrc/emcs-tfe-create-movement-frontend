@@ -47,23 +47,10 @@ class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
       val view = app.injector.instanceOf[ItemCommodityCodeView]
       val form = app.injector.instanceOf[ItemCommodityCodeFormProvider].apply()
       val submitRoute = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-      val testEpc = "testEpcTobacco"
 
-      val testCommodityCode1 = CnCodeInformation(
-        cnCode = "testCnCode1",
-        cnCodeDescription = "testCnCodeDescription1",
-        exciseProductCode = testEpc,
-        exciseProductCodeDescription = "testExciseProductCodeDescription",
-        unitOfMeasure = Kilograms
-      )
+      val testCommodityCode1 = testCommodityCodeTobacco
 
-      val testCommodityCode2 = CnCodeInformation(
-        cnCode = "testCnCodeWine",
-        cnCodeDescription = "testCnCodeDescription2",
-        exciseProductCode = testEpc,
-        exciseProductCodeDescription = "testExciseProductCodeDescription",
-        unitOfMeasure = Kilograms
-      )
+      val testCommodityCode2 = testCommodityCodeWine
 
 
       implicit val doc: Document = Jsoup.parse(view(form, submitRoute, Beer, Seq(testCommodityCode1, testCommodityCode2)).toString())

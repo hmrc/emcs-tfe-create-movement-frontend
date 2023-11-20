@@ -23,6 +23,7 @@ import models.GoodsTypeModel
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -42,7 +43,6 @@ class ItemBulkPackagingChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
         GoodsTypeModel.values.foreach(
           goodsType =>
             s"when being rendered for GoodsType code ${goodsType.code}" - {
-
 
               implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())

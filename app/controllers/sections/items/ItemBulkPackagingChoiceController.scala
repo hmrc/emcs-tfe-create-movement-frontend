@@ -21,7 +21,7 @@ import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode}
-import navigation.Navigator
+import navigation.ItemsNavigator
 import pages.sections.items.ItemBulkPackagingChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -36,7 +36,7 @@ class ItemBulkPackagingChoiceController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    override val userAnswersService: UserAnswersService,
                                                    override val userAllowList: UserAllowListAction,
-                                                   override val navigator: Navigator,
+                                                   override val navigator: ItemsNavigator,
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
@@ -69,9 +69,9 @@ class ItemBulkPackagingChoiceController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, goodsType: GoodsType, mode: Mode)(implicit request: DataRequest[_]): Result =
-      status(view(
-        form = form,
-        action = routes.ItemBulkPackagingChoiceController.onSubmit(request.ern, request.draftId, idx, mode),
-        goodsType = goodsType
-      ))
+    status(view(
+      form = form,
+      action = routes.ItemBulkPackagingChoiceController.onSubmit(request.ern, request.draftId, idx, mode),
+      goodsType = goodsType
+    ))
 }

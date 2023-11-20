@@ -22,7 +22,7 @@ import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
+import navigation.FakeNavigators.FakeItemsNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.Play.materializer
@@ -37,28 +37,22 @@ import scala.concurrent.Future
 
 class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswersService with GuiceOneAppPerSuite {
 
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val messages: Messages = messagesApi.preferred(request)
+
+  lazy val formProvider = new ItemBulkPackagingChoiceFormProvider()
+  lazy val form: Form[Boolean] = formProvider.apply(Tobacco)(messages)
+  lazy val view: ItemBulkPackagingChoiceView = app.injector.instanceOf[ItemBulkPackagingChoiceView]
+
+  def submitRoute: Call = routes.ItemBulkPackagingChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   class Test(userAnswers: Option[UserAnswers]) {
-    def onwardRoute: Call = Call("GET", "/foo")
-    def submitRoute: Call = routes.ItemBulkPackagingChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-
-    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val messages: Messages = messagesApi.preferred(request)
-
-    lazy val formProvider = new ItemBulkPackagingChoiceFormProvider()
-
-    lazy val form: Form[Boolean] = formProvider.apply(Tobacco)(messages)
-
-    lazy val view: ItemBulkPackagingChoiceView = app.injector.instanceOf[ItemBulkPackagingChoiceView]
-
     lazy val controller = new ItemBulkPackagingChoiceController(
       messagesApi,
       mockUserAnswersService,
       new FakeUserAllowListAction,
-      new FakeNavigator(onwardRoute),
+      new FakeItemsNavigator(testOnwardRoute),
       new FakeAuthAction(Helpers.stubPlayBodyParsers),
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
@@ -99,7 +93,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the Index page for GET when no Goods Type" in new Test(Some(
@@ -128,6 +122,20 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to the Index page for POST when no Item" in new Test(Some(emptyUserAnswers)) {
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to the Index page for GET when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to the Index page for POST when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER

@@ -16,14 +16,12 @@ import scala.concurrent.Future
 
 class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
 
+  lazy val formProvider = new $className$FormProvider()
+  lazy val form = formProvider()
+  lazy val view = app.injector.instanceOf[$className$View]
+
   class Test(val userAnswers: Option[UserAnswers]) {
-
-    lazy val formProvider = new $className$FormProvider()
-    lazy val form = formProvider()
-
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-   lazy val view = app.injector.instanceOf[$className$View]
 
     lazy val controller = new $className$Controller(
       messagesApi,

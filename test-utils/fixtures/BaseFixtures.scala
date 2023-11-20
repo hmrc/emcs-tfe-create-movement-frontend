@@ -17,10 +17,11 @@
 package fixtures
 
 import models.UnitOfMeasure.Kilograms
-import models.response.referenceData.CnCodeInformation
+import models.response.referenceData.{CnCodeInformation, BulkPackagingType}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import models.{CountryModel, ExciseProductCode, ExemptOrganisationDetailsModel, GoodsTypeModel, Index, TraderKnownFacts, UserAddress, UserAnswers}
+import models.sections.items.ItemBulkPackagingCode
+import models._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -147,6 +148,18 @@ trait BaseFixtures {
     "description" -> "Still wine and still fermented beverages other than wine and beer",
     "category" -> "W",
     "categoryDescription" -> "Wine and fermented beverages other than wine and beer"
+  )
+
+  val bulkPackagingTypesJson = Json.obj(
+    "VG" -> "Bulk, gas (at 1031 mbar and 15°C)",
+    "VQ" -> "Bulk, liquefied gas (abn.temp/press)",
+    "VL" -> "Bulk, liquid"
+  )
+
+  val bulkPackagingTypes: Seq[BulkPackagingType] = Seq(
+    BulkPackagingType(ItemBulkPackagingCode.BulkGas, "Bulk, gas (at 1031 mbar and 15°C)"),
+    BulkPackagingType(ItemBulkPackagingCode.BulkLiquefiedGas, "Bulk, liquefied gas (abn.temp/press)"),
+    BulkPackagingType(ItemBulkPackagingCode.BulkLiquid, "Bulk, liquid")
   )
 
   val testEpcTobacco: String = "T200"

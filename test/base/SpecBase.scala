@@ -75,6 +75,7 @@ trait SpecBase
         bind[GetDocumentTypesConnector].toInstance(new FakeGetDocumentTypesConnector()),
         bind[GetTraderKnownFactsConnector].toInstance(new FakeGetTraderKnownFactsConnector()),
         bind[GetExciseProductCodesConnector].toInstance(new FakeGetExciseProductCodesConnector()),
+        bind[GetBulkPackagingTypesConnector].toInstance(new FakeGetBulkPackagingTypesConnector()),
         bind[GetMemberStatesConnector].toInstance(new FakeGetMemberStatesConnector()),
         bind[UserAllowListConnector].toInstance(new FakeUserAllowListConnector()),
         bind[SessionRepository].toInstance(new FakeSessionRepository()),

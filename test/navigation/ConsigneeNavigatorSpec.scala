@@ -18,9 +18,9 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode, ReviewMode}
 import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
+import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
 

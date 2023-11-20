@@ -27,7 +27,6 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeExportSummary, ConsigneeExportVatSummary}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

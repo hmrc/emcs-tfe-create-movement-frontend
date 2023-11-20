@@ -26,7 +26,6 @@ import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
-import viewmodels.checkAnswers.sections.firstTransporter.FirstTransporterAddressSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

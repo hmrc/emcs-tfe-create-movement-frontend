@@ -17,8 +17,8 @@
 package forms.sections.items
 
 import forms.behaviours.BooleanFieldBehaviours
+import forms.sections.items.ItemAlcoholStrengthFormProvider._
 import play.api.data.FormError
-import ItemAlcoholStrengthFormProvider._
 
 class ItemAlcoholStrengthFormProviderSpec extends BooleanFieldBehaviours {
 

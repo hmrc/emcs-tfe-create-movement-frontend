@@ -34,8 +34,8 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID
 import javax.inject.Inject
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 

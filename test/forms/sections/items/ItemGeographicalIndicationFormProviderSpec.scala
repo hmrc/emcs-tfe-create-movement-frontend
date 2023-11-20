@@ -17,8 +17,8 @@
 package forms.sections.items
 
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import forms.behaviours.StringFieldBehaviours
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}

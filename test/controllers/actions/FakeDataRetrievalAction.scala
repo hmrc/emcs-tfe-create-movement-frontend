@@ -16,8 +16,8 @@
 
 package controllers.actions
 
-import models.{TraderKnownFacts, UserAnswers}
 import models.requests.{OptionalDataRequest, UserRequest}
+import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.ActionTransformer
 
 import scala.concurrent.{ExecutionContext, Future}

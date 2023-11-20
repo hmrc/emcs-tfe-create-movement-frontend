@@ -18,21 +18,15 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import controllers.sections.importInformation.ImportCustomsOfficeCodeController
-import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import forms.sections.items.CommercialDescriptionFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
-import navigation.FakeNavigators.{FakeImportInformationNavigator, FakeItemsNavigator}
-import navigation.ItemsNavigator
+import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Call}
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import services.UserAnswersService
-import views.html.sections.importInformation.ImportCustomsOfficeCodeView
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.CommercialDescriptionView
 
 import scala.concurrent.Future

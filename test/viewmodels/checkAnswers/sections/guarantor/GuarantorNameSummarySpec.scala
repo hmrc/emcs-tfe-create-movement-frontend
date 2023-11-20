@@ -19,9 +19,9 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
-import models.{CheckMode, Mode, NormalMode}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}

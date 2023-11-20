@@ -25,7 +25,6 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
-import viewmodels.checkAnswers.sections.journeyType.GiveInformationOtherTransportSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

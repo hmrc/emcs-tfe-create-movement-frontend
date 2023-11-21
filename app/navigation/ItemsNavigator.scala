@@ -110,6 +110,20 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: Redirect to CAM-ITM25
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
+    case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
+      (userAnswers.get(ItemWineMoreInformationChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
+        case (Some(true), _) =>
+          //TODO: redirect to CAM-ITM18
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case (Some(false), Some(false)) =>
+          //TODO: redirect to CAM-ITM24
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case (Some(false), Some(true)) =>
+          //TODO: redirect to CAM-ITM28
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }

@@ -217,13 +217,12 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when the answer is 'Yes'" - {
 
-          //TODO: Redirect to CAM-ITM11
           "to the Under Construction Page" in {
 
             val userAnswers = emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
 
             navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
           }
         }
 
@@ -236,6 +235,15 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
+        }
+      }
+
+      "must go from the ItemProducerSize page" - {
+
+        "to the quantity page" in {
+
+          navigator.nextPage(ItemProducerSizePage(0), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 

@@ -17,13 +17,14 @@
 package forms.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import forms.behaviours.StringFieldBehaviours
 import models.GoodsTypeModel.Wine
 import models.response.referenceData.ItemPackaging
 import play.api.data.{Form, FormError}
 import play.api.test.FakeRequest
 
-class ItemSelectPackagingFormProviderSpec extends SpecBase with StringFieldBehaviours {
+class ItemSelectPackagingFormProviderSpec extends SpecBase with StringFieldBehaviours with ItemFixtures {
 
   val requiredKey = "itemSelectPackaging.error.required"
 

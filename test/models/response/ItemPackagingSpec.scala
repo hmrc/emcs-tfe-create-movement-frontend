@@ -17,10 +17,11 @@
 package models.response
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import models.response.referenceData.ItemPackaging
 import play.api.libs.json._
 
-class ItemPackagingSpec extends SpecBase {
+class ItemPackagingSpec extends SpecBase with ItemFixtures {
 
   "ItemPackaging" - {
     "should be able to parse a valid JSON object response" in {

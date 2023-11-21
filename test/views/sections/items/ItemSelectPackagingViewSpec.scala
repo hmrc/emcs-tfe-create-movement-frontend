@@ -17,6 +17,7 @@
 package views.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSelectPackagingMessages
 import forms.sections.items.ItemSelectPackagingFormProvider
 import models.GoodsTypeModel.Wine
@@ -30,7 +31,7 @@ import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemSelectPackagingView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours {
+class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
 
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#packaging > option:nth-child($nthChild)"
@@ -55,10 +56,9 @@ class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, Wine).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
-          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.title -> messagesForLanguage.title("wine"),
           Selectors.h1 -> messagesForLanguage.heading("wine"),
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.aerosolSelectOption,

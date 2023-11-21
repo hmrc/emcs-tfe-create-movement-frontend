@@ -17,10 +17,10 @@
 package fixtures
 
 import models.UnitOfMeasure.Kilograms
-import models.response.referenceData.{BulkPackagingType, CnCodeInformation}
+import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode._
 import models.{ExciseProductCode, GoodsTypeModel}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
@@ -104,5 +104,19 @@ trait ItemFixtures {
     exciseProductCode = testEpcTobacco,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
     unitOfMeasure = Kilograms
+  )
+
+  val testItemPackagingTypes: Seq[ItemPackaging] = Seq(
+    ItemPackaging("AE", "Aerosol"),
+    ItemPackaging("AM", "Ampoule, non protected"),
+    ItemPackaging("BG", "Bag"),
+    ItemPackaging("VA", "Vat")
+  )
+
+  val testItemPackagingTypesJson: JsObject = Json.obj(
+    "AE" -> "Aerosol",
+    "AM" -> "Ampoule, non protected",
+    "BG" -> "Bag",
+    "VA" -> "Vat"
   )
 }

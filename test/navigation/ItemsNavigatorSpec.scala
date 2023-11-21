@@ -433,7 +433,7 @@ class ItemsNavigatorSpec extends SpecBase {
                 navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
                   .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             )
           }
         }

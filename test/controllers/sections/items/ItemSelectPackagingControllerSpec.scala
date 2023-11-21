@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemSelectPackagingFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockGetPackagingTypesService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
@@ -38,7 +39,8 @@ import scala.concurrent.Future
 class ItemSelectPackagingControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetCnCodeInformationService
-  with MockGetPackagingTypesService {
+  with MockGetPackagingTypesService
+  with ItemFixtures {
 
   val formProvider = new ItemSelectPackagingFormProvider()
   lazy val view: ItemSelectPackagingView = app.injector.instanceOf[ItemSelectPackagingView]

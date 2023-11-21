@@ -17,13 +17,17 @@
 package connectors.referenceData
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetItemPackagingTypesConnectorSpec extends SpecBase with GetItemPackagingTypesHttpParser with MockHttpClient {
+class GetItemPackagingTypesConnectorSpec extends SpecBase
+  with GetItemPackagingTypesHttpParser
+  with MockHttpClient
+  with ItemFixtures {
 
   override def http: HttpClient = mockHttpClient
 

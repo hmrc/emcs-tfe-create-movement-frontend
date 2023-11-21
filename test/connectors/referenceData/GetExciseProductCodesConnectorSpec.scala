@@ -17,13 +17,14 @@
 package connectors.referenceData
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetExciseProductCodesConnectorSpec extends SpecBase with MockHttpClient {
+class GetExciseProductCodesConnectorSpec extends SpecBase with MockHttpClient with ItemFixtures {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]

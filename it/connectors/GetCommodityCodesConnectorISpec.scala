@@ -3,7 +3,7 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.referenceData.GetCommodityCodesConnector
-import fixtures.BaseFixtures
+import fixtures.{BaseFixtures, ItemFixtures}
 import models.UnitOfMeasure.Kilograms
 import models.response.UnexpectedDownstreamResponseError
 import models.response.referenceData.CnCodeInformation
@@ -26,7 +26,8 @@ class GetCommodityCodesConnectorISpec extends AnyFreeSpec
   with IntegrationPatience
   with EitherValues
   with OptionValues
-  with BaseFixtures {
+  with BaseFixtures
+  with ItemFixtures {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 

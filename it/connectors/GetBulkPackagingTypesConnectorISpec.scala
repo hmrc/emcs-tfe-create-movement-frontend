@@ -3,7 +3,7 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, post, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.referenceData.GetBulkPackagingTypesConnector
-import fixtures.BaseFixtures
+import fixtures.{BaseFixtures, ItemFixtures}
 import models.response.UnexpectedDownstreamResponseError
 import models.sections.items.ItemBulkPackagingCode
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
@@ -25,7 +25,8 @@ class GetBulkPackagingTypesConnectorISpec extends AnyFreeSpec
   with IntegrationPatience
   with EitherValues
   with OptionValues
-  with BaseFixtures {
+  with BaseFixtures
+  with ItemFixtures {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 

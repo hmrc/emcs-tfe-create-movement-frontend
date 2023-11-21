@@ -89,11 +89,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemFiscalMarksPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
+    case ItemBulkPackagingSelectPage(idx) => (userAnswers: UserAnswers) =>
+      bulkPackagingSelectRouting(idx, userAnswers)
+
     case ItemBulkPackagingChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemBulkPackagingChoicePage(idx)) match {
         case Some(true) =>
-          //TODO: Redirect to CAM-ITM45
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
           userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
             case Some(Wine) =>
@@ -199,6 +201,30 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             }
           case _ =>
             itemsRoutes.ItemGeographicalIndicationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        }
+      case _ =>
+        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    }
+
+  private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
+    userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) =>
+        GoodsTypeModel(epc) match {
+          case Wine =>
+            userAnswers.get(ItemQuantityPage(idx)) match {
+              case Some(quantity) =>
+                if (quantity < 60) {
+                  //TODO: Redirect to CAM-ITM15
+                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                } else {
+                  //TODO: Redirect to CAM-ITM12
+                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                }
+              case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+            }
+          case _ =>
+            //TODO: Redirect to CAM-ITM28
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)

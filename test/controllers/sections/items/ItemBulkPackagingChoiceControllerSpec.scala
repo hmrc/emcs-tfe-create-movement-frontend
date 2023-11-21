@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
+import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Tobacco
@@ -33,7 +34,10 @@ import views.html.sections.items.ItemBulkPackagingChoiceView
 
 import scala.concurrent.Future
 
-class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemBulkPackagingChoiceControllerSpec extends SpecBase
+  with MockUserAnswersService
+  with MockGetCnCodeInformationService
+  with ItemFixtures {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 

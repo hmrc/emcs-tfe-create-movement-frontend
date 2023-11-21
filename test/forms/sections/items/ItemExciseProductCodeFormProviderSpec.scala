@@ -16,11 +16,11 @@
 
 package forms.sections.items
 
-import fixtures.BaseFixtures
+import fixtures.{BaseFixtures, ItemFixtures}
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class ItemExciseProductCodeFormProviderSpec extends StringFieldBehaviours with BaseFixtures {
+class ItemExciseProductCodeFormProviderSpec extends StringFieldBehaviours with BaseFixtures with ItemFixtures {
 
   val requiredKey = "itemExciseProductCode.error.required"
   val maxLength = 100

@@ -18,6 +18,8 @@ package models.response.referenceData
 
 import models.sections.items.ItemBulkPackagingCode
 import play.api.libs.json._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 case class BulkPackagingType(packagingType: ItemBulkPackagingCode, description: String)
 
@@ -29,4 +31,17 @@ object BulkPackagingType {
     case other =>
       JsError("Unable to read BulkPackagingType as a JSON object: " + other.toString())
   }
+
+  def options(bulkPackagingTypes: Seq[BulkPackagingType]): Seq[RadioItem] =
+    bulkPackagingTypes
+      .sortBy(_.packagingType.positionInRadioList)
+      .zipWithIndex
+      .map {
+        case (value, index) =>
+          RadioItem(
+            content = HtmlContent(s"${value.description} (${value.packagingType.toString})"),
+            value = Some(value.packagingType.toString),
+            id = Some(s"value_$index")
+          )
+      }
 }

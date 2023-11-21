@@ -16,12 +16,9 @@
 
 package fixtures
 
-import models.UnitOfMeasure.Kilograms
-import models.response.referenceData.{CnCodeInformation, BulkPackagingType}
+import models._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import models.sections.items.ItemBulkPackagingCode
-import models._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -120,68 +117,5 @@ trait BaseFixtures {
   val dispatchDetailsJson = Json.obj(
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
-  )
-
-  val beerExciseProductCode = ExciseProductCode(
-    code = "B000",
-    description = "Beer",
-    category = "B",
-    categoryDescription = "Beer"
-  )
-
-  val wineExciseProductCode = ExciseProductCode(
-    code = "W200",
-    description = "Still wine and still fermented beverages other than wine and beer",
-    category = "W",
-    categoryDescription = "Wine and fermented beverages other than wine and beer"
-  )
-
-  val beerExciseProductCodeJson = Json.obj(
-    "code" -> "B000",
-    "description" -> "Beer",
-    "category" -> "B",
-    "categoryDescription" -> "Beer"
-  )
-
-  val wineExciseProductCodeJson = Json.obj(
-    "code" -> "W200",
-    "description" -> "Still wine and still fermented beverages other than wine and beer",
-    "category" -> "W",
-    "categoryDescription" -> "Wine and fermented beverages other than wine and beer"
-  )
-
-  val bulkPackagingTypesJson = Json.obj(
-    "VG" -> "Bulk, gas (at 1031 mbar and 15°C)",
-    "VQ" -> "Bulk, liquefied gas (abn.temp/press)",
-    "VL" -> "Bulk, liquid"
-  )
-
-  val bulkPackagingTypes: Seq[BulkPackagingType] = Seq(
-    BulkPackagingType(ItemBulkPackagingCode.BulkGas, "Bulk, gas (at 1031 mbar and 15°C)"),
-    BulkPackagingType(ItemBulkPackagingCode.BulkLiquefiedGas, "Bulk, liquefied gas (abn.temp/press)"),
-    BulkPackagingType(ItemBulkPackagingCode.BulkLiquid, "Bulk, liquid")
-  )
-
-  val testEpcTobacco: String = "T200"
-  val testGoodsTypeTobacco: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcTobacco)
-  val testCnCodeTobacco: String = "24022090"
-  val testCnCodeTobacco2: String = "24029000"
-  val testCommodityCodeTobacco: CnCodeInformation = CnCodeInformation(
-    cnCode = testCnCodeTobacco,
-    cnCodeDescription = "Cigarettes containing tobacco / other",
-    exciseProductCode = testEpcTobacco,
-    exciseProductCodeDescription = "Cigarettes",
-    unitOfMeasure = Kilograms
-  )
-
-  val testEpcWine: String = "W200"
-  val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
-  val testCnCodeWine: String = "22060031"
-  val testCommodityCodeWine: CnCodeInformation = CnCodeInformation(
-    cnCode = testCnCodeWine,
-    cnCodeDescription = "Sparkling cider and perry",
-    exciseProductCode = testEpcTobacco,
-    exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
-    unitOfMeasure = Kilograms
   )
 }

@@ -17,11 +17,11 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.BaseFixtures
+import fixtures.ItemFixtures
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 
-class SelectItemHelperSpec extends SpecBase with BaseFixtures {
+class SelectItemHelperSpec extends SpecBase with ItemFixtures {
   implicit lazy val msgs = messages(FakeRequest())
 
   ".constructSelectItems" - {

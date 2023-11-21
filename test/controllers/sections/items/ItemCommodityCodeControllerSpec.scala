@@ -19,6 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemCommodityCodeFormProvider
+import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockGetCommodityCodesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -31,31 +32,16 @@ import views.html.sections.items.ItemCommodityCodeView
 
 import scala.concurrent.Future
 
-class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersService with MockGetCommodityCodesService with MockGetCnCodeInformationService {
+class ItemCommodityCodeControllerSpec extends SpecBase
+  with MockUserAnswersService
+  with MockGetCommodityCodesService
+  with MockGetCnCodeInformationService
+  with ItemFixtures {
 
   val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
   lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
   lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-
-  //  val testEpc: String = "T200"
-  //  val testGoodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpc)
-  //
-  //  val testCommodityCode1: CnCodeInformation = CnCodeInformation(
-  //    cnCode = "testCnCode1",
-  //    cnCodeDescription = "testCnCodeDescription1",
-  //    exciseProductCode = testEpc,
-  //    exciseProductCodeDescription = "testExciseProductCodeDescription",
-  //    unitOfMeasure = Kilograms
-  //  )
-  //
-  //  val testCommodityCode2: CnCodeInformation = CnCodeInformation(
-  //    cnCode = "testCnCode2",
-  //    cnCodeDescription = "testCnCodeDescription2",
-  //    exciseProductCode = testEpc,
-  //    exciseProductCodeDescription = "testExciseProductCodeDescription",
-  //    unitOfMeasure = Kilograms
-  //  )
 
   lazy val formProvider: ItemCommodityCodeFormProvider = new ItemCommodityCodeFormProvider()
   lazy val form: Form[String] = formProvider()

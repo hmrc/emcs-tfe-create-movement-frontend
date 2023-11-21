@@ -17,62 +17,54 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemBrandNameMessages
+import fixtures.ItemFixtures
+import fixtures.messages.sections.items.ItemBulkPackagingSelectMessages
 import models.CheckMode
-import models.sections.items.ItemBrandNameModel
+import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemBrandNamePage
+import pages.sections.items.ItemBulkPackagingSelectPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemBrandNameSummarySpec extends SpecBase with Matchers {
+class ItemBulkPackagingSelectSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
-  "ItemBrandNameSummary" - {
+  "ItemBulkPackagingSelectSummary" - {
 
-    Seq(ItemBrandNameMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemBulkPackagingSelectMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemBrandNameSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemBrandName1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+            ItemBulkPackagingSelectSummary.row(testIndex1, bulkPackagingTypes) mustBe None
           }
         }
 
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(true, Some("brand"))))
+            implicit lazy val request = dataRequest(FakeRequest(),
+              emptyUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkLiquid)
+            )
 
-            ItemBrandNameSummary.row(testIndex1) mustBe Some(
+            ItemBulkPackagingSelectSummary.row(testIndex1, bulkPackagingTypes) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text("brand")),
+                value = Value(HtmlContent("Bulk, liquid (VL)")),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemBrandName1"
+                    href = controllers.sections.items.routes.ItemBulkPackagingSelectController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeItemBulkPackagingSelect1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )

@@ -18,6 +18,7 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockGetBulkPackagingTypesConnector
+import fixtures.ItemFixtures
 import models.response.{PackagingTypesException, UnexpectedDownstreamResponseError}
 import models.sections.items.ItemBulkPackagingCode
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
@@ -26,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetPackagingTypesServiceSpec extends SpecBase with MockGetBulkPackagingTypesConnector {
+class GetPackagingTypesServiceSpec extends SpecBase with MockGetBulkPackagingTypesConnector with ItemFixtures {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global

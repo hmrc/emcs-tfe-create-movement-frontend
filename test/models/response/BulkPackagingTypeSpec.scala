@@ -17,10 +17,13 @@
 package models.response
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import models.response.referenceData.BulkPackagingType
 import play.api.libs.json._
 
-class BulkPackagingTypeSpec extends SpecBase {
+import scala.util.Random
+
+class BulkPackagingTypeSpec extends SpecBase with ItemFixtures {
 
   "BulkPackagingType" - {
     "should be able to parse a valid JSON object response" in {
@@ -43,6 +46,14 @@ class BulkPackagingTypeSpec extends SpecBase {
           |}
           |""".stripMargin)
       intercept[JsResultException](Json.fromJson(modelAsJson)(BulkPackagingType.seqReads))
+    }
+
+    ".options" - {
+      "should return the radio options in the correct order" in {
+        val unorderedPackagingTypes = Random.shuffle(bulkPackagingTypes)
+        val result = BulkPackagingType.options(unorderedPackagingTypes)
+        result mustBe bulkPackagingTypesRadioOptions
+      }
     }
   }
 }

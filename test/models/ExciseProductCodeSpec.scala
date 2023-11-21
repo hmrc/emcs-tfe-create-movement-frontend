@@ -16,13 +16,13 @@
 
 package models
 
-import fixtures.BaseFixtures
+import fixtures.ItemFixtures
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
 
-class ExciseProductCodeSpec extends AnyFreeSpec with Matchers with OptionValues with BaseFixtures {
+class ExciseProductCodeSpec extends AnyFreeSpec with Matchers with OptionValues with ItemFixtures {
 
   "ExciseProductCode" - {
     "should be readable from JSON" in {

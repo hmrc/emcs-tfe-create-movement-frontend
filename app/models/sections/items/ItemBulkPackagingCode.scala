@@ -17,25 +17,40 @@
 package models.sections.items
 
 import models.{Enumerable, WithName}
-import play.api.libs.json.{JsString, Writes}
 
-sealed trait ItemBulkPackagingCode
+sealed trait ItemBulkPackagingCode {
+  val positionInRadioList: Int
+}
 
 case object ItemBulkPackagingCode extends Enumerable.Implicits {
 
-  case object BulkGas extends WithName("VG") with ItemBulkPackagingCode
+  case object BulkGas extends WithName("VG") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 1
+  }
 
-  case object BulkLiquefiedGas extends WithName("VQ") with ItemBulkPackagingCode
+  case object BulkLiquefiedGas extends WithName("VQ") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 2
+  }
 
-  case object BulkLiquid extends WithName("VL") with ItemBulkPackagingCode
+  case object BulkLiquid extends WithName("VL") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 3
+  }
 
-  case object BulkSolidPowders extends WithName("VY") with ItemBulkPackagingCode
+  case object BulkSolidPowders extends WithName("VY") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 4
+  }
 
-  case object BulkSolidGrains extends WithName("VR") with ItemBulkPackagingCode
+  case object BulkSolidGrains extends WithName("VR") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 5
+  }
 
-  case object BulkSolidNodules extends WithName("VO") with ItemBulkPackagingCode
+  case object BulkSolidNodules extends WithName("VO") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 6
+  }
 
-  case object Unpacked extends WithName("NE") with ItemBulkPackagingCode
+  case object Unpacked extends WithName("NE") with ItemBulkPackagingCode {
+    override val positionInRadioList: Int = 7
+  }
 
   val values: Seq[ItemBulkPackagingCode] = Seq(
     BulkGas, BulkLiquefiedGas, BulkLiquid, BulkSolidPowders, BulkSolidGrains, BulkSolidNodules, Unpacked
@@ -43,8 +58,6 @@ case object ItemBulkPackagingCode extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[ItemBulkPackagingCode] =
     Enumerable(values.map(v => v.toString -> v): _*)
-
-  implicit val writes: Writes[ItemBulkPackagingCode] = (o: ItemBulkPackagingCode) => JsString(o.toString)
 
 }
 

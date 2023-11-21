@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{CheckMode, Index}
@@ -38,7 +39,7 @@ object ItemGeographicalIndicationChoiceSummary {
             actions = Seq(
               ActionItemViewModel(
                 content = "site.change",
-                href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+                href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
                 id = s"changeItemGeographicalIndicationChoice${idx.displayIndex}"
               ).withVisuallyHiddenText(messages("itemGeographicalIndicationChoice.change.hidden"))
             )

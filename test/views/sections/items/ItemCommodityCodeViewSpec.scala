@@ -17,6 +17,7 @@
 package views.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCommodityCodeMessages.English
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.GoodsTypeModel.Beer
@@ -30,7 +31,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemCommodityCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours {
+class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#item-commodity-code > option:nth-child($nthChild)"
   }

@@ -17,13 +17,15 @@
 package connectors.referenceData
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 
-class GetExciseProductCodesHttpParserSpec extends SpecBase with GetExciseProductCodesHttpParser with MockHttpClient {
+class GetExciseProductCodesHttpParserSpec extends SpecBase
+  with GetExciseProductCodesHttpParser with MockHttpClient with ItemFixtures {
 
   override def http: HttpClient = mockHttpClient
 

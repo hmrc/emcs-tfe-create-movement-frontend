@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemProducerSizeMessages.English
 import forms.sections.items.ItemProducerSizeFormProvider
 import models.GoodsTypeModel.{Beer, Spirits, Wine}
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemProducerSizeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemProducerSizeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,7 +39,8 @@ class ItemProducerSizeViewSpec extends ViewSpecBase with ViewBehaviours {
 
       "when the goodsType is beer and the years are 2022 to 2023" - {
 
-        implicit val msgs: Messages = messages(app, English.lang)
+        implicit val msgs: Messages = messages(Seq(English.lang))
+
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[ItemProducerSizeView]
@@ -66,7 +67,8 @@ class ItemProducerSizeViewSpec extends ViewSpecBase with ViewBehaviours {
 
       "when the goodsType is spirit and the years are 2023 to 2024" - {
 
-        implicit val msgs: Messages = messages(app, English.lang)
+        implicit val msgs: Messages = messages(Seq(English.lang))
+
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[ItemProducerSizeView]
@@ -93,7 +95,8 @@ class ItemProducerSizeViewSpec extends ViewSpecBase with ViewBehaviours {
 
       "when the goodsTypen is beer and the years are 2024 to 2025" - {
 
-        implicit val msgs: Messages = messages(app, English.lang)
+        implicit val msgs: Messages = messages(Seq(English.lang))
+
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[ItemProducerSizeView]

@@ -16,15 +16,21 @@
 
 package forms.sections.items
 
-import forms.behaviours.IntFieldBehaviours
+import base.SpecBase
+import fixtures.messages.sections.items.ItemProducerSizeMessages.English
+import forms.behaviours.{IntFieldBehaviours, StringFieldBehaviours}
 import play.api.data.FormError
+import play.api.i18n.Messages
 
 import scala.util.Random
 
-class ItemProducerSizeFormProviderSpec extends IntFieldBehaviours {
+class ItemProducerSizeFormProviderSpec extends SpecBase with IntFieldBehaviours with StringFieldBehaviours {
 
   val requiredKey = "itemProducerSize.error.required"
-  val lengthKey = "itemProducerSize.error.length"
+  val outOfRangeKey = "itemProducerSize.error.outOfRange"
+  val wholeNumberKey = "itemProducerSize.error.wholeNumber"
+  val nonNumericKey = "itemProducerSize.error.nonNumeric"
+
   val min = 1
   val max = 15
 
@@ -43,8 +49,8 @@ class ItemProducerSizeFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "itemProducerSize.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "itemProducerSize.error.wholeNumber")
+      nonNumericError = FormError(fieldName, nonNumericKey),
+      wholeNumberError = FormError(fieldName, wholeNumberKey)
     )
 
     behave like intFieldWithRange(
@@ -52,13 +58,45 @@ class ItemProducerSizeFormProviderSpec extends IntFieldBehaviours {
       fieldName,
       minimum = min,
       maximum = max,
-      expectedError = FormError(fieldName, "itemProducerSize.error.outOfRange", Seq(min, max))
+      expectedError = FormError(fieldName, outOfRangeKey, Seq(min, max))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "itemProducerSize.error.required")
+      requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error Messages" - {
+
+    implicit val msgs: Messages = messages(Seq(English.lang))
+
+    s"when output for language code '${English.lang.code}'" - {
+
+      "have the correct error message for required key" in {
+
+        msgs(requiredKey) mustBe
+          English.errorRequired
+      }
+
+      "have the correct error message for out of range key" in {
+
+        msgs(outOfRangeKey) mustBe
+          English.errorOutOfRange
+      }
+
+      "have the correct error message for whole number key" in {
+
+        msgs(wholeNumberKey) mustBe
+          English.errorWholeNumber
+      }
+
+      "have the correct error message for non numeric key" in {
+
+        msgs(wholeNumberKey) mustBe
+          English.errorNonNumeric
+      }
+    }
   }
 }

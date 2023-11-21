@@ -31,11 +31,9 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
 
   "ItemProducerSizeSummarySummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      implicit lazy val msgs: Messages = messages(app, English.lang)
+      implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
       "when there's no answer" - {
 

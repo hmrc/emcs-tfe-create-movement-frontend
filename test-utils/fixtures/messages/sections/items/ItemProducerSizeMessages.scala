@@ -17,7 +17,6 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
-import forms.sections.items.ItemBrandNameFormProvider
 
 object ItemProducerSizeMessages {
 

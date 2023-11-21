@@ -17,25 +17,23 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemProducerSizeFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockPreDraftService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage}
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import utils.TimeMachine
 import views.html.sections.items.ItemProducerSizeView
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
-class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersService {
+class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService with MockGetCnCodeInformationService {
 
   class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), monthValue: Int = 2) {
 
@@ -44,20 +42,25 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersServic
         LocalDateTime.of(2023, monthValue, 12, 1, 1, 1)
     }
 
-    def onwardRoute = Call("GET", "/foo")
-
-    val application = applicationBuilder(userAnswers = userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[TimeMachine].toInstance(TimeMachine)
-      )
-      .build()
-
-    val view = application.injector.instanceOf[ItemProducerSizeView]
-
     val formProvider = new ItemProducerSizeFormProvider()
     val form = formProvider()
+
+    val view = app.injector.instanceOf[ItemProducerSizeView]
+
+    object TestController extends ItemProducerSizeController(
+      messagesApi = messagesApi,
+      userAnswersService = mockUserAnswersService,
+      navigator = new FakeItemsNavigator(testOnwardRoute),
+      auth = fakeAuthAction,
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      requireData = dataRequiredAction,
+      userAllowList = fakeUserAllowListAction,
+      formProvider = formProvider,
+      controllerComponents = Helpers.stubMessagesControllerComponents(),
+      view = view,
+      timeMachine = TimeMachine,
+      cnCodeInformationService = mockGetCnCodeInformationService
+    )
 
     def itemProducerSizeRoute(idx: Index): String = routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
     def onSubmitAction(idx: Index): Call = routes.ItemProducerSizeController.onSubmit(testErn, testDraftId, idx, NormalMode)
@@ -72,21 +75,18 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersServic
         emptyUserAnswers.set(ItemExciseProductCodePage(0), Wine.code)
       )) {
 
-        running(application) {
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(0))
 
-          val request = FakeRequest(GET, itemProducerSizeRoute(0))
+        val result: Future[Result] = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            form = form,
-            onSubmitAction = onSubmitAction(0),
-            goodsType = Wine,
-            startYear = "2022",
-            endYear = "2023"
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form = form,
+          onSubmitAction = onSubmitAction(0),
+          goodsType = Wine,
+          startYear = "2022",
+          endYear = "2023"
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must return OK and the correct view for a GET when the current date is January" in new Setup(
@@ -94,21 +94,18 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersServic
         monthValue = 1
       ) {
 
-        running(application) {
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
 
-          val request = FakeRequest(GET, itemProducerSizeRoute(0))
+        val result: Future[Result] = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            form = form,
-            onSubmitAction = onSubmitAction(0),
-            goodsType = Wine,
-            startYear = "2021",
-            endYear = "2022"
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form = form,
+          onSubmitAction = onSubmitAction(0),
+          goodsType = Wine,
+          startYear = "2021",
+          endYear = "2022"
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
@@ -117,35 +114,40 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersServic
           .set(ItemProducerSizePage(0), 1)
       )) {
 
-        running(application) {
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
 
-          val request = FakeRequest(GET, itemProducerSizeRoute(0))
+        val result: Future[Result] = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            form = form.fill(1),
-            onSubmitAction = onSubmitAction(0),
-            goodsType = Wine,
-            startYear = "2022",
-            endYear = "2023"
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form = form.fill(1),
+          onSubmitAction = onSubmitAction(0),
+          goodsType = Wine,
+          startYear = "2022",
+          endYear = "2023"
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to ItemsIndexController for a GET there is no GoodsType in UserAnswers" in new Setup() {
 
-        running(application) {
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
 
-          val request = FakeRequest(GET, itemProducerSizeRoute(0))
+        val result: Future[Result] = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.onPageLoad(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
     }
 
     "for a POST onSubmit" - {
@@ -154,81 +156,56 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockUserAnswersServic
 
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        running(application) {
+        val request = FakeRequest(POST, itemProducerSizeRoute(0))
+          .withFormUrlEncodedBody(("value", "1"))
 
-          val request = FakeRequest(POST, itemProducerSizeRoute(0))
-            .withFormUrlEncodedBody(("value", "1"))
+        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must return a Bad Request and errors when invalid data is submitted and there is a GoodsType set" in new Setup(Some(
         emptyUserAnswers.set(ItemExciseProductCodePage(0), Wine.code)
       )) {
 
-        running(application) {
+        val request = FakeRequest(POST, itemProducerSizeRoute(0))
+          .withFormUrlEncodedBody(("value", ""))
 
-          val request = FakeRequest(POST, itemProducerSizeRoute(0))
-            .withFormUrlEncodedBody(("value", ""))
+        val boundForm = form.bind(Map("value" -> ""))
 
-          val boundForm = form.bind(Map("value" -> ""))
+        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(
-            form = boundForm,
-            onSubmitAction = onSubmitAction(0),
-            goodsType = Wine,
-            startYear = "2022",
-            endYear = "2023"
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          onSubmitAction = onSubmitAction(0),
+          goodsType = Wine,
+          startYear = "2022",
+          endYear = "2023"
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to ItemsIndexController when invalid data is submitted and there is a No GoodsType set" in new Setup() {
 
-          running(application) {
+        val request = FakeRequest(POST, itemProducerSizeRoute(0))
+          .withFormUrlEncodedBody(("value", ""))
 
-          val request = FakeRequest(POST, itemProducerSizeRoute(0))
-            .withFormUrlEncodedBody(("value", ""))
+        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-        }
-      }
-
-      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
-
-        running(application) {
-
-          val request = FakeRequest(GET, itemProducerSizeRoute(0))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
 
       "must redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
 
-        running(application) {
+        val request = FakeRequest(POST, itemProducerSizeRoute(0))
+          .withFormUrlEncodedBody(("value", "1"))
 
-          val request = FakeRequest(POST, itemProducerSizeRoute(0))
-            .withFormUrlEncodedBody(("value", "1"))
+        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(request)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

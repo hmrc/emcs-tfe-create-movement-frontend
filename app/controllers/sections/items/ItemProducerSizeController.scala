@@ -25,7 +25,7 @@ import pages.sections.items.ItemProducerSizePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import utils.TimeMachine
 import views.html.sections.items.ItemProducerSizeView
 
@@ -44,7 +44,8 @@ class ItemProducerSizeController @Inject()(
                                        formProvider: ItemProducerSizeFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: ItemProducerSizeView,
-                                       timeMachine: TimeMachine
+                                       timeMachine: TimeMachine,
+                                       override val cnCodeInformationService: GetCnCodeInformationService
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

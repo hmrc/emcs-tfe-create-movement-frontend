@@ -17,82 +17,68 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{AuthAction, DataRetrievalAction, FakeAuthAction}
-import handlers.ErrorHandler
+import config.AppConfig
+import controllers.actions.{DataRetrievalAction, FakeDataRetrievalAction}
 import models.UserAnswers
-import models.requests.{OptionalDataRequest, UserRequest}
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.DeclarationPage
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.Application
 import play.api.i18n.Messages
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{ActionTransformer, AnyContentAsEmpty}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.ConfirmationView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
-
-class ConfirmationControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockFactory {
+class ConfirmationControllerSpec extends SpecBase with MockFactory {
   val testUserAnswers: UserAnswers = emptyUserAnswers
     .set(DeclarationPage, testSubmissionDate)
     .set(LocalReferenceNumberPage(), testConfirmationReference)
 
-  val mockDataRetrievalAction: DataRetrievalAction = mock[DataRetrievalAction]
-  val testExciseEnquiriesLink = "testExciseEnquiriesLink"
-  val testReturnToAccountLink = "testReturnToAccountLink"
-  val testFeedbackBaseUrl = "testFeedbackBaseUrl"
-  val testDeskproName = "testDeskproName"
+  lazy val testExciseEnquiriesLink = "testExciseEnquiriesLink"
+  lazy val testReturnToAccountLink = "testReturnToAccountLink"
+  lazy val testFeedbackBaseUrl = "testFeedbackBaseUrl"
+  lazy val testDeskproName = "testDeskproName"
 
-  def testRetrievalAction(userAnswers: UserAnswers): ActionTransformer[UserRequest, OptionalDataRequest] = {
-    new ActionTransformer[UserRequest, OptionalDataRequest] {
-      override def transform[A](request: UserRequest[A]): Future[OptionalDataRequest[A]] =
-        Future(OptionalDataRequest(request, testDraftId, Some(userAnswers), Some(testMinTraderKnownFacts)))
-
-      override protected def executionContext: ExecutionContext = global
-    }
-  }
-
-  override def fakeApplication(): Application =
+  override lazy val app: Application =
     new GuiceApplicationBuilder()
       .configure(
         "urls.exciseGuidance" -> testExciseEnquiriesLink,
         "urls.emcsTfeHome" -> testReturnToAccountLink,
         "feedback-frontend.host" -> testFeedbackBaseUrl,
         "deskproName" -> testDeskproName
-      )
-      .overrides(
-        bind[AuthAction].to[FakeAuthAction],
-        bind[Navigator].toInstance(new FakeNavigator(testOnwardRoute)),
-        bind[DataRetrievalAction].toInstance(mockDataRetrievalAction),
       ).build()
 
-  val view: ConfirmationView = app.injector.instanceOf[ConfirmationView]
-  val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
-  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
-  val controller: ConfirmationController = app.injector.instanceOf[ConfirmationController]
-  implicit lazy val messagesInstance: Messages = messages(app)
+  lazy val view: ConfirmationView = app.injector.instanceOf[ConfirmationView]
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
+  lazy val controller: ConfirmationController = app.injector.instanceOf[ConfirmationController]
 
+  def getController(userAnswers: UserAnswers) = new ConfirmationController(
+    messagesApi,
+    fakeAuthAction,
+    fakeUserAllowListAction,
+    new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
+    requireData = dataRequiredAction,
+    controllerComponents = messagesControllerComponents,
+    config = app.injector.instanceOf[AppConfig],
+    view = view
+  )
 
   "Confirmation Controller" - {
 
     "when the confirmation receipt reference is held in session" - {
 
       "must return OK and the correct view for a GET" in {
-        (mockDataRetrievalAction.apply _).expects(*).returns(testRetrievalAction(testUserAnswers))
-
-        implicit val req = dataRequest(
+        implicit val req: DataRequest[AnyContentAsEmpty.type] = dataRequest(
           request = request,
           answers = testUserAnswers
         )
 
-        val result = controller.onPageLoad(testErn, testDraftId)(req)
+        implicit val messagesInstance: Messages = messages(req)
+
+        val result = getController(testUserAnswers).onPageLoad(testErn, testDraftId)(req)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -107,9 +93,7 @@ class ConfirmationControllerSpec extends SpecBase with GuiceOneAppPerSuite with 
 
     "when no local reference or submission date is found" - {
       "must redirect to Journey Recovery" in {
-        (mockDataRetrievalAction.apply _).expects(*).returns(testRetrievalAction(emptyUserAnswers))
-
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = getController(emptyUserAnswers).onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url

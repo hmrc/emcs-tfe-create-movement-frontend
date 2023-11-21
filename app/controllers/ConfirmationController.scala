@@ -17,9 +17,7 @@
 package controllers
 
 import config.AppConfig
-import config.SessionKeys.SUBMISSION_RECEIPT_REFERENCE
 import controllers.actions._
-import handlers.ErrorHandler
 import pages.DeclarationPage
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,7 +26,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
 import views.html.ConfirmationView
 
-import java.time.LocalDate
 import javax.inject.Inject
 
 class ConfirmationController @Inject()(

@@ -17,6 +17,7 @@
 package controllers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.{CnCodeInformationItem, DataRequest}
@@ -31,7 +32,10 @@ import services.{GetCnCodeInformationService, UserAnswersService}
 
 import scala.concurrent.Future
 
-class BaseItemsNavigationControllerSpec extends SpecBase with MockGetCnCodeInformationService with MockUserAnswersService {
+class BaseItemsNavigationControllerSpec extends SpecBase
+  with MockGetCnCodeInformationService
+  with MockUserAnswersService
+  with ItemFixtures {
 
   class Test(val userAnswers: UserAnswers) {
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)

@@ -18,6 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemExciseProductCodeFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockGetExciseProductCodesService, MockUserAnswersService}
 import models.{ExciseProductCode, NormalMode, UserAnswers}
@@ -36,7 +37,8 @@ import scala.concurrent.Future
 class ItemExciseProductCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetExciseProductCodesService
-  with MockGetCnCodeInformationService {
+  with MockGetCnCodeInformationService
+  with ItemFixtures {
 
   val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 

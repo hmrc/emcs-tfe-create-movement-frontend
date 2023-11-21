@@ -19,30 +19,36 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemFiscalMarksChoicePage
+import pages.sections.items.ItemBulkPackagingSelectPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemFiscalMarksChoiceSummary {
+object ItemBulkPackagingSelectSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
-    answers.get(ItemFiscalMarksChoicePage(idx)).map {
+    answers.get(ItemBulkPackagingSelectPage(idx)).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
+        val value = ValueViewModel(
+          HtmlContent(
+            HtmlFormat.escape(s"${answer.description} (${answer.packagingType.toString})")
+          )
+        )
 
         SummaryListRowViewModel(
-          key = "itemFiscalMarksChoice.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          key = "itemBulkPackagingSelect.checkYourAnswersLabel",
+          value = value,
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.ItemFiscalMarksChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"changeItemFiscalMarksChoice${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemFiscalMarksChoice.change.hidden"))
+              href = routes.ItemBulkPackagingSelectController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              id = s"changeItemBulkPackagingSelect${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages("itemBulkPackagingSelect.change.hidden"))
           )
         )
     }

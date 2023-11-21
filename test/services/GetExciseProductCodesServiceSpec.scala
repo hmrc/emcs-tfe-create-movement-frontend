@@ -17,6 +17,7 @@
 package services
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import mocks.connectors.MockGetExciseProductCodesConnector
 import models.response.{ExciseProductCodesException, UnexpectedDownstreamResponseError}
 import play.api.test.Helpers._
@@ -24,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProductCodesConnector {
+class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProductCodesConnector with ItemFixtures {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global

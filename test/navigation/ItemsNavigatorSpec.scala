@@ -18,7 +18,9 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
+import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBrandNameModel
+import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
@@ -405,13 +407,12 @@ class ItemsNavigatorSpec extends SpecBase {
       }
 
       "must go from the ItemBulkPackagingChoicePage" - {
-        //TODO: Redirect to CAM-ITM45
         "to the Packaging Bulk Select page" - {
 
           "when the user answers yes" in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -438,6 +439,58 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
+      }
+
+      "must go from the ItemBulkPackagingSelectPage" - {
+
+        //TODO: redirect to CAM-ITM12
+        "to the Wine Operations Choice page" - {
+          "when the wine quantity is equal or over 60 litres" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        //TODO: redirect to CAM-ITM15
+        "to the Imported Wine Choice page" - {
+          "when the wine quantity is under 60 litres" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(59.99))
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        //TODO: redirect to CAM-ITM28
+        "to the Packaging Seal Choice page" - {
+          "when goods type is not Wine" in {
+            GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach { goodsType =>
+              navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+                .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
+              ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            }
+          }
+        }
+
+        "to the Items Index page" - {
+          "when there is no answer for ItemExciseProductCodePage" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+
+          "when there is no answer for ItemQuantityPage when the EPC is Wine" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
       }
     }
 

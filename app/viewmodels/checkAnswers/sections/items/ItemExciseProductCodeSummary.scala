@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemExciseProductCodePage
@@ -43,7 +44,7 @@ class ItemExciseProductCodeSummary @Inject()(p: views.html.components.p) {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              href = routes.ItemExciseProductCodeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               id = s"changeItemExciseProductCode${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
           )

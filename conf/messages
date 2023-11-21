@@ -1120,6 +1120,12 @@ itemNetGrossMass.grossMass.error.lessThanNetMass = The gross mass must be equal 
 itemNetGrossMass.grossMass.checkYourAnswersLabel = Gross Mass
 itemNetGrossMass.grossMass.change.hidden = gross mass
 
+itemBulkPackagingSelect.title = Which bulk packaging type are you using for the {0}?
+itemBulkPackagingSelect.heading = Which bulk packaging type are you using for the {0}?
+itemBulkPackagingSelect.checkYourAnswersLabel = Packaging type
+itemBulkPackagingSelect.error.required = Select the bulk packaging type for the {0}
+itemBulkPackagingSelect.change.hidden = packaging type
+
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.caption = Draft Movement

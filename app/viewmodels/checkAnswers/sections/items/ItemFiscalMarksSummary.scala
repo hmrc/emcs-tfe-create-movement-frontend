@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemFiscalMarksPage
@@ -37,7 +38,7 @@ object ItemFiscalMarksSummary {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              href = routes.ItemFiscalMarksController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
               id = s"changeItemFiscalMarks${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemFiscalMarks.change.hidden"))
           )

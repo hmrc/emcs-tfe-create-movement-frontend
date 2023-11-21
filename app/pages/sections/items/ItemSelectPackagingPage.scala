@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package connectors.referenceData
-import models.response.ErrorResponse
-import models.sections.documents.DocumentType
-import uk.gov.hmrc.http.HeaderCarrier
+package pages.sections.items
 
-import scala.concurrent.{ExecutionContext, Future}
+import models.Index
+import models.response.referenceData.ItemPackaging
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class FakeGetDocumentTypesConnector extends GetDocumentTypesConnector {
-  override def baseUrl: String = ""
-
-  override def getDocumentTypes()(implicit headerCarrier: HeaderCarrier,
-                                  executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[DocumentType]]] =
-    Future.successful(Right(Seq.empty))
+case class ItemSelectPackagingPage(idx: Index) extends QuestionPage[ItemPackaging] {
+  override val toString: String = "itemSelectPackaging"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

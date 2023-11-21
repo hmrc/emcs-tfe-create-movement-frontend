@@ -44,11 +44,11 @@
 
     @formHelper(action = action) {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+      @if(form.errors.nonEmpty) {
+          @govukErrorSummary(ErrorSummaryViewModel(form))
+      }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+      @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
       @govukSelect(
         Select(
@@ -74,7 +74,7 @@
         )
       )
 
-        @continueOrExit()
+      @continueOrExit()
     }
 }
 

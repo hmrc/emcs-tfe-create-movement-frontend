@@ -110,7 +110,7 @@ trait Constraints {
       case value if list.contains(value) =>
         Valid
       case _ =>
-        Invalid(errorKey, args)
+        Invalid(errorKey, args: _*)
     }
 
   protected def decimalMaxLength(maximum: Int, errorKey: String): Constraint[String] =

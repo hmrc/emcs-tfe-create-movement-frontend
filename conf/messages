@@ -1126,6 +1126,14 @@ itemBulkPackagingSelect.checkYourAnswersLabel = Packaging type
 itemBulkPackagingSelect.error.required = Select the bulk packaging type for the {0}
 itemBulkPackagingSelect.change.hidden = packaging type
 
+itemSelectPackaging.title = Add a packaging type you are using for the {0}
+itemSelectPackaging.heading = Add a packaging type you are using for the {0}
+itemSelectPackaging.hint = Search by packaging type or code. You can add more types later.
+itemSelectPackaging.checkYourAnswersLabel = Packaging type
+itemSelectPackaging.error.required = Select a packaging type you are using for the {0}
+itemSelectPackaging.change.hidden = packaging type
+itemSelectPackaging.select.defaultValue = Choose packaging type
+
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.caption = Draft Movement

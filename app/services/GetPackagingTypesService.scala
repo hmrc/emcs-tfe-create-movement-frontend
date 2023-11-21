@@ -16,20 +16,29 @@
 
 package services
 
-import connectors.referenceData.GetBulkPackagingTypesConnector
+import connectors.referenceData.{GetBulkPackagingTypesConnector, GetItemPackagingTypesConnector}
 import models.response.PackagingTypesException
-import models.response.referenceData.BulkPackagingType
+import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode
 import uk.gov.hmrc.http.HeaderCarrier
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetPackagingTypesService @Inject()(connector: GetBulkPackagingTypesConnector)
-                                        (implicit ec: ExecutionContext) {
+@Singleton
+class GetPackagingTypesService @Inject()(bulkPackagingTypesConnector: GetBulkPackagingTypesConnector,
+                                         itemPackagingTypesConnector: GetItemPackagingTypesConnector
+                                        )(implicit ec: ExecutionContext) {
 
   def getBulkPackagingTypes(packagingCodes: Seq[ItemBulkPackagingCode])(implicit hc: HeaderCarrier): Future[Seq[BulkPackagingType]] = {
-    connector.getBulkPackagingTypes(packagingCodes).map {
+    bulkPackagingTypesConnector.getBulkPackagingTypes(packagingCodes).map {
+      case Left(_) => throw PackagingTypesException("Invalid response from packaging types code endpoint")
+      case Right(packagingTypes) => packagingTypes
+    }
+  }
+
+    def getItemPackagingTypes(optIsCountable: Option[Boolean])(implicit hc: HeaderCarrier): Future[Seq[ItemPackaging]] = {
+    itemPackagingTypesConnector.getItemPackagingTypes(optIsCountable).map {
       case Left(_) => throw PackagingTypesException("Invalid response from packaging types code endpoint")
       case Right(packagingTypes) => packagingTypes
     }

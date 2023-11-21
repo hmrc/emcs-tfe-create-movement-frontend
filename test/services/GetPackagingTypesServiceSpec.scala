@@ -17,7 +17,7 @@
 package services
 
 import base.SpecBase
-import mocks.connectors.MockGetBulkPackagingTypesConnector
+import mocks.connectors.{MockGetBulkPackagingTypesConnector, MockGetItemPackagingTypesConnector}
 import fixtures.ItemFixtures
 import models.response.{PackagingTypesException, UnexpectedDownstreamResponseError}
 import models.sections.items.ItemBulkPackagingCode
@@ -27,12 +27,15 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetPackagingTypesServiceSpec extends SpecBase with MockGetBulkPackagingTypesConnector with ItemFixtures {
+class GetPackagingTypesServiceSpec extends SpecBase
+  with MockGetBulkPackagingTypesConnector
+  with MockGetItemPackagingTypesConnector
+  with ItemFixtures {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global
 
-  lazy val testService = new GetPackagingTypesService(mockGetBulkPackagingTypesConnector)
+  lazy val testService = new GetPackagingTypesService(mockGetBulkPackagingTypesConnector, mockGetItemPackagingTypesConnector)
 
   val packagingCodes: Seq[ItemBulkPackagingCode] = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
 
@@ -61,6 +64,38 @@ class GetPackagingTypesServiceSpec extends SpecBase with MockGetBulkPackagingTyp
         MockGetBulkPackagingTypesConnector.getBulkPackagingTypes().returns(Future(Left(UnexpectedDownstreamResponseError)))
 
         val actualResult = intercept[PackagingTypesException](await(testService.getBulkPackagingTypes(packagingCodes))).getMessage
+
+        actualResult mustBe expectedResult
+      }
+    }
+
+  }
+
+  ".getItemPackagingTypes" - {
+
+    "should return Seq[ItemPackaging]" - {
+
+      "when Connector returns success from downstream" in {
+
+        val expectedResult = testItemPackagingTypes
+
+        MockGetItemPackagingTypesConnector.getItemPackagingTypes().returns(Future.successful(Right(testItemPackagingTypes)))
+
+        val actualResults = testService.getItemPackagingTypes(Some(true)).futureValue
+
+        actualResults mustBe expectedResult
+      }
+    }
+
+    "should throw PackagingTypesException" - {
+
+      "when Connector returns failure from downstream" in {
+
+        val expectedResult = "Invalid response from packaging types code endpoint"
+
+        MockGetItemPackagingTypesConnector.getItemPackagingTypes().returns(Future(Left(UnexpectedDownstreamResponseError)))
+
+        val actualResult = intercept[PackagingTypesException](await(testService.getItemPackagingTypes(None))).getMessage
 
         actualResult mustBe expectedResult
       }

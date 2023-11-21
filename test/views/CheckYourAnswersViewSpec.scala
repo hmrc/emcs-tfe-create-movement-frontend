@@ -16,7 +16,7 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.CheckYourAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -37,10 +37,10 @@ class CheckYourAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CheckYourAnswersView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.routes.CheckYourAnswersController.onSubmit(testErn, testDraftId),

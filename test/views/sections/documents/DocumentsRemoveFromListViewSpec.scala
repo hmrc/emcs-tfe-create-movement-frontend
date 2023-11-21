@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsRemoveFromListMessages
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.DocumentsRemoveFromListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsRemoveFromListViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentsRemoveFromListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Documents Remove from List view" - {
@@ -37,10 +37,10 @@ class DocumentsRemoveFromListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DocumentsRemoveFromListView]
+       lazy val view = app.injector.instanceOf[DocumentsRemoveFromListView]
         val form = app.injector.instanceOf[DocumentsRemoveFromListFormProvider].apply(testIndex1)
 
         implicit val doc: Document = Jsoup.parse(view(form, testIndex1).toString())

@@ -16,9 +16,9 @@
 
 package navigation
 
-import controllers.sections.sad.{routes => sadRoutes}
 import base.SpecBase
 import controllers.routes
+import controllers.sections.sad.{routes => sadRoutes}
 import models.sections.sad.SadAddToListModel
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page

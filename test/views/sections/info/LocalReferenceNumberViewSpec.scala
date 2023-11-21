@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
 import models.NormalMode
@@ -29,9 +29,9 @@ import play.api.test.FakeRequest
 import views.html.sections.info.LocalReferenceNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
-class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
+class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
 
-  val view = app.injector.instanceOf[LocalReferenceNumberView]
+ lazy val view = app.injector.instanceOf[LocalReferenceNumberView]
   val form = app.injector.instanceOf[LocalReferenceNumberFormProvider]
 
   object Selectors extends BaseSelectors
@@ -42,7 +42,7 @@ class LocalReferenceNumberViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         "when movement is Deferred" - {

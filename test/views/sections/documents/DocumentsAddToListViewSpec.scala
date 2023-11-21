@@ -16,14 +16,14 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, DocumentsCertificatesPage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -31,7 +31,7 @@ import viewmodels.helpers.DocumentsAddToListHelper
 import views.html.sections.documents.DocumentsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with DocumentTypeFixtures {
+class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentTypeFixtures {
 
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
@@ -47,7 +47,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for singular item" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeOtherModel)
@@ -56,7 +56,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
@@ -85,7 +85,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for multiple items" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
@@ -96,7 +96,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
@@ -124,7 +124,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered with no form" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
@@ -135,7 +135,7 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -164,14 +164,14 @@ class DocumentsAddToListViewSpec extends ViewSpecBase with ViewBehaviours with D
 
     s"when being rendered for an InProgress item" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
         .set(DocumentDescriptionPage(0), "description")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-      val view = app.injector.instanceOf[DocumentsAddToListView]
+     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
       val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
       val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 

@@ -17,159 +17,130 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
 import forms.sections.items.ItemDegreesPlatoFormProvider.{degreesPlatoField, hasDegreesPlatoField}
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemDegreesPlatoModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemDegreesPlatoPage, ItemExciseProductCodePage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemDegreesPlatoView
 
 import scala.concurrent.Future
 
-class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersService {
+class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  val formProvider = new ItemDegreesPlatoFormProvider()
-  val form = formProvider()
+  def itemDegreesPlatoSubmitAction(idx: Index = testIndex1): Call = routes.ItemDegreesPlatoController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-  def itemDegreesPlatoRoute(idx: Index = testIndex1) = routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-  def itemDegreesPlatoSubmitAction(idx: Index = testIndex1) = routes.ItemDegreesPlatoController.onSubmit(testErn, testDraftId, idx, NormalMode)
+  lazy val formProvider: ItemDegreesPlatoFormProvider = new ItemDegreesPlatoFormProvider()
+  lazy val form: Form[ItemDegreesPlatoModel] = formProvider()
+  lazy val view: ItemDegreesPlatoView = app.injector.instanceOf[ItemDegreesPlatoView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
-
-    val view = application.injector.instanceOf[ItemDegreesPlatoView]
+    lazy val controller = new ItemDegreesPlatoController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
   }
 
   "ItemDegreesPlato Controller" - {
 
     "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemDegreesPlatoRoute(testIndex2))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "false")))
 
-        val request = FakeRequest(POST, itemDegreesPlatoRoute(testIndex2)).withFormUrlEncodedBody((hasDegreesPlatoField, "false"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemDegreesPlatoRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(defaultUserAnswers.set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))))
     ) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemDegreesPlatoRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))),
-          itemDegreesPlatoSubmitAction(),
-          Wine
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form.fill(ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))),
+        itemDegreesPlatoSubmitAction(),
+        Wine
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "false")))
 
-        val request = FakeRequest(POST, itemDegreesPlatoRoute()).withFormUrlEncodedBody((hasDegreesPlatoField, "false"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted (form provider validation fails)" in new Fixture() {
-      running(application) {
+      val boundForm = form.bind(Map(hasDegreesPlatoField -> ""))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "")))
 
-        val request = FakeRequest(POST, itemDegreesPlatoRoute()).withFormUrlEncodedBody((hasDegreesPlatoField, ""))
-        val boundForm = form.bind(Map(hasDegreesPlatoField -> ""))
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
     "must return a Bad Request and errors when invalid data is submitted (no brand name supplied)" in new Fixture() {
-      running(application) {
+      val boundForm =
+        form
+          .bind(Map(hasDegreesPlatoField -> "true"))
+          .withError(degreesPlatoField, ItemDegreesPlatoMessages.English.errorDegreesPlatoRequired)
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "true")))
 
-        val request = FakeRequest(POST, itemDegreesPlatoRoute()).withFormUrlEncodedBody((hasDegreesPlatoField, "true"))
-        val boundForm =
-          form
-            .bind(Map(hasDegreesPlatoField -> "true"))
-            .withError(degreesPlatoField, ItemDegreesPlatoMessages.English.errorDegreesPlatoRequired)
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemDegreesPlatoRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "false")))
 
-        val request = FakeRequest(POST, itemDegreesPlatoRoute()).withFormUrlEncodedBody(("value", "true"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

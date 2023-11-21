@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.actions._
-import handlers.ErrorHandler
 import models.NormalMode
 import navigation.Navigator
 import pages.DeclarationPage
@@ -39,8 +38,7 @@ class DeclarationController @Inject()(
                                        val controllerComponents: MessagesControllerComponents,
                                        val userAnswersService: UserAnswersService,
                                        val navigator: Navigator,
-                                       view: DeclarationView,
-                                       errorHandler: ErrorHandler
+                                       view: DeclarationView
                                      ) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =

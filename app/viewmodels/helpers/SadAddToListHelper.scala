@@ -42,12 +42,12 @@ class SadAddToListHelper @Inject()() {
       rows = Seq(
         ImportNumberSummary.row(idx)
       ).flatten
-    ).copy(card =  Some(Card(
+    ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("sadAddToList.sadCardTitle", idx.displayIndex)))),
-      actions = Some(Actions( items = Seq(
+      actions = Some(Actions(items = Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
-          href    = sadRoutes.SadRemoveDocumentController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
+          href = sadRoutes.SadRemoveDocumentController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
           id = s"removeSad${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("sadAddToList.sadCardTitle", idx.displayIndex))
       ))))

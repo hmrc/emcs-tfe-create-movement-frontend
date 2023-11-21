@@ -31,8 +31,6 @@ import viewmodels.implicits._
 class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
 
   "ItemExciseProductCodeSummary" - {
-
-    lazy val app = applicationBuilder().build()
     val p = app.injector.instanceOf[views.html.components.p]
 
     val summary = new ItemExciseProductCodeSummary(p)
@@ -41,7 +39,7 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

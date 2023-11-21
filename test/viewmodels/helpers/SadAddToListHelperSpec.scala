@@ -21,7 +21,6 @@ import controllers.sections.sad.{routes => sadRoutes}
 import fixtures.messages.sections.sad.SadAddToListMessages
 import models.UserAnswers
 import pages.sections.sad._
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -32,7 +31,6 @@ import views.html.components.link
 class SadAddToListHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
 
@@ -40,10 +38,10 @@ class SadAddToListHelperSpec extends SpecBase {
   }
 
   "SadAddToListHelper" - {
-    Seq(SadAddToListMessages.English).foreach{ msg =>
+    Seq(SadAddToListMessages.English).foreach { msg =>
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+          implicit val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Nil
         }
@@ -52,13 +50,13 @@ class SadAddToListHelperSpec extends SpecBase {
 
         s"when all answers entered '${msg.lang.code}' and single Sad" in new Setup(
           emptyUserAnswers
-          .set(ImportNumberPage(testIndex1), "wee")) {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+            .set(ImportNumberPage(testIndex1), "wee")) {
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Seq(
             SummaryList(
               card = Some(Card(
-                title= Some(CardTitle(Text(msg.sad1))),
+                title = Some(CardTitle(Text(msg.sad1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
                     href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
@@ -77,7 +75,7 @@ class SadAddToListHelperSpec extends SpecBase {
         s"when all answers entered '${msg.lang.code}' and multiple Sads" in new Setup(emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
           .set(ImportNumberPage(testIndex2), "wee2")) {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allSadSummary() mustBe Seq(
             SummaryList(

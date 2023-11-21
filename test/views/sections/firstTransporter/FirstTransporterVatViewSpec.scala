@@ -16,7 +16,7 @@
 
 package views.sections.firstTransporter
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterVatMessages
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import models.requests.DataRequest
@@ -28,14 +28,14 @@ import play.api.test.FakeRequest
 import views.html.sections.firstTransporter.FirstTransporterVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class FirstTransporterVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class FirstTransporterVatViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[FirstTransporterVatView]
+   lazy val view = app.injector.instanceOf[FirstTransporterVatView]
     val form = app.injector.instanceOf[FirstTransporterVatFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

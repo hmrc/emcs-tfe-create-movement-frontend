@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.DispatchDetailsMessages
 import forms.sections.info.DispatchDetailsFormProvider
 import models.requests.DataRequest
@@ -29,7 +29,7 @@ import utils.DateTimeUtils
 import views.html.sections.info.DispatchDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
+class DispatchDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
 
@@ -41,10 +41,10 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
 
         "and is a deferred movement" - {
 
-          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-          val view = app.injector.instanceOf[DispatchDetailsView]
+         lazy val view = app.injector.instanceOf[DispatchDetailsView]
           val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply()
 
           val skipRoute: Call = Call("GET", "/skip-url")
@@ -76,10 +76,10 @@ class DispatchDetailsViewSpec extends ViewSpecBase with ViewBehaviours with Date
 
         "and is not a deferred movement" - {
 
-          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-          val view = app.injector.instanceOf[DispatchDetailsView]
+         lazy val view = app.injector.instanceOf[DispatchDetailsView]
           val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply()
 
           val skipRoute: Call = Call("GET", "/skip-url")

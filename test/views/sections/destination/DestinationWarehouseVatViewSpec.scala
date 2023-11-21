@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import views.html.sections.destination.DestinationWarehouseVatView
 import views.{BaseSelectors, ViewBehaviours}
 
 
-class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationWarehouseVatViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "DestinationWarehouseVatView" - {
@@ -39,10 +39,10 @@ class DestinationWarehouseVatViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationWarehouseVatView]
+       lazy val view = app.injector.instanceOf[DestinationWarehouseVatView]
         val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider]
 
         val skipRoute: Call = Call("GET", "/skip-url")

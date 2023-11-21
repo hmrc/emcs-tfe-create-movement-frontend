@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportSealChoiceMessages
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import models.NormalMode
@@ -32,7 +32,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportSealChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportSealChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -46,10 +46,10 @@ class TransportSealChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
           s"for $transportUnitType" - {
 
-            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor))
-            val view = app.injector.instanceOf[TransportSealChoiceView]
+           lazy val view = app.injector.instanceOf[TransportSealChoiceView]
             val form = app.injector.instanceOf[TransportSealChoiceFormProvider].apply(transportUnitType)
 
             implicit val doc: Document = Jsoup.parse(view(form, NormalMode, transportUnitType, testOnwardRoute).toString())

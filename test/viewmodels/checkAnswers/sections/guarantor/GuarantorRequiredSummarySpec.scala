@@ -30,8 +30,6 @@ import viewmodels.govuk.summarylist._
 
 class GuarantorRequiredSummarySpec extends SpecBase {
 
-  lazy val app = applicationBuilder().build()
-
   private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
@@ -50,7 +48,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the GuarantorRequiredPage" - {
         "then must return a not provided row" in {

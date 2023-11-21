@@ -17,48 +17,57 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
 import models.sections.journeyType.HowMovementTransported.SeaTransport
+import models.{NormalMode, UserAnswers}
+import navigation.JourneyTypeNavigator
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
 import play.api.http.Status.SEE_OTHER
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
-class JourneyTypeIndexControllerSpec extends SpecBase {
+class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new JourneyTypeIndexController(
+      mockUserAnswersService,
+      app.injector.instanceOf[JourneyTypeNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      Helpers.stubMessagesControllerComponents()
+    )
+  }
+
   "JourneyTypeIndexController" - {
 
     "when JourneyTypeSection.isCompleted" - {
-      "must redirect to the CYA controller" in {
-        val completedUserAnswers = emptyUserAnswers
+      "must redirect to the CYA controller" in new Test(Some(
+        emptyUserAnswers
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
-        val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url)
-        }
-      }
-    }
-
-    "must redirect to the how movement transported controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+      )) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url)
       }
+    }
+
+    "must redirect to the how movement transported controller" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe
+        Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testDraftId, NormalMode).url)
     }
   }
 }

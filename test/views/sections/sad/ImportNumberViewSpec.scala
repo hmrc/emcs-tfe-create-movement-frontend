@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.ImportNumberMessages
 import forms.sections.sad.ImportNumberFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.sad.ImportNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportNumberViewSpec extends ViewSpecBase with ViewBehaviours {
+class ImportNumberViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,10 +39,10 @@ class ImportNumberViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ImportNumberView]
+       lazy val view = app.injector.instanceOf[ImportNumberView]
         val form = app.injector.instanceOf[ImportNumberFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testIndex1, NormalMode).toString())

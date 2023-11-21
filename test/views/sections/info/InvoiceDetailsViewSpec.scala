@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import forms.sections.info.InvoiceDetailsFormProvider
 import models.requests.DataRequest
@@ -31,7 +31,7 @@ import views.{BaseSelectors, ViewBehaviours}
 
 import java.time.LocalDate
 
-class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateTimeUtils {
+class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
 
@@ -41,10 +41,10 @@ class InvoiceDetailsViewSpec extends ViewSpecBase with ViewBehaviours with DateT
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[InvoiceDetailsView]
+       lazy val view = app.injector.instanceOf[InvoiceDetailsView]
         val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()
 
         val skipRoute: Call = Call("GET", "/skip-url")

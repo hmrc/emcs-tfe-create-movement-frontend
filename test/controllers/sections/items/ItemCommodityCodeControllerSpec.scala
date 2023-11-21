@@ -17,70 +17,88 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemCommodityCodeFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockGetCommodityCodesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
-import play.api.Application
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import services.{GetCommodityCodesService, UserAnswersService}
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemCommodityCodeView
 
 import scala.concurrent.Future
 
-class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersService {
+class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersService with MockGetCommodityCodesService with MockGetCnCodeInformationService {
 
   val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  def onwardRoute = Call("GET", "/foo")
+  lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+  lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
-  val formProvider = new ItemCommodityCodeFormProvider()
-  val form = formProvider()
+  //  val testEpc: String = "T200"
+  //  val testGoodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpc)
+  //
+  //  val testCommodityCode1: CnCodeInformation = CnCodeInformation(
+  //    cnCode = "testCnCode1",
+  //    cnCodeDescription = "testCnCodeDescription1",
+  //    exciseProductCode = testEpc,
+  //    exciseProductCodeDescription = "testExciseProductCodeDescription",
+  //    unitOfMeasure = Kilograms
+  //  )
+  //
+  //  val testCommodityCode2: CnCodeInformation = CnCodeInformation(
+  //    cnCode = "testCnCode2",
+  //    cnCodeDescription = "testCnCodeDescription2",
+  //    exciseProductCode = testEpc,
+  //    exciseProductCodeDescription = "testExciseProductCodeDescription",
+  //    unitOfMeasure = Kilograms
+  //  )
 
-  lazy val itemCommodityCodeRoute = routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
-  lazy val itemIndexRoute = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-  lazy val submitCall = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  lazy val formProvider: ItemCommodityCodeFormProvider = new ItemCommodityCodeFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ItemCommodityCodeView = app.injector.instanceOf[ItemCommodityCodeView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-    val mockGetCommodityCodesService: GetCommodityCodesService = mock[GetCommodityCodesService]
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val application: Application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[GetCommodityCodesService].toInstance(mockGetCommodityCodesService)
-      )
-      .build()
-
-    val view: ItemCommodityCodeView = application.injector.instanceOf[ItemCommodityCodeView]
+    lazy val controller = new ItemCommodityCodeController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      mockGetCommodityCodesService,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
   }
 
   "ItemCommodityCode Controller" - {
     "must return OK and the correct view for a GET when a list of commodity codes are returned" in new Fixture(
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      running(application) {
-        (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpcTobacco, *).returns(Future.successful(Seq(
-          testCommodityCodeTobacco,
-          testCommodityCodeWine
-        )))
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+        testCommodityCodeTobacco,
+        testCommodityCodeWine
+      )))
 
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemCommodityCodeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(
+          form,
+          submitCall,
+          testGoodsTypeTobacco,
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must return OK and the correct view with the previous answer for a GET when a list of commodity codes are returned" in new Fixture(
@@ -90,57 +108,49 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
           .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco.cnCode)
       )
     ) {
-      running(application) {
-        (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpcTobacco, *).returns(Future.successful(Seq(
-          testCommodityCodeTobacco,
-          testCommodityCodeWine
-        )))
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+        testCommodityCodeTobacco,
+        testCommodityCodeWine
+      )))
 
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ItemCommodityCodeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testCommodityCodeTobacco.cnCode), submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(
+          form.fill(testCommodityCodeTobacco.cnCode),
+          submitCall,
+          testGoodsTypeTobacco,
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the confirmation page for a GET when a single commodity code is returned" in new Fixture(
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      running(application) {
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpcTobacco, *).returns(Future.successful(Seq(
-          testCommodityCodeTobacco,
-        )))
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
+        testCommodityCodeTobacco
+      )))
 
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the confirmation page for a GET when no commodity codes are returned" in new Fixture(
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      running(application) {
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpcTobacco, *).returns(Future.successful(Nil))
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Nil))
 
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(
@@ -148,53 +158,41 @@ class ItemCommodityCodeControllerSpec extends SpecBase with MockUserAnswersServi
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemCommodityCodeRoute)
-            .withFormUrlEncodedBody(("item-commodity-code", "answer"))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("item-commodity-code", "answer")))
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(
       userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      (mockGetCommodityCodesService.getCommodityCodes(_: String)(_: HeaderCarrier)).expects(testEpcTobacco, *).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, itemCommodityCodeRoute)
-            .withFormUrlEncodedBody(("item-commodity-code", ""))
+      val boundForm = form.bind(Map("item-commodity-code" -> ""))
 
-        val boundForm = form.bind(Map("item-commodity-code" -> ""))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("item-commodity-code", "")))
 
-        val view = application.injector.instanceOf[ItemCommodityCodeView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, submitCall, testGoodsTypeTobacco, Seq(testCommodityCodeTobacco, testCommodityCodeWine))(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual
+        view(
+          boundForm,
+          submitCall,
+          testGoodsTypeTobacco,
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Item Index Controller for a GET if no existing data is found" in new Fixture(
       userAnswers = Some(emptyUserAnswers)
     ) {
-      running(application) {
-        val request = FakeRequest(GET, itemCommodityCodeRoute)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual itemIndexRoute
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual itemIndexRoute
     }
   }
 }

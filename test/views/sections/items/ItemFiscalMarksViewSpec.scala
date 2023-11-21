@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksMessages
 import forms.sections.items.ItemFiscalMarksFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemFiscalMarksView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemFiscalMarksViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemFiscalMarksViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "ItemFiscalMarksView" - {
@@ -37,10 +37,10 @@ class ItemFiscalMarksViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemFiscalMarksView]
+       lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
         val form = app.injector.instanceOf[ItemFiscalMarksFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

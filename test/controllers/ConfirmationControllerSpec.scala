@@ -18,19 +18,30 @@ package controllers
 
 import base.SpecBase
 import config.SessionKeys
-import handlers.ErrorHandler
+import controllers.actions.FakeDataRetrievalAction
 import models.UserAnswers
+import play.api.Play.materializer
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.ConfirmationView
 
 class ConfirmationControllerSpec extends SpecBase {
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
-    val application = applicationBuilder(userAnswers).build()
-    val view = application.injector.instanceOf[ConfirmationView]
-    val errorHandler = application.injector.instanceOf[ErrorHandler]
-    val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
+  class Fixture(optUserAnswers: Option[UserAnswers]) {
+    lazy val view = app.injector.instanceOf[ConfirmationView]
+    val request = FakeRequest()
+
+    lazy val testController = new ConfirmationController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      view,
+      errorHandler
+    )
+
   }
 
   "Confirmation Controller" - {
@@ -39,17 +50,15 @@ class ConfirmationControllerSpec extends SpecBase {
 
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
-        running(application) {
-          val req = dataRequest(
-            request = request.withSession(SessionKeys.SUBMISSION_RECEIPT_REFERENCE -> testConfirmationReference),
-            answers = emptyUserAnswers
-          )
+        val req = dataRequest(
+          request = request.withSession(SessionKeys.SUBMISSION_RECEIPT_REFERENCE -> testConfirmationReference),
+          answers = emptyUserAnswers
+        )
 
-          val result = route(application, req).value
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(testConfirmationReference)(req, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(testConfirmationReference)(req, messages(req)).toString
       }
     }
 
@@ -57,14 +66,12 @@ class ConfirmationControllerSpec extends SpecBase {
 
       "must return BadRequests" in new Fixture(Some(emptyUserAnswers)) {
 
-        running(application) {
-          val req = dataRequest(request, emptyUserAnswers)
+        val req = dataRequest(request, emptyUserAnswers)
 
-          val result = route(application, request).value
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual errorHandler.badRequestTemplate(req).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual errorHandler.badRequestTemplate(req).toString
       }
     }
   }

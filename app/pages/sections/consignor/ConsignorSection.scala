@@ -25,7 +25,7 @@ case object ConsignorSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "consignor"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if(request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
+    if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
       Completed
     } else {
       NotStarted

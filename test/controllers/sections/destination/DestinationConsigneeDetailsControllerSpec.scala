@@ -17,140 +17,106 @@
 package controllers.sections.destination
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import fixtures.UserAddressFixtures
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
 import mocks.services.MockUserAnswersService
 import models.{CheckMode, NormalMode, UserAnswers}
-import navigation.DestinationNavigator
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination._
-import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.destination.DestinationConsigneeDetailsView
 
 import scala.concurrent.Future
 
 class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
-  class Test(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  lazy val formProvider: DestinationConsigneeDetailsFormProvider = new DestinationConsigneeDetailsFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: DestinationConsigneeDetailsView = app.injector.instanceOf[DestinationConsigneeDetailsView]
 
-    def onwardRoute = Call("GET", "/foo")
+  lazy val destinationConsigneeDetailsRoute: String =
+    routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationConsigneeDetailsRouteCheckMode: String =
+    routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
 
-    val application =
-      applicationBuilder(userAnswers = userAnswers)
-        .overrides(
-          bind[DestinationNavigator].toInstance(new FakeDestinationNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+  class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    lazy val testController = new DestinationConsigneeDetailsController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeDestinationNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
 
-    val formProvider = new DestinationConsigneeDetailsFormProvider()
+    val request = FakeRequest(GET, destinationConsigneeDetailsRoute)
 
-    val form = formProvider()
-
-    val view = application.injector.instanceOf[DestinationConsigneeDetailsView]
-
-    lazy val destinationConsigneeDetailsRoute = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationConsigneeDetailsRouteCheckMode = routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
   }
 
 
   "DestinationConsigneeDetails Controller" - {
 
     "must return OK and the correct view for a GET" in new Test() {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, destinationConsigneeDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(emptyUserAnswers
       .set(DestinationConsigneeDetailsPage, true)
     )) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, destinationConsigneeDetailsRoute)
-
-        val view = application.injector.instanceOf[DestinationConsigneeDetailsView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill(true), NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test() {
-
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val req = FakeRequest(POST, destinationConsigneeDetailsRoute).withFormUrlEncodedBody(("value", "true"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, destinationConsigneeDetailsRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test() {
+      val req = FakeRequest(POST, destinationConsigneeDetailsRoute).withFormUrlEncodedBody(("value", ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, destinationConsigneeDetailsRoute)
-            .withFormUrlEncodedBody(("value", ""))
+      val boundForm = form.bind(Map("value" -> ""))
 
-        val boundForm = form.bind(Map("value" -> ""))
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val view = application.injector.instanceOf[DestinationConsigneeDetailsView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, destinationConsigneeDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val req = FakeRequest(POST, destinationConsigneeDetailsRoute).withFormUrlEncodedBody(("value", "true"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, destinationConsigneeDetailsRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     s"must redirect without changing any answers when this page is submitted with the same answer it already has" - {
-
       "when for a user with WarehouseExcise answered" in new Test(Some(emptyUserAnswers
         .set(DestinationWarehouseExcisePage, "excise")
         .set(DestinationConsigneeDetailsPage, false)
@@ -158,10 +124,9 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 
-        val request = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode)
-          .withFormUrlEncodedBody(("value", "false"))
+        val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "false"))
 
-        val result = route(application, request).value
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
       }
@@ -173,11 +138,9 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
+        val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "true"))
 
-        val request = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode)
-          .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
       }
@@ -198,10 +161,9 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-        val request = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode)
-          .withFormUrlEncodedBody(("value", "true"))
+        val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(application, request).value
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
       }
@@ -221,10 +183,9 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-        val request = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode)
-          .withFormUrlEncodedBody(("value", "true"))
+        val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "true"))
 
-        val result = route(application, request).value
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
       }

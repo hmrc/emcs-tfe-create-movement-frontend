@@ -16,7 +16,7 @@
 
 package views.sections.guarantor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.guarantor.GuarantorArrangerView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
+class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "GuarantorArrangerView" - {
@@ -38,10 +38,10 @@ class GuarantorArrangerViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[GuarantorArrangerView]
+       lazy val view = app.injector.instanceOf[GuarantorArrangerView]
         val form = app.injector.instanceOf[GuarantorArrangerFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

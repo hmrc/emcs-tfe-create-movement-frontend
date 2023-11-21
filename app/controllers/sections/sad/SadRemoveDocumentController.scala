@@ -32,17 +32,17 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class SadRemoveDocumentController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: SadNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: SadRemoveDocumentFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: SadRemoveDocumentView
-                                     ) extends BaseSadNavigationController with AuthActionHelper {
+                                             override val messagesApi: MessagesApi,
+                                             override val userAnswersService: UserAnswersService,
+                                             override val userAllowList: UserAllowListAction,
+                                             override val navigator: SadNavigator,
+                                             override val auth: AuthAction,
+                                             override val getData: DataRetrievalAction,
+                                             override val requireData: DataRequiredAction,
+                                             formProvider: SadRemoveDocumentFormProvider,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             view: SadRemoveDocumentView
+                                           ) extends BaseSadNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -73,7 +73,7 @@ class SadRemoveDocumentController @Inject()(
 
   private def handleAnswerRemovalAndRedirect(shouldRemoveSadDocument: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
-    if(shouldRemoveSadDocument) {
+    if (shouldRemoveSadDocument) {
       val cleansedAnswers = request.userAnswers.remove(SadSectionItem(index))
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(controllers.sections.sad.routes.SadIndexController.onPageLoad(ern, draftId))

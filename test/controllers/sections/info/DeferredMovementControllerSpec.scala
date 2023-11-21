@@ -33,41 +33,48 @@
 package controllers.sections.info
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.DeferredMovementFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
-import navigation.InformationNavigator
 import pages.sections.info.DeferredMovementPage
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.{PreDraftService, UserAnswersService}
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.info.DeferredMovementView
 
 import scala.concurrent.Future
 
 class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
-    val application =
-      applicationBuilder(userAnswers = userAnswers)
-        .overrides(
-          bind[InformationNavigator].toInstance(new FakeInfoNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[PreDraftService].toInstance(mockPreDraftService)
-        )
-        .build()
+  lazy val formProvider: DeferredMovementFormProvider = new DeferredMovementFormProvider()
+  lazy val form: Form[Boolean] = formProvider()
+  lazy val view: DeferredMovementView = app.injector.instanceOf[DeferredMovementView]
 
-    val view = application.injector.instanceOf[DeferredMovementView]
+  class Fixture(val userAnswers: Option[UserAnswers]) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new DeferredMovementController(
+      messagesApi,
+      mockPreDraftService,
+      new FakeInfoNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      preDraftDataRequiredAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      mockUserAnswersService,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      fakeUserAllowListAction
+    )
   }
 
-  val formProvider = new DeferredMovementFormProvider()
-  val form = formProvider()
-
-  lazy val deferredMovementPreDraftRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(testErn, NormalMode).url
   lazy val deferredMovementPreDraftSubmitRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftSubmit(testErn, NormalMode)
-  lazy val deferredMovementRoute = controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn, testDraftId).url
   lazy val deferredMovementSubmitRoute = controllers.sections.info.routes.DeferredMovementController.onSubmit(testErn, testDraftId)
 
   "DeferredMovement Controller" - {
@@ -75,94 +82,56 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
     "pre-draft" - {
 
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
+        val result = controller.onPreDraftPageLoad(testErn, NormalMode)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, deferredMovementPreDraftRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        MockPreDraftService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(true))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, deferredMovementPreDraftSubmitRoute.url)
-              .withFormUrlEncodedBody(("value", "true"))
+        val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
-          MockPreDraftService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(true))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        val boundForm = form.bind(Map("value" -> ""))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, deferredMovementPreDraftSubmitRoute.url)
-              .withFormUrlEncodedBody(("value", ""))
+        val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-          val boundForm = form.bind(Map("value" -> ""))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, deferredMovementPreDraftSubmitRoute)(dataRequest(request), messages(request)).toString
       }
     }
 
     "post-draft" - {
 
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, deferredMovementRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, deferredMovementSubmitRoute)(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        MockUserAnswersService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(emptyUserAnswers))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, deferredMovementSubmitRoute.url)
-              .withFormUrlEncodedBody(("value", "true"))
+        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "true")))
 
-          MockUserAnswersService.set(emptyUserAnswers.set(DeferredMovementPage(), true)).returns(Future.successful(emptyUserAnswers))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual testOnwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        val boundForm = form.bind(Map("value" -> ""))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, deferredMovementSubmitRoute.url)
-              .withFormUrlEncodedBody(("value", ""))
+        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "")))
 
-          val boundForm = form.bind(Map("value" -> ""))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, deferredMovementSubmitRoute)(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, deferredMovementSubmitRoute)(dataRequest(request), messages(request)).toString
       }
     }
   }

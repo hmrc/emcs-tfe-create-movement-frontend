@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{Call, MessagesControllerComponents, Result}
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -34,12 +34,11 @@ import scala.concurrent.Future
 
 class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService with GuiceOneAppPerSuite {
   object TestController extends GuarantorBaseController {
-    private def onwardRoute = Call("GET", "/foo")
 
     override val userAnswersService: UserAnswersService = mockUserAnswersService
-    override val navigator: BaseNavigator = new FakeNavigator(onwardRoute)
+    override val navigator: BaseNavigator = new FakeNavigator(testOnwardRoute)
 
-    override protected def controllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+    override protected def controllerComponents: MessagesControllerComponents = messagesControllerComponents
   }
 
   class Test(ua: UserAnswers) {

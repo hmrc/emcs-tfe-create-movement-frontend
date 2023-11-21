@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -33,7 +33,7 @@ import viewmodels.checkAnswers.sections.consignee._
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
@@ -48,7 +48,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for ERN'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
@@ -57,7 +57,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
             .set(ConsigneeExcisePage, testErn)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -98,7 +98,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Exempted Organisation'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
@@ -108,7 +108,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
             .set(DestinationTypePage, ExemptedOrganisation)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -149,7 +149,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Vat'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
@@ -159,7 +159,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -200,7 +200,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Eori'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
@@ -210,7 +210,7 @@ class CheckYourAnswersConsigneeViewSpec extends ViewSpecBase with ViewBehaviours
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),

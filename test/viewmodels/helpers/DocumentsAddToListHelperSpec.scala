@@ -22,7 +22,6 @@ import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import models.{NormalMode, UserAnswers}
 import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
@@ -34,7 +33,6 @@ import views.html.components.{link, span, tag}
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
     implicit lazy val span = app.injector.instanceOf[span]
@@ -49,7 +47,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
       s"when no answers specified for '${English.lang.code}'" in new Setup() {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Nil
       }
@@ -62,7 +60,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         .set(DocumentReferencePage(0), "reference")
       ) {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
@@ -91,7 +89,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         .set(DocumentReferencePage(0), "reference")
       ) {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
@@ -121,7 +119,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         .set(DocumentDescriptionPage(0), "description")
       ) {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(
@@ -152,7 +150,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         .set(ReferenceAvailablePage(1), true)
       ) {
 
-        implicit lazy val msgs: Messages = messages(app, English.lang)
+        implicit lazy val msgs: Messages = messages(Seq(English.lang))
 
         helper.allDocumentsSummary() mustBe Seq(
           SummaryList(

@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import forms.sections.documents.DocumentTypeFormProvider
 import models.requests.DataRequest
@@ -30,7 +30,7 @@ import viewmodels.helpers.SelectItemHelper
 import views.html.sections.documents.DocumentTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentTypeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#document-type > option:nth-child($nthChild)"
   }
@@ -39,10 +39,10 @@ class DocumentTypeViewSpec extends ViewSpecBase with ViewBehaviours {
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-      val view = app.injector.instanceOf[DocumentTypeView]
+     lazy val view = app.injector.instanceOf[DocumentTypeView]
       val form = app.injector.instanceOf[DocumentTypeFormProvider].apply(Seq.empty)
 
       val selectOptions = SelectItemHelper.constructSelectItems(

@@ -16,7 +16,7 @@
 
 package views.sections.transportArranger
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerNameMessages
 import forms.sections.transportArranger.TransportArrangerNameFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportArranger.TransportArrangerNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportArrangerNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportArrangerNameView" - {
@@ -42,10 +42,10 @@ class TransportArrangerNameViewSpec extends ViewSpecBase with ViewBehaviours {
         Seq(GoodsOwner, Other).foreach { implicit validTransportArranger =>
           s"with a transport arranger of `${validTransportArranger.getClass.getSimpleName}`" - {
 
-            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            val view = app.injector.instanceOf[TransportArrangerNameView]
+           lazy val view = app.injector.instanceOf[TransportArrangerNameView]
             val form = app.injector.instanceOf[TransportArrangerNameFormProvider].apply()
 
             implicit val doc: Document = Jsoup.parse(

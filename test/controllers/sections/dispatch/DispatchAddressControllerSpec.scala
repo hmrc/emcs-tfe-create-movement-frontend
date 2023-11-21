@@ -17,122 +17,110 @@
 package controllers.sections.dispatch
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
-import navigation.DispatchNavigator
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchAddressPage
-import play.api.inject.bind
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.AddressView
 
 import scala.concurrent.Future
 
 class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()
+  lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
-    val formProvider = new AddressFormProvider()
-    val form = formProvider()
+  lazy val dispatchAddressRoute: String =
+    controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val dispatchAddressOnSubmit: Call =
+    controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testDraftId, NormalMode)
 
-    lazy val dispatchAddressRoute = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val dispatchAddressOnSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(testErn, testDraftId, NormalMode)
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    lazy val testController = new DispatchAddressController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeDispatchNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[DispatchNavigator].toInstance(new FakeDispatchNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
-
-    val view = application.injector.instanceOf[AddressView]
+    val request = FakeRequest(GET, dispatchAddressRoute)
   }
 
   "DispatchAddress Controller" - {
-
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      running(application) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, dispatchAddressRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form,
-          addressPage = DispatchAddressPage,
-          call = dispatchAddressOnSubmit,
-          headingKey = Some("dispatchAddress")
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form,
+        addressPage = DispatchAddressPage,
+        call = dispatchAddressOnSubmit,
+        headingKey = Some("dispatchAddress")
+      )(dataRequest(request), messages(request)).toString
     }
 
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchAddressRoute)
-            .withFormUrlEncodedBody(
-              ("property", userAddressModelMax.property.value),
-              ("street", userAddressModelMax.street),
-              ("town", userAddressModelMax.town),
-              ("postcode", userAddressModelMax.postcode)
-            )
+      val req =
+        FakeRequest(POST, dispatchAddressRoute)
+          .withFormUrlEncodedBody(
+            ("property", userAddressModelMax.property.value),
+            ("street", userAddressModelMax.street),
+            ("town", userAddressModelMax.town),
+            ("postcode", userAddressModelMax.postcode)
+          )
 
-        val result = route(application, request).value
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+      val req = FakeRequest(POST, dispatchAddressRoute).withFormUrlEncodedBody(("value", ""))
+      val boundForm = form.bind(Map("value" -> ""))
 
-      running(application) {
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-        val request = FakeRequest(POST, dispatchAddressRoute).withFormUrlEncodedBody(("value", ""))
-        val boundForm = form.bind(Map("value" -> ""))
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          form = boundForm,
-          addressPage = DispatchAddressPage,
-          call = dispatchAddressOnSubmit,
-          headingKey = Some("dispatchAddress")
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(
+        form = boundForm,
+        addressPage = DispatchAddressPage,
+        call = dispatchAddressOnSubmit,
+        headingKey = Some("dispatchAddress")
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      running(application) {
-
-        val request = FakeRequest(GET, dispatchAddressRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest(POST, dispatchAddressRoute).withFormUrlEncodedBody(("value", "answer"))
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      running(application) {
-
-        val request = FakeRequest(POST, dispatchAddressRoute).withFormUrlEncodedBody(("value", "answer"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

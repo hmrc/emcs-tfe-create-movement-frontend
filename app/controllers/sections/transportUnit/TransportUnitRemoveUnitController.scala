@@ -32,17 +32,17 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class TransportUnitRemoveUnitController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: TransportUnitNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: TransportUnitRemoveUnitFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TransportUnitRemoveUnitView
-                                     ) extends BaseTransportUnitNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val userAllowList: UserAllowListAction,
+                                                   override val navigator: TransportUnitNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   formProvider: TransportUnitRemoveUnitFormProvider,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: TransportUnitRemoveUnitView
+                                                 ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -73,7 +73,7 @@ class TransportUnitRemoveUnitController @Inject()(
 
   private def handleAnswerRemovalAndRedirect(shouldRemoveTransportUnit: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
-    if(shouldRemoveTransportUnit) {
+    if (shouldRemoveTransportUnit) {
       val cleansedAnswers = request.userAnswers.remove(TransportUnitSection(index))
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(ern, draftId))

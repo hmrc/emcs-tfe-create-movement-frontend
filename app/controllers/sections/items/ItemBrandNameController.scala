@@ -27,7 +27,7 @@ import pages.sections.items.ItemBrandNamePage
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemBrandNameView
 
 import javax.inject.Inject
@@ -43,7 +43,8 @@ class ItemBrandNameController @Inject()(
                                          override val requireData: DataRequiredAction,
                                          formProvider: ItemBrandNameFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
-                                         view: ItemBrandNameView
+                                         view: ItemBrandNameView,
+                                         override val cnCodeInformationService: GetCnCodeInformationService
                                        ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -74,7 +75,7 @@ class ItemBrandNameController @Inject()(
 
   private def handleSubmittedForm(brandNameModel: ItemBrandNameModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
 
-    if(brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
+    if (brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
       renderView(
         status = BadRequest,
         form =

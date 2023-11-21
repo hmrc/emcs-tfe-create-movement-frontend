@@ -18,11 +18,10 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemQuantityFormProvider
-import handlers.ErrorHandler
-import models.requests.{CnCodeInformationItem, DataRequest}
+import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemQuantityPage}
+import pages.sections.items.ItemQuantityPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -41,10 +40,9 @@ class ItemQuantityController @Inject()(
                                         override val requireData: DataRequiredAction,
                                         override val userAllowList: UserAllowListAction,
                                         formProvider: ItemQuantityFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
+                                        override val controllerComponents: MessagesControllerComponents,
                                         view: ItemQuantityView,
-                                        cnCodeInformationService: GetCnCodeInformationService,
-                                        errorHandler: ErrorHandler
+                                        override val cnCodeInformationService: GetCnCodeInformationService
                                       ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -66,25 +64,14 @@ class ItemQuantityController @Inject()(
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     withGoodsTypeAsync(idx) { goodsType =>
-      (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
-        case (Some(epc), Some(commodityCode)) =>
-          cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
-            response.headOption match {
-              case Some((_, cnCodeInfo)) =>
-                status(view(
-                  form = form,
-                  action = routes.ItemQuantityController.onSubmit(request.ern, request.draftId, idx, mode),
-                  goodsType = goodsType,
-                  unitOfMeasure = cnCodeInfo.unitOfMeasure
-                ))
-              case _ =>
-                logger.warn(s"[onPageLoad] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
-                InternalServerError(errorHandler.internalServerErrorTemplate)
-            }
-          }
-        case _ =>
-          logger.warn(s"[onPageLoad] productCode or commodityCode missing from UserAnswers")
-          Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+      withCnCodeInformation(idx) {
+        cnCodeInfo =>
+          status(view(
+            form = form,
+            action = routes.ItemQuantityController.onSubmit(request.ern, request.draftId, idx, mode),
+            goodsType = goodsType,
+            unitOfMeasure = cnCodeInfo.unitOfMeasure
+          ))
       }
     }
 

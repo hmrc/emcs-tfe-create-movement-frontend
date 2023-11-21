@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchWarehouseExciseMessages
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchWarehouseExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "DispatchWarehouseExciseView" - {
@@ -38,10 +38,10 @@ class DispatchWarehouseExciseViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DispatchWarehouseExciseView]
+       lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
         val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

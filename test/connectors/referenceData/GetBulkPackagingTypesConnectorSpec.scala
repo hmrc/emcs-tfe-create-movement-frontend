@@ -17,29 +17,18 @@
 package connectors.referenceData
 
 import base.SpecBase
-import config.AppConfig
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
-import org.scalatest.BeforeAndAfterAll
-import play.api.http.{HeaderNames, MimeTypes, Status}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetBulkPackagingTypesConnectorSpec extends SpecBase
-  with Status
-  with MimeTypes
-  with HeaderNames
-  with MockHttpClient
-  with BeforeAndAfterAll {
-
-  lazy val app = applicationBuilder(userAnswers = None).build()
+class GetBulkPackagingTypesConnectorSpec extends SpecBase with MockHttpClient {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
   lazy val connector = new GetBulkPackagingTypesConnectorImpl(mockHttpClient, appConfig)
 
   "getBulkPackagingTypes" - {

@@ -29,7 +29,7 @@ class GetExciseProductCodesHttpParserSpec extends SpecBase with GetExciseProduct
 
   "GetExciseProductCodesReads" - {
 
-    "should return a Seq of Excise Product Codes"- {
+    "should return a Seq of Excise Product Codes" - {
 
       s"when an OK (${Status.OK}) response is retrieved" in {
 

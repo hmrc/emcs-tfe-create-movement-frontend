@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCheckAnswersMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -30,17 +30,17 @@ import viewmodels.helpers.CheckYourAnswersDocumentsHelper
 import views.html.sections.documents.DocumentsCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentsCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentsCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   trait Fixture {
 
     val messagesForLanguage = DocumentsCheckAnswersMessages.English
-    implicit val msgs: Messages = messages(app, DocumentsCheckAnswersMessages.English.lang)
+    implicit val msgs: Messages = messages(Seq(DocumentsCheckAnswersMessages.English.lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
     val summaryListHelper = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()
 
-    val view = app.injector.instanceOf[DocumentsCheckAnswersView]
+   lazy val view = app.injector.instanceOf[DocumentsCheckAnswersView]
 
     implicit val doc: Document = Jsoup.parse(view(summaryListHelper).toString())
   }

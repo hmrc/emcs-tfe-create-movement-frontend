@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExciseMessages
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExciseViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Consignee Excise view" - {
@@ -37,10 +37,10 @@ class ConsigneeExciseViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExciseView]
+       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = false).toString())
@@ -56,10 +56,10 @@ class ConsigneeExciseViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' with the dynamic content" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExciseView]
+       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = true).toString())

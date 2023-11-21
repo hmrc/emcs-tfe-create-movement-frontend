@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.actions._
-import handlers.ErrorHandler
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,16 +25,14 @@ import views.html.DraftMovementView
 
 import javax.inject.Inject
 
-class DraftMovementController @Inject()(
-                                        override val messagesApi: MessagesApi,
+class DraftMovementController @Inject()(override val messagesApi: MessagesApi,
                                         override val auth: AuthAction,
                                         override val userAllowList: UserAllowListAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: DraftMovementView,
-                                        errorHandler: ErrorHandler
-                                      ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
+                                        view: DraftMovementView
+                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

@@ -20,14 +20,14 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.LocalReferenceNumberFormProvider
-import models.{CheckMode, Mode}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
+import models.{CheckMode, Mode}
 import navigation.InformationNavigator
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import play.api.mvc._
 import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.LocalReferenceNumberView
 

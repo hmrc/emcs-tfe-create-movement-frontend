@@ -25,13 +25,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemSmallIndependentProducerSummary  {
+object ItemSmallIndependentProducerSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     request.userAnswers.get(ItemSmallIndependentProducerPage(idx)).map { value =>
 
-      val answer = if(value) "site.yes" else "site.no"
+      val answer = if (value) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "itemSmallIndependentProducer.checkYourAnswersLabel",

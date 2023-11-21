@@ -16,7 +16,7 @@
 
 package views.sections.guarantor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorVatMessages
 import forms.sections.guarantor.GuarantorVatFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.guarantor.GuarantorVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "GuarantorVatView" - {
@@ -42,10 +42,10 @@ class GuarantorVatViewSpec extends ViewSpecBase with ViewBehaviours {
         Seq(GoodsOwner, Transporter).foreach { implicit validGuarantorArranger =>
           s"with a transport arranger of `${validGuarantorArranger.getClass.getSimpleName}`" - {
 
-            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            val view = app.injector.instanceOf[GuarantorVatView]
+           lazy val view = app.injector.instanceOf[GuarantorVatView]
             val form = app.injector.instanceOf[GuarantorVatFormProvider].apply()
 
             implicit val doc: Document = Jsoup.parse(

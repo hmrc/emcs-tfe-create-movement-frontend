@@ -25,7 +25,7 @@ import pages.sections.items.ItemSmallIndependentProducerPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemSmallIndependentProducerView
 
 import javax.inject.Inject
@@ -41,7 +41,8 @@ class ItemSmallIndependentProducerController @Inject()(
                                                         override val userAllowList: UserAllowListAction,
                                                         formProvider: ItemSmallIndependentProducerFormProvider,
                                                         val controllerComponents: MessagesControllerComponents,
-                                                        view: ItemSmallIndependentProducerView
+                                                        view: ItemSmallIndependentProducerView,
+                                                        override val cnCodeInformationService: GetCnCodeInformationService
                                                       ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

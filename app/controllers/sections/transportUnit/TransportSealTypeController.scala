@@ -42,7 +42,7 @@ class TransportSealTypeController @Inject()(
                                              formProvider: TransportSealTypeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportSealTypeView
-                                     ) extends BaseTransportUnitNavigationController with AuthActionHelper {
+                                           ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

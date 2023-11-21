@@ -17,108 +17,94 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
-import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress}
+import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnswers}
+import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, _}
+import play.api.test.Helpers._
 
-class ConsigneeIndexControllerSpec extends SpecBase {
+class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+
+    val route = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
+    val request = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
+
+    lazy val testController = new ConsigneeIndexController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      new FakeConsigneeNavigator(testOnwardRoute),
+      mockUserAnswersService,
+      messagesControllerComponents
+    )
+  }
 
   "ConsigneeIndexController" - {
     "must redirect to CheckYourAnswersConsigneeController" - {
-      "when ConsigneeSection.isCompleted is true" in {
-        val ern: String = testErn
+      "when ConsigneeSection.isCompleted is true" in new Fixture(
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, ExemptedOrganisation)
+          .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
+          .set(ConsigneeBusinessNamePage, "")
+          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )) {
 
-        lazy val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers
-            .set(DestinationTypePage, ExemptedOrganisation)
-            .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
-          )
-        ).build()
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-            .copy(ern = ern)
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, testDraftId).url)
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to ConsigneeExemptOrganisationController" - {
-      s"when destination is $ExemptedOrganisation" in {
-        val ern: String = testErn
+      s"when destination is $ExemptedOrganisation" in new Fixture(
+        Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))) {
 
-        lazy val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))
-        ).build()
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-            .copy(ern = ern)
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, testDraftId, NormalMode).url)
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
     }
-
     "must redirect to ConsigneeExciseController" - {
       Seq(GbTaxWarehouse, EuTaxWarehouse, DirectDelivery).foreach(
         movementScenario =>
-          s"when destination is $movementScenario" in {
-            val ern: String = testErn
+          s"when destination is $movementScenario" in new Fixture(
+            Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-            lazy val application = applicationBuilder(
-              userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))
-            ).build()
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-            running(application) {
-              val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-                .copy(ern = ern)
-              val result = route(application, request).value
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
+            status(result) mustBe SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
           }
       )
 
       "when UserType is GBRC" - {
         val ern: String = "GBRC123"
 
-        Seq(
-          ExportWithCustomsDeclarationLodgedInTheUk
-        ).foreach(
+        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in {
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              lazy val application = applicationBuilder(
-                userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))
-              ).build()
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
-              running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-                  .copy(ern = ern)
-                val result = route(application, request).value
-
-                status(result) mustBe SEE_OTHER
-                redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-              }
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
         )
       }
-
       "when UserType is XIRC" - {
         val ern: String = "XIRC123"
 
@@ -129,42 +115,30 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in {
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              lazy val application = applicationBuilder(
-                userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))
-              ).build()
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
-              running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-                  .copy(ern = ern)
-                val result = route(application, request).value
-
-                status(result) mustBe SEE_OTHER
-                redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-              }
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
         )
       }
 
       "when UserType is XIWK" - {
         val ern: String = "XIWK123"
-        s"and destination is $TemporaryRegisteredConsignee" in {
+        s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
+          Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
 
-          lazy val application = applicationBuilder(
-            userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))
-          ).build()
+          val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
+          val result = testController.onPageLoad(ern, testDraftId)(req)
 
-          running(application) {
-            val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-              .copy(ern = ern)
-            val result = route(application, request).value
-
-            status(result) mustBe SEE_OTHER
-            redirectLocation(result) mustBe
-              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-          }
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
         }
       }
     }
@@ -173,25 +147,17 @@ class ConsigneeIndexControllerSpec extends SpecBase {
       "when UserType is GBWK" - {
         val ern = "GBWK123"
 
-        Seq(
-          ExportWithCustomsDeclarationLodgedInTheUk
-        ).foreach(
+        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in {
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              lazy val application = applicationBuilder(
-                userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))
-              ).build()
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
-              running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-                  .copy(ern = ern)
-                val result = route(application, request).value
-
-                status(result) mustBe SEE_OTHER
-                redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
-              }
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
         )
       }
@@ -205,44 +171,30 @@ class ConsigneeIndexControllerSpec extends SpecBase {
           ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in {
+            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              lazy val application = applicationBuilder(
-                userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))
-              ).build()
+              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
+              val result = testController.onPageLoad(ern, testDraftId)(req)
 
-              running(application) {
-                val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-                  .copy(ern = ern)
-                val result = route(application, request).value
-
-                status(result) mustBe SEE_OTHER
-                redirectLocation(result) mustBe
-                  Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
-              }
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
         )
       }
     }
 
     "must redirect to the tasklist" - {
-      "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in {
-        val ern = testErn
-        lazy val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))
-        ).build()
+      "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in new Fixture(
+        Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
 
-        running(application) {
-          val request = userRequest(FakeRequest(GET, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testDraftId).url))
-            .copy(ern = ern)
-          val result = route(application, request).value
+        val req = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
+        val result = testController.onPageLoad(testErn, testDraftId)(req)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
       }
     }
   }
-
 }

@@ -17,25 +17,20 @@
 package controllers.sections.info
 
 import controllers.BaseController
-import controllers.actions.{AuthAction, AuthActionHelper, DataRequiredAction, DataRetrievalAction, UserAllowListAction}
+import controllers.actions._
 import models.{NormalMode, NorthernIrelandWarehouseKeeper}
-import navigation.InformationNavigator
-import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
 
-class InfoIndexController @Inject()(override val messagesApi: MessagesApi,
-                                    authAction: AuthAction,
-                                    val userAllowList: UserAllowListAction,
+class InfoIndexController @Inject()(val userAllowList: UserAllowListAction,
                                     val getData: DataRetrievalAction,
                                     val requireData: DataRequiredAction,
-                                    val navigator: InformationNavigator,
                                     val auth: AuthAction,
                                     val controllerComponents: MessagesControllerComponents) extends BaseController with AuthActionHelper {
 
   def onPreDraftPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowList) { implicit request =>
+    (auth(ern) andThen userAllowList) { implicit request =>
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
         Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, NormalMode))
       } else {

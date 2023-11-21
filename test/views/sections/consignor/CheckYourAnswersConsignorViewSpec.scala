@@ -16,7 +16,7 @@
 
 package views.sections.consignor
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignor.CheckYourAnswersConsignorMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
@@ -41,10 +41,10 @@ class CheckYourAnswersConsignorViewSpec extends ViewSpecBase with ViewBehaviours
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),

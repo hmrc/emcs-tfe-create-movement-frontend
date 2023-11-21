@@ -25,13 +25,10 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
-import viewmodels.checkAnswers.sections.journeyType.GiveInformationOtherTransportSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
-
-  lazy val app = applicationBuilder().build()
 
   ".row" - {
 
@@ -39,7 +36,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

@@ -31,8 +31,8 @@ object JourneyTimeHoursSummary {
     answers.get(JourneyTimeHoursPage).map {
       answer =>
         SummaryListRowViewModel(
-          key     = "journeyTimeHours.checkYourAnswersLabel",
-          value   = ValueViewModel(messages("journeyTimeHours.checkYourAnswersValue", answer.toString)),
+          key = "journeyTimeHours.checkYourAnswersLabel",
+          value = ValueViewModel(messages("journeyTimeHours.checkYourAnswersValue", answer.toString)),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

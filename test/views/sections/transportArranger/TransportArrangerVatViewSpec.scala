@@ -16,7 +16,7 @@
 
 package views.sections.transportArranger
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
 import models.requests.DataRequest
@@ -30,14 +30,14 @@ import play.api.test.FakeRequest
 import views.html.sections.transportArranger.TransportArrangerVatView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportArrangerVatViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(arranger: TransportArranger, lang: Lang) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[TransportArrangerVatView]
+   lazy val view = app.injector.instanceOf[TransportArrangerVatView]
     val form = app.injector.instanceOf[TransportArrangerVatFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, arranger).toString())

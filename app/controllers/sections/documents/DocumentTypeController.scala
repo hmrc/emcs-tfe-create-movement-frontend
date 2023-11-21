@@ -35,18 +35,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class DocumentTypeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: DocumentsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       getDocumentTypesService: GetDocumentTypesService,
-                                       formProvider: DocumentTypeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DocumentTypeView
-                                     ) extends BaseDocumentsNavigationController with AuthActionHelper {
+                                        override val messagesApi: MessagesApi,
+                                        override val userAnswersService: UserAnswersService,
+                                        override val userAllowList: UserAllowListAction,
+                                        override val navigator: DocumentsNavigator,
+                                        override val auth: AuthAction,
+                                        override val getData: DataRetrievalAction,
+                                        override val requireData: DataRequiredAction,
+                                        getDocumentTypesService: GetDocumentTypesService,
+                                        formProvider: DocumentTypeFormProvider,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        view: DocumentTypeView
+                                      ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

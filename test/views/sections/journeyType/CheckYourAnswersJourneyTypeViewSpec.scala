@@ -16,7 +16,7 @@
 
 package views.sections.journeyType
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.journeyType.CheckYourAnswersJourneyTypeMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.sections.journeyType.CheckYourAnswersJourneyTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CheckYourAnswersJourneyTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class CheckYourAnswersJourneyTypeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -38,10 +38,10 @@ class CheckYourAnswersJourneyTypeViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
+       lazy val view = app.injector.instanceOf[CheckYourAnswersJourneyTypeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),

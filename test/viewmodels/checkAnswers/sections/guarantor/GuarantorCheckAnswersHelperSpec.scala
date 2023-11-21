@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
-import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
+import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
@@ -29,8 +29,7 @@ import play.api.test.FakeRequest
 
 class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
   trait Test {
-    lazy val app = applicationBuilder().build()
-    implicit lazy val msgs: Messages = messages(app, GuarantorArrangerMessages.English.lang)
+    implicit val msgs: Messages = messages(Seq(English.lang))
     val helper = new GuarantorCheckAnswersHelper()
   }
 

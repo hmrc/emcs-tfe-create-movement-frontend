@@ -16,7 +16,7 @@
 
 package views.sections.transportArranger
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.sections.transportArranger.TransportArrangerCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportArrangerCheckAnswersViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportArrangerCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -38,10 +38,10 @@ class TransportArrangerCheckAnswersViewSpec extends ViewSpecBase with ViewBehavi
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
+       lazy val view = app.injector.instanceOf[TransportArrangerCheckAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
           SummaryList(Seq()),

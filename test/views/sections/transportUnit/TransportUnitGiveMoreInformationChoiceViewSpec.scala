@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationChoiceMessages
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationChoiceFormProvider
 import models.NormalMode
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitGiveMoreInformationChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportUnitGiveMoreInformationChoiceView" - {
@@ -39,10 +39,10 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(Container)
 
         implicit val doc: Document = Jsoup.parse(
@@ -66,10 +66,10 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Fixed transport installation" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(FixedTransport)
 
         implicit val doc: Document = Jsoup.parse(
@@ -93,10 +93,10 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Tractor" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(Tractor)
 
         implicit val doc: Document = Jsoup.parse(
@@ -120,10 +120,10 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Trailer" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(Trailer)
 
         implicit val doc: Document = Jsoup.parse(
@@ -147,10 +147,10 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends ViewSpecBase with V
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Vehicle" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(Vehicle)
 
         implicit val doc: Document = Jsoup.parse(

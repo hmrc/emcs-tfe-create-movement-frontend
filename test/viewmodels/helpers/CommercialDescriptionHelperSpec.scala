@@ -21,6 +21,7 @@ import fixtures.messages.sections.items.CommercialDescriptionMessages
 import forms.sections.items.CommercialDescriptionFormProvider
 import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 
 class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite {
@@ -35,7 +36,7 @@ class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite 
 
     Seq(CommercialDescriptionMessages.English).foreach { langMessages =>
 
-      implicit lazy val msgs = messages(app, langMessages.lang)
+      implicit val msgs: Messages = messages(Seq(langMessages.lang))
 
       s"when running for language code of '${langMessages.lang.code}'" - {
 

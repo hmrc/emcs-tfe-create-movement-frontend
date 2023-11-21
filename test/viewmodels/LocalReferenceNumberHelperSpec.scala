@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 
 class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
@@ -32,7 +33,7 @@ class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
 
     Seq(LocalReferenceNumberMessages.English).foreach { langMessages =>
 
-      implicit lazy val msgs = messages(app, langMessages.lang)
+      implicit lazy val msgs: Messages = messages(Seq(langMessages.lang))
 
       s"when running for language code of '${langMessages.lang.code}'" - {
 

@@ -30,7 +30,7 @@ case object JourneyTypeSection extends Section[JsObject] {
       request.userAnswers.get(HowMovementTransportedPage).isDefined,
       request.userAnswers.get(JourneyTimeDaysPage).isDefined || request.userAnswers.get(JourneyTimeHoursPage).isDefined
     ) ++ {
-      if(request.userAnswers.get(HowMovementTransportedPage).contains(Other)) {
+      if (request.userAnswers.get(HowMovementTransportedPage).contains(Other)) {
         // GiveInformationOtherTransportPage is only mandatory when Other is selected
         List(request.userAnswers.get(GiveInformationOtherTransportPage).isDefined)
       } else {

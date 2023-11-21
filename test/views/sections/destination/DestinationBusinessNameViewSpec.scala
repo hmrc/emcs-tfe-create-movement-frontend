@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationBusinessNameMessages
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationBusinessNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Destination Business Name view" - {
@@ -37,10 +37,10 @@ class DestinationBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationBusinessNameView]
+       lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
         val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

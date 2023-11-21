@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationChoiceMessages
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import models.GoodsTypeModel.Wine
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemGeographicalIndicationChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemGeographicalIndicationChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemGeographicalIndicationChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def radioHint(index: Int) = s".govuk-radios > div:nth-child($index) > div"
@@ -43,10 +43,10 @@ class ItemGeographicalIndicationChoiceViewSpec extends ViewSpecBase with ViewBeh
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
+       lazy val view = app.injector.instanceOf[ItemGeographicalIndicationChoiceView]
         val form = app.injector.instanceOf[ItemGeographicalIndicationChoiceFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine).toString())

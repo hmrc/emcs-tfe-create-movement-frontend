@@ -26,6 +26,7 @@ sealed trait SadAddToListModel
 object SadAddToListModel extends Enumerable.Implicits {
 
   case object Yes extends WithName("1") with SadAddToListModel
+
   case object NoMoreToCome extends WithName("2") with SadAddToListModel
 
   val values: Seq[SadAddToListModel] = Seq(

@@ -32,8 +32,7 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
   val hours = 12
 
   trait Test {
-    lazy val app = applicationBuilder().build()
-    implicit lazy val msgs: Messages = messages(app, CheckYourAnswersJourneyTypeMessages.English.lang)
+    implicit val msgs: Messages = messages(Seq(CheckYourAnswersJourneyTypeMessages.English.lang))
     val helper = new CheckYourAnswersJourneyTypeHelper()
   }
 

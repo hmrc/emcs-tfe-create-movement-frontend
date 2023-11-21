@@ -41,7 +41,7 @@ case object ItemGeographicalIndicationType extends Enumerable.Implicits {
     def radioItem(value: ItemGeographicalIndicationType, hasHint: Boolean): RadioItem = RadioItem(
       content = Text(messages(s"itemGeographicalIndicationChoice.${value.toString}")),
       value = Some(value.toString),
-      hint = if(hasHint) Some(Hint(content = Text(messages(s"itemGeographicalIndicationChoice.${value.toString}.hint")))) else None,
+      hint = if (hasHint) Some(Hint(content = Text(messages(s"itemGeographicalIndicationChoice.${value.toString}.hint")))) else None,
       id = Some(s"value_$value")
     )
 

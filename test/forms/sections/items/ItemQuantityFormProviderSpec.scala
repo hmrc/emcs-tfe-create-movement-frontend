@@ -17,8 +17,8 @@
 package forms.sections.items
 
 import forms.behaviours.BooleanFieldBehaviours
+import forms.sections.items.ItemQuantityFormProvider._
 import play.api.data.FormError
-import ItemQuantityFormProvider._
 
 class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours {
 

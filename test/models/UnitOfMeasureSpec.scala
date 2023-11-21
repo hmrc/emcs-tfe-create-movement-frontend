@@ -43,7 +43,7 @@ class UnitOfMeasureSpec extends SpecBase with GuiceOneAppPerSuite {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "must output the correct messages" in {
 

@@ -31,17 +31,17 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ConsigneeBusinessNameController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: ConsigneeNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: ConsigneeBusinessNameFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ConsigneeBusinessNameView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                                 override val messagesApi: MessagesApi,
+                                                 override val userAnswersService: UserAnswersService,
+                                                 override val navigator: ConsigneeNavigator,
+                                                 override val auth: AuthAction,
+                                                 override val getData: DataRetrievalAction,
+                                                 override val requireData: DataRequiredAction,
+                                                 override val userAllowList: UserAllowListAction,
+                                                 formProvider: ConsigneeBusinessNameFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: ConsigneeBusinessNameView
+                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

@@ -19,23 +19,22 @@ package viewmodels.helpers
 import base.SpecBase
 import models.UserAnswers
 import models.requests.DataRequest
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeAddressSummary, ConsigneeBusinessNameSummary, ConsigneeExciseSummary, ConsigneeExemptOrganisationSummary, ConsigneeExportVatSummary}
+import viewmodels.checkAnswers.sections.consignee._
 
 class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
   class Setup(ern: String = testErn, data: JsObject = Json.obj()) {
     lazy val checkAnswersConsigneeHelper = new CheckYourAnswersConsigneeHelper()
-    lazy val app: Application = applicationBuilder().build()
     val userAnswers: UserAnswers = UserAnswers(ern, testDraftId, data)
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
     implicit val testUserRequest = userRequest(fakeDataRequest)
-    implicit val msgs: Messages = messagesApi(app).preferred(fakeDataRequest)
+    implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
   }
 
   "CheckAnswersConsigneeHelper" - {

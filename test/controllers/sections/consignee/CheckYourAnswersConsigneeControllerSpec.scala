@@ -17,48 +17,36 @@
 package controllers.sections.consignee
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
-import handlers.ErrorHandler
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse}
-import navigation.ConsigneeNavigator
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
-import play.api.i18n.Messages
-import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, inject}
-import services.UserAnswersService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
 import viewmodels.govuk.SummaryListFluency
-import viewmodels.helpers.CheckYourAnswersConsigneeHelper
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
-  def request: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId).url)
 
-  implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
+  lazy val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
-  class Fixture(userAnswers: Option[UserAnswers]) {
+  implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+  )
 
-    val application: Application =
-      applicationBuilder(userAnswers)
-        .overrides(inject.bind[ConsigneeNavigator].toInstance(new FakeConsigneeNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[CheckYourAnswersConsigneeHelper].toInstance(MockConsigneeCheckYourAnswersHelper)
-        )
-        .build()
+  implicit val msgs = messages(testDataRequest)
 
-    implicit val msgs: Messages = messages(application)
+  class Fixture(optUserAnswers: Option[UserAnswers]) {
 
     val ernList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
@@ -90,14 +78,23 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       rows = vatEoriList
     ).withCssClass("govuk-!-margin-bottom-9")
 
+    lazy val testController = new CheckYourAnswersConsigneeController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      new FakeConsigneeNavigator(testOnwardRoute),
+      mockConsigneeCheckYourAnswersHelper,
+      view
+    )
 
-    lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]
-    val view: CheckYourAnswersConsigneeView = application.injector.instanceOf[CheckYourAnswersConsigneeView]
   }
+
 
   "Check Your Answers consignee Controller" - {
     ".onPageLoad" - {
-
       "must return OK and the correct view when supplied with ERN condition" in new Fixture(
         Some(
           emptyUserAnswers
@@ -108,19 +105,19 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(ernSummaryList)
-        running(application) {
 
-          val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
-            testErn,
-            testDraftId,
-            ernSummaryList
-          )(dataRequest(request), messages(application)).toString
+        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        lazy val viewAsString = view(
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          testErn,
+          testDraftId,
+          ernSummaryList
+        )(testDataRequest, msgs).toString
+
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must return OK and the correct view when supplied with Exempted Organisation condition" in new Fixture(
@@ -133,19 +130,19 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(exemptSummaryList)
-        running(application) {
 
-          val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
-            testErn,
-            testDraftId,
-            exemptSummaryList
-          )(dataRequest(request), messages(application)).toString
+        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        lazy val viewAsString = view(
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          testErn,
+          testDraftId,
+          exemptSummaryList
+        )(testDataRequest, msgs).toString
+
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must return OK and the correct view when supplied with Eori number condition" in new Fixture(
@@ -158,19 +155,19 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
-        running(application) {
 
-          val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
-            testErn,
-            testDraftId,
-            vatEoriSummaryList
-          )(dataRequest(request), messages(application)).toString
+        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        lazy val viewAsString = view(
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          testErn,
+          testDraftId,
+          vatEoriSummaryList
+        )(testDataRequest, msgs).toString
+
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must return OK and the correct view when supplied with Vat number condition" in new Fixture(
@@ -183,50 +180,38 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
-        running(application) {
 
-          val result = route(application, request).value
 
-          val viewAsString = view(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
-            testErn,
-            testDraftId,
-            vatEoriSummaryList
-          )(dataRequest(request), messages(application)).toString
+        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        lazy val viewAsString = view(
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          testErn,
+          testDraftId,
+          vatEoriSummaryList
+        )(testDataRequest, msgs).toString
+
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-    }
-
-    ".onSubmit" - {
-
-
-      "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
-        def request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId).url)
-
-        running(application) {
-
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe testOnwardRoute.url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
+
+  ".onSubmit" - {
+    "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
+      val result = testController.onSubmit(testErn, testDraftId)(FakeRequest())
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe testOnwardRoute.url
+    }
+  }
+
 }
 

@@ -25,11 +25,11 @@ import viewmodels.checkAnswers.sections.guarantor.GuarantorCheckAnswersHelper
 
 trait MockGuarantorCheckAnswersHelper extends MockFactory {
 
-  lazy val MockGuarantorCheckAnswersHelper: GuarantorCheckAnswersHelper = mock[GuarantorCheckAnswersHelper]
+  lazy val mockGuarantorCheckAnswersHelper: GuarantorCheckAnswersHelper = mock[GuarantorCheckAnswersHelper]
 
-  object MockCheckAnswersJourneyTypeHelper {
+  object MockGuarantorCheckAnswersHelper {
 
     def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (MockGuarantorCheckAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
+      (mockGuarantorCheckAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
   }
 }

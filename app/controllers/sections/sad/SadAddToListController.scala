@@ -34,18 +34,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class SadAddToListController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: SadNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: SadAddToListFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: SadAddToListView,
-                                       summaryHelper: SadAddToListHelper
-                                     ) extends BaseSadNavigationController with AuthActionHelper {
+                                        override val messagesApi: MessagesApi,
+                                        override val userAnswersService: UserAnswersService,
+                                        override val navigator: SadNavigator,
+                                        override val auth: AuthAction,
+                                        override val getData: DataRetrievalAction,
+                                        override val requireData: DataRequiredAction,
+                                        override val userAllowList: UserAllowListAction,
+                                        formProvider: SadAddToListFormProvider,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        view: SadAddToListView,
+                                        summaryHelper: SadAddToListHelper
+                                      ) extends BaseSadNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

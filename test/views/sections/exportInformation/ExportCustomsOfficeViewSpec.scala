@@ -16,7 +16,7 @@
 
 package views.sections.exportInformation
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import models.requests.DataRequest
@@ -28,14 +28,14 @@ import play.api.test.FakeRequest
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ExportCustomsOfficeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, euExport: Boolean) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[ExportCustomsOfficeView]
+   lazy val view = app.injector.instanceOf[ExportCustomsOfficeView]
     val form = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(

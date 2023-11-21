@@ -33,9 +33,9 @@ object InfoSection extends Section[JsObject] {
       request.userAnswers.get(DispatchDetailsPage())
     )
 
-    if(requiredPages.forall(_.nonEmpty)) {
-      if(request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
-        if(request.userAnswers.get(DispatchPlacePage).nonEmpty) {
+    if (requiredPages.forall(_.nonEmpty)) {
+      if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
+        if (request.userAnswers.get(DispatchPlacePage).nonEmpty) {
           Completed
         } else {
           InProgress
@@ -43,7 +43,7 @@ object InfoSection extends Section[JsObject] {
       } else {
         Completed
       }
-    } else if(requiredPages.exists(_.nonEmpty)) {
+    } else if (requiredPages.exists(_.nonEmpty)) {
       InProgress
     } else {
       NotStarted

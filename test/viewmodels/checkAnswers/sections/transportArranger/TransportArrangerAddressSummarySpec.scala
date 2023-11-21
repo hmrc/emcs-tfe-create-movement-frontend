@@ -35,13 +35,11 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
   "TransportArrangerAddressSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(TransportArrangerAddressMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when the TransportArranger is GoodsOwner or Other" - {
 

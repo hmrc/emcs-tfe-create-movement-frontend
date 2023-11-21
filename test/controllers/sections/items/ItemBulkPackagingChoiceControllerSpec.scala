@@ -17,17 +17,15 @@
 package controllers.sections.items
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
+import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.Play.materializer
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -35,14 +33,12 @@ import views.html.sections.items.ItemBulkPackagingChoiceView
 
 import scala.concurrent.Future
 
-class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswersService with GuiceOneAppPerSuite {
+class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-  implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  lazy val messages: Messages = messagesApi.preferred(request)
 
   lazy val formProvider = new ItemBulkPackagingChoiceFormProvider()
-  lazy val form: Form[Boolean] = formProvider.apply(Tobacco)(messages)
+  lazy val form: Form[Boolean] = formProvider.apply(Tobacco)(messages(request))
   lazy val view: ItemBulkPackagingChoiceView = app.injector.instanceOf[ItemBulkPackagingChoiceView]
 
   def submitRoute: Call = routes.ItemBulkPackagingChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -51,14 +47,15 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new ItemBulkPackagingChoiceController(
       messagesApi,
       mockUserAnswersService,
-      new FakeUserAllowListAction,
+      fakeUserAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
-      new FakeAuthAction(Helpers.stubPlayBodyParsers),
+      fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view
+      view,
+      mockGetCnCodeInformationService
     )
   }
 
@@ -70,7 +67,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, submitRoute, Tobacco)(dataRequest(request), messages).toString
+      contentAsString(result) mustEqual view(form, submitRoute, Tobacco)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -81,7 +78,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(true), submitRoute, Tobacco)(dataRequest(request), messages).toString
+      contentAsString(result) mustEqual view(form.fill(true), submitRoute, Tobacco)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
@@ -133,7 +130,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase with MockUserAnswer
       val boundForm = form.bind(Map("value" -> ""))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, submitRoute, Tobacco)(dataRequest(request), messages).toString
+      contentAsString(result) mustEqual view(boundForm, submitRoute, Tobacco)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

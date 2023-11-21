@@ -37,13 +37,11 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
 
   "DispatchBusinessAddressSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(DispatchCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "must output no row" - {
           "when there's no answer for DispatchUseConsignorDetailsPage" in new Test(emptyUserAnswers) {

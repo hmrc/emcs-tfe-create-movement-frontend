@@ -19,9 +19,9 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
-import models.{CheckMode, Mode, NormalMode}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
@@ -35,8 +35,6 @@ import viewmodels.govuk.summarylist._
 class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
   "GuarantorNameSummary" - {
-
-    lazy val app = applicationBuilder().build()
 
     def expectedRow(value: String, showChangeLink: Boolean, mode: Mode = CheckMode)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
       Some(
@@ -55,7 +53,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
     Seq(GuarantorNameMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {

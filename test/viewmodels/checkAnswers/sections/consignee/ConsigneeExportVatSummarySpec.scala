@@ -27,20 +27,17 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.sections.consignee.{ConsigneeExportSummary, ConsigneeExportVatSummary}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
   "ConsigneeExportVatSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(ConsigneeExportVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

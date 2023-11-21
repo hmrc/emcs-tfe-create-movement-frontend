@@ -18,13 +18,13 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.TransportUnitFixtures
 import models.sections.transportUnit.TransportUnitType.Tractor
+import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportUnit._
-import controllers.sections.transportUnit.{routes => transportUnitRoutes}
-import models.sections.transportUnit.TransportUnitsAddToListModel
 
 class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
   val navigator = new TransportUnitNavigator

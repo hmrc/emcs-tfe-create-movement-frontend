@@ -31,13 +31,12 @@ import viewmodels.implicits._
 class ConsigneeExportSummarySpec extends SpecBase with Matchers {
   "ConsigneeExportSummary" - {
 
-    lazy val app = applicationBuilder().build()
 
     Seq(ConsigneeExportMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

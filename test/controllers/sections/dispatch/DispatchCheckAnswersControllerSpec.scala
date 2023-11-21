@@ -17,97 +17,83 @@
 package controllers.sections.dispatch
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import mocks.services.MockUserAnswersService
+import mocks.viewmodels.MockDispatchCheckAnswersHelper
 import models.UserAnswers
-import navigation.DispatchNavigator
 import navigation.FakeNavigators.FakeDispatchNavigator
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.all.FluentSummaryList
+import viewmodels.govuk.summarylist._
 import views.html.sections.dispatch.DispatchCheckAnswersView
 
-class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService {
+class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDispatchCheckAnswersHelper {
 
+  lazy val view: DispatchCheckAnswersView = app.injector.instanceOf[DispatchCheckAnswersView]
 
-  class Test(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  lazy val dispatchCheckAnswersRoute: String =
+    controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url
 
-    def onwardRoute = Call("GET", "/foo")
+  val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
-    lazy val dispatchCheckAnswersRoute = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url
+  class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    lazy val application =
-      applicationBuilder(userAnswers = userAnswers)
-        .overrides(
-          bind[DispatchNavigator].toInstance(new FakeDispatchNavigator(onwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+    val request = FakeRequest(GET, dispatchCheckAnswersRoute)
 
-    lazy val view = application.injector.instanceOf[DispatchCheckAnswersView]
-
+    lazy val testController = new DispatchCheckAnswersController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      new FakeDispatchNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      mockDispatchCheckAnswersHelper,
+      view
+    )
   }
 
 
   "DispatchCheckAnswers Controller" - {
-
     "must return OK and the correct view for a GET" in new Test() {
+      MockDispatchCheckAnswersHelper.summaryList().returns(list)
 
-      running(application) {
-        val request = FakeRequest(GET, dispatchCheckAnswersRoute)
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          list = SummaryList(Seq.empty).withCssClass("govuk-!-margin-bottom-9"),
-          onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(testErn, testDraftId)
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        list = list,
+        onSubmitCall = controllers.sections.dispatch.routes.DispatchCheckAnswersController.onSubmit(testErn, testDraftId)
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test() {
+      val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchCheckAnswersRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, dispatchCheckAnswersRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, dispatchCheckAnswersRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+      val result = testController.onSubmit(testErn, testDraftId)(req)
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

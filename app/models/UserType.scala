@@ -17,12 +17,19 @@
 package models
 
 sealed trait UserType
+
 case object GreatBritainRegisteredConsignor extends UserType
+
 case object NorthernIrelandRegisteredConsignor extends UserType
+
 case object GreatBritainWarehouseKeeper extends UserType
+
 case object NorthernIrelandWarehouseKeeper extends UserType
+
 case object GreatBritainWarehouse extends UserType
+
 case object NorthernIrelandWarehouse extends UserType
+
 case object Unknown extends UserType
 
 object UserType {

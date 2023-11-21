@@ -17,18 +17,17 @@
 package viewmodels.checkAnswers.sections.documents
 
 import controllers.sections.documents.routes
-import models.{CheckMode, Index}
 import models.requests.DataRequest
-import pages.sections.documents.DocumentDescriptionPage
+import models.{CheckMode, Index}
+import pages.sections.documents.{DocumentDescriptionPage, DocumentSection}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import pages.sections.documents.DocumentSection
 import viewmodels.taskList.Completed
 
-object DocumentDescriptionSummary  {
+object DocumentDescriptionSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DocumentDescriptionPage(idx)).map {
@@ -37,14 +36,14 @@ object DocumentDescriptionSummary  {
         DocumentSection(idx).status match {
           case Completed =>
             SummaryListRowViewModel(
-              key     = "documentDescription.checkYourAnswersLabel",
-              value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+              key = "documentDescription.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer).toString),
               actions = Seq(changeLink(idx))
             )
           case _ =>
             SummaryListRowViewModel(
-              key     = "documentDescription.checkYourAnswersLabel",
-              value   = ValueViewModel(HtmlFormat.escape(answer).toString)
+              key = "documentDescription.checkYourAnswersLabel",
+              value = ValueViewModel(HtmlFormat.escape(answer).toString)
             )
         }
     }

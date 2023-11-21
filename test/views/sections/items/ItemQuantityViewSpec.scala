@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.UnitOfMeasureMessages
 import fixtures.messages.sections.items.ItemQuantityMessages
 import forms.sections.items.ItemQuantityFormProvider
@@ -31,7 +31,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemQuantityView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemQuantityViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemQuantityViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -41,10 +41,10 @@ class ItemQuantityViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemQuantityView]
+       lazy val view = app.injector.instanceOf[ItemQuantityView]
         val form = app.injector.instanceOf[ItemQuantityFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine, Litres15).toString())

@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemNetGrossMassMessages
 import forms.sections.items.ItemNetGrossMassFormProvider
 import models.GoodsTypeModel.Wine
@@ -30,11 +30,13 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemNetGrossMassView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemNetGrossMassViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemNetGrossMassViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def questionTitle(i: Int): String = s".govuk-form-group:nth-of-type($i) > label"
+
     def questionHint(i: Int): String = s".govuk-form-group:nth-of-type($i) > .govuk-hint"
+
     def questionSuffix(i: Int): String = s".govuk-form-group:nth-of-type($i) > * > .govuk-input__suffix"
   }
 
@@ -43,7 +45,7 @@ class ItemNetGrossMassViewSpec extends ViewSpecBase with ViewBehaviours {
 
     s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-      implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
       val view = app.injector.instanceOf[ItemNetGrossMassView]

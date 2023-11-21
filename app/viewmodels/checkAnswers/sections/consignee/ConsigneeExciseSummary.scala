@@ -32,9 +32,9 @@ object ConsigneeExciseSummary {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "consigneeExcise.checkYourAnswersLabel",
-          value   = ValueViewModel(answer),
-          actions = if(!showActionLinks) Seq() else Seq(
+          key = "consigneeExcise.checkYourAnswersLabel",
+          value = ValueViewModel(answer),
+          actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode).url,

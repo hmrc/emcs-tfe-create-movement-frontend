@@ -17,7 +17,6 @@
 package connectors.userAllowList
 
 import base.SpecBase
-import config.AppConfig
 import mocks.connectors.MockHttpClient
 import models.requests.CheckUserAllowListRequest
 import models.response.UnexpectedDownstreamResponseError
@@ -30,12 +29,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserAllowListConnectorSpec extends SpecBase
   with Status with MimeTypes with HeaderNames with MockHttpClient with BeforeAndAfterAll {
 
-  lazy val app = applicationBuilder(userAnswers = None).build()
-
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
   lazy val connector = new UserAllowListConnectorImpl(mockHttpClient, appConfig)
 
   "check" - {

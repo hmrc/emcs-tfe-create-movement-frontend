@@ -27,7 +27,7 @@ import pages.sections.items.ItemDegreesPlatoPage
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemDegreesPlatoView
 
 import javax.inject.Inject
@@ -43,7 +43,8 @@ class ItemDegreesPlatoController @Inject()(
                                             override val requireData: DataRequiredAction,
                                             formProvider: ItemDegreesPlatoFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: ItemDegreesPlatoView
+                                            view: ItemDegreesPlatoView,
+                                            override val cnCodeInformationService: GetCnCodeInformationService
                                           ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -74,7 +75,7 @@ class ItemDegreesPlatoController @Inject()(
 
   private def handleSubmittedForm(degreesPlatoModel: ItemDegreesPlatoModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
 
-    if(degreesPlatoModel.hasDegreesPlato && degreesPlatoModel.degreesPlato.isEmpty) {
+    if (degreesPlatoModel.hasDegreesPlato && degreesPlatoModel.degreesPlato.isEmpty) {
       renderView(
         status = BadRequest,
         form =

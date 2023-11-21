@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemCommodityCodeMessages.English
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.GoodsTypeModel.Beer
@@ -24,13 +24,13 @@ import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemCommodityCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#item-commodity-code > option:nth-child($nthChild)"
   }
@@ -39,10 +39,10 @@ class ItemCommodityCodeViewSpec extends ViewSpecBase with ViewBehaviours {
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      implicit val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-      val view = app.injector.instanceOf[ItemCommodityCodeView]
+     lazy val view = app.injector.instanceOf[ItemCommodityCodeView]
       val form = app.injector.instanceOf[ItemCommodityCodeFormProvider].apply()
       val submitRoute = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
 

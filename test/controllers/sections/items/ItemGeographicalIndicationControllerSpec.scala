@@ -17,161 +17,133 @@
 package controllers.sections.items
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemGeographicalIndicationFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemGeographicalIndicationType.ProtectedDesignationOfOrigin
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import navigation.ItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage, ItemGeographicalIndicationPage}
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemGeographicalIndicationView
 
 import scala.concurrent.Future
 
-class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAnswersService {
+class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), "W200")
     .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
 
-  val formProvider = new ItemGeographicalIndicationFormProvider()
-  val form = formProvider()
+  def itemGeographicalIndicationSubmitAction(idx: Index = testIndex1): Call =
+    routes.ItemGeographicalIndicationController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-  def itemGeographicalIndicationRoute(idx: Index = testIndex1) = routes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
-  def itemGeographicalIndicationSubmitAction(idx: Index = testIndex1) = routes.ItemGeographicalIndicationController.onSubmit(testErn, testDraftId, idx, NormalMode)
+  lazy val formProvider: ItemGeographicalIndicationFormProvider = new ItemGeographicalIndicationFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ItemGeographicalIndicationView = app.injector.instanceOf[ItemGeographicalIndicationView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val application = applicationBuilder(userAnswers)
-      .overrides(
-        bind[ItemsNavigator].toInstance(new FakeItemsNavigator(testOnwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
-
-    val view = application.injector.instanceOf[ItemGeographicalIndicationView]
+    lazy val controller = new ItemGeographicalIndicationController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeItemsNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view,
+      mockGetCnCodeInformationService
+    )
   }
 
   "ItemGeographicalIndication Controller" - {
 
     "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemGeographicalIndicationRoute(testIndex2))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture() {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
-        val request = FakeRequest(POST, itemGeographicalIndicationRoute(testIndex2)).withFormUrlEncodedBody(("value", "1"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return SEE OTHER and redirect when no Goods Type exists" in new Fixture(Some(emptyUserAnswers)) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemGeographicalIndicationRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemGeographicalIndicationRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, itemGeographicalIndicationSubmitAction(), Wine, ProtectedDesignationOfOrigin)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, itemGeographicalIndicationSubmitAction(), Wine, ProtectedDesignationOfOrigin)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(defaultUserAnswers.set(ItemGeographicalIndicationPage(testIndex1), "foo"))
-    ) {
-      running(application) {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(
+      defaultUserAnswers.set(ItemGeographicalIndicationPage(testIndex1), "foo")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemGeographicalIndicationRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill("foo"),
-          itemGeographicalIndicationSubmitAction(),
-          Wine,
-          ProtectedDesignationOfOrigin
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form.fill("foo"),
+        itemGeographicalIndicationSubmitAction(),
+        Wine,
+        ProtectedDesignationOfOrigin
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "foo")))
 
-        val request = FakeRequest(POST, itemGeographicalIndicationRoute()).withFormUrlEncodedBody(("value", "foo"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must render BadRequest when invalid data is submitted" in new Fixture() {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val boundForm = form.bind(Map("value" -> ""))
 
-        val request = FakeRequest(POST, itemGeographicalIndicationRoute()).withFormUrlEncodedBody(("value", ""))
-        val result = route(application, request).value
-        val boundForm = form.bind(Map("value" -> ""))
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          boundForm,
-          itemGeographicalIndicationSubmitAction(),
-          Wine,
-          ProtectedDesignationOfOrigin
-        )(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(
+        boundForm,
+        itemGeographicalIndicationSubmitAction(),
+        Wine,
+        ProtectedDesignationOfOrigin
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
-        val request = FakeRequest(GET, itemGeographicalIndicationRoute())
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "foo")))
 
-        val request = FakeRequest(POST, itemGeographicalIndicationRoute()).withFormUrlEncodedBody(("value", "true"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

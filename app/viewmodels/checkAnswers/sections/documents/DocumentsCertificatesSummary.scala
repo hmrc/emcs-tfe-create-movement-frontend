@@ -24,7 +24,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DocumentsCertificatesSummary  {
+object DocumentsCertificatesSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DocumentsCertificatesPage).map {
@@ -33,8 +33,8 @@ object DocumentsCertificatesSummary  {
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "documentsCertificates.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "documentsCertificates.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

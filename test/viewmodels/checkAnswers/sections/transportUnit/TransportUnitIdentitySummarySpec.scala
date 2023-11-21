@@ -33,13 +33,11 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
   "TransportUnitIdentitySummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(TransportUnitIdentityMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

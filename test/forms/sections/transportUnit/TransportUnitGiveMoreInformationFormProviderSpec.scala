@@ -16,20 +16,20 @@
 
 package forms.sections.transportUnit
 
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitGiveMoreInformationMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class TransportUnitGiveMoreInformationFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class TransportUnitGiveMoreInformationFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val invalidCharacterKey = "transportUnitGiveMoreInformation.error.character"
   val lengthKey = "transportUnitGiveMoreInformation.error.length"
   val invalidCharactersKey = "transportUnitGiveMoreInformation.error.xss"
   val maxLength = 350
-  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(TransportUnitGiveMoreInformationMessages.English.lang))
+  implicit val msgs: Messages = messages(Seq(TransportUnitGiveMoreInformationMessages.English.lang))
 
   ".value" - {
 

@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.ItemsCount
-import services.{GetExciseProductCodesService, UserAnswersService}
+import services.{GetCnCodeInformationService, GetExciseProductCodesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
@@ -45,8 +45,9 @@ class ItemExciseProductCodeController @Inject()(
                                                  formProvider: ItemExciseProductCodeFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  exciseProductCodesService: GetExciseProductCodesService,
-                                                 view: ItemExciseProductCodeView
-                                           ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                 view: ItemExciseProductCodeView,
+                                                 override val cnCodeInformationService: GetCnCodeInformationService
+                                               ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

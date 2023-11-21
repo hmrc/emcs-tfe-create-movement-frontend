@@ -29,9 +29,9 @@ case object FirstTransporterSection extends Section[JsObject] {
       request.userAnswers.get(FirstTransporterVatPage),
       request.userAnswers.get(FirstTransporterAddressPage))
 
-    if(pages.forall(_.nonEmpty)) {
+    if (pages.forall(_.nonEmpty)) {
       Completed
-    } else if(pages.exists(_.nonEmpty)) {
+    } else if (pages.exists(_.nonEmpty)) {
       InProgress
     } else {
       NotStarted

@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.sections.documents.DocumentsRemoveFromListFormProvider
 import models.Index
 import models.requests.DataRequest
-import navigation.TransportUnitNavigator
+import navigation.DocumentsNavigator
 import pages.sections.documents.{DocumentSection, DocumentsAddToListPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -31,17 +31,16 @@ import views.html.sections.documents.DocumentsRemoveFromListView
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class DocumentsRemoveFromListController @Inject()(
-                                                   override val messagesApi: MessagesApi,
-                                                   override val userAnswersService: UserAnswersService,
-                                                   override val userAllowList: UserAllowListAction,
-                                                   override val navigator: TransportUnitNavigator,
-                                                   override val auth: AuthAction,
-                                                   override val getData: DataRetrievalAction,
-                                                   override val requireData: DataRequiredAction,
-                                                   formProvider: DocumentsRemoveFromListFormProvider,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   view: DocumentsRemoveFromListView
+class DocumentsRemoveFromListController @Inject()(override val messagesApi: MessagesApi,
+                                                  override val userAnswersService: UserAnswersService,
+                                                  override val userAllowList: UserAllowListAction,
+                                                  override val navigator: DocumentsNavigator,
+                                                  override val auth: AuthAction,
+                                                  override val getData: DataRetrievalAction,
+                                                  override val requireData: DataRequiredAction,
+                                                  formProvider: DocumentsRemoveFromListFormProvider,
+                                                  val controllerComponents: MessagesControllerComponents,
+                                                  view: DocumentsRemoveFromListView
                                                  ) extends BaseDocumentsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
@@ -67,12 +66,13 @@ class DocumentsRemoveFromListController @Inject()(
 
   private def handleAnswerRemovalAndRedirect(removeDocument: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
-    if(removeDocument) {
+    if (removeDocument) {
       val cleansedAnswers = request.userAnswers
         .remove(DocumentSection(index))
         .remove(DocumentsAddToListPage)
 
-      userAnswersService.set(cleansedAnswers).map { _ => Redirect(routes.DocumentsIndexController.onPageLoad(ern, draftId))
+      userAnswersService.set(cleansedAnswers).map {
+        _ => Redirect(routes.DocumentsIndexController.onPageLoad(ern, draftId))
       }
     } else {
       Future(Redirect(routes.DocumentsAddToListController.onPageLoad(ern, draftId)))

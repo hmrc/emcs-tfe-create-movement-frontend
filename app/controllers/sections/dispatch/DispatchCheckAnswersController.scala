@@ -40,7 +40,7 @@ class DispatchCheckAnswersController @Inject()(
                                                 val controllerComponents: MessagesControllerComponents,
                                                 val dispatchCheckAnswersHelper: DispatchCheckAnswersHelper,
                                                 view: DispatchCheckAnswersView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                              ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

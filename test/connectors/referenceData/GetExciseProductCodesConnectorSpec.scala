@@ -17,34 +17,23 @@
 package connectors.referenceData
 
 import base.SpecBase
-import config.AppConfig
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
-import org.scalatest.BeforeAndAfterAll
-import play.api.http.{HeaderNames, MimeTypes, Status}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetExciseProductCodesConnectorSpec extends SpecBase
-  with Status
-  with MimeTypes
-  with HeaderNames
-  with MockHttpClient
-  with BeforeAndAfterAll {
-
-  lazy val app = applicationBuilder(userAnswers = None).build()
+class GetExciseProductCodesConnectorSpec extends SpecBase with MockHttpClient {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
   lazy val connector = new GetExciseProductCodesConnectorImpl(mockHttpClient, appConfig)
 
   "getExciseProductCodes" - {
-    
+
     "should return a successful response" - {
-      
+
       "when downstream call is successful" in {
 
         val expectedResult = Right(Seq(beerExciseProductCodeJson, wineExciseProductCodeJson))
@@ -60,7 +49,7 @@ class GetExciseProductCodesConnectorSpec extends SpecBase
     }
 
     "should return an error response" - {
-      
+
       "when downstream call fails" in {
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)

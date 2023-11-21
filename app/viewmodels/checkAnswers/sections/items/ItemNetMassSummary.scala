@@ -25,14 +25,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemNetMassSummary  {
+object ItemNetMassSummary {
 
   def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
     request.userAnswers.get(ItemNetGrossMassPage(idx)).map {
       answer =>
         SummaryListRowViewModel(
-          key     = "itemNetGrossMass.netMass.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(s"${answer.netMass.toString()} kg").toString),
+          key = "itemNetGrossMass.netMass.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(s"${answer.netMass.toString()} kg").toString),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

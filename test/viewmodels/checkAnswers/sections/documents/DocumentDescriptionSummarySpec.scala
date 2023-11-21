@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.documents
 
 import base.SpecBase
 import fixtures.DocumentTypeFixtures
+import fixtures.messages.sections.documents.DocumentDescriptionMessages
 import fixtures.messages.sections.documents.DocumentDescriptionMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -33,9 +34,7 @@ class DocumentDescriptionSummarySpec extends SpecBase with Matchers with Documen
 
   "DocumentDescriptionSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
-    implicit lazy val msgs: Messages = messages(app, English.lang)
+    implicit val msgs: Messages = messages(Seq(DocumentDescriptionMessages.English.lang))
 
     "when there's no answer" - {
 

@@ -24,15 +24,15 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object JourneyTimeDaysSummary  {
+object JourneyTimeDaysSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
     answers.get(JourneyTimeDaysPage).map {
       answer =>
         SummaryListRowViewModel(
-          key     = "journeyTimeDays.checkYourAnswersLabel",
-          value   = ValueViewModel(messages("journeyTimeDays.checkYourAnswersValue", answer.toString)),
+          key = "journeyTimeDays.checkYourAnswersLabel",
+          value = ValueViewModel(messages("journeyTimeDays.checkYourAnswersValue", answer.toString)),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

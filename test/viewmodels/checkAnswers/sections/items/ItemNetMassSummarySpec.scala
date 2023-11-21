@@ -34,14 +34,12 @@ class ItemNetMassSummarySpec extends SpecBase with Matchers {
 
   "ItemNetMassSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     val messagesForLanguage = ItemNetGrossMassMessages.English
 
 
     s"when being rendered in lang code of 'en'" - {
 
-      implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "when there's no answer" - {
 

@@ -17,115 +17,89 @@
 package controllers.sections.importInformation
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
-import handlers.ErrorHandler
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckYourAnswersImportHelper
 import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeImportInformationNavigator
-import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.i18n.Messages
-import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, inject}
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.importInformation.ImportCustomsOfficeCodeSummary
 import viewmodels.govuk.SummaryListFluency
-import viewmodels.helpers.CheckYourAnswersImportHelper
 import views.html.sections.importInformation.CheckYourAnswersImportView
 
 class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckYourAnswersImportHelper with MockUserAnswersService {
 
-  def request: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn, testDraftId).url)
-
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
+  implicit val msgs: Messages = messages(request)
+
+  lazy val view: CheckYourAnswersImportView = app.injector.instanceOf[CheckYourAnswersImportView]
+
+  val summaryList: SummaryList = SummaryListViewModel(
+    rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
+  ).withCssClass("govuk-!-margin-bottom-9")
 
   class Fixture(userAnswers: Option[UserAnswers]) {
-    val application: Application =
-      applicationBuilder(userAnswers)
-        .overrides(inject.bind[ImportInformationNavigator].toInstance(new FakeImportInformationNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[CheckYourAnswersImportHelper].toInstance(MockCheckYourAnswersImportHelper))
-        .build()
-
-    implicit val msgs: Messages = messages(application)
-
-
-    val summaryList: SummaryList = SummaryListViewModel(
-      rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
-
-    lazy val errorHandler: ErrorHandler = application.injector.instanceOf[ErrorHandler]
-    val view: CheckYourAnswersImportView = application.injector.instanceOf[CheckYourAnswersImportView]
+    lazy val controller = new CheckYourAnswersImportController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      Helpers.stubMessagesControllerComponents(),
+      new FakeImportInformationNavigator(testOnwardRoute),
+      MockCheckYourAnswersImportHelper,
+      view
+    )
   }
 
   "CheckYourAnswersImportController" - {
     ".onPageLoad" - {
 
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn, testDraftId).url)
-
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456"))) {
-
-
         MockCheckAnswersImportHelper.summaryList().returns(summaryList)
-        running(application) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-          val result = route(application, request).value
+        lazy val viewAsString = view(
+          testErn,
+          testDraftId,
+          summaryList
+        )(dataRequest(request), messages(request)).toString
 
-          val viewAsString = view(
-            testErn,
-            testDraftId,
-            summaryList
-          )(dataRequest(request), messages(application)).toString
-
-          status(result) mustBe OK
-          contentAsString(result) mustBe viewAsString
-        }
+        status(result) mustBe OK
+        contentAsString(result) mustBe viewAsString
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to /customs-office if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, NormalMode).url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe
+          controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, NormalMode).url
       }
     }
 
     ".onSubmit" - {
-
-      def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(POST, controllers.sections.importInformation.routes.CheckYourAnswersImportController.onSubmit(testErn, testDraftId).url)
-
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
+        val result = controller.onSubmit(testErn, testDraftId)(request)
 
-        running(application) {
-
-          val result = route(application, request).value
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe testOnwardRoute.url
-        }
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe testOnwardRoute.url
       }
     }
   }

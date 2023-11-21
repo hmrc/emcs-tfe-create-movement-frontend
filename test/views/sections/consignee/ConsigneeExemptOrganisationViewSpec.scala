@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExemptOrganisationMessages
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
 import models.NormalMode
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeExemptOrganisationViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
 
@@ -38,10 +38,10 @@ class ConsigneeExemptOrganisationViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
+       lazy val view = app.injector.instanceOf[ConsigneeExemptOrganisationView]
         val form = app.injector.instanceOf[ConsigneeExemptOrganisationFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(

@@ -23,7 +23,9 @@ import utils.Logging
 
 sealed trait MovementScenario {
   def originType(implicit request: UserRequest[_]): OriginType
+
   def destinationType: DestinationType
+
   def movementType(implicit request: UserRequest[_]): MovementType
 
   //TODO we should probably change this to use the messages file instead of having the message here directly

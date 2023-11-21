@@ -25,24 +25,25 @@ import pages.sections.items.ItemGeographicalIndicationChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemGeographicalIndicationChoiceView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemGeographicalIndicationChoiceController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemGeographicalIndicationChoiceFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemGeographicalIndicationChoiceView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                            override val messagesApi: MessagesApi,
+                                                            override val userAnswersService: UserAnswersService,
+                                                            override val userAllowList: UserAllowListAction,
+                                                            override val navigator: ItemsNavigator,
+                                                            override val auth: AuthAction,
+                                                            override val getData: DataRetrievalAction,
+                                                            override val requireData: DataRequiredAction,
+                                                            formProvider: ItemGeographicalIndicationChoiceFormProvider,
+                                                            val controllerComponents: MessagesControllerComponents,
+                                                            view: ItemGeographicalIndicationChoiceView,
+                                                            override val cnCodeInformationService: GetCnCodeInformationService
+                                                          ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

@@ -17,24 +17,22 @@
 package viewmodels.helpers
 
 import base.SpecBase
+import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
-import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import models.UserAnswers
 import models.sections.transportUnit.TransportSealTypeModel
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import pages.sections.transportUnit._
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
 import views.html.components.link
-import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 
 class TransportUnitsAddToListHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit lazy val link = app.injector.instanceOf[link]
     implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
 
@@ -42,10 +40,10 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
   }
 
   "TransportUnitsAddToListHelper" - {
-    Seq(TransportUnitAddToListMessages.English).foreach{ msg =>
+    Seq(TransportUnitAddToListMessages.English).foreach { msg =>
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+          implicit val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Nil
         }
@@ -54,18 +52,18 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
 
         s"when all answers entered '${msg.lang.code}' and single transport units" in new Setup(
           emptyUserAnswers
-          .set(TransportUnitTypePage(testIndex1), Tractor)
-          .set(TransportUnitIdentityPage(testIndex1), "wee")
-          .set(TransportSealChoicePage(testIndex1), true)
-          .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
-          .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+            .set(TransportUnitTypePage(testIndex1), Tractor)
+            .set(TransportUnitIdentityPage(testIndex1), "wee")
+            .set(TransportSealChoicePage(testIndex1), true)
+            .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
+            .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Seq(
             SummaryList(
               card = Some(Card(
-                title= Some(CardTitle(Text(msg.transportUnit1))),
+                title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
                     href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
@@ -99,7 +97,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
           .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
           .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
           .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))) {
-          implicit lazy val msgs: Messages = messages(app, msg.lang)
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
           helper.allTransportUnitsSummary() mustBe Seq(
             SummaryList(

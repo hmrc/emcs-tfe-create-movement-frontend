@@ -44,7 +44,7 @@ object InformationInvoiceReferenceSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            if(isOnPreDraftFlow) {
+            if (isOnPreDraftFlow) {
               controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
               controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url

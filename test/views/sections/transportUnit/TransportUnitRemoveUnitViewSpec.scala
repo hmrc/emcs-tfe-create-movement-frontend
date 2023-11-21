@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitRemoveUnitMessages
 import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportUnitRemoveUnitView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitRemoveUnitViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitRemoveUnitViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportUnitRemoveUnitView" - {
@@ -37,10 +37,10 @@ class TransportUnitRemoveUnitViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' - for transport unit type: Container" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitRemoveUnitView]
+       lazy val view = app.injector.instanceOf[TransportUnitRemoveUnitView]
         val form = app.injector.instanceOf[TransportUnitRemoveUnitFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

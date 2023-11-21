@@ -30,8 +30,6 @@ import viewmodels.govuk.summarylist._
 
 class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
-  lazy val app = applicationBuilder().build()
-
   private def expectedRow(value: String, deferredMovement: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
 
     val cyaLabel: String = if (deferredMovement) messagesForLanguage.deferredCyaLabel else messagesForLanguage.newCyaLabel
@@ -56,7 +54,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
       "and this is a deferred movement" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {
@@ -78,7 +76,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
       "and this is NOT a deferred movement" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {

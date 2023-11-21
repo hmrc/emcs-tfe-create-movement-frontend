@@ -17,41 +17,46 @@
 package controllers.sections.consignor
 
 import base.SpecBase
-import models.{NormalMode, UserAddress}
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
+import models.{NormalMode, UserAddress, UserAnswers}
+import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class ConsignorIndexControllerSpec extends SpecBase {
+class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    val request = FakeRequest(GET, controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url)
+
+    lazy val testController = new ConsignorIndexController(
+      mockUserAnswersService,
+      new FakeConsignorNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
+  }
+
   "ConsignorIndexController" - {
-
     "when ConsignorSection.isCompleted" - {
-      "must redirect to the consignor CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(ConsignorAddressPage, UserAddress(None, "", "", "")))).build()
-
-        running(application) {
-
-          val request = FakeRequest(GET, controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url)
-        }
-      }
-    }
-    "must redirect to the guarantor required controller" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url)
-        val result = route(application, request).value
+      "must redirect to the consignor CYA controller" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url)
       }
     }
+    "must redirect to the guarantor required controller" in new Fixture() {
+      val result = testController.onPageLoad(testErn, testDraftId)(request)
 
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url)
+    }
   }
+
 }

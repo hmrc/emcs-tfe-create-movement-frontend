@@ -16,7 +16,7 @@
 
 package views.sections.journeyType
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.journeyType.JourneyTimeHoursMessages
 import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.journeyType.JourneyTimeHoursView
 import views.{BaseSelectors, ViewBehaviours}
 
-class JourneyTimeHoursViewSpec extends ViewSpecBase with ViewBehaviours {
+class JourneyTimeHoursViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,10 +39,10 @@ class JourneyTimeHoursViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[JourneyTimeHoursView]
+       lazy val view = app.injector.instanceOf[JourneyTimeHoursView]
         val form = app.injector.instanceOf[JourneyTimeHoursFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

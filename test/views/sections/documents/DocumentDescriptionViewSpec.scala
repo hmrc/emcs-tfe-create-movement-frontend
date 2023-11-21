@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.DocumentDescriptionMessages
 import forms.sections.documents.DocumentDescriptionFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.DocumentDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DocumentDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
+class DocumentDescriptionViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Business Name view" - {
@@ -37,10 +37,10 @@ class DocumentDescriptionViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DocumentDescriptionView]
+       lazy val view = app.injector.instanceOf[DocumentDescriptionView]
         val form = app.injector.instanceOf[DocumentDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

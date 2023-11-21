@@ -30,7 +30,7 @@ class GetDocumentTypesHttpParserSpec extends SpecBase with GetDocumentTypesHttpP
 
   "GetDocumentTypesReads" - {
 
-    "should return a Seq[DocumentTypes]"- {
+    "should return a Seq[DocumentTypes]" - {
 
       s"when an OK (${Status.OK}) response is retrieved" in {
 

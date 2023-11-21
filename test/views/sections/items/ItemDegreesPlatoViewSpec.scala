@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.CountryMessages
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemDegreesPlatoView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemDegreesPlatoViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -40,10 +40,10 @@ class ItemDegreesPlatoViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemDegreesPlatoView]
+       lazy val view = app.injector.instanceOf[ItemDegreesPlatoView]
         val form = app.injector.instanceOf[ItemDegreesPlatoFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())

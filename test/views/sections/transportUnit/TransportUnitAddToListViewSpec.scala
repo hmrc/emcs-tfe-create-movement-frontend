@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import models.NormalMode
@@ -33,7 +33,7 @@ import viewmodels.helpers.TransportUnitsAddToListHelper
 import views.html.sections.transportUnit.TransportUnitsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
     val cardTitle: String = ".govuk-summary-card__title-wrapper > .govuk-summary-card__title"
@@ -49,7 +49,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -61,7 +61,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -88,7 +88,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item with error" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -100,7 +100,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -129,7 +129,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -147,7 +147,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -175,7 +175,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items and no form" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(TransportUnitTypePage(testIndex1), Tractor)
@@ -193,7 +193,7 @@ class TransportUnitAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[TransportUnitsAddToListView]
+       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
         implicit val doc: Document = Jsoup.parse(

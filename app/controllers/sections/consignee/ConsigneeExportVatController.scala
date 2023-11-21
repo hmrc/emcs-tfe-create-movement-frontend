@@ -41,7 +41,7 @@ class ConsigneeExportVatController @Inject()(
                                               formProvider: ConsigneeExportVatFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: ConsigneeExportVatView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                            ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

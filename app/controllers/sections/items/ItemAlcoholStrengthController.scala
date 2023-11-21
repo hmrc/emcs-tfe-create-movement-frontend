@@ -25,24 +25,25 @@ import pages.sections.items.ItemAlcoholStrengthPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemAlcoholStrengthView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemAlcoholStrengthController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val userAllowList: UserAllowListAction,
-                                       formProvider: ItemAlcoholStrengthFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemAlcoholStrengthView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                               override val messagesApi: MessagesApi,
+                                               override val userAnswersService: UserAnswersService,
+                                               override val navigator: ItemsNavigator,
+                                               override val auth: AuthAction,
+                                               override val getData: DataRetrievalAction,
+                                               override val requireData: DataRequiredAction,
+                                               override val userAllowList: UserAllowListAction,
+                                               formProvider: ItemAlcoholStrengthFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: ItemAlcoholStrengthView,
+                                               override val cnCodeInformationService: GetCnCodeInformationService
+                                             ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

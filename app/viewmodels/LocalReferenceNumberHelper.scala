@@ -36,7 +36,7 @@ class LocalReferenceNumberHelper @Inject()(p: views.html.components.p) {
 
   def content(isDeferred: Boolean)(implicit messages: Messages): Html =
     HtmlFormat.fill(
-      if(isDeferred) {
+      if (isDeferred) {
         Seq(
           p() {
             Html(messageFor("p1")(isDeferred))

@@ -17,192 +17,155 @@
 package controllers.sections.destination
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
-import navigation.DestinationNavigator
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import play.api.inject.bind
+import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersService
 import views.html.sections.destination.DestinationWarehouseVatView
 
 import scala.concurrent.Future
 
 class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    def onwardRoute = Call("GET", "/foo")
+  lazy val formProvider: DestinationWarehouseVatFormProvider = new DestinationWarehouseVatFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: DestinationWarehouseVatView = app.injector.instanceOf[DestinationWarehouseVatView]
 
-    lazy val destinationWarehouseVatRoute = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-    lazy val destinationWarehouseVatOnSubmit = controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testDraftId, NormalMode)
-    lazy val destinationWarehouseSkipQuestion = controllers.sections.destination.routes.DestinationWarehouseVatController.skipThisQuestion(testErn, testDraftId, NormalMode)
+  lazy val destinationWarehouseVatRoute: String =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val destinationWarehouseVatOnSubmit: Call =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val destinationWarehouseSkipQuestion: Call =
+    controllers.sections.destination.routes.DestinationWarehouseVatController.skipThisQuestion(testErn, testDraftId, NormalMode)
 
-    val application = applicationBuilder(userAnswers = userAnswers)
-      .overrides(
-        bind[DestinationNavigator].toInstance(new FakeDestinationNavigator(onwardRoute)),
-        bind[UserAnswersService].toInstance(mockUserAnswersService)
-      )
-      .build()
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    lazy val testController = new DestinationWarehouseVatController(
+      messagesApi,
+      mockUserAnswersService,
+      new FakeDestinationNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      formProvider,
+      messagesControllerComponents,
+      view
+    )
 
-    val formProvider = new DestinationWarehouseVatFormProvider()
-
-    val form = formProvider()
-
-    val view = application.injector.instanceOf[DestinationWarehouseVatView]
+    val request = FakeRequest(GET, destinationWarehouseVatRoute)
 
   }
 
   "DestinationWarehouseVat Controller" - {
-
     "for a GET onPageLoad" - {
-
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, destinationWarehouseVatRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form,
-            action = destinationWarehouseVatOnSubmit,
-            movementScenario = RegisteredConsignee,
-            skipQuestionCall = destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form,
+          action = destinationWarehouseVatOnSubmit,
+          movementScenario = RegisteredConsignee,
+          skipQuestionCall = destinationWarehouseSkipQuestion
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
         .set(DestinationWarehouseVatPage, "answer")
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, destinationWarehouseVatRoute)
+        val expectedView = view(
+          form = form.fill("answer"),
+          action = destinationWarehouseVatOnSubmit,
+          movementScenario = RegisteredConsignee,
+          skipQuestionCall = destinationWarehouseSkipQuestion
+        )(dataRequest(request), messages(request)).toString
 
-          val result = route(application, request).value
-
-          val expectedView = view(
-            form = form.fill("answer"),
-            action = destinationWarehouseVatOnSubmit,
-            movementScenario = RegisteredConsignee,
-            skipQuestionCall = destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual expectedView
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual expectedView
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, destinationWarehouseVatRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
     "for a POST onSubmit" - {
-
       "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
-
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
+        val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, destinationWarehouseVatRoute)
-              .withFormUrlEncodedBody(("value", "answer"))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, RegisteredConsignee)
       )) {
+        val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "12345678901234567890"))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, destinationWarehouseVatRoute)
-              .withFormUrlEncodedBody(("value", "12345678901234567890"))
+        val boundForm = form.bind(Map("value" -> "12345678901234567890"))
 
-          val boundForm = form.bind(Map("value" -> "12345678901234567890"))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
-            RegisteredConsignee, destinationWarehouseSkipQuestion
-          )(dataRequest(request), messages(application)).toString
-        }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
+          RegisteredConsignee, destinationWarehouseSkipQuestion
+        )(dataRequest(request), messages(request)).toString
       }
+
 
       "must redirect to Journey Recovery for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
         .set(DispatchPlacePage, GreatBritain)
       )) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        running(application) {
-          val request = FakeRequest(GET, destinationWarehouseVatRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to Journey Recovery for a POST if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
         .set(DispatchPlacePage, GreatBritain)
       )) {
+        val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        running(application) {
-          val request = FakeRequest(POST, destinationWarehouseVatRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+        val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-        running(application) {
-          val request =
-            FakeRequest(POST, destinationWarehouseVatRoute)
-              .withFormUrlEncodedBody(("value", "answer"))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
-
     "for a GET skipThisQuestion" - {
 
       "must redirect to the next page called and not cleanse any answers when no DetinationWarehouseVat" in new Fixture(Some(emptyUserAnswers
@@ -215,16 +178,12 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
           .set(DestinationDetailsChoicePage, true)
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+        val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
 
-        running(application) {
-          val request =
-            FakeRequest(GET, destinationWarehouseSkipQuestion.url)
+        val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
       "must redirect to the next page and cleanse ONLY the DesinationWarehouseVatPage answer" in new Fixture(Some(emptyUserAnswers
@@ -239,30 +198,24 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-        running(application) {
-          val request =
-            FakeRequest(GET,destinationWarehouseSkipQuestion.url)
+        val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
 
-          val result = route(application, request).value
+        val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual onwardRoute.url
-        }
-      }
-
-      "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
-
-        running(application) {
-          val request =
-            FakeRequest(GET, destinationWarehouseSkipQuestion.url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
+
+    "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+      val req = FakeRequest(GET, destinationWarehouseSkipQuestion.url)
+
+      val result = testController.skipThisQuestion(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+    }
   }
+
 }
 

@@ -16,7 +16,7 @@
 
 package views.sections.transportUnit
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import forms.sections.transportUnit.TransportSealTypeFormProvider
 import models.requests.DataRequest
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.transportUnit.TransportSealTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class TransportSealTypeViewSpec extends ViewSpecBase with ViewBehaviours {
+class TransportSealTypeViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "TransportSealTypeView" - {
@@ -42,10 +42,10 @@ class TransportSealTypeViewSpec extends ViewSpecBase with ViewBehaviours {
 
           s"when transport unit type is $transportUnitType" - {
 
-            implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            val view = app.injector.instanceOf[TransportSealTypeView]
+           lazy val view = app.injector.instanceOf[TransportSealTypeView]
             val form = app.injector.instanceOf[TransportSealTypeFormProvider].apply()
 
             implicit val doc: Document = Jsoup.parse(

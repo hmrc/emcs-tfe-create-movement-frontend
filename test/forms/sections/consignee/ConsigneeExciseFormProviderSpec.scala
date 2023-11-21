@@ -16,8 +16,8 @@
 
 package forms.sections.consignee
 
-import forms.behaviours.StringFieldBehaviours
 import forms.ALPHANUMERIC_REGEX
+import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 

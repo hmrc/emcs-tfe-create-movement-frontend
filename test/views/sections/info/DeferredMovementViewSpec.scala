@@ -16,7 +16,7 @@
 
 package views.sections.info
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.info.DeferredMovementMessages
 import forms.sections.info.DeferredMovementFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.info.DeferredMovementView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DeferredMovementViewSpec extends ViewSpecBase with ViewBehaviours {
+class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,10 +39,10 @@ class DeferredMovementViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[DeferredMovementView]
+       lazy val view = app.injector.instanceOf[DeferredMovementView]
         val form = app.injector.instanceOf[DeferredMovementFormProvider].apply()
 
         implicit val doc: Document =

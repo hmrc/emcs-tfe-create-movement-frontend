@@ -18,8 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode, ReviewMode}
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
+import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportArranger._
 

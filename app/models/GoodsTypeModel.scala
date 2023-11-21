@@ -23,24 +23,32 @@ object GoodsTypeModel {
 
   sealed trait GoodsType {
     val code: String
+
     def toPluralOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.plural")
+
     def toSingularOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.singular")
   }
+
   case object Beer extends GoodsType {
     override val code: String = "B"
   }
+
   case object Wine extends GoodsType {
     override val code: String = "W"
   }
+
   case object Energy extends GoodsType {
     override val code: String = "E"
   }
+
   case object Spirits extends GoodsType {
     override val code: String = "S"
   }
+
   case object Tobacco extends GoodsType {
     override val code: String = "T"
   }
+
   case object Intermediate extends GoodsType {
     override val code: String = "I"
   }

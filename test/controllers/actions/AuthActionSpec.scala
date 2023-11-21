@@ -34,16 +34,14 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID
 import javax.inject.Inject
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 
   implicit val fakeRequest = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
-
-  lazy val app = applicationBuilder(userAnswers = None).build()
 
   override def beforeAll(): Unit = {
     Play.start(app)

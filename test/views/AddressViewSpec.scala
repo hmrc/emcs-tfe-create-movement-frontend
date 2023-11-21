@@ -16,7 +16,7 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.AddressMessages
 import forms.AddressFormProvider
 import models.NormalMode
@@ -35,13 +35,13 @@ import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
 import views.html.AddressView
 
-class AddressViewSpec extends ViewSpecBase with ViewBehaviours {
+class AddressViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang) {
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[AddressView]
+   lazy val view = app.injector.instanceOf[AddressView]
     val form = app.injector.instanceOf[AddressFormProvider].apply()
   }
 

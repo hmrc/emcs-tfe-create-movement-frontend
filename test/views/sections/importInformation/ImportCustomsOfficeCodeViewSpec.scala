@@ -16,7 +16,7 @@
 
 package views.sections.importInformation
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.importInformation.ImportCustomsOfficeCodeMessages
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import models.requests.DataRequest
@@ -29,14 +29,14 @@ import play.api.test.FakeRequest
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportCustomsOfficeCodeViewSpec extends ViewSpecBase with ViewBehaviours {
+class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours {
 
   class Fixture(lang: Lang, userType: UserType) {
 
-    implicit val msgs: Messages = messages(app, lang)
+    implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
+   lazy val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
     val form = app.injector.instanceOf[ImportCustomsOfficeCodeFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(

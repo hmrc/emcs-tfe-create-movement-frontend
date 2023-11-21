@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.SadRemoveDocumentMessages
 import forms.sections.sad.SadRemoveDocumentFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.sad.SadRemoveDocumentView
 import views.{BaseSelectors, ViewBehaviours}
 
-class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
+class SadRemoveDocumentViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "SadRemoveDocumentView" - {
@@ -37,10 +37,10 @@ class SadRemoveDocumentViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' " - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[SadRemoveDocumentView]
+       lazy val view = app.injector.instanceOf[SadRemoveDocumentView]
         val form = app.injector.instanceOf[SadRemoveDocumentFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(

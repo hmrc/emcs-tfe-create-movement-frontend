@@ -16,7 +16,7 @@
 
 package views.sections.destination
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.destination.DestinationConsigneeDetailsMessages
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationConsigneeDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
+class DestinationConsigneeDetailsViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child(${index})"
     val errorField: String = "p.govuk-error-message"
@@ -42,10 +42,10 @@ class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
+       lazy val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
         val form = app.injector.instanceOf[DestinationConsigneeDetailsFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
@@ -61,10 +61,10 @@ class DestinationConsigneeDetailsViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered with form not answered error in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
+       lazy val view = app.injector.instanceOf[DestinationConsigneeDetailsView]
         val form = app.injector.instanceOf[DestinationConsigneeDetailsFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form.bind(Map("value" -> "")), NormalMode).toString())

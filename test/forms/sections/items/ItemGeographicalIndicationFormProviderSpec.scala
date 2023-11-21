@@ -16,14 +16,14 @@
 
 package forms.sections.items
 
+import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class ItemGeographicalIndicationFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class ItemGeographicalIndicationFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "itemGeographicalIndication.error.required"
   val lengthKey = "itemGeographicalIndication.error.length"
@@ -73,31 +73,31 @@ class ItemGeographicalIndicationFormProviderSpec extends StringFieldBehaviours w
 
     Seq(ItemGeographicalIndicationMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message for required" in {
 
-          messages("itemGeographicalIndication.error.required") mustBe
+          msgs("itemGeographicalIndication.error.required") mustBe
             messagesForLanguage.errorRequired
         }
 
         "have the correct error message for length" in {
 
-          messages("itemGeographicalIndication.error.length") mustBe
+          msgs("itemGeographicalIndication.error.length") mustBe
             messagesForLanguage.errorLength
         }
 
         "have the correct error message for xss" in {
 
-          messages("itemGeographicalIndication.error.xss") mustBe
+          msgs("itemGeographicalIndication.error.xss") mustBe
             messagesForLanguage.errorXss
         }
 
         "have the correct error message for alphanumeric" in {
 
-          messages("itemGeographicalIndication.error.alphanumeric") mustBe
+          msgs("itemGeographicalIndication.error.alphanumeric") mustBe
             messagesForLanguage.errorAlphanumeric
         }
       }

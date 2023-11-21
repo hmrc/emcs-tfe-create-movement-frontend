@@ -20,7 +20,7 @@ import play.api.libs.json.JsPath
 
 import java.time.LocalDateTime
 
-object DeclarationPage extends QuestionPage[LocalDateTime]{
+object DeclarationPage extends QuestionPage[LocalDateTime] {
   override val toString: String = "declaration"
   override val path: JsPath = JsPath \ "declaration"
 }

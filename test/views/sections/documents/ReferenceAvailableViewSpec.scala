@@ -16,7 +16,7 @@
 
 package views.sections.documents
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.documents.ReferenceAvailableMessages
 import forms.sections.documents.ReferenceAvailableFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.documents.ReferenceAvailableView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ReferenceAvailableViewSpec extends ViewSpecBase with ViewBehaviours {
+class ReferenceAvailableViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -38,10 +38,10 @@ class ReferenceAvailableViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ReferenceAvailableView]
+       lazy val view = app.injector.instanceOf[ReferenceAvailableView]
         val form = app.injector.instanceOf[ReferenceAvailableFormProvider].apply()
 
         implicit val doc: Document =

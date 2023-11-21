@@ -16,7 +16,7 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.DeclarationMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,7 +26,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.DeclarationView
 
-class DeclarationViewSpec extends ViewSpecBase with ViewBehaviours {
+class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -38,7 +38,7 @@ class DeclarationViewSpec extends ViewSpecBase with ViewBehaviours {
 
         "when movement was Satisfactory" - {
 
-          implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
           val view = app.injector.instanceOf[DeclarationView]

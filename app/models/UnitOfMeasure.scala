@@ -30,8 +30,11 @@ sealed trait UnitOfMeasure {
 object UnitOfMeasure {
 
   case object Kilograms extends WithName("kilograms") with UnitOfMeasure
+
   case object Litres15 extends WithName("litres15") with UnitOfMeasure
+
   case object Litres20 extends WithName("litres20") with UnitOfMeasure
+
   case object Thousands extends WithName("thousands") with UnitOfMeasure
 
   val values: Seq[UnitOfMeasure] = Seq(

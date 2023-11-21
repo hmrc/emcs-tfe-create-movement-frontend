@@ -16,18 +16,20 @@
 
 package models.sections.documents
 
-import views.ViewUtils.pluralSingular
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import views.ViewUtils.pluralSingular
 
 sealed trait DocumentsAddToList
 
 object DocumentsAddToList extends Enumerable.Implicits {
 
   case object Yes extends WithName("1") with DocumentsAddToList
+
   case object No extends WithName("2") with DocumentsAddToList
+
   case object MoreLater extends WithName("3") with DocumentsAddToList
 
   val values: Seq[DocumentsAddToList] = Seq(
@@ -51,8 +53,8 @@ object DocumentsAddToList extends Enumerable.Implicits {
 
     Seq(
       Some(radioItem(Yes, 0, None)),
-      if(showNoOption) Some(radioItem(No, 1, Some(totalDocuments))) else None,
-      if(showNoOption) Some(orDivider) else None,
+      if (showNoOption) Some(radioItem(No, 1, Some(totalDocuments))) else None,
+      if (showNoOption) Some(orDivider) else None,
       Some(radioItem(MoreLater, 2, None))
     ).flatten
   }

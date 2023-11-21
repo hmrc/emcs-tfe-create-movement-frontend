@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
 import forms.sections.items.ItemGeographicalIndicationFormProvider
 import models.GoodsTypeModel.Beer
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemGeographicalIndicationView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemGeographicalIndicationViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemGeographicalIndicationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -40,10 +40,10 @@ class ItemGeographicalIndicationViewSpec extends ViewSpecBase with ViewBehaviour
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemGeographicalIndicationView]
+       lazy val view = app.injector.instanceOf[ItemGeographicalIndicationView]
         val form = app.injector.instanceOf[ItemGeographicalIndicationFormProvider].apply()
 
         "when being rendered for PDO" - {

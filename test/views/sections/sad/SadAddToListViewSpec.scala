@@ -16,7 +16,7 @@
 
 package views.sections.sad
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.sad.SadAddToListMessages
 import forms.sections.sad.SadAddToListFormProvider
 import models.NormalMode
@@ -31,7 +31,7 @@ import viewmodels.helpers.SadAddToListHelper
 import views.html.sections.sad.SadAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
-class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
+class SadAddToListViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors {
     val returnToDraftLink: String = "#save-and-exit"
     val cardTitle: String = ".govuk-summary-card__title-wrapper > .govuk-summary-card__title"
@@ -47,7 +47,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
@@ -55,7 +55,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -81,7 +81,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item with error" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
@@ -89,7 +89,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -117,7 +117,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
@@ -126,7 +126,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val form = app.injector.instanceOf[SadAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
@@ -153,7 +153,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for multiple items and no form" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         val userAnswers = emptyUserAnswers
           .set(ImportNumberPage(testIndex1), "wee")
@@ -161,7 +161,7 @@ class SadAddToListViewSpec extends ViewSpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-        val view = app.injector.instanceOf[SadAddToListView]
+       lazy val view = app.injector.instanceOf[SadAddToListView]
         val helper = app.injector.instanceOf[SadAddToListHelper].allSadSummary()
 
         implicit val doc: Document = Jsoup.parse(

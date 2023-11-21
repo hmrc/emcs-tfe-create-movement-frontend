@@ -16,7 +16,7 @@
 
 package views.sections.dispatch
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.dispatch.DispatchUseConsignorDetailsMessages
 import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchUseConsignorDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchUseConsignorDetailsViewSpec extends ViewSpecBase with ViewBehaviours {
+class DispatchUseConsignorDetailsViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Dispatch Use Consignor Details view" - {
@@ -37,10 +37,10 @@ class DispatchUseConsignorDetailsViewSpec extends ViewSpecBase with ViewBehaviou
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[DispatchUseConsignorDetailsView]
+       lazy val view = app.injector.instanceOf[DispatchUseConsignorDetailsView]
         val form = app.injector.instanceOf[DispatchUseConsignorDetailsFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

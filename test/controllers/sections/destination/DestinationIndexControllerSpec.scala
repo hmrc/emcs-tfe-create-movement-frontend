@@ -17,115 +17,102 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import models.NormalMode
+import controllers.actions.FakeDataRetrievalAction
+import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class DestinationIndexControllerSpec extends SpecBase {
+class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService {
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+
+    lazy val testController = new DestinationIndexController(
+      mockUserAnswersService,
+      new FakeDestinationNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents
+    )
+
+  }
+
   "DestinationIndexController" - {
-
     "when DestinationSection.isCompleted" - {
-      "must redirect to the CYA controller" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers
-          .set(DestinationTypePage, TemporaryRegisteredConsignee)
-          .set(DestinationWarehouseVatPage, "vat")
-          .set(DestinationDetailsChoicePage, false)
-        )).build()
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
+        .set(DestinationTypePage, TemporaryRegisteredConsignee)
+        .set(DestinationWarehouseVatPage, "vat")
+        .set(DestinationDetailsChoicePage, false))) {
 
-        running(application) {
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-          val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
-    }
 
-    "must redirect to the destination warehouse excise controller" - {
-      Seq(GbTaxWarehouse,
-        EuTaxWarehouse).foreach(
-        answer =>
-          s"when DestinationTypePage answer is $answer" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
-
-            running(application) {
-
-              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
-              val result = route(application, request).value
+      "must redirect to the destination warehouse excise controller" - {
+        Seq(GbTaxWarehouse, EuTaxWarehouse).foreach(
+          answer =>
+            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+              val result = testController.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
                 Some(routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
-          }
-      )
-    }
+        )
+      }
 
-    "must redirect to the destination warehouse vat controller" - {
-      Seq(RegisteredConsignee,
-        TemporaryRegisteredConsignee,
-        ExemptedOrganisation).foreach(
-        answer =>
-          s"when DestinationTypePage answer is $answer" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
-
-            running(application) {
-
-              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
-              val result = route(application, request).value
+      "must redirect to the destination warehouse vat controller" - {
+        Seq(RegisteredConsignee,
+          TemporaryRegisteredConsignee,
+          ExemptedOrganisation).foreach(
+          answer =>
+            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+              val result = testController.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
                 Some(routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
-          }
-      )
-    }
+        )
+      }
 
-    "must redirect to the destination business name controller" - {
-      Seq(DirectDelivery).foreach(
-        answer =>
-          s"when DestinationTypePage answer is $answer" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
-
-            running(application) {
-
-              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
-              val result = route(application, request).value
+      "must redirect to the destination business name controller" - {
+        Seq(DirectDelivery).foreach(
+          answer =>
+            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+              val result = testController.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe
                 Some(routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
-          }
-      )
-    }
+        )
+      }
 
-    "must redirect to the tasklist" - {
-      Seq(UnknownDestination,
-        ExportWithCustomsDeclarationLodgedInTheEu,
-        ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-        answer =>
-          s"when DestinationTypePage answer is $answer" in {
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers.set(DestinationTypePage, answer))).build()
-
-            running(application) {
-
-              val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
-              val result = route(application, request).value
+      "must redirect to the tasklist" - {
+        Seq(UnknownDestination,
+          ExportWithCustomsDeclarationLodgedInTheEu,
+          ExportWithCustomsDeclarationLodgedInTheUk).foreach(
+          answer =>
+            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+              val result = testController.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
             }
-          }
-      )
+        )
+      }
     }
-
   }
+
 }

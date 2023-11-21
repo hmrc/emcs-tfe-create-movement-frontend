@@ -19,6 +19,7 @@ package models.sections.items
 import base.SpecBase
 import models.sections.items.ItemGeographicalIndicationType._
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, RadioItem}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
@@ -35,7 +36,7 @@ class ItemGeographicalIndicationTypeSpec extends SpecBase {
 
     ".options" - {
       "return all the radio options for geographical indications" in {
-        implicit val msgs: Messages = messages(applicationBuilder().build())
+        implicit val msgs: Messages = messages(FakeRequest())
 
         ItemGeographicalIndicationType.options mustBe Seq(
           RadioItem(

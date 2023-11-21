@@ -17,125 +17,114 @@
 package controllers.sections.importInformation
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, NorthernIrelandRegisteredConsignor, UserAnswers}
 import navigation.FakeNavigators.FakeImportInformationNavigator
-import navigation.ImportInformationNavigator
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 
 import scala.concurrent.Future
 
 class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val formProvider = new ImportCustomsOfficeCodeFormProvider()
-  val form = formProvider()
+  lazy val formProvider: ImportCustomsOfficeCodeFormProvider = new ImportCustomsOfficeCodeFormProvider()
+  lazy val form: Form[String] = formProvider()
+  lazy val view: ImportCustomsOfficeCodeView = app.injector.instanceOf[ImportCustomsOfficeCodeView]
 
-  lazy val importCustomsOfficeRoute = controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, NormalMode).url
-  lazy val importCustomsOfficeSubmitAction = controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onSubmit(testErn, testDraftId, NormalMode)
-
+  lazy val importCustomsOfficeSubmitAction: Call =
+    controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onSubmit(testErn, testDraftId, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    lazy val application =
-      applicationBuilder(userAnswers)
-        .overrides(
-          bind[ImportInformationNavigator].toInstance(new FakeImportInformationNavigator(testOnwardRoute)),
-          bind[UserAnswersService].toInstance(mockUserAnswersService)
-        )
-        .build()
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val view = application.injector.instanceOf[ImportCustomsOfficeCodeView]
+    lazy val controller = new ImportCustomsOfficeCodeController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      new FakeImportInformationNavigator(testOnwardRoute),
+      mockUserAnswersService,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
   }
 
   "Import Customs Office Code Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, importCustomsOfficeRoute)
-        val result = route(application, request).value
-
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(ImportCustomsOfficeCodePage, "answer"))
     ) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, importCustomsOfficeRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
-      running(application) {
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "AB123456")))
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-        val request = FakeRequest(POST, importCustomsOfficeRoute).withFormUrlEncodedBody(("value", "AB123456"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      running(application) {
+      val boundForm = form.bind(Map("value" -> ""))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-        val request = FakeRequest(POST, importCustomsOfficeRoute).withFormUrlEncodedBody(("value", ""))
-        val boundForm = form.bind(Map("value" -> ""))
-        val result = route(application, request).value
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
+    }
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(application)).toString
+    "must redirect to tasklist for GET if ERN is not XIRC or GBRC" in new Fixture() {
+      Seq("GB", "XI").foreach {
+        prefix =>
+          val ern = s"${prefix}WK123"
+          val result = controller.onPageLoad(ern, testDraftId, NormalMode)(request)
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
       }
     }
 
-    "must redirect to unauthorised page is ERN is not XIRC or GBRC" in new Fixture() {
-      running(application){
-        val ern = "GBWK123"
-        val request = userRequest(FakeRequest(GET, controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, testDraftId, NormalMode).url)).copy(ern = ern)
+    "must redirect to tasklist for POST if ERN is not XIRC or GBRC" in new Fixture() {
+      Seq("GB", "XI").foreach {
+        prefix =>
+          val ern = s"${prefix}WK123"
+          val result = controller.onSubmit(ern, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "AB123456")))
 
-        val result = route(application, request).value
-
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
-
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
       }
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        val request = FakeRequest(GET, importCustomsOfficeRoute)
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      running(application) {
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "AB123456")))
 
-        val request = FakeRequest(POST, importCustomsOfficeRoute).withFormUrlEncodedBody(("value", "answer"))
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

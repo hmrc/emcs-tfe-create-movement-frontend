@@ -32,10 +32,7 @@ import viewmodels.implicits._
 class DocumentTypeSummarySpec extends SpecBase with Matchers with DocumentTypeFixtures {
 
   "DocumentTypeSummary" - {
-
-    lazy val app = applicationBuilder().build()
-
-    implicit lazy val msgs: Messages = messages(app, English.lang)
+    implicit val msgs: Messages = messages(Seq(English.lang))
 
     "when there's no answer" - {
 

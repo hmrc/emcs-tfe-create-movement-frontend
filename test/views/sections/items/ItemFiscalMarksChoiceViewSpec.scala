@@ -16,7 +16,7 @@
 
 package views.sections.items
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksChoiceMessages
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
 import models.GoodsTypeModel.Tobacco
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemFiscalMarksChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemFiscalMarksChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
+class ItemFiscalMarksChoiceViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,10 +39,10 @@ class ItemFiscalMarksChoiceViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        val view = app.injector.instanceOf[ItemFiscalMarksChoiceView]
+       lazy val view = app.injector.instanceOf[ItemFiscalMarksChoiceView]
         val form = app.injector.instanceOf[ItemFiscalMarksChoiceFormProvider].apply(Tobacco)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Tobacco).toString())

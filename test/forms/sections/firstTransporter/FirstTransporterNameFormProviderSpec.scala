@@ -16,13 +16,13 @@
 
 package forms.sections.firstTransporter
 
+import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterNameMessages
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
-class FirstTransporterNameFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class FirstTransporterNameFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "firstTransporterName.error.required"
   val lengthKey = "firstTransporterName.error.length"
@@ -60,20 +60,20 @@ class FirstTransporterNameFormProviderSpec extends StringFieldBehaviours with Gu
 
     Seq(FirstTransporterNameMessages.English) foreach { messagesForLanguage =>
 
-      implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       s"when output for language code '${messagesForLanguage.lang.code}'" - {
 
         "have the correct error message when failed to supply a field value" in {
-          messages(requiredKey) mustBe messagesForLanguage.errorRequired
+          msgs(requiredKey) mustBe messagesForLanguage.errorRequired
         }
 
         "have the correct error message when the field value is too large" in {
-          messages(lengthKey) mustBe messagesForLanguage.errorLength
+          msgs(lengthKey) mustBe messagesForLanguage.errorLength
         }
 
         "have the correct error message when the field value has invalid characters" in {
-          messages(invalidKey) mustBe messagesForLanguage.errorInvalidCharacter
+          msgs(invalidKey) mustBe messagesForLanguage.errorInvalidCharacter
         }
 
       }

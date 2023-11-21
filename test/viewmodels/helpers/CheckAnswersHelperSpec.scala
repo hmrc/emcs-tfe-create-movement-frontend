@@ -17,14 +17,15 @@
 package viewmodels.helpers
 
 import base.SpecBase
+import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import viewmodels.govuk.summarylist._
 class CheckAnswersHelperSpec extends SpecBase {
 
   lazy val checkAnswersHelper = new CheckAnswersHelper()
 
-  lazy val app = applicationBuilder().build()
-  implicit lazy val msgs = messages(app)
+  implicit val msgs: Messages = messages(FakeRequest())
 
   "CheckAnswersHelper" - {
 

@@ -22,7 +22,7 @@ import models.CheckMode
 import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner, Other}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -32,13 +32,11 @@ import viewmodels.implicits._
 class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
   "TransportArrangerVatSummary" - {
 
-    lazy val app = applicationBuilder().build()
-
     Seq(TransportArrangerVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
         "when TransportArranger is NOT GoodsOwner or Other" - {
 

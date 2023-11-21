@@ -32,12 +32,9 @@ import viewmodels.implicits._
 class ReferenceAvailableSummarySpec extends SpecBase with Matchers with DocumentTypeFixtures {
 
   "ReferenceAvailableSummary" - {
-
-    lazy val app = applicationBuilder().build()
-
     s"when being rendered in lang code of '${English.lang}'" - {
 
-      implicit lazy val msgs: Messages = messages(app, English.lang)
+      implicit val msgs: Messages = messages(Seq(English.lang))
 
       "when there's no answer" - {
 

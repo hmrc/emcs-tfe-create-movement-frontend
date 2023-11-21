@@ -20,13 +20,13 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DeferredMovementFormProvider
-import models.{CheckMode, Mode}
 import models.requests.DataRequest
+import models.{CheckMode, Mode}
 import navigation.InformationNavigator
 import pages.sections.info.DeferredMovementPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import play.api.mvc._
 import services.{PreDraftService, UserAnswersService}
 import views.html.sections.info.DeferredMovementView
 

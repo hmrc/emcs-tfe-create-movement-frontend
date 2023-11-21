@@ -16,7 +16,7 @@
 
 package views.sections.journeyType
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.journeyType.GiveInformationOtherTransportMessages
 import forms.sections.journeyType.GiveInformationOtherTransportFormProvider
 import models.NormalMode
@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.journeyType.GiveInformationOtherTransportView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehaviours {
+class GiveInformationOtherTransportViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
@@ -39,10 +39,10 @@ class GiveInformationOtherTransportViewSpec extends ViewSpecBase with ViewBehavi
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[GiveInformationOtherTransportView]
+       lazy val view = app.injector.instanceOf[GiveInformationOtherTransportView]
         val form = app.injector.instanceOf[GiveInformationOtherTransportFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())

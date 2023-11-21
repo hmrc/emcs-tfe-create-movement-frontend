@@ -42,7 +42,10 @@ class CheckYourAnswersImportController @Inject()(override val messagesApi: Messa
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) {
       implicit request =>
-        withAnswer(ImportCustomsOfficeCodePage, controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode)) {
+        withAnswer(
+          ImportCustomsOfficeCodePage,
+          redirectRoute = controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode)
+        ) {
           _ =>
             Ok(view(
               ern,

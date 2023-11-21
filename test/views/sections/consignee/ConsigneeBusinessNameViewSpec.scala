@@ -16,7 +16,7 @@
 
 package views.sections.consignee
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeBusinessNameMessages
 import forms.sections.consignee.ConsigneeBusinessNameFormProvider
 import models.requests.DataRequest
@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeBusinessNameView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
+class ConsigneeBusinessNameViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
   "Deferred Movement view" - {
@@ -37,10 +37,10 @@ class ConsigneeBusinessNameViewSpec extends ViewSpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        val view = app.injector.instanceOf[ConsigneeBusinessNameView]
+       lazy val view = app.injector.instanceOf[ConsigneeBusinessNameView]
         val form = app.injector.instanceOf[ConsigneeBusinessNameFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())

@@ -38,9 +38,9 @@ class DocumentsCheckAnswersController @Inject()(
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                view: DocumentsCheckAnswersView,
+                                                 view: DocumentsCheckAnswersView,
                                                  checkAnswersHelper: CheckYourAnswersDocumentsHelper
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] = authorisedDataRequest(ern, draftId) { implicit request =>
     Ok(view(checkAnswersHelper.summaryList()))

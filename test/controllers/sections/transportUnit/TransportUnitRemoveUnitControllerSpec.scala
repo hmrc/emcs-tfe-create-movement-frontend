@@ -17,94 +17,84 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import mocks.services.MockUserAnswersService
+import models.UserAnswers
 import models.sections.transportUnit.TransportUnitType
+import navigation.TransportUnitNavigator
 import pages.sections.transportUnit.TransportUnitTypePage
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.Play.materializer
+import play.api.data.Form
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportUnit.TransportUnitRemoveUnitView
 
 import scala.concurrent.Future
 
 class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val formProvider = new TransportUnitRemoveUnitFormProvider()
-  val form = formProvider()
+  lazy val formProvider: TransportUnitRemoveUnitFormProvider = new TransportUnitRemoveUnitFormProvider()
 
-  lazy val transportUnitRemoveUnitRoute = controllers.sections.transportUnit.routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url
+  lazy val form: Form[Boolean] = formProvider()
+
+  lazy val view: TransportUnitRemoveUnitView = app.injector.instanceOf[TransportUnitRemoveUnitView]
+
+  class Test(userAnswers: Option[UserAnswers]) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new TransportUnitRemoveUnitController(
+      messagesApi,
+      mockUserAnswersService,
+      fakeUserAllowListAction,
+      app.injector.instanceOf[TransportUnitNavigator],
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
+  }
 
   "TransportUnitRemoveUnit Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+    )) {
 
-      val application = applicationBuilder(userAnswers =
-        Some(emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport))
-      ).build()
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, transportUnitRemoveUnitRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[TransportUnitRemoveUnitView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the index controller when index is out of bounds (for GET)" in {
+    "must redirect to the index controller when index is out of bounds (for GET)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to TU07 when the user answers no" in {
+    "must redirect to TU07 when the user answers no" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "false")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, transportUnitRemoveUnitRoute)
-            .withFormUrlEncodedBody(("value", "false"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual
-          controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual
+        controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the index controller when the user answers yes (removing the transport unit)" in {
+    "must redirect to the index controller when the user answers yes (removing the transport unit)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+        .set(TransportUnitTypePage(testIndex2), TransportUnitType.Container)
+    )) {
 
       MockUserAnswersService.set(
         emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Container)
@@ -112,103 +102,47 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Container)
       ))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-            .set(TransportUnitTypePage(testIndex2), TransportUnitType.Container)
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, transportUnitRemoveUnitRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the index controller when index is out of bounds (for POST)" in {
+    "must redirect to the index controller when index is out of bounds (for POST)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request.withFormUrlEncodedBody(("value", "true")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-        ))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+    )) {
 
-      val application = applicationBuilder(userAnswers = Some(
-        emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-      )).build()
+      val boundForm = form.bind(Map("value" -> ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, transportUnitRemoveUnitRoute)
-            .withFormUrlEncodedBody(("value", ""))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "")))
 
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[TransportUnitRemoveUnitView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-      running(application) {
-        val request = FakeRequest(GET, transportUnitRemoveUnitRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, transportUnitRemoveUnitRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

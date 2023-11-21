@@ -25,7 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DestinationConsigneeDetailsSummary  {
+object DestinationConsigneeDetailsSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DestinationConsigneeDetailsPage).map { answer =>
@@ -33,8 +33,8 @@ object DestinationConsigneeDetailsSummary  {
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key     = "destinationConsigneeDetails.checkYourAnswersLabel",
-        value   = ValueViewModel(value),
+        key = "destinationConsigneeDetails.checkYourAnswersLabel",
+        value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             content = "site.change",

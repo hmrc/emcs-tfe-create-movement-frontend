@@ -22,7 +22,6 @@ import models.UserAnswers
 import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory
 import pages.sections.destination._
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -33,9 +32,8 @@ import viewmodels.govuk.all.FluentSummaryList
 class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with UserAddressFixtures {
 
   class Setup(userAnswers: UserAnswers) {
-    lazy val app: Application = applicationBuilder().build()
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-    implicit val msgs: Messages = messagesApi(app).preferred(fakeDataRequest)
+    implicit val msgs: Messages = messages(FakeRequest())
     lazy val dispatchCheckAnswersSummary = new DestinationCheckAnswersHelper()
   }
 

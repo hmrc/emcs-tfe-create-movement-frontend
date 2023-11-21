@@ -17,151 +17,104 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import forms.sections.journeyType.JourneyTimeDaysFormProvider
 import mocks.services.MockUserAnswersService
-import models.NormalMode
 import models.sections.journeyType.HowMovementTransported
-import navigation.FakeNavigators.FakeNavigator
-import navigation.Navigator
+import models.{NormalMode, UserAnswers}
+import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTimeDaysPage}
 import play.api.data.Form
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
-import services.UserAnswersService
+import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.journeyType.JourneyTimeDaysView
 
 import scala.concurrent.Future
 
 class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService {
 
-  val formProvider = new JourneyTimeDaysFormProvider()
-  val form: Form[Int] = formProvider(40)
-
   val validAnswer = 1
 
-  val onwardRoute: Call = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+  lazy val formProvider: JourneyTimeDaysFormProvider = new JourneyTimeDaysFormProvider()
+  lazy val form: Form[Int] = formProvider(40)
+  lazy val view: JourneyTimeDaysView = app.injector.instanceOf[JourneyTimeDaysView]
 
-  lazy val journeyTimeDaysRoute = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode).url
+  class Test(val userAnswers: Option[UserAnswers]) {
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new JourneyTimeDaysController(
+      messagesApi,
+      fakeUserAllowListAction,
+      mockUserAnswersService,
+      new FakeJourneyTypeNavigator(testOnwardRoute),
+      fakeAuthAction,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      formProvider,
+      Helpers.stubMessagesControllerComponents(),
+      view
+    )
+  }
 
   "JourneyTimeDays Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new Test(Some(
+      emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+    )) {
 
-      val userAnswers = emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, journeyTimeDaysRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[JourneyTimeDaysView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers
+    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
+      emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
         .set(JourneyTimeDaysPage, validAnswer)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, journeyTimeDaysRoute)
-
-        val view = application.injector.instanceOf[JourneyTimeDaysView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val userAnswers = emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+    "must redirect to the next page when valid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+    )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, journeyTimeDaysRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
+      emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+    )) {
+      val boundForm = form.bind(Map("value" -> ""))
 
-      val userAnswers = emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, journeyTimeDaysRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
-
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[JourneyTimeDaysView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(application)).toString
-      }
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, journeyTimeDaysRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, journeyTimeDaysRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
 }

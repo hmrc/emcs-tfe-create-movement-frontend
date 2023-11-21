@@ -30,14 +30,13 @@ import viewmodels.implicits._
 class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers {
   "TransportUnitGiveMoreInformationSummary" - {
 
-    lazy val app = applicationBuilder().build()
     implicit val link = app.injector.instanceOf[views.html.components.link]
 
     Seq(TransportUnitGiveMoreInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit lazy val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "when there's no answer" - {
 

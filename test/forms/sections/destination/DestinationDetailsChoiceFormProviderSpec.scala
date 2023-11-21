@@ -19,16 +19,15 @@ package forms.sections.destination
 import base.SpecBase
 import forms.behaviours.BooleanFieldBehaviours
 import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
-import pages.sections.info.DestinationTypePage
 import play.api.data.{Form, FormError}
+import play.api.test.FakeRequest
 
 class DestinationDetailsChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredErrorMessage = "Select ’yes’ to enter the address and business name of the registered consignee"
   val invalidErrorMessage = "error.boolean"
 
-  val form: Form[Boolean] = new DestinationDetailsChoiceFormProvider().apply(RegisteredConsignee)(messages(
-        applicationBuilder(Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))).build()))
+  val form: Form[Boolean] = new DestinationDetailsChoiceFormProvider().apply(RegisteredConsignee)(messages(FakeRequest()))
 
   ".value" - {
 

@@ -41,11 +41,11 @@ object TransportUnitType extends Enumerable.Implicits {
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
-      RadioItem(
-        content = Text(messages(s"transportUnitType.${value.toString}")),
-        value = Some(value.toString),
-        id = Some(s"value_${value.toString}")
-      )
+    RadioItem(
+      content = Text(messages(s"transportUnitType.${value.toString}")),
+      value = Some(value.toString),
+      id = Some(s"value_${value.toString}")
+    )
   }
 
   implicit val enumerable: Enumerable[TransportUnitType] =

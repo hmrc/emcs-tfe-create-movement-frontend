@@ -17,29 +17,38 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.info.DestinationTypePage
+import play.api.Play.materializer
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.DraftMovementView
 
 class DraftMovementControllerSpec extends SpecBase {
   "onPageLoad" - {
+
+    val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+    lazy val view = app.injector.instanceOf[DraftMovementView]
+
+    lazy val testController = new DraftMovementController(
+      messagesApi,
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
+      dataRequiredAction,
+      messagesControllerComponents,
+      view
+    )
+
+    lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
+
     "must render the page" in {
-      val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
-      val application = applicationBuilder(Some(userAnswers)).build()
+      lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-      running(application) {
-        lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
 
-        lazy val result = route(application, request).value
-
-        lazy val view = application.injector.instanceOf[DraftMovementView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual
-          view()(dataRequest(request, userAnswers), messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view()(dataRequest(request, userAnswers), messages(request)).toString
     }
   }
 }

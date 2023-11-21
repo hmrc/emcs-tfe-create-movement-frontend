@@ -31,7 +31,7 @@ object CnCodeInformation {
 
   implicit val reads: Reads[CnCodeInformation] = (
     (JsPath \ "cnCode").read[String] and
-      (JsPath \ "cnCodeDescription").read[String] and
+      (JsPath \ "cnCodeDescription").read[String].map(_.replaceAll("&lsquo;", "'")) and
       (JsPath \ "exciseProductCode").read[String] and
       (JsPath \ "exciseProductCodeDescription").read[String] and
       (JsPath \ "unitOfMeasureCode").read[Int].map(UnitOfMeasure.apply)

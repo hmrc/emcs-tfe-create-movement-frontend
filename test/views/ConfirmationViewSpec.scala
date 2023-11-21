@@ -45,7 +45,13 @@ class ConfirmationViewSpec extends ViewSpecBase with ViewBehaviours {
 
           val view = app.injector.instanceOf[ConfirmationView]
 
-          implicit val doc: Document = Jsoup.parse(view(testConfirmationReference, testSubmissionDate.toLocalDate).toString())
+          implicit val doc: Document = Jsoup.parse(view(
+            testConfirmationReference,
+            testSubmissionDate.toLocalDate,
+            "testUrl1",
+            "testUrl2",
+            "testUrl3"
+          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,

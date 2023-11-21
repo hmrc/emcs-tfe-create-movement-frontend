@@ -30,7 +30,7 @@
         govukSummaryList: GovukSummaryList
 )
 
-@(reference: String, dateOfSubmission: LocalDate)(implicit request: DataRequest[_], messages: Messages)
+@(reference: String, dateOfSubmission: LocalDate, exciseEnquiriesLink: String, returnToAccountLink: String, feedbackLink: String)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("confirmation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
 
@@ -55,12 +55,13 @@
 
     @h2("confirmation.whatHappensNext")
     <p class="govuk-body">@messages("confirmation.p1")</p>
-    <p class="govuk-body">@messages("confirmation.p2.beforeLink") <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/excise-enquiries"> @messages("confirmation.p2.link")</a> @messages("confirmation.p2.afterLink")</p>
+    <p class="govuk-body">@messages("confirmation.p2.beforeLink") <a class="govuk-link" href=@exciseEnquiriesLink> @messages("confirmation.p2.link")</a>
+        @messages("confirmation.p2.afterLink")</p>
     <p class="govuk-body">@messages("confirmation.p3")</p>
     <p class="govuk-body">@messages("confirmation.p4")</p>
 
-    <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href="/emcs-tfe">@messages("confirmation.returnToAccountLink")</a></p>
-    <p class="govuk-body no-print"><a class="govuk-link" href="/feedback/emcstfe/beta">@messages("confirmation.feedbackLink")</a> @messages("confirmation.feedbackText")</p>
+    <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href=@returnToAccountLink>@messages("confirmation.returnToAccountLink")</a></p>
+    <p class="govuk-body no-print"><a class="govuk-link" href=@feedbackLink>@messages("confirmation.feedbackLink")</a> @messages("confirmation.feedbackText")</p>
 }
 
 @{

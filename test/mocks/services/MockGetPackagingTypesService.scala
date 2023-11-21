@@ -16,7 +16,7 @@
 
 package mocks.services
 
-import models.response.referenceData.BulkPackagingType
+import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode
 import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
@@ -33,6 +33,10 @@ trait MockGetPackagingTypesService extends MockFactory {
 
     def getBulkPackagingTypes(): CallHandler2[Seq[ItemBulkPackagingCode], HeaderCarrier, Future[Seq[BulkPackagingType]]] = {
       (mockGetPackagingTypesService.getBulkPackagingTypes(_: Seq[ItemBulkPackagingCode])(_: HeaderCarrier)).expects(*, *)
+    }
+
+    def getItemPackagingTypes(): CallHandler2[Option[Boolean], HeaderCarrier, Future[Seq[ItemPackaging]]] = {
+      (mockGetPackagingTypesService.getItemPackagingTypes(_: Option[Boolean])(_: HeaderCarrier)).expects(*, *)
     }
   }
 }

@@ -17,7 +17,7 @@
 package fixtures
 
 import models.UnitOfMeasure.Kilograms
-import models.response.referenceData.{CnCodeInformation, BulkPackagingType}
+import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import models.sections.items.ItemBulkPackagingCode
@@ -183,5 +183,19 @@ trait BaseFixtures {
     exciseProductCode = testEpcTobacco,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
     unitOfMeasure = Kilograms
+  )
+
+  val testItemPackagingTypes: Seq[ItemPackaging] = Seq(
+    ItemPackaging("AE", "Aerosol"),
+    ItemPackaging("AM", "Ampoule, non protected"),
+    ItemPackaging("BG", "Bag"),
+    ItemPackaging("VA", "Vat")
+  )
+
+  val testItemPackagingTypesJson: JsObject = Json.obj(
+    "AE" -> "Aerosol",
+    "AM" -> "Ampoule, non protected",
+    "BG" -> "Bag",
+    "VA" -> "Vat"
   )
 }

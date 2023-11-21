@@ -18,6 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
+import models.response.referenceData.ItemPackaging
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
@@ -426,18 +427,27 @@ class ItemsNavigatorSpec extends SpecBase {
         }
 
         "to the Packaging Select page" - {
-          //TODO: Redirect to CAM-ITM24
           "when the user answers no and EPC is not wine" in {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(
               goodsType =>
                 navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
                   .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             )
           }
         }
 
+      }
+
+      "must go from the ItemSelectPackagingPage" - {
+        //TODO: Redirect to CAM-ITM25
+        "to the Packaging Quantity page" in {
+          navigator.nextPage(ItemSelectPackagingPage(testIndex1), NormalMode, emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), "W200")
+            .set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
     }
 

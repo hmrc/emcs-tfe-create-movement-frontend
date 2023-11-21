@@ -52,7 +52,7 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request, userAnswers.get), messages).toString
+      contentAsString(result) mustEqual view(form.fill($className$.values.toSet), NormalMode)(dataRequest(request, userAnswers.get), messages).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {

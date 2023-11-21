@@ -45,7 +45,7 @@ class ItemExciseProductCodeFormProviderSpec extends StringFieldBehaviours with B
 
     "not bind when the value provided is not in the excise product code list" in {
       val result = form.bind(Map(fieldName -> "B001")).apply(fieldName)
-      result.errors mustEqual Seq(FormError(fieldName, requiredKey, Seq(Seq())))
+      result.errors mustEqual Seq(FormError(fieldName, requiredKey, Seq()))
     }
   }
 }

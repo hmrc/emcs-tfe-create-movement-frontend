@@ -31,7 +31,15 @@ object CnCodeInformation {
 
   implicit val reads: Reads[CnCodeInformation] = (
     (JsPath \ "cnCode").read[String] and
-      (JsPath \ "cnCodeDescription").read[String].map(_.replaceAll("&lsquo;", "'")) and
+      (JsPath \ "cnCodeDescription").read[String]
+        .map(
+          _
+            // single quotes followed by a space, or the end of the String, or following a letter/number, or &rsquo;
+            .replaceAll("(')(?=\\s|$)|&rsquo;|(?<=[A-Za-z0-9])(')", "’")
+            // leftover &lsquo; or '
+            .replaceAll("&lsquo;|'", "‘")
+        )
+      and
       (JsPath \ "exciseProductCode").read[String] and
       (JsPath \ "exciseProductCodeDescription").read[String] and
       (JsPath \ "unitOfMeasureCode").read[Int].map(UnitOfMeasure.apply)

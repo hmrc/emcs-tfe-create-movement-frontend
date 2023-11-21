@@ -31,14 +31,14 @@ class CnCodeInformationSpec extends SpecBase {
       ).as[CnCodeInformation] mustBe testCommodityCodeTobacco
     }
 
-    "must replace &lsquo; with '" in {
+    "must replace &lsquo;, &rsquo; and ' with smart quotes" in {
       Json.obj(
         "cnCode" -> testCnCodeTobacco,
-        "cnCodeDescription" -> "This is a &lsquo;test'",
+        "cnCodeDescription" -> "This is a &lsquo;test', it's a good 'test&rsquo; and it will be 'tested'",
         "exciseProductCode" -> testEpcTobacco,
         "exciseProductCodeDescription" -> "Cigarettes",
         "unitOfMeasureCode" -> 1
-      ).as[CnCodeInformation] mustBe testCommodityCodeTobacco.copy(cnCodeDescription = "This is a 'test'")
+      ).as[CnCodeInformation] mustBe testCommodityCodeTobacco.copy(cnCodeDescription = "This is a ‘test’, it’s a good ‘test’ and it will be ‘tested’")
     }
   }
 }

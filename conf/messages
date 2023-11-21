@@ -167,7 +167,6 @@ activeTrader.link = Change trader type
 lrn.subHeading = Create movement for {0}
 
 draftMovement.title = Draft movement
-draftMovement.subHeading = Draft movement
 draftMovement.lrn = Local Reference Number (LRN): {0}
 draftMovement.consignee = Consignee: {0}
 draftMovement.notProvided = Not provided
@@ -323,6 +322,7 @@ exportInformation.subHeading = Export information
 importInformation.subHeading = Import information
 documents.subHeading = Documents
 items.subHeading = Item information
+draftMovement.subHeading = Draft movement
 subHeading.hidden = This section is
 
 checkYourAnswersJourneyType.title = Check your answers
@@ -1128,10 +1128,7 @@ itemBulkPackagingSelect.change.hidden = packaging type
 
 declaration.title = Declaration
 declaration.heading = Declaration
-declaration.caption = Draft Movement
-declaration.p1 = By submitting this draft movement you are confirming that:
-declaration.bullet1 = to the best of your knowledge, the details you are providing are correct
-declaration.bullet2 = you understand this movement cannot be recalled or changed after submission
+declaration.content = By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct.
 declaration.submit = Submit draft movement
 
 itemBulkPackagingChoice.title = Is the {0} being moved in bulk?

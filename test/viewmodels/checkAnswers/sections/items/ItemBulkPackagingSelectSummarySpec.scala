@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBulkPackagingSelectMessages
 import models.CheckMode
+import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemBulkPackagingSelectPage
@@ -45,7 +46,7 @@ class ItemBulkPackagingSelectSummarySpec extends SpecBase with Matchers with Ite
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemBulkPackagingSelectSummary.row(testIndex1, bulkPackagingTypes) mustBe None
+            ItemBulkPackagingSelectSummary.row(testIndex1) mustBe None
           }
         }
 
@@ -53,10 +54,10 @@ class ItemBulkPackagingSelectSummarySpec extends SpecBase with Matchers with Ite
 
           "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(),
-              emptyUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkLiquid)
+              emptyUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
             )
 
-            ItemBulkPackagingSelectSummary.row(testIndex1, bulkPackagingTypes) mustBe Some(
+            ItemBulkPackagingSelectSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(HtmlContent("Bulk, liquid (VL)")),

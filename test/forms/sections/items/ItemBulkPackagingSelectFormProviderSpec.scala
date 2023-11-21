@@ -17,18 +17,20 @@
 package forms.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBulkPackagingSelectMessages
 import forms.behaviours.OptionFieldBehaviours
 import models.GoodsTypeModel.Wine
+import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 
-class ItemBulkPackagingSelectFormProviderSpec extends SpecBase with OptionFieldBehaviours {
+class ItemBulkPackagingSelectFormProviderSpec extends SpecBase with OptionFieldBehaviours with ItemFixtures {
 
   implicit val msgs: Messages = messages(Seq(ItemBulkPackagingSelectMessages.English.lang))
 
-  val form = new ItemBulkPackagingSelectFormProvider().apply(Wine)
+  val form: Form[BulkPackagingType] = new ItemBulkPackagingSelectFormProvider().apply(Wine, bulkPackagingTypes)
 
   ".value" - {
 

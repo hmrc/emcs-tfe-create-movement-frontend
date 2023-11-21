@@ -43,7 +43,7 @@ class ItemBulkPackagingSelectViewSpec extends SpecBase with ViewBehaviours with 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[ItemBulkPackagingSelectView]
-        val form = app.injector.instanceOf[ItemBulkPackagingSelectFormProvider].apply(Wine)
+        val form = app.injector.instanceOf[ItemBulkPackagingSelectFormProvider].apply(Wine, bulkPackagingTypes)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, bulkPackagingTypesRadioOptions, Wine).toString())
 

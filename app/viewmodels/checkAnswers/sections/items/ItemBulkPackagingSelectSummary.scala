@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.response.referenceData.BulkPackagingType
 import models.{CheckMode, Index}
 import pages.sections.items.ItemBulkPackagingSelectPage
 import play.api.i18n.Messages
@@ -30,17 +29,14 @@ import viewmodels.implicits._
 
 object ItemBulkPackagingSelectSummary {
 
-  def row(idx: Index, bulkPackagingTypes: Seq[BulkPackagingType])
-         (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
     answers.get(ItemBulkPackagingSelectPage(idx)).map {
       answer =>
 
-        val answerWithDescription = bulkPackagingTypes.find(_.packagingType == answer).get
-
         val value = ValueViewModel(
           HtmlContent(
-            HtmlFormat.escape(s"${answerWithDescription.description} (${answerWithDescription.packagingType.toString})")
+            HtmlFormat.escape(s"${answer.description} (${answer.packagingType.toString})")
           )
         )
 

@@ -35,25 +35,28 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemBulkPackagingSelectController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemBulkPackagingSelectFormProvider,
-                                       getPackagingTypesService: GetPackagingTypesService,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemBulkPackagingSelectView,
-                                       override val cnCodeInformationService: GetCnCodeInformationService
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val userAllowList: UserAllowListAction,
+                                                   override val navigator: ItemsNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   formProvider: ItemBulkPackagingSelectFormProvider,
+                                                   getPackagingTypesService: GetPackagingTypesService,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: ItemBulkPackagingSelectView,
+                                                   override val cnCodeInformationService: GetCnCodeInformationService
+                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
         withGoodsTypeAsync(idx) { goodsType =>
-          renderView(Ok, fillForm(ItemBulkPackagingSelectPage(idx), formProvider(goodsType)), idx, goodsType, mode)
+          getPackagingTypesService.getBulkPackagingTypes(ItemBulkPackagingCode.values).flatMap { bulkPackagingTypes =>
+            renderView(Ok, fillForm(ItemBulkPackagingSelectPage(idx), formProvider(goodsType, bulkPackagingTypes)), idx,
+              goodsType, bulkPackagingTypes, mode)
+          }
         }
       }
     }
@@ -62,26 +65,24 @@ class ItemBulkPackagingSelectController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
         withGoodsTypeAsync(idx) { goodsType =>
-          formProvider(goodsType).bindFromRequest().fold(
-            renderView(BadRequest, _, idx, goodsType, mode),
-            saveAndRedirect(ItemBulkPackagingSelectPage(idx), _, mode)
-          )
+          getPackagingTypesService.getBulkPackagingTypes(ItemBulkPackagingCode.values).flatMap { bulkPackagingTypes =>
+            formProvider(goodsType, bulkPackagingTypes).bindFromRequest().fold(
+              renderView(BadRequest, _, idx, goodsType, bulkPackagingTypes, mode),
+              saveAndRedirect(ItemBulkPackagingSelectPage(idx), _, mode)
+            )
+          }
         }
       }
     }
 
-  private def renderView(status: Status, form: Form[_], idx: Index, goodsType: GoodsType, mode: Mode)
+  private def renderView(status: Status, form: Form[_], idx: Index, goodsType: GoodsType, bulkPackagingTypes: Seq[BulkPackagingType], mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
-    getPackagingTypesService.getBulkPackagingTypes(ItemBulkPackagingCode.values).flatMap {
-      packagingTypes => {
-        val radioOptions = BulkPackagingType.options(packagingTypes)
-        Future.successful(status(view(
-          form = form,
-          action = routes.ItemBulkPackagingSelectController.onSubmit(request.ern, request.draftId, idx, mode),
-          options = radioOptions,
-          goodsType = goodsType
-        )))
-      }
-    }
+    val radioOptions = BulkPackagingType.options(bulkPackagingTypes)
+    Future.successful(status(view(
+      form = form,
+      action = routes.ItemBulkPackagingSelectController.onSubmit(request.ern, request.draftId, idx, mode),
+      options = radioOptions,
+      goodsType = goodsType
+    )))
   }
 }

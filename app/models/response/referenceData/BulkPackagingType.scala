@@ -24,6 +24,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 case class BulkPackagingType(packagingType: ItemBulkPackagingCode, description: String)
 
 object BulkPackagingType {
+  implicit val format: Format[BulkPackagingType] = Json.format[BulkPackagingType]
+
   implicit val seqReads: Reads[Seq[BulkPackagingType]] = {
     case JsObject(underlying) => JsSuccess(underlying.map {
       case (key, value) => BulkPackagingType(JsString(key).as[ItemBulkPackagingCode], value.as[String])

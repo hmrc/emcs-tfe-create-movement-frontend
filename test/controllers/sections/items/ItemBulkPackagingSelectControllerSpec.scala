@@ -22,7 +22,7 @@ import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingSelectFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockGetPackagingTypesService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
-import models.sections.items.ItemBulkPackagingCode
+import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -44,7 +44,7 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   lazy val formProvider = new ItemBulkPackagingSelectFormProvider()
-  lazy val form: Form[ItemBulkPackagingCode] = formProvider.apply(Wine)(messages(request))
+  lazy val form: Form[BulkPackagingType] = formProvider.apply(Wine, bulkPackagingTypes)(messages(request))
   lazy val view: ItemBulkPackagingSelectView = app.injector.instanceOf[ItemBulkPackagingSelectView]
 
   val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
@@ -106,22 +106,22 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(
-      Some(baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkLiquid))
+      Some(baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid")))
     ) {
 
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(BulkLiquid), submitRoute,
+      contentAsString(result) mustEqual view(form.fill(BulkPackagingType(BulkLiquid, "Bulk, liquid")), submitRoute,
         bulkPackagingTypesRadioOptions, Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(callsService = false) {
+    "must redirect to the next page when valid data is submitted" in new Test() {
 
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkLiquid)
+        baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
       ).returns(
-        Future.successful(baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkLiquid))
+        Future.successful(baseUserAnswers.set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid")))
       )
 
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(

@@ -18,6 +18,7 @@ package forms.sections.items
 
 import forms.mappings.Mappings
 import models.GoodsTypeModel.GoodsType
+import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
 import play.api.data.Form
 import play.api.i18n.Messages
@@ -26,9 +27,10 @@ import javax.inject.Inject
 
 class ItemBulkPackagingSelectFormProvider @Inject() extends Mappings {
 
-  def apply(goodsType: GoodsType)
-           (implicit message: Messages): Form[ItemBulkPackagingCode] =
+  def apply(goodsType: GoodsType, bulkPackagingTypes: Seq[BulkPackagingType])
+           (implicit message: Messages): Form[BulkPackagingType] =
     Form(
       "value" -> enumerable[ItemBulkPackagingCode]("itemBulkPackagingSelect.error.required", args = Seq(goodsType.toSingularOutput()))
+        .transform[BulkPackagingType](code => bulkPackagingTypes.find(_.packagingType == code).get, _.packagingType)
     )
 }

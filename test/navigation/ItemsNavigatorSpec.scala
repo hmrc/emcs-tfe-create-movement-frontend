@@ -188,15 +188,14 @@ class ItemsNavigatorSpec extends SpecBase {
 
         "when GoodsType is Spirits" - {
 
-          //TODO: Redirect to CAM-ITM08
-          "to the Under Construction Page" in {
+          "to the Item Maturation Period Age Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
               .set(ItemExciseProductCodePage(testIndex1), "S100")
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
           }
         }
 
@@ -280,6 +279,15 @@ class ItemsNavigatorSpec extends SpecBase {
             navigator.nextPage(ItemDegreesPlatoPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemQuantityController.onPageLoad(testNorthernIrelandErn, testDraftId, testIndex1, NormalMode)
           }
+        }
+      }
+
+      "must go from the Item Maturation Period Age page" - {
+
+        "to the Geographical Indication Choice Page" in {
+
+          navigator.nextPage(ItemMaturationPeriodAgePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 

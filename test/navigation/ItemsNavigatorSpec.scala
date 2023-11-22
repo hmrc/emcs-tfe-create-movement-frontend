@@ -542,6 +542,15 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
+      "must go from the ItemWineGrowingZonePage" - {
+
+        "to the Wine More Information Choice page" in {
+
+          navigator.nextPage(ItemWineGrowingZonePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
       "must go from the ItemWineMoreInformationChoicePage" - {
         "to the Wine More Information page" - {
           "when the user answers yes" in {

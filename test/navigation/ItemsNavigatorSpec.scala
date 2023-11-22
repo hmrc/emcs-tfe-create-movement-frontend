@@ -514,14 +514,13 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
-        //TODO: Redirect to CAM-ITM24
         "to the Select Packaging page" - {
           "when the user answers no and the item is not classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 

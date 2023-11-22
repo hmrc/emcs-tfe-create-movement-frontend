@@ -49,7 +49,7 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.p(1) -> messagesForLanguage.content,
+            Selectors.p(1) -> messagesForLanguage.content
           ))
         }
       }

@@ -116,8 +116,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           //TODO: redirect to CAM-ITM18
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case (Some(false), Some(false)) =>
-          //TODO: redirect to CAM-ITM24
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case (Some(false), Some(true)) =>
           //TODO: redirect to CAM-ITM28
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()

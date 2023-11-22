@@ -33,6 +33,7 @@ trait BaseMessages { _: i18n =>
   val sadSection: String = "Single Administrative Document"
   val documentsSection: String = s"$hiddenSectionContent Documents"
   val itemSection: String = s"$hiddenSectionContent Item information"
+  val draftMovementSection: String = s"$hiddenSectionContent Draft movement"
 
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"

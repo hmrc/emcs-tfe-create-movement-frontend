@@ -1145,3 +1145,7 @@ itemBulkPackagingChoice.hint = Moving goods in bulk means that the goods are loa
 itemBulkPackagingChoice.checkYourAnswersLabel = Bulk packaging
 itemBulkPackagingChoice.error.required = Select yes if the {0} is being moved in bulk
 itemBulkPackagingChoice.change.hidden = bulk packaging
+
+itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?
+itemWineMoreInformationChoice.heading = Do you want to give any more information about the wine?
+itemWineMoreInformationChoice.error.required = Select yes if you would like to give more information about the wine

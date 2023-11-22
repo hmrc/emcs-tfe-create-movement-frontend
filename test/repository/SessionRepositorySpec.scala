@@ -18,13 +18,14 @@ package repository
 
 import base.SpecBase
 import models.UserAnswers
+import org.scalatest.concurrent.IntegrationPatience
 import pages.sections.info.DeferredMovementPage
 import repositories.SessionRepositoryImpl
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, PlayMongoRepositorySupport}
 
 import scala.concurrent.ExecutionContext
 
-class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[UserAnswers] with CleanMongoCollectionSupport {
+class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[UserAnswers] with CleanMongoCollectionSupport with IntegrationPatience {
 
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 

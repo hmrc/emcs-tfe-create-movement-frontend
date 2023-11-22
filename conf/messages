@@ -951,9 +951,9 @@ itemExciseProductCode.select.defaultValue = Choose Excise Product Code
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?
 itemBrandName.label = Brand name
-itemBrandName.error.radio.required = Select yes if you know the brand name
 itemBrandName.checkYourAnswersLabel = Brand name
 itemBrandName.change.hidden = if goods are branded
+itemBrandName.error.radio.required = Select yes if you know the brand name
 itemBrandName.error.brandName.required = Enter a brand name between 1 and {0} characters
 itemBrandName.error.brandName.length = Brand name must be {0} characters or less
 itemBrandName.error.brandName.invalid = Brand name must not include < and > and : and ;
@@ -1149,3 +1149,15 @@ itemBulkPackagingChoice.change.hidden = bulk packaging
 itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?
 itemWineMoreInformationChoice.heading = Do you want to give any more information about the wine?
 itemWineMoreInformationChoice.error.required = Select yes if you would like to give more information about the wine
+
+itemMaturationPeriodAge.title = Do you know the maturation age of the {0}?
+itemMaturationPeriodAge.heading = Do you know the maturation age of the {0}?
+itemMaturationPeriodAge.hint = The maturation age refers to a production process that happens before bottling. It can usually be found in the description, presentation and labelling of the goods.
+itemMaturationPeriodAge.label = Enter the maturation age
+itemMaturationPeriodAge.error.radio.required = Select 'yes' if you know the maturation age of the {0}
+itemMaturationPeriodAge.error.maturationPeriodAge.required = Field cannot be blank
+itemMaturationPeriodAge.error.maturationPeriodAge.length = Enter the maturation age in {0} characters or less
+itemMaturationPeriodAge.error.maturationPeriodAge.invalid = Maturation age must not contain < and > and : and ;
+#TODO: No Design exists for this yet, to be confirmed and updated
+itemMaturationPeriodAge.checkYourAnswersLabel = Maturation age
+itemMaturationPeriodAge.change.hidden = the maturation age

@@ -42,6 +42,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
       commercialDescriptionRouting(idx, userAnswers)
 
+    case ItemMaturationPeriodAgePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
     case ItemGeographicalIndicationChoicePage(idx) => (userAnswers: UserAnswers) =>
       geographicalIndicationChoiceRouting(idx, userAnswers)
 
@@ -162,8 +165,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
           case Spirits =>
-            //TODO: Redirect to CAM-ITM08
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
             itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }

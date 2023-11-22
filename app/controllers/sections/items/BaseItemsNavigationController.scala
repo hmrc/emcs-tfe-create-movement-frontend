@@ -23,7 +23,7 @@ import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, Index}
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.mvc.Result
-import queries.ItemsCount
+import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
 
 import scala.concurrent.Future
@@ -43,6 +43,20 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     super.validateIndex(ItemsCount, index)(
       onSuccess,
       Future.successful(Redirect(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    )
+  }
+
+  def validatePackagingIndex(itemsIndex: Index, packagingIndex: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
+    super.validateIndex(ItemsPackagingCount(itemsIndex), packagingIndex)(
+      onSuccess,
+      Redirect(controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIndex))
+    )
+  }
+
+  def validatePackagingIndexAsync(itemsIndex: Index, packagingIndex: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    super.validateIndex(ItemsPackagingCount(itemsIndex), packagingIndex)(
+      onSuccess,
+      Future.successful(Redirect(controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIndex)))
     )
   }
 

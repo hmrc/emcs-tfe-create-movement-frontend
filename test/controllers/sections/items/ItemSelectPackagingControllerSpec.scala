@@ -45,7 +45,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
   val formProvider = new ItemSelectPackagingFormProvider()
   lazy val view: ItemSelectPackagingView = app.injector.instanceOf[ItemSelectPackagingView]
 
-  val action: Call = controllers.sections.items.routes.ItemSelectPackagingController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
+  val action: Call = controllers.sections.items.routes.ItemSelectPackagingController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
 
@@ -80,22 +80,36 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
   "ItemSelectPackaging Controller" - {
 
-    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Test(Some(baseUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
+    "must redirect to Index of section when the packaging idx is outside of bounds for a GET" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when the packaging idx is outside of bounds for a POST" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "AE")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when the item idx is outside of bounds for a GET" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Test(Some(baseUserAnswers)) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "AE")))
+    "must redirect to Index of section when the item idx is outside of bounds for a POST" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "AE")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when Excise Product Code is missing" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
@@ -103,14 +117,14 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
     "must return OK and the correct view for a GET" in new Test(Some(baseUserAnswers), callsService = true) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      baseUserAnswers.set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+      baseUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
     ), callsService = true) {
 
       val sampleEPCsSelectOptionsWithAerosolSelected: Seq[SelectItem] = SelectItemHelper.constructSelectItems(
@@ -118,7 +132,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
         defaultTextMessageKey = "itemSelectPackaging.select.defaultValue",
         existingAnswer = Some("AE"))(messages(request))
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(ItemPackaging("AE", "Aerosol")), action, sampleEPCsSelectOptionsWithAerosolSelected,
@@ -128,12 +142,12 @@ class ItemSelectPackagingControllerSpec extends SpecBase
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers), callsService = true) {
 
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+        baseUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
       ).returns(Future.successful(
-        baseUserAnswers.set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+        baseUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
       ))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "AE")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "AE")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -142,7 +156,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers), callsService = true) {
       val boundForm = form.bind(Map("packaging" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "")))
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, action, sampleEPCsSelectOptions,
         Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
@@ -150,14 +164,14 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("packaging", "AE")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "AE")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

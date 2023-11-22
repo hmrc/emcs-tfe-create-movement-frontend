@@ -17,11 +17,19 @@
 package pages.sections.items
 
 import models.Index
-import models.response.referenceData.ItemPackaging
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.requests.DataRequest
+import pages.sections.Section
+import play.api.libs.json.{JsObject, JsPath}
+import viewmodels.taskList.{NotStarted, TaskListStatus}
 
-case class ItemSelectPackagingPage(itemsIndex: Index, itemsPackagingIndex: Index) extends QuestionPage[ItemPackaging] {
-  override val toString: String = "itemSelectPackaging"
-  override val path: JsPath = ItemsPackagingSectionItems(itemsIndex, itemsPackagingIndex).path \ toString
+case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
+  override val path: JsPath = JsPath \ "items" \ itemIndex.position \ "packaging"
+  val MAX: Int = 99
+
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    // TODO: Update when CAM-ITM36 is built
+    NotStarted
+  }
+
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

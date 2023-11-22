@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package queries
 
 import models.Index
-import models.response.referenceData.ItemPackaging
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.items.ItemsPackagingSection
+import play.api.libs.json.{JsPath, JsValue}
 
-case class ItemSelectPackagingPage(itemsIndex: Index, itemsPackagingIndex: Index) extends QuestionPage[ItemPackaging] {
-  override val toString: String = "itemSelectPackaging"
-  override val path: JsPath = ItemsPackagingSectionItems(itemsIndex, itemsPackagingIndex).path \ toString
+case class ItemsPackagingCount(idx: Index) extends Derivable[List[JsValue], Int] {
+  override val derive: List[JsValue] => Int = _.size
+  override val path: JsPath = ItemsPackagingSection(idx).path
 }

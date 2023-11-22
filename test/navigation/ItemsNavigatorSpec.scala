@@ -426,14 +426,14 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
-        "to the Packaging Select page" - {
+        "to the Packaging Select (Items Packaging Index) page" - {
           "when the user answers no and EPC is not wine" in {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(
               goodsType =>
                 navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
                   .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+                ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
             )
           }
         }
@@ -495,9 +495,9 @@ class ItemsNavigatorSpec extends SpecBase {
       "must go from the ItemSelectPackagingPage" - {
         //TODO: Redirect to CAM-ITM25
         "to the Packaging Quantity page" in {
-          navigator.nextPage(ItemSelectPackagingPage(testIndex1), NormalMode, emptyUserAnswers
+          navigator.nextPage(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), "W200")
-            .set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
 
@@ -514,13 +514,13 @@ class ItemsNavigatorSpec extends SpecBase {
           }
         }
 
-        "to the Select Packaging page" - {
+        "to the Select Packaging (Items Packaging Index) page" - {
           "when the user answers no and the item is not classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
 

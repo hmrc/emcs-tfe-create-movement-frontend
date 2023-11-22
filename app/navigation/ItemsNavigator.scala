@@ -102,11 +102,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               //TODO: Redirect to CAM-ITM15
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
             case _ =>
-              itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+              itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
           }
       }
 
-    case ItemSelectPackagingPage(idx) => (_: UserAnswers) =>
+    case ItemSelectPackagingPage(itemsIndex, itemsPackagingIndex) => (_: UserAnswers) =>
       //TODO: Redirect to CAM-ITM25
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
@@ -116,7 +116,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           //TODO: redirect to CAM-ITM18
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case (Some(false), Some(false)) =>
-          itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
         case (Some(false), Some(true)) =>
           //TODO: redirect to CAM-ITM28
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()

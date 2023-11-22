@@ -26,9 +26,9 @@ import viewmodels.implicits._
 
 object ItemSelectPackagingSummary  {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
-    answers.get(ItemSelectPackagingPage(idx)).map {
+    answers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)).map {
       answer =>
 
         SummaryListRowViewModel(
@@ -37,8 +37,8 @@ object ItemSelectPackagingSummary  {
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"changeItemSelectPackaging${idx.displayIndex}"
+              href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
+              id = s"changeItemSelectPackaging${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemSelectPackaging.change.hidden"))
           )
         )

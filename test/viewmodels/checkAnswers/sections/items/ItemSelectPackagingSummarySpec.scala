@@ -42,7 +42,7 @@ class ItemSelectPackagingSummarySpec extends SpecBase with Matchers {
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemSelectPackagingSummary.row(testIndex1) mustBe None
+            ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe None
           }
         }
 
@@ -50,18 +50,19 @@ class ItemSelectPackagingSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(),
-              emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1), ItemPackaging("AE", "Aerosol"))
+              emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
             )
 
-            ItemSelectPackagingSummary.row(testIndex1) mustBe Some(
+            ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = ValueViewModel("Aerosol"),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemSelectPackaging1"
+                    href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1,
+                      testPackagingIndex1, CheckMode).url,
+                    id = "changeItemSelectPackaging1ForItem1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )

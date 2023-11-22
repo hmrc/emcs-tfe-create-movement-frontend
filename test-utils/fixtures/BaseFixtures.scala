@@ -45,6 +45,8 @@ trait BaseFixtures {
   val testBusinessName: String = "testName"
   val testIndex1: Index = Index(0)
   val testIndex2: Index = Index(1)
+  val testPackagingIndex1: Index = testIndex1
+  val testPackagingIndex2: Index = testIndex2
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
   val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))

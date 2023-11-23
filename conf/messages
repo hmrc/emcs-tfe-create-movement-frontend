@@ -1142,6 +1142,18 @@ itemBulkPackagingChoice.checkYourAnswersLabel = Bulk packaging
 itemBulkPackagingChoice.error.required = Select yes if the {0} is being moved in bulk
 itemBulkPackagingChoice.change.hidden = bulk packaging
 
+itemPackagingShippingMarks.title = What shipping marks are on this packaging?
+itemPackagingShippingMarks.heading = What shipping marks are on this packaging?
+itemPackagingShippingMarks.p = Enter any marks or numbers on the packaging that will help to identify it. Use the same shipping marks for any other product types contained within this package that are entered as a separate item.
+itemPackagingShippingMarks.p2 = The packaging type is: {0}.
+itemPackagingShippingMarks.link = This packaging has no shipping marks
+itemPackagingShippingMarks.checkYourAnswersLabel = Shipping mark description
+itemPackagingShippingMarks.error.required = Enter details of the shipping marks
+itemPackagingShippingMarks.error.length = Shipping marks details must be 999 characters or less
+itemPackagingShippingMarks.error.character = Description must contain letters and numbers
+itemPackagingShippingMarks.error.invalid = Description cannot contain < and > and : and ;
+itemPackagingShippingMarks.change.hidden = shipping mark description
+
 itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?
 itemWineMoreInformationChoice.heading = Do you want to give any more information about the wine?
 itemWineMoreInformationChoice.error.required = Select yes if you would like to give more information about the wine

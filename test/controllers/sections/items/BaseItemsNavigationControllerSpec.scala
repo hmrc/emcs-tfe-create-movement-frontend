@@ -21,10 +21,10 @@ import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.{CnCodeInformationItem, DataRequest}
-import models.response.referenceData.CnCodeInformation
+import models.response.referenceData.{CnCodeInformation, ItemPackaging}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemSelectPackagingPage}
 import play.api.mvc.{MessagesControllerComponents, Result, Results}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -48,19 +48,56 @@ class BaseItemsNavigationControllerSpec extends SpecBase
       override protected def controllerComponents: MessagesControllerComponents = Helpers.stubMessagesControllerComponents()
     }
 
-    val successFunction: CnCodeInformation => Result = _ => Results.Ok
+    val cnCodeSuccessFunction: CnCodeInformation => Result = _ => Results.Ok
+    val itemPackagingSuccessFunction: String => Future[Result] = _ => Future.successful(Results.Ok)
+  }
+
+  "withItemPackaging" - {
+    "must return the item packaging description when both the item and packaging indexes are valid" in new Test(
+      emptyUserAnswers
+        .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
+    ) {
+      val result: Future[Result] = controller.withItemPackaging(testIndex1, testPackagingIndex1)(itemPackagingSuccessFunction)
+
+      status(result) mustBe OK
+    }
+
+    "must redirect to the packaging index" - {
+      "when the item index is invalid" in new Test(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
+      ) {
+        val result: Future[Result] = controller.withItemPackaging(testIndex2, testPackagingIndex1)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, testIndex2).url
+      }
+
+      "when the packaging index is invalid" in new Test(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BG", "Bag"))
+      ) {
+        val result: Future[Result] = controller.withItemPackaging(testIndex1, testPackagingIndex2)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, testIndex1).url
+      }
+    }
   }
 
   "withCnCodeInformation" - {
     "must redirect to the index controller" - {
       "when EPC is missing" in new Test(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)) {
-        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(successFunction)
+        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
       "when CN Code is missing" in new Test(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)) {
-        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(successFunction)
+        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
@@ -76,7 +113,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
           .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
           .returns(Future.successful(Nil))
 
-        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(successFunction)
+        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -94,7 +131,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
           .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
           .returns(Future.successful(Seq(item -> testCommodityCodeTobacco)))
 
-        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(successFunction)
+        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe OK
       }
@@ -112,7 +149,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
             item -> testCommodityCodeWine
           )))
 
-        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(successFunction)
+        val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)
 
         status(result) mustBe OK
       }

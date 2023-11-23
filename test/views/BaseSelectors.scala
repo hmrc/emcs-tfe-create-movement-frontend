@@ -25,6 +25,7 @@ trait BaseSelectors {
   val hiddenText = s".govuk-visually-hidden"
   def h3(i: Int) = s"main h3:nth-of-type($i)"
   val p: Int => String = i => s"main p:nth-of-type($i)"
+  val strong: Int => String = i => s"main span.govuk-\\!-font-weight-bold:nth-of-type($i)"
   val link: Int => String = i => s"main a:nth-of-type($i)"
   def bullet(i: Int, ul: Int = 1) = s"main ul.govuk-list--bullet:nth-of-type($ul) li:nth-of-type($i)"
   val hint: String = "main .govuk-hint"

@@ -23,7 +23,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
 import java.time.temporal.ChronoUnit
-import java.time.{Instant, LocalDate, LocalTime}
+import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 
 trait BaseFixtures {
 
@@ -38,6 +38,7 @@ trait BaseFixtures {
   val testVatNumber: String = "123456789"
   val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
+  val testSubmissionDate: LocalDateTime = LocalDateTime.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
   val testOnwardRoute: Call = Call("GET", "/foo")
   val testId: String = "123"

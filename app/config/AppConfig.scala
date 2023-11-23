@@ -55,6 +55,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
   lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
+  lazy val exciseGuidance: String = configuration.get[String]("urls.exciseGuidance")
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")

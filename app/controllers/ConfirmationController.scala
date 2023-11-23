@@ -16,9 +16,10 @@
 
 package controllers
 
-import config.SessionKeys.SUBMISSION_RECEIPT_REFERENCE
+import config.AppConfig
 import controllers.actions._
-import handlers.ErrorHandler
+import pages.DeclarationPage
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,18 +35,24 @@ class ConfirmationController @Inject()(
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: ConfirmationView,
-                                        errorHandler: ErrorHandler
+                                        config: AppConfig,
+                                        view: ConfirmationView
                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      request.session.get(SUBMISSION_RECEIPT_REFERENCE) match {
-        case Some(reference) =>
-          Ok(view(reference))
-        case None =>
-          logger.warn("[onPageLoad] Could not retrieve submission receipt reference from Users session")
-          BadRequest(errorHandler.badRequestTemplate)
+      (request.userAnswers.get(LocalReferenceNumberPage()), request.userAnswers.get(DeclarationPage)) match {
+        case (Some(submissionReference), Some(submissionTimestamp)) =>
+          Ok(view(
+            reference = submissionReference,
+            dateOfSubmission = submissionTimestamp.toLocalDate,
+            exciseEnquiriesLink = config.exciseGuidance,
+            returnToAccountLink = config.emcsTfeHomeUrl,
+            feedbackLink = config.feedbackFrontendSurveyUrl
+          ))
+        case _ =>
+          logger.warn("[onPageLoad] Could not retrieve submission receipt reference or submission timestamp from user answers")
+          Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
     }
 }

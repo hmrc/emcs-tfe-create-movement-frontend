@@ -16,27 +16,67 @@
 
 @import config.AppConfig
 @import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import java.time.LocalDate
+@import java.time.format.DateTimeFormatter
 
 @this(
         layout: templates.Layout,
         confirmationPanel: components.confirmationPanel,
         p: components.p,
-        strong: components.strong,
         link: components.link,
-        appConfig: AppConfig
+        h2: components.h2,
+        appConfig: AppConfig,
+        govukSummaryList: GovukSummaryList
 )
 
-@(reference: String)(implicit request: DataRequest[_], messages: Messages)
+@(reference: String, dateOfSubmission: LocalDate, exciseEnquiriesLink: String, returnToAccountLink: String, feedbackLink: String)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("confirmation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
 
     @confirmationPanel("confirmation.heading")
 
-    @p() {
-        @messages("confirmation.reference")
-        @strong {
-            @reference
-        }
+    @h2("confirmation.movementInformation")
+
+    @govukSummaryList(SummaryList(
+        rows = Seq(
+            SummaryListRow(
+                key = Key(Text(messages("confirmation.localReferenceNumber"))),
+                value = Value(Text(reference))
+            ),
+            SummaryListRow(
+                key = Key(Text(messages("confirmation.dateOfSubmission"))),
+                value = Value(Text(dateOfSubmission.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))))
+            )
+        )
+    ))
+
+    <p class="govuk-body no-print"><a class="govuk-link" href="javascript:if(window.print)window.print()" id="print-page">@messages("confirmation.printLink")</a> @messages("confirmation.printMessage")</p>
+
+    @h2("confirmation.whatHappensNext")
+    <p class="govuk-body">@messages("confirmation.p1")</p>
+    <p class="govuk-body">
+        @messages("confirmation.p2.beforeLink")
+        @link(
+            exciseEnquiriesLink,
+            "confirmation.p2.link",
+            opensInNewTab = true,
+            id = Some("contactHmrc")
+        )
+        @messages("confirmation.p2.afterLink")
+    </p>
+    <p class="govuk-body">@messages("confirmation.p3")</p>
+    <p class="govuk-body">@messages("confirmation.p4")</p>
+
+    <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href=@returnToAccountLink>@messages("confirmation.returnToAccountLink")</a></p>
+    @p(classes = "govuk-body no-print") {
+        @link(
+            feedbackLink,
+            "confirmation.feedbackLink",
+            opensInNewTab = true,
+            id = Some("feedbackSurvey")
+        )
+        @messages("confirmation.feedbackText")
     }
 }
 

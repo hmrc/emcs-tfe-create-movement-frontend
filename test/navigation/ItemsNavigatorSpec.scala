@@ -501,14 +501,20 @@ class ItemsNavigatorSpec extends SpecBase {
       }
 
       "must go from the ItemSelectPackagingPage" - {
-        //TODO: Redirect to CAM-ITM25
         "to the Packaging Quantity page" in {
           navigator.nextPage(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), "W200")
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+          ) mustBe itemsRoutes.ItemPackagingQuantityController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
+        }
+      }
+
+      "must go from the ItemPackagingQuantityPage" - {
+        "to the Packaging Product Type page" in {
+          navigator.nextPage(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
-
       }
 
       "must go from the ItemWineMoreInformationChoicePage" - {

@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import config.AppConfig
-import controllers.actions.{DataRetrievalAction, FakeDataRetrievalAction}
+import controllers.actions.FakeDataRetrievalAction
 import models.UserAnswers
 import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory

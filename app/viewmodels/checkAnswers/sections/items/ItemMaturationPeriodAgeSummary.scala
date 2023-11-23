@@ -21,7 +21,6 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemMaturationPeriodAgePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

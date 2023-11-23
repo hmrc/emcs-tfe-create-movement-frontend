@@ -1216,3 +1216,12 @@ itemProducerSize.error.nonNumeric = Amount must only contain numbers
 itemProducerSize.error.outOfRange = Enter an amount between 1 and 15 digits
 itemProducerSize.checkYourAnswersLabel = Size of producer
 itemProducerSize.change.hidden = Size of producer
+
+itemWineMoreInformation.title = Give more information about the wine (optional)
+itemWineMoreInformation.heading = Give more information about the wine (optional)
+itemWineMoreInformation.error.length = Information must be {0} characters or less
+itemWineMoreInformation.error.alphanumeric = Information must contain letters and numbers
+itemWineMoreInformation.error.invalidCharacter = Information must not contain < and > and : and ;
+itemWineMoreInformation.checkYourAnswers.label = Wine more information
+itemWineMoreInformation.checkYourAnswers.change.hidden = wine more information
+itemWineMoreInformation.checkYourAnswers.addMoreInformation = Enter more information about wine product (optional)

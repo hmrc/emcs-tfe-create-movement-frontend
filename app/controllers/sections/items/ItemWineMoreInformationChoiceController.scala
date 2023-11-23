@@ -19,9 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemWineMoreInformationChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemWineMoreInformationChoicePage
+import pages.sections.items.{ItemWineMoreInformationChoicePage, ItemWineMoreInformationPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -59,7 +59,7 @@ class ItemWineMoreInformationChoiceController @Inject()(
         withGoodsTypeAsync(idx) { _ =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode),
-            saveAndRedirect(ItemWineMoreInformationChoicePage(idx), _, mode)
+            answer => saveAndRedirect(ItemWineMoreInformationChoicePage(idx), answer, cleanseFunction(idx, answer), mode)
           )
         }
       }
@@ -70,4 +70,9 @@ class ItemWineMoreInformationChoiceController @Inject()(
       form = form,
       action = routes.ItemWineMoreInformationChoiceController.onSubmit(request.ern, request.draftId, idx, mode)
     )))
+
+  private def cleanseFunction(idx: Index, hasMoreInformation: Boolean)(implicit request: DataRequest[_]): UserAnswers =
+    if (hasMoreInformation) request.userAnswers else {
+      request.userAnswers.remove(ItemWineMoreInformationPage(idx))
+    }
 }

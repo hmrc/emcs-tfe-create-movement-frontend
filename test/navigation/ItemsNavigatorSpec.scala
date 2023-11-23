@@ -533,10 +533,12 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingQuantityPage" - {
+
         "to the Packaging Product Type page" in {
+
           navigator.nextPage(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            .set(ItemPackagingQuantityPage(0, 0), "1")
+          ) mustBe itemsRoutes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
         }
       }
 

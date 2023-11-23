@@ -116,22 +116,22 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           }
       }
 
-    case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>
-      (userAnswers: UserAnswers) => userAnswers.get(ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex)) match {
-        case Some(PackagingProductTypeYes) => //TODO: Redirect to CAM-ITM27
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        case Some(PackagingProductTypeNo) => //TODO: Redirect to CAM-ITM28
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        case _ =>
-          itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
-    }
-
     case ItemSelectPackagingPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
     case ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
-      //TODO: redirect to CAM-ITM26
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      itemsRoutes.ItemPackagingProductTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+
+    case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>
+      (userAnswers: UserAnswers) =>
+        userAnswers.get(ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex)) match {
+          case Some(PackagingProductTypeYes) => //TODO: Redirect to CAM-ITM27
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(PackagingProductTypeNo) => //TODO: Redirect to CAM-ITM28
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
+        }
 
     case ItemWineGrowingZonePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)

@@ -24,7 +24,7 @@ import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.sections.items.PackagingProductType
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingSelectPage, ItemPackagingProductTypePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingProductTypePage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}

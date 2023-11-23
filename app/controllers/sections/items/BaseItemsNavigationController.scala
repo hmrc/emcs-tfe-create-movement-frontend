@@ -21,7 +21,7 @@ import models.GoodsTypeModel.GoodsType
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
 import models.{GoodsTypeModel, Index}
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemSelectPackagingPage}
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
@@ -74,6 +74,14 @@ trait BaseItemsNavigationController extends BaseNavigationController {
         f(GoodsTypeModel.apply(epc))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+
+  def withItemPackaging(itemIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)) match {
+      case Some(itemPackaging) =>
+        f(itemPackaging.description)
+      case None =>
+        Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemIdx)))
     }
 
   def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {

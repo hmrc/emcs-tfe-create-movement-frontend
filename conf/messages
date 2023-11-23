@@ -978,7 +978,7 @@ itemCommodityCode.checkYourAnswersLabel = Choose the commodity code for the {0}
 itemCommodityCode.error.required = Choose a commodity code
 itemCommodityCode.change.hidden = ItemCommodityCode
 itemCommodityCode.hint.text = You can use the Trade Tariff tool to
-itemCommodityCode.hint.link = look up a commodity code (opens in new tab)
+itemCommodityCode.hint.link = look up a commodity code
 itemCommodityCode.defaultItem = Choose commodity code
 
 itemQuantity.title = How much {0} are you moving?

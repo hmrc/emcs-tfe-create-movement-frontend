@@ -1249,6 +1249,15 @@ itemPackagingSealChoice.checkYourAnswersLabel = Commercial seal
 itemPackagingSealChoice.error.required = Select yes if there is a commercial seal on the packaging
 itemPackagingSealChoice.change.hidden = commercial seal
 
+itemPackagingProductType.title = Is this the only product type in the package?
+itemPackagingProductType.heading = Is this the only product type in the package?
+itemPackagingProductType.p = The packaging type is: {0}.
+itemPackagingProductType.yes = Yes
+itemPackagingProductType.no = No - the packaging contains more than one product type, required to be entered as separate items in this movement
+itemPackagingProductType.error.required = Select yes if there is only one product type in the package
+itemPackagingProductType.checkYourAnswersLabel = Contains one product type
+itemPackagingProductType.change.hidden = Contains one product type
+
 itemRemoveItem.title = Are you sure you want to remove this item?
 itemRemoveItem.heading = Are you sure you want to remove this item?
 itemRemoveItem.error.required = Select yes if you would like to remove the item

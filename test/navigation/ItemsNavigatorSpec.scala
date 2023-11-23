@@ -23,6 +23,7 @@ import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
+import models.sections.items.PackagingProductType.{PackagingProductTypeNo, PackagingProductTypeYes}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
@@ -536,6 +537,31 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           navigator.nextPage(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
+
+      "must go from the ItemPackagingProductTypePage" - {
+
+        //TODO: Redirect to CAM-ITM27
+        "to the UnderConstruction page when Answered Yes" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
+            .set(ItemPackagingProductTypePage(0, 0), PackagingProductTypeYes)
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        //TODO: Redirect to CAM-ITM28
+        "to the UnderConstruction page when Answered No" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
+            .set(ItemPackagingProductTypePage(0, 0), PackagingProductTypeNo)
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+
+        "to the PackagingIndex route when neither answer has been selected" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, 0)
         }
       }
 

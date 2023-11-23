@@ -37,7 +37,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
 
   class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), monthValue: Int = 2) {
 
-    object TimeMachine extends TimeMachine {
+    object FakeTimeMachine extends TimeMachine {
       override def now(): LocalDateTime =
         LocalDateTime.of(2023, monthValue, 12, 1, 1, 1)
     }
@@ -58,7 +58,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view,
-      timeMachine = TimeMachine,
+      timeMachine = FakeTimeMachine,
       cnCodeInformationService = mockGetCnCodeInformationService
     )
 
@@ -111,7 +111,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
         emptyUserAnswers
           .set(ItemExciseProductCodePage(0), Wine.code)
-          .set(ItemProducerSizePage(0), 1)
+          .set(ItemProducerSizePage(0), BigInt(1))
       )) {
 
         val request = FakeRequest(GET, itemProducerSizeRoute(0))

@@ -40,11 +40,11 @@ trait BigIntFieldBehaviours extends FieldBehaviours {
 
   def bigIntFieldWithMinimum(form: Form[_],
                           fieldName: String,
-                          minimum: Int,
+                          minimum: BigInt,
                           expectedError: FormError): Unit = {
 
     s"not bind integers below $minimum" in {
-      val number: Int = minimum - 1
+      val number: BigInt = minimum - 1
       val result = form.bind(Map(fieldName -> number.toString)).apply(fieldName)
       result.errors must contain only expectedError
     }
@@ -52,11 +52,11 @@ trait BigIntFieldBehaviours extends FieldBehaviours {
 
   def bigIntFieldWithMaximum(form: Form[_],
                           fieldName: String,
-                          maximum: Int,
+                          maximum: BigInt,
                           expectedError: FormError): Unit = {
 
     s"not bind integers above $maximum" in {
-      val number: Int = maximum + 1
+      val number: BigInt = maximum + 1
       val result = form.bind(Map(fieldName -> number.toString)).apply(fieldName)
       result.errors must contain only expectedError
     }
@@ -64,8 +64,8 @@ trait BigIntFieldBehaviours extends FieldBehaviours {
 
   def bigIntFieldWithRange(form: Form[_],
                         fieldName: String,
-                        minimum: Int,
-                        maximum: Int,
+                        minimum: BigInt,
+                        maximum: BigInt,
                         expectedError: FormError): Unit = {
 
     s"not bind integers outside the range $minimum to $maximum" in {

@@ -58,7 +58,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> English.title("beer", "2022", "2023"),
           Selectors.h1 -> English.heading("beer", "2022", "2023"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
-          Selectors.hint -> English.hint,
+          Selectors.p(1) -> English.p,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.returnToDraft
@@ -86,7 +86,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> English.title("pure alcohol", "2023", "2024"),
           Selectors.h1 -> English.heading("pure alcohol", "2023", "2024"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
-          Selectors.hint -> English.hint,
+          Selectors.p(1) -> English.p,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.returnToDraft
@@ -114,7 +114,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> English.title("this product type", "2024", "2025"),
           Selectors.h1 -> English.heading("this product type", "2024", "2025"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
-          Selectors.hint -> English.hint,
+          Selectors.p(1) -> English.p,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.returnToDraft

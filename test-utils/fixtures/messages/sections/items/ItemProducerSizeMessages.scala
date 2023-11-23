@@ -26,14 +26,14 @@ object ItemProducerSizeMessages {
       s"What was the producer’s total production of $goodsType from 1 February $start to 31 January $end?"
     def title(goodsType: String, start: String, end: String): String = titleHelper(heading(goodsType, start: String, end: String))
 
-    val hint = "This information should be provided when claiming Small Producer Relief on Alcohol Duty."
+    val p = "This information should be provided when claiming Small Producer Relief on Alcohol Duty."
     val inputSuffix = "hl"
     val errorRequired = "Enter the producer’s total production"
     val errorWholeNumber = "Amount must only contain numbers"
     val errorNonNumeric = "Amount must only contain numbers"
-    val errorOutOfRange = "Enter an amount between 1 and 15"
-    val cyaLabel = "Producer size"
-    val cyaChangeHidden = "Producer size"
+    val errorOutOfRange = "Enter an amount between 1 and 15 digits"
+    val cyaLabel = "Size of producer"
+    val cyaChangeHidden = "Size of producer"
   }
 
   object English extends ViewMessages with BaseEnglish

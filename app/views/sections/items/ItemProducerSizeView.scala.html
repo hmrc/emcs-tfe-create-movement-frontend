@@ -27,6 +27,7 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    p: components.p,
     continueOrExit: components.continueOrExit
 
 )
@@ -46,14 +47,17 @@
 
         @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
+        @h1(messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
+
+        @p(){@messages("itemProducerSize.p")}
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))).hidden
             )
-            .withWidth(OneQuarter)
+            .withWidth(OneThird)
             .withSuffix(PrefixOrSuffix(content = Text(messages("itemProducerSize.input.suffix"))))
-            .withHint(HintViewModel(Text(messages("itemProducerSize.hint"))))
         )
 
         @continueOrExit()

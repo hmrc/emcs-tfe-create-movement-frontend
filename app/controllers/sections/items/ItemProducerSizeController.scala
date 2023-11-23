@@ -72,10 +72,10 @@ class ItemProducerSizeController @Inject()(
     ))
   }
 
-  def yearEnd(): Int = timeMachine.now().getMonth match {
+  private def yearEnd(): Int = timeMachine.now().getMonth match {
     case Month.JANUARY => timeMachine.now().getYear - 1
     case _ => timeMachine.now().getYear
   }
 
-  def yearStart(): Int = yearEnd() - 1
+  private def yearStart(): Int = yearEnd() - 1
 }

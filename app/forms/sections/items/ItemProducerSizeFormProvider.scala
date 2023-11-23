@@ -23,12 +23,15 @@ import play.api.data.Form
 
 class ItemProducerSizeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  val min = BigInt(1)
+  val max = BigInt("999999999999999")
+
+  def apply(): Form[BigInt] =
     Form(
-      "value" -> int(
+      "value" -> bigInt(
         "itemProducerSize.error.required",
         "itemProducerSize.error.wholeNumber",
         "itemProducerSize.error.nonNumeric"
-      ).verifying(inRange(1, 15, "itemProducerSize.error.outOfRange"))
+      ).verifying(inRange(BigInt(1), BigInt("999999999999999"), "itemProducerSize.error.outOfRange"))
     )
 }

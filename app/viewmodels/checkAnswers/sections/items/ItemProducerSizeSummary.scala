@@ -33,7 +33,7 @@ object ItemProducerSizeSummary  {
       answer =>
         SummaryListRowViewModel(
           key     = "itemProducerSize.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer.toString).toString),
+          value   = ValueViewModel(s"${HtmlFormat.escape(answer.toString).toString}${messages("itemProducerSize.input.suffix")}"),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

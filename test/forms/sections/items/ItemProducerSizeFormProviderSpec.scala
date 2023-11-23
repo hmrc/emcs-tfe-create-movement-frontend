@@ -18,21 +18,19 @@ package forms.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemProducerSizeMessages.English
-import forms.behaviours.{IntFieldBehaviours, StringFieldBehaviours}
+import forms.behaviours.{BigIntFieldBehaviours, StringFieldBehaviours}
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-import scala.util.Random
-
-class ItemProducerSizeFormProviderSpec extends SpecBase with IntFieldBehaviours with StringFieldBehaviours {
+class ItemProducerSizeFormProviderSpec extends SpecBase with BigIntFieldBehaviours with StringFieldBehaviours {
 
   val requiredKey = "itemProducerSize.error.required"
   val outOfRangeKey = "itemProducerSize.error.outOfRange"
   val wholeNumberKey = "itemProducerSize.error.wholeNumber"
   val nonNumericKey = "itemProducerSize.error.nonNumeric"
 
-  val min = 1
-  val max = 15
+  val min: BigInt = BigInt(1)
+  val max: BigInt = BigInt("999999999999999")
 
   val form = new ItemProducerSizeFormProvider()()
 
@@ -40,20 +38,32 @@ class ItemProducerSizeFormProviderSpec extends SpecBase with IntFieldBehaviours 
 
     val fieldName = "value"
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      Random.between(min, max).toString
-    )
+    "for the minimum valid value" - {
 
-    behave like intField(
+      behave like fieldThatBindsValidData(
+        form,
+        fieldName,
+        min.toString
+      )
+    }
+
+    "for the maximum valid value" - {
+
+      behave like fieldThatBindsValidData(
+        form,
+        fieldName,
+        max.toString
+      )
+    }
+
+    behave like bigIntField(
       form,
       fieldName,
       nonNumericError = FormError(fieldName, nonNumericKey),
       wholeNumberError = FormError(fieldName, wholeNumberKey)
     )
 
-    behave like intFieldWithRange(
+    behave like bigIntFieldWithRange(
       form,
       fieldName,
       minimum = min,

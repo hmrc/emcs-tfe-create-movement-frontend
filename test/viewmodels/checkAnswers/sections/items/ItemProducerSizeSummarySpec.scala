@@ -48,13 +48,13 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
 
         "must output the expected row" in {
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ItemProducerSizePage(0), 1)
+            .set(ItemProducerSizePage(0), BigInt(1))
           )
 
           ItemProducerSizeSummary.row(0) mustBe Some(
             SummaryListRowViewModel(
               key = English.cyaLabel,
-              value = Value(Text("1")),
+              value = Value(Text(s"1${English.inputSuffix}")),
               actions = Seq(
                 ActionItemViewModel(
                   content = English.change,

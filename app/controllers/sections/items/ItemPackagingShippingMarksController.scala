@@ -62,6 +62,18 @@ class ItemPackagingShippingMarksController @Inject()(
       }
     }
 
+  def onNoShippingMarks(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validatePackagingIndexAsync(itemsIndex, packagingIdx) {
+        val cleansedAnswers = request.userAnswers.remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
+        userAnswersService.set(cleansedAnswers).map {
+          //TODO: redirect to CAM-ITM28
+          _ => Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        }
+      }
+    }
+
+
   private def renderView(status: Status, form: Form[_], itemsIndex: Index, packagingIdx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
     withItemPackaging(itemsIndex, packagingIdx) { packagingDescription =>
@@ -69,8 +81,7 @@ class ItemPackagingShippingMarksController @Inject()(
         form = form,
         action = routes.ItemPackagingShippingMarksController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
         packagingDescription = packagingDescription,
-        //TODO: redirect to CAM-ITM28
-        skipLink = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        skipLink = routes.ItemPackagingShippingMarksController.onNoShippingMarks(request.ern, request.draftId, itemsIndex, packagingIdx, mode)
       )))
     }
   }

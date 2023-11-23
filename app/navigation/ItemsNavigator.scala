@@ -59,7 +59,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       }
 
     case ItemQuantityPage(idx) => (userAnswers: UserAnswers) =>
-      //TODO: Route to CAM-ITM21
       itemsRoutes.ItemNetGrossMassController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemNetGrossMassPage(idx) => (userAnswers: UserAnswers) =>
@@ -109,8 +108,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           }
       }
 
-    case ItemSelectPackagingPage(itemsIndex, itemsPackagingIndex) => (_: UserAnswers) =>
-      //TODO: Redirect to CAM-ITM25
+    case ItemSelectPackagingPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+
+    case ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      //TODO: redirect to CAM-ITM26
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>

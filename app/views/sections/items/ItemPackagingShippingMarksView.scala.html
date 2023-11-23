@@ -52,7 +52,7 @@
         }
 
         @p() {
-            @{Html(messages("itemPackagingShippingMarks.p2", strong(Html(packagingDescription))))}
+            @{Html(messages("itemPackagingShippingMarks.p2", strong(packagingDescription, withFullStop = true)))}
         }
 
         @{govukCharacterCount(CharacterCount(

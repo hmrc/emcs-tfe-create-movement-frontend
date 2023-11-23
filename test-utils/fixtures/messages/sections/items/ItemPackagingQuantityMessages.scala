@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package fixtures.messages.sections.items
 
-@(content: String, withFullStop: Boolean = false)(implicit messages: Messages)
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-<span class="govuk-!-font-weight-bold">@content</span>@if(withFullStop){.}
+object ItemPackagingQuantityMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    def heading(goodsType: String) = s"How many of this type of package are you using to move the $goodsType?"
+    def title(goodsType: String): String = titleHelper(heading(goodsType))
+
+    def hint(packageType: String) = s"The packaging type is: $packageType."
+  }
+
+  object English extends ViewMessages with BaseEnglish
+
+}

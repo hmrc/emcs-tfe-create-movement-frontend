@@ -130,6 +130,14 @@ trait Constraints {
         Invalid(errorKey)
     }
 
+  protected def isInt(errorKey: String): Constraint[String] =
+    Constraint {
+      case answer if Try(BigInt(answer)).isSuccess =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
   protected def decimalRange(min: BigDecimal, max: BigDecimal, errorKey: String): Constraint[BigDecimal] =
     Constraint {
       case answer if answer <= max && answer >= min =>

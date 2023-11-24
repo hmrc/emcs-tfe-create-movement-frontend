@@ -38,8 +38,8 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
   lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
   val action: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onSubmit(testErn, testDraftId, testIndex1,
     testPackagingIndex1, NormalMode)
-  //TODO: redirect to CAM-ITM28
-  val skipLink: Call = testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+  val skipLink: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onNoShippingMarks(testErn, testDraftId, testIndex1,
+    testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), "W300")
@@ -74,6 +74,15 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
     }
 
+    "must redirect to Index of section when the packaging idx is outside of bounds for a GET (no shipping marks)" in new Test(Some(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+    )) {
+      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
     "must redirect to Index of section when the packaging idx is outside of bounds for a POST" in new Test(Some(
       emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
     )) {
@@ -81,6 +90,14 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when the item idx is outside of bounds for a GET (no shipping marks - " +
+      "which redirects to Items index)" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex2, testPackagingIndex1, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex2).url
     }
 
     "must redirect to Index of section when the item idx is outside of bounds for a GET (which redirects to Items index)" in new Test(Some(emptyUserAnswers)) {
@@ -112,6 +129,22 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), action, skipLink, "Aerosol")(
         dataRequest(request, userAnswers.get), messages(request)).toString
+    }
+
+    "must clear down the shipping marks when onNoShippingMarks is called and redirect to the next page" in new Test(Some(
+      baseUserAnswers.set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+    )) {
+      MockUserAnswersService.set(
+        baseUserAnswers
+      ).returns(Future.successful(
+        baseUserAnswers
+      ))
+
+      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      //TODO: redirect to CAM-ITM28
+      redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
@@ -146,6 +179,13 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+
+    "must redirect to Journey Recovery for a GET (no shipping marks) if no existing data is found" in new Test(None) {
+      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

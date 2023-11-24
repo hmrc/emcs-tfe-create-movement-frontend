@@ -450,12 +450,12 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
 
         "to the Imported Wine Choice page" - {
-          //TODO: Redirect to CAM-ITM15
+
           "when the user answers no and EPC is wine" in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -486,14 +486,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: redirect to CAM-ITM15
         "to the Imported Wine Choice page" - {
           "when the wine quantity is under 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemQuantityPage(testIndex1), BigDecimal(59.99))
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -625,6 +624,57 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           "when the user has no answer for ItemBulkPackagingChoicePage (when clicking no)" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
               itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
+      "must go from the ItemImportedWineChoicePage" - {
+
+        //TODO: Redirect to CAM-ITM14
+        "to the Wine Growing Zone page" - {
+
+          "when the user answers yes, moving in bulk and more than 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Wine More Information Choice page" - {
+
+          "when the user answers yes, moving in Bulk but <= 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+            ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        "to the Wine More Information Choice page" - {
+
+          "when the user answers yes, NOT moving in Bulk > 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
+        //TODO: Redirect to CAM-ITM16
+        "to the Wine Origin page" - {
+
+          "when the user answers no" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), false)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
         }
       }

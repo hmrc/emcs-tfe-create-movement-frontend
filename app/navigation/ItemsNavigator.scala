@@ -109,8 +109,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case _ =>
           userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
             case Some(Wine) =>
-              //TODO: Redirect to CAM-ITM15
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
               itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
           }
@@ -166,6 +165,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case _ =>
           //TODO: redirect to CAM-ITM36
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    case ItemImportedWineChoicePage(idx) => (userAnswers: UserAnswers) =>
+      (userAnswers.get(ItemImportedWineChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
+        case (Some(true), Some(true), Some(quantity)) if quantity > 60 =>
+          //TODO: redirect to CAM-ITM14 (Wine Growing Zone)
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case (Some(true), _, _) =>
+          itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        case _ =>
+          //TODO: redirect to CAM-ITM16 (Wine Origin)
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
@@ -290,8 +301,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             userAnswers.get(ItemQuantityPage(idx)) match {
               case Some(quantity) =>
                 if (quantity < 60) {
-                  //TODO: Redirect to CAM-ITM15
-                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                  itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 } else {
                   //TODO: Redirect to CAM-ITM12
                   testOnly.controllers.routes.UnderConstructionController.onPageLoad()

@@ -18,6 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.ItemFixtures
+import models.ReviewMode
 import models.requests.DataRequest
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
@@ -26,7 +27,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary}
 
-class ConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
+class ItemConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
 
   val answers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
@@ -35,17 +36,17 @@ class ConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
   lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
   lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
 
-  lazy val confirmCommodityCodeHelper = new ConfirmCommodityCodeHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary)
+  lazy val confirmCommodityCodeHelper = new ItemConfirmCommodityCodeHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary)
   implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
   implicit val testUserRequest = userRequest(fakeDataRequest)
   implicit val msgs: Messages = messagesApi.preferred(fakeDataRequest)
 
-  "ConfirmCommodityCodeHelper" - {
+  "ItemConfirmCommodityCodeHelper" - {
     ".summaryList should render row" in {
-      confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine) mustBe SummaryList(
+      confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine, ReviewMode) mustBe SummaryList(
         rows = Seq(
-          itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine),
-          itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine)
+          itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode),
+          itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode)
         )
       )
     }

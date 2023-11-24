@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{GoodsTypeModel, Index, NormalMode}
+import models.{GoodsTypeModel, Index, Mode}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -30,7 +30,7 @@ import viewmodels.implicits._
 import views.html.components.p
 
 class ItemCommodityCodeSummary @Inject()(p: p) {
-  def row(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
       key = messages("itemCommodityCode.checkYourAnswersLabel", GoodsTypeModel(cnCodeInformation.exciseProductCode).toSingularOutput()),
       value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
@@ -45,7 +45,7 @@ class ItemCommodityCodeSummary @Inject()(p: p) {
             Seq(
               ActionItemViewModel(
                 content = "site.change",
-                routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, NormalMode).url,
+                routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, mode).url,
                 id = s"changeItemCommodityCode${idx.displayIndex}"
               )
                 .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))

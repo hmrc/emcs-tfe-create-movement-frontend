@@ -18,9 +18,9 @@ package views.sections.items
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ConfirmCommodityCodeMessages
-import models.NormalMode
+import fixtures.messages.sections.items.ItemConfirmCommodityCodeMessages
 import models.requests.DataRequest
+import models.ReviewMode
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
@@ -45,9 +45,9 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
   lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
   lazy val view: ItemConfirmCommodityCodeView = app.injector.instanceOf[ItemConfirmCommodityCodeView]
 
-  "ConfirmCommodityCode view" - {
+  "ItemConfirmCommodityCode view" - {
 
-    Seq(ConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -62,28 +62,28 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
           SummaryList(Seq(
-            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeTobacco),
-            itemCommodityCodeSummary.row(testIndex1, testCommodityCodeTobacco)
+            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeTobacco, ReviewMode),
+            itemCommodityCodeSummary.row(testIndex1, testCommodityCodeTobacco, ReviewMode)
           ))
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.caption,
+          Selectors.h2(1) -> messagesForLanguage.itemSection,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.exciseProductCode,
           Selectors.govukSummaryListKey(2) -> messagesForLanguage.commodityCode,
           Selectors.button -> messagesForLanguage.confirmCodes,
         ))
 
-        "have a link to change excise product code" in {
+        "must have a link to change excise product code" in {
           doc.getElementById("changeItemExciseProductCode1").attr("href") mustBe
-            controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+            controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url
         }
 
-        "have a link to change commodity code" in {
+        "must have a link to change commodity code" in {
           doc.getElementById("changeItemCommodityCode1").attr("href") mustBe
-            controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+            controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url
         }
       }
     }
@@ -97,7 +97,7 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
 
       val commodityCode = testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code)
 
-      Seq(ConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
+      Seq(ItemConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
 
         s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for EPC code ${exciseProductCode}'" - {
 
@@ -112,29 +112,18 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
           implicit val doc: Document = Jsoup.parse(view(
             controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
             SummaryList(Seq(
-              itemExciseProductCodeSummary.row(testIndex1, commodityCode),
-              itemCommodityCodeSummary.row(testIndex1, commodityCode)
+              itemExciseProductCodeSummary.row(testIndex1, commodityCode, ReviewMode),
+              itemCommodityCodeSummary.row(testIndex1, commodityCode, ReviewMode)
             ))
           ).toString())
 
-          behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title,
-            Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.h2(1) -> messagesForLanguage.caption,
-            Selectors.govukSummaryListKey(1) -> messagesForLanguage.exciseProductCode,
-            Selectors.govukSummaryListKey(2) -> messagesForLanguage.commodityCode,
-            Selectors.button -> messagesForLanguage.confirmCodes,
-          ))
-
-          "have a link to change excise product code" in {
+          "must have a link to change excise product code" in {
             doc.getElementById("changeItemExciseProductCode1").attr("href") mustBe
-              controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+              controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url
           }
 
-          "does not have a link to change commodity code" in {
-            intercept[NullPointerException] {
-              doc.getElementById("changeItemCommodityCode1").attr("href")
-            }
+          "must not have a link to change commodity code" in {
+            Option(doc.getElementById("changeItemCommodityCode1")) mustBe None
           }
         }
       }

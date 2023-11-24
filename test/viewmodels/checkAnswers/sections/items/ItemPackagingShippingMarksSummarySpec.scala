@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -27,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers {
+class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
   "ItemPackagingShippingMarksSummary" - {
 

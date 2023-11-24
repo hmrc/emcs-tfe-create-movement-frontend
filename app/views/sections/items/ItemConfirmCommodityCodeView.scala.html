@@ -29,7 +29,7 @@
 
         @formHelper(submitAction) {
 
-            @h1("itemConfirmCommodityCode.heading", Some(messages("items.subHeading")), "govuk-heading-l")
+            @h1("itemConfirmCommodityCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
             @govukSummaryList(summaryList)
 

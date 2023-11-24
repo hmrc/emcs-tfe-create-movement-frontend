@@ -17,7 +17,6 @@
 package services
 
 import connectors.referenceData.GetCommodityCodesConnector
-import models.ExciseProductCode
 import models.response.CommodityCodesException
 import models.response.referenceData.CnCodeInformation
 import uk.gov.hmrc.http.HeaderCarrier

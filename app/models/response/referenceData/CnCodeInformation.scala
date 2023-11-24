@@ -18,7 +18,7 @@ package models.response.referenceData
 
 import models.UnitOfMeasure
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Format, JsPath, Reads, Writes}
+import play.api.libs.json.{JsPath, Reads}
 
 case class CnCodeInformation(cnCode: String,
                              cnCodeDescription: String,
@@ -36,14 +36,4 @@ object CnCodeInformation {
       (JsPath \ "exciseProductCodeDescription").read[String] and
       (JsPath \ "unitOfMeasureCode").read[Int].map(UnitOfMeasure.apply)
     )(CnCodeInformation.apply _)
-
-  implicit val writes: Writes[CnCodeInformation] = (
-    (JsPath \ "cnCode").write[String] and
-      (JsPath \ "cnCodeDescription").write[String] and
-      (JsPath \ "exciseProductCode").write[String] and
-      (JsPath \ "exciseProductCodeDescription").write[String] and
-      (JsPath \ "unitOfMeasureCode").write[Int].contramap(UnitOfMeasure.unapply)
-    )(unlift(CnCodeInformation.unapply))
-
-  implicit val format: Format[CnCodeInformation] = Format(reads,writes)
 }

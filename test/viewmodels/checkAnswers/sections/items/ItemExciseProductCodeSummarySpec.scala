@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
-import models.NormalMode
+import models.ReviewMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
@@ -48,7 +48,7 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemF
           "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
 
-            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine) mustBe
+            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
@@ -58,7 +58,7 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemF
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
+                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url,
                     id = "changeItemExciseProductCode1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

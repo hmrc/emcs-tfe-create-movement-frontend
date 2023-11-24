@@ -64,14 +64,13 @@ trait BaseItemsNavigationController extends BaseNavigationController {
         Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
     }
 
-  def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         f(GoodsTypeModel.apply(epc))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
-  }
 
   def withItemPackaging(itemIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)) match {

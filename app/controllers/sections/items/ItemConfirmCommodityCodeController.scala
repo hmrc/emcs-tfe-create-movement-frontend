@@ -19,13 +19,13 @@ package controllers.sections.items
 import controllers.actions._
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
-import models.{Index, NormalMode}
+import models.{Index, NormalMode, ReviewMode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemConfirmCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{GetCnCodeInformationService, UserAnswersService}
-import viewmodels.helpers.ConfirmCommodityCodeHelper
+import viewmodels.helpers.ItemConfirmCommodityCodeHelper
 import views.html.sections.items.ItemConfirmCommodityCodeView
 
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
                                                    val cnCodeInformationService: GetCnCodeInformationService,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    val navigator: ItemsNavigator,
-                                                   val confirmCommodityCodeHelper: ConfirmCommodityCodeHelper,
+                                                   val itemConfirmCommodityCodeHelper: ItemConfirmCommodityCodeHelper,
                                                    view: ItemConfirmCommodityCodeView
                                               ) extends BaseItemsNavigationController with AuthActionHelper {
 
@@ -52,7 +52,7 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
             cnCodeInformation =>
               Ok(view(
                 routes.ItemConfirmCommodityCodeController.onSubmit(request.ern, request.draftId, idx),
-                confirmCommodityCodeHelper.summaryList(idx, cnCodeInformation)
+                itemConfirmCommodityCodeHelper.summaryList(idx, cnCodeInformation, ReviewMode)
               ))
           }
         }

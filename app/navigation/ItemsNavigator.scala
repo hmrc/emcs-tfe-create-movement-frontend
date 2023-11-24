@@ -107,7 +107,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(epc => GoodsTypeModel(epc)) match {
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
             case Some(Wine) =>
               //TODO: Redirect to CAM-ITM15
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -148,6 +148,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) =>
+      answers.get(ItemCommodityCodePage(idx)) match {
+        case Some(_) => itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx)
+        case None => itemsRoutes.ItemCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx, ReviewMode)
+      }
+    case ItemCommodityCodePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx)
     case _ =>
       (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }

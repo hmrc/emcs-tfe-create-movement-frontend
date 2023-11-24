@@ -50,22 +50,22 @@ class ItemCommodityCodeController @Inject()(
         ItemExciseProductCodePage(idx),
         redirectRoute = routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
       ) {
-          itemExciseProductCode =>
-            getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
-              case Nil =>
-                saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
-              case singleCommodityCode :: Nil =>
-                saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode.cnCode, mode)
-              case commodityCodes =>
-                Future.successful(Ok(
-                  view(
-                    form = fillForm(ItemCommodityCodePage(idx), formProvider()),
-                    action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                    goodsType = GoodsTypeModel(itemExciseProductCode),
-                    commodityCodes
-                  )
-                ))
-            }
+        itemExciseProductCode =>
+          getCommodityCodesService.getCommodityCodes(itemExciseProductCode).flatMap {
+            case Nil =>
+              saveAndRedirect(ItemCommodityCodePage(idx), CnCodeInformation.defaultCnCode, mode)
+            case singleCommodityCode :: Nil =>
+              saveAndRedirect(ItemCommodityCodePage(idx), singleCommodityCode.cnCode, mode)
+            case commodityCodes =>
+              Future.successful(Ok(
+                view(
+                  form = fillForm(ItemCommodityCodePage(idx), formProvider()),
+                  action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
+                  goodsType = GoodsTypeModel(itemExciseProductCode),
+                  commodityCodes
+                )
+              ))
+          }
       }
     }
 

@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{Index, NormalMode}
+import models.{Index, Mode}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -31,7 +31,7 @@ import views.html.components.p
 
 class ItemExciseProductCodeSummary @Inject()(p: p) {
 
-  def row(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
       key = "itemExciseProductCode.checkYourAnswersLabel",
       value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
@@ -41,7 +41,7 @@ class ItemExciseProductCodeSummary @Inject()(p: p) {
       actions = Seq(
         ActionItemViewModel(
           content = "site.change",
-          href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
+          href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
           id = s"changeItemExciseProductCode${idx.displayIndex}"
         ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
       )

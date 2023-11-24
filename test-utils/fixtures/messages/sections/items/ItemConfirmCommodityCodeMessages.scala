@@ -18,15 +18,15 @@ package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object ConfirmCommodityCodeMessages {
+object ItemConfirmCommodityCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading() = "Review and confirm Excise Product Code and commodity code"
     def title(): String = titleHelper(heading())
 
-    val caption: String = "Item information"
     val exciseProductCode: String = "Excise Product Code"
     val commodityCode: String = "Commodity code"
+    val confirmCodes = "Confirm codes"
   }
 
   object English extends ViewMessages with BaseEnglish

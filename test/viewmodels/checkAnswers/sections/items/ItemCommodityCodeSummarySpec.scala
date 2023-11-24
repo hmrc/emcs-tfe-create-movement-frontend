@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCommodityCodeMessages
-import models.NormalMode
+import models.ReviewMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
@@ -63,7 +63,7 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
                     .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode)
                 )
 
-              itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code)) mustBe
+              itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code), ReviewMode) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
@@ -92,7 +92,7 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
                 .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
                 .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode))
 
-          itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine) mustBe
+          itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
             SummaryListRowViewModel(
               key = messagesForLanguage.cyaLabel,
               value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
@@ -102,7 +102,7 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
-                  href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
+                  href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url,
                   id = "changeItemCommodityCode1"
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )

@@ -18,73 +18,17 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
+import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
-import models.{CheckMode, ExciseProductCode, GoodsTypeModel, NormalMode, ReviewMode}
+import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
 
-class ItemsNavigatorSpec extends SpecBase {
+class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
   val navigator = new ItemsNavigator
-
-  val testExciseProductCodeS200: ExciseProductCode =
-    ExciseProductCode(
-      "S200",
-      "Spirituous beverages",
-      "S",
-      "Ethyl alcohol and spirits"
-    )
-  val testExciseProductCodeE200: ExciseProductCode =
-    ExciseProductCode(
-      "E200",
-      "Vegetable and animal oils Products falling within CN codes 1507 to 1518, if these are intended for use as heating fuel or motor fuel (Article 20(1)(a))",
-      "E",
-      "Energy Products"
-    )
-  val testExciseProductCodeE470: ExciseProductCode =
-    ExciseProductCode(
-      "E470",
-      "Heavy fuel oil",
-      "E",
-      "Energy Products"
-    )
-  val testExciseProductCodeE500: ExciseProductCode =
-    ExciseProductCode(
-      "E500",
-      "Liquified Petroleum gases (LPG) Products falling within CN codes 2711 (except 2711 11, 2711 21 and 2711 29)",
-      "E",
-      "Energy Products"
-    )
-  val testExciseProductCodeE930: ExciseProductCode =
-    ExciseProductCode(
-      "E930",
-      "Additives falling within CN codes 3811 11, 3811 19 00 and 3811 90 00",
-      "E",
-      "Energy Products"
-    )
-  val testExciseProductCodeW100: ExciseProductCode =
-    ExciseProductCode(
-      "W100",
-      "Test Description",
-      "W",
-      "Test Description"
-    )
-  val testExciseProductCodeS100: ExciseProductCode =
-    ExciseProductCode(
-      "S100",
-      "Test Description",
-      "S",
-      "Test Description"
-    )
-  val testExciseProductCodeI200: ExciseProductCode =
-    ExciseProductCode(
-      "I200",
-      "Test Description",
-      "I",
-      "Test Description"
-    )
 
   "ItemsNavigator" - {
     "in Normal mode" - {
@@ -113,11 +57,30 @@ class ItemsNavigatorSpec extends SpecBase {
         }
       }
 
+      "must go from the Item Commodity Code page" - {
+        "to the Confirm Commodity Code page" in {
+          navigator.nextPage(
+            ItemCommodityCodePage(testIndex1),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe controllers.sections.items.routes.ItemConfirmCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the Confirm Commodity Code page" - {
+        "to the Item Brand Name page" in {
+          navigator.nextPage(
+            ItemConfirmCommodityCodePage(testIndex1),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
       "must go from the Item Brand Name page" - {
 
         "to the Commercial Description Page" in {
           val userAnswers = emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
-
 
           navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, userAnswers) mustBe
             itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -658,6 +621,46 @@ class ItemsNavigatorSpec extends SpecBase {
     }
 
     "in Review mode" - {
+      "must go from the Item Excise Product Code page" - {
+        "to the Item Commodity Code page" - {
+          "when ItemCommodityCodePage is empty" in {
+            navigator.nextPage(
+              ItemExciseProductCodePage(testIndex1),
+              ReviewMode,
+              emptyUserAnswers
+            ) mustBe controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode)
+          }
+        }
+        "to the Item Confirm Commodity Code page" - {
+          "when ItemCommodityCodePage is not empty" in {
+            navigator.nextPage(
+              ItemExciseProductCodePage(testIndex1),
+              ReviewMode,
+              emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+            ) mustBe controllers.sections.items.routes.ItemConfirmCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+      "must go from the Item Commodity Code page" - {
+        "to the Item Confirm Commodity Code page" in {
+          navigator.nextPage(
+            ItemCommodityCodePage(testIndex1),
+            ReviewMode,
+            emptyUserAnswers
+          ) mustBe controllers.sections.items.routes.ItemConfirmCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the Confirm Commodity Code page" - {
+        "to the Item Brand Name page" in {
+          navigator.nextPage(
+            ItemConfirmCommodityCodePage(testIndex1),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe

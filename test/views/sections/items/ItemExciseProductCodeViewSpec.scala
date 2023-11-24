@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import forms.sections.items.ItemExciseProductCodeFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -46,14 +45,14 @@ class ItemExciseProductCodeViewSpec extends SpecBase with ViewBehaviours with It
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemExciseProductCodeView]
+        lazy val view = app.injector.instanceOf[ItemExciseProductCodeView]
         val selectOptions = SelectItemHelper.constructSelectItems(
           selectOptions = Seq(beerExciseProductCode),
           defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
         )
         val form = app.injector.instanceOf[ItemExciseProductCodeFormProvider].apply(Seq(beerExciseProductCode))
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, NormalMode).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.h2(1) -> messagesForLanguage.itemInformationSection,

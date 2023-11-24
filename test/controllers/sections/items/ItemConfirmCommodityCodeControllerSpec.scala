@@ -20,8 +20,8 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
-import mocks.viewmodels.MockConfirmCommodityCodeHelper
-import models.UserAnswers
+import mocks.viewmodels.MockItemConfirmCommodityCodeHelper
+import models.{ReviewMode, UserAnswers}
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 
 class ItemConfirmCommodityCodeControllerSpec extends SpecBase
   with SummaryListFluency
-  with MockConfirmCommodityCodeHelper
+  with MockItemConfirmCommodityCodeHelper
   with MockUserAnswersService
   with MockGetCnCodeInformationService
   with ItemFixtures {
@@ -63,15 +63,15 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
       mockGetCnCodeInformationService,
       Helpers.stubMessagesControllerComponents(),
       new FakeItemsNavigator(testOnwardRoute),
-      mockConfirmCommodityCodeHelper,
+      mockItemConfirmCommodityCodeHelper,
       view
     )
 
     implicit lazy val msgs: Messages = messages(request)
 
     lazy val confirmCodesList: Seq[SummaryListRow] = Seq(
-      itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco),
-      itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco))
+      itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco, mode = ReviewMode),
+      itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco, mode = ReviewMode))
 
     lazy val confirmCodesSummaryList: SummaryList = SummaryListViewModel(
       rows = confirmCodesList
@@ -80,7 +80,24 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
     lazy val view: ItemConfirmCommodityCodeView = app.injector.instanceOf[ItemConfirmCommodityCodeView]
   }
 
-  "ConfirmCommodityCode Controller" - {
+  "ItemConfirmCommodityCode Controller" - {
+
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+    }
+
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(emptyUserAnswers)) {
+      def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(POST, controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1).url)
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+    }
+
     ".onPageLoad" - {
 
       "must return OK and the correct view when supplied EPC and Commodity Code" in new Fixture(
@@ -92,7 +109,7 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
           .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
           .returns(Future.successful(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco) -> testCommodityCodeTobacco)))
 
-        MockConfirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeTobacco).returns(confirmCodesSummaryList)
+        MockItemConfirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeTobacco).returns(confirmCodesSummaryList)
 
         val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
@@ -126,6 +143,18 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe testOnwardRoute.url
+
+      }
+      "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
+
+        def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1).url)
+
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
 
       }
     }

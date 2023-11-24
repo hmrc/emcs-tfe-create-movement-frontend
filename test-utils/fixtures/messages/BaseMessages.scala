@@ -38,7 +38,6 @@ trait BaseMessages { _: i18n =>
   def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"
-  val confirmCodes = "Confirm codes"
   val notProvided = "Not provided"
   val saveAndContinue = "Save and continue"
   val returnToDraft = "Return to draft"

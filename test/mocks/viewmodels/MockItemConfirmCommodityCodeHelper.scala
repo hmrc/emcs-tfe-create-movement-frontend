@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package mocks.viewmodels
 
-import models.Index
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
+import models.{Index, Mode}
+import org.scalamock.handlers.CallHandler5
+import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.items._
-import viewmodels.govuk.summarylist._
+import viewmodels.helpers.ItemConfirmCommodityCodeHelper
 
-import javax.inject.Inject
+trait MockItemConfirmCommodityCodeHelper extends MockFactory {
 
-class ConfirmCommodityCodeHelper @Inject()(
-                                            itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
-                                            itemCommodityCodeSummary: ItemCommodityCodeSummary
-                                          ) {
+  lazy val mockItemConfirmCommodityCodeHelper: ItemConfirmCommodityCodeHelper = mock[ItemConfirmCommodityCodeHelper]
 
-  def summaryList(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    SummaryListViewModel(
-      rows = Seq(
-        itemExciseProductCodeSummary.row(idx, cnCodeInformation),
-        itemCommodityCodeSummary.row(idx, cnCodeInformation)
-      )
-    )
+  object MockItemConfirmCommodityCodeHelper {
+
+    def summaryList(idx: Index, cnCodeInformation: CnCodeInformation): CallHandler5[Index, CnCodeInformation, Mode, DataRequest[_], Messages, SummaryList] =
+      (mockItemConfirmCommodityCodeHelper.summaryList(_: Index, _: CnCodeInformation, _: Mode)(_: DataRequest[_], _: Messages))
+        .expects(idx, cnCodeInformation, *, *, *)
   }
 
 }

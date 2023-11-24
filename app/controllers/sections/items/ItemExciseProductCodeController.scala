@@ -68,13 +68,18 @@ class ItemExciseProductCodeController @Inject()(
       validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            val selectItems = SelectItemHelper.constructSelectItems(
-              exciseProductCodes,
-              defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
-            )
             formProvider(exciseProductCodes).bindFromRequest().fold(
-              renderView(BadRequest, _, idx, selectItems, mode),
-              saveAndRedirect(ItemExciseProductCodePage(idx), _, mode)
+              formWithErrors => {
+                val selectItems = SelectItemHelper.constructSelectItems(
+                  exciseProductCodes,
+                  defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
+                )
+                renderView(BadRequest, formWithErrors, idx, selectItems, mode)
+              },
+              value => {
+                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(ItemExciseProductCodePage(idx), value, request.userAnswers.remove(ItemsSection))
+                saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
+              }
             )
           }
         }
@@ -96,8 +101,7 @@ class ItemExciseProductCodeController @Inject()(
     Future.successful(status(view(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-      selectOptions = selectItems,
-      mode = mode
+      selectOptions = selectItems
     )))
   }
 }

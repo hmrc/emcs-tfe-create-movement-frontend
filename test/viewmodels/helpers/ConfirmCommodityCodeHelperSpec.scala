@@ -17,8 +17,8 @@
 package viewmodels.helpers
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import models.requests.DataRequest
-import models.{GoodsTypeModel, UserAnswers}
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -26,21 +26,27 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary}
 
-class ConfirmCommodityCodeHelperSpec extends SpecBase {
+class ConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
 
-  class Setup(answers: UserAnswers = emptyUserAnswers) {
-    lazy val confirmCommodityCodeHelper = new ConfirmCommodityCodeHelper()
-    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
-    implicit val testUserRequest = userRequest(fakeDataRequest)
-    implicit val msgs: Messages = messagesApi.preferred(fakeDataRequest)
-  }
+  val answers = emptyUserAnswers
+    .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
+    .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode)
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+
+  lazy val confirmCommodityCodeHelper = new ConfirmCommodityCodeHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary)
+  implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
+  implicit val testUserRequest = userRequest(fakeDataRequest)
+  implicit val msgs: Messages = messagesApi.preferred(fakeDataRequest)
 
   "ConfirmCommodityCodeHelper" - {
-    ".summaryList should render row" in new Setup(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000).set(ItemCommodityCodePage(testIndex1), testCommodityCodeBeer)) {
-      confirmCommodityCodeHelper.summaryList(testIndex1, GoodsTypeModel(testExciseProductCodeB000.category), emptyUserAnswers) mustBe SummaryList(
+    ".summaryList should render row" in {
+      confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine) mustBe SummaryList(
         rows = Seq(
-          ItemExciseProductCodeSummary.row(idx = testIndex1),
-          ItemCommodityCodeSummary.row(idx = testIndex1, goodsType = GoodsTypeModel(testExciseProductCodeB000.category), emptyUserAnswers)).flatten
+          itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine),
+          itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine)
+        )
       )
     }
   }

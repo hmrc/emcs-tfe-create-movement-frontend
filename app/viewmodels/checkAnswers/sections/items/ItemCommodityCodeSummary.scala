@@ -16,41 +16,41 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import com.google.inject.Inject
 import controllers.sections.items.routes
-import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
-import models.{Index, NormalMode, UserAnswers}
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
+import models.response.referenceData.CnCodeInformation
+import models.{GoodsTypeModel, Index, NormalMode}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
-object ItemCommodityCodeSummary {
-  def row(idx: Index, goodsType: GoodsType, userAnswers: UserAnswers)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(ItemCommodityCodePage(idx)).map { value =>
-      SummaryListRowViewModel(
-        key = messages("itemCommodityCode.checkYourAnswersLabel", goodsType.toSingularOutput()),
-        value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-          Html(value.cnCode + "<br>"),
-          Html(value.cnCodeDescription))))),
-        actions =
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(_.code) match {
-            case Some("S500" | "T300" | "S400" | "E600" | "E800" | "E910") =>
-              Seq.empty
-            case _ =>
-              Seq(
-                ActionItemViewModel(
-                  content = "site.change",
-                  routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, NormalMode).url,
-                  id = s"changeItemCommodityCode${idx.displayIndex}"
-                )
-                  .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
+class ItemCommodityCodeSummary @Inject()(p: p) {
+  def row(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+    SummaryListRowViewModel(
+      key = messages("itemCommodityCode.checkYourAnswersLabel", GoodsTypeModel(cnCodeInformation.exciseProductCode).toSingularOutput()),
+      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+        p()(Html(cnCodeInformation.cnCode)),
+        p()(Html(cnCodeInformation.cnCodeDescription))
+      )))),
+      actions =
+        cnCodeInformation.exciseProductCode match {
+          case "S500" | "T300" | "S400" | "E600" | "E800" | "E910" =>
+            Seq.empty
+          case _ =>
+            Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, NormalMode).url,
+                id = s"changeItemCommodityCode${idx.displayIndex}"
               )
-          }
-      )
-    }
+                .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
+            )
+        }
+    )
   }
 }

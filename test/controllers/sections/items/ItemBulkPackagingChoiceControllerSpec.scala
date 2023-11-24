@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -36,7 +36,6 @@ import scala.concurrent.Future
 
 class ItemBulkPackagingChoiceControllerSpec extends SpecBase
   with MockUserAnswersService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -58,15 +57,14 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
       app.injector.instanceOf[DataRequiredAction],
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
   "ItemBulkPackagingChoice Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
@@ -76,7 +74,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
         .set(ItemBulkPackagingChoicePage(testIndex1), true)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
@@ -86,7 +84,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -111,14 +109,14 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
       redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the Index page for GET when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))) {
+    "must redirect to the Index page for GET when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the Index page for POST when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))) {
+    "must redirect to the Index page for POST when no EPC" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
@@ -127,7 +125,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "")))
 

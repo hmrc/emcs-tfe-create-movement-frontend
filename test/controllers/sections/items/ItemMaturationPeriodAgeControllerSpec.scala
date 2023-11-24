@@ -18,10 +18,11 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider.{hasMaturationPeriodAgeField, maturationPeriodAgeField}
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemMaturationPeriodAgeModel
 import models.{Index, NormalMode, UserAnswers}
@@ -35,15 +36,16 @@ import views.html.sections.items.ItemMaturationPeriodAgeView
 
 import scala.concurrent.Future
 
-class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   val formProvider = new ItemMaturationPeriodAgeFormProvider()
   val form = formProvider(Wine)(messages(Seq(ItemMaturationPeriodAgeMessages.English.lang)))
 
   def itemMaturationPeriodAgeRoute(idx: Index = testIndex1) = routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
   def itemMaturationPeriodAgeSubmitAction(idx: Index = testIndex1) = routes.ItemMaturationPeriodAgeController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
@@ -60,8 +62,7 @@ class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswer
       requireData = app.injector.instanceOf[DataRequiredAction],
       formProvider = formProvider,
       controllerComponents = app.injector.instanceOf[MessagesControllerComponents],
-      view = view,
-      cnCodeInformationService = mockGetCnCodeInformationService
+      view = view
     )
 
   }

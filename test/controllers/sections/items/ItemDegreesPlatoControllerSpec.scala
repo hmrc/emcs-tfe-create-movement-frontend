@@ -18,10 +18,11 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
 import forms.sections.items.ItemDegreesPlatoFormProvider.{degreesPlatoField, hasDegreesPlatoField}
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemDegreesPlatoModel
 import models.{Index, NormalMode, UserAnswers}
@@ -35,10 +36,10 @@ import views.html.sections.items.ItemDegreesPlatoView
 
 import scala.concurrent.Future
 
-class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   def itemDegreesPlatoSubmitAction(idx: Index = testIndex1): Call = routes.ItemDegreesPlatoController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
@@ -59,8 +60,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

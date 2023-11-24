@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemExciseProductCodeFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockGetExciseProductCodesService, MockUserAnswersService}
+import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
 import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
@@ -37,7 +37,6 @@ import scala.concurrent.Future
 class ItemExciseProductCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetExciseProductCodesService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
   val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -62,8 +61,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       mockGetExciseProductCodesService,
-      view,
-      mockGetCnCodeInformationService
+      view
     )
 
     val sampleEPCsSelectOptions: Seq[SelectItem] = SelectItemHelper.constructSelectItems(
@@ -99,7 +97,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000))
+      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))
     ) {
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
@@ -121,10 +119,10 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
       MockUserAnswersService.set(
-        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
-      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)))
+        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -152,7 +150,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

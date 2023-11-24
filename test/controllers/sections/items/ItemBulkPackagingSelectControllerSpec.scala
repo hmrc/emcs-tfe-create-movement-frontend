@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingSelectFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockGetPackagingTypesService, MockUserAnswersService}
+import mocks.services.{MockGetPackagingTypesService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
@@ -37,7 +37,6 @@ import scala.concurrent.Future
 
 class ItemBulkPackagingSelectControllerSpec extends SpecBase
   with MockUserAnswersService
-  with MockGetCnCodeInformationService
   with MockGetPackagingTypesService
   with ItemFixtures {
 
@@ -47,7 +46,7 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
   lazy val form: Form[BulkPackagingType] = formProvider.apply(Wine, bulkPackagingTypes)(messages(request))
   lazy val view: ItemBulkPackagingSelectView = app.injector.instanceOf[ItemBulkPackagingSelectView]
 
-  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val baseUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   def submitRoute: Call = routes.ItemBulkPackagingSelectController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
@@ -68,8 +67,7 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
       formProvider,
       mockGetPackagingTypesService,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

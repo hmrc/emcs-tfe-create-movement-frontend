@@ -52,7 +52,7 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers {
           "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)
               .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
             )
 

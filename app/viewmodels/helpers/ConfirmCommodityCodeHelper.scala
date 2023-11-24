@@ -16,9 +16,9 @@
 
 package viewmodels.helpers
 
-import models.GoodsTypeModel.GoodsType
+import models.Index
 import models.requests.DataRequest
-import models.{Index, UserAnswers}
+import models.response.referenceData.CnCodeInformation
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.items._
@@ -26,14 +26,17 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class ConfirmCommodityCodeHelper @Inject()() {
+class ConfirmCommodityCodeHelper @Inject()(
+                                            itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
+                                            itemCommodityCodeSummary: ItemCommodityCodeSummary
+                                          ) {
 
-  def summaryList(idx: Index, goodsType: GoodsType, userAnswers: UserAnswers)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        ItemExciseProductCodeSummary.row(idx),
-        ItemCommodityCodeSummary.row(idx, goodsType, userAnswers)
-      ).flatten
+        itemExciseProductCodeSummary.row(idx, cnCodeInformation),
+        itemCommodityCodeSummary.row(idx, cnCodeInformation)
+      )
     )
   }
 

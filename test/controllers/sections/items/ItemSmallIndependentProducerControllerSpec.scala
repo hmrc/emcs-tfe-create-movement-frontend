@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -31,10 +32,10 @@ import views.html.sections.items.ItemSmallIndependentProducerView
 
 import scala.concurrent.Future
 
-class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   def itemSmallIndependentProducerSubmitAction(idx: Index = testIndex1) =
     routes.ItemSmallIndependentProducerController.onSubmit(testErn, testDraftId, idx, NormalMode)
@@ -58,8 +59,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

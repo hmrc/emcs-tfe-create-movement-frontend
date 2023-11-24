@@ -29,8 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class GetCommodityCodesService @Inject()(connector: GetCommodityCodesConnector)
                                         (implicit ec: ExecutionContext) {
 
-  def getCommodityCodes(exciseProductCode: ExciseProductCode)(implicit hc: HeaderCarrier): Future[Seq[CnCodeInformation]] = {
-    connector.getCommodityCodes(exciseProductCode.code).map {
+  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier): Future[Seq[CnCodeInformation]] = {
+    connector.getCommodityCodes(exciseProductCode).map {
       case Left(_) => throw CommodityCodesException("Invalid response from commodity code endpoint")
       case Right(commodityCodes) => commodityCodes
     }

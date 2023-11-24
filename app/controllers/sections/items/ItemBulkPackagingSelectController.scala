@@ -28,7 +28,7 @@ import pages.sections.items.ItemBulkPackagingSelectPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, GetPackagingTypesService, UserAnswersService}
+import services.{GetPackagingTypesService, UserAnswersService}
 import views.html.sections.items.ItemBulkPackagingSelectView
 
 import javax.inject.Inject
@@ -45,8 +45,7 @@ class ItemBulkPackagingSelectController @Inject()(
                                                    formProvider: ItemBulkPackagingSelectFormProvider,
                                                    getPackagingTypesService: GetPackagingTypesService,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: ItemBulkPackagingSelectView,
-                                                   override val cnCodeInformationService: GetCnCodeInformationService
+                                                   view: ItemBulkPackagingSelectView
                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

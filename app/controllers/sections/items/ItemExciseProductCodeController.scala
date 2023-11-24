@@ -26,11 +26,10 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.ItemsCount
-import services.{GetCnCodeInformationService, GetExciseProductCodesService, UserAnswersService}
+import services.{GetExciseProductCodesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
-import models.ExciseProductCode.format
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -46,8 +45,7 @@ class ItemExciseProductCodeController @Inject()(
                                                  formProvider: ItemExciseProductCodeFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  exciseProductCodesService: GetExciseProductCodesService,
-                                                 view: ItemExciseProductCodeView,
-                                                 override val cnCodeInformationService: GetCnCodeInformationService
+                                                 view: ItemExciseProductCodeView
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -58,7 +56,7 @@ class ItemExciseProductCodeController @Inject()(
             val selectItems = SelectItemHelper.constructSelectItems(
               selectOptions = exciseProductCodes,
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
-              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx)).map(_.code)
+              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx))
             )
             renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
@@ -76,12 +74,7 @@ class ItemExciseProductCodeController @Inject()(
             )
             formProvider(exciseProductCodes).bindFromRequest().fold(
               renderView(BadRequest, _, idx, selectItems, mode),
-              {answer =>
-                saveAndRedirect(
-                  page = ItemExciseProductCodePage(idx),
-                  answer = exciseProductCodes.filter(_.code == answer).head,
-                  mode = mode)
-              }
+              saveAndRedirect(ItemExciseProductCodePage(idx), _, mode)
             )
           }
         }

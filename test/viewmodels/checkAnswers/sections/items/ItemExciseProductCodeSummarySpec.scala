@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import models.NormalMode
 import org.scalatest.matchers.must.Matchers
@@ -27,8 +28,12 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
-class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
+class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val paragraph: p = app.injector.instanceOf[p]
 
   "ItemExciseProductCodeSummary" - {
 
@@ -38,26 +43,17 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemExciseProductCodeSummary.row(testIndex1) mustBe None
-          }
-        }
-
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
 
-            ItemExciseProductCodeSummary.row(testIndex1) mustBe Some(
+            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                  Html("B000" + "<br>"),
-                  Html("Beer")
+                  paragraph()(Html(testCommodityCodeWine.exciseProductCode)),
+                  paragraph()(Html(testCommodityCodeWine.exciseProductCodeDescription))
                 )))),
                 actions = Seq(
                   ActionItemViewModel(
@@ -67,7 +63,6 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
-            )
           }
         }
       }

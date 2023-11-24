@@ -19,8 +19,8 @@ package views.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ConfirmCommodityCodeMessages
+import models.NormalMode
 import models.requests.DataRequest
-import models.{GoodsTypeModel, NormalMode}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
@@ -29,10 +29,10 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary}
-import views.html.sections.items.ConfirmCommodityCodeView
+import views.html.sections.items.ItemConfirmCommodityCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
+class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
@@ -40,6 +40,10 @@ class ConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with Ite
     val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
 
   }
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+  lazy val view: ItemConfirmCommodityCodeView = app.injector.instanceOf[ItemConfirmCommodityCodeView]
 
   "ConfirmCommodityCode view" - {
 
@@ -51,19 +55,16 @@ class ConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with Ite
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
-            .set(ItemCommodityCodePage(testIndex1), testCommodityCodeBeer)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
           )
-        val view = app.injector.instanceOf[ConfirmCommodityCodeView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.items.routes.ConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode),
+          controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
           SummaryList(Seq(
-            ItemExciseProductCodeSummary.row(testIndex1),
-            ItemCommodityCodeSummary.row(testIndex1, GoodsTypeModel(testExciseProductCodeB000.code), emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000)
-              .set(ItemCommodityCodePage(testIndex1), testCommodityCodeBeer))
-          ).flatten)
+            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeTobacco),
+            itemCommodityCodeSummary.row(testIndex1, testCommodityCodeTobacco)
+          ))
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -87,12 +88,15 @@ class ConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with Ite
       }
     }
 
-    Map(testExciseProductCodeS500 -> testCommodityCodeWine,
-      testExciseProductCodeT300 -> testCommodityCodeWine,
-      testExciseProductCodeS400 -> testCommodityCodeWine,
-      testExciseProductCodeE600 -> testCommodityCodeWine,
-      testExciseProductCodeE800 -> testCommodityCodeWine,
-      testExciseProductCodeE910 -> testCommodityCodeWine).foreach { case (exciseProductCode, commodityCode) =>
+    Seq(testExciseProductCodeS500,
+      testExciseProductCodeT300,
+      testExciseProductCodeS400,
+      testExciseProductCodeE600,
+      testExciseProductCodeE800,
+      testExciseProductCodeE910).foreach { exciseProductCode =>
+
+      val commodityCode = testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code)
+
       Seq(ConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
 
         s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for EPC code ${exciseProductCode}'" - {
@@ -101,19 +105,16 @@ class ConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with Ite
 
           implicit val request: DataRequest[AnyContentAsEmpty.type] =
             dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), exciseProductCode)
-              .set(ItemCommodityCodePage(testIndex1), commodityCode)
+              .set(ItemExciseProductCodePage(testIndex1), exciseProductCode.code)
+              .set(ItemCommodityCodePage(testIndex1), commodityCode.cnCode)
             )
-          val view = app.injector.instanceOf[ConfirmCommodityCodeView]
 
           implicit val doc: Document = Jsoup.parse(view(
-            controllers.sections.items.routes.ConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode),
+            controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
             SummaryList(Seq(
-              ItemExciseProductCodeSummary.row(testIndex1),
-              ItemCommodityCodeSummary.row(testIndex1, GoodsTypeModel(exciseProductCode.code), emptyUserAnswers
-                .set(ItemExciseProductCodePage(testIndex1), exciseProductCode)
-                .set(ItemCommodityCodePage(testIndex1), commodityCode))
-            ).flatten)
+              itemExciseProductCodeSummary.row(testIndex1, commodityCode),
+              itemCommodityCodeSummary.row(testIndex1, commodityCode)
+            ))
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(

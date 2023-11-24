@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemProducerSizeFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockPreDraftService, MockUserAnswersService}
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -33,7 +34,7 @@ import views.html.sections.items.ItemProducerSizeView
 import java.time.LocalDateTime
 import scala.concurrent.Future
 
-class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService with ItemFixtures {
 
   class Setup(userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), monthValue: Int = 2) {
 
@@ -58,11 +59,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view,
-      timeMachine = FakeTimeMachine,
-      cnCodeInformationService = mockGetCnCodeInformationService
+      timeMachine = FakeTimeMachine
     )
 
     def itemProducerSizeRoute(idx: Index): String = routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+
     def onSubmitAction(idx: Index): Call = routes.ItemProducerSizeController.onSubmit(testErn, testDraftId, idx, NormalMode)
   }
 
@@ -72,7 +73,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
     "for a GET onPageLoad" - {
 
       "must return OK and the correct view for a GET with a goodstype set" in new Setup(Some(
-        emptyUserAnswers.set(ItemExciseProductCodePage(0), testExciseProductCodeW300)
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
       )) {
 
         val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(0))
@@ -90,7 +91,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       }
 
       "must return OK and the correct view for a GET when the current date is January" in new Setup(
-        userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(0), testExciseProductCodeW300)),
+        userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)),
         monthValue = 1
       ) {
 
@@ -110,7 +111,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Setup(Some(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(0), testExciseProductCodeW300)
+          .set(ItemExciseProductCodePage(0), testEpcWine)
           .set(ItemProducerSizePage(0), BigInt(1))
       )) {
 
@@ -129,7 +130,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       }
 
       "must redirect to Index of section when the idx is outside of bounds for a GET" in new Setup(Some(
-        emptyUserAnswers.set(ItemExciseProductCodePage(0), testExciseProductCodeW300)
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
       )) {
         val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(1))
 
@@ -177,7 +178,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       }
 
       "must return a Bad Request and errors when invalid data is submitted and there is a GoodsType set" in new Setup(Some(
-        emptyUserAnswers.set(ItemExciseProductCodePage(0), testExciseProductCodeW300)
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
       )) {
 
         val request = FakeRequest(POST, itemProducerSizeRoute(0))
@@ -198,7 +199,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       }
 
       "must redirect to Index of section when the idx is outside of bounds for a GET" in new Setup(Some(
-        emptyUserAnswers.set(ItemExciseProductCodePage(0), testExciseProductCodeW300)
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
       )) {
 
         val request = FakeRequest(POST, itemProducerSizeRoute(1))

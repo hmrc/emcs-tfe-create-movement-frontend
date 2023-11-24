@@ -18,19 +18,15 @@ package controllers.sections.items
 
 import controllers.BaseNavigationController
 import models.GoodsTypeModel.GoodsType
-import models.requests.{CnCodeInformationItem, DataRequest}
-import models.response.referenceData.CnCodeInformation
+import models.requests.DataRequest
 import models.{GoodsTypeModel, Index}
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemSelectPackagingPage}
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
-import services.GetCnCodeInformationService
 
 import scala.concurrent.Future
 
 trait BaseItemsNavigationController extends BaseNavigationController {
-
-  val cnCodeInformationService: GetCnCodeInformationService
 
   def validateIndex(index: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
     super.validateIndex(ItemsCount, index)(
@@ -63,15 +59,15 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   def withGoodsType(idx: Index)(f: GoodsType => Result)(implicit request: DataRequest[_]): Result =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        f(GoodsTypeModel.apply(epc.code))
+        f(GoodsTypeModel.apply(epc))
       case None =>
         Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
     }
 
   def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
-      case Some(exciseProductCode) =>
-        f(GoodsTypeModel.apply(exciseProductCode.code))
+      case Some(epc) =>
+        f(GoodsTypeModel.apply(epc))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
@@ -84,22 +80,4 @@ trait BaseItemsNavigationController extends BaseNavigationController {
       case None =>
         Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemIdx)))
     }
-
-  def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
-    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
-      case (Some(epc), Some(commodityCode)) =>
-        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc.code, commodityCode.cnCode))).map { response =>
-          response.headOption match {
-            case Some((_, cnCodeInfo)) =>
-              f(cnCodeInfo)
-            case _ =>
-              logger.warn(s"[onPageLoad] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
-              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-          }
-        }
-      case _ =>
-        logger.warn(s"[onPageLoad] productCode or commodityCode missing from UserAnswers")
-        Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
-    }
-  }
 }

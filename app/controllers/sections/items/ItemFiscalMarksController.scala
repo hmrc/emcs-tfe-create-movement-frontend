@@ -25,7 +25,7 @@ import pages.sections.items.ItemFiscalMarksPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemFiscalMarksView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemFiscalMarksController @Inject()(
                                            override val requireData: DataRequiredAction,
                                            formProvider: ItemFiscalMarksFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
-                                           view: ItemFiscalMarksView,
-                                           override val cnCodeInformationService: GetCnCodeInformationService
+                                           view: ItemFiscalMarksView
                                          ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

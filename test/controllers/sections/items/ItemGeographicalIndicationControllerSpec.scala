@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemGeographicalIndicationFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemGeographicalIndicationType.ProtectedDesignationOfOrigin
 import models.{Index, NormalMode, UserAnswers}
@@ -33,11 +34,11 @@ import views.html.sections.items.ItemGeographicalIndicationView
 
 import scala.concurrent.Future
 
-class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+    .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
 
   def itemGeographicalIndicationSubmitAction(idx: Index = testIndex1): Call =
@@ -60,8 +61,7 @@ class ItemGeographicalIndicationControllerSpec extends SpecBase with MockUserAns
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

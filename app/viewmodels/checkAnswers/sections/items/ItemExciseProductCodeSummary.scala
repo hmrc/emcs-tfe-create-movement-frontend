@@ -16,37 +16,35 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import com.google.inject.Inject
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.response.referenceData.CnCodeInformation
 import models.{Index, NormalMode}
-import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
-object ItemExciseProductCodeSummary {
+class ItemExciseProductCodeSummary @Inject()(p: p) {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemExciseProductCodePage(idx)).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "itemExciseProductCode.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-            Html(answer.code + "<br>"),
-            Html(answer.description)
-          )))),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = routes.ItemExciseProductCodeController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode).url,
-              id = s"changeItemExciseProductCode${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
-          )
-        )
-    }
+  def row(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+    SummaryListRowViewModel(
+      key = "itemExciseProductCode.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+        p()(Html(cnCodeInformation.exciseProductCode)),
+        p()(Html(cnCodeInformation.exciseProductCodeDescription))
+      )))),
+      actions = Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
+          id = s"changeItemExciseProductCode${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
+      )
+    )
   }
 }

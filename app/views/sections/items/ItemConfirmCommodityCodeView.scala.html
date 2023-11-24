@@ -25,15 +25,15 @@
 
 @(submitAction: Call, summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
-    @layout(maybeShowActiveTrader = maybeShowActiveTrader(request), pageTitle = titleNoForm(messages("confirmCommodityCode.heading"))) {
+    @layout(maybeShowActiveTrader = maybeShowActiveTrader(request), pageTitle = titleNoForm(messages("itemConfirmCommodityCode.title"))) {
 
         @formHelper(submitAction) {
 
-            @h1("confirmCommodityCode.heading", Some(messages("items.subHeading")), "govuk-heading-l")
+            @h1("itemConfirmCommodityCode.heading", Some(messages("items.subHeading")), "govuk-heading-l")
 
             @govukSummaryList(summaryList)
 
-            @saveAndContinue("site.confirmCodes")
+            @saveAndContinue("itemConfirmCommodityCode.confirmCodes")
 
         }
     }

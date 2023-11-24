@@ -18,9 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import forms.sections.items.ItemCommodityCodeFormProvider
 import fixtures.ItemFixtures
-import mocks.services.{MockGetCnCodeInformationService, MockGetCommodityCodesService, MockUserAnswersService}
+import forms.sections.items.ItemCommodityCodeFormProvider
+import mocks.services.{MockGetCommodityCodesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
@@ -35,10 +35,9 @@ import scala.concurrent.Future
 class ItemCommodityCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetCommodityCodesService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
   lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -61,16 +60,15 @@ class ItemCommodityCodeControllerSpec extends SpecBase
       mockGetCommodityCodesService,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
   "ItemCommodityCode Controller" - {
     "must return OK and the correct view for a GET when a list of commodity codes are returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))
@@ -90,11 +88,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     "must return OK and the correct view with the previous answer for a GET when a list of commodity codes are returned" in new Fixture(
       userAnswers = Some(
         emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200)
-          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
       )
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))
@@ -112,11 +110,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the confirmation page for a GET when a single commodity code is returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
         testCommodityCodeTobacco
       )))
 
@@ -127,11 +125,11 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the confirmation page for a GET when no commodity codes are returned" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Nil))
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Nil))
 
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -140,13 +138,9 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
-        testCommodityCodeTobacco
-      )))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("item-commodity-code", "answer")))
 
@@ -155,9 +149,9 @@ class ItemCommodityCodeControllerSpec extends SpecBase
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(
-      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200))
+      userAnswers = Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))
     ) {
-      MockGetCommodityCodesService.getCommodityCodes(testExciseProductCodeT200).returns(Future.successful(Seq(
+      MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(
         testCommodityCodeTobacco,
         testCommodityCodeWine
       )))

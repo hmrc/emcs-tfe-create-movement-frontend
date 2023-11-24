@@ -23,7 +23,7 @@ import navigation.ItemsNavigator
 import pages.sections.items.ItemNetGrossMassPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemNetGrossMassView
 
 import javax.inject.Inject
@@ -39,8 +39,7 @@ class ItemNetGrossMassController @Inject()(
                                             override val userAllowList: UserAllowListAction,
                                             formProvider: ItemNetGrossMassFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: ItemNetGrossMassView,
-                                            override val cnCodeInformationService: GetCnCodeInformationService
+                                            view: ItemNetGrossMassView
                                           ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

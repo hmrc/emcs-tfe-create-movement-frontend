@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCommodityCodeMessages
-import models.{GoodsTypeModel, NormalMode}
+import models.NormalMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
@@ -28,12 +28,23 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
 class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+  lazy val paragraph: p = app.injector.instanceOf[p]
+
   "ItemCommodityCodeSummary" - {
 
-    Seq(testExciseProductCodeS500, testExciseProductCodeT300, testExciseProductCodeS400, testExciseProductCodeE600, testExciseProductCodeE800, testExciseProductCodeE910).foreach { exciseProductCode =>
+    Seq(
+      testExciseProductCodeS500,
+      testExciseProductCodeT300,
+      testExciseProductCodeS400,
+      testExciseProductCodeE600,
+      testExciseProductCodeE800,
+      testExciseProductCodeE910
+    ).foreach { exciseProductCode =>
 
       Seq(ItemCommodityCodeMessages.English).foreach { messagesForLanguage =>
 
@@ -44,17 +55,23 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
           "when there's an answer" - {
 
             "must output the expected row" in {
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), exciseProductCode).set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))
+              implicit lazy val request =
+                dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ItemExciseProductCodePage(testIndex1), exciseProductCode.code)
+                    .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode)
+                )
 
-              ItemCommodityCodeSummary.row(testIndex1,GoodsTypeModel(exciseProductCode.code), request.userAnswers) mustBe Some(
+              itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code)) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                    Html("22060031" + "<br>"),
-                    Html("Sparkling cider and perry"))))),
+                    paragraph()(Html(testCommodityCodeWine.cnCode)),
+                    paragraph()(Html(testCommodityCodeWine.cnCodeDescription))
+                  )))),
                   actions = Seq()
                 )
-              )
             }
           }
         }
@@ -67,36 +84,29 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
 
         implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "must output the expected row" in {
+          implicit lazy val request =
+            dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
+                .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode))
 
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemCommodityCodeSummary.row(testIndex1,GoodsTypeModel(testExciseProductCodeB000.code),request.userAnswers) mustBe None
-          }
-        }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000).set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine))
-
-            ItemCommodityCodeSummary.row(testIndex1, GoodsTypeModel(testExciseProductCodeB000.code),request.userAnswers) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                  Html("22060031" + "<br>"),
-                  Html("Sparkling cider and perry"))))),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
-                    id = "changeItemCommodityCode1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
+          itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine) mustBe
+            SummaryListRowViewModel(
+              key = messagesForLanguage.cyaLabel,
+              value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+                paragraph()(Html(testCommodityCodeWine.cnCode)),
+                paragraph()(Html(testCommodityCodeWine.cnCodeDescription))
+              )))),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
+                  id = "changeItemCommodityCode1"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
             )
-          }
         }
       }
     }

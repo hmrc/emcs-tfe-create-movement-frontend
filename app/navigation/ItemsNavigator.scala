@@ -33,9 +33,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
 
-    case ItemCommodityCodePage(idx) => (userAnswers: UserAnswers) => itemsRoutes.ConfirmCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+    case ItemCommodityCodePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
-    case ConfirmCommodityCodePage(idx) => (userAnswers: UserAnswers) => itemsRoutes.ItemBrandNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+    case ItemConfirmCommodityCodePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemBrandNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemBrandNamePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.CommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -105,7 +107,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map{epc => GoodsTypeModel(epc.code)} match {
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(epc => GoodsTypeModel(epc)) match {
             case Some(Wine) =>
               //TODO: Redirect to CAM-ITM15
               testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -163,7 +165,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def alcoholStrengthRouting(idx: Index, userAnswers: UserAnswers): Call =
     (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemAlcoholStrengthPage(idx))) match {
       case (Some(epc), Some(abv)) =>
-        GoodsTypeModel(epc.code) match {
+        GoodsTypeModel(epc) match {
           case Beer =>
             if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
               itemsRoutes.ItemDegreesPlatoController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -192,12 +194,12 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def commercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        GoodsTypeModel(epc.code) match {
+        GoodsTypeModel(epc) match {
           case Beer | Spirits | Wine | Intermediate =>
             itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Tobacco =>
             itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-          case Energy if Seq("E470", "E500", "E600", "E930").contains(epc.code) =>
+          case Energy if Seq("E470", "E500", "E600", "E930").contains(epc) =>
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy =>
             //TODO: Redirect to CAM-ITM33
@@ -216,7 +218,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case (Some(geographicalIndicationType), Some(alcoholStrength), Some(epc)) =>
         geographicalIndicationType match {
           case NoGeographicalIndication =>
-            val goodsType = GoodsTypeModel(epc.code)
+            val goodsType = GoodsTypeModel(epc)
             val acceptableGoodsTypes = Seq(Spirits, Wine, Intermediate)
             if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength < 8.5) {
               itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -235,7 +237,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        GoodsTypeModel(epc.code) match {
+        GoodsTypeModel(epc) match {
           case Wine =>
             userAnswers.get(ItemQuantityPage(idx)) match {
               case Some(quantity) =>

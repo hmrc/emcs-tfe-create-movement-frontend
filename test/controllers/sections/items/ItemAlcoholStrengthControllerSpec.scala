@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemAlcoholStrengthFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -32,10 +33,10 @@ import views.html.sections.items.ItemAlcoholStrengthView
 
 import scala.concurrent.Future
 
-class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   def itemAlcoholStrengthSubmitAction(idx: Index = testIndex1): Call = routes.ItemAlcoholStrengthController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
@@ -56,8 +57,7 @@ class ItemAlcoholStrengthControllerSpec extends SpecBase with MockUserAnswersSer
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

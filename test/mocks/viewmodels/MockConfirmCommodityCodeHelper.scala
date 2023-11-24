@@ -16,10 +16,10 @@
 
 package mocks.viewmodels
 
-import models.GoodsTypeModel.GoodsType
+import models.Index
 import models.requests.DataRequest
-import models.{Index, UserAnswers}
-import org.scalamock.handlers.CallHandler5
+import models.response.referenceData.CnCodeInformation
+import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -31,8 +31,8 @@ trait MockConfirmCommodityCodeHelper extends MockFactory {
 
   object MockConfirmCommodityCodeHelper {
 
-    def summaryList(idx: Index, goodsType: GoodsType, userAnswers: UserAnswers): CallHandler5[Index, GoodsType, UserAnswers, DataRequest[_], Messages, SummaryList] =
-      (mockConfirmCommodityCodeHelper.summaryList(_: Index, _: GoodsType, _: UserAnswers)(_: DataRequest[_], _: Messages)).expects(*, *, *, *, *)
+    def summaryList(idx: Index, cnCodeInformation: CnCodeInformation): CallHandler4[Index, CnCodeInformation, DataRequest[_], Messages, SummaryList] =
+      (mockConfirmCommodityCodeHelper.summaryList(_: Index, _: CnCodeInformation)(_: DataRequest[_], _: Messages)).expects(idx, cnCodeInformation, *, *)
   }
 
 }

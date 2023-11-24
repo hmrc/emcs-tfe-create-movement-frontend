@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingQuantityFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
@@ -34,11 +34,11 @@ import views.html.sections.items.ItemPackagingQuantityView
 
 import scala.concurrent.Future
 
-class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService with ItemFixtures {
+class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
+    .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("VA", "Vat"))
 
   val itemPackagingQuantitySubmitAction: Call = routes.ItemPackagingQuantityController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
@@ -59,8 +59,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
@@ -89,7 +88,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must redirect to Index of section when Select Packaging Type is missing" in new Fixture(
-      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300))) {
+      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER

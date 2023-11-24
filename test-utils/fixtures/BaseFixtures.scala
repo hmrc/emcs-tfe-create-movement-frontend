@@ -16,9 +16,7 @@
 
 package fixtures
 
-import models.UnitOfMeasure.Litres20
 import models._
-import models.response.referenceData.CnCodeInformation
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.libs.json.{JsObject, Json}
@@ -193,13 +191,5 @@ trait BaseFixtures {
   val dispatchDetailsJson = Json.obj(
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
-  )
-
-  val testCommodityCodeBeer: CnCodeInformation = CnCodeInformation(
-    cnCode = "22030001",
-    cnCodeDescription = "Beer made from malt in bottles holding 10 litres or less",
-    exciseProductCode = testExciseProductCodeB000.code,
-    exciseProductCodeDescription = "Beer",
-    unitOfMeasure = Litres20
   )
 }

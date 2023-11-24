@@ -29,7 +29,7 @@ import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemQuantityPage}
 import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.{AnyContentAsEmpty, Call, Result, Results}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemQuantityView
@@ -42,8 +42,8 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200)
-    .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine)
+    .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+    .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
   def itemQuantitySubmitAction(idx: Index = testIndex1): Call = routes.ItemQuantityController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
@@ -52,7 +52,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
   lazy val view: ItemQuantityView = app.injector.instanceOf[ItemQuantityView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new ItemQuantityController(
       messagesApi,
@@ -176,6 +176,76 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+
+    "withCnCodeInformation" - {
+      val cnCodeSuccessFunction: CnCodeInformation => Result = _ => Results.Ok
+
+      "must redirect to the index controller" - {
+        "when EPC is missing" in new Fixture(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco))) {
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+        "when CN Code is missing" in new Fixture(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco))) {
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+      "must redirect to JourneyRecovery" - {
+        "when both EPC and CN Code are in userAnswers and service returns an empty list" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+        )) {
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
+            .returns(Future.successful(Nil))
+
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+      "must load the success function" - {
+        "when both EPC and CN Code are in userAnswers and service returns a list with one item" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+        )) {
+          val item: CnCodeInformationItem = CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)
+
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
+            .returns(Future.successful(Seq(item -> testCommodityCodeTobacco)))
+
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe OK
+        }
+        "when both EPC and CN Code are in userAnswers and service returns a list with multiple items" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+        )) {
+          val item: CnCodeInformationItem = CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)
+
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
+            .returns(Future.successful(Seq(
+              item -> testCommodityCodeTobacco,
+              item -> testCommodityCodeWine
+            )))
+
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe OK
+        }
+      }
     }
   }
 }

@@ -19,6 +19,6 @@ package pages.sections.items
 import models.Index
 import pages.Page
 
-case class ConfirmCommodityCodePage(idx: Index) extends Page {
-  override val toString: String = "confirmCommodityCode"
+case class ItemConfirmCommodityCodePage(idx: Index) extends Page {
+  override val toString: String = "itemConfirmCommodityCode"
 }

@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemWineMoreInformationChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemWineMoreInformationChoicePage}
@@ -30,12 +31,12 @@ import views.html.sections.items.ItemWineMoreInformationChoiceView
 
 import scala.concurrent.Future
 
-class ItemWineMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemWineMoreInformationChoiceControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   lazy val formProvider = new ItemWineMoreInformationChoiceFormProvider()
   lazy val form = formProvider()
   lazy val view = app.injector.instanceOf[ItemWineMoreInformationChoiceView]
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW300)
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   val action: Call = controllers.sections.items.routes.ItemWineMoreInformationChoiceController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
@@ -52,8 +53,7 @@ class ItemWineMoreInformationChoiceControllerSpec extends SpecBase with MockUser
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

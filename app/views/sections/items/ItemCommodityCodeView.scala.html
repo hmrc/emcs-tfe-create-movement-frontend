@@ -22,7 +22,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 @import models.response.referenceData.CnCodeInformation
 @import pages.sections.items.ItemCommodityCodePage
-
+@import views.html.helper.CSPNonce
+@import config.AppConfig
 
 @this(
         layout: templates.Layout,
@@ -30,7 +31,11 @@
         govukErrorSummary: GovukErrorSummary,
         govukSelect: GovukSelect,
         govukButton: GovukButton,
+        h1: components.h1,
         h2: components.h2,
+        p: components.p,
+        link: components.link,
+        appConfig: AppConfig,
         continueOrExit: components.continueOrExit,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
@@ -38,11 +43,12 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
 
-@hint = {
-@messages("itemCommodityCode.hint.text") <a href="https://www.trade-tariff.service.gov.uk/find_commodity" class="govuk-link" target=_blank>@messages("itemCommodityCode.hint.link")</a>
+@scripts = {
+  @autocompleteJavascript()
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = autocompleteJavascript(), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
         @if(form.errors.nonEmpty) {
@@ -50,20 +56,22 @@
         }
 
         @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(
+          headingMsg = messages("itemCommodityCode.heading", goodsType.toSingularOutput())
+        )
+
+        @p(id = Some("commodity-code-guidance")) {
+          @messages("itemCommodityCode.hint.text")
+          @link(appConfig.findCommodityCodeUrl, messages("itemCommodityCode.hint.link"), opensInNewTab = true)
+        }
+
         @govukSelect(
             Select(
                 id = "item-commodity-code",
                 name = "item-commodity-code",
-                label = Label(
-                    classes = "govuk-label--l",
-                    isPageHeading = true,
+                label = LabelViewModel(
                     content = Text(messages("itemCommodityCode.heading", goodsType.toSingularOutput()))
-                ),
-                hint = Some(Hint(
-                    id = Some("commodity-code-hint"),
-                    classes = "gov-uk-hint",
-                    content = HtmlContent(hint)
-                )),
+                ).withCssClass("govuk-label--l").hidden,
                 items = Seq(
                     SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>

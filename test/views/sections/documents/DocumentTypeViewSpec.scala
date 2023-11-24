@@ -35,7 +35,7 @@ class DocumentTypeViewSpec extends SpecBase with ViewBehaviours {
     def selectOption(nthChild: Int) = s"#document-type > option:nth-child($nthChild)"
   }
 
-  "Dispatch Business Name view" - {
+  "Document Type view" - {
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 

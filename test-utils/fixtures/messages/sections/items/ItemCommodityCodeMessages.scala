@@ -24,6 +24,8 @@ object ItemCommodityCodeMessages {
 
     val heading = "Choose the commodity code for the beer"
     val title = titleHelper(heading)
+    val p = "You can use the Trade Tariff tool to look up a commodity code (opens in new tab)"
+    val link = "look up a commodity code (opens in new tab)"
     val errorRequired = "Choose the commodity code for the beer"
     val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
     val defaultItem = "Choose commodity code"

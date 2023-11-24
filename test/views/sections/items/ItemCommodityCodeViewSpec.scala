@@ -36,7 +36,7 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFi
     def selectOption(nthChild: Int) = s"#item-commodity-code > option:nth-child($nthChild)"
   }
 
-  "Dispatch Business Name view" - {
+  "Item Commodity Code view" - {
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
@@ -51,23 +51,24 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFi
 
       val testCommodityCode2 = testCommodityCodeWine
 
-
       implicit val doc: Document = Jsoup.parse(view(form, submitRoute, Beer, Seq(testCommodityCode1, testCommodityCode2)).toString())
-      val main = doc.getElementsByTag("main").first()
-      val links = main.getElementsByTag("a")
-      links.get(0).text mustBe English.lookUpCommodityCode
-      links.get(1).text mustBe English.returnToDraft
 
       behave like pageWithExpectedElementsAndMessages(Seq(
-        Selectors.h2(1) -> English.itemSection,
-        Selectors.hiddenText -> English.hiddenSectionContent,
         Selectors.title -> English.title,
+        Selectors.subHeadingCaptionSelector -> English.itemSection,
         Selectors.h1 -> English.heading,
+        Selectors.p(1) -> English.p,
+        Selectors.link(1) -> English.link,
         Selectors.selectOption(1) -> English.defaultItem,
         Selectors.selectOption(2) -> s"${testCommodityCode1.cnCode}: ${testCommodityCode1.cnCodeDescription}",
         Selectors.selectOption(3) -> s"${testCommodityCode2.cnCode}: ${testCommodityCode2.cnCodeDescription}",
-        Selectors.button -> English.saveAndContinue
+        Selectors.button -> English.saveAndContinue,
+        Selectors.saveAndExitLink -> English.returnToDraft
       ))
+
+      "must have the correct link to lookup commodity codes" in {
+        doc.select(Selectors.link(1)).attr("href") mustBe "https://www.trade-tariff.service.gov.uk/find_commodity"
+      }
     }
   }
 }

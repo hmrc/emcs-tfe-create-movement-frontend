@@ -128,6 +128,17 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         )(dataRequest(request), messages(request)).toString
       }
 
+      "must redirect to Index of section when the idx is outside of bounds for a GET" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), Wine.code)
+      )) {
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(1))
+
+        val result = TestController.onPageLoad(testErn, testDraftId, 1, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+
       "must redirect to ItemsIndexController for a GET there is no GoodsType in UserAnswers" in new Setup() {
 
         val request = FakeRequest(GET, itemProducerSizeRoute(0))
@@ -184,6 +195,18 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           startYear = "2022",
           endYear = "2023"
         )(dataRequest(request), messages(request)).toString
+      }
+
+      "must redirect to Index of section when the idx is outside of bounds for a GET" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), Wine.code)
+      )) {
+
+        val request = FakeRequest(POST, itemProducerSizeRoute(1))
+          .withFormUrlEncodedBody(("value", ""))
+        val result = TestController.onSubmit(testErn, testDraftId, 1, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
       }
 
       "must redirect to ItemsIndexController when invalid data is submitted and there is a No GoodsType set" in new Setup() {

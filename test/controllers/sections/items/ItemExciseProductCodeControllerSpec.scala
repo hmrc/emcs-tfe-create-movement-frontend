@@ -155,6 +155,29 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
         }
+        "and only clear down the current item's answers when the previous answer is different to the new answer" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+        )) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
+
+          MockUserAnswersService.set(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ).returns(Future.successful(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ))
+
+          val result: Future[Result] =
+            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
       }
     }
 

@@ -21,7 +21,7 @@ import forms.sections.items.ItemExciseProductCodeFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemsSection}
+import pages.sections.items.{ItemExciseProductCodePage, ItemsSection, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -77,7 +77,11 @@ class ItemExciseProductCodeController @Inject()(
                 renderView(BadRequest, formWithErrors, idx, selectItems, mode)
               },
               value => {
-                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(ItemExciseProductCodePage(idx), value, request.userAnswers.remove(ItemsSection))
+                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
+                  page = ItemExciseProductCodePage(idx),
+                  newAnswer = value,
+                  cleansingFunction = request.userAnswers.resetIndexedPage(ItemsSectionItems(idx), idx)
+                )
                 saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
               }
             )

@@ -84,12 +84,12 @@ class ItemQuantityController @Inject()(
             case Some((_, cnCodeInfo)) =>
               f(cnCodeInfo)
             case _ =>
-              logger.warn(s"[renderView] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
+              logger.warn(s"[withCnCodeInformation] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
               Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           }
         }
       case _ =>
-        logger.warn(s"[renderView] productCode or commodityCode missing from UserAnswers")
+        logger.warn(s"[withCnCodeInformation] productCode or commodityCode missing from UserAnswers")
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
   }

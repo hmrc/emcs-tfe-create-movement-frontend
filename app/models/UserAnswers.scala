@@ -67,11 +67,10 @@ final case class UserAnswers(ern: String,
   /**
    * @param section section to reset to an empty object
    * @param index to ensure this method is used to reset indexed Sections
-   * @tparam A
    * @return UserAnswers with the supplied section reset to an empty JSON object
    *         To be used to reset indexed Sections without deleting the index - e.g. clearing down an indexed Section in order to start it up again without losing its place in the Array
    */
-  def resetIndexedPage[A <: JsValue](section: Section[A], @unused index: Index): UserAnswers =
+  def resetIndexedSection(section: Section[JsObject], @unused index: Index): UserAnswers =
     handleResult {
       data.setObject(section.path, Json.obj())
     }

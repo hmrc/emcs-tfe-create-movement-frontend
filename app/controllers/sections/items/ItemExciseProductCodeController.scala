@@ -80,7 +80,7 @@ class ItemExciseProductCodeController @Inject()(
                 val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
                   page = ItemExciseProductCodePage(idx),
                   newAnswer = value,
-                  cleansingFunction = request.userAnswers.resetIndexedPage(ItemsSectionItems(idx), idx)
+                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItems(idx), idx)
                 )
                 saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
               }

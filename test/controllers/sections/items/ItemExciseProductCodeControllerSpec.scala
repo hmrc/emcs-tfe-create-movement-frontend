@@ -20,12 +20,12 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemExciseProductCodeFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockGetExciseProductCodesService, MockUserAnswersService}
+import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
 import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
@@ -37,7 +37,6 @@ import scala.concurrent.Future
 class ItemExciseProductCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetExciseProductCodesService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
   val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -62,8 +61,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       mockGetExciseProductCodesService,
-      view,
-      mockGetCnCodeInformationService
+      view
     )
 
     val sampleEPCsSelectOptions: Seq[SelectItem] = SelectItemHelper.constructSelectItems(
@@ -95,7 +93,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form, action, sampleEPCsSelectOptions)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -113,21 +111,74 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+    "when valid data is submitted" - {
+      "must redirect to the next page" - {
+        "when there was no previous answer" in new Fixture(Some(emptyUserAnswers)) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
+          MockUserAnswersService.set(
+            emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+          ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
 
-      MockUserAnswersService.set(
-        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
-      ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")))
+          val result: Future[Result] =
+            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+        "when the previous answer is the same as the new answer" in new Fixture(Some(
+          emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+        )) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+          val result: Future[Result] =
+            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+        "when the previous answer is different to the new answer" in new Fixture(Some(
+          emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        )) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
+
+          MockUserAnswersService.set(
+            emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+          ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
+
+          val result: Future[Result] =
+            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+        "and only clear down the current item's answers when the previous answer is different to the new answer" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+        )) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
+
+          MockUserAnswersService.set(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ).returns(Future.successful(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ))
+
+          val result: Future[Result] =
+            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
@@ -140,7 +191,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, action, sampleEPCsSelectOptions, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(boundForm, action, sampleEPCsSelectOptions)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
@@ -152,7 +203,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

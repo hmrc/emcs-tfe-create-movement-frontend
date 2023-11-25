@@ -33,6 +33,12 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, NormalMode)
 
+    case ItemCommodityCodePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+
+    case ItemConfirmCommodityCodePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemBrandNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
     case ItemBrandNamePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.CommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
@@ -142,6 +148,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) =>
+      answers.get(ItemCommodityCodePage(idx)) match {
+        case Some(_) => itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx)
+        case None => itemsRoutes.ItemCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx, ReviewMode)
+      }
+    case ItemCommodityCodePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx)
     case _ =>
       (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }

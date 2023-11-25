@@ -28,7 +28,7 @@ import pages.sections.items.ItemMaturationPeriodAgePage
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemMaturationPeriodAgeView
 
 import javax.inject.Inject
@@ -42,7 +42,6 @@ class ItemMaturationPeriodAgeController @Inject()(
                                          override val auth: AuthAction,
                                          override val getData: DataRetrievalAction,
                                          override val requireData: DataRequiredAction,
-                                         override val cnCodeInformationService: GetCnCodeInformationService,
                                          formProvider: ItemMaturationPeriodAgeFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: ItemMaturationPeriodAgeView

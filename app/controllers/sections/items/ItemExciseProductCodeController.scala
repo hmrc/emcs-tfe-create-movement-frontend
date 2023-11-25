@@ -21,12 +21,12 @@ import forms.sections.items.ItemExciseProductCodeFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemsSection}
+import pages.sections.items.{ItemExciseProductCodePage, ItemsSection, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.ItemsCount
-import services.{GetCnCodeInformationService, GetExciseProductCodesService, UserAnswersService}
+import services.{GetExciseProductCodesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
@@ -45,8 +45,7 @@ class ItemExciseProductCodeController @Inject()(
                                                  formProvider: ItemExciseProductCodeFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  exciseProductCodesService: GetExciseProductCodesService,
-                                                 view: ItemExciseProductCodeView,
-                                                 override val cnCodeInformationService: GetCnCodeInformationService
+                                                 view: ItemExciseProductCodeView
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -69,13 +68,22 @@ class ItemExciseProductCodeController @Inject()(
       validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            val selectItems = SelectItemHelper.constructSelectItems(
-              exciseProductCodes,
-              defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
-            )
             formProvider(exciseProductCodes).bindFromRequest().fold(
-              renderView(BadRequest, _, idx, selectItems, mode),
-              saveAndRedirect(ItemExciseProductCodePage(idx), _, mode)
+              formWithErrors => {
+                val selectItems = SelectItemHelper.constructSelectItems(
+                  exciseProductCodes,
+                  defaultTextMessageKey = "itemExciseProductCode.select.defaultValue"
+                )
+                renderView(BadRequest, formWithErrors, idx, selectItems, mode)
+              },
+              value => {
+                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
+                  page = ItemExciseProductCodePage(idx),
+                  newAnswer = value,
+                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItems(idx), idx)
+                )
+                saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
+              }
             )
           }
         }
@@ -97,8 +105,7 @@ class ItemExciseProductCodeController @Inject()(
     Future.successful(status(view(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-      selectOptions = selectItems,
-      mode = mode
+      selectOptions = selectItems
     )))
   }
 }

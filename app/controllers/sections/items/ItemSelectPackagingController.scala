@@ -28,7 +28,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.ItemsPackagingCount
-import services.{GetCnCodeInformationService, GetPackagingTypesService, UserAnswersService}
+import services.{GetPackagingTypesService, UserAnswersService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemSelectPackagingView
@@ -47,8 +47,7 @@ class ItemSelectPackagingController @Inject()(
                                                formProvider: ItemSelectPackagingFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                getPackagingTypesService: GetPackagingTypesService,
-                                               view: ItemSelectPackagingView,
-                                               override val cnCodeInformationService: GetCnCodeInformationService
+                                               view: ItemSelectPackagingView
                                              ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =

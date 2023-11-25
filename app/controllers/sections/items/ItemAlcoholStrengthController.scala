@@ -25,7 +25,7 @@ import pages.sections.items.ItemAlcoholStrengthPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemAlcoholStrengthView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemAlcoholStrengthController @Inject()(
                                                override val userAllowList: UserAllowListAction,
                                                formProvider: ItemAlcoholStrengthFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
-                                               view: ItemAlcoholStrengthView,
-                                               override val cnCodeInformationService: GetCnCodeInformationService
+                                               view: ItemAlcoholStrengthView
                                              ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

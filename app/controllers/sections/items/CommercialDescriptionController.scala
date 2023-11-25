@@ -25,7 +25,7 @@ import pages.sections.items.CommercialDescriptionPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.CommercialDescriptionView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class CommercialDescriptionController @Inject()(
                                                  override val requireData: DataRequiredAction,
                                                  formProvider: CommercialDescriptionFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: CommercialDescriptionView,
-                                                 override val cnCodeInformationService: GetCnCodeInformationService
+                                                 view: CommercialDescriptionView
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

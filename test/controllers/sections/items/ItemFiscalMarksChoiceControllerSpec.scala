@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -32,9 +33,9 @@ import views.html.sections.items.ItemFiscalMarksChoiceView
 
 import scala.concurrent.Future
 
-class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -53,8 +54,7 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
 
   }

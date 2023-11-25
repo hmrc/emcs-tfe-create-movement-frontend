@@ -974,9 +974,9 @@ documentType.change.hidden = Document type
 
 itemCommodityCode.title = Choose the commodity code for the {0}
 itemCommodityCode.heading = Choose the commodity code for the {0}
-itemCommodityCode.checkYourAnswersLabel = Choose the commodity code for the {0}
+itemCommodityCode.checkYourAnswersLabel = Commodity code
 itemCommodityCode.error.required = Choose a commodity code
-itemCommodityCode.change.hidden = ItemCommodityCode
+itemCommodityCode.change.hidden = commodity code
 itemCommodityCode.hint.text = You can use the Trade Tariff tool to
 itemCommodityCode.hint.link = look up a commodity code
 itemCommodityCode.defaultItem = Choose commodity code
@@ -1195,6 +1195,10 @@ itemPackagingQuantity.error.required = Enter the amount of this type of package 
 itemPackagingQuantity.error.invalidCharacters = The amount must only contain numbers
 itemPackagingQuantity.error.decimalPlaces = The amount must not contain decimal places
 itemPackagingQuantity.error.tooLong = The amount can be up to 15 digits long
+
+itemConfirmCommodityCode.heading = Review and confirm Excise Product Code and commodity code
+itemConfirmCommodityCode.title = Review and confirm Excise Product Code and commodity code
+itemConfirmCommodityCode.confirmCodes = Confirm codes
 
 itemProducerSize.title = What was the producer’s total production of {0} from 1 February {1} to 31 January {2}?
 itemProducerSize.heading = What was the producer’s total production of {0} from 1 February {1} to 31 January {2}?

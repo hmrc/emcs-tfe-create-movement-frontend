@@ -25,7 +25,7 @@ import pages.sections.items.ItemPackagingShippingMarksPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemPackagingShippingMarksView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemPackagingShippingMarksController @Inject()(
                                        override val requireData: DataRequiredAction,
                                        formProvider: ItemPackagingShippingMarksFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: ItemPackagingShippingMarksView,
-                                       override val cnCodeInformationService: GetCnCodeInformationService
+                                       view: ItemPackagingShippingMarksView
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =

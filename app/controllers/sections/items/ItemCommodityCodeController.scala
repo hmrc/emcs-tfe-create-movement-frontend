@@ -24,7 +24,7 @@ import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GetCnCodeInformationService, GetCommodityCodesService, UserAnswersService}
+import services.{GetCommodityCodesService, UserAnswersService}
 import views.html.sections.items.ItemCommodityCodeView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemCommodityCodeController @Inject()(
                                              getCommodityCodesService: GetCommodityCodesService,
                                              formProvider: ItemCommodityCodeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
-                                             view: ItemCommodityCodeView,
-                                             override val cnCodeInformationService: GetCnCodeInformationService
+                                             view: ItemCommodityCodeView
                                            ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

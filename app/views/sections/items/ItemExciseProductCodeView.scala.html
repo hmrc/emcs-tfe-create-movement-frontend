@@ -33,7 +33,7 @@
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()

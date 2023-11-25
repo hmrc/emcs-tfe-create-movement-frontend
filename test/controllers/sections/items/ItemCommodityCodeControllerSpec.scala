@@ -18,9 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import forms.sections.items.ItemCommodityCodeFormProvider
 import fixtures.ItemFixtures
-import mocks.services.{MockGetCnCodeInformationService, MockGetCommodityCodesService, MockUserAnswersService}
+import forms.sections.items.ItemCommodityCodeFormProvider
+import mocks.services.{MockGetCommodityCodesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
@@ -35,10 +35,9 @@ import scala.concurrent.Future
 class ItemCommodityCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetCommodityCodesService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   lazy val itemIndexRoute: String = routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
   lazy val submitCall: Call = routes.ItemCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
@@ -61,8 +60,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase
       mockGetCommodityCodesService,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
@@ -91,7 +89,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase
       userAnswers = Some(
         emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-          .set(ItemCommodityCodePage(testIndex1), testCommodityCodeTobacco.cnCode)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
       )
     ) {
       MockGetCommodityCodesService.getCommodityCodes(testEpcTobacco).returns(Future.successful(Seq(

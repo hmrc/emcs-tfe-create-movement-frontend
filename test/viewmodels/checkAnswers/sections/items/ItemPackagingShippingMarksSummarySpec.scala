@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
@@ -27,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers {
+class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
   "ItemPackagingShippingMarksSummary" - {
 
@@ -52,7 +53,7 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers {
           "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), "B000")
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)
               .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
             )
 

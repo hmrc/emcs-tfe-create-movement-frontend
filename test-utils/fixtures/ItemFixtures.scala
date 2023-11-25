@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.UnitOfMeasure.Kilograms
+import models.UnitOfMeasure.{Kilograms, Litres20}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode._
 import models.{ExciseProductCode, GoodsTypeModel}
@@ -95,6 +95,15 @@ trait ItemFixtures {
     unitOfMeasure = Kilograms
   )
 
+  val testEpcOtherProductsContainingEthylAlcohol: String = "S500"
+  val testCommodityCodeS500: CnCodeInformation = CnCodeInformation(
+    cnCode = "10000000",
+    cnCodeDescription = "Other products containing ethyl alcohol",
+    exciseProductCode = testEpcOtherProductsContainingEthylAlcohol,
+    exciseProductCodeDescription = "Other products containing ethyl alcohol",
+    unitOfMeasure = Litres20
+  )
+
   val testEpcWine: String = "W200"
   val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
   val testCnCodeWine: String = "22060031"
@@ -103,7 +112,7 @@ trait ItemFixtures {
     cnCodeDescription = "Sparkling cider and perry",
     exciseProductCode = testEpcTobacco,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
-    unitOfMeasure = Kilograms
+    unitOfMeasure = Litres20
   )
 
   val testItemPackagingTypes: Seq[ItemPackaging] = Seq(
@@ -119,4 +128,130 @@ trait ItemFixtures {
     "BG" -> "Bag",
     "VA" -> "Vat"
   )
+  val testExciseProductCodeB000: ExciseProductCode =
+    ExciseProductCode(
+      "B000",
+      "Beer",
+      "B",
+      "Beer"
+    )
+  val testExciseProductCodeE200: ExciseProductCode =
+    ExciseProductCode(
+      "E200",
+      "Vegetable and animal oils Products falling within CN codes 1507 to 1518, if these are intended for use as heating fuel or motor fuel (Article 20(1)(a))",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE470: ExciseProductCode =
+    ExciseProductCode(
+      "E470",
+      "Heavy fuel oil",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE500: ExciseProductCode =
+    ExciseProductCode(
+      "E500",
+      "Liquified Petroleum gases (LPG) Products falling within CN codes 2711 (except 2711 11, 2711 21 and 2711 29)",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE600: ExciseProductCode =
+    ExciseProductCode(
+      "E600",
+      "Saturated acyclic hydrocarbons Products falling within CN code 2901 10",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE800: ExciseProductCode =
+    ExciseProductCode(
+      "E800",
+      "Methanol (methyl alcohol) Products falling within CN code 2905 11 00, which are not of synthetic origin, if these are intended for use as heating fuel or motor fuel",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE910: ExciseProductCode =
+    ExciseProductCode(
+      "E910",
+      "Fatty-acid mono-alkyl esters, containing by volume 96,5 % or more of esters (FAMAE) falling within CN code 3824 90 99",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeE930: ExciseProductCode =
+    ExciseProductCode(
+      "E930",
+      "Additives falling within CN codes 3811 11, 3811 19 00 and 3811 90 00",
+      "E",
+      "Energy Products"
+    )
+  val testExciseProductCodeI200: ExciseProductCode =
+    ExciseProductCode(
+      "I200",
+      "Test Description",
+      "I",
+      "Test Description"
+    )
+  val testExciseProductCodeS100: ExciseProductCode =
+    ExciseProductCode(
+      "S100",
+      "Test Description",
+      "S",
+      "Test Description"
+    )
+  val testExciseProductCodeS200: ExciseProductCode =
+    ExciseProductCode(
+      "S200",
+      "Spirituous beverages",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeS400: ExciseProductCode =
+    ExciseProductCode(
+      "S400",
+      "Partially denatured alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeS500: ExciseProductCode =
+    ExciseProductCode(
+      "S500",
+      "Other products containing ethyl alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeT200: ExciseProductCode =
+    ExciseProductCode(
+      "T200",
+      "Cigarettes",
+      "T",
+      "Manufactured tobacco products"
+    )
+  val testExciseProductCodeT300: ExciseProductCode =
+    ExciseProductCode(
+      "T300",
+      "Cigars &amp; cigarillos",
+      "T",
+      "Manufactured tobacco products"
+    )
+  val testExciseProductCodeW100: ExciseProductCode =
+    ExciseProductCode(
+      "W100",
+      "Test Description",
+      "W",
+      "Test Description"
+    )
+  val testExciseProductCodeW200: ExciseProductCode =
+    ExciseProductCode(
+      "W200",
+      "Still wine and still fermented beverages other than wine and beer",
+      "W",
+      "Wine and fermented beverages other than wine and beer"
+    )
+  val testExciseProductCodeW300: ExciseProductCode =
+    ExciseProductCode(
+      "W300",
+      "Sparkling wine and sparkling fermented beverages other than wine and beer",
+      "W",
+      "Wine and fermented beverages other than wine and beer"
+    )
 }

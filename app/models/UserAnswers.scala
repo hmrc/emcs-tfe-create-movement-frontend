@@ -17,11 +17,13 @@
 package models
 
 import pages.QuestionPage
+import pages.sections.Section
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
+import scala.annotation.unused
 
 final case class UserAnswers(ern: String,
                              draftId: String,
@@ -60,6 +62,17 @@ final case class UserAnswers(ern: String,
   def remove[A](page: Settable[A]): UserAnswers =
     handleResult {
       data.removeObject(page.path)
+    }
+
+  /**
+   * @param section section to reset to an empty object
+   * @param index to ensure this method is used to reset indexed Sections
+   * @return UserAnswers with the supplied section reset to an empty JSON object
+   *         To be used to reset indexed Sections without deleting the index - e.g. clearing down an indexed Section in order to start it up again without losing its place in the Array
+   */
+  def resetIndexedSection(section: Section[JsObject], @unused index: Index): UserAnswers =
+    handleResult {
+      data.setObject(section.path, Json.obj())
     }
 
   private[models] def handleResult: JsResult[JsObject] => UserAnswers = {

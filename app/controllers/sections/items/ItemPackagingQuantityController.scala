@@ -26,7 +26,7 @@ import pages.sections.items.{ItemPackagingQuantityPage, ItemSelectPackagingPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemPackagingQuantityView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
                                                 override val userAllowList: UserAllowListAction,
                                                 formProvider: ItemPackagingQuantityFormProvider,
                                                 override val controllerComponents: MessagesControllerComponents,
-                                                view: ItemPackagingQuantityView,
-                                                override val cnCodeInformationService: GetCnCodeInformationService
+                                                view: ItemPackagingQuantityView
                                                ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =

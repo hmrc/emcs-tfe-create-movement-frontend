@@ -18,10 +18,11 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemQuantityFormProvider
-import models.requests.DataRequest
+import models.requests.{CnCodeInformationItem, DataRequest}
+import models.response.referenceData.CnCodeInformation
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemQuantityPage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemQuantityPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,7 +43,7 @@ class ItemQuantityController @Inject()(
                                         formProvider: ItemQuantityFormProvider,
                                         override val controllerComponents: MessagesControllerComponents,
                                         view: ItemQuantityView,
-                                        override val cnCodeInformationService: GetCnCodeInformationService
+                                        val cnCodeInformationService: GetCnCodeInformationService
                                       ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
@@ -74,5 +75,23 @@ class ItemQuantityController @Inject()(
           ))
       }
     }
+
+  private[controllers] def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
+    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
+      case (Some(epc), Some(commodityCode)) =>
+        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
+          response.headOption match {
+            case Some((_, cnCodeInfo)) =>
+              f(cnCodeInfo)
+            case _ =>
+              logger.warn(s"[withCnCodeInformation] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
+              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          }
+        }
+      case _ =>
+        logger.warn(s"[withCnCodeInformation] productCode or commodityCode missing from UserAnswers")
+        Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+  }
 
 }

@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.CommercialDescriptionFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -32,7 +33,7 @@ import views.html.sections.items.CommercialDescriptionView
 
 import scala.concurrent.Future
 
-class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   def itemCommercialDescriptionSubmitAction(idx: Index = testIndex1): Call =
     routes.CommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
@@ -54,14 +55,13 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
   "CommercialDescription Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
+    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -69,15 +69,16 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), "W200")
+      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual
+        view(form.fill("answer"), itemCommercialDescriptionSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200"))) {
+    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -88,7 +89,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val boundForm = form.bind(Map("value" -> ""))
 

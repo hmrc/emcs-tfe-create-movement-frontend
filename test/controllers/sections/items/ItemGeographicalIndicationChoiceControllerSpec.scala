@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Beer
 import models.sections.items.ItemGeographicalIndicationType
 import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
@@ -34,7 +34,7 @@ import views.html.sections.items.ItemGeographicalIndicationChoiceView
 
 import scala.concurrent.Future
 
-class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: ItemGeographicalIndicationChoiceFormProvider = new ItemGeographicalIndicationChoiceFormProvider()
   lazy val form: Form[ItemGeographicalIndicationType] = formProvider()
@@ -57,8 +57,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

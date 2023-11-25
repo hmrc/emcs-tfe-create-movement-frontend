@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import forms.sections.items.ItemNetGrossMassFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.sections.items.ItemNetGrossMassModel
 import models.{GoodsTypeModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -32,7 +32,7 @@ import views.html.sections.items.ItemNetGrossMassView
 
 import scala.concurrent.Future
 
-class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersService {
 
   val testModel: ItemNetGrossMassModel = ItemNetGrossMassModel(BigDecimal("1234"), BigDecimal("4523"))
 
@@ -57,8 +57,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

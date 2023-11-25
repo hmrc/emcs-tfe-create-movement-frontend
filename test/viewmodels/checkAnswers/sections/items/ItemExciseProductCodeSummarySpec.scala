@@ -17,23 +17,25 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
-import models.CheckMode
+import models.ReviewMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
-class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
+class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val paragraph: p = app.injector.instanceOf[p]
 
   "ItemExciseProductCodeSummary" - {
-    val p = app.injector.instanceOf[views.html.components.p]
-
-    val summary = new ItemExciseProductCodeSummary(p)
 
     Seq(ItemExciseProductCodeMessages.English).foreach { messagesForLanguage =>
 
@@ -41,36 +43,26 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            summary.row(testIndex1, None) mustBe None
-          }
-        }
-
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "B000"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
 
-            summary.row(testIndex1, Some("Beer")) mustBe Some(
+            itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                  p()(HtmlFormat.escape("B000")),
-                  p()(HtmlFormat.escape("Beer"))
+                  paragraph()(Html(testCommodityCodeWine.exciseProductCode)),
+                  paragraph()(Html(testCommodityCodeWine.exciseProductCodeDescription))
                 )))),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url,
                     id = "changeItemExciseProductCode1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
-            )
           }
         }
       }

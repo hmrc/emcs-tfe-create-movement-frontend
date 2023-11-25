@@ -18,10 +18,11 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemBrandNameFormProvider.{brandNameField, hasBrandNameField}
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.sections.items.ItemBrandNameModel
 import models.{Index, NormalMode, UserAnswers}
@@ -35,10 +36,10 @@ import views.html.sections.items.ItemBrandNameView
 
 import scala.concurrent.Future
 
-class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
+  val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   def itemBrandNameSubmitAction(idx: Index = testIndex1): Call = routes.ItemBrandNameController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
@@ -59,8 +60,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService w
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

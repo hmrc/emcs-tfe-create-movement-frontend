@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -36,7 +36,6 @@ import scala.concurrent.Future
 
 class ItemBulkPackagingChoiceControllerSpec extends SpecBase
   with MockUserAnswersService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -58,8 +57,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
       app.injector.instanceOf[DataRequiredAction],
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
@@ -76,7 +74,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), "T200")
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
         .set(ItemBulkPackagingChoicePage(testIndex1), true)
     )) {
       val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest())
@@ -86,7 +84,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "T200")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -127,7 +125,7 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
       emptyUserAnswers
-        .set(ItemExciseProductCodePage(testIndex1), "T200")
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     )) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "")))
 

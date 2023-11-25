@@ -18,20 +18,17 @@ package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object ItemCommodityCodeMessages {
+object ItemConfirmCommodityCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    def heading() = "Review and confirm Excise Product Code and commodity code"
+    def title(): String = titleHelper(heading())
 
-    val heading = "Choose the commodity code for the beer"
-    val title = titleHelper(heading)
-    val p = "You can use the Trade Tariff tool to look up a commodity code (opens in new tab)"
-    val link = "look up a commodity code (opens in new tab)"
-    val errorRequired = "Choose the commodity code for the beer"
-    val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
-    val defaultItem = "Choose commodity code"
-    val cyaLabel = "Commodity code"
-    val cyaChangeHidden = "commodity code"
+    val exciseProductCode: String = "Excise Product Code"
+    val commodityCode: String = "Commodity code"
+    val confirmCodes = "Confirm codes"
   }
 
   object English extends ViewMessages with BaseEnglish
+
 }

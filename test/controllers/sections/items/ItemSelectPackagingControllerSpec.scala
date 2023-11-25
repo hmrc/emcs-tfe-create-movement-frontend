@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemSelectPackagingFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockGetPackagingTypesService, MockUserAnswersService}
+import mocks.services.{MockGetPackagingTypesService, MockUserAnswersService}
 import models.GoodsTypeModel.Wine
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
@@ -38,7 +38,6 @@ import scala.concurrent.Future
 
 class ItemSelectPackagingControllerSpec extends SpecBase
   with MockUserAnswersService
-  with MockGetCnCodeInformationService
   with MockGetPackagingTypesService
   with ItemFixtures {
 
@@ -47,7 +46,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
   val action: Call = controllers.sections.items.routes.ItemSelectPackagingController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   class Test(val userAnswers: Option[UserAnswers], callsService: Boolean = false) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -69,8 +68,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       mockGetPackagingTypesService,
-      view,
-      mockGetCnCodeInformationService
+      view
     )
 
     val sampleEPCsSelectOptions: Seq[SelectItem] = SelectItemHelper.constructSelectItems(

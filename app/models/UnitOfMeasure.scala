@@ -52,4 +52,13 @@ object UnitOfMeasure {
     case code =>
       throw new IllegalArgumentException(s"Invalid argument of '$code' received which can not be mapped to a UnitOfMeasure")
   }
+
+  def unapply(unitOfMeasure: UnitOfMeasure): Int = unitOfMeasure match {
+    case Kilograms => 1
+    case Litres15 => 2
+    case Litres20 => 3
+    case Thousands => 4
+    case unitOfMeasure =>
+      throw new IllegalArgumentException(s"Invalid argument of '$unitOfMeasure' received which can not be mapped to an Int")
+  }
 }

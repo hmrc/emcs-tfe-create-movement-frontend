@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
@@ -30,7 +30,6 @@ import play.api.test.{FakeRequest, Helpers}
 
 class ItemsPackagingIndexControllerSpec extends SpecBase
   with MockUserAnswersService
-  with MockGetCnCodeInformationService
   with ItemFixtures {
 
   class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
@@ -44,8 +43,7 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeUserAllowListAction,
-      Helpers.stubMessagesControllerComponents(),
-      mockGetCnCodeInformationService
+      Helpers.stubMessagesControllerComponents()
     )
   }
 

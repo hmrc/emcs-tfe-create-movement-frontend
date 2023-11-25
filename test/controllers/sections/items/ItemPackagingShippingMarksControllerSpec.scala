@@ -18,8 +18,9 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingShippingMarksFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -31,7 +32,7 @@ import views.html.sections.items.ItemPackagingShippingMarksView
 
 import scala.concurrent.Future
 
-class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   lazy val formProvider = new ItemPackagingShippingMarksFormProvider()
   lazy val form = formProvider()
@@ -42,7 +43,7 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemExciseProductCodePage(testIndex1), "W300")
+    .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
 
   class Test(val userAnswers: Option[UserAnswers]) {
@@ -58,15 +59,14 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 
   "ItemPackagingShippingMarks Controller" - {
 
     "must redirect to Index of section when the packaging idx is outside of bounds for a GET" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
 
@@ -84,7 +84,7 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     }
 
     "must redirect to Index of section when the packaging idx is outside of bounds for a POST" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 

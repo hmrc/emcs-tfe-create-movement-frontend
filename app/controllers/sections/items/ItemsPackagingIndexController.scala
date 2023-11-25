@@ -21,7 +21,7 @@ import models.{Index, NormalMode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemsPackagingSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 
 import javax.inject.Inject
 
@@ -32,8 +32,7 @@ class ItemsPackagingIndexController @Inject()(
                                       override val getData: DataRetrievalAction,
                                       override val requireData: DataRequiredAction,
                                       override val userAllowList: UserAllowListAction,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      override val cnCodeInformationService: GetCnCodeInformationService
+                                      val controllerComponents: MessagesControllerComponents
                                     ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIndex: Index): Action[AnyContent] =

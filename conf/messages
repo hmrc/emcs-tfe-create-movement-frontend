@@ -1225,3 +1225,7 @@ itemWineMoreInformation.error.invalidCharacter = Information must not contain < 
 itemWineMoreInformation.checkYourAnswers.label = Wine more information
 itemWineMoreInformation.checkYourAnswers.change.hidden = wine more information
 itemWineMoreInformation.checkYourAnswers.addMoreInformation = Enter more information about wine product (optional)
+
+itemRemoveItem.title = Are you sure you want to remove this item?
+itemRemoveItem.heading = Are you sure you want to remove this item?
+itemRemoveItem.error.required = Select yes if you would like to remove the item

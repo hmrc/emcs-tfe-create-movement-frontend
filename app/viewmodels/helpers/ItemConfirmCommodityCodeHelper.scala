@@ -34,9 +34,9 @@ class ItemConfirmCommodityCodeHelper @Inject()(
   def summaryList(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        itemExciseProductCodeSummary.row(idx, cnCodeInformation, mode),
-        itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)
-      )
+        Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, mode)),
+        if(cnCodeInformation.exciseProductCode != "S500") Some(itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)) else None
+      ).collect { case Some(x) => x }
     )
   }
 

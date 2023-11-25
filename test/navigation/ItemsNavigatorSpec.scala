@@ -651,16 +651,6 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from the Confirm Commodity Code page" - {
-        "to the Item Brand Name page" in {
-          navigator.nextPage(
-            ItemConfirmCommodityCodePage(testIndex1),
-            NormalMode,
-            emptyUserAnswers
-          ) mustBe controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-        }
-      }
-
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe

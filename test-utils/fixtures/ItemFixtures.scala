@@ -95,6 +95,15 @@ trait ItemFixtures {
     unitOfMeasure = Kilograms
   )
 
+  val testEpcOtherProductsContainingEthylAlcohol: String = "S500"
+  val testCommodityCodeS500: CnCodeInformation = CnCodeInformation(
+    cnCode = "10000000",
+    cnCodeDescription = "Other products containing ethyl alcohol",
+    exciseProductCode = testEpcOtherProductsContainingEthylAlcohol,
+    exciseProductCodeDescription = "Other products containing ethyl alcohol",
+    unitOfMeasure = Litres20
+  )
+
   val testEpcWine: String = "W200"
   val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
   val testCnCodeWine: String = "22060031"

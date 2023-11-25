@@ -42,13 +42,23 @@ class ItemConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
   implicit val msgs: Messages = messagesApi.preferred(fakeDataRequest)
 
   "ItemConfirmCommodityCodeHelper" - {
-    ".summaryList should render row" in {
-      confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine, ReviewMode) mustBe SummaryList(
-        rows = Seq(
-          itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode),
-          itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode)
+    ".summaryList" - {
+      "should render both rows (when EPC is not S500)" in {
+        confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine, ReviewMode) mustBe SummaryList(
+          rows = Seq(
+            itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode),
+            itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode)
+          )
         )
-      )
+      }
+
+      "should render EPC only when EPC is S500" in {
+        confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeS500, ReviewMode) mustBe SummaryList(
+          rows = Seq(
+            itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeS500, ReviewMode)
+          )
+        )
+      }
     }
   }
 }

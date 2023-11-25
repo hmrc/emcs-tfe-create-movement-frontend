@@ -475,14 +475,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the ItemBulkPackagingSelectPage" - {
 
-        //TODO: redirect to CAM-ITM12
         "to the Wine Operations Choice page" - {
           "when the wine quantity is equal or over 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemQuantityPage(testIndex1), BigDecimal(60))
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 

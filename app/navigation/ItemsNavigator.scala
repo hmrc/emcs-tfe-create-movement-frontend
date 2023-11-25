@@ -303,8 +303,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
                 if (quantity < 60) {
                   itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 } else {
-                  //TODO: Redirect to CAM-ITM12
-                  testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+                  itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 }
               case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
             }

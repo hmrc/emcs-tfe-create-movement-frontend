@@ -145,3 +145,8 @@ POST        /trader/:ern/draft/:draftId/items/:idx/remove                       
 
 GET         /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/:packagingIdx/remove                                      controllers.sections.items.ItemPackagingRemovePackageController.onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index)
 POST        /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/:packagingIdx/remove                                      controllers.sections.items.ItemPackagingRemovePackageController.onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index)
+
+GET        /trader/:ern/draft/:draftId/items/:idx/wine-operations-choice                        controllers.sections.items.ItemWineOperationsChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/wine-operations-choice                        controllers.sections.items.ItemWineOperationsChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/wine-operations-choice/change                 controllers.sections.items.ItemWineOperationsChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/wine-operations-choice/change                 controllers.sections.items.ItemWineOperationsChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

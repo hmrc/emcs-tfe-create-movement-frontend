@@ -24,15 +24,17 @@ import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnsw
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import scala.concurrent.Future
 
 class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val route = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testLrn, NormalMode).url
-    val request = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val testController = new ConsigneeIndexController(
       messagesApi,
@@ -56,7 +58,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
@@ -67,7 +69,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       s"when destination is $ExemptedOrganisation" in new Fixture(
         Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
@@ -75,29 +77,32 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       }
     }
     "must redirect to ConsigneeExciseController" - {
-      Seq(GbTaxWarehouse, EuTaxWarehouse, DirectDelivery).foreach(
-        movementScenario =>
-          s"when destination is $movementScenario" in new Fixture(
-            Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-            val result = testController.onPageLoad(testErn, testDraftId)(request)
-
-            status(result) mustBe SEE_OTHER
-            redirectLocation(result) mustBe
-              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
-          }
-      )
-
       "when UserType is GBRC" - {
         val ern: String = "GBRC123"
+
+        Seq(
+          GbTaxWarehouse,
+          EuTaxWarehouse,
+          DirectDelivery
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
 
         Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = testController.onPageLoad(ern, testDraftId)(req)
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -109,6 +114,23 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "XIRC123"
 
         Seq(
+          GbTaxWarehouse,
+          EuTaxWarehouse,
+          DirectDelivery
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+
+        Seq(
           RegisteredConsignee,
           TemporaryRegisteredConsignee,
           ExportWithCustomsDeclarationLodgedInTheUk,
@@ -118,8 +140,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = testController.onPageLoad(ern, testDraftId)(req)
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -130,11 +151,28 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
       "when UserType is XIWK" - {
         val ern: String = "XIWK123"
+
+        Seq(
+          GbTaxWarehouse,
+          EuTaxWarehouse,
+          DirectDelivery
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+
         s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
           Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
 
-          val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-          val result = testController.onPageLoad(ern, testDraftId)(req)
+          val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe
@@ -152,8 +190,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
             s"and destination is $movementScenario" in new Fixture(
               Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = testController.onPageLoad(ern, testDraftId)(req)
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -173,8 +210,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val req = userRequest(FakeRequest(GET, route)).copy(ern = ern)
-              val result = testController.onPageLoad(ern, testDraftId)(req)
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
@@ -188,8 +224,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in new Fixture(
         Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
 
-        val req = userRequest(FakeRequest(GET, route)).copy(ern = testErn)
-        val result = testController.onPageLoad(testErn, testDraftId)(req)
+        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe

@@ -57,62 +57,74 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
+    }
 
-      "must redirect to the destination warehouse excise controller" - {
-        Seq(GbTaxWarehouse, EuTaxWarehouse).foreach(
-          answer =>
-            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
-              val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "must redirect to the destination warehouse excise controller" - {
+      Seq(GbTaxWarehouse, EuTaxWarehouse).foreach(
+        answer =>
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+            Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
+              ern =>
+                val result = testController.onPageLoad(ern, testDraftId)(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe
+                  Some(routes.DestinationWarehouseExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
-        )
-      }
+          }
+      )
+    }
 
-      "must redirect to the destination warehouse vat controller" - {
-        Seq(RegisteredConsignee,
-          TemporaryRegisteredConsignee,
-          ExemptedOrganisation).foreach(
-          answer =>
-            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
-              val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "must redirect to the destination warehouse vat controller" - {
+      Seq(RegisteredConsignee,
+        TemporaryRegisteredConsignee,
+        ExemptedOrganisation).foreach(
+        answer =>
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+            Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
+              ern =>
+                val result = testController.onPageLoad(ern, testDraftId)(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe
+                  Some(routes.DestinationWarehouseVatController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
-        )
-      }
+          }
+      )
+    }
 
-      "must redirect to the destination business name controller" - {
-        Seq(DirectDelivery).foreach(
-          answer =>
-            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
-              val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "must redirect to the destination business name controller" - {
+      Seq(DirectDelivery).foreach(
+        answer =>
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+            Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
+              ern =>
+                val result = testController.onPageLoad(ern, testDraftId)(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe
+                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
-        )
-      }
+          }
+      )
+    }
 
-      "must redirect to the tasklist" - {
-        Seq(UnknownDestination,
-          ExportWithCustomsDeclarationLodgedInTheEu,
-          ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-          answer =>
-            s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
-              val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "must redirect to the tasklist" - {
+      Seq(UnknownDestination,
+        ExportWithCustomsDeclarationLodgedInTheEu,
+        ExportWithCustomsDeclarationLodgedInTheUk).foreach(
+        answer =>
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+            Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
+              ern =>
+                val result = testController.onPageLoad(ern, testDraftId)(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustBe Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
+                status(result) mustEqual SEE_OTHER
+                redirectLocation(result) mustBe
+                  Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
             }
-        )
-      }
+          }
+      )
     }
   }
-
 }

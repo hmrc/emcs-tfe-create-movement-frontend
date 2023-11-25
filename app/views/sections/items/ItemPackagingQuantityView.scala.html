@@ -59,7 +59,7 @@
 }
 
 @hint = {
-    @p() {@Html(messages("itemPackagingQuantity.hint", strong(packagingType.description.trim, withFullStop = true)))}
+    @p() {@Html(messages("itemPackagingQuantity.hint", strong(Html(packagingType.description.trim), withFullStop = true)))}
 }
 
 @{

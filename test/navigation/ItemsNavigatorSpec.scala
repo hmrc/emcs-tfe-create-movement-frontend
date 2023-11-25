@@ -497,14 +497,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: redirect to CAM-ITM28
-        "to the Packaging Seal Choice page" - {
+        "to the Packaging Seal Choice (Bulk packaging) page" - {
           "when goods type is not Wine" in {
             GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
                 .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
-              ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
         }
@@ -571,14 +570,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM28
-        "to the Packaging Seal Choice page" - {
+        "to the Packaging Seal Choice (Bulk packaging) page" - {
           "when the user answers no and the item is classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemWineMoreInformationChoicePage(testIndex1), false)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -625,6 +623,54 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           "when the user has no answer for ItemBulkPackagingChoicePage (when clicking no)" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
               itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
+      "must go from the ItemPackagingShippingMarksPage" - {
+        "to the Packaging Seal Choice (Item packaging) page" in {
+          navigator.nextPage(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+          ) mustBe itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
+        }
+      }
+
+      "must go from the ItemBulkPackagingSealChoicePage" - {
+        //TODO: Redirect to CAM-ITM29 (bulk packaging version)
+        "to the Packaging Seal Type (bulk packaging) page" - {
+          "when the user answers 'yes'" in {
+            navigator.nextPage(ItemBulkPackagingSealChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        //TODO: Redirect to CAM-ITM40
+        "to the Item CYA page" - {
+          "when the user answers 'no'" in {
+            navigator.nextPage(ItemBulkPackagingSealChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+      }
+
+      "must go from the ItemPackagingSealChoicePage" - {
+        //TODO: Redirect to CAM-ITM29 (item packaging version)
+        "to the Packaging Seal Type (item packaging) page" - {
+          "when the user answers 'yes'" in {
+            navigator.nextPage(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        //TODO: Redirect to CAM-ITM36
+        "to the Item CYA page" - {
+          "when the user answers 'no'" in {
+            navigator.nextPage(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
         }
       }

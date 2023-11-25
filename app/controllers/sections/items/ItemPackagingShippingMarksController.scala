@@ -44,19 +44,19 @@ class ItemPackagingShippingMarksController @Inject()(
                                        view: ItemPackagingShippingMarksView
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-        renderView(Ok, fillForm(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx), formProvider()), itemsIndex, packagingIdx, mode)
+      validatePackagingIndexAsync(itemsIdx, packagingIdx) {
+        renderView(Ok, fillForm(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), formProvider()), itemsIdx, packagingIdx, mode)
       }
     }
 
-  def onSubmit(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validatePackagingIndexAsync(itemsIndex, packagingIdx) {
+      validatePackagingIndexAsync(itemsIdx, packagingIdx) {
         formProvider().bindFromRequest().fold(
-          renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
-          saveAndRedirect(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx), _, mode)
+          renderView(BadRequest, _, itemsIdx, packagingIdx, mode),
+          saveAndRedirect(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), _, mode)
         )
       }
     }
@@ -66,8 +66,7 @@ class ItemPackagingShippingMarksController @Inject()(
       validatePackagingIndexAsync(itemsIndex, packagingIdx) {
         val cleansedAnswers = request.userAnswers.remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
         userAnswersService.set(cleansedAnswers).map {
-          //TODO: redirect to CAM-ITM28
-          _ => Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+          _ => Redirect(routes.ItemPackagingSealChoiceController.onPageLoad(request.ern, request.draftId, itemsIndex, packagingIdx, mode))
         }
       }
     }

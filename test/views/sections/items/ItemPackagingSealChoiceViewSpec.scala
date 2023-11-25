@@ -17,40 +17,34 @@
 package views.sections.items
 
 import base.SpecBase
-import controllers.sections.items.routes
-import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
-import forms.sections.items.ItemPackagingShippingMarksFormProvider
-import models.NormalMode
+import fixtures.messages.sections.items.ItemPackagingSealChoiceMessages
+import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.items.ItemPackagingShippingMarksView
+import views.html.sections.items.ItemPackagingSealChoiceView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemPackagingShippingMarksViewSpec extends SpecBase with ViewBehaviours {
+class ItemPackagingSealChoiceViewSpec extends SpecBase with ViewBehaviours {
 
-  object Selectors extends BaseSelectors {
-    val skipLink: String = "#skipPackagingShippingMarksQuestionLink"
-  }
+  object Selectors extends BaseSelectors
 
-  "ItemPackagingShippingMarks view" - {
+  "ItemPackagingSealChoice view" - {
 
-    Seq(ItemPackagingShippingMarksMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemPackagingSealChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
-        val form = app.injector.instanceOf[ItemPackagingShippingMarksFormProvider].apply()
+        val view = app.injector.instanceOf[ItemPackagingSealChoiceView]
+        val form = app.injector.instanceOf[ItemPackagingSealChoiceFormProvider].apply()
 
-        val skipLink = routes.ItemPackagingSealChoiceController.onPageLoad(request.ern, request.draftId, testIndex1, testPackagingIndex1, NormalMode)
-
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, skipLink, "Aerosol").toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, "Aerosol").toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
@@ -59,14 +53,11 @@ class ItemPackagingShippingMarksViewSpec extends SpecBase with ViewBehaviours {
           Selectors.p(1) -> messagesForLanguage.p1,
           Selectors.p(2) -> messagesForLanguage.p2("Aerosol"),
           Selectors.strong(1) -> "Aerosol",
-          Selectors.skipLink -> messagesForLanguage.link,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
-
-        "must have the correct link to CAM-ITM28" in {
-          doc.select(Selectors.skipLink).attr("href") mustBe skipLink.url
-        }
       }
     }
   }

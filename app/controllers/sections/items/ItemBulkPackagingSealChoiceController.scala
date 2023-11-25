@@ -25,25 +25,24 @@ import pages.sections.items.ItemBulkPackagingSealChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemPackagingSealChoiceView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemBulkPackagingSealChoiceController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemPackagingSealChoiceFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemPackagingSealChoiceView,
-                                       override val cnCodeInformationService: GetCnCodeInformationService
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                       override val messagesApi: MessagesApi,
+                                                       override val userAnswersService: UserAnswersService,
+                                                       override val userAllowList: UserAllowListAction,
+                                                       override val navigator: ItemsNavigator,
+                                                       override val auth: AuthAction,
+                                                       override val getData: DataRetrievalAction,
+                                                       override val requireData: DataRequiredAction,
+                                                       formProvider: ItemPackagingSealChoiceFormProvider,
+                                                       val controllerComponents: MessagesControllerComponents,
+                                                       view: ItemPackagingSealChoiceView
+                                                     ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

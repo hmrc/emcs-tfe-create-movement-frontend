@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemPackagingSealChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
 import models.{NormalMode, UserAnswers}
@@ -32,7 +32,7 @@ import views.html.sections.items.ItemPackagingSealChoiceView
 
 import scala.concurrent.Future
 
-class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider = new ItemPackagingSealChoiceFormProvider()
   lazy val form = formProvider()
@@ -56,8 +56,7 @@ class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAn
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

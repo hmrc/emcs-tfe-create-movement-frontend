@@ -25,7 +25,7 @@ import pages.sections.items.ItemPackagingSealChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemPackagingSealChoiceView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemPackagingSealChoiceController @Inject()(
                                                    override val requireData: DataRequiredAction,
                                                    formProvider: ItemPackagingSealChoiceFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: ItemPackagingSealChoiceView,
-                                                   override val cnCodeInformationService: GetCnCodeInformationService
+                                                   view: ItemPackagingSealChoiceView
                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =

@@ -47,6 +47,6 @@ object ItemMaturationPeriodAgeSummary  {
   }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge).fold(Text(messages("site.notProvided")))(_.toString())
+    request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge).fold(Text(messages("site.notProvided")))(Text(_))
 
 }

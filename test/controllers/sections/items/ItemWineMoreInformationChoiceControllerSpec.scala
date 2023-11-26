@@ -23,7 +23,7 @@ import forms.sections.items.ItemWineMoreInformationChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemWineMoreInformationChoicePage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemWineMoreInformationChoicePage, ItemWineMoreInformationPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -103,6 +103,23 @@ class ItemWineMoreInformationChoiceControllerSpec extends SpecBase with MockUser
       ).returns(Future.successful(baseUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), true)))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted AND delete More Information captured if answered 'NO'" in new Test(Some(
+      baseUserAnswers
+        .set(ItemWineMoreInformationPage(testIndex1), Some("Information"))
+    )) {
+
+      MockUserAnswersService.set(
+        userAnswers.get
+          .set(ItemWineMoreInformationChoicePage(testIndex1), false)
+          .remove(ItemWineMoreInformationPage(testIndex1))
+      ).returns(Future.successful(baseUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), false)))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

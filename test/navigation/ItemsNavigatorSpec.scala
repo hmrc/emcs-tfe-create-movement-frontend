@@ -543,13 +543,12 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemWineMoreInformationChoicePage" - {
-        //TODO: Redirect to CAM-ITM18
         "to the Wine More Information page" - {
           "when the user answers yes" in {
             navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemWineMoreInformationChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemWineMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -590,6 +589,36 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
       }
+
+      "must go from the ItemWineMoreInformationPage" - {
+
+        "to the Select Packaging (Items Packaging Index) page" - {
+
+          "when the user answers no and the item is not classed as bulk" in {
+            navigator.nextPage(ItemWineMoreInformationPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+            ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+
+        //TODO: Redirect to CAM-ITM28
+        "to the Packaging Seal Choice page" - {
+
+          "when the user answers no and the item is classed as bulk" in {
+            navigator.nextPage(ItemWineMoreInformationPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Items Index page" - {
+
+          "when the user has no answer for ItemBulkPackagingChoicePage (when clicking no)" in {
+            navigator.nextPage(ItemWineMoreInformationChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+              itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
     }
 
     "in Check mode" - {
@@ -608,6 +637,25 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           "when there is no answer" in {
             navigator.nextPage(ItemExciseProductCodePage(testIndex1),
               CheckMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
+      "must go from the ItemWineMoreInformationChoice page" - {
+        "to ItemWineMoreInformation page" - {
+          "when the answer is 'Yes'" in {
+            navigator.nextPage(
+              ItemWineMoreInformationChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), true)
+            ) mustBe itemsRoutes.ItemWineMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        //TODO: Update when CYA page is built CAM-ITM40
+        "to CYA page" - {
+          "when the answer is 'No'" in {
+            navigator.nextPage(
+              ItemWineMoreInformationChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), false)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
         }
       }

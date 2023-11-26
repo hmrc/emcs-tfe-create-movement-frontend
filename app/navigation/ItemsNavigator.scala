@@ -126,11 +126,20 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       (userAnswers.get(ItemWineMoreInformationChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
         case (Some(true), _) =>
-          //TODO: redirect to CAM-ITM18
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemWineMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case (Some(false), Some(false)) =>
           itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
         case (Some(false), Some(true)) =>
+          //TODO: redirect to CAM-ITM28
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+
+    case ItemWineMoreInformationPage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemBulkPackagingChoicePage(idx)) match {
+        case Some(false) =>
+          itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+        case Some(true) =>
           //TODO: redirect to CAM-ITM28
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -142,6 +151,14 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, CheckMode)
+    case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
+        case Some(true) =>
+          itemsRoutes.ItemWineMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, CheckMode)
+        case _ =>
+        // TODO: update to Items CYA when built
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
     case _ =>
       // TODO: update to Items CYA when built
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

@@ -25,7 +25,7 @@ import pages.sections.items.{ItemWineMoreInformationChoicePage, ItemWineMoreInfo
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import utils.JsonOptionFormatter
 import views.html.sections.items.ItemWineMoreInformationView
 
@@ -42,8 +42,7 @@ class ItemWineMoreInformationController @Inject()(
                                                    override val requireData: DataRequiredAction,
                                                    formProvider: ItemWineMoreInformationFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: ItemWineMoreInformationView,
-                                                   override val cnCodeInformationService: GetCnCodeInformationService
+                                                   view: ItemWineMoreInformationView
                                                  ) extends BaseItemsNavigationController with AuthActionHelper with JsonOptionFormatter {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemWineMoreInformationFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemWineMoreInformationChoicePage, ItemWineMoreInformationPage}
@@ -31,7 +31,7 @@ import views.html.sections.items.ItemWineMoreInformationView
 
 import scala.concurrent.Future
 
-class ItemWineMoreInformationControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemWineMoreInformationControllerSpec extends SpecBase with MockUserAnswersService {
 
   def itemWineMoreInformationSubmitAction(idx: Index = testIndex1): Call =
     routes.ItemWineMoreInformationController.onSubmit(testErn, testDraftId, idx, NormalMode)
@@ -55,8 +55,7 @@ class ItemWineMoreInformationControllerSpec extends SpecBase with MockUserAnswer
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      mockGetCnCodeInformationService
+      view
     )
   }
 

@@ -26,7 +26,7 @@ object ItemWineGrowingZoneMessages {
     val title = titleHelper(heading)
 
     val findOutMoreLink = "find more information about each wine-growing zone (opens in new tab)"
-    val hint = s"Select a wine-growing zone code. You can $findOutMoreLink in Annex IX to Regulation (EC) No 479/2008."
+    val p1 = s"Select a wine-growing zone code. You can $findOutMoreLink in Annex IX to Regulation (EC) No 479/2008."
 
     val a = "A"
     val b = "B"

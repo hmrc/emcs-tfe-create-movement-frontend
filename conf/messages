@@ -1232,9 +1232,9 @@ itemRemoveItem.error.required = Select yes if you would like to remove the item
 
 itemWineGrowingZone.title = Which wine-growing zone has the wine come from?
 itemWineGrowingZone.heading = Which wine-growing zone has the wine come from?
-itemWineGrowingZone.hint.preLink = Select a wine-growing zone code. You can
-itemWineGrowingZone.hint.link = find more information about each wine-growing zone
-itemWineGrowingZone.hint.afterLink = in Annex IX to Regulation (EC) No 479/2008.
+itemWineGrowingZone.p1.preLink = Select a wine-growing zone code. You can
+itemWineGrowingZone.p1.link = find more information about each wine-growing zone
+itemWineGrowingZone.p1.afterLink = in Annex IX to Regulation (EC) No 479/2008.
 itemWineGrowingZone.A = A
 itemWineGrowingZone.B = B
 itemWineGrowingZone.CI = CI

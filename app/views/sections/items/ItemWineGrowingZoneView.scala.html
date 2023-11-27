@@ -43,24 +43,23 @@
         }
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(headingMsg = messages("itemWineGrowingZone.heading"))
+
+        @p() {
+            @messages("itemWineGrowingZone.p1.preLink")
+            @link(appConfig.wineGrowingZoneHintUrl, "itemWineGrowingZone.p1.link", opensInNewTab = true)
+            @messages("itemWineGrowingZone.p1.afterLink")
+        }
 
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("itemWineGrowingZone.heading"))).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(Text(messages("itemWineGrowingZone.heading"))).hidden,
                 items = ItemWineGrowingZone.options
-            ).withHint(HintViewModel(HtmlContent(hint)))
+            )
         )
 
         @continueOrExit()
-    }
-}
-
-@hint = {
-    @p() {
-        @messages("itemWineGrowingZone.hint.preLink")
-        @link(appConfig.wineGrowingZoneHintUrl, "itemWineGrowingZone.hint.link", opensInNewTab = true)
-        @messages("itemWineGrowingZone.hint.afterLink")
     }
 }
 

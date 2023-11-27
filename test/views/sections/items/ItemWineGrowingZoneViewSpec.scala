@@ -50,7 +50,7 @@ class ItemWineGrowingZoneViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.legend -> messagesForLanguage.heading,
-          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.p(1) -> messagesForLanguage.p1,
           Selectors.link(1) -> messagesForLanguage.findOutMoreLink,
           Selectors.radioButton(1) -> messagesForLanguage.a,
           Selectors.radioButton(2) -> messagesForLanguage.b,

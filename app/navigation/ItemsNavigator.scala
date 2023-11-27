@@ -123,6 +123,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: redirect to CAM-ITM26
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
+    case ItemWineGrowingZonePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       (userAnswers.get(ItemWineMoreInformationChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
         case (Some(true), _) =>

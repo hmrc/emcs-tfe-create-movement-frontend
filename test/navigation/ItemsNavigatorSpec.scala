@@ -723,6 +723,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
       }
+
+      "must go from the ItemWineOperationsChoicePage" - {
+        "to the Imported Wine Choice page" in {
+          navigator.nextPage(ItemWineOperationsChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
     }
 
     "in Check mode" - {

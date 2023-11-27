@@ -180,6 +180,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
+    case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }

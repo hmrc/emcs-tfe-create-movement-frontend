@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
-import models.sections.items.ItemBrandNameModel
+import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
@@ -659,12 +659,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemBulkPackagingSealChoicePage" - {
-        //TODO: Redirect to CAM-ITM29 (bulk packaging version)
         "to the Packaging Seal Type (bulk packaging) page" - {
           "when the user answers 'yes'" in {
             navigator.nextPage(ItemBulkPackagingSealChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -679,12 +678,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingSealChoicePage" - {
-        //TODO: Redirect to CAM-ITM29 (item packaging version)
         "to the Packaging Seal Type (item packaging) page" - {
           "when the user answers 'yes'" in {
             navigator.nextPage(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
               .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemPackagingSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
           }
         }
 
@@ -755,6 +753,26 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
+
+       "must go from the ItemPackagingSealTypePage" - {
+         "to the Item CYA page" - {
+           "when the user answers 'no'" in {
+             navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+               .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
+             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+           }
+         }
+       }
+
+      "must go from the ItemBulkPackagingSealTypePage" - {
+         "to the Item CYA page" - {
+           "when the user answers 'no'" in {
+             navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
+               .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
+             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+           }
+         }
+       }
     }
 
     "in Check mode" - {

@@ -1282,3 +1282,16 @@ itemWineOperationsChoice.error.invalid = Select a wine operation, or select 'No,
 itemWineOperationsChoice.error.exclusive = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
 itemWineOperationsChoice.change.hidden = wine operations
 itemWineOperationsChoice.0 = No, I am not aware that the wine has undergone any operations
+
+
+itemPackagingSealType.title = What type of commercial seal is on this packaging?
+itemPackagingSealType.heading = What type of commercial seal is on this packaging?
+itemPackagingSealType.p = The packaging type is: {0}
+itemPackagingSealType.p2 = Give more information (optional)
+itemPackagingSealType.hint = Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one.
+itemPackagingSealType.error.sealType.required = Enter the type of commercial seal on the packaging
+itemPackagingSealType.error.sealType.invalid = Commercial seal must be 35 characters or less
+itemPackagingSealType.error.sealType.length = Description cannot contain < and > and : and ;
+itemPackagingSealType.error.required = Enter details of the commercial seal
+itemPackagingSealType.error.invalid = Commercial seal details must be 350 characters or less
+itemPackagingSealType.error.length = Description cannot contain < and > and : and ;

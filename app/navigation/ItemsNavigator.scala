@@ -161,8 +161,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemBulkPackagingSealChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemBulkPackagingSealChoicePage(idx)) match {
         case Some(true) =>
-          //TODO: redirect to CAM-ITM29 (bulk packaging version)
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
           //TODO: redirect to CAM-ITM40
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -172,7 +171,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex)) match {
         case Some(true) =>
           //TODO: redirect to CAM-ITM29 (item packaging version)
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
         case _ =>
           //TODO: redirect to CAM-ITM36
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -189,6 +188,14 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
+    case ItemBulkPackagingSealTypePage(idx) => (_: UserAnswers) =>
+      //TODO: redirect to CAM-ITM40
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
+    case ItemPackagingSealTypePage(idx, packagingIndex) => (_: UserAnswers) =>
+      //TODO: redirect to CAM-ITM36
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
@@ -203,7 +210,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemWineMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, CheckMode)
         case _ =>
-        // TODO: update to Items CYA when built
+          // TODO: update to Items CYA when built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     case _ =>

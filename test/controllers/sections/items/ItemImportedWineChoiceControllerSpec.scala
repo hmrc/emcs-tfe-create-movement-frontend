@@ -19,7 +19,7 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemImportedWineChoiceFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage}
@@ -30,7 +30,7 @@ import views.html.sections.items.ItemImportedWineChoiceView
 
 import scala.concurrent.Future
 
-class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService {
+class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider = new ItemImportedWineChoiceFormProvider()
   lazy val form = formProvider()
@@ -52,8 +52,7 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
       requireData = dataRequiredAction,
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
-      view = view,
-      cnCodeInformationService = mockGetCnCodeInformationService
+      view = view
     )
   }
 

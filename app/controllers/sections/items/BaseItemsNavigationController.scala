@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{GoodsTypeModel, Index}
-import pages.sections.items.{ItemExciseProductCodePage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
 
@@ -68,6 +68,14 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         f(GoodsTypeModel.apply(epc))
+      case None =>
+        Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+
+  def withItemBulkPackaging(itemIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx)) match {
+      case Some(itemPackaging) =>
+        f(itemPackaging.description)
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }

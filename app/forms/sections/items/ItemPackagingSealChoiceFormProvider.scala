@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms.sections.items
 
-@(content: Html, withFullStop: Boolean = false)(implicit messages: Messages)
+import javax.inject.Inject
 
-<span class="govuk-!-font-weight-bold">@content</span>@if(withFullStop){.}
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class ItemPackagingSealChoiceFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("itemPackagingSealChoice.error.required")
+    )
+}

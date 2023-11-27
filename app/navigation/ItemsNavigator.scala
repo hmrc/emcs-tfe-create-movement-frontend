@@ -126,6 +126,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineGrowingZonePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
+    case ItemPackagingShippingMarksPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       (userAnswers.get(ItemWineMoreInformationChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
         case (Some(true), _) =>
@@ -133,8 +136,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case (Some(false), Some(false)) =>
           itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
         case (Some(false), Some(true)) =>
-          //TODO: redirect to CAM-ITM28
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
 
@@ -143,9 +145,28 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(false) =>
           itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
         case Some(true) =>
-          //TODO: redirect to CAM-ITM28
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+
+    case ItemBulkPackagingSealChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemBulkPackagingSealChoicePage(idx)) match {
+        case Some(true) =>
+          //TODO: redirect to CAM-ITM29 (bulk packaging version)
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          //TODO: redirect to CAM-ITM40
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      }
+
+    case ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex)) match {
+        case Some(true) =>
+          //TODO: redirect to CAM-ITM29 (item packaging version)
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        case _ =>
+          //TODO: redirect to CAM-ITM36
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
 
     case _ =>
@@ -278,8 +299,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
             }
           case _ =>
-            //TODO: Redirect to CAM-ITM28
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)

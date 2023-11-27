@@ -18,29 +18,33 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemNetGrossMassPage
+import pages.sections.items.ItemPackagingSealChoicePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemGrossMassSummary {
+object ItemPackagingSealChoiceSummary {
 
-  def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
-    request.userAnswers.get(ItemNetGrossMassPage(idx)).map {
+  def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    val answers = request.userAnswers
+    answers.get(ItemPackagingSealChoicePage(itemIdx, packagingIdx)).map {
       answer =>
+
+        val value = if (answer) "site.yes" else "site.no"
+
         SummaryListRowViewModel(
-          key = "itemNetGrossMass.grossMass.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(s"${answer.grossMass.toString()} kg").toString),
+          key = "itemPackagingSealChoice.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeGrossMass${idx.displayIndex}"
-            )
-              .withVisuallyHiddenText(messages("itemNetGrossMass.grossMass.change.hidden"))
+              href = controllers.sections.items.routes.ItemPackagingSealChoiceController.onPageLoad(answers.ern,
+                answers.draftId, itemIdx, packagingIdx, CheckMode).url,
+              id = s"changeItemPackagingSealChoice${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
+            ).withVisuallyHiddenText(messages("itemPackagingSealChoice.change.hidden"))
           )
         )
     }
+  }
 }

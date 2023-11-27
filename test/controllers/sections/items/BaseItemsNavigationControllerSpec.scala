@@ -21,10 +21,11 @@ import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.DataRequest
-import models.response.referenceData.{CnCodeInformation, ItemPackaging}
+import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
+import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.mvc.{MessagesControllerComponents, Result, Results}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -83,6 +84,31 @@ class BaseItemsNavigationControllerSpec extends SpecBase
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, testIndex1).url
+      }
+    }
+  }
+
+  "withBulkItemPackaging" - {
+    "must return the item bulk packaging description when the item index is valid" in new Test(
+      emptyUserAnswers
+        .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+        .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkSolidPowders, "Bulk, solid, fine (powders)"))
+    ) {
+      val result: Future[Result] = controller.withItemBulkPackaging(testIndex1)(itemPackagingSuccessFunction)
+
+      status(result) mustBe OK
+    }
+
+    "must redirect to the items index" - {
+      "when the index is invalid" in new Test(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testCnCodeTobacco)
+          .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkSolidPowders, "Bulk, solid, fine (powders)"))
+      ) {
+        val result: Future[Result] = controller.withItemBulkPackaging(testIndex2)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(request.ern, request.draftId).url
       }
     }
   }

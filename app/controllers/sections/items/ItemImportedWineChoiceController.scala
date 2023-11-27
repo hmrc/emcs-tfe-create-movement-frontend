@@ -41,8 +41,7 @@ class ItemImportedWineChoiceController @Inject()(
                                                   override val userAllowList: UserAllowListAction,
                                                   formProvider: ItemImportedWineChoiceFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  view: ItemImportedWineChoiceView,
-                                                  override val cnCodeInformationService: GetCnCodeInformationService
+                                                  view: ItemImportedWineChoiceView
                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

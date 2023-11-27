@@ -1255,6 +1255,6 @@ itemRemoveItem.error.required = Select yes if you would like to remove the item
 
 itemImportedWineChoice.title = Was the wine imported from an EU country?
 itemImportedWineChoice.heading = Was the wine imported from an EU country?
-itemImportedWineChoice.error.required = Select ‘yes’ if the wine was imported from an EU country
+itemImportedWineChoice.error.required = Select yes if the wine was imported from an EU country
 itemImportedWineChoice.checkYourAnswersLabel = Wine imported from EU
 itemImportedWineChoice.change.hidden = wine imported from EU

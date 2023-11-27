@@ -28,7 +28,7 @@ object ItemImportedWineChoiceMessages {
     val cyaLabel = "Wine imported from EU"
     val cyaChangeHidden = "wine imported from EU"
 
-    val errorRequired = "Select ‘yes’ if the wine was imported from an EU country"
+    val errorRequired = "Select yes if the wine was imported from an EU country"
   }
 
   object English extends ViewMessages with BaseEnglish

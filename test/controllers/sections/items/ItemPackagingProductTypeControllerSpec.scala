@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingProductTypeFormProvider
-import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
+import mocks.services.MockUserAnswersService
 import models.sections.items.PackagingProductType
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -32,7 +32,7 @@ import views.html.sections.items.ItemPackagingProductTypeView
 
 import scala.concurrent.Future
 
-class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures with MockGetCnCodeInformationService {
+class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   lazy val formProvider = new ItemPackagingProductTypeFormProvider()
   lazy val form = formProvider()
@@ -57,8 +57,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       requireData = dataRequiredAction,
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
-      view = view,
-      cnCodeInformationService = mockGetCnCodeInformationService
+      view = view
     )
   }
 

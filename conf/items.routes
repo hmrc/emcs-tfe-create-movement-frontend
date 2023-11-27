@@ -142,3 +142,6 @@ POST        /trader/:ern/draft/:draftId/items/:idx/imported-wine-choice/change  
 
 GET         /trader/:ern/draft/:draftId/items/:idx/remove                                                                   controllers.sections.items.ItemRemoveItemController.onPageLoad(ern: String, draftId: String, idx: Index)
 POST        /trader/:ern/draft/:draftId/items/:idx/remove                                                                   controllers.sections.items.ItemRemoveItemController.onSubmit(ern: String, draftId: String, idx: Index)
+
+GET         /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/:packagingIdx/remove                                      controllers.sections.items.ItemPackagingRemovePackageController.onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index)
+POST        /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/:packagingIdx/remove                                      controllers.sections.items.ItemPackagingRemovePackageController.onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index)

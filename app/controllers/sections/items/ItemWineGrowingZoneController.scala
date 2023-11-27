@@ -25,7 +25,7 @@ import pages.sections.items.ItemWineGrowingZonePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemWineGrowingZoneView
 
 import javax.inject.Inject
@@ -41,8 +41,7 @@ class ItemWineGrowingZoneController @Inject()(
                                                override val userAllowList: UserAllowListAction,
                                                formProvider: ItemWineGrowingZoneFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
-                                               view: ItemWineGrowingZoneView,
-                                               override val cnCodeInformationService: GetCnCodeInformationService
+                                               view: ItemWineGrowingZoneView
                                              ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

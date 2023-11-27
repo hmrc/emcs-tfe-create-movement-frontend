@@ -41,7 +41,7 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
 
   lazy val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W200")
 
-  class Test(val userAnswers: Option[UserAnswers]) {
+  class Test(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new ItemWineGrowingZoneController(
@@ -54,14 +54,27 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
       userAllowList = fakeUserAllowListAction,
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
-      view = view,
-      cnCodeInformationService = mockGetCnCodeInformationService
+      view = view
     )
   }
 
   "ItemWineGrowingZone Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(defaultUserAnswers)) {
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Test() {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Test() {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
+    "must return OK and the correct view for a GET" in new Test() {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -77,9 +90,10 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
       contentAsString(result) mustEqual view(form.fill(ItemWineGrowingZone.values.head), submitUrl)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(defaultUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" in new Test() {
 
-      MockUserAnswersService.set().returns(Future.successful(defaultUserAnswers))
+      MockUserAnswersService.set(defaultUserAnswers.set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.values.head))
+        .returns(Future.successful(defaultUserAnswers))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", ItemWineGrowingZone.values.head.toString)))
 
@@ -87,7 +101,7 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(defaultUserAnswers)) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test() {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))

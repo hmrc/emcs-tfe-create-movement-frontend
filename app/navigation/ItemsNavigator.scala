@@ -145,8 +145,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(false) =>
           itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
         case Some(true) =>
-          //TODO: redirect to CAM-ITM28
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
 

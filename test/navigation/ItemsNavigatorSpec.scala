@@ -608,13 +608,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM28
-        "to the Packaging Seal Choice page" - {
+        "to the Packaging Seal Choice (bulk packaging) page" - {
 
           "when the user answers no and the item is classed as bulk" in {
             navigator.nextPage(ItemWineMoreInformationPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+
           }
         }
 

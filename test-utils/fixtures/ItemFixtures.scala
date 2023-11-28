@@ -17,7 +17,7 @@
 package fixtures
 
 import models.UnitOfMeasure.{Kilograms, Litres20}
-import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
+import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging, WineOperations}
 import models.sections.items.ItemBulkPackagingCode._
 import models.{ExciseProductCode, GoodsTypeModel}
 import play.api.libs.json.{JsObject, Json}
@@ -254,4 +254,36 @@ trait ItemFixtures {
       "W",
       "Wine and fermented beverages other than wine and beer"
     )
+
+  val testWineOperationsJson = Json.obj(
+    "12" -> "Other operations",
+    "8" -> "A product harvested during a year other than that indicated in the description has been added to the product",
+    "4" -> "The product has been sweetened",
+    "5" -> "The product has been fortified for distillation",
+    "10" -> "The product has been made on the basis of experimental use of a new oenological practice",
+    "0" -> "The product has undergone none of the following operations",
+    "2" -> "The product has been acidified",
+    "7" -> "A product obtained from a vine variety other than that indicated in the description has been added to the product",
+    "3" -> "The product has been de-acidified",
+    "11" -> "The product has been partially dealcoholised",
+    "9" -> "The product has been made using oak chips",
+    "6" -> "A product originating in a geographical unit other than that indicated in the description has been added to the product",
+    "1" -> "The product has been enriched"
+  )
+
+  val testWineOperations: Seq[WineOperations] = Seq(
+    WineOperations("12", "Other operations"),
+    WineOperations("8", "A product harvested during a year other than that indicated in the description has been added to the product"),
+    WineOperations("4", "The product has been sweetened"),
+    WineOperations("5", "The product has been fortified for distillation"),
+    WineOperations("10", "The product has been made on the basis of experimental use of a new oenological practice"),
+    WineOperations("0", "The product has undergone none of the following operations"),
+    WineOperations("2", "The product has been acidified"),
+    WineOperations("7", "A product obtained from a vine variety other than that indicated in the description has been added to the product"),
+    WineOperations("3", "The product has been de-acidified"),
+    WineOperations("11", "The product has been partially dealcoholised"),
+    WineOperations("9", "The product has been made using oak chips"),
+    WineOperations("6", "A product originating in a geographical unit other than that indicated in the description has been added to the product"),
+    WineOperations("1", "The product has been enriched")
+  )
 }

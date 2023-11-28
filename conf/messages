@@ -1259,8 +1259,17 @@ itemImportedWineChoice.error.required = Select yes if the wine was imported from
 itemImportedWineChoice.checkYourAnswersLabel = Wine imported from EU
 itemImportedWineChoice.change.hidden = wine imported from EU
 
-
 itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
 itemPackagingRemovePackage.heading = Are you sure you want to remove this packaging?
 itemPackagingRemovePackage.p1 = The packaging type is: {0}
 itemPackagingRemovePackage.error.required = Select yes if you would like to remove this packaging
+
+itemWineOperationsChoice.title = Has the wine undergone any operations?
+itemWineOperationsChoice.heading = Has the wine undergone any operations?
+itemWineOperationsChoice.hint = Select all that apply.
+itemWineOperationsChoice.checkYourAnswersLabel = Wine operations
+itemWineOperationsChoice.error.required = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
+itemWineOperationsChoice.error.invalid = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
+itemWineOperationsChoice.error.exclusive = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
+itemWineOperationsChoice.change.hidden = wine operations
+itemWineOperationsChoice.0 = No, I am not aware that the wine has undergone any operations

@@ -36,6 +36,7 @@ trait BaseSelectors {
   val legend = "main legend"
   def radioButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > label"
   def checkboxItem(index: Int) = s".govuk-checkboxes > div:nth-child($index) > label"
+  def checkboxDividerItem(index: Int) = s".govuk-checkboxes > div:nth-child($index)"
   val dateDay = s".govuk-date-input .govuk-date-input__item:nth-of-type(1)"
   val dateMonth = s".govuk-date-input .govuk-date-input__item:nth-of-type(2)"
   val dateYear = s".govuk-date-input .govuk-date-input__item:nth-of-type(3)"

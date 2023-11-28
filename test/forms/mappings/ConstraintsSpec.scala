@@ -254,4 +254,28 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
     }
 
   }
+
+  "exclusiveItemInSet" - {
+
+    "must return Valid for an exclusive item selected and only that one is present" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("0"))
+      result mustEqual Valid
+    }
+
+    "must return Valid for one non-exclusive item selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("1"))
+      result mustEqual Valid
+    }
+
+    "must return Valid for more than one non-exclusive item selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("1", "2"))
+      result mustEqual Valid
+    }
+
+    "must return Invalid when both a non-exclusive and exclusive item has been selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("0", "1"))
+      result mustEqual Invalid("errorKey")
+    }
+
+  }
 }

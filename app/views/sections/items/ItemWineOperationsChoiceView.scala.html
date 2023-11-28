@@ -38,7 +38,14 @@
     @formHelper(action = action, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(
+                ErrorSummaryViewModel(
+                    form,
+                    errorLinkOverrides = Map(
+                        "value" -> formatCheckboxesForDisplay(values.toCheckBoxItems("itemWineOperationsChoice")).head.id.getOrElse("itemWineOperationsChoice")
+                    )
+                )
+            )
         }
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

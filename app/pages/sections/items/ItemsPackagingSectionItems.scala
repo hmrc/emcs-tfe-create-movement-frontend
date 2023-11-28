@@ -19,15 +19,25 @@ package pages.sections.items
 import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
+import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case class ItemsPackagingSectionItems(itemsIndex: Index, itemsPackagingIndex: Index) extends Section[JsObject] {
-  override val path: JsPath = ItemsPackagingSection(itemsIndex).path \ itemsPackagingIndex.position
+case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) extends Section[JsObject] {
+  override val path: JsPath = ItemsPackagingSection(itemsIndex).path \ packagingIndex.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
+    (
+      request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIndex)),
+      request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIndex)),
+      request.userAnswers.get(ItemPackagingProductTypePage(itemsIndex, packagingIndex)),
+      request.userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, packagingIndex)),
+      request.userAnswers.get(ItemPackagingSealTypePage(itemsIndex, packagingIndex))
+    ) match {
+      case (Some(_), Some(_), Some(_), Some(false), _) => Completed
+      case (Some(_), Some(_), Some(_), Some(true), Some(_)) => Completed
+      case _ => InProgress
+    }
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

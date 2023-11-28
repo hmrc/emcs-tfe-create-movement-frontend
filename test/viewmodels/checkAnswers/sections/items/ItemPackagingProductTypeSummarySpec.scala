@@ -21,12 +21,12 @@ import fixtures.messages.sections.items.ItemPackagingProductTypeMessages
 import models.CheckMode
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemPackagingProductTypePage
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -51,45 +51,89 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          val sampleRow: SummaryListRow = SummaryListRowViewModel(
+          val rowNoChangeLink: SummaryListRow = SummaryListRowViewModel(
             key = messagesForLanguage.cyaLabel,
             value = Value(Text(messagesForLanguage.yes)),
-            actions = Seq(
+            actions = Seq()
+          )
+
+          val rowWithChangeLink: SummaryListRow = rowNoChangeLink.copy(actions = Some(Actions(items =
+            Seq(
               ActionItemViewModel(
                 content = messagesForLanguage.change,
                 href = controllers.sections.items.routes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, testIndex1,
                   testPackagingIndex1, CheckMode).url,
                 id = "changePackagingProductType1ForItem1"
               ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-            )
-          )
+            ))
+          ))
 
-          "must output the expected row" - {
+          "when the packaging item is complete" - {
 
-            "when the answer is yes" in {
+            val userAnsers = emptyUserAnswers
+              .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-              implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-                dataRequest(FakeRequest(), emptyUserAnswers
-                  .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            "must output the expected row" - {
+
+              "when the answer is yes" in {
+
+                implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+                  dataRequest(FakeRequest(), userAnsers
+                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+                  )
+
+                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                  rowWithChangeLink.copy(value = Value(Text(messagesForLanguage.yes)))
                 )
+              }
 
-              ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
-                sampleRow.copy(value = Value(Text(messagesForLanguage.yes)))
-              )
-            }
+              "when the answer is no" in {
 
-            "when the answer is no" in {
+                implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+                  dataRequest(FakeRequest(), userAnsers
+                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+                  )
 
-              implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-                dataRequest(FakeRequest(), emptyUserAnswers
-                  .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                  rowWithChangeLink.copy(value = Value(Text(messagesForLanguage.no)))
                 )
-
-              ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
-                sampleRow.copy(value = Value(Text(messagesForLanguage.no)))
-              )
+              }
             }
+          }
 
+          "when the packaging item is NOT complete" - {
+
+            val userAnsers = emptyUserAnswers
+              .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+
+            "must output the expected row (NO CHANGE LINK)" - {
+
+              "when the answer is yes" in {
+
+                implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+                  dataRequest(FakeRequest(), userAnsers
+                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+                  )
+
+                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                  rowNoChangeLink.copy(value = Value(Text(messagesForLanguage.yes)))
+                )
+              }
+
+              "when the answer is no" in {
+
+                implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+                  dataRequest(FakeRequest(), userAnsers
+                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+                  )
+
+                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                  rowNoChangeLink.copy(value = Value(Text(messagesForLanguage.no)))
+                )
+              }
+            }
           }
         }
       }

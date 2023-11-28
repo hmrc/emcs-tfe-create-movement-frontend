@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.items
+package pages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
+import models.sections.items.ItemsPackagingAddToList
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-object ItemDensityMessages {
-
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(goodsType: String) = s"What is the density of the $goodsType?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
-
-    val hint = "Enter the density, at 15 degrees Celsius per kilogram per litre."
-    val suffix = "kg/l"
-
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
+case class ItemsPackagingAddToListPage(idx: Index) extends QuestionPage[ItemsPackagingAddToList] {
+  override val toString: String = "itemsPackagingAddToList"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

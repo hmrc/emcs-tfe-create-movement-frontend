@@ -82,8 +82,7 @@ class ItemPackagingRemovePackageController @Inject()(
         _ => Redirect(routes.ItemsPackagingIndexController.onPageLoad(ern, draftId, itemIdx))
       }
     } else {
-      //TODO: route to CAM-ITM36
-      Future(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+      Future(Redirect(routes.ItemsPackagingAddToListController.onPageLoad(ern, draftId, itemIdx)))
     }
   }
 }

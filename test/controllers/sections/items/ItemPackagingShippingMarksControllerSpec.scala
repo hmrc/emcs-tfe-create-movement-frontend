@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingProductTypePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -140,20 +140,21 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
         dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must clear down the shipping marks when onNoShippingMarks is called and redirect to the next page" in new Test(Some(
-      baseUserAnswers.set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+    "must clear down the shipping marks when onNoShippingMarks is called and redirect to the next page" +
+      "setting he Packaging Product Type to 'Yes'" in new Test(Some(
+      baseUserAnswers
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
     )) {
       MockUserAnswersService.set(
-        baseUserAnswers
+        baseUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
       ).returns(Future.successful(
-        baseUserAnswers
+        baseUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
       ))
 
       val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ItemPackagingSealChoiceController.onPageLoad(testErn,
-        testDraftId, testIndex1, testPackagingIndex1, NormalMode).url
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {

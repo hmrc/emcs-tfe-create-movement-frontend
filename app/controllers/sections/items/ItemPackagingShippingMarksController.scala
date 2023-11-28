@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingShippingMarksFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemPackagingShippingMarksPage
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -64,9 +64,11 @@ class ItemPackagingShippingMarksController @Inject()(
   def onNoShippingMarks(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-        val cleansedAnswers = request.userAnswers.remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
-        userAnswersService.set(cleansedAnswers).map {
-          _ => Redirect(routes.ItemPackagingSealChoiceController.onPageLoad(request.ern, request.draftId, itemsIndex, packagingIdx, mode))
+        val cleansedAnswers = request.userAnswers
+          .set(ItemPackagingProductTypePage(itemsIndex, packagingIdx), true)
+          .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
+        userAnswersService.set(cleansedAnswers).map { savedAnswers =>
+          Redirect(navigator.nextPage(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx), mode, savedAnswers))
         }
       }
     }

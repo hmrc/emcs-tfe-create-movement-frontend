@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemPackagingProductTypePage
+import pages.sections.items.{ItemPackagingProductTypePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -31,12 +31,12 @@ object ItemPackagingProductTypeSummary {
     request.userAnswers.get(ItemPackagingProductTypePage(itemIdx, packagingIdx)).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "itemPackagingProductType.no"
+        val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
           key     = "itemPackagingProductType.checkYourAnswersLabel",
           value   = ValueViewModel(value),
-          actions = Seq(
+          actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = routes.ItemPackagingProductTypeController.onPageLoad(request.ern, request.draftId, itemIdx, packagingIdx, CheckMode).url,

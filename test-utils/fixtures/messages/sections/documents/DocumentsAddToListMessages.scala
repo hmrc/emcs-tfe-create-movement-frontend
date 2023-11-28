@@ -40,7 +40,6 @@ object DocumentsAddToListMessages {
     val no2 = "No, these are the only documents in this movement"
     val moreLater = "I will add more documents later"
     val errorRequired = "Select yes if you need to add another document"
-    val incomplete: String = "Incomplete"
   }
 
   object English extends ViewMessages with BaseEnglish

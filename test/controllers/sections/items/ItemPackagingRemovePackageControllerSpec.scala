@@ -122,8 +122,7 @@ class ItemPackagingRemovePackageControllerSpec extends SpecBase with MockUserAns
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
-      //TODO: redirect to CAM-ITM36
-      redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test() {

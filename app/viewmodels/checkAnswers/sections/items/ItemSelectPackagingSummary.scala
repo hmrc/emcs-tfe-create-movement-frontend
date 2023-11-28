@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemSelectPackagingPage
+import pages.sections.items.{ItemSelectPackagingPage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -28,20 +28,18 @@ object ItemSelectPackagingSummary  {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
-    answers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key = "itemSelectPackaging.checkYourAnswersLabel",
-          value = ValueViewModel(answer.description),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
-              id = s"changeItemSelectPackaging${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemSelectPackaging.change.hidden"))
-          )
+    answers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)).map { answer =>
+      SummaryListRowViewModel(
+        key = "itemSelectPackaging.checkYourAnswersLabel",
+        value = ValueViewModel(answer.description),
+        actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
+            id = s"changeItemSelectPackaging${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
+          ).withVisuallyHiddenText(messages("itemSelectPackaging.change.hidden"))
         )
+      )
     }
   }
 }

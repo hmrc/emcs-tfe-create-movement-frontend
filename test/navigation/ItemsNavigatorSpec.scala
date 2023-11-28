@@ -149,16 +149,24 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           })
 
           s"when the EPC is anything else" - {
-
-            //TODO: Route to CAM-ITM33
-            "to the Under Construction Page" in {
+            "to the Item Density Page" in {
               val userAnswers = emptyUserAnswers
                 .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeE200.code)
 
               navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
-                testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              itemsRoutes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
+        }
+      }
+
+      "must go from the Item Density Page" - {
+        "to the Item Quantity Page" in {
+          val userAnswers = emptyUserAnswers
+            .set(ItemDensityPage(testIndex1), BigDecimal("1234.5"))
+
+          navigator.nextPage(ItemDensityPage(testIndex1), NormalMode, userAnswers) mustBe
+            itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 

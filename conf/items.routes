@@ -100,6 +100,11 @@ POST        /trader/:ern/draft/:draftId/items/:idx/wine-more-information-choice	
 GET         /trader/:ern/draft/:draftId/items/:idx/wine-more-information-choice/change                                      controllers.sections.items.ItemWineMoreInformationChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/wine-more-information-choice/change                                      controllers.sections.items.ItemWineMoreInformationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:draftId/items/:idx/density                                       controllers.sections.items.ItemDensityController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/density                                       controllers.sections.items.ItemDensityController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/items/:idx/density/change                                controllers.sections.items.ItemDensityController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/items/:idx/density/change                                controllers.sections.items.ItemDensityController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
 GET         /trader/:ern/draft/:draftId/items/:idx/wine-more-information                                                    controllers.sections.items.ItemWineMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/wine-more-information                                                    controllers.sections.items.ItemWineMoreInformationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/items/:idx/wine-more-information/change                                             controllers.sections.items.ItemWineMoreInformationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

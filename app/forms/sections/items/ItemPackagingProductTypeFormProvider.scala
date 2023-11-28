@@ -17,15 +17,14 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import models.sections.items.PackagingProductType
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ItemPackagingProductTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[PackagingProductType] =
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> enumerable[PackagingProductType]("itemPackagingProductType.error.required")
+      "value" -> boolean("itemPackagingProductType.error.required")
     )
 }

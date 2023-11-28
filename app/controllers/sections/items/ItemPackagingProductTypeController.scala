@@ -19,10 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemPackagingProductTypeFormProvider
 import models.requests.DataRequest
-import models.response.referenceData.ItemPackaging
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemSelectPackagingPage}
+import pages.sections.items.ItemPackagingProductTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -43,11 +42,11 @@ class ItemPackagingProductTypeController @Inject()(
                                                     formProvider: ItemPackagingProductTypeFormProvider,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: ItemPackagingProductTypeView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      validatePackagingIndex(itemsIdx, packagingIdx){
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validatePackagingIndexAsync(itemsIdx, packagingIdx) {
         renderView(Ok, fillForm(ItemPackagingProductTypePage(itemsIdx, packagingIdx), formProvider()), itemsIdx, packagingIdx, mode)
       }
     }
@@ -56,24 +55,19 @@ class ItemPackagingProductTypeController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
         formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(renderView(BadRequest, formWithErrors, itemsIdx, packagingIdx, mode)),
-          value =>
-            saveAndRedirect(ItemPackagingProductTypePage(itemsIdx, packagingIdx), value, mode)
+          renderView(BadRequest, _, itemsIdx, packagingIdx, mode),
+          saveAndRedirect(ItemPackagingProductTypePage(itemsIdx, packagingIdx), _, mode)
         )
       }
     }
 
-  def renderView(status: Status, form: Form[_], itemsIdx: Index, packagingIdx: Index, mode: Mode)(implicit request: DataRequest[_]): Result = {
-    withAnswer(
-      ItemSelectPackagingPage(itemsIdx, packagingIdx),
-      routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)
-    ) { packageType: ItemPackaging =>
-      status(view(
+  def renderView(status: Status, form: Form[_], itemsIdx: Index, packagingIdx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    withItemPackaging(itemsIdx, packagingIdx) { description =>
+      Future.successful(status(view(
         form = form,
-        packageType = packageType,
+        description = description,
         onSubmitAction = routes.ItemPackagingProductTypeController.onSubmit(request.ern, request.draftId, itemsIdx, packagingIdx, mode)
-      ))
+      )))
     }
   }
 

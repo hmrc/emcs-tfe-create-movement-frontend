@@ -18,12 +18,11 @@ package forms.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemPackagingProductTypeMessages.English
-import forms.behaviours.{OptionFieldBehaviours, StringFieldBehaviours}
-import models.sections.items.PackagingProductType
+import forms.behaviours.{BooleanFieldBehaviours, StringFieldBehaviours}
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class ItemPackagingProductTypeFormProviderSpec extends OptionFieldBehaviours with SpecBase with StringFieldBehaviours {
+class ItemPackagingProductTypeFormProviderSpec extends BooleanFieldBehaviours with SpecBase with StringFieldBehaviours {
 
   val form = new ItemPackagingProductTypeFormProvider()()
 
@@ -31,12 +30,12 @@ class ItemPackagingProductTypeFormProviderSpec extends OptionFieldBehaviours wit
 
     val fieldName = "value"
     val requiredKey = "itemPackagingProductType.error.required"
+    val invalidKey = "error.boolean"
 
-    behave like optionsField[PackagingProductType](
+    behave like booleanField(
       form,
       fieldName,
-      validValues  = PackagingProductType.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(

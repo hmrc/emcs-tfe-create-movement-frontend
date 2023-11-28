@@ -20,7 +20,6 @@ import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.sections.items.PackagingProductType.{PackagingProductTypeNo, PackagingProductTypeYes}
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -125,10 +124,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>
       (userAnswers: UserAnswers) =>
         userAnswers.get(ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex)) match {
-          case Some(PackagingProductTypeYes) => //TODO: Redirect to CAM-ITM27
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          case Some(PackagingProductTypeNo) => //TODO: Redirect to CAM-ITM28
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case Some(true) =>
+            itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+          case Some(false) =>
+            itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
           case _ =>
             itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
         }

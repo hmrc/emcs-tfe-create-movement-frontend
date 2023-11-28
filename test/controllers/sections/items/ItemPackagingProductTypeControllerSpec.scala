@@ -21,7 +21,6 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingProductTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.items.PackagingProductType
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemPackagingProductTypePage, ItemSelectPackagingPage}
@@ -41,7 +40,8 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
   def onSubmitAction(itemIdx: Index, packagingIdx: Index): Call =
     routes.ItemPackagingProductTypeController.onSubmit(testErn, testDraftId, itemIdx, packagingIdx, NormalMode)
 
-  val packageType = testItemPackagingTypes.head
+  private val packageType = testItemPackagingTypes.head
+  private val packageTypeDescription = packageType.description
 
   class Test(val userAnswers: Option[UserAnswers]) {
 
@@ -61,7 +61,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
     )
   }
 
-  "PackagingProductType Controller" - {
+  "ItemPackagingProductType Controller" - {
 
     "for GET onPageLoad" - {
 
@@ -75,23 +75,23 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form = form,
-          packageType = packageType,
+          description = packageTypeDescription,
           onSubmitAction = onSubmitAction(0, 0)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
         emptyUserAnswers
-          .set(ItemPackagingProductTypePage(0, 0), PackagingProductType.PackagingProductTypeYes)
-          .set(ItemSelectPackagingPage(0, 0), packageType)
+          .set(ItemPackagingProductTypePage(0, 0), true)
+          .set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form = form.fill(PackagingProductType.PackagingProductTypeYes),
-          packageType = packageType,
+          form = form.fill(true),
+          description = packageTypeDescription,
           onSubmitAction = onSubmitAction(0, 0)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
@@ -105,7 +105,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the packagingIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 0, 1, NormalMode)(request)
@@ -115,7 +115,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the itemsIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 1, 0, NormalMode)(request)
@@ -138,10 +138,18 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
       )) {
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+        MockUserAnswersService.set(
+          emptyUserAnswers
+            .set(ItemSelectPackagingPage(0, 0), packageType)
+            .set(ItemPackagingProductTypePage(0, 0), true)
+        ).returns(Future.successful(
+          emptyUserAnswers
+            .set(ItemSelectPackagingPage(0, 0), packageType)
+            .set(ItemPackagingProductTypePage(0, 0), true)
+        ))
 
         val result = controller.onSubmit(testErn, testDraftId, 0, 0, NormalMode)(
-          request.withFormUrlEncodedBody(("value", PackagingProductType.PackagingProductTypeYes.toString))
+          request.withFormUrlEncodedBody(("value", "true"))
         )
 
         status(result) mustEqual SEE_OTHER
@@ -152,10 +160,18 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
       )) {
 
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+        MockUserAnswersService.set(
+          emptyUserAnswers
+            .set(ItemSelectPackagingPage(0, 0), packageType)
+            .set(ItemPackagingProductTypePage(0, 0), false)
+        ).returns(Future.successful(
+          emptyUserAnswers
+            .set(ItemSelectPackagingPage(0, 0), packageType)
+            .set(ItemPackagingProductTypePage(0, 0), false)
+        ))
 
         val result = controller.onSubmit(testErn, testDraftId, 0, 0, NormalMode)(
-          request.withFormUrlEncodedBody(("value", PackagingProductType.PackagingProductTypeNo.toString))
+          request.withFormUrlEncodedBody(("value", "false"))
         )
 
         status(result) mustEqual SEE_OTHER
@@ -172,7 +188,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           form = boundForm,
-          packageType = packageType,
+          description = packageTypeDescription,
           onSubmitAction = onSubmitAction(0, 0)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }

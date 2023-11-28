@@ -15,50 +15,53 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.items.PackagingProductType
 @import models.response.referenceData.ItemPackaging
 @import viewmodels.LegendSize
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    h1: components.h1,
-    h2: components.h2,
-    p: components.p,
-    continueOrExit: components.continueOrExit
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        strong: components.strong,
+        continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], packageType: ItemPackaging, onSubmitAction: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], description: String, onSubmitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingProductType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-        @formHelper(action = onSubmitAction, 'autoComplete -> "off") {
+  @formHelper(action = onSubmitAction, 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
-        }
-
-        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-
-        @h1(messages("itemPackagingProductType.heading"))
-
-        @p(){@messages("itemPackagingProductType.p", packageType.displayName)}
-
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("itemPackagingProductType.heading"))).hidden,
-                items  = PackagingProductType.options
-            )
-        )
-
-        @continueOrExit()
+    @if(form.errors.nonEmpty) {
+      @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+
+    @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+
+    @h1(messages("itemPackagingProductType.heading"), classes = "govuk-heading-l")
+
+    @p() {
+      @Html(messages("itemPackagingProductType.p", strong(Html(description.trim), withFullStop = true)))
+    }
+
+    @govukRadios(
+      RadiosViewModel.yesNo(
+        field = form("value"),
+        legend = LegendViewModel(Text(messages("itemPackagingProductType.heading"))).hidden,
+        yesMessageKey = "site.yes",
+        noMessageKey = "itemPackagingProductType.no"
+      )
+    )
+
+    @continueOrExit()
+  }
 }
 
 @{
-    //$COVERAGE-OFF$
+  //$COVERAGE-OFF$
 }

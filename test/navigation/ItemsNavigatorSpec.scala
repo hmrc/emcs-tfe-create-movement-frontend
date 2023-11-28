@@ -23,7 +23,6 @@ import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
-import models.sections.items.PackagingProductType.{PackagingProductTypeNo, PackagingProductTypeYes}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
@@ -544,20 +543,18 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the ItemPackagingProductTypePage" - {
 
-        //TODO: Redirect to CAM-ITM27
-        "to the UnderConstruction page when Answered Yes" in {
+        "to the Packaging Seal Choice (Item packaging) page when user answered Yes" in {
 
           navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
-            .set(ItemPackagingProductTypePage(0, 0), PackagingProductTypeYes)
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            .set(ItemPackagingProductTypePage(0, 0), true)
+          ) mustBe itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
         }
 
-        //TODO: Redirect to CAM-ITM28
-        "to the UnderConstruction page when Answered No" in {
+        "to the Shipping Marks page when user answered No" in {
 
           navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
-            .set(ItemPackagingProductTypePage(0, 0), PackagingProductTypeNo)
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            .set(ItemPackagingProductTypePage(0, 0), false)
+          ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
         }
 
         "to the PackagingIndex route when neither answer has been selected" in {

@@ -43,13 +43,14 @@ class ItemPackagingProductTypeViewSpec extends SpecBase with ViewBehaviours with
       val view = app.injector.instanceOf[ItemPackagingProductTypeView]
       val form = app.injector.instanceOf[ItemPackagingProductTypeFormProvider].apply()
 
-      implicit val doc: Document = Jsoup.parse(view(form, packageType = testItemPackagingTypes.head, testOnwardRoute).toString())
+      implicit val doc: Document = Jsoup.parse(view(form, description = testItemPackagingTypes.head.description, testOnwardRoute).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.subHeadingCaptionSelector -> English.itemSection,
-        Selectors.p(1) -> English.p(testItemPackagingTypes.head.displayName),
+        Selectors.p(1) -> English.p(testItemPackagingTypes.head.description),
+        Selectors.strong(1) -> testItemPackagingTypes.head.description,
         Selectors.radioButton(1) -> English.yes,
         Selectors.radioButton(2) -> English.no,
         Selectors.button -> English.saveAndContinue,

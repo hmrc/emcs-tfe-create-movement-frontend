@@ -21,32 +21,26 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemPackagingProductTypePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemPackagingProductTypeSummary  {
+object ItemPackagingProductTypeSummary {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ItemPackagingProductTypePage(itemIdx, packagingIdx)).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"itemPackagingProductType.$answer"))
-          )
-        )
+        val value = if (answer) "site.yes" else "itemPackagingProductType.no"
 
         SummaryListRowViewModel(
           key     = "itemPackagingProductType.checkYourAnswersLabel",
-          value   = value,
+          value   = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(
-              "site.change",
-              routes.ItemPackagingProductTypeController.onPageLoad(request.ern, request.draftId, itemIdx, packagingIdx, CheckMode).url,
-              s"changePackagingProductType-${itemIdx.displayIndex}-${packagingIdx.displayIndex}"
+              content = "site.change",
+              href = routes.ItemPackagingProductTypeController.onPageLoad(request.ern, request.draftId, itemIdx, packagingIdx, CheckMode).url,
+              id = s"changePackagingProductType${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
             ).withVisuallyHiddenText(messages("itemPackagingProductType.change.hidden"))
           )
         )

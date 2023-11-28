@@ -17,11 +17,10 @@
 package pages.sections.items
 
 import models.Index
-import models.sections.items.PackagingProductType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ItemPackagingProductTypePage(itemsIndex: Index, itemsPackagingIndex: Index) extends QuestionPage[PackagingProductType] {
-  override val toString: String = "packagingProductType"
+case class ItemPackagingProductTypePage(itemsIndex: Index, itemsPackagingIndex: Index) extends QuestionPage[Boolean] {
+  override val toString: String = "itemPackagingProductType"
   override val path: JsPath = ItemsPackagingSectionItems(itemsIndex, itemsPackagingIndex).path \ toString
 }

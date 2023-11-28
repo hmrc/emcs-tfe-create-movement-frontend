@@ -25,7 +25,7 @@ import pages.sections.items.ItemImportedWineChoicePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{GetCnCodeInformationService, UserAnswersService}
+import services.UserAnswersService
 import views.html.sections.items.ItemImportedWineChoiceView
 
 import javax.inject.Inject

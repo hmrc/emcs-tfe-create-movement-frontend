@@ -17,6 +17,7 @@
 package fixtures
 
 import models._
+import models.response.referenceData.ItemPackaging
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.libs.json.{JsObject, Json}
@@ -46,8 +47,13 @@ trait BaseFixtures {
   val testBusinessName: String = "testName"
   val testIndex1: Index = Index(0)
   val testIndex2: Index = Index(1)
+  val testIndex3: Index = Index(2)
   val testPackagingIndex1: Index = testIndex1
   val testPackagingIndex2: Index = testIndex2
+  val testPackagingIndex3: Index = testIndex3
+
+  val testPackageAerosol = ItemPackaging("AE", "Aerosol")
+  val testPackageBag = ItemPackaging("BG", "Bag")
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
   val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))

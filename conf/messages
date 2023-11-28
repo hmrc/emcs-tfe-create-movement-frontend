@@ -1258,3 +1258,9 @@ itemImportedWineChoice.heading = Was the wine imported from an EU country?
 itemImportedWineChoice.error.required = Select yes if the wine was imported from an EU country
 itemImportedWineChoice.checkYourAnswersLabel = Wine imported from EU
 itemImportedWineChoice.change.hidden = wine imported from EU
+
+
+itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
+itemPackagingRemovePackage.heading = Are you sure you want to remove this packaging?
+itemPackagingRemovePackage.p1 = The packaging type is: {0}
+itemPackagingRemovePackage.error.required = Select yes if you would like to remove this packaging

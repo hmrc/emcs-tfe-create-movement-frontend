@@ -78,7 +78,7 @@
                     value = form("packaging-seal-information").value,
                     errorMessage = form.errors("packaging-seal-information") match {
                         case Nil => None
-                        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+                        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message, err.args:_*)).mkString("<br>"))))
                     }
                 )
             )

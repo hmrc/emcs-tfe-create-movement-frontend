@@ -16,42 +16,46 @@
 
 package forms.sections.items
 
+import base.SpecBase
+import fixtures.messages.sections.items.ItemPackagingSealTypeMessages
 import forms.XSS_REGEX
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+import play.api.i18n.Messages
+import forms.sections.items.ItemPackagingSealTypeFormProvider._
 
-class ItemPackagingSealTypeFormProviderSpec extends BooleanFieldBehaviours {
+class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val form = new ItemPackagingSealTypeFormProvider()()
 
   "form" - {
     "packagingSealType field" - {
       "must error when no data is entered" in {
-        val boundForm = form.bind(Map(ItemPackagingSealTypeFormProvider.packagingSealTypeField -> ""))
+        val boundForm = form.bind(Map(packagingSealTypeField -> ""))
 
         boundForm.errors mustBe Seq(FormError(
-          ItemPackagingSealTypeFormProvider.packagingSealTypeField,
-          ItemPackagingSealTypeFormProvider.sealTypeRequiredErrorKey
+          packagingSealTypeField,
+          sealTypeRequiredErrorKey
         ))
       }
 
       "must error when there are invalid characters" in {
-        val boundForm = form.bind(Map(ItemPackagingSealTypeFormProvider.packagingSealTypeField -> "<>"))
+        val boundForm = form.bind(Map(packagingSealTypeField -> "<>"))
 
         boundForm.errors mustBe Seq(FormError(
-          ItemPackagingSealTypeFormProvider.packagingSealTypeField,
-          ItemPackagingSealTypeFormProvider.sealTypeInvalidErrorKey,
+          packagingSealTypeField,
+          sealTypeInvalidErrorKey,
           Seq(XSS_REGEX)
         ))
       }
 
       "must error when the input is too long" in {
-        val boundForm = form.bind(Map(ItemPackagingSealTypeFormProvider.packagingSealTypeField -> "1" * 36))
+        val boundForm = form.bind(Map(packagingSealTypeField -> "1" * 36))
 
         boundForm.errors mustBe Seq(FormError(
-          ItemPackagingSealTypeFormProvider.packagingSealTypeField,
-          ItemPackagingSealTypeFormProvider.sealTypeLengthErrorKey,
-          Seq(ItemPackagingSealTypeFormProvider.maxLengthTextBoxValue)
+          packagingSealTypeField,
+          sealTypeLengthErrorKey,
+          Seq(maxLengthSealTypeField)
         ))
 
       }
@@ -59,29 +63,76 @@ class ItemPackagingSealTypeFormProviderSpec extends BooleanFieldBehaviours {
     "packagingSealInformation field" - {
       "must error when there are invalid characters" in {
         val boundForm = form.bind(Map(
-          ItemPackagingSealTypeFormProvider.packagingSealTypeField -> "test",
-          ItemPackagingSealTypeFormProvider.packagingSealInformationField -> "<>"
+          packagingSealTypeField -> "test",
+          packagingSealInformationField -> "<>"
         ))
 
         boundForm.errors mustBe Seq(FormError(
-          ItemPackagingSealTypeFormProvider.packagingSealInformationField,
-          ItemPackagingSealTypeFormProvider.answerInvalidErrorKey,
+          packagingSealInformationField,
+          sealInformationInvalidErrorKey,
           Seq(XSS_REGEX)
         ))
       }
 
       "must error when the input is too long" in {
         val boundForm = form.bind(Map(
-          ItemPackagingSealTypeFormProvider.packagingSealTypeField -> "test",
-          ItemPackagingSealTypeFormProvider.packagingSealInformationField -> "1" * 351
+          packagingSealTypeField -> "test",
+          packagingSealInformationField -> "1" * 351
         ))
 
         boundForm.errors mustBe Seq(FormError(
-          ItemPackagingSealTypeFormProvider.packagingSealInformationField,
-          ItemPackagingSealTypeFormProvider.answerLengthErrorKey,
-          Seq(ItemPackagingSealTypeFormProvider.maxLengthValue)
+          packagingSealInformationField,
+          SealTypeInformationLengthErrorKey,
+          Seq(maxLengthSealInformationField)
         ))
 
+      }
+    }
+  }
+
+  "Error Messages" - {
+
+    Seq(ItemPackagingSealTypeMessages.English) foreach { messagesForLanguage =>
+
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+
+        s"for the $packagingSealTypeField field" - {
+
+          "have the correct error message for required" in {
+
+            msgs(sealTypeRequiredErrorKey) mustBe
+              messagesForLanguage.errorSealTypeRequired
+          }
+
+          "have the correct error message for length" in {
+
+            msgs(sealTypeLengthErrorKey, maxLengthSealTypeField) mustBe
+              messagesForLanguage.errorSealTypeLength
+          }
+
+          "have the correct error message for xss" in {
+
+            msgs(sealTypeInvalidErrorKey) mustBe
+              messagesForLanguage.errorSealTypeInvalid
+          }
+        }
+
+        s"for the $packagingSealInformationField field" - {
+
+          "have the correct error message for length" in {
+
+            msgs(sealInformationInvalidErrorKey, maxLengthSealInformationField) mustBe
+              messagesForLanguage.errorSealInformationInvalid
+          }
+
+          "have the correct error message for xss" in {
+
+            msgs(sealTypeInvalidErrorKey) mustBe
+              messagesForLanguage.errorSealInformationInvalid
+          }
+        }
       }
     }
   }

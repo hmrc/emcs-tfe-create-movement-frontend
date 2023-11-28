@@ -17,6 +17,7 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import forms.sections.items.ItemPackagingSealTypeFormProvider
 
 object ItemPackagingSealTypeMessages {
 
@@ -29,6 +30,13 @@ object ItemPackagingSealTypeMessages {
 
     val p2 = "Give more information (optional)"
     val hint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
+
+    val errorSealTypeRequired = "Enter the type of commercial seal on the packaging"
+    val errorSealTypeInvalid = "Description cannot contain < and > and : and ;"
+    val errorSealTypeLength = s"Commercial seal must be ${ItemPackagingSealTypeFormProvider.maxLengthSealTypeField} characters or less"
+
+    val errorSealInformationInvalid = "Description cannot contain < and > and : and ;"
+    val errorSealInformationLength = s"Commercial seal details must be ${ItemPackagingSealTypeFormProvider.maxLengthSealInformationField} characters or less"
 
   }
 

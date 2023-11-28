@@ -170,7 +170,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex)) match {
         case Some(true) =>
-          //TODO: redirect to CAM-ITM29 (item packaging version)
           itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
         case _ =>
           //TODO: redirect to CAM-ITM36

@@ -21,6 +21,7 @@ import forms.mappings.Mappings
 import models.sections.items.ItemPackagingSealTypeModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
+import play.api.data.Forms.{text => playText}
 
 import javax.inject.Inject
 
@@ -33,13 +34,13 @@ class ItemPackagingSealTypeFormProvider @Inject() extends Mappings {
       mapping(
         packagingSealTypeField ->
           text(sealTypeRequiredErrorKey)
-            .verifying(maxLength(maxLengthTextBoxValue, sealTypeLengthErrorKey))
+            .verifying(maxLength(maxLengthSealTypeField, sealTypeLengthErrorKey))
             .verifying(regexp(XSS_REGEX, sealTypeInvalidErrorKey)),
         packagingSealInformationField ->
           optional(
-            text(answerRequiredErrorKey)
-              .verifying(maxLength(maxLengthValue, answerLengthErrorKey))
-              .verifying(regexp(XSS_REGEX, answerInvalidErrorKey))
+            playText
+              .verifying(maxLength(maxLengthSealInformationField, SealTypeInformationLengthErrorKey))
+              .verifying(regexp(XSS_REGEX, sealInformationInvalidErrorKey))
           )
       )(ItemPackagingSealTypeModel.apply)(ItemPackagingSealTypeModel.unapply)
     )
@@ -53,11 +54,10 @@ object ItemPackagingSealTypeFormProvider {
   val sealTypeInvalidErrorKey = "itemPackagingSealType.error.sealType.invalid"
   val sealTypeLengthErrorKey = "itemPackagingSealType.error.sealType.length"
 
-  val answerRequiredErrorKey = "itemPackagingSealType.error.required"
-  val answerInvalidErrorKey = "itemPackagingSealType.error.invalid"
-  val answerLengthErrorKey = "itemPackagingSealType.error.length"
+  val sealInformationInvalidErrorKey = "itemPackagingSealType.error.invalid"
+  val SealTypeInformationLengthErrorKey = "itemPackagingSealType.error.length"
 
-  val maxLengthValue: Int = 350
-  val maxLengthTextBoxValue: Int = 35
+  val maxLengthSealInformationField: Int = 350
+  val maxLengthSealTypeField: Int = 35
 }
 

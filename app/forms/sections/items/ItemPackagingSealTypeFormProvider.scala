@@ -16,12 +16,11 @@
 
 package forms.sections.items
 
-import forms.XSS_REGEX
 import forms.mappings.Mappings
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import models.sections.items.ItemPackagingSealTypeModel
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional}
-import play.api.data.Forms.{text => playText}
+import play.api.data.Forms.{mapping, optional, text => playText}
 
 import javax.inject.Inject
 
@@ -39,8 +38,9 @@ class ItemPackagingSealTypeFormProvider @Inject() extends Mappings {
         packagingSealInformationField ->
           optional(
             playText
-              .verifying(maxLength(maxLengthSealInformationField, SealTypeInformationLengthErrorKey))
+              .verifying(maxLength(maxLengthSealInformationField, sealInformationLengthErrorKey))
               .verifying(regexp(XSS_REGEX, sealInformationInvalidErrorKey))
+              .verifying(regexp(ALPHANUMERIC_REGEX, sealInformationAlphanumericErrorKey)),
           )
       )(ItemPackagingSealTypeModel.apply)(ItemPackagingSealTypeModel.unapply)
     )
@@ -55,7 +55,8 @@ object ItemPackagingSealTypeFormProvider {
   val sealTypeLengthErrorKey = "itemPackagingSealType.error.sealType.length"
 
   val sealInformationInvalidErrorKey = "itemPackagingSealType.error.invalid"
-  val SealTypeInformationLengthErrorKey = "itemPackagingSealType.error.length"
+  val sealInformationLengthErrorKey = "itemPackagingSealType.error.length"
+  val sealInformationAlphanumericErrorKey = "itemPackagingSealType.error.alphanumeric"
 
   val maxLengthSealInformationField: Int = 350
   val maxLengthSealTypeField: Int = 35

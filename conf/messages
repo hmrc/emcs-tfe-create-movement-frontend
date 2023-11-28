@@ -1295,3 +1295,4 @@ itemPackagingSealType.error.sealType.length = Commercial seal must be {0} charac
 itemPackagingSealType.error.required = Enter details of the commercial seal
 itemPackagingSealType.error.invalid = Description cannot contain < and > and : and ;
 itemPackagingSealType.error.length = Commercial seal details must be {0} characters or less
+itemPackagingSealType.error.alphanumeric = Description must contain letters and numbers

@@ -64,7 +64,7 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
       "must error when there are invalid characters" in {
         val boundForm = form.bind(Map(
           packagingSealTypeField -> "test",
-          packagingSealInformationField -> "<>"
+          packagingSealInformationField -> "<javascript>"
         ))
 
         boundForm.errors mustBe Seq(FormError(
@@ -82,7 +82,7 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
 
         boundForm.errors mustBe Seq(FormError(
           packagingSealInformationField,
-          SealTypeInformationLengthErrorKey,
+          sealInformationLengthErrorKey,
           Seq(maxLengthSealInformationField)
         ))
 
@@ -123,14 +123,20 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
 
           "have the correct error message for length" in {
 
-            msgs(sealInformationInvalidErrorKey, maxLengthSealInformationField) mustBe
-              messagesForLanguage.errorSealInformationInvalid
+            msgs(sealInformationLengthErrorKey, maxLengthSealInformationField) mustBe
+              messagesForLanguage.errorSealInformationLength
           }
 
           "have the correct error message for xss" in {
 
-            msgs(sealTypeInvalidErrorKey) mustBe
+            msgs(sealInformationInvalidErrorKey) mustBe
               messagesForLanguage.errorSealInformationInvalid
+          }
+
+          "have the correct error message for alphanumeric check" in {
+
+            msgs(sealInformationAlphanumericErrorKey) mustBe
+              messagesForLanguage.errorSealInformationAlphanumeric
           }
         }
       }

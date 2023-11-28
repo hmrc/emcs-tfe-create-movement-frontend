@@ -18,11 +18,11 @@ package forms.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemPackagingSealTypeMessages
-import forms.XSS_REGEX
 import forms.behaviours.BooleanFieldBehaviours
+import forms.sections.items.ItemPackagingSealTypeFormProvider._
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import play.api.data.FormError
 import play.api.i18n.Messages
-import forms.sections.items.ItemPackagingSealTypeFormProvider._
 
 class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
@@ -50,7 +50,7 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
       }
 
       "must error when the input is too long" in {
-        val boundForm = form.bind(Map(packagingSealTypeField -> "1" * 36))
+        val boundForm = form.bind(Map(packagingSealTypeField -> "1" * (maxLengthSealTypeField + 1)))
 
         boundForm.errors mustBe Seq(FormError(
           packagingSealTypeField,
@@ -77,7 +77,7 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
       "must error when the input is too long" in {
         val boundForm = form.bind(Map(
           packagingSealTypeField -> "test",
-          packagingSealInformationField -> "1" * 351
+          packagingSealInformationField -> "1" * (maxLengthSealInformationField + 1)
         ))
 
         boundForm.errors mustBe Seq(FormError(
@@ -85,7 +85,19 @@ class ItemPackagingSealTypeFormProviderSpec extends SpecBase with BooleanFieldBe
           sealInformationLengthErrorKey,
           Seq(maxLengthSealInformationField)
         ))
+      }
 
+      "must error when the input is does not contain an alphanumeric" in {
+        val boundForm = form.bind(Map(
+          packagingSealTypeField -> "test",
+          packagingSealInformationField -> "???"
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          packagingSealInformationField,
+          sealInformationAlphanumericErrorKey,
+          Seq(ALPHANUMERIC_REGEX)
+        ))
       }
     }
   }

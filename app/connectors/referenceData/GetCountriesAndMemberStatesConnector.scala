@@ -22,29 +22,29 @@ import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstream
 import play.api.libs.json.JsResultException
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-trait GetMemberStatesConnector {
+trait GetCountriesAndMemberStatesConnector {
   def baseUrl: String
 
-  def getMemberStates()(implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]]
+  def getCountryCodesAndMemberStates()(implicit headerCarrier: HeaderCarrier,
+                                       executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]]
 }
-
-@Singleton
-class GetMemberStatesConnectorImpl @Inject()(val http: HttpClient,
-                                         config: AppConfig) extends GetCountriesHttpParser with GetMemberStatesConnector {
-
+class GetCountriesAndMemberStatesConnectorImpl @Inject()(val http: HttpClient,
+                                                         config: AppConfig) extends GetCountriesHttpParser with GetCountriesAndMemberStatesConnector {
   def baseUrl: String = config.referenceDataBaseUrl
 
-  def getMemberStates()(implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]] =
-    get(baseUrl + "/oracle/member-states")
+  def getCountryCodesAndMemberStates()(
+    implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext
+  ): Future[Either[ErrorResponse, Seq[CountryModel]]] =
+    get(baseUrl + "/oracle/member-states-and-countries")
       .recover {
         case JsResultException(errors) =>
-          logger.warn(s"[getMemberStates] Bad JSON response from emcs-tfe-reference-data: " + errors)
+          logger.warn(s"[getCountryCodesAndMemberStates] Bad JSON response from emcs-tfe-reference-data: " + errors)
           Left(JsonValidationError)
         case error =>
-          logger.warn(s"[getMemberStates] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
+          logger.warn(s"[getCountryCodesAndMemberStates] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
 }

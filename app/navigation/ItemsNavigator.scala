@@ -171,8 +171,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemImportedWineChoicePage(idx) => (userAnswers: UserAnswers) =>
       (userAnswers.get(ItemImportedWineChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
         case (Some(true), Some(true), Some(quantity)) if quantity > 60 =>
-          //TODO: redirect to CAM-ITM14 (Wine Growing Zone)
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemWineGrowingZoneController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case (Some(true), _, _) =>
           itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>

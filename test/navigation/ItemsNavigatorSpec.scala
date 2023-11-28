@@ -684,7 +684,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               .set(ItemImportedWineChoicePage(testIndex1), true)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
               .set(ItemQuantityPage(testIndex1), BigDecimal(61))
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemWineGrowingZoneController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 

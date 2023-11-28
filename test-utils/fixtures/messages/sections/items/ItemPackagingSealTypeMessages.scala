@@ -37,7 +37,7 @@ object ItemPackagingSealTypeMessages {
 
     val errorSealInformationInvalid = "Description cannot contain < and > and : and ;"
     val errorSealInformationLength = s"Commercial seal details must be ${ItemPackagingSealTypeFormProvider.maxLengthSealInformationField} characters or less"
-    val errorSealInformationAlphanumeric = "Description must contain letters and numbers"
+    val errorSealInformationAlphanumeric = "Description must include letters and numbers"
 
   }
 

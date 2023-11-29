@@ -18,18 +18,20 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockGetCountriesAndMemberStatesConnector
+import mocks.services.MockGetMemberStatesService
+import models.CountryModel
 import models.response.{CountriesAndMemberStatesException, UnexpectedDownstreamResponseError}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetCountriesAndMemberStatesServiceSpec extends SpecBase with MockGetCountriesAndMemberStatesConnector {
+class GetCountriesAndMemberStatesServiceSpec extends SpecBase with MockGetCountriesAndMemberStatesConnector with MockGetMemberStatesService {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global
 
-  lazy val testService = new GetCountriesAndMemberStatesService(mockGetCountriesAndMemberStatesConnector)
+  lazy val testService = new GetCountriesAndMemberStatesService(mockGetCountriesAndMemberStatesConnector, mockGetMemberStatesService)
 
   ".getCountryCodesAndMemberStates" - {
 
@@ -61,6 +63,37 @@ class GetCountriesAndMemberStatesServiceSpec extends SpecBase with MockGetCountr
         val actualResult = intercept[CountriesAndMemberStatesException](await(testService.getCountryCodesAndMemberStates())).getMessage
 
         actualResult mustBe expectedResult
+      }
+    }
+  }
+
+  ".removeEUMemberStates" - {
+
+    "should retrieve EU member states and remove them from the existing list" - {
+
+      "when EU member states connector returns success from downstream" in {
+
+        val countryModelEl = CountryModel(
+          countryCode = "EL",
+          country = "Greece"
+        )
+
+        val countryModelGr = CountryModel(
+          countryCode = "GR",
+          country = "Greece"
+        )
+
+        val expectedResult = Seq(
+          countryModelAU,
+          countryModelBR,
+          countryModelGB
+        )
+
+        MockGetMemberStatesService.getMemberStates().returns(Future(Seq(countryModelAT, countryModelBE, countryModelGB, countryModelEl)))
+
+        val actualResults = testService.removeEUMemberStates(Seq(countryModelAT, countryModelBE, countryModelGB, countryModelAU, countryModelBR, countryModelEl, countryModelGr)).futureValue
+
+        actualResults mustBe expectedResult
       }
     }
   }

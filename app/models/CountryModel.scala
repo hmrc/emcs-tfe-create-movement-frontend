@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, Json}
 
 case class CountryModel(countryCode: String, country: String) extends SelectOptionModel {
   override val code: String = countryCode
-  override val displayName: String = country
+  override val displayName: String = s"$country ($countryCode)"
 }
 
 object CountryModel {

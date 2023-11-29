@@ -50,13 +50,15 @@ class ItemWineOriginController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        countryAndMemberStatesService.getCountryCodesAndMemberStates().flatMap { countries =>
-          val selectItems = SelectItemHelper.constructSelectItems(
-            selectOptions = countries,
-            defaultTextMessageKey = "itemWineOrigin.select.defaultValue",
-            existingAnswer = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode)
-          )
-          renderView(Ok, fillForm(ItemWineOriginPage(idx), formProvider(countries)), selectItems, idx, mode)
+        countryAndMemberStatesService.getCountryCodesAndMemberStates().flatMap { allCountries =>
+          countryAndMemberStatesService.removeEUMemberStates(allCountries).flatMap { countries =>
+            val selectItems = SelectItemHelper.constructSelectItems(
+              selectOptions = countries,
+              defaultTextMessageKey = "itemWineOrigin.select.defaultValue",
+              existingAnswer = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode)
+            )
+            renderView(Ok, fillForm(ItemWineOriginPage(idx), formProvider(countries)), selectItems, idx, mode)
+          }
         }
 
       }
@@ -65,17 +67,19 @@ class ItemWineOriginController @Inject()(
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        countryAndMemberStatesService.getCountryCodesAndMemberStates().flatMap { countries =>
-          formProvider(countries).bindFromRequest().fold(
-            formWithErrors => {
-              val selectItems = SelectItemHelper.constructSelectItems(
-                selectOptions = countries,
-                defaultTextMessageKey = "itemWineOrigin.select.defaultValue"
-              )
-              renderView(BadRequest, formWithErrors, selectItems, idx, mode)
-            },
-            saveAndRedirect(ItemWineOriginPage(idx), _, mode)
-          )
+        countryAndMemberStatesService.getCountryCodesAndMemberStates().flatMap { allCountries =>
+          countryAndMemberStatesService.removeEUMemberStates(allCountries).flatMap { countries =>
+            formProvider(countries).bindFromRequest().fold(
+              formWithErrors => {
+                val selectItems = SelectItemHelper.constructSelectItems(
+                  selectOptions = countries,
+                  defaultTextMessageKey = "itemWineOrigin.select.defaultValue"
+                )
+                renderView(BadRequest, formWithErrors, selectItems, idx, mode)
+              },
+              saveAndRedirect(ItemWineOriginPage(idx), _, mode)
+            )
+          }
         }
       }
     }

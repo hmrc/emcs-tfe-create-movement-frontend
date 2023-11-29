@@ -1251,7 +1251,7 @@ itemPackagingSealChoice.change.hidden = commercial seal
 
 itemWineOrigin.title = What was the wine’s country of origin?
 itemWineOrigin.heading = What was the wine’s country of origin?
-itemWineOrigin.hint = Search by country name.
+itemWineOrigin.hint = Search by country name or abbreviation
 itemWineOrigin.select.defaultValue = Choose country
 itemWineOrigin.checkYourAnswersLabel = Third country of origin
 itemWineOrigin.error.required = Select the wine’s country of origin

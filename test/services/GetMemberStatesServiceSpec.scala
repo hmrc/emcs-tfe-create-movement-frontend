@@ -32,7 +32,7 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
 
   lazy val testService = new GetMemberStatesService(mockGetMemberStatesConnector)
 
-  ".getMemberStates" - {
+  ".getMemberStatesSelectItems" - {
 
     "should return Seq[SelectItem]" - {
 
@@ -41,6 +41,40 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
         val expectedResult = Seq(
           SelectItem(Some(countryModelAT.countryCode), s"${countryModelAT.country} (${countryModelAT.countryCode})"),
           SelectItem(Some(countryModelBE.countryCode), s"${countryModelBE.country} (${countryModelBE.countryCode})")
+        )
+
+        MockGetMemberStatesConnector.getMemberStates().returns(Future(Right(Seq(countryModelAT, countryModelBE))))
+
+        val actualResults = testService.getMemberStatesSelectItems().futureValue
+
+        actualResults mustBe expectedResult
+      }
+    }
+
+    "should throw MemberStatesException" - {
+
+      "when Connector returns failure from downstream" in {
+
+        val expectedResult = "No member states retrieved"
+
+        MockGetMemberStatesConnector.getMemberStates().returns(Future(Left(UnexpectedDownstreamResponseError)))
+
+        val actualResult = intercept[MemberStatesException](await(testService.getMemberStatesSelectItems())).getMessage
+
+        actualResult mustBe expectedResult
+      }
+    }
+  }
+
+  ".getMemberStates" - {
+
+    "should return Seq[CountryModel]" - {
+
+      "when Connector returns success from downstream" in {
+
+        val expectedResult = Seq(
+          countryModelAT,
+          countryModelBE
         )
 
         MockGetMemberStatesConnector.getMemberStates().returns(Future(Right(Seq(countryModelAT, countryModelBE))))
@@ -59,7 +93,7 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
 
         MockGetMemberStatesConnector.getMemberStates().returns(Future(Left(UnexpectedDownstreamResponseError)))
 
-        val actualResult = intercept[MemberStatesException](await(testService.getMemberStates())).getMessage
+        val actualResult = intercept[MemberStatesException](await(testService.getMemberStatesSelectItems())).getMessage
 
         actualResult mustBe expectedResult
       }

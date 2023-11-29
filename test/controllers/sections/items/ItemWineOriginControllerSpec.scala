@@ -39,7 +39,8 @@ class ItemWineOriginControllerSpec
   with MockGetCountriesAndMemberStatesService
   with ItemFixtures {
 
-  private val countries = Seq(countryModelAU, countryModelBR)
+  private val countries = Seq(countryModelAT, countryModelBE, countryModelGB, countryModelAU, countryModelBR)
+  private val countriesWithoutEUMemberStates = Seq(countryModelAU, countryModelBR, countryModelGB)
   lazy val formProvider = new ItemWineOriginFormProvider()
   lazy val form = formProvider(countries)
   lazy val view = app.injector.instanceOf[ItemWineOriginView]
@@ -65,9 +66,11 @@ class ItemWineOriginControllerSpec
 
     if(callsService) {
       MockGetCountriesAndMemberStatesService.getCountryCodesAndMemberStates().returns(Future.successful(countries))
+
+      MockGetCountriesAndMemberStatesService.removeEUMemberStates(countries).returns(Future.successful(countriesWithoutEUMemberStates))
     }
 
-    val selectItems: Seq[SelectItem] = SelectItemHelper.constructSelectItems(countries, "itemWineOrigin.select.defaultValue")(messages(request))
+    val selectItems: Seq[SelectItem] = SelectItemHelper.constructSelectItems(countriesWithoutEUMemberStates, "itemWineOrigin.select.defaultValue")(messages(request))
   }
 
   "ItemWineOrigin Controller" - {
@@ -99,7 +102,7 @@ class ItemWineOriginControllerSpec
     )) {
 
       val sampleEPCsSelectOptionsWithAUSelected = SelectItemHelper.constructSelectItems(
-        selectOptions = countries,
+        selectOptions = countriesWithoutEUMemberStates,
         defaultTextMessageKey = "itemWineOrigin.select.defaultValue",
         existingAnswer = Some("AU"))(messages(request))
 

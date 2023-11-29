@@ -23,10 +23,10 @@ object ItemWineOriginMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading: String = s"What was the wine’s country of origin?"
     val title: String = titleHelper(heading)
-    val hint: String = "Search by country name."
+    val hint: String = "Search by country name or abbreviation"
 
     val defaultSelectOption = "Choose country"
-    val auSelectOption = "Australia"
+    val auSelectOption = "Australia (AU)"
 
     val cyaLabel = "Third country of origin"
     val cyaChangeHidden = "third country of origin"

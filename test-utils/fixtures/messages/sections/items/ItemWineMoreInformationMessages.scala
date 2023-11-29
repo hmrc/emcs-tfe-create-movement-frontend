@@ -29,7 +29,7 @@ object ItemWineMoreInformationMessages {
     val cyaAddMoreInformation: String = "Enter more information about wine product (optional)"
 
     val errorLength = s"Information must be 350 characters or less"
-    val errorAlphanumeric = "Information must contain letters and numbers"
+    val errorAlphanumeric = "Information must include letters and numbers"
     val errorInvalidCharacter = "Information must not contain < and > and : and ;"
 
   }

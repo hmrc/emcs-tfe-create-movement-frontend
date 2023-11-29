@@ -755,7 +755,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
        "must go from the ItemPackagingSealTypePage" - {
-         "to the Item CYA page" in {
+         "to the Item Packaging CYA page" in {
            navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
              .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()

@@ -18,7 +18,10 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class CountryModel(countryCode: String, country: String)
+case class CountryModel(countryCode: String, country: String) extends SelectOptionModel {
+  override val code: String = countryCode
+  override val displayName: String = country
+}
 
 object CountryModel {
   implicit val format: Format[CountryModel] = Json.format[CountryModel]

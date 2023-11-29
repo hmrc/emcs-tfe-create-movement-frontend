@@ -186,8 +186,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case (Some(true), _, _) =>
           itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          //TODO: redirect to CAM-ITM16 (Wine Origin)
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
     case ItemBulkPackagingSealTypePage(idx) => (_: UserAnswers) =>
@@ -200,6 +199,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
 
     case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+    case ItemWineOriginPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()

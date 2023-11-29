@@ -16,11 +16,11 @@
 
 package pages.sections.items
 
-import models.Index
+import models.{CountryModel, Index}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ItemSmallIndependentProducerPage(idx: Index) extends QuestionPage[Boolean] {
-  override val toString: String = "itemSmallIndependentProducer"
+case class ItemWineOriginPage(idx: Index) extends QuestionPage[CountryModel] {
+  override val toString: String = "itemWineOrigin"
   override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

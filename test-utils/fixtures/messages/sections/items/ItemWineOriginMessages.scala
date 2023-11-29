@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package fixtures.messages.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case class ItemSmallIndependentProducerPage(idx: Index) extends QuestionPage[Boolean] {
-  override val toString: String = "itemSmallIndependentProducer"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+object ItemWineOriginMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading: String = s"What was the wine’s country of origin?"
+    val title: String = titleHelper(heading)
+    val hint: String = "Search by country name."
+
+    val defaultSelectOption = "Choose country"
+    val auSelectOption = "Australia"
+
+    val cyaLabel = "Third country of origin"
+    val cyaChangeHidden = "third country of origin"
+  }
+
+  object English extends ViewMessages with BaseEnglish
+
 }
+

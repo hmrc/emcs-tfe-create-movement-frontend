@@ -532,10 +532,35 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingQuantityPage" - {
+
         "to the Packaging Product Type page" in {
+
           navigator.nextPage(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            .set(ItemPackagingQuantityPage(0, 0), "1")
+          ) mustBe itemsRoutes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+        }
+      }
+
+      "must go from the ItemPackagingProductTypePage" - {
+
+        "to the Packaging Seal Choice (Item packaging) page when user answered Yes" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
+            .set(ItemPackagingProductTypePage(0, 0), true)
+          ) mustBe itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+        }
+
+        "to the Shipping Marks page when user answered No" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
+            .set(ItemPackagingProductTypePage(0, 0), false)
+          ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+        }
+
+        "to the PackagingIndex route when neither answer has been selected" in {
+
+          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, 0)
         }
       }
 

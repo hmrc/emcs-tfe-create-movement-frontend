@@ -119,8 +119,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
     case ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
-      //TODO: redirect to CAM-ITM26
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      itemsRoutes.ItemPackagingProductTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+
+    case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>
+      (userAnswers: UserAnswers) =>
+        userAnswers.get(ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex)) match {
+          case Some(true) =>
+            itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+          case Some(false) =>
+            itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+          case _ =>
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
+        }
 
     case ItemWineGrowingZonePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)

@@ -48,6 +48,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
       commercialDescriptionRouting(idx, userAnswers)
 
+    case ItemDensityPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
     case ItemMaturationPeriodAgePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
@@ -279,8 +282,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           case Energy if Seq("E470", "E500", "E600", "E930").contains(epc) =>
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy =>
-            //TODO: Redirect to CAM-ITM33
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemDensityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }

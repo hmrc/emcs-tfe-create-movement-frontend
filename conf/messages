@@ -1296,3 +1296,13 @@ itemPackagingSealType.error.required = Enter details of the commercial seal
 itemPackagingSealType.error.invalid = Description cannot contain < and > and : and ;
 itemPackagingSealType.error.length = Commercial seal details must be {0} characters or less
 itemPackagingSealType.error.alphanumeric = Description must include letters and numbers
+
+
+itemDensity.title = What is the density of the {0}?
+itemDensity.heading = What is the density of the {0}?
+itemDensity.checkYourAnswersLabel = itemDensity
+itemDensity.error.required = Enter the density of the {0}
+itemDensity.error.length = Enter a density amount up to 5 digits long, which can include up to 2 decimal places
+itemDensity.change.hidden = ItemDensity
+itemDensity.suffix = kg/l
+itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per litre.

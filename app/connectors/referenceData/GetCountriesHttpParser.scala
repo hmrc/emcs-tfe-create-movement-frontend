@@ -25,12 +25,12 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait GetMemberStatesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
+trait GetCountriesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
 
   implicit val reads: Reads[Seq[CountryModel]] = Reads.seq(CountryModel.format)
   def http: HttpClient
 
-  class GetMemberStatesReads() extends HttpReads[Either[ErrorResponse, Seq[CountryModel]]] {
+  class GetCountriesReads() extends HttpReads[Either[ErrorResponse, Seq[CountryModel]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[CountryModel]] = {
       response.status match {
         case OK =>
@@ -48,6 +48,6 @@ trait GetMemberStatesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
   }
 
   def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]] =
-    http.GET[Either[ErrorResponse, Seq[CountryModel]]](url = url)(new GetMemberStatesReads(), hc, ec)
+    http.GET[Either[ErrorResponse, Seq[CountryModel]]](url = url)(new GetCountriesReads(), hc, ec)
 
 }

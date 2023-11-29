@@ -48,5 +48,7 @@ class Module extends AbstractModule {
     bind(classOf[GetBulkPackagingTypesConnector]).to(classOf[GetBulkPackagingTypesConnectorImpl]).asEagerSingleton()
     bind(classOf[GetItemPackagingTypesConnector]).to(classOf[GetItemPackagingTypesConnectorImpl]).asEagerSingleton()
     bind(classOf[GetWineOperationsConnector]).to(classOf[GetWineOperationsConnectorImpl]).asEagerSingleton()
+    bind(classOf[GetCountriesAndMemberStatesConnector]).to(classOf[GetCountriesAndMemberStatesConnectorImpl]).asEagerSingleton()
+
   }
 }

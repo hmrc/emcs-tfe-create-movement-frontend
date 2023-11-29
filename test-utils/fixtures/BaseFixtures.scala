@@ -88,12 +88,12 @@ trait BaseFixtures {
     country = "Belgium"
   )
 
-  val memberStateJsonAT = Json.obj(
+  val countryJsonAT = Json.obj(
     "countryCode" -> "AT",
     "country" -> "Austria"
   )
 
-  val memberStateJsonBE = Json.obj(
+  val countryJsonBE = Json.obj(
     "countryCode" -> "BE",
     "country" -> "Belgium"
   )

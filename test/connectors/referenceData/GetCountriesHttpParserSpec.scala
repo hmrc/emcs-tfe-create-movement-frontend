@@ -23,13 +23,13 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 
-class GetMemberStatesHttpParserSpec extends SpecBase with GetMemberStatesHttpParser with MockHttpClient {
+class GetCountriesHttpParserSpec extends SpecBase with GetCountriesHttpParser with MockHttpClient {
 
   override def http: HttpClient = mockHttpClient
 
-  "GetMemberStatesReads" - {
+  "GetCountriesReads" - {
 
-    "should return a Seq[countryModels]" - {
+    "should return a Seq[CountryModel]" - {
 
       s"when an OK (${Status.OK}) response is retrieved" in {
 
@@ -39,11 +39,11 @@ class GetMemberStatesHttpParserSpec extends SpecBase with GetMemberStatesHttpPar
         ))
 
         val jsonResponse = Json.arr(
-          memberStateJsonAT,
-          memberStateJsonBE
+          countryJsonAT,
+          countryJsonBE
         )
 
-        val actualResult = new GetMemberStatesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
+        val actualResult = new GetCountriesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
 
         actualResult mustBe expectedResult
       }
@@ -60,7 +60,7 @@ class GetMemberStatesHttpParserSpec extends SpecBase with GetMemberStatesHttpPar
           Json.obj("is" -> "incorrect")
         )
 
-        val actualResult = new GetMemberStatesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
+        val actualResult = new GetCountriesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))
 
         actualResult mustBe expectedResult
       }
@@ -72,7 +72,7 @@ class GetMemberStatesHttpParserSpec extends SpecBase with GetMemberStatesHttpPar
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)
 
-        val actualResult = new GetMemberStatesReads().read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, ""))
+        val actualResult = new GetCountriesReads().read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, ""))
 
         actualResult mustBe expectedResult
       }

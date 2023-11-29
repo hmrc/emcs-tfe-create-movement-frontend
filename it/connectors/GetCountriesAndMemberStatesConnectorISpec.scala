@@ -2,7 +2,7 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.GetMemberStatesConnector
+import connectors.referenceData.GetCountriesAndMemberStatesConnector
 import fixtures.BaseFixtures
 import models.CountryModel
 import models.response.UnexpectedDownstreamResponseError
@@ -18,7 +18,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetMemberStatesConnectorISpec extends AnyFreeSpec
+class GetCountriesAndMemberStatesConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
@@ -29,14 +29,14 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  val url = "/emcs-tfe-reference-data/oracle/member-states"
+  val url = "/emcs-tfe-reference-data/oracle/member-states-and-countries"
 
-  val memberStatesSeq: Seq[CountryModel] = Seq(
+  val countries: Seq[CountryModel] = Seq(
     countryModelAT,
     countryModelBE
   )
 
-  ".getMemberStates" - {
+  ".getCountryCodesAndMemberStates" - {
 
     def app: Application =
       new GuiceApplicationBuilder()
@@ -44,7 +44,7 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
         .configure("features.stub-get-trader-known-facts" -> "false")
         .build()
 
-    lazy val connector: GetMemberStatesConnector = app.injector.instanceOf[GetMemberStatesConnector]
+    lazy val connector: GetCountriesAndMemberStatesConnector = app.injector.instanceOf[GetCountriesAndMemberStatesConnector]
 
     "must return Right(Seq[CountryModel]) when the server responds OK" in {
 
@@ -56,7 +56,7 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
               .withBody(Json.stringify(Json.arr(countryJsonAT, countryJsonBE))))
       )
 
-      connector.getMemberStates().futureValue mustBe Right(memberStatesSeq)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Right(countries)
     }
 
     "must fail when the server responds with any other status" in {
@@ -66,7 +66,7 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -76,7 +76,7 @@ class GetMemberStatesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

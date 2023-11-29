@@ -50,6 +50,8 @@ case class TraderKnownFactsException(message: String) extends Exception(message)
 
 case class MemberStatesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
+case class CountriesAndMemberStatesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
 case class DocumentTypesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class CommodityCodesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

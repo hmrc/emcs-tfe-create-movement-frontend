@@ -23,14 +23,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
+class GetCountriesAndMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val connector = new GetMemberStatesConnectorImpl(mockHttpClient, appConfig)
+  lazy val connector = new GetCountriesAndMemberStatesConnectorImpl(mockHttpClient, appConfig)
 
-  "getMemberStates" - {
+  "getCountryCodesAndMemberStates" - {
 
     "should return a successful response" - {
 
@@ -39,10 +39,10 @@ class GetMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
         val expectedResult = Right(Seq(countryJsonAT, countryJsonBE))
 
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states-and-countries"
         ).returns(Future.successful(expectedResult))
 
-        val actualResult = connector.getMemberStates().futureValue
+        val actualResult = connector.getCountryCodesAndMemberStates().futureValue
 
         actualResult mustBe expectedResult
       }
@@ -55,10 +55,10 @@ class GetMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
         val expectedResult = Left(UnexpectedDownstreamResponseError)
 
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states-and-countries"
         ).returns(Future.successful(expectedResult))
 
-        val actualResult = connector.getMemberStates().futureValue
+        val actualResult = connector.getCountryCodesAndMemberStates().futureValue
 
         actualResult mustBe expectedResult
       }

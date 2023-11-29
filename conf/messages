@@ -1291,7 +1291,6 @@ itemWineOperationsChoice.error.exclusive = Select a wine operation, or select 'N
 itemWineOperationsChoice.change.hidden = wine operations
 itemWineOperationsChoice.0 = No, I am not aware that the wine has undergone any operations
 
-
 itemPackagingSealType.title = What type of commercial seal is on this packaging?
 itemPackagingSealType.heading = What type of commercial seal is on this packaging?
 itemPackagingSealType.p = The packaging type is: {0}

@@ -30,6 +30,8 @@ object ItemWineOriginMessages {
 
     val cyaLabel = "Third country of origin"
     val cyaChangeHidden = "third country of origin"
+
+    val errorRequired = "Select the wine’s country of origin"
   }
 
   object English extends ViewMessages with BaseEnglish

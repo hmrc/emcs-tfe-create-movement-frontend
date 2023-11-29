@@ -16,11 +16,13 @@
 
 package forms.sections.items
 
-import fixtures.BaseFixtures
+import base.SpecBase
+import fixtures.messages.sections.items.ItemWineOriginMessages
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-class ItemWineOriginFormProviderSpec extends StringFieldBehaviours with BaseFixtures {
+class ItemWineOriginFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   private val countries = Seq(countryModelAU, countryModelBR)
   val requiredKey = "itemWineOrigin.error.required"
@@ -46,6 +48,22 @@ class ItemWineOriginFormProviderSpec extends StringFieldBehaviours with BaseFixt
     "not bind when the value provided is not in the countries list" in {
       val result = form.bind(Map(fieldName -> "ZZ")).apply(fieldName)
       result.errors mustEqual Seq(FormError(fieldName, requiredKey, Seq()))
+    }
+  }
+
+  "Error Messages" - {
+
+    Seq(ItemWineOriginMessages.English) foreach { messagesForLanguage =>
+
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+      s"when output for language code '${messagesForLanguage.lang.code}'" - {
+
+        "have the correct error message for alphanumeric" in {
+
+          msgs(requiredKey) mustBe messagesForLanguage.errorRequired
+        }
+      }
     }
   }
 }

@@ -33,7 +33,7 @@ object ItemPackagingSealTypeMessages {
 
     val errorSealTypeRequired = "Enter the type of commercial seal on the packaging"
     val errorSealTypeInvalid = "Commercial seal type cannot contain < and > and : and ;"
-    val errorSealTypeLength = s"Commercial seal must be ${ItemPackagingSealTypeFormProvider.maxLengthSealTypeField} characters or less"
+    val errorSealTypeLength = s"Commercial seal type must be ${ItemPackagingSealTypeFormProvider.maxLengthSealTypeField} characters or less"
 
     val errorSealInformationInvalid = "Description cannot contain < and > and : and ;"
     val errorSealInformationLength = s"Commercial seal details must be ${ItemPackagingSealTypeFormProvider.maxLengthSealInformationField} characters or less"

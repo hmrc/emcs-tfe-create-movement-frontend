@@ -755,22 +755,18 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
        "must go from the ItemPackagingSealTypePage" - {
-         "to the Item CYA page" - {
-           "when the user answers 'no'" in {
-             navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
-               .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
-             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-           }
+         "to the Item CYA page" in {
+           navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
+           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
          }
        }
 
       "must go from the ItemBulkPackagingSealTypePage" - {
-         "to the Item CYA page" - {
-           "when the user answers 'no'" in {
-             navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
-               .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
-             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-           }
+         "to the Item CYA page" in {
+           navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
+             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
+           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
          }
        }
     }

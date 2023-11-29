@@ -40,7 +40,7 @@ class ItemPackagingSealTypeFormProvider @Inject() extends Mappings {
             playText
               .verifying(maxLength(maxLengthSealInformationField, sealInformationLengthErrorKey))
               .verifying(regexp(XSS_REGEX, sealInformationInvalidErrorKey))
-              .verifying(regexp(ALPHANUMERIC_REGEX, sealInformationAlphanumericErrorKey)),
+              .verifying(regexp(ALPHANUMERIC_REGEX, sealInformationAlphanumericErrorKey))
           )
       )(ItemPackagingSealTypeModel.apply)(ItemPackagingSealTypeModel.unapply)
     )

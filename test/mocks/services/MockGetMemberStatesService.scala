@@ -16,6 +16,7 @@
 
 package mocks.services
 
+import models.CountryModel
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import services.GetMemberStatesService
@@ -30,7 +31,10 @@ trait MockGetMemberStatesService extends MockFactory {
 
   object MockGetMemberStatesService {
 
-    def getMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[SelectItem]]] =
+    def getMemberStatesSelectItems(): CallHandler1[HeaderCarrier, Future[Seq[SelectItem]]] =
+      (mockGetMemberStatesService.getMemberStatesSelectItems()(_: HeaderCarrier)).expects(*)
+
+    def getMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[CountryModel]]] =
       (mockGetMemberStatesService.getMemberStates()(_: HeaderCarrier)).expects(*)
   }
 }

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package forms.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import javax.inject.Inject
+import forms.mappings.Mappings
+import models.CountryModel
+import play.api.data.Form
 
-case class ItemSmallIndependentProducerPage(idx: Index) extends QuestionPage[Boolean] {
-  override val toString: String = "itemSmallIndependentProducer"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+class ItemWineOriginFormProvider @Inject() extends Mappings {
+
+  def apply(countries: Seq[CountryModel]): Form[CountryModel] =
+    Form(
+      "country" -> text("itemWineOrigin.error.required")
+        .verifying("itemWineOrigin.error.required", enteredCountryCode => countries.exists(_.countryCode == enteredCountryCode))
+        .transform[CountryModel](enteredCountryCode => countries.find(_.countryCode == enteredCountryCode).get, _.countryCode)
+    )
 }

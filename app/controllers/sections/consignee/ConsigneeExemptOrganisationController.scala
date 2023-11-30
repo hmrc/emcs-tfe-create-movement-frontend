@@ -62,7 +62,7 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
-    getMemberStatesService.getMemberStates().map { selectItems =>
+    getMemberStatesService.getMemberStatesSelectItems().map { selectItems =>
       status(view(
         form = form,
         items = selectItems,

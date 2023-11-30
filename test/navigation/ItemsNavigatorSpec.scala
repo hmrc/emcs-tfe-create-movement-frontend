@@ -743,14 +743,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM16
         "to the Wine Origin page" - {
 
           "when the user answers no" in {
             navigator.nextPage(ItemImportedWineChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
               .set(ItemImportedWineChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemWineOriginController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
       }
@@ -777,6 +776,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
          }
        }
+
+      "must go from the ItemWineOriginPage" - {
+        "to the Wine More Information Choice page" in {
+          navigator.nextPage(ItemWineOriginPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
     }
 
     "in Check mode" - {

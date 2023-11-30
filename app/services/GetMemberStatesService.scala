@@ -17,6 +17,7 @@
 package services
 
 import connectors.referenceData.GetMemberStatesConnector
+import models.CountryModel
 import models.response.MemberStatesException
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,7 +30,7 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
                                       (implicit ec: ExecutionContext) {
 
 
-  def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] = {
+  def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] = {
     connector.getMemberStates().map {
       case Left(_) => throw MemberStatesException("No member states retrieved")
       case Right(value) => value.map { memberState =>
@@ -38,6 +39,13 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
           text = s"${memberState.country} (${memberState.countryCode})"
         )
       }
+    }
+  }
+
+  def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] = {
+    connector.getMemberStates().map {
+      case Left(_) => throw MemberStatesException("No member states retrieved")
+      case Right(value) => value
     }
   }
 }

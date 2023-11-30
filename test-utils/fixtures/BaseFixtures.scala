@@ -88,6 +88,21 @@ trait BaseFixtures {
     country = "Belgium"
   )
 
+  val countryModelGB = CountryModel(
+    countryCode = "GB",
+    country = "United Kingdom"
+  )
+
+  val countryModelAU = CountryModel(
+    countryCode = "AU",
+    country = "Australia"
+  )
+
+  val countryModelBR = CountryModel(
+    countryCode = "BR",
+    country = "Brazil"
+  )
+
   val countryJsonAT = Json.obj(
     "countryCode" -> "AT",
     "country" -> "Austria"

@@ -17,7 +17,7 @@
 package mocks.services
 
 import models.CountryModel
-import org.scalamock.handlers.CallHandler1
+import org.scalamock.handlers.{CallHandler1, CallHandler2}
 import org.scalamock.scalatest.MockFactory
 import services.GetCountriesAndMemberStatesService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,5 +32,8 @@ trait MockGetCountriesAndMemberStatesService extends MockFactory {
 
     def getCountryCodesAndMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[CountryModel]]] =
       (mockGetCountriesAndMemberStatesService.getCountryCodesAndMemberStates()(_: HeaderCarrier)).expects(*)
+
+    def removeEUMemberStates(allCountries: Seq[CountryModel]): CallHandler2[Seq[CountryModel], HeaderCarrier, Future[Seq[CountryModel]]] =
+      (mockGetCountriesAndMemberStatesService.removeEUMemberStates(_: Seq[CountryModel])(_: HeaderCarrier)).expects(allCountries, *)
   }
 }

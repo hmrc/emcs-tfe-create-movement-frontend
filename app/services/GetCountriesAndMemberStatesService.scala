@@ -25,7 +25,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetCountriesAndMemberStatesService @Inject()(connector: GetCountriesAndMemberStatesConnector)
+class GetCountriesAndMemberStatesService @Inject()(connector: GetCountriesAndMemberStatesConnector,
+                                                   getMemberStatesService: GetMemberStatesService)
                                                   (implicit ec: ExecutionContext) {
 
 
@@ -33,6 +34,15 @@ class GetCountriesAndMemberStatesService @Inject()(connector: GetCountriesAndMem
     connector.getCountryCodesAndMemberStates().map {
       case Left(_) => throw CountriesAndMemberStatesException("No countries retrieved")
       case Right(value) => value
+    }
+  }
+
+  def removeEUMemberStates(countriesIncludingMemberStates: Seq[CountryModel])(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] = {
+    getMemberStatesService.getMemberStates().map {
+      memberStates => {
+        val gb: CountryModel = countriesIncludingMemberStates.find(_.countryCode == "GB").get
+        countriesIncludingMemberStates.diff(memberStates).filterNot(_.countryCode == "GR") ++ Seq(gb)
+      }
     }
   }
 }

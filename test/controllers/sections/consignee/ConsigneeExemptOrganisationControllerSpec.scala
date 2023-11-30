@@ -85,7 +85,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
   "ConsigneeExemptOrganisation Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
+      MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
@@ -100,7 +100,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(ConsigneeExemptOrganisationPage, exemptOrganisationDetailsModel))) {
 
-      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
+      MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
@@ -131,7 +131,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      MockGetMemberStatesService.getMemberStates().returns(Future(testSelectItems))
+      MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

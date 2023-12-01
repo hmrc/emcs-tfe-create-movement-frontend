@@ -21,9 +21,10 @@ import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
+import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingSealChoicePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -119,7 +120,7 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
       contentAsString(result) mustEqual view(form.fill(true), action, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
+    "must redirect to the next page when valid data is submitted (true)" in new Test(Some(baseUserAnswers)) {
 
       MockUserAnswersService.set(
         baseUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
@@ -128,6 +129,24 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
       ))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted (false - removing the SealType answer)" in new Test(Some(
+      baseUserAnswers
+        .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", None))
+    )) {
+
+      MockUserAnswersService.set(
+        baseUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+      ).returns(Future.successful(
+        baseUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+      ))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

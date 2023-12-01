@@ -23,7 +23,7 @@ import forms.sections.items.ItemPackagingProductTypeFormProvider
 import mocks.services.MockUserAnswersService
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -67,7 +67,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
 
       "must return OK and the correct view for a GET" in new Test(Some(
         emptyUserAnswers
-          .set(ItemSelectPackagingPage(0, 0), packageType)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)(request)
@@ -76,14 +76,14 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = form,
           description = packageTypeDescription,
-          onSubmitAction = onSubmitAction(0, 0)
+          onSubmitAction = onSubmitAction(testIndex1, testPackagingIndex1)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
         emptyUserAnswers
-          .set(ItemPackagingProductTypePage(0, 0), true)
-          .set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
+          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)(request)
@@ -92,7 +92,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = form.fill(true),
           description = packageTypeDescription,
-          onSubmitAction = onSubmitAction(0, 0)
+          onSubmitAction = onSubmitAction(testIndex1, testPackagingIndex1)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 
@@ -105,7 +105,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the packagingIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
+        emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 0, 1, NormalMode)(request)
@@ -115,7 +115,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the itemsIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), testItemPackagingTypes.head)
+        emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testItemPackagingTypes.head)
       )) {
 
         val result = controller.onPageLoad(testErn, testDraftId, 1, 0, NormalMode)(request)
@@ -134,18 +134,20 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
 
     "for POST onSubmit" - {
 
-      s"must redirect to the next page when Yes is submitted" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+      s"must redirect to the next page when Yes is submitted (removing any shipping marks)" in new Test(Some(
+        emptyUserAnswers
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIPPING")
       )) {
 
         MockUserAnswersService.set(
           emptyUserAnswers
-            .set(ItemSelectPackagingPage(0, 0), packageType)
-            .set(ItemPackagingProductTypePage(0, 0), true)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
         ).returns(Future.successful(
           emptyUserAnswers
-            .set(ItemSelectPackagingPage(0, 0), packageType)
-            .set(ItemPackagingProductTypePage(0, 0), true)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
         ))
 
         val result = controller.onSubmit(testErn, testDraftId, 0, 0, NormalMode)(
@@ -156,18 +158,22 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      s"must redirect to the next page when No is submitted" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+      s"must redirect to the next page when No is submitted (without removing the shipping marks answer)" in new Test(Some(
+        emptyUserAnswers
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIPPING")
       )) {
 
         MockUserAnswersService.set(
           emptyUserAnswers
-            .set(ItemSelectPackagingPage(0, 0), packageType)
-            .set(ItemPackagingProductTypePage(0, 0), false)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIPPING")
         ).returns(Future.successful(
           emptyUserAnswers
-            .set(ItemSelectPackagingPage(0, 0), packageType)
-            .set(ItemPackagingProductTypePage(0, 0), false)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
+            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIPPING")
         ))
 
         val result = controller.onSubmit(testErn, testDraftId, 0, 0, NormalMode)(
@@ -179,7 +185,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+        emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
       )) {
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -189,7 +195,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = boundForm,
           description = packageTypeDescription,
-          onSubmitAction = onSubmitAction(0, 0)
+          onSubmitAction = onSubmitAction(testIndex1, testPackagingIndex1)
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 
@@ -204,7 +210,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the packagingIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+        emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
       )) {
 
         val result = controller.onSubmit(testErn, testDraftId, 0, 1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
@@ -214,7 +220,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to the ItemsPackagingIndexController when the itemIndex is invalid" in new Test(Some(
-        emptyUserAnswers.set(ItemSelectPackagingPage(0, 0), packageType)
+        emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), packageType)
       )) {
 
         val result = controller.onSubmit(testErn, testDraftId, 1, 0, NormalMode)(request.withFormUrlEncodedBody(("value", "")))

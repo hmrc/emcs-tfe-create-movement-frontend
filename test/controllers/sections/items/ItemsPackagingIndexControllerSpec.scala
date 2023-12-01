@@ -50,12 +50,12 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
   "ItemsIndexController" - {
 
     "when ItemsSection.isCompleted" - {
-      // TODO: remove ignore when CAM-ITM36 is built
+
       "must redirect to the CYA controller" ignore new Test(Some(emptyUserAnswers)) {
         val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
       }
     }
 

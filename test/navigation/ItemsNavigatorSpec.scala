@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
-import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel}
+import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel, ItemsPackagingAddToList}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
@@ -154,7 +154,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeE200.code)
 
               navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
-              itemsRoutes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+                itemsRoutes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
         }
@@ -694,12 +694,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM36
-        "to the Item CYA page" - {
+        "to the Item Packaging CYA page" - {
           "when the user answers 'no'" in {
             navigator.nextPage(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
               .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }
@@ -761,26 +760,59 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-       "must go from the ItemPackagingSealTypePage" - {
-         "to the Item Packaging CYA page" in {
-           navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
-             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
-           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-         }
-       }
+      "must go from the ItemPackagingSealTypePage" - {
+        "to the Item Packaging CYA page" in {
+          navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
+          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
 
       "must go from the ItemBulkPackagingSealTypePage" - {
-         "to the Item CYA page" in {
-           navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
-             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
-           ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-         }
-       }
+        "to the Item CYA page" in {
+          navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
+            .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
 
       "must go from the ItemWineOriginPage" - {
         "to the Wine More Information Choice page" in {
           navigator.nextPage(ItemWineOriginPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
+      "must go from the ItemsPackagingAddToList page" - {
+
+        "to Item CYA page" - {
+
+          //TODO: Route to CAM-ITM40
+          "when answer is `No` (not adding more packages)" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+
+          //TODO: Route to CAM-ITM40
+          "when answer is `More later`" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.MoreLater)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Select Packaging type page at the next idx" - {
+
+          "when answer is `Yes` (adding another package)" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.Yes)
+            ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)
+          }
         }
       }
     }
@@ -821,6 +853,80 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               ItemWineMoreInformationChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), false)
             ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
           }
+        }
+      }
+
+      "must go from the ItemSelectPackaging page" - {
+        "to Item Packaging CYA page"  in {
+          navigator.nextPage(
+            ItemSelectPackagingPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
+          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the ItemPackagingQuantity page" - {
+        "to Item Packaging CYA page" in {
+          navigator.nextPage(
+            ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
+          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the ItemPackagingProductType page" - {
+        "to Item Packaging CYA page" - {
+          "when answered 'Yes'" in {
+            navigator.nextPage(
+              page = ItemPackagingProductTypePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+        "to Item Shipping Marks page" - {
+          "when answered 'No'" in {
+            navigator.nextPage(
+              page = ItemPackagingProductTypePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+            ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+          }
+        }
+      }
+
+      "must go from the ItemPackagingShippingMarks page" - {
+        "to Item Packaging CYA page" in {
+          navigator.nextPage(
+            ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
+          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the ItemPackagingSealChoice page" - {
+        "to Item Packaging CYA page" - {
+          "when answered 'No'" in {
+            navigator.nextPage(
+              page = ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+        "to ItemPackagingSealType page" - {
+          "when answered 'Yes'" in {
+            navigator.nextPage(
+              page = ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+            ) mustBe itemsRoutes.ItemPackagingSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+          }
+        }
+      }
+
+      "must go from the ItemPackagingSealType page" - {
+        "to Item Packaging CYA page" in {
+          navigator.nextPage(
+            ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
+          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 

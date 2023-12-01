@@ -32,8 +32,10 @@ object ViewUtils {
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
-  def pluralSingular(msg: String, count: Int)(implicit messages: Messages): String =
-    messages(msg + (if(count!=1) ".plural" else ".singular"), count)
+  def pluralSingular(msg: String, count: Int, additionalArgs: String*)(implicit messages: Messages): String = {
+    val msgArgs = Seq(count.toString) ++ additionalArgs
+    messages(msg + (if(count!=1) ".plural" else ".singular"), msgArgs:_*)
+  }
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") + " " else ""

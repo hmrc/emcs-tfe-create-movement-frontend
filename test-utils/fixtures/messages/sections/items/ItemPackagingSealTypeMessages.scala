@@ -39,6 +39,12 @@ object ItemPackagingSealTypeMessages {
     val errorSealInformationLength = s"Commercial seal details must be ${ItemPackagingSealTypeFormProvider.maxLengthSealInformationField} characters or less"
     val errorSealInformationAlphanumeric = "Description must include letters and numbers"
 
+    val cyaLabelSealType = "Commercial seal type"
+    val cyaSealTypeHiddenChange = "commercial seal type"
+    val cyaLabelSealInformation = "Commercial seal information (optional)"
+    val cyaSealInformationHiddenChange = "information about commercial seal"
+    val cyaSealInformationAddMoreInfo = "Enter more information about the commercial seal (optional)"
+
   }
 
   object English extends ViewMessages with BaseEnglish

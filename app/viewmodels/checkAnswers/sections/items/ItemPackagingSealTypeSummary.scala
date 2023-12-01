@@ -16,33 +16,33 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsPackagingSectionItems}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealTypePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemPackagingShippingMarksSummary {
+object ItemPackagingSealTypeSummary {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)).map {
-      answer =>
 
+    request.userAnswers.get(ItemPackagingSealTypePage(itemIdx, packagingIdx)).map {
+      value =>
         SummaryListRowViewModel(
-          key = "itemPackagingShippingMarks.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.items.routes.ItemPackagingShippingMarksController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
-              id = s"changeItemPackagingShippingMarks${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
+          key = "itemPackagingSealType.sealType.checkYourAnswersLabel",
+          value = ValueViewModel(value.sealType),
+          actions = {
+            if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                routes.ItemPackagingSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, itemIdx, packagingIdx, CheckMode).url,
+                id = s"changeItemPackagingSealType${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
+              ).withVisuallyHiddenText(messages("itemPackagingSealType.sealType.change.hidden"))
             )
-              .withVisuallyHiddenText(messages("itemPackagingShippingMarks.change.hidden"))
-          )
+          }
         )
     }
   }

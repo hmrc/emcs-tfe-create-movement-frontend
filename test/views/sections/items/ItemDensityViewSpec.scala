@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemDensityMessages
 import forms.sections.items.ItemDensityFormProvider
-import models.GoodsTypeModel.{Beer, Energy}
+import models.GoodsTypeModel.Energy
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.ItemSelectPackagingMessages
 import models.CheckMode
 import models.response.referenceData.ItemPackaging
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemSelectPackagingPage
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import viewmodels.govuk.summarylist._
@@ -48,25 +48,51 @@ class ItemSelectPackagingSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(),
-              emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
-            )
+          "when the package is complete" - {
 
-            ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = ValueViewModel("Aerosol"),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1,
-                      testPackagingIndex1, CheckMode).url,
-                    id = "changeItemSelectPackaging1ForItem1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+            val userAnswers = emptyUserAnswers
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
+              .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+            "must output the expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(),
+                userAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+              )
+
+              ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = ValueViewModel("Aerosol"),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1,
+                        testPackagingIndex1, CheckMode).url,
+                      id = "changeItemSelectPackaging1ForItem1"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
                 )
               )
-            )
+            }
+          }
+
+          "when the package is NOT complete" - {
+
+            "must output the expected row (NO CHANGE LINK)" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(),
+                emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+              )
+
+              ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = ValueViewModel("Aerosol")
+                )
+              )
+            }
           }
         }
       }

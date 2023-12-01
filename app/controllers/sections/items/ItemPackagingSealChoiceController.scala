@@ -19,9 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemPackagingSealChoicePage
+import pages.sections.items.{ItemPackagingSealChoicePage, ItemPackagingSealTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -44,26 +44,33 @@ class ItemPackagingSealChoiceController @Inject()(
                                                    view: ItemPackagingSealChoiceView
                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, itemIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        withItemPackaging(itemsIdx, packagingIdx) { description =>
-          renderView(Ok, fillForm(ItemPackagingSealChoicePage(itemsIdx, packagingIdx), formProvider()), itemsIdx, packagingIdx, mode, description)
+      validatePackagingIndexAsync(itemIdx, packagingIdx) {
+        withItemPackaging(itemIdx, packagingIdx) { description =>
+          renderView(Ok, fillForm(ItemPackagingSealChoicePage(itemIdx, packagingIdx), formProvider()), itemIdx, packagingIdx, mode, description)
         }
       }
     }
 
-  def onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, itemIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        withItemPackaging(itemsIdx, packagingIdx) { description =>
+      validatePackagingIndexAsync(itemIdx, packagingIdx) {
+        withItemPackaging(itemIdx, packagingIdx) { description =>
           formProvider().bindFromRequest().fold(
-            renderView(BadRequest, _, itemsIdx, packagingIdx, mode, description),
-            saveAndRedirect(ItemPackagingSealChoicePage(itemsIdx, packagingIdx), _, mode)
+            renderView(BadRequest, _, itemIdx, packagingIdx, mode, description),
+            cleanseSaveAndRedirect(_, itemIdx, packagingIdx, mode)
           )
         }
       }
     }
+
+  private def cleanseSaveAndRedirect(hasSeal: Boolean, itemIdx: Index, packageIdx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = if(hasSeal) request.userAnswers else {
+      request.userAnswers.remove(ItemPackagingSealTypePage(itemIdx, packageIdx))
+    }
+    saveAndRedirect(ItemPackagingSealChoicePage(itemIdx, packageIdx), hasSeal, cleansedAnswers, mode)
+  }
 
   private def renderView(status: Status, form: Form[_], itemsIndex: Index, packagingIndex: Index, mode: Mode,
                          description: String)(implicit request: DataRequest[_]): Future[Result] =

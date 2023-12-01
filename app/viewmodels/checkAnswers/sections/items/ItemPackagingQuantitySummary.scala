@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemPackagingQuantityPage
+import pages.sections.items.{ItemPackagingQuantityPage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,19 +27,19 @@ import viewmodels.implicits._
 
 object ItemPackagingQuantitySummary {
 
-  def row(itemsIndex: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIdx)).map {
+    request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).map {
       value =>
         SummaryListRowViewModel(
           key = "itemPackagingQuantity.checkYourAnswersLabel",
-          value = ValueViewModel(value.toString()),
+          value = ValueViewModel(value),
           actions = {
-            Seq(
+            if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
               ActionItemViewModel(
                 content = "site.change",
-                routes.ItemPackagingQuantityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, itemsIndex, packagingIdx, CheckMode).url,
-                id = s"changeItemPackagingQuantity${packagingIdx.displayIndex}ForItem${itemsIndex.displayIndex}"
+                routes.ItemPackagingQuantityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, itemIdx, packagingIdx, CheckMode).url,
+                id = s"changeItemPackagingQuantity${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
               ).withVisuallyHiddenText(messages("itemPackagingQuantity.change.hidden"))
             )
           }

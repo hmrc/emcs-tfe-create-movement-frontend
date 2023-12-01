@@ -20,9 +20,11 @@ import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemsPackagingAddToList
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
+import queries.ItemsPackagingCount
 
 import javax.inject.Inject
 
@@ -175,8 +177,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
         case _ =>
-          //TODO: redirect to CAM-ITM36
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
       }
 
     case ItemImportedWineChoicePage(idx) => (userAnswers: UserAnswers) =>
@@ -193,9 +194,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       //TODO: redirect to CAM-ITM40
       testOnly.controllers.routes.UnderConstructionController.onPageLoad()
 
-    case ItemPackagingSealTypePage(idx, packagingIndex) => (_: UserAnswers) =>
-      //TODO: redirect to CAM-ITM36
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemPackagingSealTypePage(idx, _) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -203,12 +203,17 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineOriginPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
+    case ItemsPackagingAddToListPage(itemsIdx) =>
+      itemPackagingAddToListRouting(itemsIdx)(NormalMode)
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+
     case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, CheckMode)
+
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
         case Some(true) =>
@@ -217,6 +222,32 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           // TODO: update to Items CYA when built
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
+
+    case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+
+    case page@ItemPackagingProductTypePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(page) match {
+        case Some(false) => itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+        case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      }
+
+
+    case ItemPackagingQuantityPage(itemIdx, _) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+
+    case ItemPackagingShippingMarksPage(itemIdx, _) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+
+    case page@ItemPackagingSealChoicePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(page) match {
+        case Some(true) => itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+        case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      }
+
+    case ItemPackagingSealTypePage(itemIdx, _) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+
     case _ =>
       // TODO: update to Items CYA when built
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -335,4 +366,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
+
+  private def itemPackagingAddToListRouting(itemIdx: Index)(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+    userAnswers.get(ItemsPackagingAddToListPage(itemIdx)) match {
+      case Some(ItemsPackagingAddToList.Yes) =>
+        val nextPackageIdx: Index = userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
+        itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, nextPackageIdx, mode)
+      case _ =>
+        //TODO: Route to CAM-ITM40 (Check Answers Item)
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    }
+  }
 }

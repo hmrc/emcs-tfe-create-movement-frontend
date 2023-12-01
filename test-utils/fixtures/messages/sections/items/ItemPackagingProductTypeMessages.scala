@@ -27,7 +27,7 @@ object ItemPackagingProductTypeMessages {
 
     def p(packageType: String) = s"The packaging type is: $packageType."
 
-    override val no = "No - the packaging contains more than one product type, required to be entered as separate items in this movement"
+    val noMoreThanOne = "No - the packaging contains more than one product type, required to be entered as separate items in this movement"
 
     val errorRequired = "Select yes if there is only one product type in the package"
     val cyaLabel = "Contains one product type"

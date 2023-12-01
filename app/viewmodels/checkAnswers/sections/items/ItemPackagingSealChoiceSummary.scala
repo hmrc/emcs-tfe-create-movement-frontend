@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemPackagingSealChoicePage
+import pages.sections.items.{ItemPackagingSealChoicePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -36,7 +36,7 @@ object ItemPackagingSealChoiceSummary {
         SummaryListRowViewModel(
           key = "itemPackagingSealChoice.checkYourAnswersLabel",
           value = ValueViewModel(value),
-          actions = Seq(
+          actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.items.routes.ItemPackagingSealChoiceController.onPageLoad(answers.ern,

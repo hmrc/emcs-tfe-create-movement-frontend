@@ -21,7 +21,7 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksPage}
+import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
@@ -50,26 +50,51 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with 
 
         "when there's an answer" - {
 
-          "must output the expected row" in {
+          "when the packaging item is complete" - {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)
-              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
-            )
+            val userAnswers = emptyUserAnswers
+              .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
+              .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
+            "must output the expected row" in {
 
-            ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text("answer")),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.items.routes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1,
-                    testPackagingIndex1, CheckMode).url,
-                  id = "changeItemPackagingShippingMarks1ForItem1"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              implicit lazy val request = dataRequest(FakeRequest(), userAnswers
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
               )
-            ))
+
+              ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("answer")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.items.routes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1,
+                      testPackagingIndex1, CheckMode).url,
+                    id = "changeItemPackagingShippingMarks1ForItem1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              ))
+            }
+          }
+
+          "when the packaging item is NOT complete" - {
+
+            val userAnswers = emptyUserAnswers
+              .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+
+            "must output the expected row (NO CHANGE LINK)" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), userAnswers
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+              )
+
+              ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("answer"))
+              ))
+            }
           }
         }
       }

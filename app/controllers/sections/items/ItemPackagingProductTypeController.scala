@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingProductTypeFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemPackagingProductTypePage
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemPackagingShippingMarksPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -56,10 +56,18 @@ class ItemPackagingProductTypeController @Inject()(
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, itemsIdx, packagingIdx, mode),
-          saveAndRedirect(ItemPackagingProductTypePage(itemsIdx, packagingIdx), _, mode)
+          cleanseSaveAndRedirect(_, itemsIdx, packagingIdx, mode)
         )
       }
     }
+
+  private def cleanseSaveAndRedirect(hasOneProductType: Boolean, itemIdx: Index, packageIdx: Index, mode: Mode)
+                                    (implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = if (!hasOneProductType) request.userAnswers else {
+      request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+    }
+    saveAndRedirect(ItemPackagingProductTypePage(itemIdx, packageIdx), hasOneProductType, cleansedAnswers, mode)
+  }
 
   def renderView(status: Status, form: Form[_], itemsIdx: Index, packagingIdx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     withItemPackaging(itemsIdx, packagingIdx) { description =>

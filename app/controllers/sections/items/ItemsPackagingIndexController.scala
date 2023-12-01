@@ -39,8 +39,7 @@ class ItemsPackagingIndexController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       validateIndex(itemsIndex) {
         if (ItemsPackagingSection(itemsIndex).isCompleted) {
-          // TODO: Update to CAM-ITM36 when built
-          Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+          Redirect(routes.ItemsPackagingAddToListController.onPageLoad(ern, draftId, itemsIndex))
         } else {
           Redirect(controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId,
             itemsIndex, Index(0), NormalMode))

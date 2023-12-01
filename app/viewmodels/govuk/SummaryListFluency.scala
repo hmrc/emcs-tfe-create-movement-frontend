@@ -60,7 +60,7 @@ trait SummaryListFluency {
       SummaryListRow(
         key     = key,
         value   = value,
-        actions = Some(Actions(items = actions))
+        actions = if(actions.isEmpty) None else Some(Actions(items = actions))
       )
   }
 

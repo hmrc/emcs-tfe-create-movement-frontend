@@ -176,3 +176,6 @@ POST       /trader/:ern/draft/:draftId/items/:idx/packaging-seal-type		         
 GET        /trader/:ern/draft/:draftId/items/:idx/packaging-seal-type/change                                                controllers.sections.items.ItemBulkPackagingSealTypeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/items/:idx/packaging-seal-type/change                                                controllers.sections.items.ItemBulkPackagingSealTypeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
+
+GET         /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                               controllers.sections.items.ItemsPackagingAddToListController.onPageLoad(ern: String, draftId: String, itemsIdx: Index)
+POST        /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                               controllers.sections.items.ItemsPackagingAddToListController.onSubmit(ern: String, draftId: String, itemsIdx: Index)

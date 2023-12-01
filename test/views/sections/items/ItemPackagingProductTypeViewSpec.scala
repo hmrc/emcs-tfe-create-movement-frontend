@@ -52,7 +52,7 @@ class ItemPackagingProductTypeViewSpec extends SpecBase with ViewBehaviours with
         Selectors.p(1) -> English.p(testItemPackagingTypes.head.description),
         Selectors.strong(1) -> testItemPackagingTypes.head.description,
         Selectors.radioButton(1) -> English.yes,
-        Selectors.radioButton(2) -> English.no,
+        Selectors.radioButton(2) -> English.noMoreThanOne,
         Selectors.button -> English.saveAndContinue,
         Selectors.link(1) -> English.returnToDraft
       ))

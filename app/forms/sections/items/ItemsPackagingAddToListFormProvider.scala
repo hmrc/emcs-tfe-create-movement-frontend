@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.items
+package forms.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import forms.mappings.Mappings
+import models.sections.items.ItemsPackagingAddToList
+import play.api.data.Form
 
-object ItemDensityMessages {
+import javax.inject.Inject
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(goodsType: String) = s"What is the density of the $goodsType?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+class ItemsPackagingAddToListFormProvider @Inject() extends Mappings {
 
-    val hint = "Enter the density, at 15 degrees Celsius per kilogram per litre."
-    val suffix = "kg/l"
-
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
+  def apply(): Form[ItemsPackagingAddToList] =
+    Form(
+      "value" -> enumerable[ItemsPackagingAddToList]("itemsPackagingAddToList.error.required")
+    )
 }

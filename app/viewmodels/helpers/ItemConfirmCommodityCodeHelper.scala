@@ -16,7 +16,7 @@
 
 package viewmodels.helpers
 
-import models.{Index, Mode}
+import models.{ExciseProductCode, Index, Mode}
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import play.api.i18n.Messages
@@ -35,8 +35,12 @@ class ItemConfirmCommodityCodeHelper @Inject()(
     SummaryListViewModel(
       rows = Seq(
         Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, mode)),
-        if(cnCodeInformation.exciseProductCode != "S500") Some(itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)) else None
-      ).collect { case Some(x) => x }
+        if(!ExciseProductCode.epcsWithNoCnCodes.contains(cnCodeInformation.exciseProductCode)) {
+          Some(itemCommodityCodeSummary.row(idx, cnCodeInformation, mode))
+        } else {
+          None
+        }
+      ).flatten
     )
   }
 

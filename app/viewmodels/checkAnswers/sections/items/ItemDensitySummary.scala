@@ -22,6 +22,8 @@ import models.{CheckMode, Index}
 import pages.sections.items.ItemDensityPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.Key
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,7 +35,7 @@ object ItemDensitySummary  {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "itemDensity.checkYourAnswersLabel",
+          key     = Key(HtmlContent("itemDensity.checkYourAnswersLabel")),
           value   = ValueViewModel(HtmlFormat.escape(answer.toString()).toString),
           actions = Seq(
             ActionItemViewModel(

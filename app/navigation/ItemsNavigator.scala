@@ -20,7 +20,7 @@ import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.sections.items.ItemsPackagingAddToList
+import models.sections.items.{ItemGeographicalIndicationType, ItemsPackagingAddToList}
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -206,21 +206,80 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemsPackagingAddToListPage(itemsIdx) =>
       itemPackagingAddToListRouting(itemsIdx)(NormalMode)
 
+    case ItemCheckAnswersPage(_) => (_: UserAnswers) =>
+      // TODO: redirect to add-to-list page
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
     case _ =>
       (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) =>
+      answers.get(ItemCommodityCodePage(idx)) match {
+        case Some(_) => itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+        case None => itemsRoutes.ItemCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx, NormalMode)
+      }
 
-    case ItemExciseProductCodePage(idx) => (answers: UserAnswers) => epcRouting(idx, answers, CheckMode)
+    case ItemCommodityCodePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemBrandNamePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case CommercialDescriptionPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemAlcoholStrengthPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemDegreesPlatoPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemMaturationPeriodAgePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemDensityPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case page@ItemFiscalMarksChoicePage(idx) => (answers: UserAnswers) =>
+      if (answers.get(page).contains(true)) {
+        itemsRoutes.ItemFiscalMarksController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
+      } else {
+        itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+      }
+
+    case ItemFiscalMarksPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case page@ItemGeographicalIndicationChoicePage(idx) => (answers: UserAnswers) =>
+      if (answers.get(page).contains(ItemGeographicalIndicationType.NoGeographicalIndication)) {
+        // User has answered "no"
+        itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+      } else {
+        // User has answered "yes"
+        itemsRoutes.ItemGeographicalIndicationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
+      }
+
+    case ItemGeographicalIndicationPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case page@ItemSmallIndependentProducerPage(idx) => (answers: UserAnswers) =>
+      if (answers.get(page).contains(true)) {
+        itemsRoutes.ItemProducerSizeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
+      } else {
+        itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+      }
+
+    case ItemProducerSizePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
         case Some(true) =>
           itemsRoutes.ItemWineMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, CheckMode)
         case _ =>
-          // TODO: update to Items CYA when built
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
       }
 
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
@@ -248,9 +307,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemPackagingSealTypePage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
-    case _ =>
-      // TODO: update to Items CYA when built
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case _ => _ =>
+      // TODO: update to Items AddToList when built
+      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
@@ -261,8 +321,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       }
     case ItemCommodityCodePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemConfirmCommodityCodeController.onPageLoad(answers.ern, answers.draftId, idx)
-    case _ =>
-      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -367,14 +427,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
-  private def itemPackagingAddToListRouting(itemIdx: Index)(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+  private def itemPackagingAddToListRouting(itemIdx: Index)(mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     userAnswers.get(ItemsPackagingAddToListPage(itemIdx)) match {
       case Some(ItemsPackagingAddToList.Yes) =>
         val nextPackageIdx: Index = userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
         itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, nextPackageIdx, mode)
       case _ =>
-        //TODO: Route to CAM-ITM40 (Check Answers Item)
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
     }
   }
 }

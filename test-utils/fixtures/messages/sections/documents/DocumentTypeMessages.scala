@@ -26,7 +26,7 @@ object DocumentTypeMessages {
     val title = titleHelper(heading)
     val errorRequired = "Select the document you want to add"
     val cyaLabel = "Document type"
-    val cyaChangeHidden = "Document type"
+    val cyaChangeHidden = "document type"
 
     val defaultSelectOption = "Choose document type"
     val firstSelectionOption = "First selection (code)"

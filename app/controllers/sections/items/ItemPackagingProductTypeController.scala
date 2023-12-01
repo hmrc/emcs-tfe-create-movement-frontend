@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingProductTypeFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

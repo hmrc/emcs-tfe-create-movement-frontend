@@ -22,10 +22,10 @@ import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Beer
 import models.sections.items.ItemGeographicalIndicationType
-import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
+import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage, ItemGeographicalIndicationPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -100,16 +100,44 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
       contentAsString(result) mustEqual view(form.fill(ProtectedDesignationOfOrigin), action, Beer)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" - {
+      "when the answer has changed" in new Test(Some(
+        baseUserAnswers
+          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemGeographicalIndicationPage(testIndex1), "beans")
+      )) {
 
-      MockUserAnswersService.set(
-        baseUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
-      ).returns(Future.successful(baseUserAnswers))
+        MockUserAnswersService.set(
+          baseUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
+        ).returns(Future.successful(baseUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "PGI")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "PGI")))
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer has not changed" in new Test(Some(
+        baseUserAnswers
+          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
+          .set(ItemGeographicalIndicationPage(testIndex1), "beans")
+      )) {
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "PGI")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer is new" in new Test(Some(baseUserAnswers)) {
+
+        MockUserAnswersService.set(
+          baseUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
+        ).returns(Future.successful(baseUserAnswers))
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "PGI")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers)) {

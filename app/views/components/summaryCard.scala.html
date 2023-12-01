@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package fixtures.messages.sections.items
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+@this(govukSummaryList: GovukSummaryList)
 
-object ItemExciseProductCodeMessages {
+@(
+        card: Card,
+        summaryListRows: Seq[SummaryListRow]
+)
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Choose the Excise Product Code (EPC) for the item"
-    val title = titleHelper(heading)
+@govukSummaryList(SummaryList(summaryListRows, Some(card)))
 
-    val cyaLabel = "Excise product code"
-    val cyaChangeHidden = "Excise product code"
-
-    val defaultSelectOption = "Choose Excise Product Code"
-    val beerSelectOption = "B000: Beer"
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
+@{
+    //$COVERAGE-OFF$
 }

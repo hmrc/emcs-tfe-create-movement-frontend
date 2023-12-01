@@ -29,6 +29,7 @@ object ItemAlcoholStrengthMessages {
     val suffix = "%vol."
 
     val cyaLabel = "Alcohol by volume (ABV)"
+    val cyaSuffix = "Percent by Volume"
     val cyaChangeHidden = "alcohol strength"
 
     val errorRadioRequired = "Enter the alcoholic strength"

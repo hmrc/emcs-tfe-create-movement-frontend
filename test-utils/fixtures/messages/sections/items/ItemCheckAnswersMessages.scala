@@ -17,21 +17,23 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
-object ItemPackagingProductTypeMessages {
+object ItemCheckAnswersMessages {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+  sealed trait ViewMessages extends BaseMessages {
+    _: i18n =>
+    val heading = "Check your answers"
 
-    val heading = "Is this the only product type in the package?"
     val title = titleHelper(heading)
 
-    def p(packageType: String) = s"The packaging type is: $packageType."
+    def subheading(idx: Index): String = s"Item ${idx.displayIndex}"
 
-    val noMoreThanOne = "No - the packaging contains more than one product type, required to be entered as separate items in this movement"
+    val cardTitleItemDetails = "Item details"
+    val cardTitleQuantity = "Quantity"
+    val cardTitleWineDetails = "Wine details"
+    val cardTitlePackaging = "Packaging"
 
-    val errorRequired = "Select yes if there is only one product type in the package"
-    val cyaLabel = "Contains one product type"
-    val cyaChangeHidden = "if the packaging contains one or more product types"
   }
 
   object English extends ViewMessages with BaseEnglish

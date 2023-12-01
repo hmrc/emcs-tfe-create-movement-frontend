@@ -39,7 +39,7 @@ object ItemGeographicalIndicationChoiceMessages {
 
     val noRadioOption = "No - I cannot confirm that the product has a geographical indication (GI)"
 
-    val cyaLabel = "Designation of origin"
+    val cyaLabel = "Geographical indication"
     val cyaValuePDO = "Protected Designation of Origin (PDO)"
     val cyaValuePGI = "Protected Geographical Indication (PGI)"
     val cyaValueGI = "Geographical Indication (GI)"

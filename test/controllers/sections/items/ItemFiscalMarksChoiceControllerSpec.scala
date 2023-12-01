@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksChoicePage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksChoicePage, ItemFiscalMarksPage}
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -108,18 +108,44 @@ class ItemFiscalMarksChoiceControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(form.fill(true), action, Tobacco)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(baseUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" - {
+      "when the answer has changed" in new Fixture(Some(
+        baseUserAnswers
+          .set(ItemFiscalMarksChoicePage(testIndex1), false)
+          .set(ItemFiscalMarksPage(testIndex1), "beans")
+      )) {
 
-      MockUserAnswersService.set(
-        baseUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)
-      ).returns(Future.successful(
-        baseUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)
-      ))
+        MockUserAnswersService.set(
+          baseUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)
+        ).returns(Future.successful(baseUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer has not changed" in new Fixture(Some(
+        baseUserAnswers
+          .set(ItemFiscalMarksChoicePage(testIndex1), true)
+          .set(ItemFiscalMarksPage(testIndex1), "beans")
+      )) {
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer is new" in new Fixture(Some(baseUserAnswers)) {
+
+        MockUserAnswersService.set(
+          baseUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)
+        ).returns(Future.successful(baseUserAnswers))
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(baseUserAnswers)) {

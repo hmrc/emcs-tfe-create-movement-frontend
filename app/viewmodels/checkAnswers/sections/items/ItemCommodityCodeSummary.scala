@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{GoodsTypeModel, Index, Mode}
+import models.{ExciseProductCode, GoodsTypeModel, Index, Mode}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -39,7 +39,7 @@ class ItemCommodityCodeSummary @Inject()(p: p) {
       )))),
       actions =
         cnCodeInformation.exciseProductCode match {
-          case "S500" | "T300" | "S400" | "E600" | "E800" | "E910" =>
+          case epc if ExciseProductCode.epcsWithFewerThanTwoCnCodes.contains(epc) =>
             Seq.empty
           case _ =>
             Seq(

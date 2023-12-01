@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.items
+package pages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
+import pages.Page
 
-object ItemExciseProductCodeMessages {
-
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Choose the Excise Product Code (EPC) for the item"
-    val title = titleHelper(heading)
-
-    val cyaLabel = "Excise product code"
-    val cyaChangeHidden = "Excise product code"
-
-    val defaultSelectOption = "Choose Excise Product Code"
-    val beerSelectOption = "B000: Beer"
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
+case class ItemCheckAnswersPage(idx: Index) extends Page {
+  override def toString: String = "itemCheckAnswers"
 }

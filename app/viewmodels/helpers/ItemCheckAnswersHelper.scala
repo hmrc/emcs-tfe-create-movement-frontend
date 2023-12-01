@@ -22,14 +22,23 @@ import models.sections.items.ItemGeographicalIndicationType
 import models.{CheckMode, ExciseProductCode, Index, UnitOfMeasure}
 import pages.sections.items._
 import play.api.i18n.Messages
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, SummaryListRow, Value}
 import viewmodels.implicits._
+import views.html.components.p
 
 import javax.inject.Inject
 
-class ItemCheckAnswersHelper @Inject()() {
+class ItemCheckAnswersHelper @Inject()(p: p) {
+
+  private def summaryListRowBuilder(key: Content, value: Content, changeLink: Option[ActionItem]) = SummaryListRow(
+    Key(key),
+    Value(value),
+    classes = "govuk-summary-list__row",
+    actions = changeLink.map(actionItem => Actions(items = Seq(actionItem)))
+  )
 
   object ItemDetails {
     def constructCard(idx: Index, cnCodeInformation: CnCodeInformation)
@@ -52,19 +61,15 @@ class ItemCheckAnswersHelper @Inject()() {
       ).flatten
     }
 
-    private def summaryListRowBuilder(key: Content, value: Content, changeLink: Option[ActionItem]) = SummaryListRow(
-      Key(key),
-      Value(value),
-      classes = "govuk-summary-list__row",
-      actions = changeLink.map(actionItem => Actions(items = Seq(actionItem)))
-    )
-
     private[helpers] def constructEpcRow(idx: Index, cnCodeInformation: CnCodeInformation)
                                         (implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
       lazy val page = ItemExciseProductCodePage(idx)
       summaryListRowBuilder(
         key = s"$page.checkYourAnswersLabel",
-        value = HtmlContent(s"${cnCodeInformation.exciseProductCode}<br>${cnCodeInformation.exciseProductCodeDescription}"),
+        value = HtmlContent(HtmlFormat.fill(Seq(
+          p()(Html(cnCodeInformation.exciseProductCode)),
+          p()(Html(cnCodeInformation.exciseProductCodeDescription))
+        ))),
         changeLink = Some(ActionItem(
           href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "itemCheckAnswers.change",
@@ -82,7 +87,10 @@ class ItemCheckAnswersHelper @Inject()() {
       } else {
         Some(summaryListRowBuilder(
           key = s"$page.checkYourAnswersLabel",
-          value = HtmlContent(s"${cnCodeInformation.cnCode}<br>${cnCodeInformation.cnCodeDescription}"),
+          value = HtmlContent(HtmlFormat.fill(Seq(
+            p()(Html(cnCodeInformation.cnCode)),
+            p()(Html(cnCodeInformation.cnCodeDescription))
+          ))),
           changeLink = if (ExciseProductCode.epcsOnlyOneCnCode.contains(cnCodeInformation.exciseProductCode)) None else Some(ActionItem(
             href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "itemCheckAnswers.change",
@@ -339,6 +347,71 @@ class ItemCheckAnswersHelper @Inject()() {
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
         )
+      }
+    }
+  }
+
+  object Quantity {
+    def constructCard(idx: Index, cnCodeInformation: CnCodeInformation)
+                     (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
+      Seq(
+        constructQuantityRow(idx, cnCodeInformation.unitOfMeasure),
+        constructNetMassRow(idx, cnCodeInformation.unitOfMeasure),
+        constructGrossMassRow(idx, cnCodeInformation.unitOfMeasure),
+      ).flatten
+    }
+
+    private[helpers] def constructQuantityRow(idx: Index, unitOfMeasure: UnitOfMeasure)
+                                             (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+      lazy val page = ItemQuantityPage(idx)
+
+      request.userAnswers.get(page).map {
+        answer =>
+          summaryListRowBuilder(
+            key = s"$page.checkYourAnswersLabel",
+            value = messages("itemCheckAnswers.quantity.value", answer, unitOfMeasure.toShortFormatMessage()),
+            changeLink = Some(ActionItem(
+              href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              content = "itemCheckAnswers.change",
+              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
+            ))
+          )
+      }
+    }
+
+    private[helpers] def constructNetMassRow(idx: Index, unitOfMeasure: UnitOfMeasure)
+                                            (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+      lazy val page = ItemNetGrossMassPage(idx)
+
+      request.userAnswers.get(page).map {
+        answer =>
+          summaryListRowBuilder(
+            key = s"$page.netMass.checkYourAnswersLabel",
+            value = messages("itemCheckAnswers.netMass.value", answer.netMass, unitOfMeasure.toShortFormatMessage()),
+            changeLink = Some(ActionItem(
+              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              content = "itemCheckAnswers.change",
+              visuallyHiddenText = Some(messages(s"$page.netMass.change.hidden"))
+            ))
+          )
+      }
+    }
+
+    private[helpers] def constructGrossMassRow(idx: Index, unitOfMeasure: UnitOfMeasure)
+                                              (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+      lazy val page = ItemNetGrossMassPage(idx)
+
+      request.userAnswers.get(page).map {
+        answer =>
+          summaryListRowBuilder(
+            key = s"$page.grossMass.checkYourAnswersLabel",
+            value = messages("itemCheckAnswers.grossMass.value", answer.grossMass, unitOfMeasure.toShortFormatMessage()),
+            changeLink = Some(ActionItem(
+              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              content = "itemCheckAnswers.change",
+              visuallyHiddenText = Some(messages(s"$page.grossMass.change.hidden"))
+            ))
+          )
       }
     }
   }

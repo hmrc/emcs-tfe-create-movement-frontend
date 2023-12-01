@@ -168,8 +168,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          //TODO: redirect to CAM-ITM40
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
       }
 
     case ItemPackagingSealChoicePage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
@@ -190,9 +189,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       }
 
-    case ItemBulkPackagingSealTypePage(idx) => (_: UserAnswers) =>
-      //TODO: redirect to CAM-ITM40
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemBulkPackagingSealTypePage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemPackagingSealTypePage(idx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -274,6 +272,12 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemProducerSizePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
+    case ItemQuantityPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemNetGrossMassPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
     case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
         case Some(true) =>
@@ -290,7 +294,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(false) => itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
         case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
       }
-
 
     case ItemPackagingQuantityPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)

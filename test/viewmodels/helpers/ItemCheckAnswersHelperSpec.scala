@@ -26,8 +26,11 @@ import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.implicits._
+import views.html.components.p
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   val messagesForLang: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -45,16 +48,17 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   class Test(val userAnswers: UserAnswers) {
     lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
     lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+    lazy val p: p = app.injector.instanceOf[p]
 
-    lazy val helper = new ItemCheckAnswersHelper()
+    lazy val helper = new ItemCheckAnswersHelper(p)
   }
 
   "ItemCheckAnswersHelper" - {
     "for the ItemDetails section" - {
       "constructCard" - {
-          "must return rows" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructCard(testIndex1, testCommodityCodeWine) must not be empty
-          }
+        "must return rows" in new Test(baseUserAnswers) {
+          helper.ItemDetails.constructCard(testIndex1, testCommodityCodeWine) must not be empty
+        }
       }
 
       "constructEpcRow" - {
@@ -65,7 +69,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           ) mustBe
             summaryListRowBuilder(
               key = ItemExciseProductCodeMessages.English.cyaLabel,
-              value = HtmlContent(s"${testCommodityCodeWine.exciseProductCode}<br>${testCommodityCodeWine.exciseProductCodeDescription}"),
+              value = HtmlContent(HtmlFormat.fill(Seq(
+                p()(Html(testCommodityCodeWine.exciseProductCode)),
+                p()(Html(testCommodityCodeWine.exciseProductCodeDescription))
+              ))),
               changeLink = Some(ActionItem(
                 href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                 content = "itemCheckAnswers.change",
@@ -87,7 +94,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                   ) mustBe
                     Some(summaryListRowBuilder(
                       key = ItemCommodityCodeMessages.English.cyaLabel,
-                      value = HtmlContent(s"${testCommodityCodeWine.cnCode}<br>${testCommodityCodeWine.cnCodeDescription}"),
+                      value = HtmlContent(HtmlFormat.fill(Seq(
+                        p()(Html(testCommodityCodeWine.cnCode)),
+                        p()(Html(testCommodityCodeWine.cnCodeDescription))
+                      ))),
                       changeLink = None
                     ))
                 }
@@ -101,7 +111,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
               ) mustBe
                 Some(summaryListRowBuilder(
                   key = ItemCommodityCodeMessages.English.cyaLabel,
-                  value = HtmlContent(s"${testCommodityCodeWine.cnCode}<br>${testCommodityCodeWine.cnCodeDescription}"),
+                  value = HtmlContent(HtmlFormat.fill(Seq(
+                    p()(Html(testCommodityCodeWine.cnCode)),
+                    p()(Html(testCommodityCodeWine.cnCodeDescription))
+                  ))),
                   changeLink = Some(ActionItem(
                     href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     content = "itemCheckAnswers.change",
@@ -269,7 +282,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
               helper.ItemDetails.constructDegreesPlatoRow(idx = testIndex1) mustBe
                 Some(summaryListRowBuilder(
                   key = ItemDegreesPlatoMessages.English.cyaLabel,
-                  value = HtmlContent(s"1.59${ItemDegreesPlatoMessages.English.degreesPlatoSuffix}"),
+                  value = HtmlContent(s"1.59${ItemDegreesPlatoMessages.English.cyaSuffix}"),
                   changeLink = Some(ActionItem(
                     href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     content = "itemCheckAnswers.change",
@@ -706,6 +719,111 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           "must not return a row" in new Test(baseUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)) {
             helper.ItemDetails.constructProducerSizeRow(
               idx = testIndex1
+            ) mustBe None
+          }
+        }
+      }
+    }
+
+    "for the Quantity section" - {
+      "constructCard" - {
+        "must return all rows" in new Test(
+          baseUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
+            .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
+        ) {
+          helper.Quantity.constructCard(testIndex1, testCommodityCodeWine).length mustBe 3
+        }
+      }
+
+      "constructQuantityRow" - {
+        "if provided" - {
+          "must return a row" in new Test(
+            baseUserAnswers
+              .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
+          ) {
+            helper.Quantity.constructQuantityRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Kilograms
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = ItemQuantityMessages.English.cyaLabel,
+                value = s"1.23 ${UnitOfMeasure.Kilograms.toShortFormatMessage()}",
+                changeLink = Some(ActionItem(
+                  href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = "itemCheckAnswers.change",
+                  visuallyHiddenText = Some(ItemQuantityMessages.English.cyaChangeHidden)
+                ))
+              ))
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(baseUserAnswers) {
+            helper.Quantity.constructQuantityRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Kilograms
+            ) mustBe None
+          }
+        }
+      }
+
+      "constructNetMassRow" - {
+        "if provided" - {
+          "must return a row" in new Test(
+            baseUserAnswers
+              .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
+          ) {
+            helper.Quantity.constructNetMassRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Litres20
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = ItemNetGrossMassMessages.English.cyaNetMassLabel,
+                value = s"4.56 ${UnitOfMeasure.Litres20.toShortFormatMessage()}",
+                changeLink = Some(ActionItem(
+                  href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = "itemCheckAnswers.change",
+                  visuallyHiddenText = Some(ItemNetGrossMassMessages.English.cyaNetMassChangeHidden)
+                ))
+              ))
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(baseUserAnswers) {
+            helper.Quantity.constructNetMassRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Litres20
+            ) mustBe None
+          }
+        }
+      }
+
+      "constructGrossMassRow" - {
+        "if provided" - {
+          "must return a row" in new Test(
+            baseUserAnswers
+              .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
+          ) {
+            helper.Quantity.constructGrossMassRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Thousands
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = ItemNetGrossMassMessages.English.cyaGrossMassLabel,
+                value = s"7.89 ${UnitOfMeasure.Thousands.toShortFormatMessage()}",
+                changeLink = Some(ActionItem(
+                  href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = "itemCheckAnswers.change",
+                  visuallyHiddenText = Some(ItemNetGrossMassMessages.English.cyaGrossMassChangeHidden)
+                ))
+              ))
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(baseUserAnswers) {
+            helper.Quantity.constructGrossMassRow(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Thousands
             ) mustBe None
           }
         }

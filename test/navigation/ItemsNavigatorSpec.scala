@@ -32,7 +32,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
   "ItemsNavigator" - {
     "in Normal mode" - {
-      "must go from a page that doesn't exist in the route map to Items CYA" in {
+      "must go from a page that doesn't exist in the route map to ItemAddToList" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -675,12 +675,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM40
         "to the Item CYA page" - {
           "when the user answers 'no'" in {
             navigator.nextPage(ItemBulkPackagingSealChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }
@@ -772,7 +771,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Item CYA page" in {
           navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
@@ -811,6 +810,16 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.Yes)
             ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)
           }
+        }
+      }
+
+      "must go from the ItemCheckAnswers page" - {
+
+        "to Item AddToList page" in {
+          // TODO: update when AddToList page is added
+          navigator.nextPage(
+            ItemCheckAnswersPage(testIndex1), NormalMode, emptyUserAnswers
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
         }
       }
     }

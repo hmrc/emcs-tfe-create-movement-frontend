@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealTypePage, ItemsPackagingSectionItems}
+import pages.sections.items.{ItemPackagingSealTypePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

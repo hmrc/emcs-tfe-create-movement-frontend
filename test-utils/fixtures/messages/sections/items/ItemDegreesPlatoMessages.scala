@@ -27,7 +27,8 @@ object ItemDegreesPlatoMessages {
 
     val degreesPlatoLabel = "Enter the density in Degrees Plato"
     val detailsSummaryHeading = "Which countries use Degrees Plato"
-    val degreesPlatoSuffix = "&deg;P"
+    val degreesPlatoSuffix = "°P"
+    val cyaSuffix = "&deg;P"
 
     val cyaLabel = "Degree plato"
     val cyaRadioLabel = "Degrees Plato used by destination country"

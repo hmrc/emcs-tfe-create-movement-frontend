@@ -43,6 +43,11 @@
             helper.ItemDetails.constructCard(idx, cnCodeInformation)
         )
 
+        @summaryCard(
+            Card(Some(CardTitle(Text(messages("itemCheckAnswers.quantityCardTitle")), headingLevel = Some(3)))),
+            helper.Quantity.constructCard(idx, cnCodeInformation)
+        )
+
         @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }
 }

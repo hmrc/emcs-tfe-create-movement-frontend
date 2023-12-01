@@ -68,7 +68,7 @@ class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers {
                 ),
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaAmountLabel,
-                  value = Value(Text(s"5 ${messagesForLanguage.degreesPlatoSuffix}")),
+                  value = Value(Text(s"5 ${messagesForLanguage.cyaSuffix}")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,

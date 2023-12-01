@@ -49,7 +49,8 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h2(2) -> messagesForLanguage.subheading(testIndex1),
-          Selectors.h3(1) -> messagesForLanguage.cardTitleItemDetails,
+          Selectors.summaryCardHeading(1) -> messagesForLanguage.cardTitleItemDetails,
+          Selectors.summaryCardHeading(2) -> messagesForLanguage.cardTitleQuantity,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
       }

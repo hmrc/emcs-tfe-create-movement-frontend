@@ -42,7 +42,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
 
         val view = app.injector.instanceOf[ItemCheckAnswersView]
 
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, None, testOnwardRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,

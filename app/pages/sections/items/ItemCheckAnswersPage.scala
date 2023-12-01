@@ -20,5 +20,5 @@ import models.Index
 import pages.Page
 
 case class ItemCheckAnswersPage(idx: Index) extends Page {
-  override def toString: String = "itemCheckAnswers"
+  override val toString: String = "itemCheckAnswers"
 }

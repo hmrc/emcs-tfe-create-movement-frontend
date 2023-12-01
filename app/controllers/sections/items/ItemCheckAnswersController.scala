@@ -17,9 +17,9 @@
 package controllers.sections.items
 
 import controllers.actions._
-import models.{Index, NormalMode}
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
+import models.{Index, NormalMode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemCheckAnswersPage, ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
@@ -46,9 +46,12 @@ class ItemCheckAnswersController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] = authorisedDataRequestAsync(ern, draftId) { implicit request =>
     validateIndexAsync(idx) {
       for {
-        cnCodeInformation <- getCnCodeInformation(idx)
+        cnCodeInformationO <- getCnCodeInformation(idx)
       } yield {
-        renderView(idx, cnCodeInformation)
+        cnCodeInformationO match {
+          case Some(cnCodeInformation) => renderView(idx, cnCodeInformation)
+          case None => Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
+        }
       }
     }
   }
@@ -68,13 +71,16 @@ class ItemCheckAnswersController @Inject()(
         case (_, cnCodeInformation@CnCodeInformation(_, _, _, _, _)) :: Nil =>
           Some(cnCodeInformation)
         case answer =>
-          logger.warn(s"Unexpected value returned from GetCnCodeInformationService: $answer")
+          logger.warn(s"[getCnCodeInformation] Unexpected value returned from GetCnCodeInformationService: $answer")
           None
       }
     }
-  }.getOrElse(Future.successful(None))
+  }.getOrElse({
+    logger.warn("[getCnCodeInformation] error retrieving CN Code Information ")
+    Future.successful(None)
+  })
 
-  private def renderView(idx: Index, cnCodeInformation: Option[CnCodeInformation])(implicit request: DataRequest[_]): Result = Ok(view(
+  private def renderView(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_]): Result = Ok(view(
     idx,
     cnCodeInformation,
     routes.ItemCheckAnswersController.onSubmit(request.ern, request.draftId, idx)

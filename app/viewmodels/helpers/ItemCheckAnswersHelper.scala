@@ -32,27 +32,24 @@ import javax.inject.Inject
 class ItemCheckAnswersHelper @Inject()() {
 
   object ItemDetails {
-    def constructCard(idx: Index, cnCodeInformationO: Option[CnCodeInformation])
+    def constructCard(idx: Index, cnCodeInformation: CnCodeInformation)
                      (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
-      cnCodeInformationO.map {
-        cnCodeInformation =>
-          Seq(
-            Some(constructEpcRow(idx, cnCodeInformation)),
-            constructCommodityCodeRow(idx, cnCodeInformation),
-            constructBrandNameRow(idx),
-            constructCommercialDescriptionRow(idx),
-            constructAlcoholStrengthRow(idx),
-            constructDegreesPlatoRow(idx),
-            constructMaturationPeriodAgeRow(idx),
-            constructDensityRow(idx, cnCodeInformation.unitOfMeasure),
-            constructFiscalMarksChoiceRow(idx),
-            constructFiscalMarksRow(idx),
-            constructGeographicalIndicationChoiceRow(idx),
-            constructGeographicalIndicationRow(idx),
-            constructSmallIndependentProducerRow(idx),
-            constructProducerSizeRow(idx),
-          ).flatten
-      }.getOrElse(Seq.empty)
+      Seq(
+        Some(constructEpcRow(idx, cnCodeInformation)),
+        constructCommodityCodeRow(idx, cnCodeInformation),
+        constructBrandNameRow(idx),
+        constructCommercialDescriptionRow(idx),
+        constructAlcoholStrengthRow(idx),
+        constructDegreesPlatoRow(idx),
+        constructMaturationPeriodAgeRow(idx),
+        constructDensityRow(idx, cnCodeInformation.unitOfMeasure),
+        constructFiscalMarksChoiceRow(idx),
+        constructFiscalMarksRow(idx),
+        constructGeographicalIndicationChoiceRow(idx),
+        constructGeographicalIndicationRow(idx),
+        constructSmallIndependentProducerRow(idx),
+        constructProducerSizeRow(idx),
+      ).flatten
     }
 
     private def summaryListRowBuilder(key: Content, value: Content, changeLink: Option[ActionItem]) = SummaryListRow(

@@ -52,16 +52,9 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   "ItemCheckAnswersHelper" - {
     "for the ItemDetails section" - {
       "constructCard" - {
-        "when CnCodeInformation is provided" - {
           "must return rows" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructCard(testIndex1, Some(testCommodityCodeWine)) must not be empty
+            helper.ItemDetails.constructCard(testIndex1, testCommodityCodeWine) must not be empty
           }
-        }
-        "when CnCodeInformation is not provided" - {
-          "must return no rows" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructCard(testIndex1, None) mustBe Seq.empty
-          }
-        }
       }
 
       "constructEpcRow" - {

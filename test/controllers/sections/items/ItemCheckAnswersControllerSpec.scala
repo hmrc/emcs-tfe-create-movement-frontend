@@ -65,7 +65,7 @@ class ItemCheckAnswersControllerSpec extends SpecBase
   "ItemCheckAnswers Controller" - {
     "onPageLoad" - {
       "must render the page" - {
-        "when EPC and CN Code are in UserAnswers" in new Test() {
+        "when EPC and CN Code are in UserAnswers service calls are successful" in new Test() {
           MockGetCnCodeInformationService
             .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine)))
             .returns(Future.successful(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine) -> testCommodityCodeWine)))
@@ -74,28 +74,38 @@ class ItemCheckAnswersControllerSpec extends SpecBase
 
           status(result) mustEqual OK
           contentAsString(result) mustBe
-            view(testIndex1, Some(testCommodityCodeWine), submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
+            view(testIndex1, testCommodityCodeWine, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
         }
+      }
+      "must redirect to Index of section" - {
         "when EPC is not in UserAnswers" in new Test(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))) {
           val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-          status(result) mustEqual OK
-          contentAsString(result) mustBe
-            view(testIndex1, None, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
         }
         "when CN Code is not in UserAnswers" in new Test(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeWine))) {
           val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
-          status(result) mustEqual OK
-          contentAsString(result) mustBe
-            view(testIndex1, None, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
         }
-      }
-      "must redirect to Index of section when the idx is outside of bounds" in new Test() {
-        val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
+        "when call to service returns an unexpected number of items" in new Test() {
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine)))
+            .returns(Future.successful(Seq()))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+          val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+        }
+        "when the idx is outside of bounds" in new Test() {
+          val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+        }
       }
       "must redirect to Journey recovery when no user answers" in new Test(None) {
         val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)

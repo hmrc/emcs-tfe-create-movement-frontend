@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package models.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.{GoodsTypeModel, Index, UnitOfMeasure}
+import viewmodels.taskList.TaskListStatus
 
-case class ItemAlcoholStrengthPage(idx: Index) extends QuestionPage[BigDecimal] {
-  override val toString: String = "itemAlcoholStrength"
-  override val path: JsPath = ItemsSectionItem(idx).path \ toString
+case class ItemsAddToListItemModel(exciseProductCode: String,
+                                   commodityCode: String,
+                                   idx: Index,
+                                   status: TaskListStatus,
+                                   unitOfMeasure: Option[UnitOfMeasure] = None) {
+
+  val goodsType: GoodsTypeModel.GoodsType = GoodsTypeModel(exciseProductCode)
 }

@@ -22,7 +22,7 @@ import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
-import models.sections.items.{ItemBrandNameModel, ItemGeographicalIndicationType, ItemPackagingSealTypeModel, ItemsPackagingAddToList}
+import models.sections.items._
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
@@ -35,7 +35,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       "must go from a page that doesn't exist in the route map to ItemAddToList" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          itemsRoutes.ItemsAddToListController.onPageLoad(testErn, testDraftId)
       }
 
       "must go from the Excise Product Code page" - {
@@ -815,10 +815,36 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       "must go from the ItemCheckAnswers page" - {
 
         "to Item AddToList page" in {
-          // TODO: update when AddToList page is added
           navigator.nextPage(
             ItemCheckAnswersPage(testIndex1), NormalMode, emptyUserAnswers
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          ) mustBe itemsRoutes.ItemsAddToListController.onPageLoad(testErn, testDraftId)
+        }
+      }
+
+      "must go from the ItemsAddToList page" - {
+
+        "to Draft Movement page" - {
+
+          "when answer is `No` (not adding more packages)" in {
+            navigator.nextPage(
+              ItemsAddToListPage, NormalMode, emptyUserAnswers.set(ItemsAddToListPage, ItemsAddToList.No)
+            ) mustBe controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          }
+
+          "when answer is `More later`" in {
+            navigator.nextPage(
+              ItemsAddToListPage, NormalMode, emptyUserAnswers.set(ItemsAddToListPage, ItemsAddToList.MoreLater)
+            ) mustBe controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          }
+        }
+
+        "to the Excise Product Code page at the next idx" - {
+
+          "when answer is `Yes` (adding another package)" in {
+            navigator.nextPage(
+              ItemsAddToListPage, NormalMode, singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.Yes)
+            ) mustBe itemsRoutes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)
+          }
         }
       }
     }

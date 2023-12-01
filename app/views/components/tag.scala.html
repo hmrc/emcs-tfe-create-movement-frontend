@@ -16,6 +16,6 @@
 
 @this()
 
-@(message: String, colour: String)(implicit messages: Messages)
+@(message: String, colour: String, extraClasses: String = "")(implicit messages: Messages)
 
-<strong class="govuk-tag govuk-tag--@colour app-task-list__tag">@messages(message)</strong>
+<strong class="govuk-tag govuk-tag--@colour app-task-list__tag @extraClasses">@messages(message)</strong>

@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package forms.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import models.sections.items.ItemsAddToList
+import play.api.data.Form
 
-case class ItemAlcoholStrengthPage(idx: Index) extends QuestionPage[BigDecimal] {
-  override val toString: String = "itemAlcoholStrength"
-  override val path: JsPath = ItemsSectionItem(idx).path \ toString
+import javax.inject.Inject
+
+class ItemsAddToListFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[ItemsAddToList] =
+    Form(
+      "value" -> enumerable[ItemsAddToList]("itemsAddToList.error.required")
+    )
 }

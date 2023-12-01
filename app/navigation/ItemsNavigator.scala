@@ -20,11 +20,11 @@ import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsTypeModel._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.sections.items.{ItemGeographicalIndicationType, ItemsPackagingAddToList}
+import models.sections.items.{ItemGeographicalIndicationType, ItemsAddToList, ItemsPackagingAddToList}
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
-import queries.ItemsPackagingCount
+import queries.{ItemsCount, ItemsPackagingCount}
 
 import javax.inject.Inject
 
@@ -196,12 +196,14 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemsPackagingAddToListPage(itemsIdx) =>
       itemPackagingAddToListRouting(itemsIdx)(NormalMode)
 
-    case ItemCheckAnswersPage(_) => (_: UserAnswers) =>
-      // TODO: redirect to add-to-list page
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemCheckAnswersPage(_) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
-    case _ =>
-      (_: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case ItemsAddToListPage =>
+      itemsAddToListRouting(NormalMode)
+
+    case _ => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
@@ -416,7 +418,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         GoodsTypeModel(epc) match {
-          case Beer | Spirits | Wine | Intermediate =>
+          case goodsType if goodsType.isAlcohol =>
             itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Tobacco =>
             itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -494,6 +496,16 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+    }
+  }
+
+  private def itemsAddToListRouting(mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+    userAnswers.get(ItemsAddToListPage) match {
+      case Some(ItemsAddToList.Yes) =>
+        val nextIdx: Index = userAnswers.get(ItemsCount).fold(0)(identity)
+        itemsRoutes.ItemExciseProductCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, nextIdx, mode)
+      case _ =>
+        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
   }
 }

@@ -16,11 +16,11 @@
 
 package pages.sections.items
 
-import models.Index
+import models.sections.items.ItemsAddToList
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ItemAlcoholStrengthPage(idx: Index) extends QuestionPage[BigDecimal] {
-  override val toString: String = "itemAlcoholStrength"
-  override val path: JsPath = ItemsSectionItem(idx).path \ toString
+object ItemsAddToListPage extends QuestionPage[ItemsAddToList] {
+  override val toString: String = "itemsAddToList"
+  override val path: JsPath = ItemsSection.path \ toString
 }

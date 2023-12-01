@@ -25,7 +25,7 @@ import queries.ItemsPackagingCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "items" \ itemIndex.position \ "packaging"
+  override val path: JsPath = ItemsSectionItem(itemIndex).path \ "packaging"
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =

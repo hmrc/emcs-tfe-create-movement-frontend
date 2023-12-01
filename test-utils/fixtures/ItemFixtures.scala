@@ -18,13 +18,17 @@ package fixtures
 
 import models.UnitOfMeasure.{Kilograms, Litres20}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging, WineOperations}
+import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import models.sections.items.ItemBulkPackagingCode._
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{ExciseProductCode, GoodsTypeModel}
+import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemBulkPackagingChoicePage, ItemCommercialDescriptionPage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage, ItemImportedWineChoicePage, ItemNetGrossMassPage, ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemQuantityPage, ItemSelectPackagingPage, ItemWineMoreInformationChoicePage}
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-trait ItemFixtures {
+trait ItemFixtures { _: BaseFixtures =>
+
   val beerExciseProductCode = ExciseProductCode(
     code = "B000",
     description = "Beer",
@@ -103,6 +107,18 @@ trait ItemFixtures {
     exciseProductCodeDescription = "Other products containing ethyl alcohol",
     unitOfMeasure = Litres20
   )
+
+  val testEpcBeer: String = "B200"
+  val testCnCodeBeer: String = "22030001"
+
+  val testEpcSpirit: String = "S200"
+  val testCnCodeSpirit: String = "22060031"
+
+  val testEpcEnergy: String = "E500"
+  val testCnCodeEnergy: String = "29011000"
+
+  val testEpcEnergyWithDensity: String = "E200"
+  val testCnCodeEnergyWithDensity: String = "29011000"
 
   val testEpcWine: String = "W200"
   val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
@@ -286,4 +302,21 @@ trait ItemFixtures {
     WineOperations("6", "A product originating in a geographical unit other than that indicated in the description has been added to the product"),
     WineOperations("1", "The product has been enriched")
   )
+
+  val singleCompletedWineItem = emptyUserAnswers
+    .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+    .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+    .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+    .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
+    .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
+    .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+    .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
+    .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+    .set(ItemBulkPackagingChoicePage(testIndex1), false)
+    .set(ItemImportedWineChoicePage(testIndex1), true)
+    .set(ItemWineMoreInformationChoicePage(testIndex1), false)
+    .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+    .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
+    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+    .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 }

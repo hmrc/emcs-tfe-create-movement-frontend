@@ -22,5 +22,5 @@ import play.api.libs.json.JsPath
 
 case class ItemDensityPage(idx: Index) extends QuestionPage[BigDecimal] {
   override val toString: String = "itemDensity"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

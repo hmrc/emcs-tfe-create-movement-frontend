@@ -23,5 +23,5 @@ import play.api.libs.json.JsPath
 
 case class ItemNetGrossMassPage(idx: Index) extends QuestionPage[ItemNetGrossMassModel] {
   override val toString: String = "itemNetGrossMass"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

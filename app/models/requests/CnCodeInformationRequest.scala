@@ -16,6 +16,7 @@
 
 package models.requests
 
+import models.sections.items.ItemsAddToListItemModel
 import play.api.libs.json.{Json, OWrites}
 
 case class CnCodeInformationRequest(items: Seq[CnCodeInformationItem])
@@ -27,5 +28,8 @@ object CnCodeInformationRequest {
 }
 
 object CnCodeInformationItem {
+  def apply(items: Seq[ItemsAddToListItemModel]): Seq[CnCodeInformationItem] =
+    items.map(item => CnCodeInformationItem(item.exciseProductCode, item.commodityCode))
+
   implicit val writes: OWrites[CnCodeInformationItem] = Json.writes
 }

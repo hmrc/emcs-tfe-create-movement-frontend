@@ -39,6 +39,9 @@ trait SummaryListFluency {
 
     def withAttribute(attribute: (String, String)): SummaryList =
       list copy (attributes = list.attributes + attribute)
+
+    def withCard(card: Card): SummaryList =
+      list.copy(card = Some(card))
   }
 
   object SummaryListRowViewModel {

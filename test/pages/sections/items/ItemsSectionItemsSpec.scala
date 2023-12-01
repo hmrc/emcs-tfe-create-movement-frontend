@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import models.sections.items.ItemsAddToList.MoreLater
 import play.api.test.FakeRequest
 
-class ItemsSectionSpec extends SpecBase with ItemFixtures {
+class ItemsSectionItemsSpec extends SpecBase with ItemFixtures {
 
   "isCompleted" - {
 
@@ -32,7 +32,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem)
 
-        ItemsSection.isCompleted mustBe true
+        ItemsSectionItems.isCompleted mustBe true
       }
     }
 
@@ -42,7 +42,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        ItemsSection.isCompleted mustBe false
+        ItemsSectionItems.isCompleted mustBe false
       }
 
       "when an item exists which is not complete" in {
@@ -51,7 +51,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures {
           .set(ItemExciseProductCodePage(testIndex2), testEpcTobacco)
         )
 
-        ItemsSection.isCompleted mustBe false
+        ItemsSectionItems.isCompleted mustBe false
       }
 
       "when an items are complete but user has indicated they will add more later" in {
@@ -60,7 +60,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures {
           .set(ItemsAddToListPage, MoreLater)
         )
 
-        ItemsSection.isCompleted mustBe false
+        ItemsSectionItems.isCompleted mustBe false
       }
     }
   }

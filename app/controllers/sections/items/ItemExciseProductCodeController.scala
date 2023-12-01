@@ -21,7 +21,7 @@ import forms.sections.items.ItemExciseProductCodeFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemsSection, ItemsSectionItems}
+import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItem, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -80,7 +80,7 @@ class ItemExciseProductCodeController @Inject()(
                 val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
                   page = ItemExciseProductCodePage(idx),
                   newAnswer = value,
-                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItems(idx), idx)
+                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx)
                 )
                 saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
               }
@@ -91,7 +91,7 @@ class ItemExciseProductCodeController @Inject()(
     }
 
   override def validateIndexAsync(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    validateIndexForJourneyEntry(ItemsCount, idx, ItemsSection.MAX)(
+    validateIndexForJourneyEntry(ItemsCount, idx, ItemsSectionItems.MAX)(
       onSuccess = f,
       onFailure = Future.successful(
         Redirect(

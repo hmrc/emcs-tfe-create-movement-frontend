@@ -21,5 +21,5 @@ import play.api.libs.json.{JsPath, JsValue}
 
 case object ItemsCount extends Derivable[List[JsValue], Int] {
   override val derive: List[JsValue] => Int = _.size
-  override val path: JsPath = ItemsSection.path
+  override val path: JsPath = ItemsSection.path \ "addedItems"
 }

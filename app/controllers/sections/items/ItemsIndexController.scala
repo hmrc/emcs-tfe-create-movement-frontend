@@ -22,6 +22,7 @@ import models.{Index, NormalMode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemsSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.ItemsCount
 import services.UserAnswersService
 
 import javax.inject.Inject
@@ -38,12 +39,11 @@ class ItemsIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (ItemsSection.isCompleted) {
-        // TODO: Update to CAM-ITM34 when built
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
-      } else {
-        Redirect(controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode))
+      request.userAnswers.get(ItemsCount) match {
+        case Some(value) if value > 1 || ItemsSection.isCompleted =>
+          Redirect(routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId))
+        case _ =>
+          Redirect(routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode))
       }
     }
-
 }

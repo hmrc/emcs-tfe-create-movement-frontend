@@ -28,13 +28,13 @@ import viewmodels.implicits._
 
 object ItemBrandNameSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, showChangeLinks: Boolean = true)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemBrandNamePage(idx)
 
     def constructRow(value: String = "site.notProvided"): SummaryListRow = SummaryListRowViewModel(
       key = s"$page.checkYourAnswersLabel",
       value = ValueViewModel(HtmlFormat.escape(value).toString()),
-      actions = Seq(ActionItemViewModel(
+      actions = if (!showChangeLinks) Seq() else Seq(ActionItemViewModel(
         href = routes.ItemBrandNameController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
         content = "site.change",
         id = s"changeItemBrandName${idx.displayIndex}"

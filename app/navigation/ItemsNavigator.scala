@@ -373,7 +373,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         val nextPackageIdx: Index = userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
         itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, nextPackageIdx, mode)
       case _ =>
-        controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        //TODO: Route to CAM-ITM40 (Check Answers Item)
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
     }
   }
 }

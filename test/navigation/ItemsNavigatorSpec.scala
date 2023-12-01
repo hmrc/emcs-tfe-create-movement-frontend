@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
-import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel}
+import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel, ItemsPackagingAddToList}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
@@ -780,6 +780,39 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine More Information Choice page" in {
           navigator.nextPage(ItemWineOriginPage(testIndex1), NormalMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+        }
+      }
+
+      "must go from the ItemsPackagingAddToList page" - {
+
+        "to Item CYA page" - {
+
+          //TODO: Route to CAM-ITM40
+          "when answer is `No` (not adding more packages)" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+
+          //TODO: Route to CAM-ITM40
+          "when answer is `More later`" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.MoreLater)
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "to the Select Packaging type page at the next idx" - {
+
+          "when answer is `Yes` (adding another package)" in {
+            navigator.nextPage(
+              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.Yes)
+            ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)
+          }
         }
       }
     }

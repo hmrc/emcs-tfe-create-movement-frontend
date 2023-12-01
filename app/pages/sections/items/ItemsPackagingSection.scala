@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.sections.items.ItemsPackagingAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import queries.{DocumentsCount, ItemsPackagingCount}
+import queries.ItemsPackagingCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {

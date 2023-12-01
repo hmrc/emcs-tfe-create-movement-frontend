@@ -92,8 +92,7 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with 
 
               ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text("answer")),
-                actions = Seq()
+                value = Value(Text("answer"))
               ))
             }
           }

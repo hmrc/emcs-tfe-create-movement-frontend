@@ -89,8 +89,7 @@ class ItemSelectPackagingSummarySpec extends SpecBase with Matchers {
               ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = ValueViewModel("Aerosol"),
-                  actions = Seq()
+                  value = ValueViewModel("Aerosol")
                 )
               )
             }

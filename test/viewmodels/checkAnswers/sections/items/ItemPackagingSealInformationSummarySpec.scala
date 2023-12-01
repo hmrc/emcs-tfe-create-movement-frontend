@@ -69,8 +69,7 @@ class ItemPackagingSealInformationSummarySpec extends SpecBase with Matchers {
 
           val rowNoChangeLink: SummaryListRow = SummaryListRowViewModel(
             key = messagesForLanguage.cyaLabelSealInformation,
-            value = Value(Text("INFO")),
-            actions = Seq()
+            value = Value(Text("INFO"))
           )
 
           val rowWithChangeLink: SummaryListRow = rowNoChangeLink.copy(

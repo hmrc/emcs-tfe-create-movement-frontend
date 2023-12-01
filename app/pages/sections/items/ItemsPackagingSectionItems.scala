@@ -19,9 +19,8 @@ package pages.sections.items
 import models.Index
 import models.requests.DataRequest
 import pages.sections.Section
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
 
 case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) extends Section[JsObject] {
   override val path: JsPath = ItemsPackagingSection(itemsIndex).path \ packagingIndex.position

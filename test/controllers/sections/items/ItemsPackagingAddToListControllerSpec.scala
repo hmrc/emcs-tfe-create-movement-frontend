@@ -116,7 +116,7 @@ class ItemsPackagingAddToListControllerSpec extends SpecBase with MockUserAnswer
         )(dataRequest(request), messages(request)).toString
       }
 
-      "must return OK and the correct view when there MAX documents already added" in new Setup(Some(userAnswersWithMaxPackages)) {
+      "must return OK and the correct view when there MAX packages already added" in new Setup(Some(userAnswersWithMaxPackages)) {
 
         MockItemsPackagingAddToListHelper.allPackagesSummary(testIndex1)()
 
@@ -197,7 +197,7 @@ class ItemsPackagingAddToListControllerSpec extends SpecBase with MockUserAnswer
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "must redirect to the next page when submitted with MAX documents already added" in new Setup(Some(userAnswersWithMaxPackages)) {
+      "must redirect to the next page when submitted with MAX packages already added" in new Setup(Some(userAnswersWithMaxPackages)) {
         val req = FakeRequest(POST, controllerRoute)
 
         val result = testController.onSubmit(testErn, testDraftId, testIndex1)(req)

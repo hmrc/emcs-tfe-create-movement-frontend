@@ -27,18 +27,18 @@ object GuarantorArranger extends Enumerable.Implicits {
 
   case object Consignor extends WithName("1") with GuarantorArranger
 
-  case object Consignee extends WithName("2") with GuarantorArranger
+  case object Consignee extends WithName("4") with GuarantorArranger
 
   case object GoodsOwner extends WithName("3") with GuarantorArranger
 
-  case object Transporter extends WithName("4") with GuarantorArranger
+  case object Transporter extends WithName("2") with GuarantorArranger
 
   val values: Seq[GuarantorArranger] = Seq(
     Consignor, Consignee, GoodsOwner, Transporter
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, _) =>
+  def options(implicit messages: Messages): Seq[RadioItem] = values.map {
+    value =>
       RadioItem(
         content = Text(messages(s"guarantorArranger.${value.toString}")),
         value = Some(value.toString),

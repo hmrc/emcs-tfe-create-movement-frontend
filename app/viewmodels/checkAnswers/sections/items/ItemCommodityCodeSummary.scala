@@ -17,10 +17,10 @@
 package viewmodels.checkAnswers.sections.items
 
 import com.google.inject.Inject
-import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{ExciseProductCode, GoodsTypeModel, Index, Mode}
+import models.{ExciseProductCode, Index, Mode}
+import pages.sections.items.ItemCommodityCodePage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -30,27 +30,25 @@ import viewmodels.implicits._
 import views.html.components.p
 
 class ItemCommodityCodeSummary @Inject()(p: p) {
-  def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
-    SummaryListRowViewModel(
-      key = messages("itemCommodityCode.checkYourAnswersLabel", GoodsTypeModel(cnCodeInformation.exciseProductCode).toSingularOutput()),
-      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-        p()(Html(cnCodeInformation.cnCode)),
-        p()(Html(cnCodeInformation.cnCodeDescription))
-      )))),
-      actions =
-        cnCodeInformation.exciseProductCode match {
-          case epc if ExciseProductCode.epcsWithFewerThanTwoCnCodes.contains(epc) =>
-            Seq.empty
-          case _ =>
-            Seq(
-              ActionItemViewModel(
-                content = "site.change",
-                routes.ItemCommodityCodeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, mode).url,
-                id = s"changeItemCommodityCode${idx.displayIndex}"
-              )
-                .withVisuallyHiddenText(messages("itemCommodityCode.change.hidden"))
-            )
-        }
-    )
+  def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    lazy val page = ItemCommodityCodePage(idx)
+
+    if (ExciseProductCode.epcsWithNoCnCodes.contains(cnCodeInformation.exciseProductCode)) {
+      None
+    } else {
+      Some(SummaryListRowViewModel(
+        key = s"$page.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+          p()(Html(cnCodeInformation.cnCode)),
+          p()(Html(cnCodeInformation.cnCodeDescription))
+        )))),
+        actions = if (ExciseProductCode.epcsOnlyOneCnCode.contains(cnCodeInformation.exciseProductCode)) Seq() else Seq(ActionItemViewModel(
+          href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
+          content = "itemCheckAnswers.change",
+          id = s"changeItemCommodityCode${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+      ))
+    }
   }
 }

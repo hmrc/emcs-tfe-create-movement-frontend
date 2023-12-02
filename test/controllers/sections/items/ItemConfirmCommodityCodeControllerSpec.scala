@@ -71,7 +71,8 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
 
     lazy val confirmCodesList: Seq[SummaryListRow] = Seq(
       itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco, mode = ReviewMode),
-      itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco, mode = ReviewMode))
+      itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeTobacco, mode = ReviewMode).get
+    )
 
     lazy val confirmCodesSummaryList: SummaryList = SummaryListViewModel(
       rows = confirmCodesList

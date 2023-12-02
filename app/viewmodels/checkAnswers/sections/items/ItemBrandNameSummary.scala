@@ -31,23 +31,29 @@ import viewmodels.implicits._
 object ItemBrandNameSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    val page = ItemBrandNamePage(idx)
 
-    Some(SummaryListRowViewModel(
-      key = "itemBrandName.checkYourAnswersLabel",
-      value = ValueViewModel(getValue(idx)),
-      actions = {
-        Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            routes.ItemBrandNameController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemBrandName${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("itemBrandName.change.hidden"))
-        )
-      }
-    ))
+    def constructRow(value: String = "itemCheckAnswers.notProvided"): SummaryListRow = SummaryListRowViewModel(
+      key = s"$page.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(ActionItemViewModel(
+        href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+        content = "itemCheckAnswers.change",
+        id = s"changeItemBrandName${idx.displayIndex}"
+      ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+    )
+
+    request.userAnswers.get(ItemBrandNamePage(idx)).map {
+      answer =>
+        if (answer.hasBrandName) {
+          answer
+            .brandName
+            .map(name => constructRow(name))
+            .getOrElse(constructRow())
+        } else {
+          constructRow()
+        }
+    }
   }
-
-  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(ItemBrandNamePage(idx)).flatMap(_.brandName).fold(Text(messages("site.notProvided")))(HtmlFormat.escape(_).toString())
 
 }

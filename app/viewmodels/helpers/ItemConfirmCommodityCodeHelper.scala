@@ -35,11 +35,7 @@ class ItemConfirmCommodityCodeHelper @Inject()(
     SummaryListViewModel(
       rows = Seq(
         Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, mode)),
-        if(!ExciseProductCode.epcsWithNoCnCodes.contains(cnCodeInformation.exciseProductCode)) {
-          Some(itemCommodityCodeSummary.row(idx, cnCodeInformation, mode))
-        } else {
-          None
-        }
+        itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)
       ).flatten
     )
   }

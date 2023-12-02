@@ -26,12 +26,17 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, SummaryListRow, Value}
+import viewmodels.checkAnswers.sections.items._
 import viewmodels.implicits._
 import views.html.components.p
 
 import javax.inject.Inject
 
-class ItemCheckAnswersHelper @Inject()(p: p) {
+class ItemCheckAnswersHelper @Inject()(
+                                        itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
+                                        itemCommodityCodeSummary: ItemCommodityCodeSummary,
+                                        p: p
+                                      ) {
 
   private def summaryListRowBuilder(key: Content, value: Content, changeLink: Option[ActionItem]) = SummaryListRow(
     Key(key),
@@ -44,9 +49,9 @@ class ItemCheckAnswersHelper @Inject()(p: p) {
     def constructCard(idx: Index, cnCodeInformation: CnCodeInformation)
                      (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
       Seq(
-        Some(constructEpcRow(idx, cnCodeInformation)),
-        constructCommodityCodeRow(idx, cnCodeInformation),
-        constructBrandNameRow(idx),
+        Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, CheckMode)),
+        itemCommodityCodeSummary.row(idx, cnCodeInformation, CheckMode),
+        ItemBrandNameSummary.row(idx),
         constructCommercialDescriptionRow(idx),
         constructAlcoholStrengthRow(idx),
         constructDegreesPlatoRow(idx),
@@ -59,72 +64,6 @@ class ItemCheckAnswersHelper @Inject()(p: p) {
         constructSmallIndependentProducerRow(idx),
         constructProducerSizeRow(idx),
       ).flatten
-    }
-
-    private[helpers] def constructEpcRow(idx: Index, cnCodeInformation: CnCodeInformation)
-                                        (implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
-      lazy val page = ItemExciseProductCodePage(idx)
-      summaryListRowBuilder(
-        key = s"$page.checkYourAnswersLabel",
-        value = HtmlContent(HtmlFormat.fill(Seq(
-          p()(Html(cnCodeInformation.exciseProductCode)),
-          p()(Html(cnCodeInformation.exciseProductCodeDescription))
-        ))),
-        changeLink = Some(ActionItem(
-          href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          content = "itemCheckAnswers.change",
-          visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-        ))
-      )
-    }
-
-    private[helpers] def constructCommodityCodeRow(idx: Index, cnCodeInformation: CnCodeInformation)
-                                                  (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemCommodityCodePage(idx)
-
-      if (ExciseProductCode.epcsWithNoCnCodes.contains(cnCodeInformation.exciseProductCode)) {
-        None
-      } else {
-        Some(summaryListRowBuilder(
-          key = s"$page.checkYourAnswersLabel",
-          value = HtmlContent(HtmlFormat.fill(Seq(
-            p()(Html(cnCodeInformation.cnCode)),
-            p()(Html(cnCodeInformation.cnCodeDescription))
-          ))),
-          changeLink = if (ExciseProductCode.epcsOnlyOneCnCode.contains(cnCodeInformation.exciseProductCode)) None else Some(ActionItem(
-            href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "itemCheckAnswers.change",
-            visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-          ))
-        ))
-      }
-    }
-
-    private[helpers] def constructBrandNameRow(idx: Index)
-                                              (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemBrandNamePage(idx)
-
-      def row(value: String = "itemCheckAnswers.notProvided"): SummaryListRow = summaryListRowBuilder(
-        key = s"$page.checkYourAnswersLabel",
-        value = value,
-        changeLink = Some(ActionItem(
-          href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          content = "itemCheckAnswers.change",
-          visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-        ))
-      )
-
-      request.userAnswers.get(ItemBrandNamePage(idx)).map {
-        answer =>
-          if (answer.hasBrandName) {
-            answer
-              .brandName
-              .map(name => row(name))
-              .getOrElse(row())
-          } else {
-            row()
-          }
-      }
     }
 
     private[helpers] def constructCommercialDescriptionRow(idx: Index)

@@ -21,14 +21,14 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items._
 import models.requests.DataRequest
 import models.sections.items._
-import models.{CheckMode, ExciseProductCode, UnitOfMeasure, UserAnswers}
+import models.{CheckMode, UnitOfMeasure, UserAnswers}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary}
 import viewmodels.implicits._
 import views.html.components.p
 
@@ -38,6 +38,16 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
+  class Test(val userAnswers: UserAnswers) {
+    lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
+    lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+    lazy val p: p = app.injector.instanceOf[p]
+    lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+    lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+
+    lazy val helper = new ItemCheckAnswersHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary, p)
+  }
+
   private def summaryListRowBuilder(key: Content, value: Content, changeLink: Option[ActionItem]) = SummaryListRow(
     Key(key),
     Value(value),
@@ -45,167 +55,11 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
     actions = changeLink.map(actionItem => Actions(items = Seq(actionItem)))
   )
 
-  class Test(val userAnswers: UserAnswers) {
-    lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
-    lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
-    lazy val p: p = app.injector.instanceOf[p]
-
-    lazy val helper = new ItemCheckAnswersHelper(p)
-  }
-
   "ItemCheckAnswersHelper" - {
     "for the ItemDetails section" - {
       "constructCard" - {
         "must return rows" in new Test(baseUserAnswers) {
           helper.ItemDetails.constructCard(testIndex1, testCommodityCodeWine) must not be empty
-        }
-      }
-
-      "constructEpcRow" - {
-        "must return a row" in new Test(baseUserAnswers) {
-          helper.ItemDetails.constructEpcRow(
-            idx = testIndex1,
-            cnCodeInformation = testCommodityCodeWine
-          ) mustBe
-            summaryListRowBuilder(
-              key = ItemExciseProductCodeMessages.English.cyaLabel,
-              value = HtmlContent(HtmlFormat.fill(Seq(
-                p()(Html(testCommodityCodeWine.exciseProductCode)),
-                p()(Html(testCommodityCodeWine.exciseProductCodeDescription))
-              ))),
-              changeLink = Some(ActionItem(
-                href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                content = "itemCheckAnswers.change",
-                visuallyHiddenText = Some(ItemExciseProductCodeMessages.English.cyaChangeHidden)
-              ))
-            )
-        }
-      }
-
-      "constructCommodityCodeRow" - {
-        "if EPC is not S500" - {
-          "must return a row with no change link" - {
-            ExciseProductCode.epcsOnlyOneCnCode.foreach(
-              epc =>
-                s"if EPC is $epc" in new Test(baseUserAnswers) {
-                  helper.ItemDetails.constructCommodityCodeRow(
-                    idx = testIndex1,
-                    cnCodeInformation = testCommodityCodeWine.copy(exciseProductCode = epc)
-                  ) mustBe
-                    Some(summaryListRowBuilder(
-                      key = ItemCommodityCodeMessages.English.cyaLabel,
-                      value = HtmlContent(HtmlFormat.fill(Seq(
-                        p()(Html(testCommodityCodeWine.cnCode)),
-                        p()(Html(testCommodityCodeWine.cnCodeDescription))
-                      ))),
-                      changeLink = None
-                    ))
-                }
-            )
-          }
-          "must return a row with a change link" - {
-            "if EPC has more than one CN Code" in new Test(baseUserAnswers) {
-              helper.ItemDetails.constructCommodityCodeRow(
-                idx = testIndex1,
-                cnCodeInformation = testCommodityCodeWine
-              ) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemCommodityCodeMessages.English.cyaLabel,
-                  value = HtmlContent(HtmlFormat.fill(Seq(
-                    p()(Html(testCommodityCodeWine.cnCode)),
-                    p()(Html(testCommodityCodeWine.cnCodeDescription))
-                  ))),
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemCommodityCodeMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-          }
-        }
-        "if EPC is S500" - {
-          "must not return a row" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructCommodityCodeRow(
-              idx = testIndex1,
-              cnCodeInformation = testCommodityCodeWine.copy(exciseProductCode = "S500")
-            ) mustBe None
-          }
-        }
-      }
-
-      "constructBrandNameRow" - {
-        "if ItemBrandNamePage hasBrandName is true" - {
-          "must return a row with their answer if brandName is provided" in new Test(
-            baseUserAnswers
-              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, brandName = Some("test brand name")))
-          ) {
-            helper.ItemDetails.constructBrandNameRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
-                value = "test brand name",
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemBrandNameMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
-          "must return a row with default answer if brandName is not provided" in new Test(
-            baseUserAnswers
-              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, brandName = None))
-          ) {
-            helper.ItemDetails.constructBrandNameRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
-                value = messagesForLang.notProvided,
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemBrandNameMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
-        }
-        "if ItemBrandNamePage hasBrandName is false" - {
-          "must return a row with default answer even if brandName is provided" in new Test(
-            baseUserAnswers
-              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = false, brandName = Some("test brand name")))
-          ) {
-            helper.ItemDetails.constructBrandNameRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
-                value = messagesForLang.notProvided,
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemBrandNameMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
-          "must return a row with default answer if brandName is not provided" in new Test(
-            baseUserAnswers
-              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = false, brandName = None))
-          ) {
-            helper.ItemDetails.constructBrandNameRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
-                value = messagesForLang.notProvided,
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemBrandNameMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
         }
       }
 

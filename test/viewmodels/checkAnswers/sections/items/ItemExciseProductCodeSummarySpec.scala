@@ -20,9 +20,11 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import models.ReviewMode
+import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -33,7 +35,7 @@ import views.html.components.p
 class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
   lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
-  lazy val paragraph: p = app.injector.instanceOf[p]
+  lazy val p: p = app.injector.instanceOf[p]
 
   "ItemExciseProductCodeSummary" - {
 
@@ -46,22 +48,21 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemF
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
 
             itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                  paragraph()(Html(testCommodityCodeWine.exciseProductCode)),
-                  paragraph()(Html(testCommodityCodeWine.exciseProductCodeDescription))
-                )))),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url,
-                    id = "changeItemExciseProductCode1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
+              summaryListRowBuilder(
+                key = ItemExciseProductCodeMessages.English.cyaLabel,
+                value = HtmlContent(HtmlFormat.fill(Seq(
+                  p()(Html(testCommodityCodeWine.exciseProductCode)),
+                  p()(Html(testCommodityCodeWine.exciseProductCodeDescription))
+                ))),
+                Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, testIndex1, ReviewMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemExciseProductCode${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
               )
           }
         }

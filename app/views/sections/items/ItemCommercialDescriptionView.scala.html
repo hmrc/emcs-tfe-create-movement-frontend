@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.LabelSize
 @import models.GoodsTypeModel.GoodsType
-@import viewmodels.helpers.CommercialDescriptionHelper
+@import viewmodels.helpers.ItemCommercialDescriptionHelper
 
 @this(
         layout: templates.Layout,
@@ -31,12 +31,12 @@
         continueOrExit: components.continueOrExit,
         details: components.details,
         p: components.p,
-        helper: CommercialDescriptionHelper
+        helper: ItemCommercialDescriptionHelper
 )
 
 @(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("commercialDescription.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemCommercialDescription.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off"){
 
@@ -50,10 +50,10 @@
             id = "value",
             name = "value",
             maxLength = Some(350),
-            label = LabelViewModel(Text(messages("commercialDescription.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large),
+            label = LabelViewModel(Text(messages("itemCommercialDescription.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             hint = Some(HintViewModel(content = HtmlContent(
-            messages(s"commercialDescription.hint.${goodsType.code}")
+            messages(s"itemCommercialDescription.hint.${goodsType.code}")
             ))),
             errorMessage = form.errors("value") match {
                 case Nil => None

@@ -67,18 +67,18 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
         "if provided" - {
           "must return a row" in new Test(
             baseUserAnswers
-              .set(CommercialDescriptionPage(testIndex1), "test commercial description")
+              .set(ItemCommercialDescriptionPage(testIndex1), "test commercial description")
           ) {
             helper.ItemDetails.constructCommercialDescriptionRow(
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = CommercialDescriptionMessages.English.cyaLabel,
+                key = ItemCommercialDescriptionMessages.English.cyaLabel,
                 value = "test commercial description",
                 changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(CommercialDescriptionMessages.English.cyaChangeHidden)
+                  visuallyHiddenText = Some(ItemCommercialDescriptionMessages.English.cyaChangeHidden)
                 ))
               ))
           }

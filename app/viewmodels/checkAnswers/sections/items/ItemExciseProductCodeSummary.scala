@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.items
 
 import com.google.inject.Inject
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.{Index, Mode}
@@ -41,7 +42,7 @@ class ItemExciseProductCodeSummary @Inject()(p: p) {
         p()(Html(cnCodeInformation.exciseProductCodeDescription))
       )))),
       actions = Seq(ActionItemViewModel(
-        href = controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
+        href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
         content = "itemCheckAnswers.change",
         id = s"changeItemExciseProductCode${idx.displayIndex}"
       ).withVisuallyHiddenText(messages(s"$page.change.hidden")))

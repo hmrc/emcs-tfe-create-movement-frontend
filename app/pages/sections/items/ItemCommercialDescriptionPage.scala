@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package forms.sections.items
+package pages.sections.items
 
-import forms.XSS_REGEX
+import models.Index
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
-
-class CommercialDescriptionFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("commercialDescription.error.required")
-        .verifying(maxLength(350, "commercialDescription.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "commercialDescription.error.invalidCharacter"))
-    )
+case class ItemCommercialDescriptionPage(idx: Index) extends QuestionPage[String] {
+  override val toString: String = "itemCommercialDescription"
+  override val path: JsPath = ItemsSectionItems(idx).path \ toString
 }

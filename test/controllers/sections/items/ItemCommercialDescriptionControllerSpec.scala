@@ -19,33 +19,33 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
-import forms.sections.items.CommercialDescriptionFormProvider
+import forms.sections.items.ItemCommercialDescriptionFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{CommercialDescriptionPage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemCommercialDescriptionPage, ItemExciseProductCodePage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import views.html.sections.items.CommercialDescriptionView
+import views.html.sections.items.ItemCommercialDescriptionView
 
 import scala.concurrent.Future
 
-class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
+class ItemCommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   def itemCommercialDescriptionSubmitAction(idx: Index = testIndex1): Call =
-    routes.CommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
+    routes.ItemCommercialDescriptionController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-  lazy val formProvider: CommercialDescriptionFormProvider = new CommercialDescriptionFormProvider()
+  lazy val formProvider: ItemCommercialDescriptionFormProvider = new ItemCommercialDescriptionFormProvider()
   lazy val form: Form[String] = formProvider()
-  lazy val view: CommercialDescriptionView = app.injector.instanceOf[CommercialDescriptionView]
+  lazy val view: ItemCommercialDescriptionView = app.injector.instanceOf[ItemCommercialDescriptionView]
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val controller = new CommercialDescriptionController(
+    lazy val controller = new ItemCommercialDescriptionController(
       messagesApi,
       mockUserAnswersService,
       fakeUserAllowListAction,
@@ -69,7 +69,7 @@ class CommercialDescriptionControllerSpec extends SpecBase with MockUserAnswersS
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+      emptyUserAnswers.set(ItemCommercialDescriptionPage(testIndex1), "answer").set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 

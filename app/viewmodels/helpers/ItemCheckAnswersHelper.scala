@@ -16,13 +16,13 @@
 
 package viewmodels.helpers
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.sections.items.ItemGeographicalIndicationType
-import models.{CheckMode, ExciseProductCode, Index, UnitOfMeasure}
+import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items._
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, SummaryListRow, Value}
@@ -68,7 +68,7 @@ class ItemCheckAnswersHelper @Inject()(
 
     private[helpers] def constructCommercialDescriptionRow(idx: Index)
                                                           (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = CommercialDescriptionPage(idx)
+      lazy val page = ItemCommercialDescriptionPage(idx)
 
       request.userAnswers.get(page).map {
         answer =>
@@ -76,7 +76,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = answer,
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemCommercialDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -94,7 +94,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = messages("itemCheckAnswers.alcoholStrength.value", answer),
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemAlcoholStrengthController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemAlcoholStrengthController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -110,7 +110,7 @@ class ItemCheckAnswersHelper @Inject()(
         key = s"$page.checkYourAnswersLabel",
         value = HtmlContent(messages(value)),
         changeLink = Some(ActionItem(
-          href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          href = routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "itemCheckAnswers.change",
           visuallyHiddenText = Some(messages(s"$page.change.hidden"))
         ))
@@ -136,7 +136,7 @@ class ItemCheckAnswersHelper @Inject()(
         key = s"$page.checkYourAnswersLabel",
         value = value,
         changeLink = Some(ActionItem(
-          href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          href = routes.ItemMaturationPeriodAgeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "itemCheckAnswers.change",
           visuallyHiddenText = Some(messages(s"$page.change.hidden"))
         ))
@@ -164,7 +164,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = HtmlContent(messages(s"$page.checkYourAnswersLabel")),
             value = HtmlContent(messages("itemCheckAnswers.density.value", answer, messages(s"itemCheckAnswers.density.value.$unitOfMeasure"))),
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemDensityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemDensityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -182,7 +182,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = if (answer) "site.yes" else "site.no",
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemFiscalMarksChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -203,7 +203,7 @@ class ItemCheckAnswersHelper @Inject()(
           key = s"$page.checkYourAnswersLabel",
           value = answer,
           changeLink = Some(ActionItem(
-            href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            href = routes.ItemFiscalMarksController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "itemCheckAnswers.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
@@ -221,7 +221,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = s"$page.checkYourAnswers.value.$answer",
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -242,7 +242,7 @@ class ItemCheckAnswersHelper @Inject()(
           key = s"$page.checkYourAnswersLabel",
           value = answer,
           changeLink = Some(ActionItem(
-            href = controllers.sections.items.routes.ItemGeographicalIndicationController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            href = routes.ItemGeographicalIndicationController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "itemCheckAnswers.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
@@ -260,7 +260,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = if (answer) "site.yes" else "site.no",
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -281,7 +281,7 @@ class ItemCheckAnswersHelper @Inject()(
           key = s"$page.checkYourAnswersLabel",
           value = messages("itemCheckAnswers.producerSize.value", answer.toString()),
           changeLink = Some(ActionItem(
-            href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "itemCheckAnswers.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
@@ -310,7 +310,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.checkYourAnswersLabel",
             value = messages("itemCheckAnswers.quantity.value", answer, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
@@ -328,7 +328,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.netMass.checkYourAnswersLabel",
             value = messages("itemCheckAnswers.netMass.value", answer.netMass, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.netMass.change.hidden"))
             ))
@@ -346,7 +346,7 @@ class ItemCheckAnswersHelper @Inject()(
             key = s"$page.grossMass.checkYourAnswersLabel",
             value = messages("itemCheckAnswers.grossMass.value", answer.grossMass, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
-              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               content = "itemCheckAnswers.change",
               visuallyHiddenText = Some(messages(s"$page.grossMass.change.hidden"))
             ))

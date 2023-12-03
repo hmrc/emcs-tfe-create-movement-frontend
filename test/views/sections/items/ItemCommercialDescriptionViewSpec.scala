@@ -17,8 +17,8 @@
 package views.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.CommercialDescriptionMessages
-import forms.sections.items.CommercialDescriptionFormProvider
+import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
+import forms.sections.items.ItemCommercialDescriptionFormProvider
 import models.GoodsTypeModel.{Beer, Energy, Wine}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,24 +26,24 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.items.CommercialDescriptionView
+import views.html.sections.items.ItemCommercialDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
+class ItemItemCommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "CommercialDescriptionView for Beer" - {
+  "ItemCommercialDescriptionView for Beer" - {
 
-    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemCommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
-        val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
+       lazy val view = app.injector.instanceOf[ItemCommercialDescriptionView]
+        val form = app.injector.instanceOf[ItemCommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
 
@@ -62,17 +62,17 @@ class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
       }
     }
   }
-  "CommercialDescriptionView for Wine" - {
+  "ItemCommercialDescriptionView for Wine" - {
 
-    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemCommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
-        val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
+       lazy val view = app.injector.instanceOf[ItemCommercialDescriptionView]
+        val form = app.injector.instanceOf[ItemCommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Wine).toString())
 
@@ -95,17 +95,17 @@ class CommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
     }
   }
 
-  "CommercialDescriptionView for Energy" - {
+  "ItemCommercialDescriptionView for Energy" - {
 
-    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemCommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[CommercialDescriptionView]
-        val form = app.injector.instanceOf[CommercialDescriptionFormProvider].apply()
+       lazy val view = app.injector.instanceOf[ItemCommercialDescriptionView]
+        val form = app.injector.instanceOf[ItemCommercialDescriptionFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Energy).toString())
 

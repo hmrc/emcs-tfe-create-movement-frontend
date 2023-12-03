@@ -17,20 +17,20 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.CommercialDescriptionMessages
+import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.CommercialDescriptionPage
+import pages.sections.items.ItemCommercialDescriptionPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
-  "CommercialDescriptionSummary" - {
+class ItemCommercialDescriptionSummarySpec extends SpecBase with Matchers {
+  "ItemCommercialDescriptionSummary" - {
 
-    Seq(CommercialDescriptionMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemCommercialDescriptionMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -41,15 +41,15 @@ class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            CommercialDescriptionSummary.row(testIndex1) mustBe Some(
+            ItemCommercialDescriptionSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.checkYourAnswersLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeCommercialDescription1"
+                    href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeItemCommercialDescription1"
                   ).withVisuallyHiddenText(messagesForLanguage.changehidden)
                 )
 
@@ -61,17 +61,17 @@ class CommercialDescriptionSummarySpec extends SpecBase with Matchers {
         "when there's an answer" - {
 
           "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(CommercialDescriptionPage(testIndex1), "value"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemCommercialDescriptionPage(testIndex1), "value"))
 
-            CommercialDescriptionSummary.row(testIndex1) mustBe Some(
+            ItemCommercialDescriptionSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeCommercialDescription1"
+                    href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeItemCommercialDescription1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )

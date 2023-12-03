@@ -18,7 +18,7 @@ package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object CommercialDescriptionMessages {
+object ItemCommercialDescriptionMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(goodsType: String) = s"Enter a commercial description for the $goodsType"
     def title(goodsType: String): String = titleHelper(heading(goodsType))

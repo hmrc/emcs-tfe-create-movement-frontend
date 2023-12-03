@@ -16,9 +16,9 @@
 
 package viewmodels.helpers
 
-import models.{ExciseProductCode, Index, Mode}
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
+import models.{Index, Mode}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.items._

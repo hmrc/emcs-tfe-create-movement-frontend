@@ -42,13 +42,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemBrandNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemBrandNamePage(idx) => (userAnswers: UserAnswers) =>
-      itemsRoutes.CommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      itemsRoutes.ItemCommercialDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemAlcoholStrengthPage(idx) => (userAnswers: UserAnswers) =>
       alcoholStrengthRouting(idx, userAnswers)
 
-    case CommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
-      commercialDescriptionRouting(idx, userAnswers)
+    case ItemCommercialDescriptionPage(idx) => (userAnswers: UserAnswers) =>
+      itemCommercialDescriptionRouting(idx, userAnswers)
 
     case ItemDensityPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -225,7 +225,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemBrandNamePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case CommercialDescriptionPage(idx) => (answers: UserAnswers) =>
+    case ItemCommercialDescriptionPage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
     case ItemAlcoholStrengthPage(idx) => (answers: UserAnswers) =>
@@ -367,7 +367,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
-  private def commercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
+  private def itemCommercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
         GoodsTypeModel(epc) match {

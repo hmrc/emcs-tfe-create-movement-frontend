@@ -79,21 +79,21 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the Item Brand Name page" - {
 
-        "to the Commercial Description Page" in {
+        "to the Item Commercial Description Page" in {
           val userAnswers = emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
 
           navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, userAnswers) mustBe
-            itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            itemsRoutes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 
-      "must go from the Commercial Description page" - {
+      "must go from the Item Commercial Description page" - {
         "when GoodsType is Beer" - {
           "to the Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -102,7 +102,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -111,7 +111,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -120,7 +120,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeI200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -130,7 +130,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -142,7 +142,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               "to the Item Quantity Page" in {
                 val userAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc.code)
 
-                navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+                navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                   itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
               }
             }
@@ -153,7 +153,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               val userAnswers = emptyUserAnswers
                 .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeE200.code)
 
-              navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                 itemsRoutes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
@@ -869,9 +869,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from CommercialDescriptionPage" - {
+      "must go from ItemCommercialDescriptionPage" - {
         "to CYA page" in {
-          navigator.nextPage(CommercialDescriptionPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+          navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }

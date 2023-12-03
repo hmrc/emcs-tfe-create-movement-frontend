@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.CommercialDescriptionPage
+import pages.sections.items.ItemCommercialDescriptionPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -28,26 +28,26 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object CommercialDescriptionSummary {
+object ItemCommercialDescriptionSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     Some(SummaryListRowViewModel(
-      key = "commercialDescription.checkYourAnswersLabel",
+      key = "itemCommercialDescription.checkYourAnswersLabel",
       value = ValueViewModel(getValue(idx)),
       actions = {
         Seq(
           ActionItemViewModel(
             content = "site.change",
-            routes.CommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeCommercialDescription${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("commercialDescription.change.hidden"))
+            routes.ItemCommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            id = s"changeItemCommercialDescription${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("itemCommercialDescription.change.hidden"))
         )
       }
     ))
   }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(CommercialDescriptionPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
+    request.userAnswers.get(ItemCommercialDescriptionPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
 
 }

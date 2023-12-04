@@ -18,16 +18,22 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemCommercialDescriptionPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemCommercialDescriptionSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
+
   "ItemCommercialDescriptionSummary" - {
 
     Seq(ItemCommercialDescriptionMessages.English).foreach { messagesForLanguage =>
@@ -36,46 +42,32 @@ class ItemCommercialDescriptionSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemCommercialDescriptionSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.checkYourAnswersLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemCommercialDescription1"
-                  ).withVisuallyHiddenText(messagesForLanguage.changehidden)
-                )
-
-              )
-            )
+        "if provided" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemCommercialDescriptionPage(testIndex1), "test commercial description")
+          ) {
+            ItemCommercialDescriptionSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = "test commercial description",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemCommercialDescription${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemCommercialDescriptionPage(testIndex1), "value"))
-
-            ItemCommercialDescriptionSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text("value")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemCommercialDescription1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+        "if not provided" - {
+          "must not return a row" in new Test(
+            emptyUserAnswers
+          ) {
+            ItemCommercialDescriptionSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

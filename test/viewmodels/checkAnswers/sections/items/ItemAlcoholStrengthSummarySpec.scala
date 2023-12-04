@@ -18,16 +18,21 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemAlcoholStrengthMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemAlcoholStrengthPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemAlcoholStrengthSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemAlcoholStrengthSummarySummary" - {
 
@@ -37,34 +42,32 @@ class ItemAlcoholStrengthSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemAlcoholStrengthSummary.row(testIndex1) mustBe None
+        "if provided" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(3.14))
+          ) {
+            ItemAlcoholStrengthSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = s"3.14 ${messagesForLanguage.cyaSuffix}",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemAlcoholStrength${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(1)))
-
-            ItemAlcoholStrengthSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text("1")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemAlcoholStrength1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+        "if not provided" - {
+          "must not return a row" in new Test(
+            emptyUserAnswers
+          ) {
+            ItemAlcoholStrengthSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

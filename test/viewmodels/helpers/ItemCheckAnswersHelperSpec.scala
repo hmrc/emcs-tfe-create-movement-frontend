@@ -33,14 +33,14 @@ import viewmodels.implicits._
 import views.html.components.p
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
-  val messagesForLang: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
+  val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
   class Test(val userAnswers: UserAnswers) {
     lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
-    lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+    lazy implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
     lazy val p: p = app.injector.instanceOf[p]
     lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
     lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
@@ -63,233 +63,6 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "constructCommercialDescriptionRow" - {
-        "if provided" - {
-          "must return a row" in new Test(
-            baseUserAnswers
-              .set(ItemCommercialDescriptionPage(testIndex1), "test commercial description")
-          ) {
-            helper.ItemDetails.constructCommercialDescriptionRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemCommercialDescriptionMessages.English.cyaLabel,
-                value = "test commercial description",
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemCommercialDescriptionMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
-        }
-        "if not provided" - {
-          "must not return a row" in new Test(
-            baseUserAnswers
-              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = false, brandName = Some("test brand name")))
-          ) {
-            helper.ItemDetails.constructCommercialDescriptionRow(
-              idx = testIndex1
-            ) mustBe None
-          }
-        }
-      }
-
-      "constructAlcoholStrengthRow" - {
-        "if provided" - {
-          "must return a row" in new Test(
-            baseUserAnswers
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(3.14))
-          ) {
-            helper.ItemDetails.constructAlcoholStrengthRow(
-              idx = testIndex1
-            ) mustBe
-              Some(summaryListRowBuilder(
-                key = ItemAlcoholStrengthMessages.English.cyaLabel,
-                value = s"3.14 ${ItemAlcoholStrengthMessages.English.cyaSuffix}",
-                changeLink = Some(ActionItem(
-                  href = controllers.sections.items.routes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
-                  visuallyHiddenText = Some(ItemAlcoholStrengthMessages.English.cyaChangeHidden)
-                ))
-              ))
-          }
-        }
-        "if not provided" - {
-          "must not return a row" in new Test(
-            baseUserAnswers
-          ) {
-            helper.ItemDetails.constructAlcoholStrengthRow(
-              idx = testIndex1
-            ) mustBe None
-          }
-        }
-      }
-
-      "constructDegreesPlatoRow" - {
-        "if provided" - {
-          "and hasDegreesPlato is true" - {
-            "must return a row with their answer if degreesPlato is provided" in new Test(
-              baseUserAnswers
-                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = Some(BigDecimal(1.59))))
-            ) {
-              helper.ItemDetails.constructDegreesPlatoRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemDegreesPlatoMessages.English.cyaLabel,
-                  value = HtmlContent(s"1.59${ItemDegreesPlatoMessages.English.cyaSuffix}"),
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemDegreesPlatoMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-            "must return a row with default answer if degreesPlato is not provided" in new Test(
-              baseUserAnswers
-                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = None))
-            ) {
-              helper.ItemDetails.constructDegreesPlatoRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemDegreesPlatoMessages.English.cyaLabel,
-                  value = HtmlContent(messagesForLang.no),
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemDegreesPlatoMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-          }
-          "and hasDegreesPlato is false" - {
-            "must return a row with default answer even if degreesPlato is provided" in new Test(
-              baseUserAnswers
-                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = false, degreesPlato = Some(BigDecimal(1.59))))
-            ) {
-              helper.ItemDetails.constructDegreesPlatoRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemDegreesPlatoMessages.English.cyaLabel,
-                  value = HtmlContent(messagesForLang.no),
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemDegreesPlatoMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-            "must return a row with default answer if degreesPlato is not provided" in new Test(
-              baseUserAnswers
-                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = false, degreesPlato = None))
-            ) {
-              helper.ItemDetails.constructDegreesPlatoRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemDegreesPlatoMessages.English.cyaLabel,
-                  value = HtmlContent(messagesForLang.no),
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemDegreesPlatoMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-          }
-        }
-        "if not provided" - {
-          "must not return a row" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructDegreesPlatoRow(
-              idx = testIndex1
-            ) mustBe None
-          }
-        }
-      }
-
-      "constructMaturationPeriodAgeRow" - {
-        "if provided" - {
-          "and hasMaturationPeriodAge is true" - {
-            "must return a row with their answer if maturationPeriodAge is provided" in new Test(
-              baseUserAnswers
-                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
-                  hasMaturationPeriodAge = true,
-                  maturationPeriodAge = Some("test maturation period age")
-                ))
-            ) {
-              helper.ItemDetails.constructMaturationPeriodAgeRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemMaturationPeriodAgeMessages.English.cyaLabel,
-                  value = "test maturation period age",
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemMaturationPeriodAgeMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-            "must return a row with default answer if maturationPeriodAge is not provided" in new Test(
-              baseUserAnswers
-                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
-                  hasMaturationPeriodAge = true,
-                  maturationPeriodAge = None
-                ))
-            ) {
-              helper.ItemDetails.constructMaturationPeriodAgeRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemMaturationPeriodAgeMessages.English.cyaLabel,
-                  value = messagesForLang.notProvided,
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemMaturationPeriodAgeMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-          }
-          "and hasMaturationPeriodAge is false" - {
-            "must return a row with default answer even if maturationPeriodAge is provided" in new Test(
-              baseUserAnswers
-                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
-                  hasMaturationPeriodAge = false,
-                  maturationPeriodAge = Some("test maturation period age")
-                ))
-            ) {
-              helper.ItemDetails.constructMaturationPeriodAgeRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemMaturationPeriodAgeMessages.English.cyaLabel,
-                  value = messagesForLang.notProvided,
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemMaturationPeriodAgeMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-            "must return a row with default answer if maturationPeriodAge is not provided" in new Test(
-              baseUserAnswers
-                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
-                  hasMaturationPeriodAge = false,
-                  maturationPeriodAge = None
-                ))
-            ) {
-              helper.ItemDetails.constructMaturationPeriodAgeRow(idx = testIndex1) mustBe
-                Some(summaryListRowBuilder(
-                  key = ItemMaturationPeriodAgeMessages.English.cyaLabel,
-                  value = messagesForLang.notProvided,
-                  changeLink = Some(ActionItem(
-                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    content = "itemCheckAnswers.change",
-                    visuallyHiddenText = Some(ItemMaturationPeriodAgeMessages.English.cyaChangeHidden)
-                  ))
-                ))
-            }
-          }
-        }
-        "if not provided" - {
-          "must not return a row" in new Test(baseUserAnswers) {
-            helper.ItemDetails.constructMaturationPeriodAgeRow(
-              idx = testIndex1
-            ) mustBe None
-          }
-        }
-      }
-
       "constructDensityRow" - {
         "if provided" - {
           "must return a row" in new Test(
@@ -305,7 +78,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = HtmlContent(s"2.65${ItemDensityMessages.English.cyaSuffix}"),
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemDensityMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -332,10 +105,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
             ) mustBe
               Some(summaryListRowBuilder(
                 key = ItemFiscalMarksChoiceMessages.English.cyaLabel,
-                value = messagesForLang.yes,
+                value = messagesForLanguage.yes,
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemFiscalMarksChoiceMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -351,10 +124,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
             ) mustBe
               Some(summaryListRowBuilder(
                 key = ItemFiscalMarksChoiceMessages.English.cyaLabel,
-                value = messagesForLang.no,
+                value = messagesForLanguage.no,
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemFiscalMarksChoiceMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -384,7 +157,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = "test fiscal marks",
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemFiscalMarksMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -426,7 +199,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                     value = msgs(s"${ItemGeographicalIndicationChoicePage(testIndex1)}.checkYourAnswers.value.$answer"),
                     changeLink = Some(ActionItem(
                       href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      content = "itemCheckAnswers.change",
+                      content = messagesForLanguage.change,
                       visuallyHiddenText = Some(ItemGeographicalIndicationChoiceMessages.English.cyaChangeHidden)
                     ))
                   ))
@@ -459,7 +232,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                     value = "test fiscal marks",
                     changeLink = Some(ActionItem(
                       href = controllers.sections.items.routes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      content = "itemCheckAnswers.change",
+                      content = messagesForLanguage.change,
                       visuallyHiddenText = Some(ItemGeographicalIndicationMessages.English.cyaChangeHidden)
                     ))
                   ))
@@ -500,10 +273,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
             ) mustBe
               Some(summaryListRowBuilder(
                 key = ItemSmallIndependentProducerMessages.English.cyaLabel,
-                value = messagesForLang.yes,
+                value = messagesForLanguage.yes,
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemSmallIndependentProducerMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -519,10 +292,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
             ) mustBe
               Some(summaryListRowBuilder(
                 key = ItemSmallIndependentProducerMessages.English.cyaLabel,
-                value = messagesForLang.no,
+                value = messagesForLanguage.no,
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemSmallIndependentProducerMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -552,7 +325,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = s"3 ${ItemProducerSizeMessages.English.inputSuffix}",
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemProducerSizeMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -605,7 +378,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = s"1.23 ${UnitOfMeasure.Kilograms.toShortFormatMessage()}",
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemQuantityMessages.English.cyaChangeHidden)
                 ))
               ))
@@ -636,7 +409,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = s"4.56 ${UnitOfMeasure.Litres20.toShortFormatMessage()}",
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemNetGrossMassMessages.English.cyaNetMassChangeHidden)
                 ))
               ))
@@ -667,7 +440,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 value = s"7.89 ${UnitOfMeasure.Thousands.toShortFormatMessage()}",
                 changeLink = Some(ActionItem(
                   href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  content = "itemCheckAnswers.change",
+                  content = messagesForLanguage.change,
                   visuallyHiddenText = Some(ItemNetGrossMassMessages.English.cyaGrossMassChangeHidden)
                 ))
               ))

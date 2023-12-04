@@ -52,10 +52,10 @@ class ItemCheckAnswersHelper @Inject()(
         Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, CheckMode)),
         itemCommodityCodeSummary.row(idx, cnCodeInformation, CheckMode),
         ItemBrandNameSummary.row(idx),
-        constructCommercialDescriptionRow(idx),
-        constructAlcoholStrengthRow(idx),
-        constructDegreesPlatoRow(idx),
-        constructMaturationPeriodAgeRow(idx),
+        ItemCommercialDescriptionSummary.row(idx),
+        ItemAlcoholStrengthSummary.row(idx),
+        ItemDegreesPlatoSummary.row(idx),
+        ItemMaturationPeriodAgeSummary.row(idx),
         constructDensityRow(idx, cnCodeInformation.unitOfMeasure),
         constructFiscalMarksChoiceRow(idx),
         constructFiscalMarksRow(idx),
@@ -64,94 +64,6 @@ class ItemCheckAnswersHelper @Inject()(
         constructSmallIndependentProducerRow(idx),
         constructProducerSizeRow(idx),
       ).flatten
-    }
-
-    private[helpers] def constructCommercialDescriptionRow(idx: Index)
-                                                          (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemCommercialDescriptionPage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = s"$page.checkYourAnswersLabel",
-            value = answer,
-            changeLink = Some(ActionItem(
-              href = routes.ItemCommercialDescriptionController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructAlcoholStrengthRow(idx: Index)
-                                                    (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemAlcoholStrengthPage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = s"$page.checkYourAnswersLabel",
-            value = messages("itemCheckAnswers.alcoholStrength.value", answer),
-            changeLink = Some(ActionItem(
-              href = routes.ItemAlcoholStrengthController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructDegreesPlatoRow(idx: Index)
-                                                 (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemDegreesPlatoPage(idx)
-
-      def row(value: String = "site.no"): SummaryListRow = summaryListRowBuilder(
-        key = s"$page.checkYourAnswersLabel",
-        value = HtmlContent(messages(value)),
-        changeLink = Some(ActionItem(
-          href = routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          content = "itemCheckAnswers.change",
-          visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-        ))
-      )
-
-      request.userAnswers.get(page).map {
-        answer =>
-          if (answer.hasDegreesPlato) {
-            answer.degreesPlato
-              .map(degreesPlato => row(messages("itemCheckAnswers.degreesPlato.value", degreesPlato)))
-              .getOrElse(row())
-          } else {
-            row()
-          }
-      }
-    }
-
-    private[helpers] def constructMaturationPeriodAgeRow(idx: Index)
-                                                        (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemMaturationPeriodAgePage(idx)
-
-      def row(value: String = "itemCheckAnswers.notProvided"): SummaryListRow = summaryListRowBuilder(
-        key = s"$page.checkYourAnswersLabel",
-        value = value,
-        changeLink = Some(ActionItem(
-          href = routes.ItemMaturationPeriodAgeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          content = "itemCheckAnswers.change",
-          visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-        ))
-      )
-
-      request.userAnswers.get(page).map {
-        answer =>
-          if (answer.hasMaturationPeriodAge) {
-            answer.maturationPeriodAge
-              .map(maturationPeriodAge => row(maturationPeriodAge))
-              .getOrElse(row())
-          } else {
-            row()
-          }
-      }
     }
 
     private[helpers] def constructDensityRow(idx: Index, unitOfMeasure: UnitOfMeasure)
@@ -165,7 +77,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = HtmlContent(messages("itemCheckAnswers.density.value", answer, messages(s"itemCheckAnswers.density.value.$unitOfMeasure"))),
             changeLink = Some(ActionItem(
               href = routes.ItemDensityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
           )
@@ -183,7 +95,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = if (answer) "site.yes" else "site.no",
             changeLink = Some(ActionItem(
               href = routes.ItemFiscalMarksChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
           )
@@ -204,7 +116,7 @@ class ItemCheckAnswersHelper @Inject()(
           value = answer,
           changeLink = Some(ActionItem(
             href = routes.ItemFiscalMarksController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "itemCheckAnswers.change",
+            content = "site.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
         )
@@ -222,7 +134,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = s"$page.checkYourAnswers.value.$answer",
             changeLink = Some(ActionItem(
               href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
           )
@@ -243,7 +155,7 @@ class ItemCheckAnswersHelper @Inject()(
           value = answer,
           changeLink = Some(ActionItem(
             href = routes.ItemGeographicalIndicationController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "itemCheckAnswers.change",
+            content = "site.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
         )
@@ -261,7 +173,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = if (answer) "site.yes" else "site.no",
             changeLink = Some(ActionItem(
               href = routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
           )
@@ -282,7 +194,7 @@ class ItemCheckAnswersHelper @Inject()(
           value = messages("itemCheckAnswers.producerSize.value", answer.toString()),
           changeLink = Some(ActionItem(
             href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "itemCheckAnswers.change",
+            content = "site.change",
             visuallyHiddenText = Some(messages(s"$page.change.hidden"))
           ))
         )
@@ -311,7 +223,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = messages("itemCheckAnswers.quantity.value", answer, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
               href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.change.hidden"))
             ))
           )
@@ -329,7 +241,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = messages("itemCheckAnswers.netMass.value", answer.netMass, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
               href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.netMass.change.hidden"))
             ))
           )
@@ -347,7 +259,7 @@ class ItemCheckAnswersHelper @Inject()(
             value = messages("itemCheckAnswers.grossMass.value", answer.grossMass, unitOfMeasure.toShortFormatMessage()),
             changeLink = Some(ActionItem(
               href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "itemCheckAnswers.change",
+              content = "site.change",
               visuallyHiddenText = Some(messages(s"$page.grossMass.change.hidden"))
             ))
           )

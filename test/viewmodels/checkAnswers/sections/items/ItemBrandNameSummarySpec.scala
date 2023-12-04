@@ -52,13 +52,13 @@ class ItemBrandNameSummarySpec extends SpecBase with Matchers {
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = "test brand name",
                 changeLink = Some(ActionItemViewModel(
                   href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = messagesForLanguage.change,
                   id = "changeItemBrandName1"
-                ).withVisuallyHiddenText(ItemBrandNameMessages.English.cyaChangeHidden))
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
               ))
           }
           "must return a row with default answer if brandName is not provided" in new Test(
@@ -69,13 +69,13 @@ class ItemBrandNameSummarySpec extends SpecBase with Matchers {
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = messagesForLanguage.notProvided,
                 changeLink = Some(ActionItemViewModel(
                   href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = messagesForLanguage.change,
                   id = "changeItemBrandName1"
-                ).withVisuallyHiddenText(ItemBrandNameMessages.English.cyaChangeHidden))
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
               ))
           }
         }
@@ -88,13 +88,13 @@ class ItemBrandNameSummarySpec extends SpecBase with Matchers {
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = messagesForLanguage.notProvided,
                 changeLink = Some(ActionItemViewModel(
                   href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = messagesForLanguage.change,
                   id = "changeItemBrandName1"
-                ).withVisuallyHiddenText(ItemBrandNameMessages.English.cyaChangeHidden))
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
               ))
           }
           "must return a row with default answer if brandName is not provided" in new Test(
@@ -105,13 +105,13 @@ class ItemBrandNameSummarySpec extends SpecBase with Matchers {
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = ItemBrandNameMessages.English.cyaLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = messagesForLanguage.notProvided,
                 changeLink = Some(ActionItemViewModel(
                   href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = messagesForLanguage.change,
                   id = "changeItemBrandName1"
-                ).withVisuallyHiddenText(ItemBrandNameMessages.English.cyaChangeHidden))
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
               ))
           }
         }

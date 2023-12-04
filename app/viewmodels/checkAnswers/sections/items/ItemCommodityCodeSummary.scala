@@ -46,7 +46,7 @@ class ItemCommodityCodeSummary @Inject()(p: p) {
         )))),
         actions = if (ExciseProductCode.epcsOnlyOneCnCode.contains(cnCodeInformation.exciseProductCode)) Seq() else Seq(ActionItemViewModel(
           href = routes.ItemCommodityCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
-          content = "itemCheckAnswers.change",
+          content = "site.change",
           id = s"changeItemCommodityCode${idx.displayIndex}"
         ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
       ))

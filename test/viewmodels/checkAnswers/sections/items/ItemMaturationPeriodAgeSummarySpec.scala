@@ -18,17 +18,22 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
-import models.CheckMode
+import models.requests.DataRequest
 import models.sections.items.ItemMaturationPeriodAgeModel
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemMaturationPeriodAgePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemMaturationPeriodAgeSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemMaturationPeriodAgeSummary" - {
 
@@ -38,45 +43,89 @@ class ItemMaturationPeriodAgeSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemMaturationPeriodAgeSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
+        "if provided" - {
+          "and hasMaturationPeriodAge is true" - {
+            "must return a row with their answer if maturationPeriodAge is provided" in new Test(
+              emptyUserAnswers
+                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
+                  hasMaturationPeriodAge = true,
+                  maturationPeriodAge = Some("test maturation period age")
+                ))
+            ) {
+              ItemMaturationPeriodAgeSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = "test maturation period age",
+                  changeLink = Some(ActionItemViewModel(
                     href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemMaturationPeriodAge1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+                    content = messagesForLanguage.change,
+                    id = s"changeItemMaturationPeriodAge${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+            "must return a row with default answer if maturationPeriodAge is not provided" in new Test(
+              emptyUserAnswers
+                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
+                  hasMaturationPeriodAge = true,
+                  maturationPeriodAge = None
+                ))
+            ) {
+              ItemMaturationPeriodAgeSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = messagesForLanguage.notProvided,
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemMaturationPeriodAge${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+          }
+          "and hasMaturationPeriodAge is false" - {
+            "must return a row with default answer even if maturationPeriodAge is provided" in new Test(
+              emptyUserAnswers
+                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
+                  hasMaturationPeriodAge = false,
+                  maturationPeriodAge = Some("test maturation period age")
+                ))
+            ) {
+              ItemMaturationPeriodAgeSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = messagesForLanguage.notProvided,
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemMaturationPeriodAge${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+            "must return a row with default answer if maturationPeriodAge is not provided" in new Test(
+              emptyUserAnswers
+                .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(
+                  hasMaturationPeriodAge = false,
+                  maturationPeriodAge = None
+                ))
+            ) {
+              ItemMaturationPeriodAgeSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = messagesForLanguage.notProvided,
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemMaturationPeriodAge${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(true, Some("10 Years"))))
-
-            ItemMaturationPeriodAgeSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text("10 Years")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemMaturationPeriodAgeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemMaturationPeriodAge1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemMaturationPeriodAgeSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

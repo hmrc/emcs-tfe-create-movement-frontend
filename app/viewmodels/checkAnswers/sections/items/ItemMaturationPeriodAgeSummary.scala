@@ -21,32 +21,34 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemMaturationPeriodAgePage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemMaturationPeriodAgeSummary  {
+object ItemMaturationPeriodAgeSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemMaturationPeriodAgePage(idx)
 
-    Some(SummaryListRowViewModel(
-      key = "itemMaturationPeriodAge.checkYourAnswersLabel",
-      value = ValueViewModel(getValue(idx)),
-      actions = {
-        Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            routes.ItemMaturationPeriodAgeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemMaturationPeriodAge${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("itemMaturationPeriodAge.change.hidden"))
-        )
-      }
-    ))
+    def row(value: String = "site.notProvided"): SummaryListRow = SummaryListRowViewModel(
+      key = s"$page.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(ActionItemViewModel(
+        href = routes.ItemMaturationPeriodAgeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+        content = "site.change",
+        id = s"changeItemMaturationPeriodAge${idx.displayIndex}"
+      ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+    )
+
+    request.userAnswers.get(page).map {
+      answer =>
+        if (answer.hasMaturationPeriodAge) {
+          answer.maturationPeriodAge
+            .map(maturationPeriodAge => row(maturationPeriodAge))
+            .getOrElse(row())
+        } else {
+          row()
+        }
+    }
   }
-
-  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge).fold(Text(messages("site.notProvided")))(Text(_))
-
 }

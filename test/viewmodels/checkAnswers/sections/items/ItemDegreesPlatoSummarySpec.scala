@@ -18,17 +18,23 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
-import models.CheckMode
+import models.requests.DataRequest
 import models.sections.items.ItemDegreesPlatoModel
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemDegreesPlatoPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemDegreesPlatoSummarySummary" - {
 
@@ -38,68 +44,77 @@ class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemDegreesPlatoSummary.row(testIndex1) mustBe None
+        "if provided" - {
+          "and hasDegreesPlato is true" - {
+            "must return a row with their answer if degreesPlato is provided" in new Test(
+              emptyUserAnswers
+                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = Some(BigDecimal(1.59))))
+            ) {
+              ItemDegreesPlatoSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = HtmlContent(s"1.59${messagesForLanguage.cyaSuffix}"),
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemDegreesPlatoAmount${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+            "must return a row with default answer if degreesPlato is not provided" in new Test(
+              emptyUserAnswers
+                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = None))
+            ) {
+              ItemDegreesPlatoSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = HtmlContent(messagesForLanguage.no),
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemDegreesPlatoAmount${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+          }
+          "and hasDegreesPlato is false" - {
+            "must return a row with default answer even if degreesPlato is provided" in new Test(
+              emptyUserAnswers
+                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = false, degreesPlato = Some(BigDecimal(1.59))))
+            ) {
+              ItemDegreesPlatoSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = HtmlContent(messagesForLanguage.no),
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemDegreesPlatoAmount${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
+            "must return a row with default answer if degreesPlato is not provided" in new Test(
+              emptyUserAnswers
+                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = false, degreesPlato = None))
+            ) {
+              ItemDegreesPlatoSummary.row(idx = testIndex1) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLanguage.cyaLabel,
+                  value = HtmlContent(messagesForLanguage.no),
+                  changeLink = Some(ActionItemViewModel(
+                    href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    content = messagesForLanguage.change,
+                    id = s"changeItemDegreesPlatoAmount${testIndex1.displayIndex}"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ))
+            }
           }
         }
-
-        "when there's an answer" - {
-
-          "when the answer is Yes with a value" - {
-
-            "must output the expected rows" in {
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(true, Some(5))))
-
-              ItemDegreesPlatoSummary.row(testIndex1) mustBe Some(Seq(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaRadioLabel,
-                  value = Value(Text(messagesForLanguage.yes)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemDegreesPlatoRadio1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                ),
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaAmountLabel,
-                  value = Value(Text(s"5 ${messagesForLanguage.cyaSuffix}")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemDegreesPlatoAmount1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              ))
-            }
-          }
-
-          "when the answer is No" - {
-
-            "must output the expected rows" in {
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(false, None)))
-
-              ItemDegreesPlatoSummary.row(testIndex1) mustBe Some(Seq(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaRadioLabel,
-                  value = Value(Text(messagesForLanguage.no)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemDegreesPlatoRadio1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              ))
-            }
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemDegreesPlatoSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

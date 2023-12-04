@@ -30,12 +30,12 @@ object ItemBrandNameSummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemBrandNamePage(idx)
 
-    def constructRow(value: String = "itemCheckAnswers.notProvided"): SummaryListRow = SummaryListRowViewModel(
+    def constructRow(value: String = "site.notProvided"): SummaryListRow = SummaryListRowViewModel(
       key = s"$page.checkYourAnswersLabel",
       value = ValueViewModel(value),
       actions = Seq(ActionItemViewModel(
         href = routes.ItemBrandNameController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-        content = "itemCheckAnswers.change",
+        content = "site.change",
         id = s"changeItemBrandName${idx.displayIndex}"
       ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )

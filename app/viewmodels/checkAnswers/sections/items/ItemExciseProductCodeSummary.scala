@@ -43,7 +43,7 @@ class ItemExciseProductCodeSummary @Inject()(p: p) {
       )))),
       actions = Seq(ActionItemViewModel(
         href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
-        content = "itemCheckAnswers.change",
+        content = "site.change",
         id = s"changeItemExciseProductCode${idx.displayIndex}"
       ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )

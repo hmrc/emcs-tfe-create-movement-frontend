@@ -31,23 +31,24 @@ import viewmodels.implicits._
 object ItemCommercialDescriptionSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemCommercialDescriptionPage(idx)
 
-    Some(SummaryListRowViewModel(
-      key = "itemCommercialDescription.checkYourAnswersLabel",
-      value = ValueViewModel(getValue(idx)),
-      actions = {
-        Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            routes.ItemCommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemCommercialDescription${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("itemCommercialDescription.change.hidden"))
+    request.userAnswers.get(page).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(answer),
+          actions = {
+            Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                routes.ItemCommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+                id = s"changeItemCommercialDescription${idx.displayIndex}"
+              ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
+            )
+          }
         )
-      }
-    ))
+    }
   }
-
-  private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(ItemCommercialDescriptionPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
 
 }

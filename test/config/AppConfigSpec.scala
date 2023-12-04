@@ -70,7 +70,7 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
         s"when the $ReturnToLegacy feature switch is disabled" in {
           disable(ReturnToLegacy)
 
-          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs-tfe"
+          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
         }
       }
     }

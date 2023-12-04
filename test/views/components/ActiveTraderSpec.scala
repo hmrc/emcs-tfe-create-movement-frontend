@@ -73,7 +73,7 @@ class ActiveTraderSpec extends SpecBase {
 
           val link =  doc.select(linkSelector).first
 
-          (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs-tfe", messagesForLanguage.changeTraderType)
+          (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs/account", messagesForLanguage.changeTraderType)
         }
 
       }

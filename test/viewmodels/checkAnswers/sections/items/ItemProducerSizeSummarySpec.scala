@@ -17,53 +17,67 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemProducerSizeMessages.English
-import models.CheckMode
+import fixtures.messages.sections.items.ItemProducerSizeMessages
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemProducerSizePage
+import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
 
-  "ItemProducerSizeSummarySummary" - {
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
-    s"when being rendered in lang code of '${English.lang.code}'" - {
+  "ItemProducerSizeSummary" - {
 
-      implicit lazy val msgs: Messages = messages(Seq(English.lang))
+    val messagesForLanguage = ItemProducerSizeMessages.English
 
-      "when there's no answer" - {
+    s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        "must output the expected data" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+      implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-          ItemProducerSizeSummary.row(0) mustBe None
+      "if ItemSmallIndependentProducerPage is true" - {
+        "must return a row when there is an answer" in new Test(
+          emptyUserAnswers
+            .set(ItemSmallIndependentProducerPage(testIndex1), true)
+            .set(ItemProducerSizePage(testIndex1), BigInt(3))
+        ) {
+          ItemProducerSizeSummary.row(
+            idx = testIndex1
+          ) mustBe
+            Some(summaryListRowBuilder(
+              key = messagesForLanguage.cyaLabel,
+              value = s"3 ${messagesForLanguage.inputSuffix}",
+              changeLink = Some(ActionItemViewModel(
+                href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                content = messagesForLanguage.change,
+                id = s"changeItemProducerSize${testIndex1.displayIndex}"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+            ))
         }
       }
-
-      "when there's an answer" - {
-
-        "must output the expected row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ItemProducerSizePage(0), BigInt(1))
-          )
-
-          ItemProducerSizeSummary.row(0) mustBe Some(
-            SummaryListRowViewModel(
-              key = English.cyaLabel,
-              value = Value(Text(s"1${English.inputSuffix}")),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = English.change,
-                  href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, 0, CheckMode).url,
-                  id = "changeItemProducerSize1"
-                ).withVisuallyHiddenText(English.cyaChangeHidden)
-              )
-            )
-          )
+      "if ItemSmallIndependentProducerPage is false" - {
+        "must not return a row" in new Test(
+          emptyUserAnswers
+            .set(ItemSmallIndependentProducerPage(testIndex1), false)
+            .set(ItemProducerSizePage(testIndex1), BigInt(3))
+        ) {
+          ItemProducerSizeSummary.row(
+            idx = testIndex1
+          ) mustBe None
+        }
+      }
+      "if not provided" - {
+        "must not return a row" in new Test(emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)) {
+          ItemProducerSizeSummary.row(
+            idx = testIndex1
+          ) mustBe None
         }
       }
     }

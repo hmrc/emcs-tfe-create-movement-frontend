@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemBrandNamePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -32,7 +33,7 @@ object ItemBrandNameSummary {
 
     def constructRow(value: String = "site.notProvided"): SummaryListRow = SummaryListRowViewModel(
       key = s"$page.checkYourAnswersLabel",
-      value = ValueViewModel(value),
+      value = ValueViewModel(HtmlFormat.escape(value).toString()),
       actions = Seq(ActionItemViewModel(
         href = routes.ItemBrandNameController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
         content = "site.change",

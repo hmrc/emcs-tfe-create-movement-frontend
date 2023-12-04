@@ -55,7 +55,7 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
                 mode = CheckMode
               ) mustBe
                 Some(summaryListRowBuilder(
-                  key = ItemCommodityCodeMessages.English.cyaLabel,
+                  key = messagesForLang.cyaLabel,
                   value = HtmlContent(HtmlFormat.fill(Seq(
                     p()(Html(testCommodityCodeWine.cnCode)),
                     p()(Html(testCommodityCodeWine.cnCodeDescription))
@@ -73,7 +73,7 @@ class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtu
             mode = CheckMode
           ) mustBe
             Some(summaryListRowBuilder(
-              key = ItemCommodityCodeMessages.English.cyaLabel,
+              key = messagesForLang.cyaLabel,
               value = HtmlContent(HtmlFormat.fill(Seq(
                 p()(Html(testCommodityCodeWine.cnCode)),
                 p()(Html(testCommodityCodeWine.cnCodeDescription))

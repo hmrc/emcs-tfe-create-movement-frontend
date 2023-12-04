@@ -18,16 +18,21 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemFiscalMarksPage
+import pages.sections.items.{ItemFiscalMarksChoicePage, ItemFiscalMarksPage}
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemFiscalMarksSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemFiscalMarksSummary" - {
 
@@ -37,37 +42,42 @@ class ItemFiscalMarksSummarySpec extends SpecBase with Matchers {
 
         implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemFiscalMarksSummary.row(testIndex1) mustBe None
+        "if ItemFiscalMarksChoicePage is true" - {
+          "must return a row when there is an answer" in new Test(
+            emptyUserAnswers
+              .set(ItemFiscalMarksChoicePage(testIndex1), true)
+              .set(ItemFiscalMarksPage(testIndex1), "test fiscal marks")
+          ) {
+            ItemFiscalMarksSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = "test fiscal marks",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemFiscalMarks${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
-
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(
-              ItemFiscalMarksPage(testIndex1), "value")
-            )
-
-            ItemFiscalMarksSummary.row(testIndex1) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("value")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemFiscalMarks1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              )
+        "if ItemFiscalMarksChoicePage is false" - {
+          "must not return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemFiscalMarksChoicePage(testIndex1), false)
+              .set(ItemFiscalMarksPage(testIndex1), "test fiscal marks")
+          ) {
+            ItemFiscalMarksSummary.row(
+              idx = testIndex1
+            ) mustBe None
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)) {
+            ItemFiscalMarksSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

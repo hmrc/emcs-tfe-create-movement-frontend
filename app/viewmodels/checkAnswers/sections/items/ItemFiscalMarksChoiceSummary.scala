@@ -28,22 +28,19 @@ import viewmodels.implicits._
 object ItemFiscalMarksChoiceSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemFiscalMarksChoicePage(idx)).map {
+    lazy val page = ItemFiscalMarksChoicePage(idx)
+
+    request.userAnswers.get(page).map {
       answer =>
-
         val value = if (answer) "site.yes" else "site.no"
-
         SummaryListRowViewModel(
-          key = "itemFiscalMarksChoice.checkYourAnswersLabel",
+          key = s"$page.checkYourAnswersLabel",
           value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = routes.ItemFiscalMarksChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"changeItemFiscalMarksChoice${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemFiscalMarksChoice.change.hidden"))
-          )
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemFiscalMarksChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemFiscalMarksChoice${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
         )
     }
   }

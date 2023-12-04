@@ -53,7 +53,7 @@ class ItemExciseProductCodeSummarySpec extends SpecBase with Matchers with ItemF
 
             itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
               summaryListRowBuilder(
-                key = ItemExciseProductCodeMessages.English.cyaLabel,
+                key = messagesForLanguage.cyaLabel,
                 value = HtmlContent(HtmlFormat.fill(Seq(
                   p()(Html(testCommodityCodeWine.exciseProductCode)),
                   p()(Html(testCommodityCodeWine.exciseProductCodeDescription))

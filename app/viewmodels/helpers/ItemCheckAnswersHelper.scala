@@ -19,12 +19,11 @@ package viewmodels.helpers
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.sections.items.ItemGeographicalIndicationType
 import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, SummaryListRow, Value}
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.implicits._
@@ -56,149 +55,14 @@ class ItemCheckAnswersHelper @Inject()(
         ItemAlcoholStrengthSummary.row(idx),
         ItemDegreesPlatoSummary.row(idx),
         ItemMaturationPeriodAgeSummary.row(idx),
-        constructDensityRow(idx, cnCodeInformation.unitOfMeasure),
-        constructFiscalMarksChoiceRow(idx),
-        constructFiscalMarksRow(idx),
-        constructGeographicalIndicationChoiceRow(idx),
-        constructGeographicalIndicationRow(idx),
-        constructSmallIndependentProducerRow(idx),
-        constructProducerSizeRow(idx),
+        ItemDensitySummary.row(idx),
+        ItemFiscalMarksChoiceSummary.row(idx),
+        ItemFiscalMarksSummary.row(idx),
+        ItemGeographicalIndicationChoiceSummary.row(idx),
+        ItemGeographicalIndicationSummary.row(idx),
+        ItemSmallIndependentProducerSummary.row(idx),
+        ItemProducerSizeSummary.row(idx),
       ).flatten
-    }
-
-    private[helpers] def constructDensityRow(idx: Index, unitOfMeasure: UnitOfMeasure)
-                                            (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemDensityPage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = HtmlContent(messages(s"$page.checkYourAnswersLabel")),
-            value = HtmlContent(messages("itemCheckAnswers.density.value", answer, messages(s"itemCheckAnswers.density.value.$unitOfMeasure"))),
-            changeLink = Some(ActionItem(
-              href = routes.ItemDensityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "site.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructFiscalMarksChoiceRow(idx: Index)
-                                                      (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemFiscalMarksChoicePage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = s"$page.checkYourAnswersLabel",
-            value = if (answer) "site.yes" else "site.no",
-            changeLink = Some(ActionItem(
-              href = routes.ItemFiscalMarksChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "site.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructFiscalMarksRow(idx: Index)
-                                                (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemFiscalMarksPage(idx)
-
-      for {
-        fiscalMarksChoiceAnswer <- request.userAnswers.get(ItemFiscalMarksChoicePage(idx))
-        answer <- request.userAnswers.get(page)
-        if fiscalMarksChoiceAnswer
-      } yield {
-        summaryListRowBuilder(
-          key = s"$page.checkYourAnswersLabel",
-          value = answer,
-          changeLink = Some(ActionItem(
-            href = routes.ItemFiscalMarksController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "site.change",
-            visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-          ))
-        )
-      }
-    }
-
-    private[helpers] def constructGeographicalIndicationChoiceRow(idx: Index)
-                                                                 (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemGeographicalIndicationChoicePage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = s"$page.checkYourAnswersLabel",
-            value = s"$page.checkYourAnswers.value.$answer",
-            changeLink = Some(ActionItem(
-              href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "site.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructGeographicalIndicationRow(idx: Index)
-                                                           (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemGeographicalIndicationPage(idx)
-
-      for {
-        itemGeographicalIndicationChoice <- request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx))
-        answer <- request.userAnswers.get(page)
-        if itemGeographicalIndicationChoice != ItemGeographicalIndicationType.NoGeographicalIndication
-      } yield {
-        summaryListRowBuilder(
-          key = s"$page.checkYourAnswersLabel",
-          value = answer,
-          changeLink = Some(ActionItem(
-            href = routes.ItemGeographicalIndicationController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "site.change",
-            visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-          ))
-        )
-      }
-    }
-
-    private[helpers] def constructSmallIndependentProducerRow(idx: Index)
-                                                             (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemSmallIndependentProducerPage(idx)
-
-      request.userAnswers.get(page).map {
-        answer =>
-          summaryListRowBuilder(
-            key = s"$page.checkYourAnswersLabel",
-            value = if (answer) "site.yes" else "site.no",
-            changeLink = Some(ActionItem(
-              href = routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              content = "site.change",
-              visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-            ))
-          )
-      }
-    }
-
-    private[helpers] def constructProducerSizeRow(idx: Index)
-                                                 (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-      lazy val page = ItemProducerSizePage(idx)
-
-      for {
-        itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
-        answer <- request.userAnswers.get(page)
-        if itemSmallIndependentProducer
-      } yield {
-        summaryListRowBuilder(
-          key = s"$page.checkYourAnswersLabel",
-          value = messages("itemCheckAnswers.producerSize.value", answer.toString()),
-          changeLink = Some(ActionItem(
-            href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-            content = "site.change",
-            visuallyHiddenText = Some(messages(s"$page.change.hidden"))
-          ))
-        )
-      }
     }
   }
 

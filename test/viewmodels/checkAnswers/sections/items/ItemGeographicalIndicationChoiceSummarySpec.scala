@@ -18,17 +18,23 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationChoiceMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.sections.items.ItemGeographicalIndicationType
 import models.sections.items.ItemGeographicalIndicationType._
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemGeographicalIndicationChoicePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemGeographicalIndicationChoiceSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemGeographicalIndicationChoiceSummary" - {
 
@@ -38,48 +44,34 @@ class ItemGeographicalIndicationChoiceSummarySpec extends SpecBase with Matchers
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
 
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemGeographicalIndicationChoiceSummary.row(testIndex1) mustBe None
-          }
-
-        }
-
-        "when there's an answer" - {
-
-          def sampleSummaryRow(text: String) = SummaryListRowViewModel(
-            key = messagesForLanguage.cyaLabel,
-            value = Value(Text(text)),
-            actions = Seq(
-              ActionItemViewModel(
-                content = messagesForLanguage.change,
-                href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                id = "changeItemGeographicalIndicationChoice1"
-              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-            )
-          )
-
-          "must output None - when 'No' is selected" in {
-            implicit lazy val request = dataRequest(FakeRequest(),
-              emptyUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication))
-            ItemGeographicalIndicationChoiceSummary.row(testIndex1) mustBe None
-          }
-
-          "must output the expected row" - {
-
-            Seq(ProtectedDesignationOfOrigin -> "Protected Designation of Origin (PDO)",
-              ProtectedGeographicalIndication -> "Protected Geographical Indication (PGI)",
-              GeographicalIndication -> "Geographical Indication (GI)"
-            ).foreach( geographicalIndicationTypeAndDisplayText =>
-              s"when the answer is ${geographicalIndicationTypeAndDisplayText._1}" in {
-                implicit lazy val request = dataRequest(FakeRequest(),
-                  emptyUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), geographicalIndicationTypeAndDisplayText._1))
-                ItemGeographicalIndicationChoiceSummary.row(testIndex1) mustBe Some(sampleSummaryRow(geographicalIndicationTypeAndDisplayText._2))
+        ItemGeographicalIndicationType.values.foreach {
+          answer =>
+            s"if answer is $answer" - {
+              "must return a row" in new Test(
+                emptyUserAnswers
+                  .set(ItemGeographicalIndicationChoicePage(testIndex1), answer)
+              ) {
+                ItemGeographicalIndicationChoiceSummary.row(
+                  idx = testIndex1
+                ) mustBe
+                  Some(summaryListRowBuilder(
+                    key = messagesForLanguage.cyaLabel,
+                    value = msgs(s"${ItemGeographicalIndicationChoicePage(testIndex1)}.checkYourAnswers.value.$answer"),
+                    changeLink = Some(ActionItemViewModel(
+                      href = controllers.sections.items.routes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                      content = messagesForLanguage.change,
+                      id = s"changeItemGeographicalIndicationChoice${testIndex1.displayIndex}"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                  ))
               }
-            )
+            }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemGeographicalIndicationChoiceSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

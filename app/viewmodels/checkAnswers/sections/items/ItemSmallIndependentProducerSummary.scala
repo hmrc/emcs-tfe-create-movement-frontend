@@ -28,23 +28,20 @@ import viewmodels.implicits._
 object ItemSmallIndependentProducerSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemSmallIndependentProducerPage(idx)
 
-    request.userAnswers.get(ItemSmallIndependentProducerPage(idx)).map { value =>
-
-      val answer = if (value) "site.yes" else "site.no"
-
-      SummaryListRowViewModel(
-        key = "itemSmallIndependentProducer.checkYourAnswersLabel",
-        value = ValueViewModel(messages(answer)),
-        actions =
-          Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              routes.ItemSmallIndependentProducerController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeItemSmallIndependentProducer${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemSmallIndependentProducer.change.hidden"))
-          )
-      )
+    request.userAnswers.get(page).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
+        SummaryListRowViewModel(
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(messages(value)),
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemSmallIndependentProducer${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+        )
     }
   }
 }

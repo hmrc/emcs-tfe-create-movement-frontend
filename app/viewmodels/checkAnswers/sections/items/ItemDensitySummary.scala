@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.{CheckMode, Index}
+import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items.ItemDensityPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -31,20 +31,18 @@ import viewmodels.implicits._
 object ItemDensitySummary  {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(ItemDensityPage(idx)).map {
-      answer =>
+    lazy val page = ItemDensityPage(idx)
 
+    request.userAnswers.get(page).map {
+      answer =>
         SummaryListRowViewModel(
-          key     = Key(HtmlContent("itemDensity.checkYourAnswersLabel")),
-          value   = ValueViewModel(HtmlFormat.escape(answer.toString()).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ItemDensityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              "item-density"
-            )
-              .withVisuallyHiddenText(messages("itemDensity.change.hidden"))
-          )
+          key = KeyViewModel(HtmlContent(messages(s"$page.checkYourAnswersLabel"))),
+          value = ValueViewModel(HtmlContent(messages(s"$page.checkYourAnswersValue", answer))),
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemDensityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemDensity${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
         )
     }
   }

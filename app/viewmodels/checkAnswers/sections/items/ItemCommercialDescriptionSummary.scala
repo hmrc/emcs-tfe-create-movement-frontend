@@ -37,7 +37,7 @@ object ItemCommercialDescriptionSummary {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(HtmlFormat.escape(answer).toString()),
           actions = {
             Seq(
               ActionItemViewModel(

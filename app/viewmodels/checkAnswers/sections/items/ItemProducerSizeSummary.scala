@@ -38,7 +38,7 @@ object ItemProducerSizeSummary {
     } yield {
       SummaryListRowViewModel(
         key = s"$page.checkYourAnswersLabel",
-        value = ValueViewModel(messages("itemCheckAnswers.producerSize.value", HtmlFormat.escape(answer.toString).toString)),
+        value = ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString)),
         actions = Seq(ActionItemViewModel(
           href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "site.change",

@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.items.ItemNetGrossMassMessages
 import models.requests.DataRequest
 import models.sections.items.ItemNetGrossMassModel
-import models.{CheckMode, UnitOfMeasure, UserAnswers}
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemNetGrossMassPage
 import play.api.i18n.Messages
@@ -48,12 +48,11 @@ class ItemNetMassSummarySpec extends SpecBase with Matchers {
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
       ) {
         ItemNetMassSummary.row(
-          idx = testIndex1,
-          unitOfMeasure = UnitOfMeasure.Litres20
+          idx = testIndex1
         ) mustBe
           Some(summaryListRowBuilder(
             key = messagesForLanguage.cyaNetMassLabel,
-            value = s"4.56 ${UnitOfMeasure.Litres20.toShortFormatMessage()}",
+            value = s"4.56 ${messagesForLanguage.cyaSuffix}",
             changeLink = Some(ActionItemViewModel(
               href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
               content = messagesForLanguage.change,
@@ -64,8 +63,7 @@ class ItemNetMassSummarySpec extends SpecBase with Matchers {
       "if not provided" - {
         "must not return a row" in new Test(emptyUserAnswers) {
           ItemNetMassSummary.row(
-            idx = testIndex1,
-            unitOfMeasure = UnitOfMeasure.Litres20
+            idx = testIndex1
           ) mustBe None
         }
       }

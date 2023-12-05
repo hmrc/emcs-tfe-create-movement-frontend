@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemDensityMessages
 import models.requests.DataRequest
-import models.{CheckMode, UnitOfMeasure, UserAnswers}
+import models.{CheckMode, UserAnswers}
 import pages.sections.items.ItemDensityPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty

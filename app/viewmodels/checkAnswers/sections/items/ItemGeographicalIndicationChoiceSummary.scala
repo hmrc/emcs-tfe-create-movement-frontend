@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{CheckMode, Index}
 import pages.sections.items.ItemGeographicalIndicationChoicePage
 import play.api.i18n.Messages

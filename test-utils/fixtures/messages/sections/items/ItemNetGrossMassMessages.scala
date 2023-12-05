@@ -35,6 +35,8 @@ object ItemNetGrossMassMessages {
 
     val cyaGrossMassLabel = "Gross mass"
     val cyaGrossMassChangeHidden = "gross mass"
+
+    val cyaSuffix = "kg"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -53,7 +53,7 @@ class ItemCheckAnswersHelper @Inject()(
                            (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     Seq(
       ItemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
-      ItemNetMassSummary.row(idx, cnCodeInformation.unitOfMeasure),
-      ItemGrossMassSummary.row(idx, cnCodeInformation.unitOfMeasure),
+      ItemNetMassSummary.row(idx),
+      ItemGrossMassSummary.row(idx),
     ).flatten
 }

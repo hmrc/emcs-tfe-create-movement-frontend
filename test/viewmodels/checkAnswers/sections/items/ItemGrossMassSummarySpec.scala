@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.items.ItemNetGrossMassMessages
 import models.requests.DataRequest
 import models.sections.items.ItemNetGrossMassModel
-import models.{CheckMode, UnitOfMeasure, UserAnswers}
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemNetGrossMassPage
 import play.api.i18n.Messages
@@ -50,11 +50,10 @@ class ItemGrossMassSummarySpec extends SpecBase with Matchers {
         ) {
           ItemGrossMassSummary.row(
             idx = testIndex1,
-            unitOfMeasure = UnitOfMeasure.Thousands
           ) mustBe
             Some(summaryListRowBuilder(
               key = messagesForLanguage.cyaGrossMassLabel,
-              value = s"7.89 ${UnitOfMeasure.Thousands.toShortFormatMessage()}",
+              value = s"7.89 ${messagesForLanguage.cyaSuffix}",
               changeLink = Some(ActionItemViewModel(
                 href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                 content = messagesForLanguage.change,
@@ -66,8 +65,7 @@ class ItemGrossMassSummarySpec extends SpecBase with Matchers {
       "if not provided" - {
         "must not return a row" in new Test(emptyUserAnswers) {
           ItemGrossMassSummary.row(
-            idx = testIndex1,
-            unitOfMeasure = UnitOfMeasure.Thousands
+            idx = testIndex1
           ) mustBe None
         }
       }

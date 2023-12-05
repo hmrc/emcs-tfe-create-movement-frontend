@@ -27,14 +27,14 @@ import viewmodels.implicits._
 
 object ItemGrossMassSummary {
 
-  def row(idx: Index, unitOfMeasure: UnitOfMeasure)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] = {
+  def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] = {
     lazy val page = ItemNetGrossMassPage(idx)
 
     request.userAnswers.get(page).map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.grossMass.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"$page.grossMass.checkYourAnswersValue", answer.grossMass, unitOfMeasure.toShortFormatMessage())),
+          value = ValueViewModel(messages(s"$page.grossMass.checkYourAnswersValue", answer.grossMass, UnitOfMeasure.Kilograms.toShortFormatMessage())),
           actions = Seq(ActionItemViewModel(
             href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "site.change",

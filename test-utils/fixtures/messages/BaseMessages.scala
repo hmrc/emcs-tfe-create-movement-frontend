@@ -48,6 +48,7 @@ trait BaseMessages { _: i18n =>
   val year: String = "Year"
   val yes: String = "Yes"
   val no: String = "No"
+  val none: String = "None"
   val change: String = "Change"
   val remove: String = "Remove"
   val continueEditing: String = "Continue editing"

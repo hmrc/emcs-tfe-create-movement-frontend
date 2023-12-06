@@ -107,6 +107,20 @@ class ItemWineMoreInformationControllerSpec extends SpecBase with MockUserAnswer
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
+    "must redirect to the next page when valid data is submitted (whitespace-only answer, ensuring radio is set to 'false' for the choice page)" in new Test() {
+
+      MockUserAnswersService.set(
+        userAnswers.get
+          .set(ItemWineMoreInformationChoicePage(testIndex1), false)
+          .set(ItemWineMoreInformationPage(testIndex1), None)
+      ).returns(Future.successful(emptyUserAnswers))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "\n\n       \n\n\n\n  ")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in new Test() {
 
       val boundForm = form.bind(Map("value" -> "<"))

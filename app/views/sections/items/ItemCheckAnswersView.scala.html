@@ -48,6 +48,13 @@
             helper.constructQuantityCard(idx, cnCodeInformation)
         )
 
+        @if(GoodsTypeModel.apply(cnCodeInformation.exciseProductCode) == GoodsTypeModel.Wine) {
+            @summaryCard(
+                Card(Some(CardTitle(Text(messages("itemCheckAnswers.wineDetailsCardTitle")), headingLevel = Some(3)))),
+                helper.constructWineDetailsCard(idx)
+            )
+        }
+
         @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }
 }

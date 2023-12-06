@@ -278,13 +278,28 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemNetGrossMassPage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
-      userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
+    case ItemWineOperationsChoicePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemImportedWineChoicePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemWineGrowingZonePage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case ItemWineOriginPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+
+    case page@ItemWineMoreInformationChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(page) match {
         case Some(true) =>
           itemsRoutes.ItemWineMoreInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, CheckMode)
         case _ =>
           itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
       }
+
+    case ItemWineMoreInformationPage(idx) => (answers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)

@@ -19,6 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCheckAnswersMessages
+import models.GoodsTypeModel
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -31,16 +32,15 @@ import views.{BaseSelectors, ViewBehaviours}
 class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
   object Selectors extends BaseSelectors
 
-  //scalastyle:off
-  "Item Bulk Packaging Select view" - {
+  val view: ItemCheckAnswersView = app.injector.instanceOf[ItemCheckAnswersView]
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+  "Item Check Answers view" - {
     Seq(ItemCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-        val view = app.injector.instanceOf[ItemCheckAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
 
@@ -51,8 +51,26 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.h2(2) -> messagesForLanguage.subheading(testIndex1),
           Selectors.summaryCardHeading(1) -> messagesForLanguage.cardTitleItemDetails,
           Selectors.summaryCardHeading(2) -> messagesForLanguage.cardTitleQuantity,
+          Selectors.summaryCardHeading(3) -> messagesForLanguage.cardTitleWineDetails,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
+      }
+
+      "must not render the Wine card" - {
+        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+          goodsType =>
+            s"when goodsType is $goodsType" in {
+              implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+              val view = app.injector.instanceOf[ItemCheckAnswersView]
+
+              val epc = s"${goodsType.code}000"
+              implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(exciseProductCode = epc), testOnwardRoute).toString())
+
+              Option(doc.selectFirst(Selectors.summaryCardHeading(3))) mustBe None
+            }
+        }
       }
     }
   }

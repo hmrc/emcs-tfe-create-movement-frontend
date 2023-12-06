@@ -19,6 +19,7 @@ package viewmodels.helpers
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.{CheckMode, Index}
+import pages.sections.items.ItemWineMoreInformationPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.checkAnswers.sections.items._
@@ -27,7 +28,9 @@ import javax.inject.Inject
 
 class ItemCheckAnswersHelper @Inject()(
                                         itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
-                                        itemCommodityCodeSummary: ItemCommodityCodeSummary
+                                        itemCommodityCodeSummary: ItemCommodityCodeSummary,
+                                        itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary,
+                                        itemWineMoreInformationSummary: ItemWineMoreInformationSummary
                                       ) {
 
   def constructItemDetailsCard(idx: Index, cnCodeInformation: CnCodeInformation)
@@ -55,5 +58,15 @@ class ItemCheckAnswersHelper @Inject()(
       ItemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
       ItemNetMassSummary.row(idx),
       ItemGrossMassSummary.row(idx),
+    ).flatten
+
+  def constructWineDetailsCard(idx: Index)
+                           (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
+    Seq(
+      itemWineOperationsChoiceSummary.row(idx),
+      ItemImportedWineChoiceSummary.row(idx),
+      ItemWineGrowingZoneSummary.row(idx),
+      ItemWineOriginSummary.row(idx),
+      Some(itemWineMoreInformationSummary.row(idx))
     ).flatten
 }

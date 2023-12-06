@@ -28,18 +28,19 @@ import viewmodels.implicits._
 object ItemWineGrowingZoneSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemWineGrowingZonePage(idx)).map {
+    val page = ItemWineGrowingZonePage(idx)
+
+    request.userAnswers.get(page).map {
       answer =>
         SummaryListRowViewModel(
-          key = "itemWineGrowingZone.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"itemWineGrowingZone.$answer")),
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"$page.$answer")),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.ItemWineGrowingZoneController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              href = routes.ItemWineGrowingZoneController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = s"changeItemWineGrowingZone${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemWineGrowingZone.change.hidden"))
+            ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
           )
         )
     }

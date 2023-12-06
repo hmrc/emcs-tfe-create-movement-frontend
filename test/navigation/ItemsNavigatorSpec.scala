@@ -982,6 +982,34 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
+      "must go from ItemWineOperationsChoicePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineOperationsChoicePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemImportedWineChoicePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemWineGrowingZonePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineGrowingZonePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemWineOriginPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineOriginPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
       "must go from ItemWineMoreInformationChoicePage" - {
         "to ItemWineMoreInformation page" - {
           "when the answer is 'Yes'" in {
@@ -997,6 +1025,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               ItemWineMoreInformationChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), false)
             ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
+        }
+      }
+
+      "must go from ItemWineMoreInformationPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineMoreInformationPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 

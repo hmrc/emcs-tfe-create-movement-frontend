@@ -26,7 +26,7 @@ import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary}
+import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary, ItemWineMoreInformationSummary, ItemWineOperationsChoiceSummary}
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -39,8 +39,15 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
     lazy implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
     lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
     lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+    lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
+    lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
 
-    lazy val helper = new ItemCheckAnswersHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary)
+    lazy val helper = new ItemCheckAnswersHelper(
+      itemExciseProductCodeSummary = itemExciseProductCodeSummary,
+      itemCommodityCodeSummary = itemCommodityCodeSummary,
+      itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
+      itemWineMoreInformationSummary = itemWineMoreInformationSummary
+    )
   }
 
   "ItemCheckAnswersHelper" - {
@@ -57,6 +64,15 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
       ) {
         helper.constructQuantityCard(testIndex1, testCommodityCodeWine).length mustBe 3
+      }
+    }
+
+    "constructWineDetailsCard" - {
+      "must return rows" in new Test(
+        baseUserAnswers
+          .set(ItemWineOperationsChoicePage(testIndex1), Seq())
+      ) {
+        helper.constructWineDetailsCard(testIndex1) must not be empty
       }
     }
   }

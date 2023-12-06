@@ -24,8 +24,8 @@ object ItemFiscalMarksMessages {
     val heading = s"Give information about the fiscal marks on the tobacco"
     val title: String = titleHelper(heading)
 
-    val cyaLabel = "Fiscal marks details"
-    val cyaChangeHidden = "fiscal marks details"
+    val cyaLabel = "Fiscal marks information"
+    val cyaChangeHidden = "fiscal marks information"
   }
 
   object English extends ViewMessages with BaseEnglish

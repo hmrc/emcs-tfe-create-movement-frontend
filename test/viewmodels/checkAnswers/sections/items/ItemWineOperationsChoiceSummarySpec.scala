@@ -52,9 +52,9 @@ class ItemWineOperationsChoiceSummarySpec extends SpecBase with Matchers with It
           }
         }
 
-        "when there's an answer" - {
+        "must output the expected row" - {
+          "when there's an answer which isn't 'none'" in {
 
-          "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(),
               emptyUserAnswers.set(
                 ItemWineOperationsChoicePage(testIndex1),
@@ -73,6 +73,62 @@ class ItemWineOperationsChoiceSummarySpec extends SpecBase with Matchers with It
                     Html("The product has been acidified"),
                     Html("The product has been de-acidified")
                   )))
+                ),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.items.routes.ItemWineOperationsChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeWineOperationsChoice1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+            )
+          }
+
+          "when there's an answer which contains 'none'" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(),
+              emptyUserAnswers.set(
+                ItemWineOperationsChoicePage(testIndex1),
+                Seq(
+                  WineOperations("2", "The product has been acidified"),
+                  WineOperations("0", "unused")
+                )
+              )
+            )
+
+            ItemWineOperationsChoiceSummary(list).row(testIndex1) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = ValueViewModel(
+                  HtmlContent(Html(messagesForLanguage.none))
+                ),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.items.routes.ItemWineOperationsChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    id = "changeWineOperationsChoice1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+            )
+          }
+
+          "when the only answer is 'none'" in {
+            implicit lazy val request = dataRequest(FakeRequest(),
+              emptyUserAnswers.set(
+                ItemWineOperationsChoicePage(testIndex1),
+                Seq(
+                  WineOperations("0", "unused")
+                )
+              )
+            )
+
+            ItemWineOperationsChoiceSummary(list).row(testIndex1) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = ValueViewModel(
+                  HtmlContent(Html(messagesForLanguage.none))
                 ),
                 actions = Seq(
                   ActionItemViewModel(

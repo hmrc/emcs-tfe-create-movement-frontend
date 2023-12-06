@@ -16,18 +16,17 @@
 
 package viewmodels.helpers
 
+import models.response.referenceData.WineOperations
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.{CheckboxItem, ExclusiveCheckbox}
 
 object ItemWineOperationsChoiceHelper {
-
-  private val nonWineOperationCode = "0"
 
   def formatCheckboxesForDisplay(items: Seq[CheckboxItem]): Seq[CheckboxItem] = {
     val dividerItem = Seq(CheckboxItem(divider = Some("or")))
 
     items
       .sortBy(_.value.toInt)
-      .partition(_.value == nonWineOperationCode) match {
+      .partition(_.value == WineOperations.nonWineOperationCode) match {
       case (nonWineOperations, wineOperations) =>
         val exclusiveOption = nonWineOperations.map(_.copy(behaviour = Some(ExclusiveCheckbox)))
         wineOperations ++ dividerItem ++ exclusiveOption

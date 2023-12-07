@@ -1146,6 +1146,24 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
+      "must go from ItemBulkPackagingSealChoicePage" - {
+        val page = ItemBulkPackagingSealChoicePage(testIndex1)
+
+        "to ItemBulkPackagingSealType page" - {
+          "when the answer is 'Yes'" in {
+            navigator.nextPage(page, CheckMode, emptyUserAnswers.set(page, true)) mustBe
+              itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        "to CYA page" - {
+          "when the answer is 'No'" in {
+            navigator.nextPage(page, CheckMode, emptyUserAnswers.set(page, false)) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+
       "must go from the ItemSelectPackaging page" - {
         "to Item Packaging CYA page" in {
           navigator.nextPage(

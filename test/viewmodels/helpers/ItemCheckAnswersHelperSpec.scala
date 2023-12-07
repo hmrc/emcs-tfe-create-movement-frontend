@@ -19,7 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items._
-import models.{GoodsTypeModel, UserAnswers}
+import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.items._
 import pages.sections.items._
@@ -44,12 +44,14 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
     lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
     lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
     lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
+    lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
       itemCommodityCodeSummary = itemCommodityCodeSummary,
       itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
-      itemWineMoreInformationSummary = itemWineMoreInformationSummary
+      itemWineMoreInformationSummary = itemWineMoreInformationSummary,
+      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary
     )
   }
 

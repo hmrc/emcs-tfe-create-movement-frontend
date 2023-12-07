@@ -32,7 +32,8 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
                                         itemCommodityCodeSummary: ItemCommodityCodeSummary,
                                         itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary,
-                                        itemWineMoreInformationSummary: ItemWineMoreInformationSummary
+                                        itemWineMoreInformationSummary: ItemWineMoreInformationSummary,
+                                        itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary
                                       ) {
 
   private val headingLevel = 3
@@ -113,8 +114,9 @@ class ItemCheckAnswersHelper @Inject()(
                                           (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     Seq(
       ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode)),
-      ItemBulkPackagingSelectSummary.row(idx)
-    ).flatten
+      ItemBulkPackagingSelectSummary.row(idx),
+      ItemBulkPackagingSealChoiceSummary.row(idx)
+    ).flatten ++ itemBulkPackagingSealTypeSummary.rows(idx)
 
   private[helpers] def notBulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
                                           (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =

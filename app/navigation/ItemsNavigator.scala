@@ -319,6 +319,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           }
       }
 
+    case page@ItemBulkPackagingSealChoicePage(itemIdx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(page) match {
+        case Some(true) => itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, CheckMode)
+        case _ => itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      }
+
+    case ItemBulkPackagingSealTypePage(itemIdx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+
     case ItemBulkPackagingSelectPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 

@@ -61,8 +61,11 @@ class ItemImportedWineChoiceController @Inject()(
       }
     }
 
-  private def cleanseFunction(idx: Index, wineInEu: Boolean)(implicit request: DataRequest[_]): UserAnswers =
-    if(wineInEu) request.userAnswers else request.userAnswers.remove(ItemWineOriginPage(idx))
+  private def cleanseFunction(idx: Index, wineInEu: Boolean)(implicit request: DataRequest[_]): UserAnswers = {
+    // if wine in eu, clear third country of origin
+    // if not, keep that answer
+    if(!wineInEu) request.userAnswers else request.userAnswers.remove(ItemWineOriginPage(idx))
+  }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     Future.successful(status(view(

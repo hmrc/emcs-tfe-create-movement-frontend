@@ -68,7 +68,7 @@ class ItemCheckAnswersController @Inject()(
       cnCode <- request.userAnswers.get(ItemCommodityCodePage(idx))
     } yield {
       getCnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, cnCode))).map {
-        case (_, cnCodeInformation@CnCodeInformation(_, _, _, _, _)) :: Nil =>
+        case (_, cnCodeInformation) :: Nil =>
           Some(cnCodeInformation)
         case answer =>
           logger.warn(s"[getCnCodeInformation] Unexpected value returned from GetCnCodeInformationService: $answer")

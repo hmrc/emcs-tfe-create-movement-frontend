@@ -188,6 +188,34 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           )
         }
       }
+
+      "must not return any packaging type rows" - {
+        "if both ItemSelectPackagingPage and ItemPackagingQuantityPage are not present" in new Test(
+          emptyUserAnswers
+            .set(ItemBulkPackagingChoicePage(testIndex1), false)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("type 1", "description 1"))
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "15")
+            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex3), true)
+        ) {
+          val result: Seq[SummaryListRow] = helper.notBulkPackagingSummaryListRows(testIndex1, testCommodityCodeTobacco)
+
+          result.length mustBe 1
+
+          result mustBe Seq(
+            SummaryListRowViewModel(
+              key = ItemBulkPackagingChoiceMessages.English.cyaLabel,
+              value = Value(Text(ItemBulkPackagingChoiceMessages.English.no)),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.items.routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  id = "changeItemBulkPackagingChoice1"
+                ).withVisuallyHiddenText(ItemBulkPackagingChoiceMessages.English.cyaChangeHidden("tobacco"))
+              )
+            )
+          )
+        }
+      }
     }
   }
 }

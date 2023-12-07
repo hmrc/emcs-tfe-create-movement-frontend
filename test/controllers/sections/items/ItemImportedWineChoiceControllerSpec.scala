@@ -20,9 +20,10 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemImportedWineChoiceFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.items.ItemWineGrowingZone
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage, ItemWineOriginPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -123,20 +124,18 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must redirect to the next page and not remove ItemWineOriginPage's answer if false" in new Test(Some(
+    "must redirect to the next page and remove ItemWineGrowingZonePage's answer if false" in new Test(Some(
       baseUserAnswers
         .set(ItemImportedWineChoicePage(testIndex1), true)
-        .set(ItemWineOriginPage(testIndex1), countryModelGB)
+        .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.A)
     )) {
 
       MockUserAnswersService.set(
         baseUserAnswers
           .set(ItemImportedWineChoicePage(testIndex1), false)
-          .set(ItemWineOriginPage(testIndex1), countryModelGB)
       ).returns(Future.successful(
         baseUserAnswers
           .set(ItemImportedWineChoicePage(testIndex1), false)
-          .set(ItemWineOriginPage(testIndex1), countryModelGB)
       ))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))

@@ -179,15 +179,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
       }
 
-    case ItemImportedWineChoicePage(idx) => (userAnswers: UserAnswers) =>
-      (userAnswers.get(ItemImportedWineChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
-        case (Some(true), Some(true), Some(quantity)) if quantity > 60 =>
-          itemsRoutes.ItemWineGrowingZoneController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-        case (Some(true), _, _) =>
-          itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-        case _ =>
-          itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-      }
+    case ItemImportedWineChoicePage(idx) => itemImportedWineChoiceRouting(idx, NormalMode)
 
     case ItemBulkPackagingSealTypePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -281,13 +273,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineOperationsChoicePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case page@ItemImportedWineChoicePage(idx) => (answers: UserAnswers) =>
-      answers.get(page) match {
-        case Some(false) =>
-          itemsRoutes.ItemWineOriginController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
-        case _ =>
-          itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
-      }
+    case ItemImportedWineChoicePage(idx) => itemImportedWineChoiceRouting(idx, CheckMode)
 
     case ItemWineGrowingZonePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
@@ -457,6 +443,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, nextPackageIdx, mode)
       case _ =>
         itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+    }
+  }
+
+  private def itemImportedWineChoiceRouting(idx: Index, mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+
+    (userAnswers.get(ItemImportedWineChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
+      case (Some(true), Some(true), Some(quantity)) if quantity > 60 =>
+        itemsRoutes.ItemWineGrowingZoneController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+      case (Some(true), _, _) =>
+        itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+      case _ =>
+        itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
     }
   }
 }

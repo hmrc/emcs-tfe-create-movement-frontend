@@ -19,8 +19,10 @@ package viewmodels.helpers
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.{CheckMode, GoodsTypeModel, Index}
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemsPackagingAddToListPage}
+import pages.sections.items._
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import queries.ItemsPackagingCount
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
@@ -119,8 +121,22 @@ class ItemCheckAnswersHelper @Inject()(
     ).flatten ++ itemBulkPackagingSealTypeSummary.rows(idx)
 
   private[helpers] def notBulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
-                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
+                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
+    def packageTypeRow(packageIndex: Index): Option[SummaryListRow] = {
+      (request.userAnswers.get(ItemSelectPackagingPage(idx, packageIndex)), request.userAnswers.get(ItemPackagingQuantityPage(idx, packageIndex))) match {
+        case (Some(packaging), Some(quantity)) => Some(SummaryListRowViewModel(
+          key = KeyViewModel(messages(s"${ItemCheckAnswersPage(idx)}.packageTypeKey", packageIndex.displayIndex)),
+          value = ValueViewModel(HtmlFormat.escape(messages(s"${ItemCheckAnswersPage(idx)}.packageTypeValue", quantity, packaging.description)).toString())
+        ))
+        case _ => None
+      }
+    }
+
     Seq(
-      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode)),
-    ).flatten
+      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode))
+    ).flatten ++ (request.userAnswers.get(ItemsPackagingCount(idx)) match {
+      case Some(value) => (0 until value).map(packageIdx => packageTypeRow(Index(packageIdx)))
+      case None => Nil
+    }).flatten
+  }
 }

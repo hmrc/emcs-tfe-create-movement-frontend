@@ -33,6 +33,9 @@ object ItemCheckAnswersMessages {
     val cardTitleQuantity = "Quantity"
     val cardTitleWineDetails = "Wine details"
     val cardTitlePackaging = "Packaging"
+
+    val packagingKey: String = s"Packaging Type"
+    def packagingValue(quantity: String, packagingType: String): String = s"${quantity}x $packagingType"
   }
 
   object English extends ViewMessages with BaseEnglish

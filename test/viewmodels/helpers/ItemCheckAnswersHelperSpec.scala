@@ -19,14 +19,16 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items._
-import models.UserAnswers
 import models.requests.DataRequest
+import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items._
+import models.{CheckMode, UserAnswers}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList, SummaryListRow, Value}
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -113,6 +115,77 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
             s"changeItemBulkPackagingChoice${testIndex1.displayIndex}"
           ).withVisuallyHiddenText(ItemsPackagingAddToListMessages.English.cyaChangeHidden))))))
           card.rows must not be empty
+        }
+      }
+    }
+
+    "bulkPackagingSummaryListRows" - {
+      val numberOfRows = 5
+
+      s"must return all rows" - {
+        "when all fields are filled in" in new Test(
+          emptyUserAnswers
+            .set(ItemBulkPackagingChoicePage(testIndex1), true)
+            .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(ItemBulkPackagingCode.BulkLiquid, "desc"))
+            .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+            .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("type", Some("info")))
+        ) {
+          val result: Seq[SummaryListRow] = helper.bulkPackagingSummaryListRows(testIndex1, testCommodityCodeWine)
+
+          result.length mustBe numberOfRows
+
+          result.map(_.key.content) mustBe Seq(
+            Text(ItemBulkPackagingChoiceMessages.English.cyaLabel),
+            Text(ItemBulkPackagingSelectMessages.English.cyaLabel),
+            Text(ItemPackagingSealChoiceMessages.English.cyaLabel),
+            Text(ItemPackagingSealTypeMessages.English.cyaLabelSealType),
+            Text(ItemPackagingSealTypeMessages.English.cyaLabelSealInformation)
+          )
+        }
+      }
+    }
+
+    "notBulkPackagingSummaryListRows" - {
+      "must return a Bulk Package row, and one row per packaging type" - {
+        "when packaging types are filled in" in new Test(
+          emptyUserAnswers
+            .set(ItemBulkPackagingChoicePage(testIndex1), false)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("type 1", "description 1"))
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), ItemPackaging("type 2", "description 2"))
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "15")
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex3), ItemPackaging("type 3", "description 3"))
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex3), "7")
+        ) {
+          val result: Seq[SummaryListRow] = helper.notBulkPackagingSummaryListRows(testIndex1, testCommodityCodeTobacco)
+
+          result.length mustBe 4
+
+          result mustBe Seq(
+            SummaryListRowViewModel(
+              key = ItemBulkPackagingChoiceMessages.English.cyaLabel,
+              value = Value(Text(ItemBulkPackagingChoiceMessages.English.no)),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.items.routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  id = "changeItemBulkPackagingChoice1"
+                ).withVisuallyHiddenText(ItemBulkPackagingChoiceMessages.English.cyaChangeHidden("tobacco"))
+              )
+            ),
+            SummaryListRowViewModel(
+              key = messagesForLanguage.packagingKey,
+              value = ValueViewModel(messagesForLanguage.packagingValue("4", "description 1"))
+            ),
+            SummaryListRowViewModel(
+              key = messagesForLanguage.packagingKey,
+              value = ValueViewModel(messagesForLanguage.packagingValue("15", "description 2"))
+            ),
+            SummaryListRowViewModel(
+              key = messagesForLanguage.packagingKey,
+              value = ValueViewModel(messagesForLanguage.packagingValue("7", "description 3"))
+            )
+          )
         }
       }
     }

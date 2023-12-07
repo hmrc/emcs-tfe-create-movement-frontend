@@ -22,6 +22,7 @@ import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{NotStarted, TaskListStatus}
 
+// $COVERAGE-OFF$
 case class ItemWineSection(idx: Index) extends Section[JsObject] {
 
   // not used as this class is just used to easily remove multiple pages at once

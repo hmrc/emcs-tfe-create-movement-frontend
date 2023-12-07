@@ -1124,9 +1124,9 @@ itemNetGrossMass.grossMass.change.hidden = gross mass
 
 itemBulkPackagingSelect.title = Which bulk packaging type are you using for the {0}?
 itemBulkPackagingSelect.heading = Which bulk packaging type are you using for the {0}?
-itemBulkPackagingSelect.checkYourAnswersLabel = Packaging type
+itemBulkPackagingSelect.checkYourAnswersLabel = Bulk package type
 itemBulkPackagingSelect.error.required = Select the bulk packaging type for the {0}
-itemBulkPackagingSelect.change.hidden = packaging type
+itemBulkPackagingSelect.change.hidden = bulk package type
 
 itemSelectPackaging.title = Add a packaging type you are using for the {0}
 itemSelectPackaging.heading = Add a packaging type you are using for the {0}
@@ -1144,9 +1144,9 @@ declaration.submit = Submit draft movement
 itemBulkPackagingChoice.title = Is the {0} being moved in bulk?
 itemBulkPackagingChoice.heading = Is the {0} being moved in bulk?
 itemBulkPackagingChoice.hint = Moving goods in bulk means that the goods are loaded directly into a vessel in large quantity, and not packaged. For example, transporting liquids in a tanker.
-itemBulkPackagingChoice.checkYourAnswersLabel = Bulk packaging
+itemBulkPackagingChoice.checkYourAnswersLabel = Bulk package
 itemBulkPackagingChoice.error.required = Select yes if the {0} is being moved in bulk
-itemBulkPackagingChoice.change.hidden = bulk packaging
+itemBulkPackagingChoice.change.hidden = if the {0} is being moved in bulk
 
 itemPackagingShippingMarks.title = What shipping marks are on this packaging?
 itemPackagingShippingMarks.heading = What shipping marks are on this packaging?
@@ -1342,6 +1342,7 @@ itemsPackagingAddToList.no.plural = No, these are the only packaging types for t
 itemsPackagingAddToList.divider = or
 itemsPackagingAddToList.moreLater = I will complete the packaging types later
 itemsPackagingAddToList.error.required = Select yes if you need to add another packaging type
+itemsPackagingAddToList.change.hidden = packaging information
 
 itemCheckAnswers.title = Check your answers
 itemCheckAnswers.heading = Check your answers

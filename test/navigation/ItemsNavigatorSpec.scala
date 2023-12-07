@@ -1076,6 +1076,76 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
+      "must go from the ItemBulkPackagingChoicePage" - {
+        "when answer is Yes" - {
+          "when ItemBulkPackagingSelectPage has an answer (answer has not changed)" - {
+            "to Item CYA" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), true)
+                  .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+          "when ItemBulkPackagingSelectPage has no answer (answer has changed)" - {
+            "to ItemBulkPackagingSelect page" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              ) mustBe itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+        }
+        "when answer is No" - {
+          "to Item CYA" - {
+            "when ItemImportedWineChoicePage has an answer (answer has not changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemImportedWineChoicePage(testIndex1), true)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+            "when ItemsPackagingSectionItems has an answer (answer has not changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemPackagingSealChoicePage(testIndex1, testIndex1), true)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+          "to ItemImportedWineChoice page" - {
+            "when Wine (answer has changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+          "to ItemsPackagingIndex page" - {
+            "when not Wine (answer has changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+              ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+        }
+      }
+
       "must go from the ItemSelectPackaging page" - {
         "to Item Packaging CYA page" in {
           navigator.nextPage(

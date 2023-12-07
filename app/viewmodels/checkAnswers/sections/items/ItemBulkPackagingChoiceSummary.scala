@@ -17,36 +17,33 @@
 package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
+import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemBulkPackagingSelectPage
+import pages.sections.items.ItemBulkPackagingChoicePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemBulkPackagingSelectSummary {
+object ItemBulkPackagingChoiceSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemBulkPackagingSelectPage(idx)).map {
+  def row(idx: Index, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    val page = ItemBulkPackagingChoicePage(idx)
+    request.userAnswers.get(page).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(s"${answer.description} (${answer.packagingType.toString})")
-        )
+        val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key = "itemBulkPackagingSelect.checkYourAnswersLabel",
-          value = value,
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.ItemBulkPackagingSelectController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"changeItemBulkPackagingSelect${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemBulkPackagingSelect.change.hidden"))
+              href = routes.ItemBulkPackagingChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              id = s"changeItemBulkPackagingChoice${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages(s"$page.change.hidden", goodsType.toSingularOutput()))
           )
         )
     }

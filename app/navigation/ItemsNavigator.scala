@@ -292,6 +292,36 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineMoreInformationPage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
+    case ItemBulkPackagingChoicePage(idx) => (userAnswers: UserAnswers) =>
+      userAnswers.get(ItemBulkPackagingChoicePage(idx)) match {
+        case Some(true) =>
+          userAnswers.get(ItemBulkPackagingSelectPage(idx)) match {
+            case Some(_) =>
+              // answer hasn't changed
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+            case _ =>
+              // answer has changed
+              itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          }
+        case _ =>
+          (userAnswers.get(ItemImportedWineChoicePage(idx)), userAnswers.get(ItemsPackagingSectionItems(idx, Index(0)))) match {
+            case (Some(_), _) | (_, Some(_)) =>
+              // answer hasn't changed
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+            case _ =>
+              // answer has changed
+              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
+                case Some(Wine) =>
+                  itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+                case _ =>
+                  itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+              }
+          }
+      }
+
+    case ItemBulkPackagingSelectPage(idx) => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 

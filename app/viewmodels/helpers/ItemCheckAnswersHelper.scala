@@ -18,8 +18,8 @@ package viewmodels.helpers
 
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{CheckMode, Index}
-import pages.sections.items.ItemBulkPackagingChoicePage
+import models.{CheckMode, GoodsTypeModel, Index}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemsPackagingAddToListPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
@@ -84,28 +84,41 @@ class ItemCheckAnswersHelper @Inject()(
       ).flatten
     )
 
-  def constructPackagingSummaryCard(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    val page = ItemBulkPackagingChoicePage(idx)
-
-    val (rows, actions): (Seq[SummaryListRow], Option[Actions]) = if (request.userAnswers.get(page).contains(true)) {
+  def constructPackagingCard(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    val (rows, cardActions): (Seq[SummaryListRow], Option[Actions]) = if (request.userAnswers.get(ItemBulkPackagingChoicePage(idx)).contains(true)) {
+      // bulk
       (
-        Seq(),
+        bulkPackagingSummaryListRows(idx, cnCodeInformation),
         None
       )
     } else {
+      // not bulk
       (
-        Seq(),
+        notBulkPackagingSummaryListRows(idx, cnCodeInformation),
         Some(Actions(items = Seq(ActionItemViewModel(
             "site.change",
             href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, idx).url,
             s"changeItemBulkPackagingChoice${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))))
+          ).withVisuallyHiddenText(messages(s"${ItemsPackagingAddToListPage(idx)}.change.hidden")))))
         )
     }
 
     SummaryListViewModel(
-      card = Some(CardViewModel(messages("itemCheckAnswers.packagingCardTitle"), headingLevel = headingLevel, actions = actions)),
+      card = Some(CardViewModel(messages("itemCheckAnswers.packagingCardTitle"), headingLevel = headingLevel, actions = cardActions)),
       rows = rows
     )
   }
+
+  private[helpers] def bulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
+                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
+    Seq(
+      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode)),
+      ItemBulkPackagingSelectSummary.row(idx)
+    ).flatten
+
+  private[helpers] def notBulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
+                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
+    Seq(
+      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode)),
+    ).flatten
 }

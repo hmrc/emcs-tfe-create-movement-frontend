@@ -34,8 +34,8 @@ object ItemBulkPackagingSelectMessages {
     val radioOption6 = "Bulk, solid, large (nodules) (VO)"
     val radioOption7 = "Unpacked or unpackaged (NE)"
 
-    val cyaLabel = "Packaging type"
-    val cyaChangeHidden = "packaging type"
+    val cyaLabel = "Bulk package type"
+    val cyaChangeHidden = "bulk package type"
 
   }
 

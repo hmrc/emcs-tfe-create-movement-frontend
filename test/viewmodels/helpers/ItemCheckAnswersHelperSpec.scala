@@ -19,16 +19,17 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items._
-import models.UserAnswers
+import models.{GoodsTypeModel, UserAnswers}
 import models.requests.DataRequest
 import models.sections.items._
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList}
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -84,6 +85,33 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
 
         card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails, 3, None))
         card.rows must not be empty
+      }
+    }
+
+    "constructPackagingCard" - {
+      "must return rows" - {
+        "when bulk" in new Test(
+          baseUserAnswers
+            .set(ItemBulkPackagingChoicePage(testIndex1), true)
+        ) {
+          val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
+
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, None))
+          card.rows must not be empty
+        }
+        "when not bulk" in new Test(
+          baseUserAnswers
+            .set(ItemBulkPackagingChoicePage(testIndex1), false)
+        ) {
+          val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
+
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, Some(Actions(items = Seq(ActionItemViewModel(
+            messagesForLanguage.change,
+            href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, testIndex1).url,
+            s"changeItemBulkPackagingChoice${testIndex1.displayIndex}"
+          ).withVisuallyHiddenText(ItemsPackagingAddToListMessages.English.cyaChangeHidden))))))
+          card.rows must not be empty
+        }
       }
     }
   }

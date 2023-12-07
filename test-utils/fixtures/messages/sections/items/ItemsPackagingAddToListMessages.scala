@@ -41,6 +41,8 @@ object ItemsPackagingAddToListMessages {
     val no2 = "No, these are the only packaging types for this item"
     val moreLater = "I will complete the packaging types later"
     val errorRequired = "Select yes if you need to add another packaging type"
+
+    val cyaChangeHidden = "packaging information"
   }
 
   object English extends ViewMessages with BaseEnglish

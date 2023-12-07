@@ -180,5 +180,5 @@ GET         /trader/:ern/draft/:draftId/items/:idx/check-answers                
 POST        /trader/:ern/draft/:draftId/items/:idx/check-answers                                                  controllers.sections.items.ItemCheckAnswersController.onSubmit(ern: String, draftId: String, idx: Index)
 
 
-GET         /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                               controllers.sections.items.ItemsPackagingAddToListController.onPageLoad(ern: String, draftId: String, itemsIdx: Index)
-POST        /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                               controllers.sections.items.ItemsPackagingAddToListController.onSubmit(ern: String, draftId: String, itemsIdx: Index)
+GET         /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                     controllers.sections.items.ItemsPackagingAddToListController.onPageLoad(ern: String, draftId: String, itemsIdx: Index)
+POST        /trader/:ern/draft/:draftId/items/:itemsIdx/packaging/add-to-list                                     controllers.sections.items.ItemsPackagingAddToListController.onSubmit(ern: String, draftId: String, itemsIdx: Index)

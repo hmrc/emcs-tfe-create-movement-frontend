@@ -47,7 +47,7 @@
             @govukSummaryList(helper.constructWineDetailsCard(idx))
         }
 
-        @govukSummaryList(helper.constructPackagingSummaryCard(idx))
+        @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
 
         @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }

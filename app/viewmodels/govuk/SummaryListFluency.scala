@@ -16,7 +16,7 @@
 
 package viewmodels.govuk
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 object summarylist extends SummaryListFluency
@@ -25,8 +25,8 @@ trait SummaryListFluency {
 
   object SummaryListViewModel {
 
-    def apply(rows: Seq[SummaryListRow]): SummaryList =
-      SummaryList(rows = rows)
+    def apply(rows: Seq[SummaryListRow], card: Option[Card] = None): SummaryList =
+      SummaryList(card = card, rows = rows)
   }
 
   implicit class FluentSummaryList(list: SummaryList) {
@@ -118,5 +118,12 @@ trait SummaryListFluency {
 
     def withCssClass(className: String): Value =
       value copy (classes = s"${value.classes} $className")
+  }
+
+  object CardViewModel {
+    def apply(title: String, headingLevel: Int, actions: Option[Actions]): Card = Card(
+      title = Some(CardTitle(content = Text(title), headingLevel = Some(headingLevel))),
+      actions = actions
+    )
   }
 }

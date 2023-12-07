@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import models.response.referenceData.CnCodeInformation
+@import pages.sections.items.ItemBulkPackagingChoicePage
 @import viewmodels.helpers.ItemCheckAnswersHelper
 
 @this(
@@ -24,7 +25,7 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
-        summaryCard: components.summaryCard,
+        govukSummaryList: GovukSummaryList,
         helper: ItemCheckAnswersHelper
 )
 
@@ -38,22 +39,15 @@
 
         @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
 
-        @summaryCard(
-            Card(Some(CardTitle(Text(messages("itemCheckAnswers.itemDetailsCardTitle")), headingLevel = Some(3)))),
-            helper.constructItemDetailsCard(idx, cnCodeInformation)
-        )
+        @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
 
-        @summaryCard(
-            Card(Some(CardTitle(Text(messages("itemCheckAnswers.quantityCardTitle")), headingLevel = Some(3)))),
-            helper.constructQuantityCard(idx, cnCodeInformation)
-        )
+        @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
         @if(GoodsTypeModel.apply(cnCodeInformation.exciseProductCode) == GoodsTypeModel.Wine) {
-            @summaryCard(
-                Card(Some(CardTitle(Text(messages("itemCheckAnswers.wineDetailsCardTitle")), headingLevel = Some(3)))),
-                helper.constructWineDetailsCard(idx)
-            )
+            @govukSummaryList(helper.constructWineDetailsCard(idx))
         }
+
+        @govukSummaryList(helper.constructPackagingSummaryCard(idx))
 
         @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }

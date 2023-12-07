@@ -33,7 +33,6 @@ object ItemCheckAnswersMessages {
     val cardTitleQuantity = "Quantity"
     val cardTitleWineDetails = "Wine details"
     val cardTitlePackaging = "Packaging"
-
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -35,6 +35,11 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
   val view: ItemCheckAnswersView = app.injector.instanceOf[ItemCheckAnswersView]
   implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
+  val itemDetailsIndex = 1
+  val quantityIndex = 2
+  val wineDetailsIndex = 3
+  val packagingIndex = 4
+
   "Item Check Answers view" - {
     Seq(ItemCheckAnswersMessages.English).foreach { messagesForLanguage =>
 
@@ -49,9 +54,10 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h2(2) -> messagesForLanguage.subheading(testIndex1),
-          Selectors.summaryCardHeading(1) -> messagesForLanguage.cardTitleItemDetails,
-          Selectors.summaryCardHeading(2) -> messagesForLanguage.cardTitleQuantity,
-          Selectors.summaryCardHeading(3) -> messagesForLanguage.cardTitleWineDetails,
+          Selectors.summaryCardHeading(itemDetailsIndex) -> messagesForLanguage.cardTitleItemDetails,
+          Selectors.summaryCardHeading(quantityIndex) -> messagesForLanguage.cardTitleQuantity,
+          Selectors.summaryCardHeading(wineDetailsIndex) -> messagesForLanguage.cardTitleWineDetails,
+          Selectors.summaryCardHeading(packagingIndex) -> messagesForLanguage.cardTitlePackaging,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
       }
@@ -68,7 +74,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
               val epc = s"${goodsType.code}000"
               implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(exciseProductCode = epc), testOnwardRoute).toString())
 
-              Option(doc.selectFirst(Selectors.summaryCardHeading(3))) mustBe None
+              doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails
             }
         }
       }

@@ -26,7 +26,9 @@ import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import viewmodels.checkAnswers.sections.items.{ItemCommodityCodeSummary, ItemExciseProductCodeSummary, ItemWineMoreInformationSummary, ItemWineOperationsChoiceSummary}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.items._
+import viewmodels.govuk.summarylist._
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -53,7 +55,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
   "ItemCheckAnswersHelper" - {
     "constructItemDetailsCard" - {
       "must return rows" in new Test(baseUserAnswers) {
-        helper.constructItemDetailsCard(testIndex1, testCommodityCodeWine) must not be empty
+        val card: SummaryList = helper.constructItemDetailsCard(testIndex1, testCommodityCodeWine)
+
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleItemDetails, 3, None))
+        card.rows must not be empty
       }
     }
 
@@ -63,7 +68,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal(4.56), BigDecimal(7.89)))
       ) {
-        helper.constructQuantityCard(testIndex1, testCommodityCodeWine).length mustBe 3
+        val card: SummaryList = helper.constructQuantityCard(testIndex1, testCommodityCodeWine)
+
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleQuantity, 3, None))
+        card.rows.length mustBe 3
       }
     }
 
@@ -72,7 +80,10 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
         baseUserAnswers
           .set(ItemWineOperationsChoicePage(testIndex1), Seq())
       ) {
-        helper.constructWineDetailsCard(testIndex1) must not be empty
+        val card: SummaryList = helper.constructWineDetailsCard(testIndex1)
+
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails, 3, None))
+        card.rows must not be empty
       }
     }
   }

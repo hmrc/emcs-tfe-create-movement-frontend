@@ -989,12 +989,24 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from ItemImportedWineChoicePage" - {
-        "to CYA page" in {
-          navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
-            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
-        }
-      }
+"must go from ItemImportedWineChoicePage" - {
+  "when answer is true" - {
+    "to CYA page" in {
+      navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode,
+        emptyUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)
+      ) mustBe
+        itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+    }
+  }
+  "when answer is false" - {
+    "to ItemWineOrigin page" in {
+      navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode,
+        emptyUserAnswers.set(ItemImportedWineChoicePage(testIndex1), false)
+      ) mustBe
+        itemsRoutes.ItemWineOriginController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+    }
+  }
+}
 
       "must go from ItemWineGrowingZonePage" - {
         "to CYA page" in {

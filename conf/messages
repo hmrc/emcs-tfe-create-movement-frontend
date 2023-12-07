@@ -1261,9 +1261,9 @@ itemWineOrigin.title = What was the wine’s country of origin?
 itemWineOrigin.heading = What was the wine’s country of origin?
 itemWineOrigin.hint = Search by country name or abbreviation
 itemWineOrigin.select.defaultValue = Choose country
-itemWineOrigin.checkYourAnswersLabel = Third country of origin
+itemWineOrigin.checkYourAnswersLabel = Wine country of origin
 itemWineOrigin.error.required = Select the wine’s country of origin
-itemWineOrigin.change.hidden = third country of origin
+itemWineOrigin.change.hidden = wine country of origin
 
 itemPackagingProductType.title = Is this the only product type in the package?
 itemPackagingProductType.heading = Is this the only product type in the package?

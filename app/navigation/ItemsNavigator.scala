@@ -281,8 +281,13 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineOperationsChoicePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case ItemImportedWineChoicePage(idx) => (answers: UserAnswers) =>
-      itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+    case page@ItemImportedWineChoicePage(idx) => (answers: UserAnswers) =>
+      answers.get(page) match {
+        case Some(false) =>
+          itemsRoutes.ItemWineOriginController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
+        case _ =>
+          itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+      }
 
     case ItemWineGrowingZonePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)

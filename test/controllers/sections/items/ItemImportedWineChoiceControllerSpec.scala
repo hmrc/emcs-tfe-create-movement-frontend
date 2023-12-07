@@ -22,7 +22,7 @@ import forms.sections.items.ItemImportedWineChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage, ItemWineOriginPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -100,6 +100,44 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
       MockUserAnswersService.set(
         baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)
       ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page and remove ItemWineOriginPage's answer if false" in new Test(Some(
+      baseUserAnswers
+        .set(ItemImportedWineChoicePage(testIndex1), true)
+        .set(ItemWineOriginPage(testIndex1), countryModelGB)
+    )) {
+
+      MockUserAnswersService.set(
+        baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), false)
+      ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), false)))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page and not remove ItemWineOriginPage's answer if true" in new Test(Some(
+      baseUserAnswers
+        .set(ItemImportedWineChoicePage(testIndex1), false)
+        .set(ItemWineOriginPage(testIndex1), countryModelGB)
+    )) {
+
+      MockUserAnswersService.set(
+        baseUserAnswers
+          .set(ItemImportedWineChoicePage(testIndex1), true)
+          .set(ItemWineOriginPage(testIndex1), countryModelGB)
+      ).returns(Future.successful(
+        baseUserAnswers
+          .set(ItemImportedWineChoicePage(testIndex1), true)
+          .set(ItemWineOriginPage(testIndex1), countryModelGB)
+      ))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 

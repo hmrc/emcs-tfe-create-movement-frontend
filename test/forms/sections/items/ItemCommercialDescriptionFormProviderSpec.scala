@@ -17,20 +17,20 @@
 package forms.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.CommercialDescriptionMessages
+import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class CommercialDescriptionFormProviderSpec extends SpecBase with StringFieldBehaviours {
+class ItemCommercialDescriptionFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
-  val requiredKey = "commercialDescription.error.required"
-  val lengthKey = "commercialDescription.error.length"
-  val xssKey = "commercialDescription.error.invalidCharacter"
+  val requiredKey = "itemCommercialDescription.error.required"
+  val lengthKey = "itemCommercialDescription.error.length"
+  val xssKey = "itemCommercialDescription.error.invalidCharacter"
   val maxLength = 350
 
-  val form = new CommercialDescriptionFormProvider()()
+  val form = new ItemCommercialDescriptionFormProvider()()
 
   ".value" - {
 
@@ -64,7 +64,7 @@ class CommercialDescriptionFormProviderSpec extends SpecBase with StringFieldBeh
 
   "Error Messages" - {
 
-    Seq(CommercialDescriptionMessages.English) foreach { messagesForLanguage =>
+    Seq(ItemCommercialDescriptionMessages.English) foreach { messagesForLanguage =>
 
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 

@@ -47,7 +47,7 @@ class ItemConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
         confirmCommodityCodeHelper.summaryList(testIndex1, testCommodityCodeWine, ReviewMode) mustBe SummaryList(
           rows = Seq(
             itemExciseProductCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode),
-            itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode)
+            itemCommodityCodeSummary.row(idx = testIndex1, cnCodeInformation = testCommodityCodeWine, ReviewMode).get
           )
         )
       }

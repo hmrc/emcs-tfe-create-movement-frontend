@@ -18,16 +18,21 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemSmallIndependentProducerPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemSmallIndependentProducerSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemSmallIndependentProducerSummarySummary" - {
 
@@ -37,34 +42,49 @@ class ItemSmallIndependentProducerSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemSmallIndependentProducerSummary.row(testIndex1) mustBe None
+        "if true" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+          ) {
+            ItemSmallIndependentProducerSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = messagesForLanguage.yes,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemSmallIndependentProducer${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true))
-
-            ItemSmallIndependentProducerSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
+        "if false" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), false)
+          ) {
+            ItemSmallIndependentProducerSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.yes)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemSmallIndependentProducer1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+                value = messagesForLanguage.no,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemSmallIndependentProducer${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemSmallIndependentProducerSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

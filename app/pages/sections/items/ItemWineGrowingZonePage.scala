@@ -23,5 +23,5 @@ import play.api.libs.json.JsPath
 
 case class ItemWineGrowingZonePage(idx: Index) extends QuestionPage[ItemWineGrowingZone] {
   override val toString: String = "itemWineGrowingZone"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemWineSection(idx).path \ toString
 }

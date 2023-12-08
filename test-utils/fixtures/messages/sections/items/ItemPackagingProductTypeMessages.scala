@@ -31,7 +31,7 @@ object ItemPackagingProductTypeMessages {
 
     val errorRequired = "Select yes if there is only one product type in the package"
     val cyaLabel = "Contains one product type"
-    val cyaChangeHidden = "Contains one product type"
+    val cyaChangeHidden = "if the packaging contains one or more product types"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -28,9 +28,8 @@ object ItemSmallIndependentProducerMessages {
     val yesSpirits = "Yes - It is hereby certified that the product described has been produced by an independent small distillery"
     val yesOther = "Yes - It is hereby certified that the product described has been produced by an independent small producer"
 
-    //TODO: TBC by UX as not in prototype or copy decks yet
     val cyaLabel = "Independent small producer"
-    val cyaChangeHidden = "independent small producer"
+    val cyaChangeHidden = "if the producer is an independent small producer"
   }
 
   object English extends ViewMessages with BaseEnglish

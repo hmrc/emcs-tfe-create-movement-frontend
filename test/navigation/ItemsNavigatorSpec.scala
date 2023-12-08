@@ -20,9 +20,9 @@ import base.SpecBase
 import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
-import models.sections.items.{ItemBrandNameModel, ItemPackagingSealTypeModel, ItemsPackagingAddToList}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
+import models.sections.items.{ItemBrandNameModel, ItemGeographicalIndicationType, ItemPackagingSealTypeModel, ItemsPackagingAddToList}
 import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
@@ -32,7 +32,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
   "ItemsNavigator" - {
     "in Normal mode" - {
-      "must go from a page that doesn't exist in the route map to Items CYA" in {
+      "must go from a page that doesn't exist in the route map to ItemAddToList" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
@@ -79,21 +79,21 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the Item Brand Name page" - {
 
-        "to the Commercial Description Page" in {
+        "to the Item Commercial Description Page" in {
           val userAnswers = emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
 
           navigator.nextPage(ItemBrandNamePage(testIndex1), NormalMode, userAnswers) mustBe
-            itemsRoutes.CommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            itemsRoutes.ItemCommercialDescriptionController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 
-      "must go from the Commercial Description page" - {
+      "must go from the Item Commercial Description page" - {
         "when GoodsType is Beer" - {
           "to the Alcohol Strength Page" in {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -102,7 +102,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -111,7 +111,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -120,7 +120,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeI200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemAlcoholStrengthController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -130,7 +130,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             val userAnswers = emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200.code)
 
-            navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
               itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
@@ -142,7 +142,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               "to the Item Quantity Page" in {
                 val userAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), epc.code)
 
-                navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+                navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                   itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
               }
             }
@@ -153,7 +153,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               val userAnswers = emptyUserAnswers
                 .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeE200.code)
 
-              navigator.nextPage(CommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
                 itemsRoutes.ItemDensityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
@@ -675,12 +675,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Redirect to CAM-ITM40
         "to the Item CYA page" - {
           "when the user answers 'no'" in {
             navigator.nextPage(ItemBulkPackagingSealChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }
@@ -705,7 +704,6 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the ItemImportedWineChoicePage" - {
 
-        //TODO: Redirect to CAM-ITM14
         "to the Wine Growing Zone page" - {
 
           "when the user answers yes, moving in bulk and more than 60 litres" in {
@@ -772,7 +770,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Item CYA page" in {
           navigator.nextPage(ItemBulkPackagingSealTypePage(testIndex1), NormalMode, emptyUserAnswers
             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test", None))
-          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
@@ -787,20 +785,18 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "to Item CYA page" - {
 
-          //TODO: Route to CAM-ITM40
           "when answer is `No` (not adding more packages)" in {
             navigator.nextPage(
               ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
 
-          //TODO: Route to CAM-ITM40
           "when answer is `More later`" in {
             navigator.nextPage(
               ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.MoreLater)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
 
@@ -815,29 +811,247 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
       }
+
+      "must go from the ItemCheckAnswers page" - {
+
+        "to Item AddToList page" in {
+          // TODO: update when AddToList page is added
+          navigator.nextPage(
+            ItemCheckAnswersPage(testIndex1), NormalMode, emptyUserAnswers
+          ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {
-      "must go from the Excise Product Code page" - {
-        "to CAM-ITM38 page" - {
-          "when the EPC has multiple commodity codes" in {
+      "must go from ItemExciseProductCodePage" - {
+        "to ItemCommodityCode page" - {
+          "when ItemCommodityCodePage has no answer (EPC has been changed)" in {
             navigator.nextPage(
               ItemExciseProductCodePage(testIndex1),
               CheckMode,
-              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeB000.code)) mustBe
-              controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+              emptyUserAnswers) mustBe
+              controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            navigator.nextPage(
+              ItemExciseProductCodePage(testIndex1),
+              CheckMode,
+              emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)) mustBe
+              controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
-        "to the Items index page" - {
-          "when there is no answer" in {
-            navigator.nextPage(ItemExciseProductCodePage(testIndex1),
-              CheckMode, emptyUserAnswers) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
+        "to CYA page" - {
+          "when ItemCommodityCodePage has an answer (EPC has not changed)" in {
+            navigator.nextPage(
+              ItemExciseProductCodePage(testIndex1),
+              CheckMode,
+              emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
+                .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode)
+            ) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }
 
-      "must go from the ItemWineMoreInformationChoice page" - {
+      "must go from ItemCommodityCodePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemCommodityCodePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemBrandNamePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemBrandNamePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemCommercialDescriptionPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemAlcoholStrengthPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemDegreesPlatoPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemDegreesPlatoPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemMaturationPeriodAgePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemMaturationPeriodAgePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemDensityPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemDensityPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemFiscalMarksChoicePage" - {
+        "when answer is true" - {
+          "to ItemFiscalMarks page" in {
+            navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), true)) mustBe
+              itemsRoutes.ItemFiscalMarksController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+        "when answer is false" - {
+          "to CYA page" in {
+            navigator.nextPage(ItemFiscalMarksChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemFiscalMarksChoicePage(testIndex1), false)) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+
+      "must go from ItemFiscalMarksPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemFiscalMarksPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemGeographicalIndicationChoicePage" - {
+        "when answer is true" - {
+          "to ItemGeographicalIndication page" in {
+            ItemGeographicalIndicationType.values.filterNot(_ == ItemGeographicalIndicationType.NoGeographicalIndication).map {
+              itemGeographicalIndicationChoicePageAnswer =>
+                navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), CheckMode,
+                  emptyUserAnswers
+                    .set(ItemGeographicalIndicationChoicePage(testIndex1), itemGeographicalIndicationChoicePageAnswer)
+                ) mustBe
+                  itemsRoutes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+            }
+          }
+        }
+        "when answer is false" - {
+          "to CYA page" in {
+            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), CheckMode,
+              emptyUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), ItemGeographicalIndicationType.NoGeographicalIndication)
+            ) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+
+      "must go from ItemGeographicalIndicationPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemSmallIndependentProducerPage" - {
+        "when answer is true" - {
+          "to ItemProducerSize page" in {
+            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
+              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
+            ) mustBe
+              itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+        "when answer is false" - {
+          "to CYA page" in {
+            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
+              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), false)
+            ) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+
+      "must go from ItemProducerSizePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemProducerSizePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemWineOperationsChoicePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineOperationsChoicePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the ItemImportedWineChoicePage" - {
+
+        "to the Wine Growing Zone page" - {
+
+          "when the user answers yes, moving in bulk and more than 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            ) mustBe itemsRoutes.ItemWineGrowingZoneController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        "to the Wine More Information Choice page" - {
+
+          "when the user answers yes, moving in Bulk but <= 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+            ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        "to the Wine More Information Choice page" - {
+
+          "when the user answers yes, NOT moving in Bulk > 60 litres" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        "to the Wine Origin page" - {
+
+          "when the user answers no" in {
+            navigator.nextPage(ItemImportedWineChoicePage(testIndex1), CheckMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), "W200")
+              .set(ItemImportedWineChoicePage(testIndex1), false)
+            ) mustBe itemsRoutes.ItemWineOriginController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+      }
+
+      "must go from ItemWineGrowingZonePage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineGrowingZonePage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemWineOriginPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineOriginPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from ItemWineMoreInformationChoicePage" - {
         "to ItemWineMoreInformation page" - {
           "when the answer is 'Yes'" in {
             navigator.nextPage(
@@ -846,18 +1060,112 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        //TODO: Update when CYA page is built CAM-ITM40
         "to CYA page" - {
           "when the answer is 'No'" in {
             navigator.nextPage(
               ItemWineMoreInformationChoicePage(testIndex1), CheckMode, emptyUserAnswers.set(ItemWineMoreInformationChoicePage(testIndex1), false)
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+      }
+
+      "must go from ItemWineMoreInformationPage" - {
+        "to CYA page" in {
+          navigator.nextPage(ItemWineMoreInformationPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+            itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+        }
+      }
+
+      "must go from the ItemBulkPackagingChoicePage" - {
+        "when answer is Yes" - {
+          "when ItemBulkPackagingSelectPage has an answer (answer has not changed)" - {
+            "to Item CYA" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), true)
+                  .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+          "when ItemBulkPackagingSelectPage has no answer (answer has changed)" - {
+            "to ItemBulkPackagingSelect page" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), true)
+              ) mustBe itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+        }
+        "when answer is No" - {
+          "to Item CYA" - {
+            "when ItemImportedWineChoicePage has an answer (answer has not changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemImportedWineChoicePage(testIndex1), true)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+            "when ItemsPackagingSectionItems has an answer (answer has not changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemPackagingSealChoicePage(testIndex1, testIndex1), true)
+              ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+          "to ItemImportedWineChoice page" - {
+            "when Wine (answer has changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+          "to ItemsPackagingIndex page" - {
+            "when not Wine (answer has changed)" in {
+              navigator.nextPage(
+                ItemBulkPackagingChoicePage(testIndex1),
+                CheckMode,
+                emptyUserAnswers
+                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                  .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+              ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
+          }
+        }
+      }
+
+      "must go from ItemBulkPackagingSealChoicePage" - {
+        val page = ItemBulkPackagingSealChoicePage(testIndex1)
+
+        "to ItemBulkPackagingSealType page" - {
+          "when the answer is 'Yes'" in {
+            navigator.nextPage(page, CheckMode, emptyUserAnswers.set(page, true)) mustBe
+              itemsRoutes.ItemBulkPackagingSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+          }
+        }
+
+        "to CYA page" - {
+          "when the answer is 'No'" in {
+            navigator.nextPage(page, CheckMode, emptyUserAnswers.set(page, false)) mustBe
+              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }
 
       "must go from the ItemSelectPackaging page" - {
-        "to Item Packaging CYA page"  in {
+        "to Item Packaging CYA page" in {
           navigator.nextPage(
             ItemSelectPackagingPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
           ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
@@ -930,11 +1238,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go to CheckYourAnswersItemsController" in {
-        //TODO: update to Items CYA when built
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      "when page isn't explicitly specified" - {
+        "must go to the ItemAddToList page" in {
+          // TODO: update when AddToList page is created
+          case object UnknownPage extends Page
+          navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        }
       }
     }
 

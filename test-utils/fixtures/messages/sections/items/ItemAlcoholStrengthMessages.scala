@@ -26,9 +26,10 @@ object ItemAlcoholStrengthMessages {
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
     val hint = "Enter the alcoholic strength as a percentage (by volume at 20°C)."
-    val suffix = "%vol."
+    val suffix = "%"
 
     val cyaLabel = "Alcohol by volume (ABV)"
+    val cyaSuffix = "%"
     val cyaChangeHidden = "alcohol strength"
 
     val errorRadioRequired = "Enter the alcoholic strength"

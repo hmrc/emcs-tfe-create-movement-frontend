@@ -28,8 +28,8 @@ object ItemWineOriginMessages {
     val defaultSelectOption = "Choose country"
     val auSelectOption = "Australia (AU)"
 
-    val cyaLabel = "Third country of origin"
-    val cyaChangeHidden = "third country of origin"
+    val cyaLabel = "Wine country of origin"
+    val cyaChangeHidden = "wine country of origin"
 
     val errorRequired = "Select the wine’s country of origin"
   }

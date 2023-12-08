@@ -63,7 +63,7 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
           controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
           SummaryList(Seq(
             itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeTobacco, ReviewMode),
-            itemCommodityCodeSummary.row(testIndex1, testCommodityCodeTobacco, ReviewMode)
+            itemCommodityCodeSummary.row(testIndex1, testCommodityCodeTobacco, ReviewMode).get
           ))
         ).toString())
 
@@ -88,7 +88,7 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
       }
     }
 
-    Seq(testExciseProductCodeS500,
+    Seq(
       testExciseProductCodeT300,
       testExciseProductCodeS400,
       testExciseProductCodeE600,
@@ -113,7 +113,44 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
             controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
             SummaryList(Seq(
               itemExciseProductCodeSummary.row(testIndex1, commodityCode, ReviewMode),
-              itemCommodityCodeSummary.row(testIndex1, commodityCode, ReviewMode)
+              itemCommodityCodeSummary.row(testIndex1, commodityCode, ReviewMode).get
+            ))
+          ).toString())
+
+          "must have a link to change excise product code" in {
+            doc.getElementById("changeItemExciseProductCode1").attr("href") mustBe
+              controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url
+          }
+
+          "must not have a link to change commodity code" in {
+            Option(doc.getElementById("changeItemCommodityCode1")) mustBe None
+          }
+        }
+      }
+    }
+
+    Seq(
+      testExciseProductCodeS500
+    ).foreach { exciseProductCode =>
+
+      val commodityCode = testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code)
+
+      Seq(ItemConfirmCommodityCodeMessages.English).foreach { messagesForLanguage =>
+
+        s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for EPC code ${exciseProductCode}'" - {
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] =
+            dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), exciseProductCode.code)
+              .set(ItemCommodityCodePage(testIndex1), commodityCode.cnCode)
+            )
+
+          implicit val doc: Document = Jsoup.parse(view(
+            controllers.sections.items.routes.ItemConfirmCommodityCodeController.onSubmit(testErn, testDraftId, testIndex1),
+            SummaryList(Seq(
+              itemExciseProductCodeSummary.row(testIndex1, commodityCode, ReviewMode)
             ))
           ).toString())
 

@@ -19,10 +19,11 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCommodityCodeMessages
-import models.ReviewMode
+import models.requests.DataRequest
+import models.{CheckMode, ExciseProductCode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -32,82 +33,67 @@ import views.html.components.p
 
 class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
-  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
-  lazy val paragraph: p = app.injector.instanceOf[p]
+
+  class Test(val userAnswers: UserAnswers) {
+    lazy val messagesForLang: ItemCommodityCodeMessages.English.type = ItemCommodityCodeMessages.English
+    lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
+    lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+    lazy val p: p = app.injector.instanceOf[p]
+    lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+  }
 
   "ItemCommodityCodeSummary" - {
 
-    Seq(
-      testExciseProductCodeS500,
-      testExciseProductCodeT300,
-      testExciseProductCodeS400,
-      testExciseProductCodeE600,
-      testExciseProductCodeE800,
-      testExciseProductCodeE910
-    ).foreach { exciseProductCode =>
-
-      Seq(ItemCommodityCodeMessages.English).foreach { messagesForLanguage =>
-
-        s"when being rendered in lang code of '${messagesForLanguage.lang.code}' with EPC of '${exciseProductCode.code}'" - {
-
-          implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-
-          "when there's an answer" - {
-
-            "must output the expected row" in {
-              implicit lazy val request =
-                dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(ItemExciseProductCodePage(testIndex1), exciseProductCode.code)
-                    .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode)
-                )
-
-              itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine.copy(exciseProductCode = exciseProductCode.code), ReviewMode) mustBe
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                    paragraph()(Html(testCommodityCodeWine.cnCode)),
-                    paragraph()(Html(testCommodityCodeWine.cnCodeDescription))
-                  )))),
-                  actions = Seq()
-                )
+    "if EPC is not S500" - {
+      "must return a row with no change link" - {
+        ExciseProductCode.epcsOnlyOneCnCode.foreach(
+          epc =>
+            s"if EPC is $epc" in new Test(emptyUserAnswers) {
+              itemCommodityCodeSummary.row(
+                idx = testIndex1,
+                cnCodeInformation = testCommodityCodeWine.copy(exciseProductCode = epc),
+                mode = CheckMode
+              ) mustBe
+                Some(summaryListRowBuilder(
+                  key = messagesForLang.cyaLabel,
+                  value = HtmlContent(HtmlFormat.fill(Seq(
+                    p()(Html(testCommodityCodeWine.cnCode)),
+                    p()(Html(testCommodityCodeWine.cnCodeDescription))
+                  ))),
+                  changeLink = None
+                ))
             }
-          }
+        )
+      }
+      "must return a row with a change link" - {
+        "if EPC has more than one CN Code" in new Test(emptyUserAnswers) {
+          itemCommodityCodeSummary.row(
+            idx = testIndex1,
+            cnCodeInformation = testCommodityCodeWine,
+            mode = CheckMode
+          ) mustBe
+            Some(summaryListRowBuilder(
+              key = messagesForLang.cyaLabel,
+              value = HtmlContent(HtmlFormat.fill(Seq(
+                p()(Html(testCommodityCodeWine.cnCode)),
+                p()(Html(testCommodityCodeWine.cnCodeDescription))
+              ))),
+              changeLink = Some(ActionItemViewModel(
+                href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                content = messagesForLang.change,
+                id = s"changeItemCommodityCode${testIndex1.displayIndex}"
+              ).withVisuallyHiddenText(messagesForLang.cyaChangeHidden))
+            ))
         }
       }
     }
-
-    Seq(ItemCommodityCodeMessages.English).foreach { messagesForLanguage =>
-
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
-
-        implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-
-        "must output the expected row" in {
-          implicit lazy val request =
-            dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode)
-                .set(ItemCommodityCodePage(testIndex1), testCommodityCodeWine.cnCode))
-
-          itemCommodityCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe
-            SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-                paragraph()(Html(testCommodityCodeWine.cnCode)),
-                paragraph()(Html(testCommodityCodeWine.cnCodeDescription))
-              )))),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.items.routes.ItemCommodityCodeController.onPageLoad(testErn, testDraftId, testIndex1, ReviewMode).url,
-                  id = "changeItemCommodityCode1"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-              )
-            )
-        }
+    "if EPC is S500" - {
+      "must not return a row" in new Test(emptyUserAnswers) {
+        itemCommodityCodeSummary.row(
+          idx = testIndex1,
+          cnCodeInformation = testCommodityCodeWine.copy(exciseProductCode = "S500"),
+          mode = CheckMode
+        ) mustBe None
       }
     }
   }

@@ -18,16 +18,21 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksChoiceMessages
-import models.CheckMode
+import models.requests.DataRequest
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemFiscalMarksChoicePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemFiscalMarksChoiceSummary" - {
 
@@ -37,37 +42,49 @@ class ItemFiscalMarksChoiceSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemFiscalMarksChoiceSummary.row(testIndex1) mustBe None
+        "if true" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemFiscalMarksChoicePage(testIndex1), true)
+          ) {
+            ItemFiscalMarksChoiceSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = messagesForLanguage.yes,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemFiscalMarksChoice${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
-
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(
-              ItemFiscalMarksChoicePage(testIndex1), true)
-            )
-
-            ItemFiscalMarksChoiceSummary.row(testIndex1) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("Yes")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeItemFiscalMarksChoice1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-              )
+        "if false" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemFiscalMarksChoicePage(testIndex1), false)
+          ) {
+            ItemFiscalMarksChoiceSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = messagesForLanguage.no,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemFiscalMarksChoice${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
+          }
+        }
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemFiscalMarksChoiceSummary.row(
+              idx = testIndex1
+            ) mustBe None
           }
         }
       }

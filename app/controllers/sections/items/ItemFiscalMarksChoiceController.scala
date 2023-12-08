@@ -22,7 +22,7 @@ import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemFiscalMarksChoicePage
+import pages.sections.items.{ItemFiscalMarksChoicePage, ItemFiscalMarksPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -60,7 +60,14 @@ class ItemFiscalMarksChoiceController @Inject()(
         withGoodsTypeAsync(idx) { goodsType =>
           formProvider(goodsType).bindFromRequest().fold(
             renderView(BadRequest, _, idx, goodsType, mode),
-            saveAndRedirect(ItemFiscalMarksChoicePage(idx), _, mode)
+            value => {
+              val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
+                page = ItemFiscalMarksChoicePage(idx),
+                newAnswer = value,
+                cleansingFunction = request.userAnswers.remove(ItemFiscalMarksPage(idx))
+              )
+              saveAndRedirect(ItemFiscalMarksChoicePage(idx), value, newUserAnswers, mode)
+            }
           )
         }
       }

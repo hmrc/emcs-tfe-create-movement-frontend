@@ -19,7 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, UserAnswers}
+import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemPackagingSealChoicePage, ItemPackagingSealTypePage}
 import play.api.data.Form

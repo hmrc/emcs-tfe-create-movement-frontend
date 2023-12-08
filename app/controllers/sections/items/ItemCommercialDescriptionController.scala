@@ -17,37 +17,37 @@
 package controllers.sections.items
 
 import controllers.actions._
-import forms.sections.items.CommercialDescriptionFormProvider
+import forms.sections.items.ItemCommercialDescriptionFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.CommercialDescriptionPage
+import pages.sections.items.ItemCommercialDescriptionPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.sections.items.CommercialDescriptionView
+import views.html.sections.items.ItemCommercialDescriptionView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class CommercialDescriptionController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 override val userAnswersService: UserAnswersService,
-                                                 override val userAllowList: UserAllowListAction,
-                                                 override val navigator: ItemsNavigator,
-                                                 override val auth: AuthAction,
-                                                 override val getData: DataRetrievalAction,
-                                                 override val requireData: DataRequiredAction,
-                                                 formProvider: CommercialDescriptionFormProvider,
-                                                 val controllerComponents: MessagesControllerComponents,
-                                                 view: CommercialDescriptionView
-                                               ) extends BaseItemsNavigationController with AuthActionHelper {
+class ItemCommercialDescriptionController @Inject()(
+                                                     override val messagesApi: MessagesApi,
+                                                     override val userAnswersService: UserAnswersService,
+                                                     override val userAllowList: UserAllowListAction,
+                                                     override val navigator: ItemsNavigator,
+                                                     override val auth: AuthAction,
+                                                     override val getData: DataRetrievalAction,
+                                                     override val requireData: DataRequiredAction,
+                                                     formProvider: ItemCommercialDescriptionFormProvider,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: ItemCommercialDescriptionView
+                                                   ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        renderView(Ok, fillForm(CommercialDescriptionPage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(ItemCommercialDescriptionPage(idx), formProvider()), idx, mode)
       }
     }
 
@@ -57,7 +57,7 @@ class CommercialDescriptionController @Inject()(
         withGoodsTypeAsync(idx) { _ =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode),
-            saveAndRedirect(CommercialDescriptionPage(idx), _, mode)
+            saveAndRedirect(ItemCommercialDescriptionPage(idx), _, mode)
           )
         }
       }
@@ -68,7 +68,7 @@ class CommercialDescriptionController @Inject()(
     withGoodsTypeAsync(idx) { goodsType =>
       Future.successful(status(view(
         form = form,
-        action = routes.CommercialDescriptionController.onSubmit(request.ern, request.draftId, idx, mode),
+        action = routes.ItemCommercialDescriptionController.onSubmit(request.ern, request.draftId, idx, mode),
         goodsType = goodsType
       )))
     }

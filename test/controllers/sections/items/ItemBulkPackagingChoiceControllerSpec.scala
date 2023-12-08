@@ -22,9 +22,11 @@ import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Tobacco
+import models.response.referenceData.BulkPackagingType
+import models.sections.items.{ItemBulkPackagingCode, ItemPackagingSealTypeModel}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage, ItemBulkPackagingSelectPage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemWineMoreInformationPage}
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
@@ -89,6 +91,42 @@ class ItemBulkPackagingChoiceControllerSpec extends SpecBase
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove previously answered Packaging pages when submitted data has changed" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        .set(ItemBulkPackagingChoicePage(testIndex1), false)
+        .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+        .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(ItemBulkPackagingCode.BulkLiquid, "test description"))
+        .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("test type", Some("test description")))
+        .set(ItemWineMoreInformationPage(testIndex1), Some("test information"))
+        .set(ItemPackagingQuantityPage(testIndex1, testIndex1), "test quantity")
+    )) {
+
+      MockUserAnswersService.set(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+          .set(ItemBulkPackagingChoicePage(testIndex1), true)
+      ).returns(Future.successful(emptyUserAnswers))
+
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must not remove previously answered Packaging pages when submitted data has not changed" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        .set(ItemBulkPackagingChoicePage(testIndex1), true)
+        .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+        .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(ItemBulkPackagingCode.BulkLiquid, "test description"))
+    )) {
       val result: Future[Result] = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(FakeRequest().withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER

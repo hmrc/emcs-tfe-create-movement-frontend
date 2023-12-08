@@ -18,49 +18,38 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.sections.items.ItemDegreesPlatoModel
 import models.{CheckMode, Index}
 import pages.sections.items.ItemDegreesPlatoPage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ItemDegreesPlatoSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[Seq[SummaryListRow]] =
-    request.userAnswers.get(ItemDegreesPlatoPage(idx)).map {
-      case ItemDegreesPlatoModel(true, Some(amount)) =>
-        Seq(
-          radioRow(idx, hasDegreesPlato = true),
-          SummaryListRowViewModel(
-            key = "itemDegreesPlato.amount.checkYourAnswersLabel",
-            value = ValueViewModel(s"$amount ${messages("itemDegreesPlato.suffix")}"),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.change",
-                routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-                s"changeItemDegreesPlatoAmount${idx.displayIndex}"
-              )
-                .withVisuallyHiddenText(messages("itemDegreesPlato.change.hidden"))
-            )
-          )
-        )
-      case _ =>
-        Seq(radioRow(idx, hasDegreesPlato = false))
-    }
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemDegreesPlatoPage(idx)
 
-  private def radioRow(idx: Index, hasDegreesPlato: Boolean)(implicit request: DataRequest[_], messages: Messages) =
-    SummaryListRowViewModel(
-      key = "itemDegreesPlato.radio.checkYourAnswersLabel",
-      value = ValueViewModel(if (hasDegreesPlato) "site.yes" else "site.no"),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          s"changeItemDegreesPlatoRadio${idx.displayIndex}"
-        )
-          .withVisuallyHiddenText(messages("itemDegreesPlato.change.hidden"))
-      )
+    def row(value: String = "site.no"): SummaryListRow = SummaryListRowViewModel(
+      key = s"$page.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlContent(messages(value))),
+      actions = Seq(ActionItemViewModel(
+        href = routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+        content = "site.change",
+        id = s"changeItemDegreesPlatoAmount${idx.displayIndex}"
+      ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )
+
+    request.userAnswers.get(page).map {
+      answer =>
+        if (answer.hasDegreesPlato) {
+          answer.degreesPlato
+            .map(degreesPlato => row(messages(s"$page.checkYourAnswersValue", degreesPlato)))
+            .getOrElse(row())
+        } else {
+          row()
+        }
+    }
+  }
 }

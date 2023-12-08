@@ -21,6 +21,7 @@ import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.{Index, Mode}
+import pages.sections.items.ItemExciseProductCodePage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -32,19 +33,20 @@ import views.html.components.p
 class ItemExciseProductCodeSummary @Inject()(p: p) {
 
   def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+
+    lazy val page = ItemExciseProductCodePage(idx)
     SummaryListRowViewModel(
-      key = "itemExciseProductCode.checkYourAnswersLabel",
+      key = s"$page.checkYourAnswersLabel",
       value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
         p()(Html(cnCodeInformation.exciseProductCode)),
         p()(Html(cnCodeInformation.exciseProductCodeDescription))
       )))),
-      actions = Seq(
-        ActionItemViewModel(
-          content = "site.change",
-          href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
-          id = s"changeItemExciseProductCode${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("itemExciseProductCode.change.hidden"))
-      )
+      actions = Seq(ActionItemViewModel(
+        href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
+        content = "site.change",
+        id = s"changeItemExciseProductCode${idx.displayIndex}"
+      ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )
   }
+
 }

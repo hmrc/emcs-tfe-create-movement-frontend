@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.GoodsTypeModel.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemSmallIndependentProducerPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -99,13 +99,39 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test() {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+    "must redirect to the next page when valid data is submitted" - {
+      "when the answer has changed" in new Test(Some(
+        defaultUserAnswers
+          .set(ItemSmallIndependentProducerPage(testIndex1), false)
+          .set(ItemProducerSizePage(testIndex1), BigInt(1))
+      )) {
+        MockUserAnswersService.set(defaultUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)).returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer has not changed" in new Test(Some(
+        defaultUserAnswers
+          .set(ItemSmallIndependentProducerPage(testIndex1), true)
+          .set(ItemProducerSizePage(testIndex1), BigInt(1))
+      )) {
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+      "when the answer is new" in new Test(Some(
+        defaultUserAnswers
+      )) {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
     }
 
     "must render BadRequest when invalid data is submitted" in new Test() {

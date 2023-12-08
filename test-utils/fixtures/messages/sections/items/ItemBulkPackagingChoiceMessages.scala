@@ -26,8 +26,8 @@ object ItemBulkPackagingChoiceMessages {
     val title: String => String = goodsType => titleHelper(heading(goodsType))
     val hint = "Moving goods in bulk means that the goods are loaded directly into a vessel in large quantity, " +
       "and not packaged. For example, transporting liquids in a tanker."
-    val cyaLabel: String = "Bulk packaging"
-    val cyaChangeHidden: String = "bulk packaging"
+    val cyaLabel: String = "Bulk package"
+    def cyaChangeHidden(goodsType: String): String = s"if the $goodsType is being moved in bulk"
   }
 
   object English extends ViewMessages with BaseEnglish

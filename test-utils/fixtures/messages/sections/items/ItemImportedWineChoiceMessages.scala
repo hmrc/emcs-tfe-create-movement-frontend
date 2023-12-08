@@ -26,7 +26,7 @@ object ItemImportedWineChoiceMessages {
     val title: String = titleHelper(heading)
 
     val cyaLabel = "Wine imported from EU"
-    val cyaChangeHidden = "wine imported from EU"
+    val cyaChangeHidden = "if wine is imported from EU"
 
     val errorRequired = "Select yes if the wine was imported from an EU country"
   }

@@ -30,11 +30,13 @@ object ItemNetGrossMassMessages {
     def grossMassH2 = "Gross mass"
     def grossMassHint = "The gross mass is the weight of the goods including packaging. Enter the gross mass in kilograms."
 
-    val cyaNetMassLabel = "Net Mass"
+    val cyaNetMassLabel = "Net mass"
     val cyaNetMassChangeHidden = "net mass"
 
-    val cyaGrossMassLabel = "Gross Mass"
+    val cyaGrossMassLabel = "Gross mass"
     val cyaGrossMassChangeHidden = "gross mass"
+
+    val cyaSuffix = "kg"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -28,8 +28,8 @@ object ItemGeographicalIndicationMessages {
     val hintPGI = "Enter the name of the Protected Geographical Indication (PGI) for the product. Include a register number if you have one."
     val hintGI = "Enter the name of the Geographical Indication (GI) for the product. Include a register number if you have one."
 
-    val cyaLabel = "Designation of origin details"
-    val cyaChangeHidden = "protected designation"
+    val cyaLabel = "Geographical indication information"
+    val cyaChangeHidden = "geographical indication information"
 
     val errorRequired = "Enter details of the geographical indication"
     val errorLength = "Geographical indication must be 350 characters or less"

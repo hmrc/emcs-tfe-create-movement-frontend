@@ -16,9 +16,9 @@
 
 package viewmodels.helpers
 
-import models.{Index, Mode}
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
+import models.{Index, Mode}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.checkAnswers.sections.items._
@@ -35,8 +35,8 @@ class ItemConfirmCommodityCodeHelper @Inject()(
     SummaryListViewModel(
       rows = Seq(
         Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, mode)),
-        if(cnCodeInformation.exciseProductCode != "S500") Some(itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)) else None
-      ).collect { case Some(x) => x }
+        itemCommodityCodeSummary.row(idx, cnCodeInformation, mode)
+      ).flatten
     )
   }
 

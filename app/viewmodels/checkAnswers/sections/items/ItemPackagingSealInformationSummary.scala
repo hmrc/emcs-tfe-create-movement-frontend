@@ -21,9 +21,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.{ItemPackagingSealTypePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
-import play.api.mvc.Call
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

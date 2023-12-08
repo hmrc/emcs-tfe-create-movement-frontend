@@ -19,17 +19,21 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.messages.UnitOfMeasureMessages
 import fixtures.messages.sections.items.ItemQuantityMessages
-import models.CheckMode
-import models.UnitOfMeasure.Kilograms
+import models.requests.DataRequest
+import models.{CheckMode, UnitOfMeasure, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemQuantityPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemQuantitySummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemQuantitySummary" - {
 
@@ -39,34 +43,32 @@ class ItemQuantitySummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output None" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemQuantitySummary.row(testIndex1, Kilograms) mustBe None
+        "if provided" - {
+          "must return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
+          ) {
+            ItemQuantitySummary.row(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Kilograms
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = s"1.23 ${UnitOfMeasure.Kilograms.toShortFormatMessage()}",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemQuantity${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(1)))
-
-            ItemQuantitySummary.row(testIndex1, Kilograms) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(s"1 ${unitOfMeasure.kilogramsShort}")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemQuantity1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+        "if not provided" - {
+          "must not return a row" in new Test(emptyUserAnswers) {
+            ItemQuantitySummary.row(
+              idx = testIndex1,
+              unitOfMeasure = UnitOfMeasure.Kilograms
+            ) mustBe None
           }
         }
       }

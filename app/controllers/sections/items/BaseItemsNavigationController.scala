@@ -42,13 +42,6 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     )
   }
 
-  def validatePackagingIndex(itemsIndex: Index, packagingIndex: Index)(onSuccess: => Result)(implicit request: DataRequest[_]): Result = {
-    super.validateIndex(ItemsPackagingCount(itemsIndex), packagingIndex)(
-      onSuccess,
-      Redirect(controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIndex))
-    )
-  }
-
   def validatePackagingIndexAsync(itemsIndex: Index, packagingIndex: Index)(onSuccess: => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     super.validateIndex(ItemsPackagingCount(itemsIndex), packagingIndex)(
       onSuccess,

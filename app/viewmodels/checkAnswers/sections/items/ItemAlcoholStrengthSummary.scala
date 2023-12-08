@@ -28,18 +28,19 @@ import viewmodels.implicits._
 object ItemAlcoholStrengthSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemAlcoholStrengthPage(idx)
 
-    request.userAnswers.get(ItemAlcoholStrengthPage(idx)).map { value =>
+    request.userAnswers.get(ItemAlcoholStrengthPage(idx)).map { answer =>
       SummaryListRowViewModel(
-        key = "itemAlcoholStrength.checkYourAnswersLabel",
-        value = ValueViewModel(value.toString()),
+        key = s"$page.checkYourAnswersLabel",
+        value = ValueViewModel(messages(s"$page.checkYourAnswersValue", answer)),
         actions = {
           Seq(
             ActionItemViewModel(
               content = "site.change",
               routes.ItemAlcoholStrengthController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
               id = s"changeItemAlcoholStrength${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemAlcoholStrength.change.hidden"))
+            ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
           )
         }
       )

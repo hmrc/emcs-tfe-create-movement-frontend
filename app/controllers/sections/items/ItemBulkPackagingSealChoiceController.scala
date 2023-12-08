@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemBulkPackagingSealChoicePage
+import pages.sections.items.{ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -59,7 +59,14 @@ class ItemBulkPackagingSealChoiceController @Inject()(
         withItemBulkPackaging(idx) { description =>
           formProvider().bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode, description),
-            saveAndRedirect(ItemBulkPackagingSealChoicePage(idx), _, mode)
+            value => {
+              val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
+                ItemBulkPackagingSealChoicePage(idx),
+                value,
+                request.userAnswers.remove(ItemBulkPackagingSealTypePage(idx))
+              )
+              saveAndRedirect(ItemBulkPackagingSealChoicePage(idx), value, newUserAnswers, mode)
+            }
           )
         }
       }

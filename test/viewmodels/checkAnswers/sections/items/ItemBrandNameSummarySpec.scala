@@ -18,17 +18,22 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.messages.sections.items.ItemBrandNameMessages
-import models.CheckMode
+import models.requests.DataRequest
 import models.sections.items.ItemBrandNameModel
+import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemBrandNamePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemBrandNameSummarySpec extends SpecBase with Matchers {
+
+  class Test(val userAnswers: UserAnswers) {
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+  }
 
   "ItemBrandNameSummary" - {
 
@@ -38,45 +43,76 @@ class ItemBrandNameSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ItemBrandNameSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
+        "if ItemBrandNamePage hasBrandName is true" - {
+          "must return a row with their answer if brandName is provided" in new Test(
+            emptyUserAnswers
+              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, brandName = Some("test brand name")))
+          ) {
+            ItemBrandNameSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemBrandName1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+                value = "test brand name",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = "changeItemBrandName1"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
+          }
+          "must return a row with default answer if brandName is not provided" in new Test(
+            emptyUserAnswers
+              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, brandName = None))
+          ) {
+            ItemBrandNameSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = messagesForLanguage.notProvided,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = "changeItemBrandName1"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
-
-        "when there's an answer" - {
-
-          "must output the expected row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(true, Some("brand"))))
-
-            ItemBrandNameSummary.row(testIndex1) mustBe Some(
-              SummaryListRowViewModel(
+        "if ItemBrandNamePage hasBrandName is false" - {
+          "must return a row with default answer even if brandName is provided" in new Test(
+            emptyUserAnswers
+              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = false, brandName = Some("test brand name")))
+          ) {
+            ItemBrandNameSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text("brand")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                    id = "changeItemBrandName1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-            )
+                value = messagesForLanguage.notProvided,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = "changeItemBrandName1"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
+          }
+          "must return a row with default answer if brandName is not provided" in new Test(
+            emptyUserAnswers
+              .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = false, brandName = None))
+          ) {
+            ItemBrandNameSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = messagesForLanguage.notProvided,
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemBrandNameController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = "changeItemBrandName1"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
           }
         }
       }

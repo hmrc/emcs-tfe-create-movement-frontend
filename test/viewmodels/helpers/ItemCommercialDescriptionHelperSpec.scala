@@ -17,24 +17,24 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.messages.sections.items.CommercialDescriptionMessages
-import forms.sections.items.CommercialDescriptionFormProvider
+import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
+import forms.sections.items.ItemCommercialDescriptionFormProvider
 import models.GoodsTypeModel._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 
-class CommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite {
+class ItemCommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSuite {
 
-  lazy val helper = app.injector.instanceOf[CommercialDescriptionHelper]
-  lazy val form = app.injector.instanceOf[CommercialDescriptionFormProvider]
+  lazy val helper = app.injector.instanceOf[ItemCommercialDescriptionHelper]
+  lazy val form = app.injector.instanceOf[ItemCommercialDescriptionFormProvider]
   lazy val p = app.injector.instanceOf[views.html.components.p]
   lazy val bullets = app.injector.instanceOf[views.html.components.bullets]
   lazy val details = app.injector.instanceOf[views.html.components.details]
 
-  "CommercialDescriptionHelper" - {
+  "ItemCommercialDescriptionHelper" - {
 
-    Seq(CommercialDescriptionMessages.English).foreach { langMessages =>
+    Seq(ItemCommercialDescriptionMessages.English).foreach { langMessages =>
 
       implicit val msgs: Messages = messages(Seq(langMessages.lang))
 

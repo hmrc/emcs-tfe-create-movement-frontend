@@ -20,9 +20,9 @@ import controllers.actions._
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
 import models.GoodsTypeModel.GoodsType
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemBulkPackagingChoicePage
+import pages.sections.items._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -61,12 +61,23 @@ class ItemBulkPackagingChoiceController @Inject()(
           formProvider(goodsType).bindFromRequest().fold(
             formWithErrors =>
               Future.successful(renderView(BadRequest, formWithErrors, idx, goodsType, mode)),
-            value =>
-              saveAndRedirect(ItemBulkPackagingChoicePage(idx), value, mode)
+            value => {
+              val newUserAnswers = cleanseUserAnswersIfValueHasChanged(ItemBulkPackagingChoicePage(idx), value, cleanseFunction(idx))
+              saveAndRedirect(ItemBulkPackagingChoicePage(idx), value, newUserAnswers, mode)
+            }
           )
         }
       }
     }
+
+  private def cleanseFunction(idx: Index)(implicit request: DataRequest[_]): UserAnswers =
+    request.userAnswers
+      // individual item pages
+      .remove(ItemsPackagingSection(idx))
+      // bulk pages
+      .remove(ItemBulkPackagingSection(idx))
+      // wine pages
+      .remove(ItemWineSection(idx))
 
   private def renderView(status: Status, form: Form[_], idx: Index, goodsType: GoodsType, mode: Mode)(implicit request: DataRequest[_]): Result =
     status(view(

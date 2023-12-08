@@ -110,7 +110,7 @@ trait ItemFixtures {
   val testCommodityCodeWine: CnCodeInformation = CnCodeInformation(
     cnCode = testCnCodeWine,
     cnCodeDescription = "Sparkling cider and perry",
-    exciseProductCode = testEpcTobacco,
+    exciseProductCode = testEpcWine,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
     unitOfMeasure = Litres20
   )

@@ -32,8 +32,8 @@ object ItemProducerSizeMessages {
     val errorWholeNumber = "Amount must only contain numbers"
     val errorNonNumeric = "Amount must only contain numbers"
     val errorOutOfRange = "Enter an amount between 1 and 15 digits"
-    val cyaLabel = "Size of producer"
-    val cyaChangeHidden = "Size of producer"
+    val cyaLabel = "Producer’s production of pure alcohol"
+    val cyaChangeHidden = "size of producer"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{CheckMode, Index}
 import pages.sections.items.ItemGeographicalIndicationChoicePage
 import play.api.i18n.Messages
@@ -29,22 +28,19 @@ import viewmodels.implicits._
 object ItemGeographicalIndicationChoiceSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemGeographicalIndicationChoicePage(idx)).flatMap {
+    lazy val page = ItemGeographicalIndicationChoicePage(idx)
+
+    request.userAnswers.get(page).map {
       answer =>
-        if (answer == NoGeographicalIndication) None else {
-          Some(SummaryListRowViewModel(
-            key = "itemGeographicalIndicationChoice.checkYourAnswersLabel",
-            value = ValueViewModel(messages(s"itemGeographicalIndicationChoice.checkYourAnswers.value.$answer")),
-            actions = Seq(
-              ActionItemViewModel(
-                content = "site.change",
-                href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-                id = s"changeItemGeographicalIndicationChoice${idx.displayIndex}"
-              ).withVisuallyHiddenText(messages("itemGeographicalIndicationChoice.change.hidden"))
-            )
-          ))
-        }
+        SummaryListRowViewModel(
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(s"$page.checkYourAnswers.value.$answer"),
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemGeographicalIndicationChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemGeographicalIndicationChoice${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+        )
     }
   }
 }

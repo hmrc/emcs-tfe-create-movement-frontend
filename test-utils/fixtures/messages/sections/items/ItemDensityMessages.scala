@@ -20,12 +20,18 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object ItemDensityMessages {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+  sealed trait ViewMessages extends BaseMessages {
+    _: i18n =>
     def heading(goodsType: String) = s"What is the density of the $goodsType?"
+
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
-    val hint = "Enter the density, at 15 degrees Celsius per kilogram per litre."
-    val suffix = "kg/l"
+    val hint = "Enter the density, at 15 degrees Celsius per kilogram per cubic metre."
+    val suffix = "kg/m3"
+
+    val cyaLabel = "Density at 15&deg;C"
+    val cyaChangeHidden = "density"
+    val cyaSuffix = "kg/m<sup>3</sup>"
 
   }
 

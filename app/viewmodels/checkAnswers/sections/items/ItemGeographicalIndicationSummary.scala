@@ -18,8 +18,9 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.sections.items.ItemGeographicalIndicationType
 import models.{CheckMode, Index}
-import pages.sections.items.ItemGeographicalIndicationPage
+import pages.sections.items.{ItemGeographicalIndicationChoicePage, ItemGeographicalIndicationPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -29,20 +30,21 @@ import viewmodels.implicits._
 object ItemGeographicalIndicationSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemGeographicalIndicationPage(idx)
 
-    request.userAnswers.get(ItemGeographicalIndicationPage(idx)).map { value =>
+    for {
+      itemGeographicalIndicationChoice <- request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx))
+      answer <- request.userAnswers.get(page)
+      if itemGeographicalIndicationChoice != ItemGeographicalIndicationType.NoGeographicalIndication
+    } yield {
       SummaryListRowViewModel(
-        key = "itemGeographicalIndication.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(value).toString()),
-        actions = {
-          Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              routes.ItemGeographicalIndicationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeItemGeographicalIndication${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemGeographicalIndication.change.hidden"))
-          )
-        }
+        key = s"$page.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlFormat.escape(answer).toString()),
+        actions = Seq(ActionItemViewModel(
+          href = routes.ItemGeographicalIndicationController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          content = "site.change",
+          id = s"changeItemGeographicalIndication${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
       )
     }
   }

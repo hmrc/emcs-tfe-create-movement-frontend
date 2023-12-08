@@ -16,31 +16,31 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
-import models.{CheckMode, Index}
+import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items.ItemNetGrossMassPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ItemGrossMassSummary {
 
-  def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] =
-    request.userAnswers.get(ItemNetGrossMassPage(idx)).map {
+  def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] = {
+    lazy val page = ItemNetGrossMassPage(idx)
+
+    request.userAnswers.get(page).map {
       answer =>
         SummaryListRowViewModel(
-          key = "itemNetGrossMass.grossMass.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(s"${answer.grossMass.toString()} kg").toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.items.routes.ItemNetGrossMassController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeGrossMass${idx.displayIndex}"
-            )
-              .withVisuallyHiddenText(messages("itemNetGrossMass.grossMass.change.hidden"))
-          )
+          key = s"$page.grossMass.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"$page.grossMass.checkYourAnswersValue", answer.grossMass, UnitOfMeasure.Kilograms.toShortFormatMessage())),
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemNetGrossMassController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemGrossMass${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.grossMass.change.hidden")))
         )
     }
+  }
 }

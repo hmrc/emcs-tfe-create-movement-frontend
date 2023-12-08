@@ -28,21 +28,19 @@ import viewmodels.implicits._
 object ItemQuantitySummary {
 
   def row(idx: Index, unitOfMeasure: UnitOfMeasure)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemQuantityPage(idx)
 
-    request.userAnswers.get(ItemQuantityPage(idx)).map { value =>
-      SummaryListRowViewModel(
-        key = "itemQuantity.checkYourAnswersLabel",
-        value = ValueViewModel(s"$value ${unitOfMeasure.toShortFormatMessage()}"),
-        actions = {
-          Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              routes.ItemQuantityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              id = s"changeItemQuantity${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemQuantity.change.hidden"))
-          )
-        }
-      )
+    request.userAnswers.get(page).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = s"$page.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage())),
+          actions = Seq(ActionItemViewModel(
+            href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+            content = "site.change",
+            id = s"changeItemQuantity${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+        )
     }
   }
 }

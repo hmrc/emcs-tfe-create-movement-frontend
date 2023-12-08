@@ -33,7 +33,7 @@ import views.html.sections.items.ItemWineOperationsChoiceView
 
 import scala.concurrent.Future
 
-class ItemGetWineOperationsChoiceControllerSpec extends SpecBase
+class ItemWineOperationsChoiceControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetWineOperationsService
   with ItemFixtures {

@@ -22,9 +22,10 @@ import forms.sections.items.ItemPackagingSealChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
+import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingSealChoicePage, ItemBulkPackagingSelectPage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage, ItemBulkPackagingSelectPage, ItemExciseProductCodePage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -115,6 +116,24 @@ class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAn
       ))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove previous ItemBulkPackagingSealTypePage answer when submitted answer has changed" in new Test(Some(
+      baseUserAnswers
+        .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+        .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("type", None))
+    )) {
+
+      MockUserAnswersService.set(
+        baseUserAnswers.set(ItemBulkPackagingSealChoicePage(testIndex1), false)
+      ).returns(Future.successful(
+        baseUserAnswers.set(ItemBulkPackagingSealChoicePage(testIndex1), false)
+      ))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

@@ -26,18 +26,21 @@ import viewmodels.implicits._
 
 object ItemImportedWineChoiceSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemImportedWineChoicePage(idx)).map { answer =>
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    val page = ItemImportedWineChoicePage(idx)
+
+    request.userAnswers.get(page).map { answer =>
       SummaryListRowViewModel(
-        key = "itemImportedWineChoice.checkYourAnswersLabel",
+        key = s"$page.checkYourAnswersLabel",
         value = ValueViewModel(if (answer) "site.yes" else "site.no"),
         actions = Seq(
           ActionItemViewModel(
             content = "site.change",
             href = controllers.sections.items.routes.ItemImportedWineChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
             id = s"changeItemImportedWineChoice${idx.displayIndex}")
-            .withVisuallyHiddenText(messages("itemImportedWineChoice.change.hidden"))
+            .withVisuallyHiddenText(messages(s"$page.change.hidden"))
         )
       )
     }
+  }
 }

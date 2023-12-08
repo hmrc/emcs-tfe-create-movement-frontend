@@ -26,6 +26,8 @@ case class WineOperations(code: String, description: String) extends Checkboxabl
 }
 
 object WineOperations extends DynamicEnumerableType[WineOperations] {
+  val nonWineOperationCode = "0"
+
   implicit val format: Format[WineOperations] = Json.format[WineOperations]
 
   val messageKeyPrefix = "itemWineOperationsChoice"

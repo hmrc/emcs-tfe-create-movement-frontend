@@ -19,9 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemImportedWineChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemImportedWineChoicePage
+import pages.sections.items.{ItemImportedWineChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -56,10 +56,20 @@ class ItemImportedWineChoiceController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          saveAndRedirect(ItemImportedWineChoicePage(idx), _, mode)
+          answer => saveAndRedirect(ItemImportedWineChoicePage(idx), answer, cleanseFunction(idx, answer), mode)
         )
       }
     }
+
+  private def cleanseFunction(idx: Index, wineInEu: Boolean)(implicit request: DataRequest[_]): UserAnswers = {
+    // if wine in eu, clear third country of origin
+    // if not, clear wine growing zone
+    if(wineInEu) {
+      request.userAnswers.remove(ItemWineOriginPage(idx))
+    } else {
+      request.userAnswers.remove(ItemWineGrowingZonePage(idx))
+    }
+  }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     Future.successful(status(view(

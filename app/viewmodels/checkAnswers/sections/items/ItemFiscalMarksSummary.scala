@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemFiscalMarksPage
+import pages.sections.items.{ItemFiscalMarksChoicePage, ItemFiscalMarksPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -29,20 +29,22 @@ import viewmodels.implicits._
 object ItemFiscalMarksSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
-    answers.get(ItemFiscalMarksPage(idx)).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "itemFiscalMarks.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = routes.ItemFiscalMarksController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
-              id = s"changeItemFiscalMarks${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemFiscalMarks.change.hidden"))
-          )
-        )
+    lazy val page = ItemFiscalMarksPage(idx)
+
+    for {
+      fiscalMarksChoiceAnswer <- request.userAnswers.get(ItemFiscalMarksChoicePage(idx))
+      answer <- request.userAnswers.get(page)
+      if fiscalMarksChoiceAnswer
+    } yield {
+      SummaryListRowViewModel(
+        key = s"$page.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlFormat.escape(answer).toString()),
+        actions = Seq(ActionItemViewModel(
+          href = routes.ItemFiscalMarksController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          content = "site.change",
+          id = s"changeItemFiscalMarks${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+      )
     }
   }
 }

@@ -21,7 +21,7 @@ import forms.sections.items.ItemSmallIndependentProducerFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemSmallIndependentProducerPage
+import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -56,7 +56,14 @@ class ItemSmallIndependentProducerController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          saveAndRedirect(ItemSmallIndependentProducerPage(idx), _, mode)
+          value => {
+            val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
+              page = ItemSmallIndependentProducerPage(idx),
+              newAnswer = value,
+              cleansingFunction = request.userAnswers.remove(ItemProducerSizePage(idx))
+            )
+            saveAndRedirect(ItemSmallIndependentProducerPage(idx), value, newUserAnswers, mode)
+          }
         )
       }
     }

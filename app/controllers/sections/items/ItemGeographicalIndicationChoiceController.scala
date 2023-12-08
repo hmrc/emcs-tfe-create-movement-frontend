@@ -21,7 +21,7 @@ import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemGeographicalIndicationChoicePage
+import pages.sections.items.{ItemGeographicalIndicationChoicePage, ItemGeographicalIndicationPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -56,7 +56,14 @@ class ItemGeographicalIndicationChoiceController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          saveAndRedirect(ItemGeographicalIndicationChoicePage(idx), _, mode)
+          value => {
+            val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
+              page = ItemGeographicalIndicationChoicePage(idx),
+              newAnswer = value,
+              cleansingFunction = request.userAnswers.remove(ItemGeographicalIndicationPage(idx))
+            )
+            saveAndRedirect(ItemGeographicalIndicationChoicePage(idx), value, newUserAnswers, mode)
+          }
         )
       }
     }

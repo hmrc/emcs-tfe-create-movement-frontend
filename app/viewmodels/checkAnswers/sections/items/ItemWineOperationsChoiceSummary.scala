@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.response.referenceData.WineOperations
 import models.{CheckMode, Index}
 import pages.sections.items.ItemWineOperationsChoicePage
 import play.api.i18n.Messages
@@ -33,26 +34,30 @@ import javax.inject.Inject
 case class ItemWineOperationsChoiceSummary @Inject()(list: list) {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val answers = request.userAnswers
+    val page = ItemWineOperationsChoicePage(idx)
 
-    answers.get(ItemWineOperationsChoicePage(idx)).map {
+    request.userAnswers.get(page).map {
       answer =>
 
         val value = ValueViewModel(HtmlContent(
-          list(answer.map { wineOperation =>
-            Html(wineOperation.description)
-          }.toSeq)
+          if (answer.exists(_.code == WineOperations.nonWineOperationCode)) {
+            Html(messages(s"$page.checkYourAnswersValue.none"))
+          } else {
+            list(answer.map { wineOperation =>
+              Html(wineOperation.description)
+            }.toSeq)
+          }
         ))
 
         SummaryListRowViewModel(
-          key = "itemWineOperationsChoice.checkYourAnswersLabel",
+          key = s"$page.checkYourAnswersLabel",
           value = value,
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = routes.ItemWineOperationsChoiceController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode).url,
+              href = routes.ItemWineOperationsChoiceController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = s"changeWineOperationsChoice${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemWineOperationsChoice.change.hidden"))
+            ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
           )
         )
     }

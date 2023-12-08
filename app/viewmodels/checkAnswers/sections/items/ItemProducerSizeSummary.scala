@@ -19,28 +19,32 @@ package viewmodels.checkAnswers.sections.items
 import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemProducerSizePage
+import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemProducerSizeSummary  {
+object ItemProducerSizeSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemProducerSizePage(idx)).map {
-      answer =>
-        SummaryListRowViewModel(
-          key     = "itemProducerSize.checkYourAnswersLabel",
-          value   = ValueViewModel(s"${HtmlFormat.escape(answer.toString).toString}${messages("itemProducerSize.input.suffix")}"),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ItemProducerSizeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              s"changeItemProducerSize${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemProducerSize.change.hidden"))
-          )
-        )
+  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    lazy val page = ItemProducerSizePage(idx)
+
+    for {
+      itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
+      answer <- request.userAnswers.get(page)
+      if itemSmallIndependentProducer
+    } yield {
+      SummaryListRowViewModel(
+        key = s"$page.checkYourAnswersLabel",
+        value = ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString)),
+        actions = Seq(ActionItemViewModel(
+          href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          content = "site.change",
+          id = s"changeItemProducerSize${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+      )
     }
+  }
 }

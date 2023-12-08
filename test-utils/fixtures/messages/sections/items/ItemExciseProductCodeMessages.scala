@@ -24,8 +24,8 @@ object ItemExciseProductCodeMessages {
     val heading = "Choose the Excise Product Code (EPC) for the item"
     val title = titleHelper(heading)
 
-    val cyaLabel = "Excise Product Code"
-    val cyaChangeHidden = "Excise Product Code"
+    val cyaLabel = "Excise product code"
+    val cyaChangeHidden = "Excise product code"
 
     val defaultSelectOption = "Choose Excise Product Code"
     val beerSelectOption = "B000: Beer"

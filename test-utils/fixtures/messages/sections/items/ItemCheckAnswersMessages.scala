@@ -34,7 +34,7 @@ object ItemCheckAnswersMessages {
     val cardTitleWineDetails = "Wine details"
     val cardTitlePackaging = "Packaging"
 
-    val packagingKey: String = s"Packaging Type"
+    def packagingKey(idx: Index): String = s"Packaging type ${idx.displayIndex}"
     def packagingValue(quantity: String, packagingType: String): String = s"${quantity}x $packagingType"
   }
 

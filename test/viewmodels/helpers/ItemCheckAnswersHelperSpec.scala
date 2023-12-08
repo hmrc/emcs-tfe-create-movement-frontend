@@ -174,15 +174,15 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
               )
             ),
             SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey,
+              key = messagesForLanguage.packagingKey(testPackagingIndex1),
               value = ValueViewModel(messagesForLanguage.packagingValue("4", "description 1"))
             ),
             SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey,
+              key = messagesForLanguage.packagingKey(testPackagingIndex2),
               value = ValueViewModel(messagesForLanguage.packagingValue("15", "description 2"))
             ),
             SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey,
+              key = messagesForLanguage.packagingKey(testPackagingIndex3),
               value = ValueViewModel(messagesForLanguage.packagingValue("7", "description 3"))
             )
           )

@@ -28,7 +28,6 @@ case class ExciseProductCode(code: String,
 object ExciseProductCode {
   val epcsWithNoCnCodes: Seq[String] = Seq("S500")
   val epcsOnlyOneCnCode: Seq[String] = Seq("T300", "S400", "E600", "E800", "E910")
-  val epcsWithFewerThanTwoCnCodes: Seq[String] = epcsWithNoCnCodes ++ epcsOnlyOneCnCode
 
   implicit val format: Format[ExciseProductCode] = Json.format[ExciseProductCode]
 }

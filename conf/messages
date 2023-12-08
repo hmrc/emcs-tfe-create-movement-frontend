@@ -1351,5 +1351,5 @@ itemCheckAnswers.itemDetailsCardTitle = Item details
 itemCheckAnswers.quantityCardTitle = Quantity
 itemCheckAnswers.wineDetailsCardTitle = Wine details
 itemCheckAnswers.packagingCardTitle = Packaging
-itemCheckAnswers.packageTypeKey = Packaging Type
+itemCheckAnswers.packageTypeKey = Packaging type {0}
 itemCheckAnswers.packageTypeValue = {0}x {1}

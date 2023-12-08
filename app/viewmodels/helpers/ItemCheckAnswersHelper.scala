@@ -58,7 +58,7 @@ class ItemCheckAnswersHelper @Inject()(
         ItemGeographicalIndicationChoiceSummary.row(idx),
         ItemGeographicalIndicationSummary.row(idx),
         ItemSmallIndependentProducerSummary.row(idx),
-        ItemProducerSizeSummary.row(idx),
+        ItemProducerSizeSummary.row(idx)
       ).flatten
     )
   }
@@ -70,7 +70,7 @@ class ItemCheckAnswersHelper @Inject()(
       rows = Seq(
         ItemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
         ItemNetMassSummary.row(idx),
-        ItemGrossMassSummary.row(idx),
+        ItemGrossMassSummary.row(idx)
       ).flatten
     )
 

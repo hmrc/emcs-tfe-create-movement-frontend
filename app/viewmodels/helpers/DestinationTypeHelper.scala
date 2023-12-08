@@ -30,7 +30,8 @@ import utils.Logging
 class DestinationTypeHelper extends Logging {
 
   def title(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.title.movement")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+      messages("destinationType.title.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.title.import")
     case userType =>
       logger.error(s"[title] invalid UserType for CAM journey: $userType")
@@ -38,7 +39,8 @@ class DestinationTypeHelper extends Logging {
   }
 
   def heading(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.heading.movement")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+      messages("destinationType.heading.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.heading.import")
     case userType =>
       logger.error(s"[heading] invalid UserType for CAM journey: $userType")
@@ -52,6 +54,7 @@ class DestinationTypeHelper extends Logging {
       case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
+      case NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor => MovementScenario.valuesForDutyPaidTraders.map(radioOption)
       case userType =>
         logger.error(s"[options] invalid UserType for CAM journey: $userType")
         throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for CAM journey: $userType")

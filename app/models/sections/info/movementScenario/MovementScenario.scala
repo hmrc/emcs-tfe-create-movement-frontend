@@ -34,13 +34,15 @@ sealed trait MovementScenario {
 
 object MovementScenario extends Enumerable.Implicits with Logging {
 
-  private def getOriginType()(implicit request: DataRequest[_]): OriginType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
-    case (true, _) => OriginType.TaxWarehouse
-    case (_, true) => OriginType.Imports
-    case _ =>
-      logger.error(s"[getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
-      throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
-  }
+  private def getOriginType()(implicit request: DataRequest[_]): OriginType =
+    (request.isWarehouseKeeper, request.isRegisteredConsignor, request.isCertifiedConsignor) match {
+      case (true, _, _) => OriginType.TaxWarehouse
+      case (_, true, _) => OriginType.Imports
+      case (_, _, true) => OriginType.DutyPaid
+      case _ =>
+        logger.error(s"[getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+    }
 
   /**
    * emcs: direct_export / import_for_direct_export
@@ -204,6 +206,45 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   }
 
   /**
+   * emcs: certified_consignee / import_for_certified_consignee
+   */
+  case object CertifiedConsignee extends WithName("certifiedConsignee") with MovementScenario {
+
+    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+
+    def destinationType: DestinationType = DestinationType.CertifiedConsignee
+
+    def movementType(implicit request: DataRequest[_]): MovementType = request.isCertifiedConsignor match {
+      case true => MovementType.UkToEu
+      case false =>
+        logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "certified consignee"
+  }
+
+  /**
+   * emcs: temp_certified_consignee / import_for_temp_certified_consignee
+   */
+  case object TemporaryCertifiedConsignee extends WithName("temporaryCertifiedConsignee") with MovementScenario {
+
+    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+
+    def destinationType: DestinationType = DestinationType.TemporaryCertifiedConsignee
+
+    def movementType(implicit request: DataRequest[_]): MovementType = request.isCertifiedConsignor match {
+      case true => MovementType.UkToEu
+      case false =>
+        logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "temporary certified consignee"
+
+  }
+
+  /**
    * emcs: unknown_destination / import_for_unknown_destination
    */
   case object UnknownDestination extends WithName("unknownDestination") with MovementScenario {
@@ -240,7 +281,12 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     UnknownDestination
   )
 
-  val values: Seq[MovementScenario] = (valuesUk ++ valuesEu).distinct
+  def valuesForDutyPaidTraders: Seq[MovementScenario] = Seq(
+    CertifiedConsignee,
+    TemporaryCertifiedConsignee
+  )
+
+  val values: Seq[MovementScenario] = (valuesUk ++ valuesEu ++ valuesForDutyPaidTraders).distinct
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }

@@ -33,5 +33,5 @@ case class UserRequest[A](request: Request[A],
 
   lazy val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
   lazy val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
-
+  lazy val isCertifiedConsignor: Boolean = (userTypeFromErn == NorthernIrelandCertifiedConsignor) || (userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor)
 }

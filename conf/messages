@@ -339,6 +339,8 @@ destinationType.exemptedOrganisation = Exempted organisation
 destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
 destinationType.registeredConsignee = Registered consignee
 destinationType.temporaryRegisteredConsignee = Temporary registered consignee
+destinationType.certifiedConsignee = Certified consignee
+destinationType.temporaryCertifiedConsignee = Temporary certified consignee
 destinationType.unknownDestination = Unknown destination
 
 destinationType.error.required.movement = Select the place of destination for this movement

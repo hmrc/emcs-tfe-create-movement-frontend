@@ -42,7 +42,7 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
       invalidError = FormError(fieldName, "error.invalid")
     )
 
-    Seq("GBWK", "XIWK").foreach {
+    Seq("GBWK", "XIWK", "XIPA", "XIPC").foreach {
       ern =>
         s"for ERN starting with $ern" - {
           val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = s"${ern}123"))

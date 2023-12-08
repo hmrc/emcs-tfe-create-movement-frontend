@@ -22,6 +22,10 @@ case object GreatBritainRegisteredConsignor extends UserType
 
 case object NorthernIrelandRegisteredConsignor extends UserType
 
+case object NorthernIrelandCertifiedConsignor extends UserType
+
+case object NorthernIrelandTemporaryCertifiedConsignor extends UserType
+
 case object GreatBritainWarehouseKeeper extends UserType
 
 case object NorthernIrelandWarehouseKeeper extends UserType
@@ -39,6 +43,8 @@ object UserType {
   def apply(ern: String): UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
     case "GBRC" => GreatBritainRegisteredConsignor
     case "XIRC" => NorthernIrelandRegisteredConsignor
+    case "XIPA" => NorthernIrelandCertifiedConsignor
+    case "XIPC" => NorthernIrelandTemporaryCertifiedConsignor
     case "GBWK" => GreatBritainWarehouseKeeper
     case "XIWK" => NorthernIrelandWarehouseKeeper
     case "XI00" => NorthernIrelandWarehouse

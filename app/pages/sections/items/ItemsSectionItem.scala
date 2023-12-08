@@ -33,8 +33,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case None => NotStarted
       case Some(epc) =>
-
-        implicit val goodsType = GoodsTypeModel(epc)
+        implicit val goodsType: GoodsType = GoodsTypeModel(epc)
 
         if(itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed
@@ -56,7 +55,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       fiscalMarksAnswers
       ).forall(_.isDefined)
 
-  def packagingPagesComplete(implicit request: DataRequest[_]): Boolean =
+  private[items] def packagingPagesComplete(implicit request: DataRequest[_]): Boolean =
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
       case (Some(_), Some(false)) =>
         ItemsPackagingSection(idx).isCompleted
@@ -84,12 +83,12 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       request.userAnswers.get(ItemBulkPackagingChoicePage(idx))
     )
 
-  private def itemDensityAnswer(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def itemDensityAnswer(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Energy && !Seq("E470", "E500", "E600", "E930").contains(epc)) {
       Seq(request.userAnswers.get(ItemDensityPage(idx)))
     }
 
-  private def fiscalMarksAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def fiscalMarksAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Tobacco) {
       request.userAnswers.get(ItemFiscalMarksChoicePage(idx)) match {
         case fiscalMarksChoice@Some(true) => Seq(fiscalMarksChoice, request.userAnswers.get(ItemFiscalMarksPage(idx)))
@@ -97,7 +96,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       }
     }
 
-  private def wineMoreInformationAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def wineMoreInformationAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Wine) {
       request.userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
         case wineInfoChoice@Some(true) => Seq(wineInfoChoice, request.userAnswers.get(ItemWineMoreInformationPage(idx)))
@@ -105,7 +104,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       }
     }
 
-  private def wineCountryOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def wineCountryOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Wine) {
       request.userAnswers.get(ItemImportedWineChoicePage(idx)) match {
         case wineImportedChoice@Some(false) => Seq(wineImportedChoice, request.userAnswers.get(ItemWineOriginPage(idx)))
@@ -113,7 +112,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       }
     }
 
-  private def geographicalIndicationsAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def geographicalIndicationsAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol && goodsType != Beer) {
       request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx)) match {
         case geographicalChoice@Some(NoGeographicalIndication) => Seq(geographicalChoice)
@@ -121,13 +120,13 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       }
     }
 
-  private def maturationAgeAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def maturationAgeAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Spirits)(Seq(request.userAnswers.get(ItemMaturationPeriodAgePage(idx))))
 
-  private def alcoholStrengthAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def alcoholStrengthAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol)(Seq(request.userAnswers.get(ItemAlcoholStrengthPage(idx))))
 
-  private def independentProducerAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def independentProducerAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol && request.userAnswers.get(ItemAlcoholStrengthPage(idx)).exists(_ < 8.5)) {
       request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
         case smallProducer@Some(true) => Seq(smallProducer, request.userAnswers.get(ItemProducerSizePage(idx)))
@@ -135,30 +134,31 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       }
     }
 
-  private def degreesPlatoAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def degreesPlatoAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(request.isNorthernIrelandErn && goodsType == Beer)(Seq(request.userAnswers.get(ItemDegreesPlatoPage(idx))))
 
-  private def bulkCommercialSeals(implicit request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def bulkCommercialSeals(implicit request: DataRequest[_]): Seq[Option[_]] =
     request.userAnswers.get(ItemBulkPackagingSealChoicePage(idx)) match {
       case sealChoice@Some(true) => Seq(sealChoice, request.userAnswers.get(ItemBulkPackagingSealTypePage(idx)))
       case sealChoice => Seq(sealChoice)
     }
 
-  private def wineBulkGrowingZoneAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def wineBulkGrowingZoneAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     (request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineChoicePage(idx))) match {
       case (Some(quantity), Some(true)) if quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
       case _ => Seq()
     }
 
-  private def wineBulkOperationAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def wineBulkOperationAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemQuantityPage(idx))) match {
       case (Some(epc), Some(quantity)) if (GoodsTypeModel.apply(epc) == GoodsTypeModel.Wine) && (quantity > 60) =>
         Seq(request.userAnswers.get(ItemWineOperationsChoicePage(idx)))
       case _ => Seq()
     }
 
-  private def mandatoryIf(bool: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if(bool) f else Seq()
+  private[items] def mandatoryIf(bool: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if(bool) f else Seq()
 
+  // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     ItemsSection.canBeCompletedForTraderAndDestinationType
 }

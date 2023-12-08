@@ -43,5 +43,7 @@ case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
         if (statuses.forall(_ == Completed)) Completed else InProgress
     }
 
-  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+  // $COVERAGE-OFF$
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    ItemsSection.canBeCompletedForTraderAndDestinationType
 }

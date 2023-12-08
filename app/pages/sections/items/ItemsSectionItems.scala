@@ -43,5 +43,6 @@ case object ItemsSectionItems extends Section[JsObject] {
         }
     }
 
+  // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

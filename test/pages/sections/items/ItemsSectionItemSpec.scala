@@ -18,15 +18,19 @@ package pages.sections.items
 
 import base.SpecBase
 import fixtures.ItemFixtures
+import models.GoodsTypeModel.{Beer, Energy, GoodsType}
 import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
 import models.sections.items.ItemWineGrowingZone.CIII_A
-import models.sections.items.{ItemBrandNameModel, ItemMaturationPeriodAgeModel, ItemNetGrossMassModel, ItemPackagingSealTypeModel}
+import models.sections.items._
+import models.{GoodsTypeModel, UserAnswers}
 import play.api.test.FakeRequest
 
 class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
+
+  val section: ItemsSectionItem = ItemsSectionItem(testIndex1)
 
   "isCompleted" - {
 
@@ -55,7 +59,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("Seal", Some("Seal Info")))
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Bulk Wine, NOT Imported from EU, optional pages not supplied" in {
@@ -78,7 +82,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Wine delivered in individual packages, all packages complete" in {
@@ -101,7 +105,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Spirit with maturation age and all other mandatory pages" in {
@@ -123,7 +127,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Energy with density and all other mandatory pages" in {
@@ -143,7 +147,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Energy that does not require density and all other mandatory pages" in {
@@ -162,7 +166,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Tobacco with fiscal marks and all other mandatory pages" in {
@@ -183,7 +187,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
 
       "when Tobacco with fiscal marks as false and all other mandatory pages" in {
@@ -203,7 +207,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe true
+        section.isCompleted mustBe true
       }
     }
 
@@ -226,7 +230,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Tobacco and fiscal marks is missing all together" in {
@@ -246,7 +250,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Energy that requires density but has page missing - all other mandatory pages exist" in {
@@ -265,7 +269,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Spirit with maturation age missing - all other mandatory pages exist" in {
@@ -286,7 +290,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when item packaging exists which is incomplete" in {
@@ -310,7 +314,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), testPackageBag)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk item where seal type is missing" in {
@@ -335,7 +339,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk item where seal choice is missing" in {
@@ -359,7 +363,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where more information is missing" in {
@@ -383,7 +387,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where more information choice is missing" in {
@@ -406,7 +410,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where imported from EU and wine growing zone is missing" in {
@@ -429,7 +433,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where wine operations choice is missing" in {
@@ -451,7 +455,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where bulk packaging select is missing" in {
@@ -473,7 +477,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when bulk wine where bulk packaging choice is missing" in {
@@ -494,7 +498,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Excise Product Code is missing" in {
@@ -516,7 +520,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Commodity Code is missing" in {
@@ -538,7 +542,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Brand Name is missing" in {
@@ -560,7 +564,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Commercial Description is missing" in {
@@ -582,7 +586,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Quantity is missing" in {
@@ -604,7 +608,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Net and Gross Mass is missing" in {
@@ -626,7 +630,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when low alcohol and Small Independent Producer annual production is missing" in {
@@ -649,7 +653,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when low alcohol and Small Independent Producer choice is missing" in {
@@ -670,7 +674,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
       }
 
       "when Beer and User is Northern Ireland (XI) and Degrees Plato is missing" in {
@@ -691,7 +695,579 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
-        ItemsSectionItem(testIndex1).isCompleted mustBe false
+        section.isCompleted mustBe false
+      }
+    }
+  }
+
+  "packagingPagesComplete" - {
+    "must return true" - {
+      "when EPC is defined, ItemBulkPackagingChoicePage is false and ItemsPackagingSection is completed" in {
+        val userAnswers = emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemBulkPackagingChoicePage(testIndex1), false)
+          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
+          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe true
+      }
+      "when EPC is defined, ItemBulkPackagingChoicePage is true and bulkPackagingPagesComplete is completed" in {
+        val userAnswers = emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemBulkPackagingChoicePage(testIndex1), true)
+          .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
+          .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe true
+      }
+    }
+
+    "must return false" - {
+      "when EPC is not defined" - {
+        val userAnswers = emptyUserAnswers
+          .set(ItemBulkPackagingChoicePage(testIndex1), false)
+          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
+          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe false
+      }
+      "when ItemBulkPackagingChoicePage is not defined" - {
+        val userAnswers = emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
+          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe false
+      }
+      "when EPC is defined, ItemBulkPackagingChoicePage is false and ItemsPackagingSection is not completed" in {
+        val userAnswers = emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemBulkPackagingChoicePage(testIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe false
+      }
+      "when EPC is defined, ItemBulkPackagingChoicePage is true and bulkPackagingPagesComplete is not completed" in {
+        val userAnswers = emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemBulkPackagingChoicePage(testIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.packagingPagesComplete mustBe false
+      }
+    }
+  }
+
+  "itemDensityAnswer" - {
+    "must return a non-empty Seq" - {
+      "when energy and not in Seq('E470', 'E500', 'E600', 'E930')" in {
+        val epc = ""
+
+        section.itemDensityAnswer(epc)(GoodsTypeModel.Energy, dataRequest(FakeRequest())).length must not be 0
+      }
+    }
+
+    "must return an empty Seq" - {
+      Seq("E470", "E500", "E600", "E930").foreach(
+        epc =>
+          s"when energy and EPC is $epc" in {
+            section.itemDensityAnswer(epc)(GoodsTypeModel.Energy, dataRequest(FakeRequest())) mustBe Nil
+          }
+      )
+
+      "when not energy" in {
+        GoodsTypeModel.values.filterNot(_ == Energy).foreach {
+          goodsType =>
+            val epc = ""
+
+            section.itemDensityAnswer(epc)(goodsType, dataRequest(FakeRequest())) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "fiscalMarksAnswers" - {
+    "must return two items" - {
+      "when tobacco and more info = true" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemFiscalMarksChoicePage(testIndex1), true)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.fiscalMarksAnswers(GoodsTypeModel.Tobacco, dr).length mustBe 2
+      }
+    }
+
+    "must return one item" - {
+      "when tobacco and more info = false" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemFiscalMarksChoicePage(testIndex1), false)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.fiscalMarksAnswers(GoodsTypeModel.Tobacco, dr).length mustBe 1
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when not tobacco" in {
+        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Tobacco).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemFiscalMarksChoicePage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.fiscalMarksAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "wineMoreInformationAnswers" - {
+    "must return two items" - {
+      "when wine and more info = true" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemWineMoreInformationChoicePage(testIndex1), true)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineMoreInformationAnswers(GoodsTypeModel.Wine, dr).length mustBe 2
+      }
+    }
+
+    "must return one item" - {
+      "when wine and more info = false" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemWineMoreInformationChoicePage(testIndex1), false)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineMoreInformationAnswers(GoodsTypeModel.Wine, dr).length mustBe 1
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when not wine" in {
+        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemWineMoreInformationChoicePage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.wineMoreInformationAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "wineCountryOfOriginAnswers" - {
+    "must return two items" - {
+      "when wine and imported = false" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemImportedWineChoicePage(testIndex1), false)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineCountryOfOriginAnswers(GoodsTypeModel.Wine, dr).length mustBe 2
+      }
+    }
+
+    "must return one item" - {
+      "when wine and more imported = true" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemImportedWineChoicePage(testIndex1), true)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineCountryOfOriginAnswers(GoodsTypeModel.Wine, dr).length mustBe 1
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when not wine" in {
+        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemImportedWineChoicePage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.wineCountryOfOriginAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "geographicalIndicationsAnswers" - {
+    "must return two items" - {
+      "when alcohol, not beer, ItemGeographicalIndicationChoicePage is not NoGeographicalIndication" in {
+        GoodsTypeModel.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+          goodsType =>
+            ItemGeographicalIndicationType.values.filterNot(_ == NoGeographicalIndication).foreach {
+              indication =>
+                val userAnswers: UserAnswers = emptyUserAnswers
+                  .set(ItemGeographicalIndicationChoicePage(testIndex1), indication)
+
+                val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+                section.geographicalIndicationsAnswers(goodsType, dr).length mustBe 2
+            }
+        }
+      }
+    }
+
+    "must return one item" - {
+      "when alcohol, not beer, ItemGeographicalIndicationChoicePage is NoGeographicalIndication" in {
+        GoodsTypeModel.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.geographicalIndicationsAnswers(goodsType, dr).length mustBe 1
+        }
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when not alcohol" in {
+        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.geographicalIndicationsAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+
+      "when beer" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.geographicalIndicationsAnswers(Beer, dr) mustBe Nil
+      }
+    }
+  }
+
+  "maturationAgeAnswer" - {
+    "must return a non-empty Seq" - {
+      "if alcohol" in {
+        GoodsTypeModel.values.filter(_ == GoodsTypeModel.Spirits).foreach {
+          goodsType =>
+            val dr: DataRequest[_] = dataRequest(FakeRequest())
+
+            section.maturationAgeAnswer(goodsType, dr).length must not be 0
+        }
+      }
+    }
+
+    "must return an empty Seq" - {
+      "if not alcohol" in {
+        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Spirits).foreach {
+          goodsType =>
+            val dr: DataRequest[_] = dataRequest(FakeRequest())
+
+            section.maturationAgeAnswer(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "alcoholStrengthAnswer" - {
+    "must return a non-empty Seq" - {
+      "if alcohol" in {
+        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+          goodsType =>
+            val dr: DataRequest[_] = dataRequest(FakeRequest())
+
+            section.alcoholStrengthAnswer(goodsType, dr).length must not be 0
+        }
+      }
+    }
+
+    "must return an empty Seq" - {
+      "if not alcohol" in {
+        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+          goodsType =>
+            val dr: DataRequest[_] = dataRequest(FakeRequest())
+
+            section.alcoholStrengthAnswer(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "independentProducerAnswers" - {
+    "must return two items" - {
+      "when alcohol, strength < 8.5, and small producer" in {
+        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers = emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
+              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.independentProducerAnswers(goodsType, dr).length mustBe 2
+        }
+      }
+    }
+
+    "must return one item" - {
+      "when alcohol, strength < 8.5, and not small producer" in {
+        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers = emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
+              .set(ItemSmallIndependentProducerPage(testIndex1), false)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.independentProducerAnswers(goodsType, dr).length mustBe 1
+        }
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when not alcohol" in {
+        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers = emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
+              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.independentProducerAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+      "strength >= 8.5" in {
+        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers = emptyUserAnswers
+              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.independentProducerAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+      "strength is not present" in {
+        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+          goodsType =>
+            val userAnswers = emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.independentProducerAnswers(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "degreesPlatoAnswer" - {
+    "must return a non-empty Seq" - {
+      "when XI and Beer" - {
+        val goodsType: GoodsType = GoodsTypeModel.Beer
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+
+        section.degreesPlatoAnswer(goodsType, dr).length must not be 0
+      }
+    }
+    "must return an empty Seq" - {
+      "when not XI" - {
+        val goodsType: GoodsType = GoodsTypeModel.Beer
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+
+        section.degreesPlatoAnswer(goodsType, dr) mustBe Nil
+      }
+      "when not Beer" - {
+        GoodsTypeModel.values.filterNot(_ == Beer).foreach {
+          goodsType =>
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+
+            section.degreesPlatoAnswer(goodsType, dr) mustBe Nil
+        }
+      }
+    }
+  }
+
+  "bulkCommercialSeals" - {
+    "must return two items" - {
+      "when true" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.bulkCommercialSeals.length mustBe 2
+      }
+    }
+    "must return one item" - {
+      "when false" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.bulkCommercialSeals.length mustBe 1
+      }
+    }
+  }
+
+  "wineBulkGrowingZoneAnswer" - {
+    "must return a non-empty Seq" - {
+      "when quantity > 60 and imported choice = true" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemImportedWineChoicePage(testIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer.length must not be 0
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when quantity <= 60" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+            .set(ItemImportedWineChoicePage(testIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer mustBe Nil
+      }
+      "when imported choice = false" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemImportedWineChoicePage(testIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer mustBe Nil
+      }
+      "when quantity is missing" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemImportedWineChoicePage(testIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer mustBe Nil
+      }
+      "when imported choice is missing" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer mustBe Nil
+      }
+    }
+  }
+
+  "wineBulkOperationAnswer" - {
+    "must return a non-empty Seq" - {
+      "when wine with quantity > 60" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer.length must not be 0
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when wine with quantity <= 60" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+            .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer mustBe Nil
+      }
+      "when not wine" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcEnergyWithDensity)
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer mustBe Nil
+      }
+      "when EPC is missing" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer mustBe Nil
+      }
+      "when quantity is missing" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer mustBe Nil
+      }
+    }
+  }
+
+  "mandatoryIf" - {
+    val fRes: Seq[Option[_]] = Seq(Some(1))
+
+    "must return the function which returns a Seq" - {
+      "if true" in {
+        section.mandatoryIf(bool = true)(fRes) mustBe fRes
+      }
+    }
+    "must return an empty Seq" - {
+      "if false" in {
+        section.mandatoryIf(bool = false)(fRes) mustBe Nil
       }
     }
   }

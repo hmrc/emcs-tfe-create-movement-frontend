@@ -101,7 +101,7 @@ class ItemCheckAnswersHelper @Inject()(
         Some(Actions(items = Seq(ActionItemViewModel(
             "site.change",
             href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, idx).url,
-            s"changeItemBulkPackagingChoice${idx.displayIndex}"
+            s"changeItemPackaging${idx.displayIndex}"
           ).withVisuallyHiddenText(messages(s"${ItemsPackagingAddToListPage(idx)}.change.hidden")))))
         )
     }

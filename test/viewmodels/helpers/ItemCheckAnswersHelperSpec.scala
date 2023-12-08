@@ -112,7 +112,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
           card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, Some(Actions(items = Seq(ActionItemViewModel(
             messagesForLanguage.change,
             href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, testIndex1).url,
-            s"changeItemBulkPackagingChoice${testIndex1.displayIndex}"
+            s"changeItemPackaging${testIndex1.displayIndex}"
           ).withVisuallyHiddenText(ItemsPackagingAddToListMessages.English.cyaChangeHidden))))))
           card.rows must not be empty
         }

@@ -19,15 +19,14 @@ package pages.sections.items
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import viewmodels.taskList.TaskListStatus
 
 case object ItemsSection extends Section[JsObject] {
+
   override val path: JsPath = JsPath \ "items"
-  val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
+    ItemsSectionItems.status
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

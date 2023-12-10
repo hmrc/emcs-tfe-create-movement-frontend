@@ -25,7 +25,7 @@ import queries.ItemsPackagingCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
-  override val path: JsPath = JsPath \ "items" \ itemIndex.position \ "packaging"
+  override val path: JsPath = ItemsSectionItem(itemIndex).path \ "packaging"
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
@@ -43,5 +43,7 @@ case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
         if (statuses.forall(_ == Completed)) Completed else InProgress
     }
 
-  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+  // $COVERAGE-OFF$
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
+    ItemsSection.canBeCompletedForTraderAndDestinationType
 }

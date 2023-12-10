@@ -80,4 +80,25 @@ trait BaseItemsNavigationController extends BaseNavigationController {
       case None =>
         Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemIdx)))
     }
+
+  def removingAnyItemsWithoutEPCandCnCode(request: DataRequest[_])(f: DataRequest[_] => Future[Result]): Future[Result] =
+    request.userAnswers.get(ItemsCount).fold(f(request)) { count =>
+
+      val indexesOfItemsToBeRemoved = (0 until count).map(Index(_)).collect {
+        case idx if request.userAnswers.get(ItemExciseProductCodePage(idx)).isEmpty || request.userAnswers.get(ItemCommodityCodePage(idx)).isEmpty =>
+          idx
+      }
+
+      if(indexesOfItemsToBeRemoved.isEmpty) f(request) else {
+
+        val updatedAnswers = indexesOfItemsToBeRemoved.foldLeft(request.userAnswers) {
+          case (userAnswers, idxToRemove) =>
+            userAnswers.remove(ItemsSectionItem(idxToRemove))
+        }
+
+        userAnswersService.set(updatedAnswers)(hc(request)).flatMap { _ =>
+          f(request.copy(userAnswers = updatedAnswers))
+        }
+      }
+    }
 }

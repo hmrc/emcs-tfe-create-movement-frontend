@@ -16,20 +16,33 @@
 
 package pages.sections.items
 
-import models.Index
 import models.requests.DataRequest
+import models.sections.items.ItemsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{NotStarted, TaskListStatus}
+import queries.ItemsCount
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case class ItemsSectionItems(idx: Index) extends Section[JsObject] {
-  override val path: JsPath = ItemsSection.path \ idx.position
+case object ItemsSectionItems extends Section[JsObject] {
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    // TODO: Update when CAM-ITM34 is built
-    NotStarted
-  }
+  override val path: JsPath = ItemsSection.path \ "addedItems"
+  val MAX: Int = 999
 
-  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    ItemsSection.canBeCompletedForTraderAndDestinationType
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    request.userAnswers.get(ItemsAddToListPage) match {
+      case Some(ItemsAddToList.MoreLater) => InProgress
+      case _ =>
+        request.userAnswers.get(ItemsCount) match {
+          case Some(0) | None => NotStarted
+          case Some(count) =>
+            if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
+              Completed
+            } else {
+              InProgress
+            }
+        }
+    }
+
+  // $COVERAGE-OFF$
+  override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

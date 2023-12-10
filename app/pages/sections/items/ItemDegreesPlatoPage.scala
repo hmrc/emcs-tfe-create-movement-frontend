@@ -23,6 +23,6 @@ import play.api.libs.json.JsPath
 
 case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlatoModel] {
   override val toString: String = "itemDegreesPlato"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }
 

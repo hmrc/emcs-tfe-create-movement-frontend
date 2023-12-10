@@ -22,5 +22,5 @@ import play.api.libs.json.JsPath
 
 case class ItemProducerSizePage(idx: Index) extends QuestionPage[BigInt] {
   override val toString: String = "itemProducerSize"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

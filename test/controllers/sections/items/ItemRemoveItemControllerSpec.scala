@@ -41,7 +41,7 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
     .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
     .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
 
-  val action: Call = controllers.sections.items.routes.ItemRemoveItemController.onSubmit(testErn, testDraftId, testIndex1)
+  val action: Call = routes.ItemRemoveItemController.onSubmit(testErn, testDraftId, testIndex1)
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -98,7 +98,7 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to the Item CYA page when no is selected" in new Test(Some(baseUserAnswers)) {
@@ -106,8 +106,7 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
-      //TODO: redirect to CAM-ITM34
-      redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.ItemsAddToListController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers)) {

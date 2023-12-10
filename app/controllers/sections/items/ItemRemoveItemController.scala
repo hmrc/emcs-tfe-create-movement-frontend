@@ -21,7 +21,7 @@ import forms.sections.items.ItemRemoveItemFormProvider
 import models.Index
 import models.requests.DataRequest
 import navigation.ItemsNavigator
-import pages.sections.items.ItemsSectionItems
+import pages.sections.items.ItemsSectionItem
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -74,13 +74,12 @@ class ItemRemoveItemController @Inject()(
   private def handleAnswerRemovalAndRedirect(shouldRemoveItem: Boolean, index: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if (shouldRemoveItem) {
-      val cleansedAnswers = request.userAnswers.remove(ItemsSectionItems(index))
+      val cleansedAnswers = request.userAnswers.remove(ItemsSectionItem(index))
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(routes.ItemsIndexController.onPageLoad(ern, draftId))
       }
     } else {
-      //TODO: route to CAM-ITM34
-      Future(Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad()))
+      Future(Redirect(routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId)))
     }
   }
 }

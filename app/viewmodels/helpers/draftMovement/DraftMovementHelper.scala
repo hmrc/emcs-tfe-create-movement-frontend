@@ -247,7 +247,7 @@ class DraftMovementHelper @Inject()() extends Logging {
     )
   }
 
-  def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
+  private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
     movementSection,
     deliverySection,
     guarantorSection,

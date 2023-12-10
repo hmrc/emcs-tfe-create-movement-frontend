@@ -23,5 +23,5 @@ import play.api.libs.json.JsPath
 
 case class ItemMaturationPeriodAgePage(idx: Index) extends QuestionPage[ItemMaturationPeriodAgeModel] {
   override val toString: String = "itemMaturationPeriodAge"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object ItemCommercialDescriptionSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, showChangeLinks: Boolean = true)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemCommercialDescriptionPage(idx)
 
     request.userAnswers.get(page).map {
@@ -36,15 +36,13 @@ object ItemCommercialDescriptionSummary {
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(answer).toString()),
-          actions = {
-            Seq(
-              ActionItemViewModel(
-                content = "site.change",
-                routes.ItemCommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-                id = s"changeItemCommercialDescription${idx.displayIndex}"
-              ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
-            )
-          }
+          actions = if (!showChangeLinks) Seq() else Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              routes.ItemCommercialDescriptionController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              id = s"changeItemCommercialDescription${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages(s"$page.change.hidden"))
+          )
         )
     }
   }

@@ -32,5 +32,5 @@ case class ItemBulkPackagingSection(idx: Index) extends Section[JsObject] {
 
   override val toString: String = "bulkPackaging"
 
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

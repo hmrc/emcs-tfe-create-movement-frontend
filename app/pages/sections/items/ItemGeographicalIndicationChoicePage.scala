@@ -23,5 +23,5 @@ import play.api.libs.json.JsPath
 
 case class ItemGeographicalIndicationChoicePage(idx: Index) extends QuestionPage[ItemGeographicalIndicationType] {
   override val toString: String = "itemGeographicalIndicationChoice"
-  override val path: JsPath = ItemsSectionItems(idx).path \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

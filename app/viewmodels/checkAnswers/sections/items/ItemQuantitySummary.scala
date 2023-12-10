@@ -27,7 +27,7 @@ import viewmodels.implicits._
 
 object ItemQuantitySummary {
 
-  def row(idx: Index, unitOfMeasure: UnitOfMeasure)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemQuantityPage(idx)
 
     request.userAnswers.get(page).map {
@@ -35,7 +35,7 @@ object ItemQuantitySummary {
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
           value = ValueViewModel(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage())),
-          actions = Seq(ActionItemViewModel(
+          actions = if (!showChangeLinks) Seq() else Seq(ActionItemViewModel(
             href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "site.change",
             id = s"changeItemQuantity${idx.displayIndex}"

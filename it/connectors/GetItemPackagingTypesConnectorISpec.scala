@@ -3,7 +3,7 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.referenceData.GetItemPackagingTypesConnector
-import fixtures.ItemFixtures
+import fixtures.{BaseFixtures, ItemFixtures}
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -23,6 +23,7 @@ class GetItemPackagingTypesConnectorISpec extends AnyFreeSpec
   with IntegrationPatience
   with EitherValues
   with OptionValues
+  with BaseFixtures
   with ItemFixtures {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()

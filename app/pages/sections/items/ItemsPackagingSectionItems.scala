@@ -39,6 +39,7 @@ case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) 
     }
   }
 
+  // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     ItemsSection.canBeCompletedForTraderAndDestinationType
 }

@@ -51,13 +51,15 @@ class DocumentsAddToListHelper @Inject()(tag: views.html.components.tag, span: v
         DocumentReferenceSummary.row(idx),
         DocumentDescriptionSummary.row(idx)
       ).flatten
-    ).copy(card = Some(Card(
-      title = Some(cardTitle(idx)),
-      actions = Some(Actions(items = Seq(
-        continueEditingLink(idx),
-        Some(removeLink(idx))
-      ).flatten))
-    )))
+    ).withCard(
+      Card(
+        title = Some(cardTitle(idx)),
+        actions = Some(Actions(items = Seq(
+          continueEditingLink(idx),
+          Some(removeLink(idx))
+        ).flatten))
+      )
+    )
   }
 
   private def cardTitle(idx: Index)(implicit request: DataRequest[_], messages: Messages): CardTitle = {

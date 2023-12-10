@@ -27,6 +27,8 @@ object GoodsTypeModel {
     def toPluralOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.plural")
 
     def toSingularOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.singular")
+
+    val isAlcohol = Seq(Beer.code, Wine.code, Spirits.code, Intermediate.code).contains(code)
   }
 
   case object Beer extends GoodsType {

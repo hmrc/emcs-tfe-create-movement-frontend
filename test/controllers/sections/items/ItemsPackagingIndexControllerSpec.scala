@@ -51,11 +51,12 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
 
     "when ItemsSection.isCompleted" - {
 
-      "must redirect to the CYA controller" ignore new Test(Some(emptyUserAnswers)) {
+      "must redirect to the CYA controller" in new Test(Some(singleCompletedWineItem)) {
         val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+        redirectLocation(result).value mustBe
+          controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1).url
       }
     }
 

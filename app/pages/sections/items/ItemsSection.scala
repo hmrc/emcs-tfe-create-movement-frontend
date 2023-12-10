@@ -17,16 +17,24 @@
 package pages.sections.items
 
 import models.requests.DataRequest
+import models.sections.items.ItemsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.TaskListStatus
+import queries.ItemsCount
+import viewmodels.taskList
+import viewmodels.taskList.{InProgress, TaskListStatus}
 
 case object ItemsSection extends Section[JsObject] {
 
   override val path: JsPath = JsPath \ "items"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    ItemsSectionItems.status
+    (request.userAnswers.get(ItemsCount), request.userAnswers.get(ItemsAddToListPage)) match {
+      case (Some(0) | None, _) => taskList.NotStarted
+      case (_, Some(ItemsAddToList.No)) =>
+        ItemsSectionItems.status
+      case _ => InProgress
+    }
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

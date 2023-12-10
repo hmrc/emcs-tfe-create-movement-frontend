@@ -17,7 +17,6 @@
 package pages.sections.items
 
 import models.requests.DataRequest
-import models.sections.items.ItemsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
@@ -29,17 +28,13 @@ case object ItemsSectionItems extends Section[JsObject] {
   val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(ItemsAddToListPage) match {
-      case Some(ItemsAddToList.MoreLater) => InProgress
-      case _ =>
-        request.userAnswers.get(ItemsCount) match {
-          case Some(0) | None => NotStarted
-          case Some(count) =>
-            if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
-              Completed
-            } else {
-              InProgress
-            }
+    request.userAnswers.get(ItemsCount) match {
+      case Some(0) | None => NotStarted
+      case Some(count) =>
+        if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
+          Completed
+        } else {
+          InProgress
         }
     }
 

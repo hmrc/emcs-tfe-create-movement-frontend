@@ -17,8 +17,8 @@
 package views.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemsAddToListMessages
-import fixtures.{DocumentTypeFixtures, ItemFixtures}
 import forms.sections.items.ItemsAddToListFormProvider
 import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
@@ -26,7 +26,6 @@ import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.concurrent.IntegrationPatience
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -40,8 +39,10 @@ import views.{BaseSelectors, ViewBehaviours}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ItemsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentTypeFixtures
-  with IntegrationPatience with ItemFixtures with MockGetCnCodeInformationService {
+class ItemsAddToListViewSpec extends SpecBase
+  with ViewBehaviours
+   with ItemFixtures
+  with MockGetCnCodeInformationService {
 
   lazy val view = app.injector.instanceOf[ItemsAddToListView]
   lazy val form = app.injector.instanceOf[ItemsAddToListFormProvider].apply()
@@ -57,13 +58,12 @@ class ItemsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentT
   )
 
   object Selectors extends BaseSelectors {
-    val returnToDraftLink: String = "#save-and-exit"
     val cardTitle: Int => String = index => s"div.govuk-summary-card:nth-of-type($index) .govuk-summary-card__title"
     val legendQuestion = ".govuk-fieldset__legend.govuk-fieldset__legend--m"
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child($index)"
-    val errorField: String = "p.govuk-error-message"
     val removeItemLink: Int => String = index => s"#removeItem-$index"
-    val editItemLink: Int => String = index => s"#editPackage-$index"
+    val changeItemLink: Int => String = index => s"#changeItem-$index"
+    val editItemLink: Int => String = index => s"#editItem-$index"
   }
 
   "ItemsAddToListView" - {
@@ -96,12 +96,12 @@ class ItemsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentT
             Selectors.h1 -> messagesForLanguage.heading(count = 1),
             Selectors.cardTitle(1) -> messagesForLanguage.itemCardTitle(testIndex1),
             Selectors.removeItemLink(1) -> messagesForLanguage.removeItem(testIndex1),
-            Selectors.legendQuestion -> messagesForLanguage.h2(testIndex1),
+            Selectors.legendQuestion -> messagesForLanguage.h2,
             Selectors.radioButton(1) -> messagesForLanguage.yes,
             Selectors.radioButton(2) -> messagesForLanguage.no1,
             Selectors.radioButton(4) -> messagesForLanguage.moreLater,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
 
@@ -134,15 +134,17 @@ class ItemsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentT
             Selectors.h2(1) -> messagesForLanguage.itemSection,
             Selectors.h1 -> messagesForLanguage.heading(count = 2),
             Selectors.cardTitle(1) -> messagesForLanguage.itemCardTitle(testIndex1),
+            Selectors.changeItemLink(1) -> messagesForLanguage.changeItem(testIndex1),
             Selectors.removeItemLink(1) -> messagesForLanguage.removeItem(testIndex1),
             Selectors.cardTitle(2) -> s"${messagesForLanguage.itemCardTitle(testIndex2)} ${messagesForLanguage.incomplete}",
+            Selectors.editItemLink(2) -> messagesForLanguage.editItem(testIndex2),
             Selectors.removeItemLink(2) -> messagesForLanguage.removeItem(testIndex2),
-            Selectors.legendQuestion -> messagesForLanguage.h2(testIndex1),
+            Selectors.legendQuestion -> messagesForLanguage.h2,
             Selectors.radioButton(1) -> messagesForLanguage.yes,
             Selectors.radioButton(2) -> messagesForLanguage.no2,
             Selectors.radioButton(4) -> messagesForLanguage.moreLater,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
 
@@ -169,7 +171,7 @@ class ItemsAddToListViewSpec extends SpecBase with ViewBehaviours with DocumentT
             Selectors.cardTitle(1) -> messagesForLanguage.itemCardTitle(testIndex1),
             Selectors.removeItemLink(1) -> messagesForLanguage.removeItem(testIndex1),
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
 
           behave like pageWithElementsNotPresent(Seq(

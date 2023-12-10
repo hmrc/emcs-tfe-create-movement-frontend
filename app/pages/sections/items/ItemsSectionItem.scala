@@ -22,10 +22,10 @@ import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndica
 import models.{GoodsTypeModel, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import utils.{JsonOptionFormatter, Logging}
+import utils.JsonOptionFormatter
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging with JsonOptionFormatter {
+case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
 
   override val path: JsPath = ItemsSectionItems.path \ idx.position
 
@@ -35,7 +35,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       case Some(epc) =>
         implicit val goodsType: GoodsType = GoodsTypeModel(epc)
 
-        if(itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
+        if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed
         } else {
           InProgress
@@ -55,7 +55,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       fiscalMarksAnswers
       ).forall(_.isDefined)
 
-  private[items] def packagingPagesComplete(implicit request: DataRequest[_]): Boolean =
+  private[items] def packagingPagesComplete(implicit goodsType: GoodsType, request: DataRequest[_]): Boolean =
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
       case (Some(_), Some(false)) =>
         ItemsPackagingSection(idx).isCompleted
@@ -65,7 +65,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
         false
     }
 
-  def bulkPackagingPagesComplete(implicit request: DataRequest[_]): Boolean =
+  def bulkPackagingPagesComplete(implicit goodsType: GoodsType, request: DataRequest[_]): Boolean =
     (wineBulkOperationAnswer ++
       wineBulkGrowingZoneAnswer ++
       bulkCommercialSeals :+
@@ -143,20 +143,20 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with Logging w
       case sealChoice => Seq(sealChoice)
     }
 
-  private[items] def wineBulkGrowingZoneAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
-    (request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineChoicePage(idx))) match {
+  private[items] def wineBulkGrowingZoneAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+    mandatoryIf(goodsType == Wine)((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineChoicePage(idx))) match {
       case (Some(quantity), Some(true)) if quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
       case _ => Seq()
-    }
+    })
 
-  private[items] def wineBulkOperationAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
-    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemQuantityPage(idx))) match {
-      case (Some(epc), Some(quantity)) if (GoodsTypeModel.apply(epc) == GoodsTypeModel.Wine) && (quantity > 60) =>
+  private[items] def wineBulkOperationAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+    mandatoryIf(goodsType == Wine)(request.userAnswers.get(ItemQuantityPage(idx)) match {
+      case Some(quantity) if quantity > 60 =>
         Seq(request.userAnswers.get(ItemWineOperationsChoicePage(idx)))
       case _ => Seq()
-    }
+    })
 
-  private[items] def mandatoryIf(bool: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if(bool) f else Seq()
+  private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

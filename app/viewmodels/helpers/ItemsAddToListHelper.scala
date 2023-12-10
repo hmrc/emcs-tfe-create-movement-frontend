@@ -44,6 +44,8 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary) extends TagFluency with Logging {
 
+  private val headingLevel = 3
+
 
   def allItemsSummary(implicit request: DataRequest[_], messages: Messages, headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Seq[SummaryList]] =
     getAddedItems match {
@@ -63,13 +65,13 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
     }
 
   private def getAddedItems(implicit request: DataRequest[_]): Seq[ItemsAddToListItemModel] =
-    request.userAnswers.get(ItemsCount).fold(Seq.empty[ItemsAddToListItemModel]) { count =>
+    request.userAnswers.get(ItemsCount).fold[Seq[ItemsAddToListItemModel]](Seq.empty) { count =>
       (0 until count).map(Index(_)).flatMap { itemIdx =>
         (request.userAnswers.get(ItemExciseProductCodePage(itemIdx)), request.userAnswers.get(ItemCommodityCodePage(itemIdx))) match {
           case (Some(epc), Some(commodityCode)) =>
             Some(ItemsAddToListItemModel(epc, commodityCode, itemIdx, ItemsSectionItem(itemIdx).status))
           case _ =>
-            logger.warn(s"[getAddedItems] Could not retrieve Excise Product Code and/or Commodity Code for item at idx: '$itemIdx'}")
+            logger.warn(s"[getAddedItems] Could not retrieve Excise Product Code and/or Commodity Code for item at idx: '$itemIdx'")
             None
         }
       }
@@ -97,14 +99,20 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
 
   private def cardTitle(item: ItemsAddToListItemModel)(implicit messages: Messages): CardTitle =
     item.status match {
-      case InProgress => CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-        span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex), Some("govuk-!-margin-right-2")),
-        tag(
-          message = messages("taskListStatus.incomplete"),
-          colour = "red"
-        )
-      ))))
-      case _ => CardTitle(HtmlContent(span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex))))
+      case InProgress => CardTitle(
+        content = HtmlContent(HtmlFormat.fill(Seq(
+          span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex), Some("govuk-!-margin-right-2")),
+          tag(
+            message = messages("taskListStatus.incomplete"),
+            colour = "red"
+          )
+        ))),
+        headingLevel = Some(headingLevel)
+      )
+      case _ => CardTitle(
+        content = HtmlContent(span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex))),
+        headingLevel = Some(headingLevel)
+      )
     }
 
   private def changeLink(item: ItemsAddToListItemModel)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] = {
@@ -131,11 +139,11 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
     item.status match {
       case InProgress =>
         val continueEditingLink =
-          if(ItemsSectionItem(item.idx).itemPagesWithoutPackagingComplete(item.exciseProductCode)(item.goodsType, request)) {
-            if(request.userAnswers.get(ItemBulkPackagingChoicePage(item.idx)).contains(true)) {
+          if (ItemsSectionItem(item.idx).itemPagesWithoutPackagingComplete(item.exciseProductCode)(item.goodsType, request)) {
+            if (request.userAnswers.get(ItemBulkPackagingChoicePage(item.idx)).contains(true)) {
               routes.ItemBulkPackagingChoiceController.onPageLoad(request.ern, request.draftId, item.idx, NormalMode)
             } else {
-              if(request.userAnswers.get(ItemsPackagingCount(item.idx)).exists(_ > 1)) {
+              if (request.userAnswers.get(ItemsPackagingCount(item.idx)).exists(_ > 1)) {
                 routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, item.idx)
               } else {
                 routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId, item.idx, Index(0), NormalMode)

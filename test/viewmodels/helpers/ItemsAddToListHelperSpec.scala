@@ -22,12 +22,11 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemsAddToListMessages
 import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
-import models.requests.CnCodeInformationItem
+import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.{NormalMode, UserAnswers}
-import org.scalatest.concurrent.IntegrationPatience
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -36,28 +35,29 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.checkAnswers.sections.items._
-import views.html.components.{link, span, tag}
+import views.html.components.{span, tag}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCnCodeInformationService with IntegrationPatience {
+class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCnCodeInformationService {
 
-  implicit lazy val ec = app.injector.instanceOf[ExecutionContext]
-  implicit lazy val hc = HeaderCarrier()
+  implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+  implicit lazy val span: span = app.injector.instanceOf[span]
+  implicit lazy val tag: tag = app.injector.instanceOf[tag]
+  lazy val itemPackagingSummary: ItemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
+
+  val headingLevel = 3
+
+  lazy val helper = new ItemsAddToListHelper(
+    tag = tag,
+    span = span,
+    cnCodeInformationService = mockGetCnCodeInformationService,
+    itemPackagingSummary = itemPackagingSummary
+  )
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    implicit lazy val link = app.injector.instanceOf[link]
-    implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
-    implicit lazy val span = app.injector.instanceOf[span]
-    implicit lazy val tag = app.injector.instanceOf[tag]
-
-    lazy val helper = new ItemsAddToListHelper(
-      tag = app.injector.instanceOf[tag],
-      span = app.injector.instanceOf[span],
-      cnCodeInformationService = mockGetCnCodeInformationService,
-      itemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
-    )
-    lazy val itemPackagingSummary: ItemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
+    implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
   }
 
   "ItemsAddToListHelper" - {
@@ -88,7 +88,10 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
             helper.allItemsSummary.futureValue mustBe Seq(
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(span(messagesForLanguage.itemCardTitle(testIndex1))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(span(messagesForLanguage.itemCardTitle(testIndex1))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
@@ -129,10 +132,13 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
             helper.allItemsSummary.futureValue mustBe Seq(
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-                    span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                    tag(messagesForLanguage.incomplete, "red")
-                  ))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
+                      tag(messagesForLanguage.incomplete, "red")
+                    ))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode).url,
@@ -169,10 +175,13 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
             helper.allItemsSummary.futureValue mustBe Seq(
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-                    span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                    tag(messagesForLanguage.incomplete, "red")
-                  ))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
+                      tag(messagesForLanguage.incomplete, "red")
+                    ))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1).url,
@@ -215,10 +224,13 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
             helper.allItemsSummary.futureValue mustBe Seq(
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-                    span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                    tag(messagesForLanguage.incomplete, "red")
-                  ))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
+                      tag(messagesForLanguage.incomplete, "red")
+                    ))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
@@ -263,7 +275,10 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
             helper.allItemsSummary.futureValue mustBe Seq(
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(span(messagesForLanguage.itemCardTitle(testIndex1))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(span(messagesForLanguage.itemCardTitle(testIndex1))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
@@ -288,10 +303,13 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
               ),
               SummaryList(
                 card = Some(Card(
-                  title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-                    span(messagesForLanguage.itemCardTitle(testIndex2), Some("govuk-!-margin-right-2")),
-                    tag(messagesForLanguage.incomplete, "red")
-                  ))))),
+                  title = Some(CardTitle(
+                    content = HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.itemCardTitle(testIndex2), Some("govuk-!-margin-right-2")),
+                      tag(messagesForLanguage.incomplete, "red")
+                    ))),
+                    headingLevel = Some(headingLevel)
+                  )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
                       href = routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url,

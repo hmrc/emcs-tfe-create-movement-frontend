@@ -1329,6 +1329,8 @@ itemDensity.change.hidden = density
 itemDensity.suffix = kg/m<sup>3</sup>
 itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per cubic metre.
 
+# Because of how the message args are built in ViewUtils.pluralSingular, {0} is the count and {1} is the item number.
+# Therefore, although it looks odd, we need to access message parameter {1} even though we're not using {0}.
 itemsPackagingAddToList.title.singular = You have added 1 packaging type for item {1}
 itemsPackagingAddToList.title.plural = You have added {0} packaging types for item {1}
 itemsPackagingAddToList.heading.singular = You have added 1 packaging type for item {1}
@@ -1360,6 +1362,7 @@ itemsAddToList.heading.singular = You have given information for 1 item
 itemsAddToList.heading.plural = You have given information for {0} items
 itemsAddToList.itemCardTitle = Item {0}
 itemsAddToList.packagesCyaLabel = Packaging
+itemsAddToList.packagesCyaValue = {0}x {1}
 itemsAddToList.h2 = Do you need to add another item?
 itemsAddToList.yes = Yes
 itemsAddToList.no.singular = No, this is the only item in this movement

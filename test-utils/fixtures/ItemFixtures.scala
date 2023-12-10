@@ -22,7 +22,7 @@ import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import models.sections.items.ItemBulkPackagingCode._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.{ExciseProductCode, GoodsTypeModel}
-import pages.sections.items.{ItemAlcoholStrengthPage, ItemBrandNamePage, ItemBulkPackagingChoicePage, ItemCommercialDescriptionPage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemGeographicalIndicationChoicePage, ItemImportedWineChoicePage, ItemNetGrossMassPage, ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemQuantityPage, ItemSelectPackagingPage, ItemWineMoreInformationChoicePage}
+import pages.sections.items._
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem

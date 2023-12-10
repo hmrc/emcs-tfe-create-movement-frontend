@@ -36,18 +36,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemsAddToListController @Inject()(
-                                                   override val messagesApi: MessagesApi,
-                                                   override val userAnswersService: UserAnswersService,
-                                                   override val userAllowList: UserAllowListAction,
-                                                   override val navigator: ItemsNavigator,
-                                                   override val auth: AuthAction,
-                                                   override val getData: DataRetrievalAction,
-                                                   override val requireData: DataRequiredAction,
-                                                   formProvider: ItemsAddToListFormProvider,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   view: ItemsAddToListView,
-                                                   addToListHelper: ItemsAddToListHelper
-                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
+                                          override val messagesApi: MessagesApi,
+                                          override val userAnswersService: UserAnswersService,
+                                          override val userAllowList: UserAllowListAction,
+                                          override val navigator: ItemsNavigator,
+                                          override val auth: AuthAction,
+                                          override val getData: DataRetrievalAction,
+                                          override val requireData: DataRequiredAction,
+                                          formProvider: ItemsAddToListFormProvider,
+                                          val controllerComponents: MessagesControllerComponents,
+                                          view: ItemsAddToListView,
+                                          addToListHelper: ItemsAddToListHelper
+                                        ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {

@@ -130,7 +130,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
         )(dataRequest(request), messages(request)).toString
       }
 
-      "must clear down any packages which don't have a EPC and CnCode before rendering" in new Setup(Some(singleCompletedWineItem
+      "must clear down any items which don't have a EPC and CnCode before rendering" in new Setup(Some(singleCompletedWineItem
         .set(ItemExciseProductCodePage(testIndex2), testEpcTobacco)
       )) {
 
@@ -148,7 +148,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
         )(dataRequest(request), messages(request)).toString
       }
 
-      "must return OK and the correct view when there MAX packages already added" in new Setup(Some(userAnswersWithMaxItems)) {
+      "must return OK and the correct view when there are MAX items already added" in new Setup(Some(userAnswersWithMaxItems)) {
 
         MockItemsAddToListHelper.allItemsSummary().returns(Future.successful(Seq()))
 
@@ -200,32 +200,23 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "must redirect to the next page when No is submitted" in new Setup() {
+      Seq(
+        ItemsAddToList.No,
+        ItemsAddToList.MoreLater
+      ).foreach { answer =>
+        s"must redirect to the next page when $answer is submitted" in new Setup() {
 
-        val updatedAnswers = singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.No)
+          val updatedAnswers = singleCompletedWineItem.set(ItemsAddToListPage, answer)
 
-        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
+          MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
 
-        val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", ItemsAddToList.No.toString))
+          val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", answer.toString))
 
-        val result = testController.onSubmit(testErn, testDraftId)(req)
+          val result = testController.onSubmit(testErn, testDraftId)(req)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
-
-      "must redirect to the next page when MoreLater is submitted" in new Setup() {
-
-        val updatedAnswers = singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.MoreLater)
-
-        MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
-
-        val req = FakeRequest(POST, controllerRoute).withFormUrlEncodedBody(("value", ItemsAddToList.MoreLater.toString))
-
-        val result = testController.onSubmit(testErn, testDraftId)(req)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
       }
 
       "must redirect to the next page when submitted with MAX packages already added" in new Setup(Some(userAnswersWithMaxItems)) {

@@ -25,6 +25,9 @@ object ItemPackagingQuantityMessages {
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
     def hint(packageType: String) = s"The packaging type is: $packageType."
+
+    val cyaLabel = "Quantity"
+    val cyaVisuallyHidden = "packaging quantity"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -22,7 +22,9 @@ object DestinationBusinessNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What is the business name of the place of destination?"
+    val headingOptional = "What is the business name of the place of destination (optional)?"
     val title = titleHelper(heading)
+    val titleOptional = titleHelper(headingOptional)
     val errorRequired = "Enter the business name of the place of destination"
     val errorLength = "Enter a business name up to 182 characters"
     val errorInvalid = "Business name must not contain < and > and : and ;"

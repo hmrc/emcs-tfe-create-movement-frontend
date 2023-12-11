@@ -19,7 +19,9 @@ package views.sections.destination
 import base.SpecBase
 import fixtures.messages.sections.destination.DestinationBusinessNameMessages
 import forms.sections.destination.DestinationBusinessNameFormProvider
+import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -35,15 +37,15 @@ class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
 
     Seq(DestinationBusinessNameMessages.English).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' and destination type is not 'DirectDelivery'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
+        lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
         val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, GbTaxWarehouse, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
@@ -51,6 +53,25 @@ class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' when destination type is 'Direct Delivery'" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
+        val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, DirectDelivery, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode)).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
+          Selectors.title -> messagesForLanguage.titleOptional,
+          Selectors.h1 -> messagesForLanguage.headingOptional,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.link(1) -> messagesForLanguage.skipQuestion
         ))
       }
     }

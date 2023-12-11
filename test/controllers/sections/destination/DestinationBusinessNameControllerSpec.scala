@@ -20,9 +20,11 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -63,43 +65,44 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
   }
 
   "DestinationBusinessName Controller" - {
+    Seq(DirectDelivery, GbTaxWarehouse).foreach { destinationType =>
+      s"must return OK and the correct view for a GET when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, destinationType))) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-    "must return OK and the correct view for a GET" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit, destinationType, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode))(dataRequest(request), messages(request)).toString
+      }
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
-    }
+      s"must populate the view correctly on a GET when the question has previously been answered when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers
+        .set(DestinationTypePage, destinationType).set(DestinationBusinessNamePage, "answer")
+      )) {
+        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationBusinessNamePage, "answer")
-    )) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form.fill("answer"), destinationBusinessNameOnSubmit, destinationType, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode))(dataRequest(request), messages(request)).toString
+      }
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
-    }
+      s"must redirect to the next page when valid data is submitted when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, destinationType))) {
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-    "must redirect to the next page when valid data is submitted" in new Fixture() {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+        val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", "answer"))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
-    }
+      s"must return a Bad Request and errors when invalid data is submitted when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, destinationType))) {
+        val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", ""))
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest(POST, destinationBusinessNameRoute).withFormUrlEncodedBody(("value", ""))
+        val boundForm = form.bind(Map("value" -> ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
+        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
-
-      status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, destinationBusinessNameOnSubmit)(dataRequest(request), messages(request)).toString
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, destinationBusinessNameOnSubmit, destinationType, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode))(dataRequest(request), messages(request)).toString
+      }
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

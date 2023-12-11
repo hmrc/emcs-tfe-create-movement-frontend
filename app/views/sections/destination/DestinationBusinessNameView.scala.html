@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
+@import models.sections.info.movementScenario.MovementScenario
 @import viewmodels.LabelSize
 
 
@@ -27,12 +28,18 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
-    continueOrExit: components.continueOrExit
+    continueOrExit: components.continueOrExit,
+    continueOrSkip: components.continueOrSkip
 )
 
-@(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitCall: Call, destinationType: MovementScenario, QuestionSkipCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("destinationBusinessName.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, if(destinationType.stringValue == "direct delivery") {
+messages("destinationBusinessName.directDelivery.title")
+} else {
+messages("destinationBusinessName.title")
+}
+), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 
@@ -45,12 +52,21 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationBusinessName.heading"))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(if(destinationType.stringValue == "direct delivery") {
+                messages("destinationBusinessName.directDelivery.heading")
+                } else {
+                messages("destinationBusinessName.heading")
+                })).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
         )
 
-        @continueOrExit()
+        @if(destinationType.stringValue == "direct delivery") {
+            @continueOrSkip(QuestionSkipCall.url, "site.saveAndContinue", "site.skipThisQuestion")
+        }else{
+            @continueOrExit()
+        }
+
     }
 }
 

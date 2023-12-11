@@ -21,11 +21,13 @@ import controllers.actions._
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import models.Mode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import navigation.DestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.destination.DestinationBusinessNameView
 
@@ -46,22 +48,40 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DestinationBusinessNamePage, formProvider()), mode)
+      withAnswer(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, draftId)) {
+        destinationType =>
+          renderView(Ok, fillForm(DestinationBusinessNamePage, formProvider()), mode, destinationType)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, mode)),
-        value =>
-          saveAndRedirect(DestinationBusinessNamePage, value, mode)
+      withAnswerAsync(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, draftId)) {
+        destinationType =>
+          formProvider().bindFromRequest().fold(
+            formWithErrors =>
+              Future(renderView(BadRequest, formWithErrors, mode, destinationType)),
+            value =>
+              saveAndRedirect(DestinationBusinessNamePage, value, mode)
+          )
+      }
+    }
+
+  def renderView(status: Status, form: Form[_], mode: Mode, destinationType: MovementScenario)(implicit request: DataRequest[_]): Result =
+    status(view(
+      form = form,
+      onSubmitCall = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(request.ern, request.draftId, mode),
+      destinationType = destinationType,
+      QuestionSkipCall = routes.DestinationBusinessNameController.skipThisQuestion(request.ern, request.draftId, mode)
+    ))
+
+  def skipThisQuestion(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      val newUserAnswers = request.userAnswers.remove(DestinationBusinessNamePage)
+      userAnswersService.set(newUserAnswers).map(result => {
+        Redirect(navigator.nextPage(DestinationBusinessNamePage, mode, result))
+      }
       )
     }
 
-  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
-    status(view(
-      form = form,
-      onSubmitCall = controllers.sections.destination.routes.DestinationBusinessNameController.onSubmit(request.ern, request.draftId, mode)
-    ))
 }

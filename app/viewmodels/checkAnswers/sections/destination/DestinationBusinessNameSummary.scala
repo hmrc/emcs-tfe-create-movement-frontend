@@ -48,7 +48,7 @@ object DestinationBusinessNameSummary {
     val (value, actions) = request.userAnswers.get(businessNamePage).fold[(String, Seq[ActionItem])] {
       useConsignee match {
         case Some(true) => (messages("destinationCheckAnswers.consignee.notProvided"), Seq.empty)
-        case _ => (messages("destinationCheckAnswers.destination.notProvided"), Seq.empty)
+        case _ => (messages("destinationCheckAnswers.destination.notProvided"), changeBusinessNameLink)
       }
     } { answer =>
       useConsignee match {

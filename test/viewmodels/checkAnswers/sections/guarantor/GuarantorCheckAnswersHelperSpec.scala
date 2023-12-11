@@ -34,7 +34,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
   }
 
   "summaryList" - {
-    GuarantorArranger.values.foreach {
+    GuarantorArranger.displayValues.foreach {
       case value@(GoodsOwner | Transporter) =>
 
         "must render five rows" - {

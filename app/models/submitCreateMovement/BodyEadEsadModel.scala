@@ -16,7 +16,16 @@
 
 package models.submitCreateMovement
 
+import models.{GoodsTypeModel, Index}
+import models.requests.DataRequest
+import models.response.MissingMandatoryPage
+import models.sections.items.ItemNetGrossMassModel
+import pages.sections.items._
+import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
+import queries.ItemsCount
+import utils.{Logging, ModelConstructorHelpers}
+import viewmodels.helpers.ItemSmallIndependentProducerHelper
 
 case class BodyEadEsadModel(
                              bodyRecordUniqueReference: Int,
@@ -30,7 +39,7 @@ case class BodyEadEsadModel(
                              fiscalMark: Option[String],
                              fiscalMarkUsedFlag: Option[Boolean],
                              designationOfOrigin: Option[String],
-                             sizeOfProducer: Option[Int],
+                             sizeOfProducer: Option[BigInt],
                              density: Option[BigDecimal],
                              commercialDescription: Option[String],
                              brandNameOfProducts: Option[String],
@@ -39,6 +48,51 @@ case class BodyEadEsadModel(
                              wineProduct: Option[WineProductModel]
                            )
 
-object BodyEadEsadModel {
+object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
+
+  def apply(implicit request: DataRequest[_], messages: Messages): Seq[BodyEadEsadModel] = {
+    request.userAnswers.get(ItemsCount) match {
+      case Some(0) | None =>
+        logger.error("ItemsSection should contain at least one item")
+        throw MissingMandatoryPage("ItemsSection should contain at least one item")
+      case Some(value) =>
+        (0 until value)
+          .map(Index(_))
+          .map {
+            idx =>
+              val exciseProductCode: String = mandatoryPage(ItemExciseProductCodePage(idx))
+              val netGrossMass: ItemNetGrossMassModel = mandatoryPage(ItemNetGrossMassPage(idx))
+              val designationOfOrigin: Option[String] =
+                (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
+                  case (Some(value), _) => Some(value)
+                  case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsTypeModel(exciseProductCode)))
+                  case _ => None
+                }
+              val packagingIsBulk = mandatoryPage(ItemBulkPackagingChoicePage(idx))
+
+              BodyEadEsadModel(
+                bodyRecordUniqueReference = idx.position,
+                exciseProductCode = exciseProductCode,
+                cnCode = mandatoryPage(ItemCommodityCodePage(idx)),
+                quantity = mandatoryPage(ItemQuantityPage(idx)),
+                grossMass = netGrossMass.grossMass,
+                netMass = netGrossMass.netMass,
+                alcoholicStrengthByVolumeInPercentage = request.userAnswers.get(ItemAlcoholStrengthPage(idx)),
+                degreePlato = request.userAnswers.get(ItemDegreesPlatoPage(idx)).flatMap(_.degreesPlato),
+                fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
+                fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
+                designationOfOrigin = designationOfOrigin,
+                sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
+                density = request.userAnswers.get(ItemDensityPage(idx)),
+                commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),
+                brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
+                maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
+                packages = if(packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
+                wineProduct = ???
+              )
+          }
+    }
+  }
+
   implicit val fmt: OFormat[BodyEadEsadModel] = Json.format
 }

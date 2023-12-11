@@ -19,6 +19,7 @@ package models.submitCreateMovement
 import base.SpecBase
 import models.requests.DataRequest
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.transportArranger.TransportArranger
@@ -27,6 +28,7 @@ import pages.sections.consignor._
 import pages.sections.destination._
 import pages.sections.dispatch._
 import pages.sections.firstTransporter._
+import pages.sections.guarantor._
 import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger._
 import play.api.mvc.AnyContentAsEmpty
@@ -90,6 +92,13 @@ class TraderModelSpec extends SpecBase {
     traderName = Some("first name"),
     address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
     vatNumber = Some("first vat"),
+    eoriNumber = None
+  )
+  val guarantorTrader: TraderModel = TraderModel(
+    traderExciseNumber = None,
+    traderName = Some("guarantor name"),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+    vatNumber = Some("guarantor vat"),
     eoriNumber = None
   )
 
@@ -394,6 +403,47 @@ class TraderModelSpec extends SpecBase {
       )
 
       TraderModel.applyFirstTransporter mustBe Some(firstTransporterTrader)
+    }
+  }
+
+  "applyGuarantor" - {
+    "must return a TraderModel" - {
+      "when GoodsType is Consignor" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+        )
+
+        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe Some(consignorTrader)
+      }
+      "when GoodsType is Consignee" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+            .set(ConsigneeBusinessNamePage, "consignee name")
+            .set(ConsigneeExcisePage, "consignee ern")
+            .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+        )
+
+        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe Some(consigneeTraderWithErn.copy(eoriNumber = None))
+      }
+      Seq(GuarantorArranger.GoodsOwner, GuarantorArranger.Transporter).foreach(
+        guarantorArranger =>
+          s"when Guarantor Arranger is $guarantorArranger" in {
+            implicit val dr: DataRequest[_] = dataRequest(
+              fakeRequest,
+              emptyUserAnswers
+                .set(GuarantorNamePage, "guarantor name")
+                .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
+                .set(GuarantorVatPage, "guarantor vat")
+            )
+
+            TraderModel.applyGuarantor(guarantorArranger) mustBe Some(guarantorTrader)
+          }
+      )
     }
   }
 }

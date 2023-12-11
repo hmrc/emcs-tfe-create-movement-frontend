@@ -65,7 +65,7 @@ object GuarantorNameSummary {
       case Some(answer) => HtmlFormat.escape(answer).toString()
       case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
     }
-    case GoodsOwner | Transporter =>
+    case _ =>
       request.userAnswers.get(GuarantorNamePage) match {
         case Some(answer) => HtmlFormat.escape(answer).toString()
         case None => messages("site.notProvided")

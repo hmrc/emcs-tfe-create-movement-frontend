@@ -26,7 +26,7 @@ import viewmodels.govuk.all._
 
 object ItemSmallIndependentProducerHelper {
 
-  private def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages) = {
+  def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages): String = {
     val key = goodsType match {
       case Beer => "beer"
       case Spirits => "spirits"

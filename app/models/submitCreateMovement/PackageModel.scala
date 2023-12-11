@@ -16,7 +16,13 @@
 
 package models.submitCreateMovement
 
+import models.Index
+import models.requests.DataRequest
+import models.sections.items.ItemPackagingSealTypeModel
+import pages.sections.items._
 import play.api.libs.json.{Json, OFormat}
+import queries.ItemsPackagingCount
+import utils.ModelConstructorHelpers
 
 case class PackageModel(
                          kindOfPackages: String,
@@ -26,6 +32,40 @@ case class PackageModel(
                          sealInformation: Option[String]
                        )
 
-object PackageModel {
+object PackageModel extends ModelConstructorHelpers {
+
+  def applyBulkPackaging(idx: Index)(implicit request: DataRequest[_]): Seq[PackageModel] = {
+    val sealType: Option[ItemPackagingSealTypeModel] = request.userAnswers.get(ItemBulkPackagingSealTypePage(idx))
+    Seq(
+      PackageModel(
+        kindOfPackages = mandatoryPage(ItemBulkPackagingSelectPage(idx)).packagingType.toString,
+        numberOfPackages = Some(1), // TODO: check
+        shippingMarks = None, // TODO: check
+        commercialSealIdentification = sealType.map(_.sealType),
+        sealInformation = sealType.flatMap(_.optSealInformation)
+      )
+    )
+  }
+
+  def applyIndividualPackaging(idx: Index)(implicit request: DataRequest[_]): Seq[PackageModel] = {
+    request.userAnswers.get(ItemsPackagingCount(idx)) match {
+      case Some(0) | None => Seq()
+      case Some(value) =>
+        (0 until value)
+          .map(Index(_))
+          .map {
+            packagingIdx =>
+              val sealType: Option[ItemPackagingSealTypeModel] = request.userAnswers.get(ItemPackagingSealTypePage(idx, packagingIdx))
+              PackageModel(
+                kindOfPackages = mandatoryPage(ItemSelectPackagingPage(idx, packagingIdx)).packagingType,
+                numberOfPackages = Some(mandatoryPage(ItemPackagingQuantityPage(idx, packagingIdx)).toInt),
+                shippingMarks = request.userAnswers.get(ItemPackagingShippingMarksPage(idx, packagingIdx)),
+                commercialSealIdentification = sealType.map(_.sealType),
+                sealInformation = sealType.flatMap(_.optSealInformation)
+              )
+          }
+    }
+  }
+
   implicit val fmt: OFormat[PackageModel] = Json.format
 }

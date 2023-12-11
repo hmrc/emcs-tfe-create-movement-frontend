@@ -16,22 +16,24 @@
 
 package models.submitCreateMovement
 
+import base.SpecBase
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
-import play.api.libs.json.{Json, OFormat}
-import utils.ModelConstructorHelpers
+import play.api.test.FakeRequest
 
-case class TransportModeModel(
-                               transportModeCode: String,
-                               complementaryInformation: Option[String]
-                             )
+class TransportModeModelSpec extends SpecBase {
+  "apply" - {
+    "must return a TransportModeModel" in {
+      implicit val dr: DataRequest[_] = dataRequest(
+        FakeRequest(),
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+          .set(GiveInformationOtherTransportPage, "info")
+      )
 
-object TransportModeModel extends ModelConstructorHelpers {
-
-  def apply(implicit request: DataRequest[_]): TransportModeModel = TransportModeModel(
-    transportModeCode = mandatoryPage(HowMovementTransportedPage).toString,
-    complementaryInformation = request.userAnswers.get(GiveInformationOtherTransportPage)
-  )
-
-  implicit val fmt: OFormat[TransportModeModel] = Json.format
+      TransportModeModel.apply mustBe
+        TransportModeModel(transportModeCode = HowMovementTransported.AirTransport.toString, complementaryInformation = Some("info"))
+    }
+  }
 }

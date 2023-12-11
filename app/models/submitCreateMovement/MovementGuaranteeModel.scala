@@ -16,20 +16,36 @@
 
 package models.submitCreateMovement
 
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.libs.json.{Json, OFormat}
+import utils.ModelConstructorHelpers
 
 case class MovementGuaranteeModel(
-    guarantorTypeCode: GuarantorArranger,
-    guarantorTrader: Option[Seq[TraderModel]]
-)
+                                   guarantorTypeCode: GuarantorArranger,
+                                   guarantorTrader: Option[Seq[TraderModel]]
+                                 )
 
-object MovementGuaranteeModel {
+object MovementGuaranteeModel extends ModelConstructorHelpers {
 
-//  implicit val xmlReads: XmlReader[MovementGuaranteeModel] = (
-//    (__ \\ "GuarantorTypeCode").read[GuarantorType](GuarantorType.xmlReads("MovementGuarantee/GuarantorTypeCode")(GuarantorType.enumerable)),
-//    (__ \\ "GuarantorTrader").read[Seq[TraderModel]](strictReadSeq(TraderModel.xmlReads(GuarantorTrader))).seqToOptionSeq
-//  ).mapN(MovementGuaranteeModel.apply)
+  def apply(implicit request: DataRequest[_]): MovementGuaranteeModel = {
+    val guarantorRequired: Boolean = mandatoryPage(GuarantorRequiredPage)
+
+    if (!guarantorRequired) {
+      MovementGuaranteeModel(
+        guarantorTypeCode = GuarantorArranger.NoGuarantorRequired,
+        guarantorTrader = None
+      )
+    } else {
+      val guarantorArranger: GuarantorArranger = mandatoryPage(GuarantorArrangerPage)
+      MovementGuaranteeModel(
+        guarantorTypeCode = guarantorArranger,
+        guarantorTrader = Some(Seq(TraderModel.applyGuarantor(guarantorArranger)).flatten)
+      )
+    }
+
+  }
 
   implicit val fmt: OFormat[MovementGuaranteeModel] = Json.format
 }

@@ -21,6 +21,7 @@ import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import pages.sections.info.DestinationTypePage
+import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
@@ -49,7 +50,7 @@ case class SubmitCreateMovementModel(
 object SubmitCreateMovementModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[SubmitCreateMovementModel] = Json.format
 
-  def apply(implicit request: DataRequest[_]): SubmitCreateMovementModel = {
+  def apply(implicit request: DataRequest[_], messages: Messages): SubmitCreateMovementModel = {
 
     val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
 
@@ -68,9 +69,9 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       firstTransporterTrader = TraderModel.applyFirstTransporter,
       documentCertificate = DocumentCertificateModel.apply,
       headerEadEsad = HeaderEadEsadModel.apply(movementScenario.destinationType),
-      transportMode = ???,
-      movementGuarantee = ???,
-      bodyEadEsad = ???,
+      transportMode = TransportModeModel.apply,
+      movementGuarantee = MovementGuaranteeModel.apply,
+      bodyEadEsad = BodyEadEsadModel.apply,
       eadEsadDraft = ???,
       transportDetails = ???
     )

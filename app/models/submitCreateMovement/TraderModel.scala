@@ -18,6 +18,7 @@ package models.submitCreateMovement
 
 import models.UserAddress
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
@@ -25,6 +26,7 @@ import pages.sections.consignor._
 import pages.sections.destination._
 import pages.sections.dispatch._
 import pages.sections.firstTransporter._
+import pages.sections.guarantor._
 import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
@@ -167,6 +169,20 @@ object TraderModel extends ModelConstructorHelpers {
       vatNumber = Some(mandatoryPage(FirstTransporterVatPage)),
       eoriNumber = None
     ))
+  }
+
+  def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): Option[TraderModel] = {
+    guarantorArranger match {
+      case GuarantorArranger.Consignor => Some(applyConsignor)
+      case GuarantorArranger.Consignee => applyConsignee.map(_.copy(eoriNumber = None))
+      case _ => Some(TraderModel(
+        traderExciseNumber = None,
+        traderName = Some(mandatoryPage(GuarantorNamePage)),
+        address = Some(AddressModel.fromUserAddress(mandatoryPage(GuarantorAddressPage))),
+        vatNumber = Some(mandatoryPage(GuarantorVatPage)),
+        eoriNumber = None
+      ))
+    }
   }
 
   implicit val fmt: Format[TraderModel] = Json.format

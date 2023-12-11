@@ -32,7 +32,7 @@ class GuarantorArrangerFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[GuarantorArranger](
       form,
       fieldName,
-      validValues = GuarantorArranger.values,
+      validValues = GuarantorArranger.displayValues,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

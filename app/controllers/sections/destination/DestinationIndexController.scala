@@ -19,7 +19,6 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
-import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import navigation.DestinationNavigator
 import pages.sections.destination.DestinationSection
@@ -46,11 +45,11 @@ class DestinationIndexController @Inject()(
           if (DestinationSection.isCompleted) {
             Redirect(routes.DestinationCheckAnswersController.onPageLoad(ern, draftId))
           } else {
-            if (shouldRedirectToDestinationWarehouseExcise) {
+            if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise) {
               Redirect(routes.DestinationWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
-            } else if (shouldRedirectToDestinationWarehouseVat) {
+            } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat) {
               Redirect(routes.DestinationWarehouseVatController.onPageLoad(ern, draftId, NormalMode))
-            } else if (shouldRedirectToDestinationBusinessName) {
+            } else if (DestinationSection.shouldStartFlowAtDestinationBusinessName) {
               Redirect(routes.DestinationBusinessNameController.onPageLoad(ern, draftId, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
@@ -59,23 +58,4 @@ class DestinationIndexController @Inject()(
           }
       }
     }
-
-  private def shouldRedirectToDestinationWarehouseExcise(implicit destinationTypePageAnswer: MovementScenario): Boolean =
-    Seq(
-      GbTaxWarehouse,
-      EuTaxWarehouse
-    ).contains(destinationTypePageAnswer)
-
-  private def shouldRedirectToDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
-    Seq(
-      RegisteredConsignee,
-      TemporaryRegisteredConsignee,
-      ExemptedOrganisation
-    ).contains(destinationTypePageAnswer)
-
-  private def shouldRedirectToDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
-    Seq(
-      DirectDelivery
-    ).contains(destinationTypePageAnswer)
-
 }

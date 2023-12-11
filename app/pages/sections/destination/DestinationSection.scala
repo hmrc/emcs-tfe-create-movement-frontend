@@ -17,6 +17,7 @@
 package pages.sections.destination
 
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
@@ -27,6 +28,24 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 case object DestinationSection extends Section[JsObject] with JsonOptionFormatter {
 
   override val path: JsPath = JsPath \ "destination"
+
+  def shouldStartFlowAtDestinationWarehouseExcise(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      GbTaxWarehouse,
+      EuTaxWarehouse
+    ).contains(destinationTypePageAnswer)
+
+  def shouldStartFlowAtDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      RegisteredConsignee,
+      TemporaryRegisteredConsignee,
+      ExemptedOrganisation
+    ).contains(destinationTypePageAnswer)
+
+  def shouldStartFlowAtDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      DirectDelivery
+    ).contains(destinationTypePageAnswer)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     (exciseVatAndDetailsChoicePagesComplete, detailsPagesComplete) match {

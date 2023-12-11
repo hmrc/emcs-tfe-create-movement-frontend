@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.{Index, NormalMode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemsSection
+import pages.sections.items.ItemsSectionItems
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.ItemsCount
 import services.UserAnswersService
@@ -40,7 +40,7 @@ class ItemsIndexController @Inject()(
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       request.userAnswers.get(ItemsCount) match {
-        case Some(value) if value > 1 || ItemsSection.isCompleted =>
+        case Some(value) if value > 1 || ItemsSectionItems.isCompleted =>
           Redirect(routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId))
         case _ =>
           Redirect(routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode))

@@ -19,48 +19,65 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import models.requests.DataRequest
-import models.sections.items.ItemsAddToList.MoreLater
+import models.sections.items.ItemsAddToList
 import play.api.test.FakeRequest
+import viewmodels.taskList._
 
 class ItemsSectionSpec extends SpecBase with ItemFixtures {
 
-  "isCompleted" - {
+  "status" - {
 
-    "must return true" - {
+    "must return NotStarted" - {
 
-      "when all items are completed" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem)
-
-        ItemsSection.isCompleted mustBe true
-      }
-    }
-
-    "must return false" - {
-
-      "when no items added" in {
+      "when no items" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        ItemsSection.isCompleted mustBe false
+        ItemsSection.status mustBe NotStarted
+      }
+    }
+
+    "must return Completed" - {
+
+      "when all items are completed and ItemsAddToList.No" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.No))
+
+        ItemsSection.status mustBe Completed
+      }
+    }
+
+    "must return InProgress" - {
+
+      "when all items are completed and ItemsAddToList.Yes" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.Yes))
+
+        ItemsSection.status mustBe InProgress
       }
 
-      "when an item exists which is not complete" in {
+      "when all items are completed and ItemsAddToList.MoreLater" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.MoreLater))
+
+        ItemsSection.status mustBe InProgress
+      }
+
+      "when all items are completed and missing" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem)
+
+        ItemsSection.status mustBe InProgress
+      }
+
+      "when an item exists which is not complete, even with ItemAddToList.No" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem
           .set(ItemExciseProductCodePage(testIndex2), testEpcTobacco)
+          .set(ItemsAddToListPage, ItemsAddToList.No)
         )
 
-        ItemsSection.isCompleted mustBe false
-      }
-
-      "when an items are complete but user has indicated they will add more later" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem
-          .set(ItemsAddToListPage, MoreLater)
-        )
-
-        ItemsSection.isCompleted mustBe false
+        ItemsSection.status mustBe InProgress
       }
     }
   }

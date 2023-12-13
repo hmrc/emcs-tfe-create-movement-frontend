@@ -16,7 +16,7 @@
 
 package models.sections.items
 
-import models.{GoodsTypeModel, Index, UnitOfMeasure}
+import models.{GoodsType, Index, UnitOfMeasure}
 import viewmodels.taskList.TaskListStatus
 
 case class ItemsAddToListItemModel(exciseProductCode: String,
@@ -25,5 +25,5 @@ case class ItemsAddToListItemModel(exciseProductCode: String,
                                    status: TaskListStatus,
                                    unitOfMeasure: Option[UnitOfMeasure] = None) {
 
-  val goodsType: GoodsTypeModel.GoodsType = GoodsTypeModel(exciseProductCode)
+  val goodsType: GoodsType = GoodsType(exciseProductCode)
 }

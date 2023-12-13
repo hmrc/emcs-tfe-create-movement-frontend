@@ -23,7 +23,7 @@ import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider.{hasMaturationPeriodAgeField, maturationPeriodAgeField}
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.sections.items.ItemMaturationPeriodAgeModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator

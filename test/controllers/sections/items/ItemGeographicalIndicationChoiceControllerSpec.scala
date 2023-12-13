@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Beer
+import models.GoodsType.Beer
 import models.sections.items.ItemGeographicalIndicationType
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.{NormalMode, UserAnswers}

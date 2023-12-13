@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemSelectPackagingFormProvider
 import mocks.services.{MockGetPackagingTypesService, MockUserAnswersService}
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator

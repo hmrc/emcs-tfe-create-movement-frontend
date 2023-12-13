@@ -16,10 +16,10 @@
 
 package pages.sections.items
 
-import models.GoodsTypeModel._
+import models.GoodsType._
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.{GoodsTypeModel, Index}
+import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
@@ -33,7 +33,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case None => NotStarted
       case Some(epc) =>
-        implicit val goodsType: GoodsType = GoodsTypeModel(epc)
+        implicit val goodsType: GoodsType = GoodsType(epc)
 
         if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed

@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.BaseFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import models.GoodsTypeModel._
+import models.GoodsType._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem

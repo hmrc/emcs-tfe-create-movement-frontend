@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
 import forms.sections.items.ItemCommercialDescriptionFormProvider
-import models.GoodsTypeModel.{Beer, Energy, Wine}
+import models.GoodsType.{Beer, Energy, Wine}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

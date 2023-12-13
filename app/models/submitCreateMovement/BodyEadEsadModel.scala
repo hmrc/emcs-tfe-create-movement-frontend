@@ -16,7 +16,7 @@
 
 package models.submitCreateMovement
 
-import models.{GoodsTypeModel, Index}
+import models.{GoodsType, Index}
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.items.ItemNetGrossMassModel
@@ -67,7 +67,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 // TODO: review this
                 (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
                   case (Some(value), _) => Some(value)
-                  case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsTypeModel(exciseProductCode)))
+                  case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsType(exciseProductCode)))
                   case _ => None
                 }
               }

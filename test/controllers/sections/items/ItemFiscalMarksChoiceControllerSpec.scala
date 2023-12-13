@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Tobacco
+import models.GoodsType.Tobacco
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksChoicePage, ItemFiscalMarksPage}

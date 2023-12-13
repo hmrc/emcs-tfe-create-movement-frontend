@@ -18,19 +18,17 @@ package models
 
 import play.api.i18n.Messages
 
+sealed trait GoodsType {
+  val code: String
 
-object GoodsTypeModel {
+  def toPluralOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.plural")
 
-  sealed trait GoodsType {
-    val code: String
+  def toSingularOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.singular")
 
-    def toPluralOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.plural")
+  val isAlcohol: Boolean = Seq(GoodsType.Beer.code, GoodsType.Wine.code, GoodsType.Spirits.code, GoodsType.Intermediate.code).contains(code)
+}
 
-    def toSingularOutput()(implicit messages: Messages): String = messages(s"goodsType.$code.singular")
-
-    val isAlcohol = Seq(Beer.code, Wine.code, Spirits.code, Intermediate.code).contains(code)
-  }
-
+object GoodsType {
   case object Beer extends GoodsType {
     override val code: String = "B"
   }

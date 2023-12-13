@@ -23,7 +23,7 @@ import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
 import forms.sections.items.ItemDegreesPlatoFormProvider.{degreesPlatoField, hasDegreesPlatoField}
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.sections.items.ItemDegreesPlatoModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator

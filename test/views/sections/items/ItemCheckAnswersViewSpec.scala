@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCheckAnswersMessages
-import models.GoodsTypeModel
+import models.GoodsType
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -63,7 +63,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
       }
 
       "must not render the Wine card" - {
-        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+        GoodsType.values.filterNot(_ == GoodsType.Wine).foreach {
           goodsType =>
             s"when goodsType is $goodsType" in {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))

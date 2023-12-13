@@ -21,7 +21,7 @@ import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import forms.sections.items.ItemNetGrossMassFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.items.ItemNetGrossMassModel
-import models.{GoodsTypeModel, NormalMode, UserAnswers}
+import models.{GoodsType, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemNetGrossMassPage}
 import play.api.data.Form
@@ -69,7 +69,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, testIndex1, GoodsType.Beer, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -81,7 +81,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form.fill(testModel), testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request, userAnswers.get), messages(request)
+        form.fill(testModel), testIndex1, GoodsType.Beer, NormalMode)(dataRequest(request, userAnswers.get), messages(request)
       ).toString
     }
 
@@ -118,7 +118,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, testIndex1, GoodsTypeModel.Beer, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, testIndex1, GoodsType.Beer, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

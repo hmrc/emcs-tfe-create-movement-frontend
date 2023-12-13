@@ -18,7 +18,7 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator

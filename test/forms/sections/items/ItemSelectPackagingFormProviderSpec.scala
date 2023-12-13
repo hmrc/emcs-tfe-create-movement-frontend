@@ -19,7 +19,7 @@ package forms.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import forms.behaviours.StringFieldBehaviours
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.response.referenceData.ItemPackaging
 import play.api.data.{Form, FormError}
 import play.api.test.FakeRequest

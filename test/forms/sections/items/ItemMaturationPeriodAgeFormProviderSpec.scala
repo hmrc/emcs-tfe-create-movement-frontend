@@ -19,7 +19,7 @@ package forms.sections.items
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.BooleanFieldBehaviours
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.sections.items.ItemMaturationPeriodAgeModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError

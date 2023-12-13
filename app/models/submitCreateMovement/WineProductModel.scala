@@ -17,7 +17,7 @@
 package models.submitCreateMovement
 
 import models.requests.DataRequest
-import models.{GoodsTypeModel, Index}
+import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.libs.json.{Json, OFormat}
 import utils.{JsonOptionFormatter, ModelConstructorHelpers}
@@ -77,7 +77,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
 
   def apply(exciseProductCode: String, idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
 
-    if (GoodsTypeModel.apply(exciseProductCode) == GoodsTypeModel.Wine) {
+    if (GoodsType.apply(exciseProductCode) == GoodsType.Wine) {
       Some(
         WineProductModel(
           wineProductCategory = wineProductCategory(idx),

@@ -18,7 +18,7 @@ package forms.sections.items
 
 import forms.behaviours.StringFieldBehaviours
 import forms.sections.items.ItemDensityFormProvider._
-import models.GoodsTypeModel
+import models.GoodsType
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 class ItemDensityFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
   implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val testGoodsType = GoodsTypeModel.Energy
+  val testGoodsType = GoodsType.Energy
 
   val form = new ItemDensityFormProvider()(testGoodsType)
 

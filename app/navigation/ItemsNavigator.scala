@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.sections.items.{routes => itemsRoutes}
-import models.GoodsTypeModel._
+import models.GoodsType._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.{ItemGeographicalIndicationType, ItemsAddToList, ItemsPackagingAddToList}
@@ -112,7 +112,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply) match {
             case Some(Wine) =>
               itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
@@ -312,7 +312,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
             case _ =>
               // answer has changed
-              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsTypeModel.apply) match {
+              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply) match {
                 case Some(Wine) =>
                   itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 case _ =>
@@ -388,7 +388,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def alcoholStrengthRouting(idx: Index, userAnswers: UserAnswers): Call =
     (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemAlcoholStrengthPage(idx))) match {
       case (Some(epc), Some(abv)) =>
-        GoodsTypeModel(epc) match {
+        GoodsType(epc) match {
           case Beer =>
             if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
               itemsRoutes.ItemDegreesPlatoController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -417,7 +417,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def itemCommercialDescriptionRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        GoodsTypeModel(epc) match {
+        GoodsType(epc) match {
           case goodsType if goodsType.isAlcohol =>
             itemsRoutes.ItemAlcoholStrengthController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Tobacco =>
@@ -440,7 +440,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case (Some(geographicalIndicationType), Some(alcoholStrength), Some(epc)) =>
         geographicalIndicationType match {
           case NoGeographicalIndication =>
-            val goodsType = GoodsTypeModel(epc)
+            val goodsType = GoodsType(epc)
             val acceptableGoodsTypes = Seq(Spirits, Wine, Intermediate)
             if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength < 8.5) {
               itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -459,7 +459,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        GoodsTypeModel(epc) match {
+        GoodsType(epc) match {
           case Wine =>
             userAnswers.get(ItemQuantityPage(idx)) match {
               case Some(quantity) =>

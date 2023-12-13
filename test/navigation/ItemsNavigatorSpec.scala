@@ -23,7 +23,7 @@ import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.sections.items._
-import models.{CheckMode, GoodsTypeModel, NormalMode, ReviewMode}
+import models.{CheckMode, GoodsType, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.items._
 
@@ -469,7 +469,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "to the Packaging Select (Items Packaging Index) page" - {
           "when the user answers no and EPC is not wine" in {
-            GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach(
+            GoodsType.values.filterNot(_ == GoodsType.Wine).foreach(
               goodsType =>
                 navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
                   .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
@@ -505,7 +505,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "to the Packaging Seal Choice (Bulk packaging) page" - {
           "when goods type is not Wine" in {
-            GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach { goodsType =>
+            GoodsType.values.filterNot(_ == GoodsType.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
                 .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")

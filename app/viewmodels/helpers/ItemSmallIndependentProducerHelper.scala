@@ -16,7 +16,8 @@
 
 package viewmodels.helpers
 
-import models.GoodsTypeModel.{Beer, GoodsType, Spirits}
+import models.GoodsType
+import models.GoodsType.{Beer, Spirits}
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text

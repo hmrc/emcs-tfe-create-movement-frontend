@@ -19,7 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider._
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.requests.DataRequest
 import models.sections.items.ItemMaturationPeriodAgeModel
 import models.{Index, Mode}

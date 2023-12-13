@@ -18,14 +18,14 @@ package pages.sections.items
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import models.GoodsTypeModel.{Beer, Energy, GoodsType}
+import models.GoodsType.{Beer, Energy}
 import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
 import models.sections.items.ItemWineGrowingZone.CIII_A
 import models.sections.items._
-import models.{GoodsTypeModel, UserAnswers}
+import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
 
 class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
@@ -711,7 +711,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe true
@@ -723,7 +723,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe true
@@ -740,7 +740,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -754,7 +754,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -764,7 +764,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -774,7 +774,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -787,7 +787,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when energy and not in Seq('E470', 'E500', 'E600', 'E930')" in {
         val epc = ""
 
-        section.itemDensityAnswer(epc)(GoodsTypeModel.Energy, dataRequest(FakeRequest())).length must not be 0
+        section.itemDensityAnswer(epc)(GoodsType.Energy, dataRequest(FakeRequest())).length must not be 0
       }
     }
 
@@ -795,12 +795,12 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       Seq("E470", "E500", "E600", "E930").foreach(
         epc =>
           s"when energy and EPC is $epc" in {
-            section.itemDensityAnswer(epc)(GoodsTypeModel.Energy, dataRequest(FakeRequest())) mustBe Nil
+            section.itemDensityAnswer(epc)(GoodsType.Energy, dataRequest(FakeRequest())) mustBe Nil
           }
       )
 
       "when not energy" in {
-        GoodsTypeModel.values.filterNot(_ == Energy).foreach {
+        GoodsType.values.filterNot(_ == Energy).foreach {
           goodsType =>
             val epc = ""
 
@@ -818,7 +818,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.fiscalMarksAnswers(GoodsTypeModel.Tobacco, dr).length mustBe 2
+        section.fiscalMarksAnswers(GoodsType.Tobacco, dr).length mustBe 2
       }
     }
 
@@ -829,13 +829,13 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.fiscalMarksAnswers(GoodsTypeModel.Tobacco, dr).length mustBe 1
+        section.fiscalMarksAnswers(GoodsType.Tobacco, dr).length mustBe 1
       }
     }
 
     "must return an empty Seq" - {
       "when not tobacco" in {
-        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Tobacco).foreach {
+        GoodsType.values.filterNot(_ == GoodsType.Tobacco).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemFiscalMarksChoicePage(testIndex1), true)
@@ -856,7 +856,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.wineMoreInformationAnswers(GoodsTypeModel.Wine, dr).length mustBe 2
+        section.wineMoreInformationAnswers(GoodsType.Wine, dr).length mustBe 2
       }
     }
 
@@ -867,13 +867,13 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.wineMoreInformationAnswers(GoodsTypeModel.Wine, dr).length mustBe 1
+        section.wineMoreInformationAnswers(GoodsType.Wine, dr).length mustBe 1
       }
     }
 
     "must return an empty Seq" - {
       "when not wine" in {
-        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+        GoodsType.values.filterNot(_ == GoodsType.Wine).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemWineMoreInformationChoicePage(testIndex1), true)
@@ -894,7 +894,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.wineCountryOfOriginAnswers(GoodsTypeModel.Wine, dr).length mustBe 2
+        section.wineCountryOfOriginAnswers(GoodsType.Wine, dr).length mustBe 2
       }
     }
 
@@ -905,13 +905,13 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.wineCountryOfOriginAnswers(GoodsTypeModel.Wine, dr).length mustBe 1
+        section.wineCountryOfOriginAnswers(GoodsType.Wine, dr).length mustBe 1
       }
     }
 
     "must return an empty Seq" - {
       "when not wine" in {
-        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Wine).foreach {
+        GoodsType.values.filterNot(_ == GoodsType.Wine).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemImportedWineChoicePage(testIndex1), true)
@@ -927,7 +927,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
   "geographicalIndicationsAnswers" - {
     "must return two items" - {
       "when alcohol, not beer, ItemGeographicalIndicationChoicePage is not NoGeographicalIndication" in {
-        GoodsTypeModel.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
           goodsType =>
             ItemGeographicalIndicationType.values.filterNot(_ == NoGeographicalIndication).foreach {
               indication =>
@@ -944,7 +944,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return one item" - {
       "when alcohol, not beer, ItemGeographicalIndicationChoicePage is NoGeographicalIndication" in {
-        GoodsTypeModel.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
@@ -958,7 +958,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return an empty Seq" - {
       "when not alcohol" in {
-        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+        GoodsType.values.filterNot(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
@@ -983,7 +983,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
   "maturationAgeAnswer" - {
     "must return a non-empty Seq" - {
       "if spirits" in {
-        GoodsTypeModel.values.filter(_ == GoodsTypeModel.Spirits).foreach {
+        GoodsType.values.filter(_ == GoodsType.Spirits).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
@@ -994,7 +994,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return an empty Seq" - {
       "if not spirits" in {
-        GoodsTypeModel.values.filterNot(_ == GoodsTypeModel.Spirits).foreach {
+        GoodsType.values.filterNot(_ == GoodsType.Spirits).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
@@ -1007,7 +1007,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
   "alcoholStrengthAnswer" - {
     "must return a non-empty Seq" - {
       "if alcohol" in {
-        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+        GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
@@ -1018,7 +1018,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return an empty Seq" - {
       "if not alcohol" in {
-        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+        GoodsType.values.filterNot(_.isAlcohol).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
@@ -1031,7 +1031,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
   "independentProducerAnswers" - {
     "must return two items" - {
       "when alcohol, strength < 8.5, and small producer" in {
-        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+        GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
@@ -1046,7 +1046,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return one item" - {
       "when alcohol, strength < 8.5, and not small producer" in {
-        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+        GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
@@ -1061,7 +1061,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return an empty Seq" - {
       "when not alcohol" in {
-        GoodsTypeModel.values.filterNot(_.isAlcohol).foreach {
+        GoodsType.values.filterNot(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
@@ -1073,7 +1073,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         }
       }
       "strength >= 8.5" in {
-        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+        GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
@@ -1085,7 +1085,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         }
       }
       "strength is not present" in {
-        GoodsTypeModel.values.filter(_.isAlcohol).foreach {
+        GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemSmallIndependentProducerPage(testIndex1), true)
@@ -1101,7 +1101,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
   "degreesPlatoAnswer" - {
     "must return a non-empty Seq" - {
       "when XI and Beer" - {
-        val goodsType: GoodsType = GoodsTypeModel.Beer
+        val goodsType: GoodsType = GoodsType.Beer
         val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
 
         section.degreesPlatoAnswer(goodsType, dr).length must not be 0
@@ -1109,13 +1109,13 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
     }
     "must return an empty Seq" - {
       "when not XI" - {
-        val goodsType: GoodsType = GoodsTypeModel.Beer
+        val goodsType: GoodsType = GoodsType.Beer
         val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn)
 
         section.degreesPlatoAnswer(goodsType, dr) mustBe Nil
       }
       "when not Beer" - {
-        GoodsTypeModel.values.filterNot(_ == Beer).foreach {
+        GoodsType.values.filterNot(_ == Beer).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn)
 
@@ -1158,7 +1158,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             .set(ItemImportedWineChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer.length must not be 0
@@ -1172,7 +1172,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             .set(ItemImportedWineChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer mustBe Nil
@@ -1183,7 +1183,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
             .set(ItemQuantityPage(testIndex1), BigDecimal(60))
             .set(ItemImportedWineChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer mustBe Nil
@@ -1196,7 +1196,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         section.wineBulkGrowingZoneAnswer mustBe Nil
       }
       "when quantity is missing" in {
@@ -1204,7 +1204,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(ItemImportedWineChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer mustBe Nil
@@ -1214,7 +1214,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer mustBe Nil
@@ -1228,7 +1228,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(61))
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkOperationAnswer.length must not be 0
@@ -1240,7 +1240,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(60))
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkOperationAnswer mustBe Nil
@@ -1249,7 +1249,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(61))
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Beer
+        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkOperationAnswer mustBe Nil
@@ -1258,7 +1258,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers
 
-        implicit val goodsType: GoodsType = GoodsTypeModel.Wine
+        implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkOperationAnswer mustBe Nil

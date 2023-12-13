@@ -21,7 +21,7 @@ import models.response.referenceData.{BulkPackagingType, CnCodeInformation, Item
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import models.sections.items.ItemBulkPackagingCode._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.{ExciseProductCode, GoodsTypeModel}
+import models.{ExciseProductCode, GoodsType}
 import pages.sections.items._
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -88,7 +88,7 @@ trait ItemFixtures { _: BaseFixtures =>
   )
 
   val testEpcTobacco: String = "T200"
-  val testGoodsTypeTobacco: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcTobacco)
+  val testGoodsTypeTobacco: GoodsType = GoodsType.apply(testEpcTobacco)
   val testCnCodeTobacco: String = "24022090"
   val testCnCodeTobacco2: String = "24029000"
   val testCommodityCodeTobacco: CnCodeInformation = CnCodeInformation(
@@ -121,7 +121,7 @@ trait ItemFixtures { _: BaseFixtures =>
   val testCnCodeEnergyWithDensity: String = "29011000"
 
   val testEpcWine: String = "W200"
-  val testGoodsTypeWine: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(testEpcWine)
+  val testGoodsTypeWine: GoodsType = GoodsType.apply(testEpcWine)
   val testCnCodeWine: String = "22060031"
   val testCommodityCodeWine: CnCodeInformation = CnCodeInformation(
     cnCode = testCnCodeWine,

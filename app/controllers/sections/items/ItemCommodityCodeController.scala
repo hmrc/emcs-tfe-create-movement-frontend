@@ -19,7 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemCommodityCodeFormProvider
 import models.response.referenceData.CnCodeInformation
-import models.{GoodsTypeModel, Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
@@ -61,7 +61,7 @@ class ItemCommodityCodeController @Inject()(
                 view(
                   form = fillForm(ItemCommodityCodePage(idx), formProvider()),
                   action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                  goodsType = GoodsTypeModel(itemExciseProductCode),
+                  goodsType = GoodsType(itemExciseProductCode),
                   commodityCodes
                 )
               ))
@@ -84,7 +84,7 @@ class ItemCommodityCodeController @Inject()(
                     view(
                       form = formWithErrors,
                       action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-                      goodsType = GoodsTypeModel(itemExciseProductCode),
+                      goodsType = GoodsType(itemExciseProductCode),
                       commodityCodes
                     )
                   )

@@ -16,10 +16,10 @@
 
 package models.submitCreateMovement
 
-import models.{GoodsType, Index}
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.items.ItemNetGrossMassModel
+import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
@@ -50,6 +50,16 @@ case class BodyEadEsadModel(
 
 object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
+  private[submitCreateMovement] def designationOfOrigin(idx: Index, exciseProductCode: String)
+                                                       (implicit request: DataRequest[_], messages: Messages): Option[String] = {
+    // TODO: review this
+    (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
+      case (Some(value), _) => Some(value)
+      case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsType(exciseProductCode)))
+      case _ => None
+    }
+  }
+
   def apply(implicit request: DataRequest[_], messages: Messages): Seq[BodyEadEsadModel] = {
     request.userAnswers.get(ItemsCount) match {
       case Some(0) | None =>
@@ -62,15 +72,6 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
             idx =>
               val exciseProductCode: String = mandatoryPage(ItemExciseProductCodePage(idx))
               val netGrossMass: ItemNetGrossMassModel = mandatoryPage(ItemNetGrossMassPage(idx))
-
-              val designationOfOrigin: Option[String] = {
-                // TODO: review this
-                (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
-                  case (Some(value), _) => Some(value)
-                  case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsType(exciseProductCode)))
-                  case _ => None
-                }
-              }
 
               val packagingIsBulk = mandatoryPage(ItemBulkPackagingChoicePage(idx))
 
@@ -85,13 +86,13 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 degreePlato = request.userAnswers.get(ItemDegreesPlatoPage(idx)).flatMap(_.degreesPlato),
                 fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
                 fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
-                designationOfOrigin = designationOfOrigin,
+                designationOfOrigin = designationOfOrigin(idx, exciseProductCode),
                 sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
                 density = request.userAnswers.get(ItemDensityPage(idx)),
                 commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),
                 brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
                 maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
-                packages = if(packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
+                packages = if (packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
                 wineProduct = WineProductModel.apply(idx)
               )
           }

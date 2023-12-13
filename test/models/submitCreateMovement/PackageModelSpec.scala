@@ -73,18 +73,18 @@ class PackageModelSpec extends SpecBase {
 
       PackageModel.applyIndividualPackaging(testIndex1) mustBe Seq(
         PackageModel(
-          "BA",
-          Some(3),
-          Some("marks"),
-          Some("seal"),
-          None
+          kindOfPackages = "BA",
+          numberOfPackages = Some(3),
+          shippingMarks = Some("marks"),
+          commercialSealIdentification = Some("seal"),
+          sealInformation = None
         ),
         PackageModel(
-          "JR",
-          Some(1),
-          None,
-          Some("seal 2"),
-          Some("seal info")
+          kindOfPackages = "JR",
+          numberOfPackages = Some(1),
+          shippingMarks = None,
+          commercialSealIdentification = Some("seal 2"),
+          sealInformation = Some("seal info")
         )
       )
     }

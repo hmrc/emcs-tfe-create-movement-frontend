@@ -106,7 +106,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineCountryOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Wine) {
-      request.userAnswers.get(ItemImportedWineChoicePage(idx)) match {
+      request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx)) match {
         case wineImportedChoice@Some(false) => Seq(wineImportedChoice, request.userAnswers.get(ItemWineOriginPage(idx)))
         case wineImportedChoice => Seq(wineImportedChoice)
       }
@@ -144,7 +144,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     }
 
   private[items] def wineBulkGrowingZoneAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType == Wine)((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineChoicePage(idx))) match {
+    mandatoryIf(goodsType == Wine)((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx))) match {
       case (Some(quantity), Some(true)) if quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
       case _ => Seq()
     })

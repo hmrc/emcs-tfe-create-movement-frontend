@@ -57,7 +57,6 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
 
     val userType = UserType(request.ern)
 
-    //TODO: review this
     OfficeModel(
       if(userType == NorthernIrelandRegisteredConsignor) {
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix

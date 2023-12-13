@@ -17,6 +17,7 @@
 package models.submitCreateMovement
 
 import models.requests.DataRequest
+import models.sections.items.ItemGeographicalIndicationType
 import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.libs.json.{Json, OFormat}
@@ -32,55 +33,40 @@ case class WineProductModel(
 
 object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter {
 
-  private def wineProductCategory(idx: Index)(implicit request: DataRequest[_]): String = {
-    /**
-     * From tcl.xsd:
-     * <!--=========================================-->
-     * <!--===== Category of Wine Product =====-->
-     * <!--=========================================-->
-     * <xs:simpleType name="CategoryOfWineProduct">
-     *   <xs:annotation>
-     *     <xs:documentation>Category of Wine Product</xs:documentation>
-     *   </xs:annotation>
-     *   <xs:restriction base="xs:nonNegativeInteger">
-     *     <xs:enumeration value="1">
-     *       <xs:annotation>
-     *         <xs:documentation>Wine without PDO/PGI</xs:documentation>
-     *       </xs:annotation>
-     *     </xs:enumeration>
-     *     <xs:enumeration value="2">
-     *       <xs:annotation>
-     *         <xs:documentation>Varietal wine without PDO/PGI</xs:documentation>
-     *       </xs:annotation>
-     *     </xs:enumeration>
-     *     <xs:enumeration value="3">
-     *       <xs:annotation>
-     *         <xs:documentation>Wine with PDO or PGI</xs:documentation>
-     *       </xs:annotation>
-     *     </xs:enumeration>
-     *     <xs:enumeration value="4">
-     *       <xs:annotation>
-     *         <xs:documentation>Imported wine</xs:documentation>
-     *       </xs:annotation>
-     *     </xs:enumeration>
-     *     <xs:enumeration value="5">
-     *       <xs:annotation>
-     *         <xs:documentation>Other</xs:documentation>
-     *       </xs:annotation>
-     *     </xs:enumeration>
-     *   </xs:restriction>
-     * </xs:simpleType>
-     */
+  private[submitCreateMovement] def wineProductCategory(idx: Index)(implicit request: DataRequest[_]): ItemWineCategory = {
+    // TODO: when do we ever set "Other"?
+    if (request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx)).contains(false)) {
+      // if imported from outside EU
+      ItemWineCategory.ImportedWine
+    } else {
+      // imported from inside EU
+      val geographicalIndicationChoice: ItemGeographicalIndicationType = mandatoryPage(ItemGeographicalIndicationChoicePage(idx))
 
-    ???
+      geographicalIndicationChoice match {
+        case ItemGeographicalIndicationType.NoGeographicalIndication =>
+          // if no GI
+          val commodityCode = mandatoryPage(ItemCommodityCodePage(idx))
+          if (ItemWineCategory.varietalWines.contains(commodityCode)) {
+            ItemWineCategory.EuVarietalWineWithoutPdoOrPgi
+          } else {
+            ItemWineCategory.EuWineWithoutPdoOrPgi
+          }
+
+        case _ =>
+          // if has PDO, PGI, or GI (umbrella term for PDO/PGI)
+          ItemWineCategory.EuWineWithPdoOrPgiOrGi
+      }
+    }
   }
 
-  def apply(exciseProductCode: String, idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
+  def apply(idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
+
+    val exciseProductCode = mandatoryPage(ItemExciseProductCodePage(idx))
 
     if (GoodsType.apply(exciseProductCode) == GoodsType.Wine) {
       Some(
         WineProductModel(
-          wineProductCategory = wineProductCategory(idx),
+          wineProductCategory = wineProductCategory(idx).toString,
           wineGrowingZoneCode = request.userAnswers.get(ItemWineGrowingZonePage(idx)).map(_.toString),
           thirdCountryOfOrigin = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode),
           otherInformation = request.userAnswers.get(ItemWineMoreInformationPage(idx)).flatten,

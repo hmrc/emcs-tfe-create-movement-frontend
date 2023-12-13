@@ -313,7 +313,7 @@ trait ItemFixtures { _: BaseFixtures =>
     .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
     .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
     .set(ItemBulkPackagingChoicePage(testIndex1), false)
-    .set(ItemImportedWineChoicePage(testIndex1), true)
+    .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
     .set(ItemWineMoreInformationChoicePage(testIndex1), false)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
     .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")

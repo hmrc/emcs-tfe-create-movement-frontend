@@ -23,7 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.sections.items.ItemWineGrowingZone
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemImportedWineFromEuChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -88,7 +88,7 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)
+      baseUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
@@ -99,8 +99,8 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
 
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)
-      ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)))
+        baseUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+      ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true)))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
@@ -110,13 +110,13 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
 
     "must redirect to the next page and remove ItemWineOriginPage's answer if true" in new Test(Some(
       baseUserAnswers
-        .set(ItemImportedWineChoicePage(testIndex1), false)
+        .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
         .set(ItemWineOriginPage(testIndex1), countryModelGB)
     )) {
 
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)
-      ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true)))
+        baseUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+      ).returns(Future.successful(baseUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true)))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
 
@@ -126,16 +126,16 @@ class ItemImportedWineChoiceControllerSpec extends SpecBase with MockUserAnswers
 
     "must redirect to the next page and remove ItemWineGrowingZonePage's answer if false" in new Test(Some(
       baseUserAnswers
-        .set(ItemImportedWineChoicePage(testIndex1), true)
+        .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
         .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.A)
     )) {
 
       MockUserAnswersService.set(
         baseUserAnswers
-          .set(ItemImportedWineChoicePage(testIndex1), false)
+          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
       ).returns(Future.successful(
         baseUserAnswers
-          .set(ItemImportedWineChoicePage(testIndex1), false)
+          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
       ))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))

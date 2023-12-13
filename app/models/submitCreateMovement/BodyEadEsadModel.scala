@@ -92,7 +92,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
                 maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
                 packages = if(packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
-                wineProduct = WineProductModel.apply(exciseProductCode = exciseProductCode, idx = idx)
+                wineProduct = WineProductModel.apply(idx)
               )
           }
     }

@@ -20,7 +20,7 @@ import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ItemImportedWineChoicePage(idx: Index) extends QuestionPage[Boolean] {
+case class ItemImportedWineFromEuChoicePage(idx: Index) extends QuestionPage[Boolean] {
   override val toString: String = "itemImportedWineChoice"
   override val path: JsPath = ItemWineSection(idx).path \ toString
 }

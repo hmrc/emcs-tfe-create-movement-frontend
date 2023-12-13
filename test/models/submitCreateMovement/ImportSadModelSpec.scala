@@ -38,7 +38,16 @@ class ImportSadModelSpec extends SpecBase {
     }
 
     "must return a Seq(ImportSadModel)" - {
-      "when SAD" in {
+      "when one SAD" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(ImportNumberPage(testIndex1), "sad 1")
+        )
+
+        ImportSadModel.apply mustBe Seq(ImportSadModel("sad 1"))
+      }
+      "when more than one SAD" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers

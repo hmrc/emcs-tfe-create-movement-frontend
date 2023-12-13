@@ -91,8 +91,8 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       transportMode = TransportModeModel.apply,
       movementGuarantee = MovementGuaranteeModel.apply,
       bodyEadEsad = BodyEadEsadModel.apply,
-      eadEsadDraft = ???,
-      transportDetails = ???
+      eadEsadDraft = EadEsadDraftModel.apply,
+      transportDetails = TransportDetailsModel.apply
     )
   }
 }

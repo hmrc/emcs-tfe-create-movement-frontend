@@ -16,7 +16,7 @@
 
 package models.sections.items
 
-import models.Enumerable
+import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -25,12 +25,12 @@ sealed trait ItemWineGrowingZone
 
 object ItemWineGrowingZone extends Enumerable.Implicits {
 
-  case object A      extends ItemWineGrowingZone
-  case object B      extends ItemWineGrowingZone
-  case object CI     extends ItemWineGrowingZone
-  case object CII    extends ItemWineGrowingZone
-  case object CIII_A extends ItemWineGrowingZone
-  case object CIII_B extends ItemWineGrowingZone
+  case object A      extends WithName("1") with ItemWineGrowingZone
+  case object B      extends WithName("2") with ItemWineGrowingZone
+  case object CI     extends WithName("3") with ItemWineGrowingZone
+  case object CII    extends WithName("4") with ItemWineGrowingZone
+  case object CIII_A extends WithName("5") with ItemWineGrowingZone
+  case object CIII_B extends WithName("6") with ItemWineGrowingZone
 
   val values: Seq[ItemWineGrowingZone] = Seq(A, B, CI, CII, CIII_A, CIII_B)
 

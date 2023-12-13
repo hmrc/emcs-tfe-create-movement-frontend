@@ -41,6 +41,7 @@ object HeaderEadEsadModel extends ModelConstructorHelpers {
         logger.error("Missing mandatory UserAnswer for journeyTime")
         throw MissingMandatoryPage("Missing mandatory UserAnswer for journeyTime")
     }
+
     HeaderEadEsadModel(
       destinationType = destinationType,
       journeyTime = journeyTime,

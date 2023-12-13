@@ -16,8 +16,13 @@
 
 package models.submitCreateMovement
 
+import models.requests.DataRequest
 import models.sections.info.movementScenario.OriginType
+import pages.sections.info._
 import play.api.libs.json.{Json, OFormat}
+import utils.ModelConstructorHelpers
+
+import java.time.format.DateTimeFormatter
 
 case class EadEsadDraftModel(
                               localReferenceNumber: String,
@@ -29,6 +34,20 @@ case class EadEsadDraftModel(
                               importSad: Option[Seq[ImportSadModel]]
                             )
 
-object EadEsadDraftModel {
+object EadEsadDraftModel extends ModelConstructorHelpers {
+
+  // XSD requires seconds so need to define a formatter which always has seconds - default formatter can potentially just be HH:mm
+  private lazy val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+
+  def apply(implicit request: DataRequest[_]): EadEsadDraftModel = EadEsadDraftModel(
+    localReferenceNumber = mandatoryPage(LocalReferenceNumberPage()),
+    invoiceNumber = mandatoryPage(InvoiceDetailsPage()).reference,
+    invoiceDate = Some(mandatoryPage(InvoiceDetailsPage()).date.toString),
+    originTypeCode = mandatoryPage(DestinationTypePage).originType,
+    dateOfDispatch = mandatoryPage(DispatchDetailsPage()).date.toString,
+    timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter)),
+    importSad = if(request.isWarehouseKeeper) None else Some(ImportSadModel.apply)
+  )
+
   implicit val fmt: OFormat[EadEsadDraftModel] = Json.format
 }

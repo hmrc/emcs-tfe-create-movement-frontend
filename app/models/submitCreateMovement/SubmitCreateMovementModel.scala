@@ -16,11 +16,14 @@
 
 package models.submitCreateMovement
 
+import config.AppConfig
+import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import models.requests.DataRequest
+import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
@@ -50,7 +53,23 @@ case class SubmitCreateMovementModel(
 object SubmitCreateMovementModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[SubmitCreateMovementModel] = Json.format
 
-  def apply(implicit request: DataRequest[_], messages: Messages): SubmitCreateMovementModel = {
+  private[submitCreateMovement]def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
+
+    val userType = UserType(request.ern)
+
+    //TODO: review this
+    OfficeModel(
+      if(userType == NorthernIrelandRegisteredConsignor) {
+        DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
+      } else if(userType == NorthernIrelandWarehouseKeeper) {
+        mandatoryPage(DispatchPlacePage) + appConfig.destinationOfficeSuffix
+      } else {
+        DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
+      }
+    )
+  }
+
+  def apply(implicit request: DataRequest[_], messages: Messages, appConfig: AppConfig): SubmitCreateMovementModel = {
 
     val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
 
@@ -64,7 +83,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       complementConsigneeTrader = ComplementConsigneeTraderModel.apply,
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(movementScenario),
       deliveryPlaceCustomsOffice = request.userAnswers.get(ExportCustomsOfficePage).map(OfficeModel(_)),
-      competentAuthorityDispatchOffice = ???,
+      competentAuthorityDispatchOffice = dispatchOffice,
       transportArrangerTrader = TraderModel.applyTransportArranger,
       firstTransporterTrader = TraderModel.applyFirstTransporter,
       documentCertificate = DocumentCertificateModel.apply,

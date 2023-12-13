@@ -62,12 +62,16 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
             idx =>
               val exciseProductCode: String = mandatoryPage(ItemExciseProductCodePage(idx))
               val netGrossMass: ItemNetGrossMassModel = mandatoryPage(ItemNetGrossMassPage(idx))
-              val designationOfOrigin: Option[String] =
+
+              val designationOfOrigin: Option[String] = {
+                // TODO: review this
                 (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
                   case (Some(value), _) => Some(value)
                   case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsTypeModel(exciseProductCode)))
                   case _ => None
                 }
+              }
+
               val packagingIsBulk = mandatoryPage(ItemBulkPackagingChoicePage(idx))
 
               BodyEadEsadModel(
@@ -88,7 +92,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
                 maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
                 packages = if(packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
-                wineProduct = ???
+                wineProduct = WineProductModel.apply(exciseProductCode = exciseProductCode, idx = idx)
               )
           }
     }

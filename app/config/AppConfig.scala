@@ -118,4 +118,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val wineGrowingZoneHintUrl: String = configuration.get[String]("urls.wineGrowingZoneHint")
 
   lazy val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
+  def destinationOfficeSuffix: String = configuration.get[String]("constants.destinationOfficeSuffix")
 }

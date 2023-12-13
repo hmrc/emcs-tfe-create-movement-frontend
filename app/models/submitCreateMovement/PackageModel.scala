@@ -39,8 +39,8 @@ object PackageModel extends ModelConstructorHelpers {
     Seq(
       PackageModel(
         kindOfPackages = mandatoryPage(ItemBulkPackagingSelectPage(idx)).packagingType.toString,
-        numberOfPackages = Some(1), // TODO: check
-        shippingMarks = None, // TODO: check
+        numberOfPackages = None,
+        shippingMarks = None,
         commercialSealIdentification = sealType.map(_.sealType),
         sealInformation = sealType.flatMap(_.optSealInformation)
       )

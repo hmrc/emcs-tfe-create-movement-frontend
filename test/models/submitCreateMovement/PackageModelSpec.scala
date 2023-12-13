@@ -39,7 +39,7 @@ class PackageModelSpec extends SpecBase {
 
       PackageModel.applyBulkPackaging(testIndex1) mustBe Seq(PackageModel(
         kindOfPackages = ItemBulkPackagingCode.BulkLiquid.toString,
-        numberOfPackages = Some(1),
+        numberOfPackages = None,
         shippingMarks = None,
         commercialSealIdentification = Some("seal"),
         sealInformation = Some("seal info")

@@ -16,10 +16,32 @@
 
 package models.submitCreateMovement
 
+import models.Index
+import models.requests.DataRequest
+import models.response.MissingMandatoryPage
+import pages.sections.sad.ImportNumberPage
 import play.api.libs.json.{Json, OFormat}
+import queries.SadCount
+import utils.{Logging, ModelConstructorHelpers}
 
 case class ImportSadModel(importSadNumber: String)
 
-object ImportSadModel {
+object ImportSadModel extends ModelConstructorHelpers with Logging {
+
+  def apply(implicit request: DataRequest[_]): Seq[ImportSadModel] = {
+    request.userAnswers.get(SadCount) match {
+      case Some(0) | None =>
+        logger.error("SadSection should contain at least one item")
+        throw MissingMandatoryPage("SadSection should contain at least one item")
+      case Some(value) =>
+        (0 until value)
+          .map(Index(_))
+          .map {
+            idx =>
+              ImportSadModel(mandatoryPage(ImportNumberPage(idx)))
+          }
+    }
+  }
+
   implicit val fmt: OFormat[ImportSadModel] = Json.format
 }

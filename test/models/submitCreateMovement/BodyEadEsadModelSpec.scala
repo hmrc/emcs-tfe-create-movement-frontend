@@ -324,6 +324,18 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
   }
 
   "designationOfOrigin" - {
+    "when ItemGeographicalIndicationPage and ItemSmallIndependentProducerPage have answers" - {
+      "must concatenate those answers" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
+            .set(ItemSmallIndependentProducerPage(testIndex1), true)
+        )
+
+        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some(s"${messagesForLanguage.yesWine} indication")
+      }
+    }
     "when ItemGeographicalIndicationPage has an answer" - {
       "must return that answer" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -332,29 +344,43 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemGeographicalIndicationPage(testIndex1), "indication")
         )
 
-        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine) mustBe Some("indication")
+        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some("indication")
       }
     }
 
     "when ItemSmallIndependentProducerPage has an answer" - {
-      Seq(
-        GoodsType.Beer -> messagesForLanguage.yesBeer,
-        GoodsType.Spirits -> messagesForLanguage.yesSpirits,
-        GoodsType.Wine -> messagesForLanguage.yesOther,
-        GoodsType.Energy -> messagesForLanguage.yesOther,
-        GoodsType.Tobacco -> messagesForLanguage.yesOther,
-        GoodsType.Intermediate -> messagesForLanguage.yesOther
-      ).foreach {
-        case (goodsType, yesText) =>
-          s"when goodsType is [$goodsType] must return [$yesText]" in {
+      s"must return Yes text" in {
+        Seq(
+          GoodsType.Beer -> messagesForLanguage.yesBeer,
+          GoodsType.Spirits -> messagesForLanguage.yesSpirits,
+          GoodsType.Wine -> messagesForLanguage.yesWine,
+          GoodsType.Energy -> messagesForLanguage.yesOther,
+          GoodsType.Tobacco -> messagesForLanguage.yesOther,
+          GoodsType.Intermediate -> messagesForLanguage.yesIntermediate
+        ).foreach {
+          case (goodsType, yesText) =>
             implicit val dr: DataRequest[_] = dataRequest(
               fakeRequest,
               emptyUserAnswers
                 .set(ItemSmallIndependentProducerPage(testIndex1), true)
             )
 
-            BodyEadEsadModel.designationOfOrigin(testIndex1, s"${goodsType.code}123") mustBe Some(yesText)
-          }
+            BodyEadEsadModel.designationOfOrigin(testIndex1, s"${goodsType.code}123", "cnCode") mustBe Some(yesText)
+        }
+      }
+      s"when CN Code means that goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
+        s" must return [${messagesForLanguage.yesFermented}]" in {
+        GoodsType.fermentedBeverages.map {
+          cnCode =>
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              fakeRequest,
+              emptyUserAnswers
+                .set(ItemSmallIndependentProducerPage(testIndex1), true)
+            )
+
+            BodyEadEsadModel.designationOfOrigin(testIndex1, s"W123", cnCode) mustBe Some(messagesForLanguage.yesFermented)
+        }
       }
     }
 
@@ -365,7 +391,84 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
         )
 
-        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine) mustBe None
+        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, testCnCodeWine) mustBe None
+      }
+    }
+  }
+
+  "yesAnswer" - {
+    "when XI trader" - {
+      Seq(
+        GoodsType.Beer -> messagesForLanguage.yesBeer,
+        GoodsType.Spirits -> messagesForLanguage.yesSpirits,
+        GoodsType.Wine -> messagesForLanguage.yesWine,
+        GoodsType.Energy -> messagesForLanguage.yesOther,
+        GoodsType.Tobacco -> messagesForLanguage.yesOther,
+        GoodsType.Intermediate -> messagesForLanguage.yesIntermediate
+      ).foreach {
+        case (goodsType, yesText) =>
+          s"when goodsType is [$goodsType] must return [$yesText]" in {
+            Seq("XIRC123", "XIWK123").foreach {
+              ern =>
+                implicit val dr: DataRequest[_] = dataRequest(
+                  fakeRequest,
+                  emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true),
+                  ern = ern
+                )
+
+                BodyEadEsadModel.yesAnswer(goodsType) mustBe yesText
+            }
+          }
+      }
+      s"when goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
+        s" must return [${messagesForLanguage.yesFermented}]" in {
+        Seq("XIRC123", "XIWK123").foreach {
+          ern =>
+            implicit val dr: DataRequest[_] = dataRequest(
+              fakeRequest,
+              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true),
+              ern = ern
+            )
+
+            BodyEadEsadModel.yesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesFermented
+        }
+      }
+    }
+    "when GB trader" - {
+      Seq(
+        GoodsType.Beer -> messagesForLanguage.yesOther,
+        GoodsType.Spirits -> messagesForLanguage.yesOther,
+        GoodsType.Wine -> messagesForLanguage.yesOther,
+        GoodsType.Energy -> messagesForLanguage.yesOther,
+        GoodsType.Tobacco -> messagesForLanguage.yesOther,
+        GoodsType.Intermediate -> messagesForLanguage.yesOther
+      ).foreach {
+        case (goodsType, yesText) =>
+          s"when goodsType is [$goodsType] must return [$yesText]" in {
+            Seq("GBRC123", "GBWK123").foreach {
+              ern =>
+                implicit val dr: DataRequest[_] = dataRequest(
+                  fakeRequest,
+                  emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true),
+                  ern = ern
+                )
+
+                BodyEadEsadModel.yesAnswer(goodsType) mustBe yesText
+            }
+          }
+      }
+      s"when goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
+        s" must return [${messagesForLanguage.yesOther}]" in {
+        Seq("GBRC123", "GBWK123").foreach {
+          ern =>
+            implicit val dr: DataRequest[_] = dataRequest(
+              fakeRequest,
+              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true),
+              ern = ern
+            )
+
+            BodyEadEsadModel.yesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesOther
+        }
       }
     }
   }

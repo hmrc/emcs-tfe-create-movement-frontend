@@ -57,6 +57,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
 
     val userType = UserType(request.ern)
 
+    // TODO will need to align for duty paid traders
     OfficeModel(
       if(userType == NorthernIrelandRegisteredConsignor) {
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix

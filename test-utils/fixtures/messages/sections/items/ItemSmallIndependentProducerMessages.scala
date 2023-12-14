@@ -24,9 +24,13 @@ object ItemSmallIndependentProducerMessages {
     def heading(goodsType: String) = s"Can you confirm that the producer of the $goodsType is certified as an independent small producer?"
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
-    val yesBeer = "Yes - It is hereby certified that the product described has been produced by an independent small brewery"
-    val yesSpirits = "Yes - It is hereby certified that the product described has been produced by an independent small distillery"
-    val yesOther = "Yes - It is hereby certified that the product described has been produced by an independent small producer"
+    def yesCertified(value: String) = s"Yes - $value"
+    val yesBeer = "It is hereby certified that the product described has been produced by an independent small brewery"
+    val yesWine = "It is hereby certified that the product described has been produced by an independent small wine producer"
+    val yesFermented = "It is hereby certified that the product described has been produced by an independent small producer of fermented beverages other than wine and beer"
+    val yesIntermediate = "It is hereby certified that the product described has been produced by an independent small intermediate products producer"
+    val yesSpirits = "It is hereby certified that the product described has been produced by an independent small distillery"
+    val yesOther = "It is hereby certified that the alcoholic product described has been produced by an independent small producer"
 
     val cyaLabel = "Independent small producer"
     val cyaChangeHidden = "if the producer is an independent small producer"

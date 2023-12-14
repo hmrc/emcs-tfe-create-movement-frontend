@@ -25,7 +25,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import queries.ItemsCount
 import utils.{Logging, ModelConstructorHelpers}
-import viewmodels.helpers.ItemSmallIndependentProducerHelper
 
 case class BodyEadEsadModel(
                              bodyRecordUniqueReference: Int,
@@ -50,12 +49,30 @@ case class BodyEadEsadModel(
 
 object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
-  private[submitCreateMovement] def designationOfOrigin(idx: Index, exciseProductCode: String)
+  private[submitCreateMovement] def yesAnswer(goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): String = {
+    val key = {
+      if (request.isNorthernIrelandErn) {
+        goodsType match {
+          case GoodsType.Beer => "beer"
+          case GoodsType.Fermented(_) => "fermented"
+          case GoodsType.Wine => "wine"
+          case GoodsType.Spirits => "spirits"
+          case GoodsType.Intermediate => "intermediate"
+          case _ => "other"
+        }
+      } else {
+        "other"
+      }
+    }
+    messages(s"itemSmallIndependentProducer.yes.$key")
+  }
+
+  private[submitCreateMovement] def designationOfOrigin(idx: Index, exciseProductCode: String, commodityCode: String)
                                                        (implicit request: DataRequest[_], messages: Messages): Option[String] = {
-    // TODO: review this
     (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
+      case (Some(value), Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))) + " " + value)
       case (Some(value), _) => Some(value)
-      case (_, Some(true)) => Some(ItemSmallIndependentProducerHelper.yesMessageFor(GoodsType(exciseProductCode)))
+      case (_, Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
       case _ => None
     }
   }
@@ -71,6 +88,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
           .map {
             idx =>
               val exciseProductCode: String = mandatoryPage(ItemExciseProductCodePage(idx))
+              val commodityCode: String = mandatoryPage(ItemCommodityCodePage(idx))
               val netGrossMass: ItemNetGrossMassModel = mandatoryPage(ItemNetGrossMassPage(idx))
 
               val packagingIsBulk = mandatoryPage(ItemBulkPackagingChoicePage(idx))
@@ -78,7 +96,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
               BodyEadEsadModel(
                 bodyRecordUniqueReference = idx.position,
                 exciseProductCode = exciseProductCode,
-                cnCode = mandatoryPage(ItemCommodityCodePage(idx)),
+                cnCode = commodityCode,
                 quantity = mandatoryPage(ItemQuantityPage(idx)),
                 grossMass = netGrossMass.grossMass,
                 netMass = netGrossMass.netMass,
@@ -86,7 +104,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 degreePlato = request.userAnswers.get(ItemDegreesPlatoPage(idx)).flatMap(_.degreesPlato),
                 fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
                 fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
-                designationOfOrigin = designationOfOrigin(idx, exciseProductCode),
+                designationOfOrigin = designationOfOrigin(idx, exciseProductCode, commodityCode),
                 sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
                 density = request.userAnswers.get(ItemDensityPage(idx)),
                 commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),

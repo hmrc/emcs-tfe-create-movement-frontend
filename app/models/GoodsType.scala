@@ -37,6 +37,12 @@ object GoodsType {
     override val code: String = "W"
   }
 
+  case class Fermented(epc: String) extends GoodsType {
+    override val code: String = epc.take(1)
+
+    override val isAlcohol: Boolean = true
+  }
+
   case object Energy extends GoodsType {
     override val code: String = "E"
   }
@@ -53,15 +59,33 @@ object GoodsType {
     override val code: String = "I"
   }
 
-  def apply(epc: String): GoodsType = epc.take(1) match {
-    case Beer.code => Beer
-    case Wine.code => Wine
-    case Energy.code => Energy
-    case Spirits.code => Spirits
-    case Tobacco.code => Tobacco
-    case Intermediate.code => Intermediate
-    case invalid => throw new IllegalArgumentException(s"Invalid argument of '$invalid' received which can not be mapped to a GoodsType")
+  // TODO: see below
+  // Fermented is currently only used in BodyEadEsadModel.
+  // When (if) we implement Fermented text throughout the frontend, remove default value and (maybe) change from Option[String] to String.
+  def apply(epc: String, cnCode: Option[String] = None): GoodsType = {
+    if(cnCode.exists(fermentedBeverages.contains)) {
+      Fermented(epc = epc)
+    } else {
+      epc.take(1) match {
+        case Beer.code => Beer
+        case Wine.code => Wine
+        case Energy.code => Energy
+        case Spirits.code => Spirits
+        case Tobacco.code => Tobacco
+        case Intermediate.code => Intermediate
+        case invalid => throw new IllegalArgumentException(s"Invalid argument of '$invalid' received which can not be mapped to a GoodsType")
+      }
+    }
   }
+
+  val fermentedBeverages: Seq[String] = Seq(
+    "22060031",
+    "22060039",
+    "22060051",
+    "22060059",
+    "22060081",
+    "22060089"
+  )
 
   val values: Seq[GoodsType] = Seq(Beer, Wine, Energy, Spirits, Tobacco, Intermediate)
 }

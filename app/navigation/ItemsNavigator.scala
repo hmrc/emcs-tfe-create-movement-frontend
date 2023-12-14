@@ -112,7 +112,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply) match {
+          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
             case Some(Wine) =>
               itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
@@ -312,7 +312,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
             case _ =>
               // answer has changed
-              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply) match {
+              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
                 case Some(Wine) =>
                   itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 case _ =>

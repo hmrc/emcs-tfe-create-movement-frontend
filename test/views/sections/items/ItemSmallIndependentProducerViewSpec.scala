@@ -51,7 +51,7 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.radioButton(1) -> messagesForLanguage.yesBeer,
+          Selectors.radioButton(1) -> messagesForLanguage.yesCertified(messagesForLanguage.yesBeer),
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft

@@ -33,7 +33,7 @@ object ItemSmallIndependentProducerHelper {
       case Spirits => "spirits"
       case _ => "other"
     }
-    messages(s"itemSmallIndependentProducer.yes.$key")
+    messages(s"itemSmallIndependentProducer.yes", messages(s"itemSmallIndependentProducer.yes.$key"))
   }
 
   def radios(form: Form[_], goodsType: GoodsType)(implicit messages: Messages): Radios =

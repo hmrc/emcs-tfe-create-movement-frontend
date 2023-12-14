@@ -35,6 +35,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
 
   private[submitCreateMovement] def wineProductCategory(idx: Index)(implicit request: DataRequest[_]): ItemWineCategory = {
     // TODO: when do we ever set "Other"?
+    // TODO: I've asked the people who look after EMCS Legacy what they currently do, waiting for a response.
     if (request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx)).contains(false)) {
       // if imported from outside EU
       ItemWineCategory.ImportedWine

@@ -18,7 +18,11 @@ package controllers
 
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
-import mocks.services.MockUserAnswersService
+import fixtures.ItemFixtures
+import mocks.config.MockAppConfig
+import mocks.services.{MockSubmitCreateMovementService, MockUserAnswersService}
+import models.UserAnswers
+import models.response.SubmitCreateMovementException
 import navigation.FakeNavigators.FakeNavigator
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -27,34 +31,37 @@ import views.html.DeclarationView
 import scala.concurrent.Future
 
 
-class DeclarationControllerSpec extends SpecBase with MockUserAnswersService {
+class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitCreateMovementService with MockAppConfig with ItemFixtures {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
   lazy val submitRoute = routes.DeclarationController.onSubmit(testErn, testDraftId)
-  implicit val request = dataRequest(
-    FakeRequest(),
-    emptyUserAnswers
-  )
-  implicit lazy val messagesInstance = messages(request)
 
-  trait Test {
+  class Test(ern: String, userAnswers: UserAnswers) {
+    implicit val request = dataRequest(
+      FakeRequest(),
+      userAnswers,
+      ern
+    )
+    implicit lazy val messagesInstance = messages(request)
     val controller: DeclarationController = new DeclarationController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
-      new FakeDataRetrievalAction(Some(emptyUserAnswers), Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),
       mockUserAnswersService,
       new FakeNavigator(testOnwardRoute),
-      view
-    )
+      mockSubmitCreateMovementService,
+      view,
+      errorHandler
+    )(mockAppConfig)
   }
 
 
   "DeclarationController" - {
     "for GET onPageLoad" - {
-      "must return the declaration page" in new Test {
+      "must return the declaration page" in new Test(testErn, emptyUserAnswers) {
         val res = controller.onPageLoad(testErn, testDraftId)(request)
 
         status(res) mustBe OK
@@ -63,13 +70,43 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService {
     }
 
     "for POST submit" - {
-      "must save the timestamp and redirect" in new Test {
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      "when downstream call is successful" - {
+        "must save the timestamp and redirect" in new Test("XIRC123", baseFullUserAnswers) {
+          MockAppConfig.destinationOfficeSuffix.returns("004098")
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(minimumSubmitCreateMovementResponse))
+          MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        val res = controller.onSubmit(testErn, testDraftId)(request)
+          val res = controller.onSubmit("XIRC123", testDraftId)(request)
 
-        status(res) mustBe SEE_OTHER
-        redirectLocation(res) must contain(testOnwardRoute.url)
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) must contain(testOnwardRoute.url)
+        }
+      }
+
+      "when downstream call is unsuccessful" - {
+        "must return an InternalServerError" in new Test("XIRC123", baseFullUserAnswers) {
+          MockAppConfig.destinationOfficeSuffix.returns("004098")
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.failed(SubmitCreateMovementException("test error")))
+
+          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+
+          status(res) mustBe INTERNAL_SERVER_ERROR
+        }
+      }
+
+      "when creating a request model fails" - {
+        "must return a BadRequest when MissingMandatoryPage" in new Test("XIRC123", emptyUserAnswers) {
+          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+
+          status(res) mustBe BAD_REQUEST
+        }
+        "must return a InternalServerError when something else goes wrong" in new Test("XIRC123", baseFullUserAnswers) {
+          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
+
+          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+
+          status(res) mustBe INTERNAL_SERVER_ERROR
+        }
       }
     }
   }

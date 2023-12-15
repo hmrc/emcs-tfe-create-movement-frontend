@@ -37,7 +37,7 @@ case class EadEsadDraftModel(
 object EadEsadDraftModel extends ModelConstructorHelpers {
 
   // XSD requires seconds so need to define a formatter which always has seconds - default formatter can potentially just be HH:mm
-  private lazy val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+  private lazy val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
   def apply(implicit request: DataRequest[_]): EadEsadDraftModel = EadEsadDraftModel(
     localReferenceNumber = mandatoryPage(LocalReferenceNumberPage()),

@@ -93,6 +93,7 @@ object TraderModel extends ModelConstructorHelpers {
     }
   }
 
+  //noinspection ScalaStyle
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
       if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
@@ -100,7 +101,14 @@ object TraderModel extends ModelConstructorHelpers {
         val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
 
         if (useConsigneeDetails) {
-          applyConsignee.map(_.copy(traderExciseNumber = Some(exciseId), eoriNumber = None))
+          val consigneeTrader = applyConsignee
+          Some(TraderModel(
+            traderExciseNumber = Some(exciseId),
+            traderName = consigneeTrader.flatMap(_.traderName),
+            address = consigneeTrader.flatMap(_.address),
+            vatNumber = None,
+            eoriNumber = None
+          ))
         } else {
           Some(TraderModel(
             traderExciseNumber = Some(exciseId),
@@ -149,8 +157,8 @@ object TraderModel extends ModelConstructorHelpers {
     val transportArranger: TransportArranger = mandatoryPage(TransportArrangerPage)
 
     transportArranger match {
-      case TransportArranger.Consignor => Some(applyConsignor)
-      case TransportArranger.Consignee => applyConsignee.map(_.copy(eoriNumber = None))
+      case TransportArranger.Consignor => None
+      case TransportArranger.Consignee => None
       case _ => Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(TransportArrangerNamePage)),
@@ -174,7 +182,15 @@ object TraderModel extends ModelConstructorHelpers {
   def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): Option[TraderModel] = {
     guarantorArranger match {
       case GuarantorArranger.Consignor => Some(applyConsignor)
-      case GuarantorArranger.Consignee => applyConsignee.map(_.copy(eoriNumber = None))
+      case GuarantorArranger.Consignee =>
+        val consigneeTrader = applyConsignee
+        Some(TraderModel(
+          traderExciseNumber = request.userAnswers.get(ConsigneeExcisePage),
+          traderName = consigneeTrader.flatMap(_.traderName),
+          address = consigneeTrader.flatMap(_.address),
+          vatNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber),
+          eoriNumber = None
+        ))
       case _ => Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(GuarantorNamePage)),

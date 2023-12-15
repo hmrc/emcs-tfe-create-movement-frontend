@@ -101,6 +101,13 @@ class TraderModelSpec extends SpecBase {
     vatNumber = Some("guarantor vat"),
     eoriNumber = None
   )
+  val guarantorTraderWithConsigneeInfo: TraderModel = TraderModel(
+    traderExciseNumber = Some("consignee ern"),
+    traderName = Some("consignee name"),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    vatNumber = Some("vat no"),
+    eoriNumber = None
+  )
 
   "applyConsignee" - {
     "must return a TraderModel" - {
@@ -358,7 +365,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyTransportArranger mustBe Some(consignorTrader)
+        TraderModel.applyTransportArranger mustBe None
       }
       "when Transport Arranger is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -372,7 +379,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyTransportArranger mustBe Some(consigneeTraderWithErn.copy(eoriNumber = None))
+        TraderModel.applyTransportArranger mustBe None
       }
       Seq(TransportArranger.GoodsOwner, TransportArranger.Other).foreach(
         transportArranger =>
@@ -428,7 +435,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe Some(consigneeTraderWithErn.copy(eoriNumber = None))
+        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe Some(guarantorTraderWithConsigneeInfo)
       }
       Seq(GuarantorArranger.GoodsOwner, GuarantorArranger.Transporter).foreach(
         guarantorArranger =>

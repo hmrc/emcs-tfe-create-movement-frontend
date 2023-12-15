@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBulkPackagingChoiceMessages
-import models.{CheckMode, GoodsTypeModel}
+import models.{CheckMode, GoodsType}
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.ItemBulkPackagingChoicePage
@@ -46,7 +46,7 @@ class ItemBulkPackagingChoiceSummarySpec extends SpecBase with Matchers with Ite
           "must output None" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsTypeModel.Wine) mustBe None
+            ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsType.Wine) mustBe None
           }
         }
 
@@ -73,7 +73,7 @@ class ItemBulkPackagingChoiceSummarySpec extends SpecBase with Matchers with Ite
                   .set(ItemBulkPackagingChoicePage(testIndex1), true)
                 )
 
-              ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsTypeModel.Wine) mustBe Some(
+              ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsType.Wine) mustBe Some(
                 sampleRow.copy(value = Value(Text(messagesForLanguage.yes)))
               )
             }
@@ -85,7 +85,7 @@ class ItemBulkPackagingChoiceSummarySpec extends SpecBase with Matchers with Ite
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
                 )
 
-              ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsTypeModel.Wine) mustBe Some(
+              ItemBulkPackagingChoiceSummary.row(testIndex1, GoodsType.Wine) mustBe Some(
                 sampleRow.copy(value = Value(Text(messagesForLanguage.no)))
               )
             }

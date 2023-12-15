@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemBulkPackagingChoiceMessages
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import models.GoodsTypeModel
+import models.GoodsType
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -39,7 +39,7 @@ class ItemBulkPackagingChoiceViewSpec extends SpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        GoodsTypeModel.values.foreach(
+        GoodsType.values.foreach(
           goodsType =>
             s"when being rendered for GoodsType code ${goodsType.code}" - {
 

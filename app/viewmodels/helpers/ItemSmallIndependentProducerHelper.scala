@@ -16,7 +16,8 @@
 
 package viewmodels.helpers
 
-import models.GoodsTypeModel.{Beer, GoodsType, Spirits}
+import models.GoodsType
+import models.GoodsType.{Beer, Spirits}
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -26,13 +27,13 @@ import viewmodels.govuk.all._
 
 object ItemSmallIndependentProducerHelper {
 
-  private def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages) = {
+  def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages): String = {
     val key = goodsType match {
       case Beer => "beer"
       case Spirits => "spirits"
       case _ => "other"
     }
-    messages(s"itemSmallIndependentProducer.yes.$key")
+    messages(s"itemSmallIndependentProducer.yes", messages(s"itemSmallIndependentProducer.yes.$key"))
   }
 
   def radios(form: Form[_], goodsType: GoodsType)(implicit messages: Messages): Radios =

@@ -17,32 +17,32 @@
 package models.sections.info.movementScenario
 
 import base.SpecBase
-import models.requests.UserRequest
+import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.movementScenario.MovementScenario._
 import play.api.test.FakeRequest
 
 class MovementScenarioSpec extends SpecBase {
 
-  val warehouseKeeperUserRequest: UserRequest[_] = userRequest(FakeRequest()).copy(ern = "GBWK123")
-  val registeredConsignorUserRequest: UserRequest[_] = userRequest(FakeRequest()).copy(ern = "GBRC123")
-  val nonWKRCUserRequest: UserRequest[_] = userRequest(FakeRequest()).copy(ern = "GB00123")
+  val warehouseKeeperDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123")
+  val registeredConsignorDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBRC123")
+  val nonWKRCDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GB00123")
 
   "ExportWithCustomsDeclarationLodgedInTheUk" - {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          ExportWithCustomsDeclarationLodgedInTheUk.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          ExportWithCustomsDeclarationLodgedInTheUk.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          ExportWithCustomsDeclarationLodgedInTheUk.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          ExportWithCustomsDeclarationLodgedInTheUk.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheUk.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheUk.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -54,17 +54,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return DirectExport" in {
-          ExportWithCustomsDeclarationLodgedInTheUk.movementType(warehouseKeeperUserRequest) mustBe MovementType.DirectExport
+          ExportWithCustomsDeclarationLodgedInTheUk.movementType(warehouseKeeperDataRequest) mustBe MovementType.DirectExport
         }
       }
       "when user is a registered consignor" - {
         "must return ImportDirectExport" in {
-          ExportWithCustomsDeclarationLodgedInTheUk.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportDirectExport
+          ExportWithCustomsDeclarationLodgedInTheUk.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportDirectExport
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheUk.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheUk.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -74,17 +74,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          GbTaxWarehouse.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          GbTaxWarehouse.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          GbTaxWarehouse.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          GbTaxWarehouse.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](GbTaxWarehouse.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](GbTaxWarehouse.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -96,17 +96,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToUk" in {
-          GbTaxWarehouse.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToUk
+          GbTaxWarehouse.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToUk
         }
       }
       "when user is a registered consignor" - {
         "must return ImportUk" in {
-          GbTaxWarehouse.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportUk
+          GbTaxWarehouse.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUk
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](GbTaxWarehouse.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](GbTaxWarehouse.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -116,17 +116,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          DirectDelivery.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          DirectDelivery.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          DirectDelivery.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          DirectDelivery.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](DirectDelivery.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](DirectDelivery.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -138,17 +138,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          DirectDelivery.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          DirectDelivery.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportEu" in {
-          DirectDelivery.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportEu
+          DirectDelivery.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportEu
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](DirectDelivery.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](DirectDelivery.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -158,17 +158,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          EuTaxWarehouse.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          EuTaxWarehouse.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          EuTaxWarehouse.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          EuTaxWarehouse.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](EuTaxWarehouse.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](EuTaxWarehouse.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -180,17 +180,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          EuTaxWarehouse.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          EuTaxWarehouse.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportEu" in {
-          EuTaxWarehouse.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportEu
+          EuTaxWarehouse.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportEu
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](EuTaxWarehouse.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](EuTaxWarehouse.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -200,17 +200,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          ExemptedOrganisation.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          ExemptedOrganisation.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          ExemptedOrganisation.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          ExemptedOrganisation.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExemptedOrganisation.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExemptedOrganisation.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -222,17 +222,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          ExemptedOrganisation.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          ExemptedOrganisation.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportEu" in {
-          ExemptedOrganisation.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportEu
+          ExemptedOrganisation.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportEu
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExemptedOrganisation.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExemptedOrganisation.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -242,17 +242,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          ExportWithCustomsDeclarationLodgedInTheEu.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          ExportWithCustomsDeclarationLodgedInTheEu.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          ExportWithCustomsDeclarationLodgedInTheEu.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          ExportWithCustomsDeclarationLodgedInTheEu.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheEu.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheEu.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -264,17 +264,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return IndirectExport" in {
-          ExportWithCustomsDeclarationLodgedInTheEu.movementType(warehouseKeeperUserRequest) mustBe MovementType.IndirectExport
+          ExportWithCustomsDeclarationLodgedInTheEu.movementType(warehouseKeeperDataRequest) mustBe MovementType.IndirectExport
         }
       }
       "when user is a registered consignor" - {
         "must return ImportIndirectExport" in {
-          ExportWithCustomsDeclarationLodgedInTheEu.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportIndirectExport
+          ExportWithCustomsDeclarationLodgedInTheEu.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportIndirectExport
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheEu.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](ExportWithCustomsDeclarationLodgedInTheEu.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -284,17 +284,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          RegisteredConsignee.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          RegisteredConsignee.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          RegisteredConsignee.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          RegisteredConsignee.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](RegisteredConsignee.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](RegisteredConsignee.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -306,17 +306,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          RegisteredConsignee.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          RegisteredConsignee.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportEu" in {
-          RegisteredConsignee.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportEu
+          RegisteredConsignee.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportEu
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](RegisteredConsignee.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](RegisteredConsignee.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -326,17 +326,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          TemporaryRegisteredConsignee.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          TemporaryRegisteredConsignee.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          TemporaryRegisteredConsignee.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          TemporaryRegisteredConsignee.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](TemporaryRegisteredConsignee.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](TemporaryRegisteredConsignee.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -348,17 +348,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          TemporaryRegisteredConsignee.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          TemporaryRegisteredConsignee.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportEu" in {
-          TemporaryRegisteredConsignee.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportEu
+          TemporaryRegisteredConsignee.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportEu
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](TemporaryRegisteredConsignee.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](TemporaryRegisteredConsignee.movementType(nonWKRCDataRequest))
         }
       }
     }
@@ -368,17 +368,17 @@ class MovementScenarioSpec extends SpecBase {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          UnknownDestination.originType(warehouseKeeperUserRequest) mustBe OriginType.TaxWarehouse
+          UnknownDestination.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          UnknownDestination.originType(registeredConsignorUserRequest) mustBe OriginType.Imports
+          UnknownDestination.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](UnknownDestination.originType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](UnknownDestination.originType(nonWKRCDataRequest))
         }
       }
     }
@@ -390,17 +390,17 @@ class MovementScenarioSpec extends SpecBase {
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToEu" in {
-          UnknownDestination.movementType(warehouseKeeperUserRequest) mustBe MovementType.UkToEu
+          UnknownDestination.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToEu
         }
       }
       "when user is a registered consignor" - {
         "must return ImportUnknownDestination" in {
-          UnknownDestination.movementType(registeredConsignorUserRequest) mustBe MovementType.ImportUnknownDestination
+          UnknownDestination.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUnknownDestination
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](UnknownDestination.movementType(nonWKRCUserRequest))
+          intercept[InvalidUserTypeException](UnknownDestination.movementType(nonWKRCDataRequest))
         }
       }
     }

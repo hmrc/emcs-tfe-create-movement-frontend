@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import models.GoodsTypeModel.Beer
+import models.GoodsType.Beer
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -51,7 +51,7 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
           Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.radioButton(1) -> messagesForLanguage.yesBeer,
+          Selectors.radioButton(1) -> messagesForLanguage.yesCertified(messagesForLanguage.yesBeer),
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft

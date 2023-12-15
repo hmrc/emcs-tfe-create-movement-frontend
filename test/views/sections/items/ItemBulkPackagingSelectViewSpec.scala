@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBulkPackagingSelectMessages
 import forms.sections.items.ItemBulkPackagingSelectFormProvider
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -21,7 +21,7 @@ import forms.sections.items.ItemImportedWineChoiceFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemImportedWineChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
+import pages.sections.items.{ItemImportedWineFromEuChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -47,7 +47,7 @@ class ItemImportedWineChoiceController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        renderView(Ok, fillForm(ItemImportedWineChoicePage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(ItemImportedWineFromEuChoicePage(idx), formProvider()), idx, mode)
       }
     }
 
@@ -56,7 +56,7 @@ class ItemImportedWineChoiceController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          answer => saveAndRedirect(ItemImportedWineChoicePage(idx), answer, cleanseFunction(idx, answer), mode)
+          answer => saveAndRedirect(ItemImportedWineFromEuChoicePage(idx), answer, cleanseFunction(idx, answer), mode)
         )
       }
     }

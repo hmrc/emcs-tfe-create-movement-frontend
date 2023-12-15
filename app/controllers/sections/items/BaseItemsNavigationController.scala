@@ -17,9 +17,8 @@
 package controllers.sections.items
 
 import controllers.BaseNavigationController
-import models.GoodsTypeModel.GoodsType
+import models.{GoodsType, Index}
 import models.requests.DataRequest
-import models.{GoodsTypeModel, Index}
 import pages.sections.items._
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
@@ -52,7 +51,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   def withGoodsType(idx: Index)(f: GoodsType => Result)(implicit request: DataRequest[_]): Result =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        f(GoodsTypeModel.apply(epc))
+        f(GoodsType.apply(epc))
       case None =>
         Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId))
     }
@@ -60,7 +59,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(epc) =>
-        f(GoodsTypeModel.apply(epc))
+        f(GoodsType.apply(epc))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }

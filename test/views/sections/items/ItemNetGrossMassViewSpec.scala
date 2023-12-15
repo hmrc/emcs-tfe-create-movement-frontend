@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemNetGrossMassMessages
 import forms.sections.items.ItemNetGrossMassFormProvider
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup

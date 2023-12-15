@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
-import models.GoodsTypeModel.Beer
+import models.GoodsType.Beer
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

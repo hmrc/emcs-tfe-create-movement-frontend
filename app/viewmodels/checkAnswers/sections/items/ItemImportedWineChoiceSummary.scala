@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemImportedWineChoicePage
+import pages.sections.items.ItemImportedWineFromEuChoicePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object ItemImportedWineChoiceSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val page = ItemImportedWineChoicePage(idx)
+    val page = ItemImportedWineFromEuChoicePage(idx)
 
     request.userAnswers.get(page).map { answer =>
       SummaryListRowViewModel(

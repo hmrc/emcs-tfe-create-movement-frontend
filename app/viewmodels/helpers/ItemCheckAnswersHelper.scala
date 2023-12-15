@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
-import models.{CheckMode, GoodsTypeModel, Index}
+import models.{CheckMode, GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -115,7 +115,7 @@ class ItemCheckAnswersHelper @Inject()(
   private[helpers] def bulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
                                           (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     Seq(
-      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode)),
+      ItemBulkPackagingChoiceSummary.row(idx, GoodsType.apply(cnCodeInformation.exciseProductCode)),
       ItemBulkPackagingSelectSummary.row(idx),
       ItemBulkPackagingSealChoiceSummary.row(idx)
     ).flatten ++ itemBulkPackagingSealTypeSummary.rows(idx)
@@ -133,7 +133,7 @@ class ItemCheckAnswersHelper @Inject()(
     }
 
     Seq(
-      ItemBulkPackagingChoiceSummary.row(idx, GoodsTypeModel.apply(cnCodeInformation.exciseProductCode))
+      ItemBulkPackagingChoiceSummary.row(idx, GoodsType.apply(cnCodeInformation.exciseProductCode))
     ).flatten ++ (request.userAnswers.get(ItemsPackagingCount(idx)) match {
       case Some(value) => (0 until value).map(packageIdx => packageTypeRow(Index(packageIdx)))
       case None => Nil

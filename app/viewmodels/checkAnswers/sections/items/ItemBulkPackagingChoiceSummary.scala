@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemBulkPackagingChoicePage

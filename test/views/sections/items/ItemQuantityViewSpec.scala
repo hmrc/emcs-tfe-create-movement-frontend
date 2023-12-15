@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.UnitOfMeasureMessages
 import fixtures.messages.sections.items.ItemQuantityMessages
 import forms.sections.items.ItemQuantityFormProvider
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.UnitOfMeasure.Litres15
 import models.requests.DataRequest
 import org.jsoup.Jsoup

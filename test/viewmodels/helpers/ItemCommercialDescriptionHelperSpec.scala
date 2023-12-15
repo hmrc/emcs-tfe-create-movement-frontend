@@ -19,7 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.messages.sections.items.ItemCommercialDescriptionMessages
 import forms.sections.items.ItemCommercialDescriptionFormProvider
-import models.GoodsTypeModel._
+import models.GoodsType._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}

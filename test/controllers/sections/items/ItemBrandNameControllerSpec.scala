@@ -23,7 +23,7 @@ import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.sections.items.ItemBrandNameFormProvider
 import forms.sections.items.ItemBrandNameFormProvider.{brandNameField, hasBrandNameField}
 import mocks.services.MockUserAnswersService
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.sections.items.ItemBrandNameModel
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator

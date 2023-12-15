@@ -62,7 +62,7 @@ class GuarantorNavigatorSpec extends SpecBase {
 
       "for GuarantorArrangerPage" - {
 
-        GuarantorArranger.values.foreach {
+        GuarantorArranger.displayValues.foreach {
           case value@(GoodsOwner | Transporter) =>
             "must goto CAM-G03" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
@@ -74,7 +74,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode)
               }
             }
-          case value@(Consignee | Consignor) =>
+          case value =>
             "must goto CAM-G06" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
                 val userAnswers = emptyUserAnswers

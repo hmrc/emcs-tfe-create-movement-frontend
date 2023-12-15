@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemProducerSizeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage}

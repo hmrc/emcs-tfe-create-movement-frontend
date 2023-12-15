@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemProducerSizeMessages.English
 import forms.sections.items.ItemProducerSizeFormProvider
-import models.GoodsTypeModel.{Beer, Spirits, Wine}
+import models.GoodsType.{Beer, Spirits, Wine}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCommodityCodeMessages.English
 import forms.sections.items.ItemCommodityCodeFormProvider
-import models.GoodsTypeModel.Beer
+import models.GoodsType.Beer
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup

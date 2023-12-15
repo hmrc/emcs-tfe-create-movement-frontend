@@ -43,7 +43,7 @@
 
         @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
-        @if(GoodsTypeModel.apply(cnCodeInformation.exciseProductCode) == GoodsTypeModel.Wine) {
+        @if(GoodsType.apply(cnCodeInformation.exciseProductCode) == GoodsType.Wine) {
             @govukSummaryList(helper.constructWineDetailsCard(idx))
         }
 

@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationChoiceMessages
 import forms.sections.items.ItemGeographicalIndicationChoiceFormProvider
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

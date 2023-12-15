@@ -17,10 +17,16 @@
 package fixtures
 
 import models._
+import models.response.SubmitCreateMovementResponse
 import models.response.referenceData.ItemPackaging
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.guarantor.GuarantorArranger
+import models.sections.info.movementScenario.{DestinationType, MovementType, OriginType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import play.api.libs.json.{JsObject, Json}
+import models.sections.journeyType.HowMovementTransported
+import models.sections.transportArranger.TransportArranger
+import models.submitCreateMovement._
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Call
 
 import java.time.temporal.ChronoUnit
@@ -142,4 +148,62 @@ trait BaseFixtures {
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
   )
+
+  val minimumSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
+    movementType = MovementType.ImportEu,
+    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    consigneeTrader = None,
+    consignorTrader = TraderModel(
+      traderExciseNumber = Some("XIRC123"),
+      traderName = Some(testMinTraderKnownFacts.traderName),
+      address = None,
+      vatNumber = None,
+      eoriNumber = None
+    ),
+    placeOfDispatchTrader = None,
+    dispatchImportOffice = None,
+    complementConsigneeTrader = None,
+    deliveryPlaceTrader = None,
+    deliveryPlaceCustomsOffice = None,
+    competentAuthorityDispatchOffice = OfficeModel("office"),
+    transportArrangerTrader = None,
+    firstTransporterTrader = None,
+    documentCertificate = None,
+    headerEadEsad = HeaderEadEsadModel(
+      destinationType = DestinationType.DirectDelivery,
+      journeyTime = "2 hours",
+      transportArrangement = TransportArranger.GoodsOwner
+    ),
+    transportMode = TransportModeModel(
+      transportModeCode = HowMovementTransported.AirTransport.toString,
+      complementaryInformation = None
+    ),
+    movementGuarantee = MovementGuaranteeModel(
+      guarantorTypeCode = GuarantorArranger.GoodsOwner,
+      guarantorTrader = None
+    ),
+    bodyEadEsad = Seq(),
+    eadEsadDraft = EadEsadDraftModel(
+      localReferenceNumber = testLrn,
+      invoiceNumber = "inv ref",
+      invoiceDate = None,
+      originTypeCode = OriginType.Imports,
+      dateOfDispatch = "2020-10-31",
+      timeOfDispatch = None,
+      importSad = None
+    ),
+    transportDetails = Seq()
+  )
+
+  val successResponseChRISJson: JsValue = Json.obj("receipt" -> testConfirmationReference, "receiptDate" -> "2023-06-07T10:11:12.000")
+  val successResponseEISJson: JsValue = Json.parse(
+    s"""{
+       | "status": "OK",
+       | "message": "$testConfirmationReference",
+       | "emcsCorrelationId": "3e8dae97-b586-4cef-8511-68ac12da9028"
+       |}""".stripMargin)
+  val submitCreateMovementResponseEIS: SubmitCreateMovementResponse =
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS")
+  val submitCreateMovementResponseChRIS: SubmitCreateMovementResponse =
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS")
 }

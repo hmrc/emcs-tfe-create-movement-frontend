@@ -17,7 +17,7 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
 import play.api.data.Form

@@ -18,7 +18,7 @@ package forms.sections.items
 
 import forms.mappings.Mappings
 import forms.sections.items.ItemDensityFormProvider.{itemDensityFormField, itemDensityFormatter}
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}

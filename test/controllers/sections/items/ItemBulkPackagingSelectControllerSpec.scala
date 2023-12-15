@@ -21,7 +21,7 @@ import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import forms.sections.items.ItemBulkPackagingSelectFormProvider
 import mocks.services.{MockGetPackagingTypesService, MockUserAnswersService}
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.{NormalMode, UserAnswers}

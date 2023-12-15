@@ -16,10 +16,10 @@
 
 package pages.sections.items
 
-import models.GoodsTypeModel._
+import models.GoodsType._
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.{GoodsTypeModel, Index}
+import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
@@ -33,7 +33,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case None => NotStarted
       case Some(epc) =>
-        implicit val goodsType: GoodsType = GoodsTypeModel(epc)
+        implicit val goodsType: GoodsType = GoodsType(epc)
 
         if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed
@@ -106,7 +106,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineCountryOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Wine) {
-      request.userAnswers.get(ItemImportedWineChoicePage(idx)) match {
+      request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx)) match {
         case wineImportedChoice@Some(false) => Seq(wineImportedChoice, request.userAnswers.get(ItemWineOriginPage(idx)))
         case wineImportedChoice => Seq(wineImportedChoice)
       }
@@ -144,7 +144,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     }
 
   private[items] def wineBulkGrowingZoneAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType == Wine)((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineChoicePage(idx))) match {
+    mandatoryIf(goodsType == Wine)((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx))) match {
       case (Some(quantity), Some(true)) if quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
       case _ => Seq()
     })

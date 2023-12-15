@@ -57,7 +57,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ItemQuantityPage(idx), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(idx), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(idx), false)
-          .set(ItemImportedWineChoicePage(idx), true)
+          .set(ItemImportedWineFromEuChoicePage(idx), true)
           .set(ItemWineMoreInformationChoicePage(idx), false)
           .set(ItemSelectPackagingPage(idx, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(idx, testPackagingIndex1), "400")

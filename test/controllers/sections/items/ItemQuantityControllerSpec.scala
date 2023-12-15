@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemQuantityFormProvider
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.UnitOfMeasure.Litres20
 import models.requests.CnCodeInformationItem
 import models.response.referenceData.CnCodeInformation

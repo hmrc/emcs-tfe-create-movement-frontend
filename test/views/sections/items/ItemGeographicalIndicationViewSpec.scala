@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemGeographicalIndicationMessages
 import forms.sections.items.ItemGeographicalIndicationFormProvider
-import models.GoodsTypeModel.Beer
+import models.GoodsType.Beer
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType.{GeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import org.jsoup.Jsoup

@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import forms.sections.items.ItemDensityFormProvider
 import forms.sections.items.ItemDensityFormProvider.itemDensityFormField
 import mocks.services.MockUserAnswersService
-import models.{GoodsTypeModel, NormalMode, UserAnswers}
+import models.{GoodsType, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemDensityPage, ItemExciseProductCodePage}
 import play.api.data.Form
@@ -34,7 +34,7 @@ import views.html.sections.items.ItemDensityView
 import scala.concurrent.Future
 
 class ItemDensityControllerSpec extends SpecBase with MockUserAnswersService {
-  lazy val testGoodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.Energy
+  lazy val testGoodsType: GoodsType = GoodsType.Energy
   lazy val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testGoodsType.code)
 
   class Test(val userAnswers: Option[UserAnswers]) {

@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.ItemImportedWineChoiceMessages
 import models.CheckMode
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemImportedWineChoicePage
+import pages.sections.items.ItemImportedWineFromEuChoicePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -70,7 +70,7 @@ class ItemImportedWineChoiceSummarySpec extends SpecBase with Matchers {
           "must output the expected row" in {
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineChoicePage(testIndex1), true))
+              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true))
 
             ItemImportedWineChoiceSummary.row(testIndex1) mustBe expectedRow(messagesForLanguage.yes)
           }
@@ -81,7 +81,7 @@ class ItemImportedWineChoiceSummarySpec extends SpecBase with Matchers {
           "must output the expected row" in {
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineChoicePage(testIndex1), false))
+              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), false))
 
             ItemImportedWineChoiceSummary.row(testIndex1) mustBe expectedRow(messagesForLanguage.no)
           }

@@ -18,26 +18,26 @@ package models
 
 import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCertificatesMessages
-import models.GoodsTypeModel._
+import models.GoodsType._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 
-class GoodsTypeModelSpec extends SpecBase with GuiceOneAppPerSuite {
+class GoodsTypeSpec extends SpecBase with GuiceOneAppPerSuite {
 
-  "GoodsTypeModel" - {
+  "GoodsType" - {
 
     "can be constructed from EPC for all valid codes" - {
 
-      GoodsTypeModel.apply("W200") mustBe Wine
-      GoodsTypeModel.apply("S100") mustBe Spirits
-      GoodsTypeModel.apply("I100") mustBe Intermediate
-      GoodsTypeModel.apply("T300") mustBe Tobacco
-      GoodsTypeModel.apply("E400") mustBe Energy
-      GoodsTypeModel.apply("B300") mustBe Beer
+      GoodsType.apply("W200") mustBe Wine
+      GoodsType.apply("S100") mustBe Spirits
+      GoodsType.apply("I100") mustBe Intermediate
+      GoodsType.apply("T300") mustBe Tobacco
+      GoodsType.apply("E400") mustBe Energy
+      GoodsType.apply("B300") mustBe Beer
     }
 
     "throws illegal argument error when EPC can't be mapped to GoodsType" in {
-      intercept[IllegalArgumentException](GoodsTypeModel.apply("OHNO")).getMessage mustBe
+      intercept[IllegalArgumentException](GoodsType.apply("OHNO")).getMessage mustBe
         s"Invalid argument of 'O' received which can not be mapped to a GoodsType"
     }
 

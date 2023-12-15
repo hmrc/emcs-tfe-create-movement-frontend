@@ -17,10 +17,10 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.BaseFixtures
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import models.GoodsTypeModel._
+import models.GoodsType._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.LegendSize
 import viewmodels.govuk.all._
 
-class ItemSmallIndependentProducerHelperSpec extends SpecBase with BaseFixtures with GuiceOneAppPerSuite {
+class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures with GuiceOneAppPerSuite {
 
   val form = new ItemSmallIndependentProducerFormProvider()()
 
@@ -59,7 +59,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with BaseFixtures 
                     RadioItem(
                       id = Some(form("value").id),
                       value = Some("true"),
-                      content = Text(yesWording)
+                      content = Text(langMessages.yesCertified(yesWording))
                     ),
                     RadioItem(
                       id = Some(s"${form("value").id}-no"),
@@ -70,6 +70,28 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with BaseFixtures 
                   LegendViewModel(Text(langMessages.heading(goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
                 )
             }
+          }
+          s"when GoodsType is ${Fermented(testEpcWine).getClass.getName.stripSuffix("$")}" in {
+
+            val yesWording = langMessages.yesOther
+
+            ItemSmallIndependentProducerHelper.radios(form, Fermented(testEpcWine)) mustBe
+              RadiosViewModel.apply(
+                form("value"),
+                items = Seq(
+                  RadioItem(
+                    id = Some(form("value").id),
+                    value = Some("true"),
+                    content = Text(langMessages.yesCertified(yesWording))
+                  ),
+                  RadioItem(
+                    id = Some(s"${form("value").id}-no"),
+                    value = Some("false"),
+                    content = Text(langMessages.no)
+                  )
+                ),
+                LegendViewModel(Text(langMessages.heading(Fermented(testEpcWine).toSingularOutput()))).asPageHeading(LegendSize.Large)
+              )
           }
         }
       }

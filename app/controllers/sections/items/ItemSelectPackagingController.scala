@@ -18,7 +18,7 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemSelectPackagingFormProvider
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging._
 import models.{Index, Mode}

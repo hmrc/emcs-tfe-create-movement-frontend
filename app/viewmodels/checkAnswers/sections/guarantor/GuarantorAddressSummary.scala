@@ -42,7 +42,7 @@ object GuarantorAddressSummary {
           val addressPage: QuestionPage[UserAddress] = guarantorArranger match {
             case Consignor => ConsignorAddressPage
             case Consignee => ConsigneeAddressPage
-            case GoodsOwner | Transporter => GuarantorAddressPage
+            case _ => GuarantorAddressPage
           }
 
           val showChangeLink: Boolean = guarantorArranger == GoodsOwner || guarantorArranger == Transporter

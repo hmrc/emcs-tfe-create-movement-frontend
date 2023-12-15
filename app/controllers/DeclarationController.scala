@@ -16,18 +16,24 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions._
+import handlers.ErrorHandler
 import models.NormalMode
+import models.response.MissingMandatoryPage
+import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersService
+import services.{SubmitCreateMovementService, UserAnswersService}
 import utils.Logging
 import views.html.DeclarationView
 
 import java.time.LocalDateTime
 import javax.inject.Inject
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -38,8 +44,10 @@ class DeclarationController @Inject()(
                                        val controllerComponents: MessagesControllerComponents,
                                        val userAnswersService: UserAnswersService,
                                        val navigator: Navigator,
-                                       view: DeclarationView
-                                     ) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
+                                       service: SubmitCreateMovementService,
+                                       view: DeclarationView,
+                                       errorHandler: ErrorHandler
+                                     )(implicit appConfig: AppConfig) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
@@ -48,6 +56,28 @@ class DeclarationController @Inject()(
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+      Try {
+        SubmitCreateMovementModel.apply
+      } match {
+        case Failure(exception: MissingMandatoryPage) =>
+          logger.error(s"MissingMandatoryPage error thrown: ${exception.message}")
+          Future.successful(BadRequest(errorHandler.badRequestTemplate))
+
+        case Failure(exception) =>
+          logger.error(s"Error thrown when creating request model to submit: ${exception.getMessage}")
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+
+        case Success(submitCreateMovementModel) =>
+          service.submit(submitCreateMovementModel).flatMap {
+            response =>
+              logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
+
+              saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+          }.recover {
+            case exception =>
+              logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
+              InternalServerError(errorHandler.internalServerErrorTemplate)
+          }
+      }
     }
 }

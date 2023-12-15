@@ -20,7 +20,7 @@ import forms.XSS_REGEX
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.GoodsTypeModel.GoodsType
+import models.GoodsType
 import models.sections.items.ItemMaturationPeriodAgeModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text => playText}

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging
-import models.{GoodsTypeModel, Index}
+import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
@@ -89,7 +89,7 @@ class ItemPackagingSummary @Inject()(
       epc <- request.userAnswers.get(ItemExciseProductCodePage(itemIdx))
       bulkType <- request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx))
     } yield {
-      implicit val goodsType: GoodsTypeModel.GoodsType = GoodsTypeModel.apply(epc)
+      implicit val goodsType: GoodsType = GoodsType.apply(epc)
       SummaryListRowViewModel(
         key = "itemsAddToList.packagesCyaLabel",
         value = ValueViewModel(HtmlContent(

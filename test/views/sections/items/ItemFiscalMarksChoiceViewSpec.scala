@@ -19,7 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksChoiceMessages
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
-import models.GoodsTypeModel.Tobacco
+import models.GoodsType.Tobacco
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

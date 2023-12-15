@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemBulkPackagingSelectMessages
 import forms.behaviours.OptionFieldBehaviours
-import models.GoodsTypeModel.Wine
+import models.GoodsType.Wine
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
 import play.api.data.{Form, FormError}

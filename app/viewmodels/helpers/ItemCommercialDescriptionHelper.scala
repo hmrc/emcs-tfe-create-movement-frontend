@@ -16,7 +16,8 @@
 
 package viewmodels.helpers
 
-import models.GoodsTypeModel._
+import models.GoodsType
+import models.GoodsType._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 

@@ -94,7 +94,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
               val packagingIsBulk = mandatoryPage(ItemBulkPackagingChoicePage(idx))
 
               BodyEadEsadModel(
-                bodyRecordUniqueReference = idx.position,
+                bodyRecordUniqueReference = idx.position + 1, // "0" is an invalid value, so assumption is this is 1-indexed
                 exciseProductCode = exciseProductCode,
                 cnCode = commodityCode,
                 quantity = mandatoryPage(ItemQuantityPage(idx)),

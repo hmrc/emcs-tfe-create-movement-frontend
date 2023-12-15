@@ -73,7 +73,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test("XIRC123", baseFullUserAnswers) {
           MockAppConfig.destinationOfficeSuffix.returns("004098")
-          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(minimumSubmitCreateMovementResponse))
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(submitCreateMovementResponseEIS))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
           val res = controller.onSubmit("XIRC123", testDraftId)(request)

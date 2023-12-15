@@ -48,7 +48,7 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
 
     val url = s"/emcs-tfe/create-movement/$testErn/$testDraftId"
     val requestBody = Json.toJson(minimumSubmitCreateMovementModel)
-    val responseBody = Json.toJson(minimumSubmitCreateMovementResponse)
+    val responseBody = successResponseEISJson
 
     "must return true when the server responds OK" in {
 
@@ -58,7 +58,7 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(OK).withBody(Json.stringify(responseBody)))
       )
 
-      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Right(minimumSubmitCreateMovementResponse)
+      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Right(submitCreateMovementResponseEIS)
     }
 
     "must return false when the server responds NOT_FOUND" in {

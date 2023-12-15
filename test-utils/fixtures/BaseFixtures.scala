@@ -25,8 +25,8 @@ import models.sections.info.movementScenario.{DestinationType, MovementType, Ori
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import models.sections.journeyType.HowMovementTransported
 import models.sections.transportArranger.TransportArranger
-import models.submitCreateMovement.{AttributesModel, EadEsadDraftModel, HeaderEadEsadModel, MovementGuaranteeModel, OfficeModel, SubmissionMessageType, SubmitCreateMovementModel, TraderModel, TransportModeModel}
-import play.api.libs.json.{JsObject, Json}
+import models.submitCreateMovement._
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Call
 
 import java.time.temporal.ChronoUnit
@@ -195,5 +195,15 @@ trait BaseFixtures {
     transportDetails = Seq()
   )
 
-  val minimumSubmitCreateMovementResponse: SubmitCreateMovementResponse = SubmitCreateMovementResponse("Accepted", "Request successful", "uuid")
+  val successResponseChRISJson: JsValue = Json.obj("receipt" -> testConfirmationReference, "receiptDate" -> "2023-06-07T10:11:12.000")
+  val successResponseEISJson: JsValue = Json.parse(
+    s"""{
+       | "status": "OK",
+       | "message": "$testConfirmationReference",
+       | "emcsCorrelationId": "3e8dae97-b586-4cef-8511-68ac12da9028"
+       |}""".stripMargin)
+  val submitCreateMovementResponseEIS: SubmitCreateMovementResponse =
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS")
+  val submitCreateMovementResponseChRIS: SubmitCreateMovementResponse =
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS")
 }

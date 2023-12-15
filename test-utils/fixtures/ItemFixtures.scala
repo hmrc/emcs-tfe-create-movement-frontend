@@ -508,7 +508,7 @@ trait ItemFixtures {
       )))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
-      bodyRecordUniqueReference = 0,
+      bodyRecordUniqueReference = 1,
       exciseProductCode = testEpcWine,
       cnCode = testCnCodeWine,
       quantity = BigDecimal(1),
@@ -640,7 +640,7 @@ trait ItemFixtures {
       )))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
-      bodyRecordUniqueReference = 0,
+      bodyRecordUniqueReference = 1,
       exciseProductCode = testEpcWine,
       cnCode = testCnCodeWine,
       quantity = BigDecimal(1),
@@ -766,7 +766,7 @@ trait ItemFixtures {
       )))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
-      bodyRecordUniqueReference = 0,
+      bodyRecordUniqueReference = 1,
       exciseProductCode = testEpcWine,
       cnCode = testCnCodeWine,
       quantity = BigDecimal(1),
@@ -898,7 +898,7 @@ trait ItemFixtures {
       )))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
-      bodyRecordUniqueReference = 0,
+      bodyRecordUniqueReference = 1,
       exciseProductCode = testEpcWine,
       cnCode = testCnCodeWine,
       quantity = BigDecimal(1),

@@ -62,19 +62,22 @@ class DeclarationController @Inject()(
         case Failure(exception: MissingMandatoryPage) =>
           logger.error(s"MissingMandatoryPage error thrown: ${exception.message}")
           Future.successful(BadRequest(errorHandler.badRequestTemplate))
+
         case Failure(exception) =>
           logger.error(s"Error thrown when creating request model to submit: ${exception.getMessage}")
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+
         case Success(submitCreateMovementModel) =>
-        service.submit(submitCreateMovementModel).flatMap {
-          response =>
-            logger.debug(s"[onSubmit] Response received from Submit Create Movement: $response")
-            saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
-        }.recover {
-          case exception =>
-            logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
-        }
+          service.submit(submitCreateMovementModel).flatMap {
+            response =>
+              logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
+
+              saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+          }.recover {
+            case exception =>
+              logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
+              InternalServerError(errorHandler.internalServerErrorTemplate)
+          }
       }
     }
 }

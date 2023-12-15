@@ -41,9 +41,9 @@ class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMove
 
         val request = dataRequest(FakeRequest())
 
-        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(minimumSubmitCreateMovementResponse)))
+        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
-        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe minimumSubmitCreateMovementResponse
+        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe submitCreateMovementResponseEIS
       }
     }
 

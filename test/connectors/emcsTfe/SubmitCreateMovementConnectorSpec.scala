@@ -44,9 +44,9 @@ class SubmitCreateMovementConnectorSpec extends SpecBase
         MockHttpClient.post(
           url = s"${appConfig.emcsTfeBaseUrl}/create-movement/$testErn/$testDraftId",
           body = minimumSubmitCreateMovementModel
-        ).returns(Future.successful(Right(minimumSubmitCreateMovementResponse)))
+        ).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
-        connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Right(minimumSubmitCreateMovementResponse)
+        connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Right(submitCreateMovementResponseEIS)
       }
     }
 

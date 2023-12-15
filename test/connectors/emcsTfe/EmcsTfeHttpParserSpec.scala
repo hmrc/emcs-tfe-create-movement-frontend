@@ -27,7 +27,7 @@ class EmcsTfeHttpParserSpec extends SpecBase
   with Status with MimeTypes with HeaderNames with MockHttpClient {
 
   lazy val httpParser = new EmcsTfeHttpParser[SubmitCreateMovementResponse] {
-    override implicit val reads: Reads[SubmitCreateMovementResponse] = SubmitCreateMovementResponse.fmt
+    override implicit val reads: Reads[SubmitCreateMovementResponse] = SubmitCreateMovementResponse.reads
     override def http: HttpClient = mockHttpClient
   }
 
@@ -37,9 +37,9 @@ class EmcsTfeHttpParserSpec extends SpecBase
 
       "when valid JSON is returned that can be parsed to the model" in {
 
-        val httpResponse = HttpResponse(Status.OK, Json.toJson(minimumSubmitCreateMovementResponse), Map())
+        val httpResponse = HttpResponse(Status.OK, successResponseEISJson, Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/create-movement/ern/draftId", httpResponse) mustBe Right(minimumSubmitCreateMovementResponse)
+        httpParser.EmcsTfeReads.read("POST", "/create-movement/ern/draftId", httpResponse) mustBe Right(submitCreateMovementResponseEIS)
       }
     }
 

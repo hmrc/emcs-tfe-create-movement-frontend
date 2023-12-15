@@ -80,7 +80,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
         )
 
         BodyEadEsadModel.apply mustBe Seq(BodyEadEsadModel(
-          bodyRecordUniqueReference = 0,
+          bodyRecordUniqueReference = 1,
           exciseProductCode = testEpcWine,
           cnCode = testCnCodeWine,
           quantity = BigDecimal(1),
@@ -150,7 +150,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
         )
 
         BodyEadEsadModel.apply mustBe Seq(BodyEadEsadModel(
-          bodyRecordUniqueReference = 0,
+          bodyRecordUniqueReference = 1,
           exciseProductCode = testEpcWine,
           cnCode = testCnCodeWine,
           quantity = BigDecimal(1),
@@ -248,7 +248,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
         BodyEadEsadModel.apply mustBe Seq(
           BodyEadEsadModel(
-            bodyRecordUniqueReference = 0,
+            bodyRecordUniqueReference = 1,
             exciseProductCode = testEpcWine,
             cnCode = testCnCodeWine,
             quantity = BigDecimal(1),
@@ -284,7 +284,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             )
           ),
           BodyEadEsadModel(
-            bodyRecordUniqueReference = 1,
+            bodyRecordUniqueReference = 2,
             exciseProductCode = testEpcTobacco,
             cnCode = testCnCodeTobacco,
             quantity = BigDecimal(1),

@@ -16,16 +16,15 @@
 
 package models.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import base.SpecBase
 
-case class SubmitCreateMovementResponse(receipt: String, downstreamService: String)
-
-object SubmitCreateMovementResponse {
-  implicit val reads: Reads[SubmitCreateMovementResponse] =
-    (__ \ "message").read[String].map(SubmitCreateMovementResponse(_, "EIS")) or
-      (__ \ "receipt").read[String].map(SubmitCreateMovementResponse(_, "ChRIS"))
-
-  implicit val writes: OWrites[SubmitCreateMovementResponse] =
-    (o: SubmitCreateMovementResponse) => Json.obj("receipt" -> o.receipt)
+class SubmitCreateMovementResponseSpec extends SpecBase {
+  "reads" - {
+    "should read from EIS" in {
+      successResponseEISJson.as[SubmitCreateMovementResponse] mustBe submitCreateMovementResponseEIS
+    }
+    "should read from ChRIS" in {
+      successResponseChRISJson.as[SubmitCreateMovementResponse] mustBe submitCreateMovementResponseChRIS
+    }
+  }
 }

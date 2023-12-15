@@ -107,7 +107,7 @@ class EadEsadDraftModelSpec extends SpecBase {
           .set(ImportNumberPage(testIndex3), "sad 3")
       )
 
-      EadEsadDraftModel.apply.timeOfDispatch mustBe Some("23:59:00.000")
+      EadEsadDraftModel.apply.timeOfDispatch mustBe Some("23:59:00")
     }
   }
 }

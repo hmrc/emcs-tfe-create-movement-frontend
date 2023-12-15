@@ -41,7 +41,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               answers = emptyUserAnswers
                 .set(LocalReferenceNumberPage(), testLrn)
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
-                .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59.123")))
+                .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
                 .set(ImportNumberPage(testIndex1), "sad 1")
                 .set(ImportNumberPage(testIndex2), "sad 2")
@@ -56,7 +56,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.Imports,
               dateOfDispatch = "2020-10-31",
-              timeOfDispatch = Some("23:59:59.123"),
+              timeOfDispatch = Some("23:59:59"),
               importSad = Some(Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3")))
             )
         }
@@ -72,7 +72,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               answers = emptyUserAnswers
                 .set(LocalReferenceNumberPage(), testLrn)
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
-                .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59.123")))
+                .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
                 .set(ImportNumberPage(testIndex1), "sad 1")
                 .set(ImportNumberPage(testIndex2), "sad 2")
@@ -87,7 +87,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.TaxWarehouse,
               dateOfDispatch = "2020-10-31",
-              timeOfDispatch = Some("23:59:59.123"),
+              timeOfDispatch = Some("23:59:59"),
               importSad = None
             )
         }

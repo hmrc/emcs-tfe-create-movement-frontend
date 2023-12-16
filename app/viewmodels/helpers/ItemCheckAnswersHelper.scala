@@ -38,7 +38,7 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary
                                       ) {
 
-  private val headingLevel = 3
+  private val headingLevel = 2
 
   def constructItemDetailsCard(idx: Index, cnCodeInformation: CnCodeInformation)
                               (implicit request: DataRequest[_], messages: Messages): SummaryList = {

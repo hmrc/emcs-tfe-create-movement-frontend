@@ -34,27 +34,31 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
-  val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
+  val headingLevel = 2
+
+  lazy val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
+  lazy implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+  lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
+  lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
+  lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
+
+  lazy val helper = new ItemCheckAnswersHelper(
+    itemExciseProductCodeSummary = itemExciseProductCodeSummary,
+    itemCommodityCodeSummary = itemCommodityCodeSummary,
+    itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
+    itemWineMoreInformationSummary = itemWineMoreInformationSummary,
+    itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary
+  )
+
   class Test(val userAnswers: UserAnswers) {
     lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
-    lazy implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-    lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
-    lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
-    lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
-    lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
-    lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
-
-    lazy val helper = new ItemCheckAnswersHelper(
-      itemExciseProductCodeSummary = itemExciseProductCodeSummary,
-      itemCommodityCodeSummary = itemCommodityCodeSummary,
-      itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
-      itemWineMoreInformationSummary = itemWineMoreInformationSummary,
-      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary
-    )
   }
 
   "ItemCheckAnswersHelper" - {
@@ -62,7 +66,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
       "must return rows" in new Test(baseUserAnswers) {
         val card: SummaryList = helper.constructItemDetailsCard(testIndex1, testCommodityCodeWine)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleItemDetails, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleItemDetails, headingLevel, None))
         card.rows must not be empty
       }
     }
@@ -75,7 +79,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
       ) {
         val card: SummaryList = helper.constructQuantityCard(testIndex1, testCommodityCodeWine)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleQuantity, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleQuantity, headingLevel, None))
         card.rows.length mustBe 3
       }
     }
@@ -87,7 +91,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
       ) {
         val card: SummaryList = helper.constructWineDetailsCard(testIndex1)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails, headingLevel, None))
         card.rows must not be empty
       }
     }
@@ -100,7 +104,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
         ) {
           val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
 
-          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, None))
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, headingLevel, None))
           card.rows must not be empty
         }
         "when not bulk" in new Test(
@@ -109,7 +113,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
         ) {
           val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
 
-          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, Some(Actions(items = Seq(ActionItemViewModel(
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, headingLevel, Some(Actions(items = Seq(ActionItemViewModel(
             messagesForLanguage.change,
             href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, testIndex1).url,
             s"changeItemPackaging${testIndex1.displayIndex}"

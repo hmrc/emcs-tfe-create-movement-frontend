@@ -34,9 +34,11 @@ import scala.concurrent.Future
 class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitCreateMovementService with MockAppConfig with ItemFixtures {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
-  lazy val submitRoute = routes.DeclarationController.onSubmit(testErn, testDraftId)
+  val ern: String = "XIRC123"
+  lazy val submitRoute = routes.DeclarationController.onSubmit(ern, testDraftId)
 
-  class Test(ern: String, userAnswers: UserAnswers) {
+
+  class Test(userAnswers: UserAnswers = baseFullUserAnswers) {
     implicit val request = dataRequest(
       FakeRequest(),
       userAnswers,
@@ -61,22 +63,39 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
 
   "DeclarationController" - {
     "for GET onPageLoad" - {
-      "must return the declaration page" in new Test(testErn, emptyUserAnswers) {
-        val res = controller.onPageLoad(testErn, testDraftId)(request)
+      "must return the declaration page" in new Test() {
+        MockAppConfig.destinationOfficeSuffix.returns("004098")
+        val res = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitRoute).toString()
+      }
+
+      "when creating a request model fails" - {
+        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
+          val res = controller.onPageLoad(ern, testDraftId)(request)
+
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+        }
+        "must return a InternalServerError when something else goes wrong" in new Test() {
+          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
+
+          val res = controller.onPageLoad(ern, testDraftId)(request)
+
+          status(res) mustBe INTERNAL_SERVER_ERROR
+        }
       }
     }
 
     "for POST submit" - {
       "when downstream call is successful" - {
-        "must save the timestamp and redirect" in new Test("XIRC123", baseFullUserAnswers) {
+        "must save the timestamp and redirect" in new Test() {
           MockAppConfig.destinationOfficeSuffix.returns("004098")
           MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(submitCreateMovementResponseEIS))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+          val res = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) must contain(testOnwardRoute.url)
@@ -84,26 +103,27 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       }
 
       "when downstream call is unsuccessful" - {
-        "must return an InternalServerError" in new Test("XIRC123", baseFullUserAnswers) {
+        "must return an InternalServerError" in new Test() {
           MockAppConfig.destinationOfficeSuffix.returns("004098")
           MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.failed(SubmitCreateMovementException("test error")))
 
-          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+          val res = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe INTERNAL_SERVER_ERROR
         }
       }
 
       "when creating a request model fails" - {
-        "must return a BadRequest when MissingMandatoryPage" in new Test("XIRC123", emptyUserAnswers) {
-          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
+          val res = controller.onSubmit(ern, testDraftId)(request)
 
-          status(res) mustBe BAD_REQUEST
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
         }
-        "must return a InternalServerError when something else goes wrong" in new Test("XIRC123", baseFullUserAnswers) {
+        "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
 
-          val res = controller.onSubmit("XIRC123", testDraftId)(request)
+          val res = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe INTERNAL_SERVER_ERROR
         }

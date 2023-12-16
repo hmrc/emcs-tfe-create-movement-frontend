@@ -42,6 +42,7 @@ trait BaseMessages { _: i18n =>
   val saveAndContinue = "Save and continue"
   val returnToDraft = "Return to draft"
   val skipThisQuestion = "Skip this question for now"
+  val skipQuestion = "Skip this question"
   val saveAndReturnToMovement = "Save and return to movement"
   val day: String = "Day"
   val month: String = "Month"

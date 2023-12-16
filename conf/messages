@@ -14,6 +14,7 @@ site.returnToDraft = Return to draft
 site.saveAndReturnToMovement = Save and return to movement
 site.start = Start now
 site.skipQuestion = Skip this question for now
+site.skipThisQuestion = Skip this question
 site.startAgain = Start again
 site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
@@ -657,7 +658,9 @@ guarantorCheckAnswers.title = Check your answers
 guarantorCheckAnswers.heading = Check your answers
 
 destinationBusinessName.title = What is the business name of the place of destination?
+destinationBusinessName.directDelivery.title = What is the business name of the place of destination (optional)?
 destinationBusinessName.heading = What is the business name of the place of destination?
+destinationBusinessName.directDelivery.heading = What is the business name of the place of destination (optional)?
 destinationBusinessName.error.required = Enter the business name of the place of destination
 destinationBusinessName.error.length = Business name must be less than 182 characters
 destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;

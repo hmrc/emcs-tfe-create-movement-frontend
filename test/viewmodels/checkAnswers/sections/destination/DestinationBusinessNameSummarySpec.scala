@@ -40,14 +40,20 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "must output no row" in {
+          "must output row with 'Not provided' and change link" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
               key = messagesForLanguage.cyaLabel,
               value = Value(messagesForLanguage.cyaDestinationNotProvided),
-              actions = Seq.empty
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  id = "changeDestinationBusinessName"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              )
             )
 
           }
@@ -66,7 +72,13 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
               DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(messagesForLanguage.cyaDestinationNotProvided),
-                actions = Seq.empty
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    id = "changeDestinationBusinessName"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
               )
             }
           }
@@ -114,7 +126,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
             }
           }
 
-          "when Consignee Busines sName has been answered" - {
+          "when Consignee Business Name has been answered" - {
 
             "must output the expected row" in {
 

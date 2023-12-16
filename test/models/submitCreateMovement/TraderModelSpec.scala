@@ -102,7 +102,7 @@ class TraderModelSpec extends SpecBase {
     eoriNumber = None
   )
   val guarantorTraderWithConsigneeInfo: TraderModel = TraderModel(
-    traderExciseNumber = Some("consignee ern"),
+    traderExciseNumber = None,
     traderName = Some("consignee name"),
     address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
     vatNumber = Some("vat no"),
@@ -422,7 +422,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe Some(consignorTrader)
+        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe Some(consignorTrader.copy(traderExciseNumber = None))
       }
       "when GoodsType is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(

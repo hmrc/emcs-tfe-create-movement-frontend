@@ -34,7 +34,7 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
 
     if (!guarantorRequired) {
       MovementGuaranteeModel(
-        guarantorTypeCode = GuarantorArranger.NoGuarantorRequired,
+        guarantorTypeCode = GuarantorArranger.NoGuarantorRequired, // TODO: when do we ever set it to "5"?
         guarantorTrader = None
       )
     } else {

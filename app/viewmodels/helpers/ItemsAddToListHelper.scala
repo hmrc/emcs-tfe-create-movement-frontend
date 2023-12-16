@@ -44,7 +44,7 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary) extends TagFluency with Logging {
 
-  private val headingLevel = 3
+  private val headingLevel = 2
 
 
   def allItemsSummary(implicit request: DataRequest[_], messages: Messages, headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Seq[SummaryList]] =

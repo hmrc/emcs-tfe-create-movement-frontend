@@ -27,7 +27,7 @@ import pages.sections.destination.DestinationBusinessNamePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.destination.DestinationBusinessNameView
 

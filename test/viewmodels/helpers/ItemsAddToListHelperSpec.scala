@@ -47,7 +47,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
   implicit lazy val tag: tag = app.injector.instanceOf[tag]
   lazy val itemPackagingSummary: ItemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
 
-  val headingLevel = 3
+  val headingLevel = 2
 
   lazy val helper = new ItemsAddToListHelper(
     tag = tag,

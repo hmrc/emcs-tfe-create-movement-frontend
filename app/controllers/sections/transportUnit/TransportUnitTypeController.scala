@@ -20,9 +20,10 @@ import controllers.actions._
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
+import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage, TransportUnitGiveMoreInformationChoicePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -59,8 +60,21 @@ class TransportUnitTypeController @Inject()(
         formProvider().bindFromRequest().fold(
           formWithErrors =>
             renderView(BadRequest, formWithErrors, idx, mode),
-          value =>
-            saveAndRedirect(TransportUnitTypePage(idx), value, mode)
+          value => {
+            val cleansedAnswers = {
+              if (value == FixedTransport) {
+                request.userAnswers
+                  .remove(TransportUnitGiveMoreInformationChoicePage(idx))
+                  .remove(TransportUnitIdentityPage(idx))
+                  .remove(TransportSealChoicePage(idx))
+                  .remove(TransportSealTypePage(idx))
+                  .remove(TransportUnitGiveMoreInformationPage(idx))
+              } else {
+                request.userAnswers
+              }
+            }
+            saveAndRedirect(TransportUnitTypePage(idx), value, cleansedAnswers, mode)
+          }
         )
       }
     }

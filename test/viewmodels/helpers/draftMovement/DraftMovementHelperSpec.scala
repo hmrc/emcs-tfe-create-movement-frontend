@@ -105,7 +105,9 @@ class DraftMovementHelperSpec extends SpecBase {
           "must return the draftMovement.heading.importFor message" in {
             Seq[String](
               "GBRC123",
-              "XIRC123"
+              "XIRC123",
+              "XIPA123",
+              "XIPC123"
             ).foreach(
               ern =>
                 MovementScenario.values.foreach {

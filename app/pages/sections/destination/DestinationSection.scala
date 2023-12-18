@@ -47,43 +47,72 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       DirectDelivery
     ).contains(destinationTypePageAnswer)
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (exciseVatAndDetailsChoicePagesComplete, detailsPagesComplete) match {
-      case (NotStarted, _) => NotStarted
-      case (Completed, Completed) => Completed
-      case _ => InProgress
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    request.userAnswers.get(DestinationTypePage) match {
+      case Some(value) =>
+        implicit val destinationTypePageAnswer: MovementScenario = value
+        if(shouldStartFlowAtDestinationWarehouseExcise) {
+          startFlowAtDestinationWarehouseExciseStatus
+        } else if(shouldStartFlowAtDestinationWarehouseVat) {
+          startFlowAtDestinationWarehouseVatStatus
+        } else if(shouldStartFlowAtDestinationBusinessName) {
+          startFlowAtDestinationBusinessNameStatus
+        } else {
+          NotStarted
+        }
+      case None => NotStarted
     }
-  }
 
-  private def exciseVatAndDetailsChoicePagesComplete(implicit request: DataRequest[_]): TaskListStatus = {
+  private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
       request.userAnswers.get(DestinationWarehouseExcisePage),
-      request.userAnswers.get(DestinationWarehouseVatPage),
-      request.userAnswers.get(DestinationDetailsChoicePage)
-    ) match {
-      case (Some(_), _, _) => Completed
-      case (_, Some(_), None) => InProgress
-      case (_, _, Some(_)) => Completed
-      case _ => NotStarted
-    }
-  }
-
-  private def detailsPagesComplete(implicit request: DataRequest[_]): TaskListStatus = {
-    if (request.userAnswers.get(DestinationDetailsChoicePage).contains(false)) Completed else (
       request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(false), Some(_), Some(_)) => Completed
-      case (Some(true), _, _) => Completed
+      case (Some(_), Some(true), _, _) => Completed
+      case (Some(_), Some(false), Some(_), Some(_)) => Completed
+      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
+      case (Some(_), _, _, _) => InProgress
+      case _ => NotStarted
+    }
+
+  private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_]): TaskListStatus =
+    (
+      request.userAnswers.get(DestinationDetailsChoicePage),
+      request.userAnswers.get(DestinationConsigneeDetailsPage),
+      request.userAnswers.get(DestinationBusinessNamePage),
+      request.userAnswers.get(DestinationAddressPage)
+    ) match {
+      case (Some(false), _, _, _) => Completed
+      case (Some(true), Some(true), _, _) => Completed
+      case (Some(true), Some(false), Some(_), Some(_)) => Completed
+      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
+      case (Some(_), _, _, _) => InProgress
+      case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
+      case _ => NotStarted
+    }
+
+  private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus =
+    (
+      request.userAnswers.get(DestinationBusinessNamePage),
+      request.userAnswers.get(DestinationAddressPage)
+    ) match {
+      case (Some(_), Some(_)) => Completed
+      case (bn, a) if bn.isEmpty && a.isEmpty => NotStarted
       case _ => InProgress
     }
-  }
 
-  //noinspection ScalaStyle
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage) match {
-      case Some(value) if Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains(value) => true
+      case Some(value) if Seq(
+        GbTaxWarehouse,
+        EuTaxWarehouse,
+        RegisteredConsignee,
+        TemporaryRegisteredConsignee,
+        ExemptedOrganisation,
+        DirectDelivery
+      ).contains(value) => true
       case _ => false
     }
 }

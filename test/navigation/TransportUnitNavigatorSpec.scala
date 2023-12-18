@@ -20,8 +20,8 @@ import base.SpecBase
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.TransportUnitFixtures
-import models.sections.transportUnit.TransportUnitType.Tractor
-import models.sections.transportUnit.TransportUnitsAddToListModel
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
+import models.sections.transportUnit.{TransportUnitType, TransportUnitsAddToListModel}
 import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportUnit._
@@ -39,11 +39,21 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
     "for the TransportUnitType (CAM-TU01)" - {
 
-      "must go to CAM-TU02" in {
-        val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+      TransportUnitType.values.filterNot(_ == FixedTransport).foreach { transportUnit =>
+        s"must go to CAM-TU02 when the TU type is $transportUnit" in {
+          val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+
+          navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
+            transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
+        }
+      }
+
+      //TODO: redirect to CAM-TU09
+      s"must go to CAM-TU09 when the TU type is FixedTransport" in {
+        val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), FixedTransport)
 
         navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
-          transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, Index(0), NormalMode)
+         testOnly.controllers.routes.UnderConstructionController.onPageLoad()
       }
     }
 

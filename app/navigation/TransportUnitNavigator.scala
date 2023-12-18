@@ -18,6 +18,7 @@ package navigation
 
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -31,7 +32,11 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
-      transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      if(userAnswers.get(TransportUnitTypePage(idx)).contains(FixedTransport)) {
+        testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      } else {
+        transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      }
     case TransportUnitIdentityPage(idx) => (userAnswers: UserAnswers) =>
       transportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 

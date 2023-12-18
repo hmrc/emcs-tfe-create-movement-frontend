@@ -19,8 +19,10 @@ package pages.sections.transportUnit
 import base.SpecBase
 import models.Index
 import models.requests.DataRequest
-import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsArray, Json}
 import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}
@@ -44,9 +46,20 @@ class TransportUnitsSectionSpec extends SpecBase {
           )
         TransportUnitsSection.isCompleted mustBe true
       }
+
+      "when the journey type is Fixed Transport Installations and the number of transport units is 1" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(HowMovementTransportedPage, FixedTransportInstallations)
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
+          )
+        TransportUnitsSection.isCompleted mustBe true
+      }
     }
 
     "must return false" - {
+
       "when empty user answers" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         TransportUnitsSection.isCompleted mustBe false
@@ -67,6 +80,17 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportUnitTypePage(testIndex2), Container)
               .set(TransportUnitIdentityPage(testIndex2), "")
               .set(TransportSealChoicePage(testIndex2), false)
+          )
+        TransportUnitsSection.isCompleted mustBe false
+      }
+
+      "when the journey type is Fixed Transport Installations and the number of transport units is > 1" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(HowMovementTransportedPage, FixedTransportInstallations)
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
+              .set(TransportUnitTypePage(testIndex2), Container)
           )
         TransportUnitsSection.isCompleted mustBe false
       }

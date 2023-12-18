@@ -123,11 +123,21 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
           actualResult.errors mustBe expectedResult
         }
 
-        "when teh date is invalid" in {
+        "when the date is invalid" in {
 
           val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
 
           val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.invalid"))
+
+          val actualResult = form.bind(data)
+
+          actualResult.errors mustBe expectedResult
+        }
+
+        "when the date is before the earliest allowed date" in {
+          val data = formAnswersMap(day = "31", month = "12", year = "1999")
+
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.earliestDate"))
 
           val actualResult = form.bind(data)
 
@@ -179,6 +189,16 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
           val data = formAnswersMap(year = "")
 
           val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required", List("year")))
+
+          val actualResult = form.bind(data)
+
+          actualResult.errors mustBe expectedResult
+        }
+
+        "when it's not four digits long" in {
+          val data = formAnswersMap(year = "23")
+
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.yearNotFourDigits"))
 
           val actualResult = form.bind(data)
 
@@ -274,6 +294,11 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
           msgs("invoiceDetails.value.error.required.two", "day", "month") mustBe
             messagesForLanguage.dateErrorRequiredTwo("day", "month")
+        }
+
+        "have the correct error message when the year isn't 4 digits long" in {
+          msgs("invoiceDetails.value.error.yearNotFourDigits") mustBe
+            messagesForLanguage.yearIsNotFourDigitsLong
         }
       }
     }

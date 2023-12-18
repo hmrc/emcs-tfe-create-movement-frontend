@@ -85,6 +85,16 @@ class DispatchDetailsFormProviderSpec extends StringFieldBehaviours with BaseFix
 
           actualResult.errors mustBe expectedResult
         }
+
+        "when the date is before the earliest allowed date" in {
+          val data = formAnswersMap(day = "31", month = "12", year = "1999")
+
+          val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.earliestDate"))
+
+          val actualResult = form.bind(data)
+
+          actualResult.errors mustBe expectedResult
+        }
       }
 
       "the day field" - {
@@ -130,6 +140,16 @@ class DispatchDetailsFormProviderSpec extends StringFieldBehaviours with BaseFix
             val data = formAnswersMap(year = "")
 
             val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required", List("year")))
+
+            val actualResult = form.bind(data)
+
+            actualResult.errors mustBe expectedResult
+          }
+
+          "when it's not four digits long" in {
+            val data = formAnswersMap(year = "23")
+
+            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.yearNotFourDigits"))
 
             val actualResult = form.bind(data)
 

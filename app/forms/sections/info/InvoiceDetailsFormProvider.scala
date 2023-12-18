@@ -20,10 +20,16 @@ import forms.mappings.Mappings
 import models.sections.info.InvoiceDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 class InvoiceDetailsFormProvider @Inject() extends Mappings {
+
+  // scalastyle:off magic.number
+  private val earliestInvoiceDate = LocalDate.of(2000, 1, 1)
+  // scalastyle:on magic.number
 
   def apply(): Form[InvoiceDetailsModel] =
     Form(mapping(
@@ -35,5 +41,12 @@ class InvoiceDetailsFormProvider @Inject() extends Mappings {
         twoRequiredKey = "invoiceDetails.value.error.required.two",
         requiredKey = "invoiceDetails.value.error.required"
       )
+        .verifying(
+          firstError(
+            fourDigitYear("invoiceDetails.value.error.yearNotFourDigits"),
+            minDate(earliestInvoiceDate, "invoiceDetails.value.error.earliestDate")
+          )
+        )
     )(InvoiceDetailsModel.apply)(InvoiceDetailsModel.unapply))
+
 }

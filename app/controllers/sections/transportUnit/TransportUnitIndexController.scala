@@ -19,11 +19,9 @@ package controllers.sections.transportUnit
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
-import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, NormalMode}
 import navigation.TransportUnitNavigator
 import pages.sections.journeyType.HowMovementTransportedPage
-import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.TransportUnitsCount

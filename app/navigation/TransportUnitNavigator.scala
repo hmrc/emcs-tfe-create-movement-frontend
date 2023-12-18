@@ -18,7 +18,6 @@ package navigation
 
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
-import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel

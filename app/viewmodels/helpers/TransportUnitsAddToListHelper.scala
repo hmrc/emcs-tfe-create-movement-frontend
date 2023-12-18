@@ -48,7 +48,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: views.html.componen
         if(!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx)) else None,
         if(!isTransportUnitAFixedTransportInstallation) Some(TransportSealTypeSummary.row(idx)) else None,
         if(!isTransportUnitAFixedTransportInstallation) Some(TransportSealInformationSummary.row(idx)) else None,
-        if(!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx)) else None,
+        if(!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx)) else None
       ).flatMap(_.flatten)
     ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex)))),

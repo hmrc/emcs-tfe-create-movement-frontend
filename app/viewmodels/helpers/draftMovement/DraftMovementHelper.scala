@@ -59,7 +59,7 @@ class DraftMovementHelper @Inject()() extends Logging {
             throw MissingMandatoryPage(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
         }
 
-      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
+      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor, Some(destinationType)) =>
         messages("draftMovement.heading.importFor", messages(s"destinationType.$destinationType"))
 
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>

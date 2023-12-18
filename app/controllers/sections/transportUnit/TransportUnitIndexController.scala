@@ -18,8 +18,10 @@ package controllers.sections.transportUnit
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.{Index, NormalMode}
 import navigation.TransportUnitNavigator
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.TransportUnitsCount
@@ -40,11 +42,15 @@ class TransportUnitIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      request.userAnswers.get(TransportUnitsCount) match {
-        case None | Some(0) => Redirect(
+      (request.userAnswers.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
+        //TODO: redirect to CAM-TU9 / CAM-TU09
+        case (_, Some(FixedTransportInstallations)) => Redirect(
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        )
+        case (None | Some(0), _) => Redirect(
           controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
         )
-        case Some(_) => Redirect(
+        case (Some(_), _) => Redirect(
           controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.draftId)
         )
       }

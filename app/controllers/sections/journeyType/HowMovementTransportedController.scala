@@ -19,9 +19,14 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
-import models.{Mode, NormalMode}
+import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
+import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
+import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -53,19 +58,30 @@ class HowMovementTransportedController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
-        value => if (request.userAnswers.get(HowMovementTransportedPage).contains(value)) {
+        answer => if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
           Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
         } else {
 
-          val cleansedAnswers = request.userAnswers.remove(JourneyTypeSection)
-
+          val newUserAnswers = cleanseAnswers(answer)
           saveAndRedirect(
             page = HowMovementTransportedPage,
-            answer = value,
-            currentAnswers = cleansedAnswers,
+            answer = answer,
+            currentAnswers = newUserAnswers,
             mode = NormalMode
           )
         }
       )
     }
+
+  private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
+    //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
+    if(answer == FixedTransportInstallations) {
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
+        TransportUnitTypePage(Index(0)), FixedTransport
+      )
+    } else {
+      //Cleanup the TU section in cases where the user has selected a different option
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
+    }
+  }
 }

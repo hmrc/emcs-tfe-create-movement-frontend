@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("guarantor.subHeading", request.draftId), "govuk-caption-xl")
+        @h2(messages("guarantor.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @govukInput(
             InputViewModel(

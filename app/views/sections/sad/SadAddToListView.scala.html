@@ -44,7 +44,7 @@
                 }
             }
 
-            @h2(messages("sad.subHeading"), "govuk-caption-xl")
+            @h2(messages("sad.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
             @h1(pluralSingular("sadAddToList.heading", sadDocuments.size), classes = "govuk-heading-l")
 
             @sadDocuments.map { sadDocument =>

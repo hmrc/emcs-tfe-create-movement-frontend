@@ -23,7 +23,6 @@ object DeferredMovementMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val title = titleHelper("Is this a deferred movement?")
     val heading = "Is this a deferred movement?"
-    val caption = "Movement information"
     val hint = "A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable."
     val summary = "Help with fallback procedures"
     val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."

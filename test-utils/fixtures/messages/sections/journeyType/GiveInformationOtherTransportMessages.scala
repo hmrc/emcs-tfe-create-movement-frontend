@@ -21,7 +21,6 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object GiveInformationOtherTransportMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val subHeading = "Journey type"
     val heading = "Give information about your other type of transport"
     val title: String = titleHelper(heading)
 

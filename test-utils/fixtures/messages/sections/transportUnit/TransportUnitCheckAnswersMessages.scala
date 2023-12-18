@@ -17,7 +17,6 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
-import models.sections.transportUnit.TransportUnitType
 
 object TransportUnitCheckAnswersMessages {
 

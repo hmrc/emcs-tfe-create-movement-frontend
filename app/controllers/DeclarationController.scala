@@ -20,12 +20,13 @@ import config.AppConfig
 import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
+import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{SubmitCreateMovementService, UserAnswersService}
 import utils.Logging
 import views.html.DeclarationView
@@ -50,34 +51,38 @@ class DeclarationController @Inject()(
                                      )(implicit appConfig: AppConfig) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId)))
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withSubmitCreateMovementModel { _ =>
+        Future.successful(Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId))))
+      }
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      Try {
-        SubmitCreateMovementModel.apply
-      } match {
-        case Failure(exception: MissingMandatoryPage) =>
-          logger.error(s"MissingMandatoryPage error thrown: ${exception.message}")
-          Future.successful(BadRequest(errorHandler.badRequestTemplate))
+      withSubmitCreateMovementModel { submitCreateMovementModel =>
+        service.submit(submitCreateMovementModel).flatMap {
+          response =>
+            logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
 
-        case Failure(exception) =>
-          logger.error(s"Error thrown when creating request model to submit: ${exception.getMessage}")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-
-        case Success(submitCreateMovementModel) =>
-          service.submit(submitCreateMovementModel).flatMap {
-            response =>
-              logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
-
-              saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
-          }.recover {
-            case exception =>
-              logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
-              InternalServerError(errorHandler.internalServerErrorTemplate)
-          }
+            saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+        }.recover {
+          case exception =>
+            logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
+            InternalServerError(errorHandler.internalServerErrorTemplate)
+        }
       }
+    }
+
+  private def withSubmitCreateMovementModel(onSuccess: SubmitCreateMovementModel => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    Try(SubmitCreateMovementModel.apply) match {
+      case Failure(exception: MissingMandatoryPage) =>
+        logger.warn(s"[withSubmitCreateMovementModel] MissingMandatoryPage error thrown: ${exception.message}")
+        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
+
+      case Failure(exception) =>
+        logger.error(s"[withSubmitCreateMovementModel]Error thrown when creating request model to submit: ${exception.getMessage}")
+        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+
+      case Success(submitCreateMovementModel) => onSuccess(submitCreateMovementModel)
     }
 }

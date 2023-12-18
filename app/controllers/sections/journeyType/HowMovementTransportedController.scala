@@ -79,9 +79,11 @@ class HowMovementTransportedController @Inject()(
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
         TransportUnitTypePage(Index(0)), FixedTransport
       )
-    } else {
-      //Cleanup the TU section in cases where the user has selected a different option
+    } else if(request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)) {
+      //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
+    } else {
+      request.userAnswers.remove(JourneyTypeSection)
     }
   }
 }

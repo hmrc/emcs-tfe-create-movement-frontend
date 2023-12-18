@@ -122,6 +122,31 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     )) {
       val expectedAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "Container1")
+        .set(TransportUnitTypePage(testIndex2), Tractor)
+        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", HowMovementTransported.values.head.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must cleanse the journey and transport unit section when changing the answer (from fixed transport installations)" in new Test(Some(
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations)
+        .set(GiveInformationOtherTransportPage, "blah")
+        .set(JourneyTimeDaysPage, 1)
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "Container1")
+        .set(TransportUnitTypePage(testIndex2), Tractor)
+        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+    )) {
+      val expectedAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.values.head)
         .set(TransportUnitsSection, Json.obj())
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

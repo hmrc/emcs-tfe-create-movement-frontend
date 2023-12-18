@@ -47,7 +47,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
     )
   }
 
-  "transportUnitIndex Controller" - {
+  "TransportUnitIndex Controller" - {
 
     "must redirect to the transport unit check answers page (CAM-TU09) when the journey type is " +
       "Fixed Transport Installations" in new Test(Some(emptyUserAnswers.set(HowMovementTransportedPage, FixedTransportInstallations))) {
@@ -56,7 +56,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe
-        testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+        routes.TransportUnitCheckAnswersController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {

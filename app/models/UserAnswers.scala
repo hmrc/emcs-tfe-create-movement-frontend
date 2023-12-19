@@ -85,29 +85,28 @@ final case class UserAnswers(ern: String,
 
 object UserAnswers {
 
-  val reads: Reads[UserAnswers] = {
+  import play.api.libs.functional.syntax._
 
-    import play.api.libs.functional.syntax._
+  val ern = "ern"
+  val draftId = "draftId"
+  val data = "data"
+  val lastUpdated = "lastUpdated"
 
+  val reads: Reads[UserAnswers] =
     (
-      (__ \ "ern").read[String] and
-        (__ \ "draftId").read[String] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
+      (__ \ ern).read[String] and
+        (__ \ draftId).read[String] and
+        (__ \ data).read[JsObject] and
+        (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat)
       )(UserAnswers.apply _)
-  }
 
-  val writes: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
+  val writes: OWrites[UserAnswers] =
     (
-      (__ \ "ern").write[String] and
-        (__ \ "draftId").write[String] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+      (__ \ ern).write[String] and
+        (__ \ draftId).write[String] and
+        (__ \ data).write[JsObject] and
+        (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat)
       )(unlift(UserAnswers.unapply))
-  }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
 }

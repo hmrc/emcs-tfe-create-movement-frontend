@@ -41,7 +41,17 @@ class SessionRepositoryImpl @Inject()(
     domainFormat = UserAnswers.format,
     indexes = Seq(
       IndexModel(
-        Indexes.ascending("lastUpdated"),
+        Indexes.compoundIndex(
+          Indexes.ascending(UserAnswers.ern),
+          Indexes.ascending(UserAnswers.draftId)
+        ),
+        IndexOptions()
+          .name("uniqueIdx")
+          .unique(true)
+          .sparse(false)
+      ),
+      IndexModel(
+        Indexes.ascending(UserAnswers.lastUpdated),
         IndexOptions()
           .name("lastUpdatedIdx")
           .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
@@ -53,15 +63,15 @@ class SessionRepositoryImpl @Inject()(
 
   private def by(ern: String, sessionId: String): Bson =
     Filters.and(
-      Filters.equal("ern", ern),
-      Filters.equal("draftId", sessionId)
+      Filters.equal(UserAnswers.ern, ern),
+      Filters.equal(UserAnswers.draftId, sessionId)
     )
 
   def keepAlive(ern: String, sessionId: String): Future[Boolean] =
     collection
       .updateOne(
         filter = by(ern, sessionId),
-        update = Updates.set("lastUpdated", Instant.now)
+        update = Updates.set(UserAnswers.lastUpdated, Instant.now)
       )
       .toFuture()
       .map(_ => true)

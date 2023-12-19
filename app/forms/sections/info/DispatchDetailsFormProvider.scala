@@ -20,11 +20,16 @@ import forms.mappings.Mappings
 import models.sections.info.DispatchDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 class DispatchDetailsFormProvider @Inject() extends Mappings {
 
+  // scalastyle:off magic.number
+  private val earliestDispatchDate = LocalDate.of(2000,1,1)
+  // scalastyle:on magic.number
 
   def apply(): Form[DispatchDetailsModel] =
     Form(
@@ -34,10 +39,17 @@ class DispatchDetailsFormProvider @Inject() extends Mappings {
           allRequiredKey = "dispatchDetails.value.error.required.all",
           twoRequiredKey = "dispatchDetails.value.error.required.two",
           requiredKey = "dispatchDetails.value.error.required"
-        ),
+        )
+          .verifying(
+            firstError(
+              fourDigitYear("dispatchDetails.value.error.yearNotFourDigits"),
+              minDate(earliestDispatchDate, "dispatchDetails.value.error.earliestDate")
+            )
+          ),
         "time" -> localTime(
           invalidKey = "dispatchDetails.time.error.invalid",
           requiredKey = "dispatchDetails.time.error.required"
         )
       )(DispatchDetailsModel.apply)(DispatchDetailsModel.unapply))
+
 }

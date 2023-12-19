@@ -195,4 +195,8 @@ trait Constraints {
       case _ =>
         Invalid(errorKey)
     }
+
+  def fourDigitYear(errorKey: String): Constraint[LocalDate] = Constraint { date =>
+    if (date.getYear < 1000 | date.getYear > 9999) Invalid(errorKey) else Valid
+  }
 }

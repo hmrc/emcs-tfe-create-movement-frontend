@@ -499,13 +499,13 @@ trait ItemFixtures {
     ),
     movementGuarantee = MovementGuaranteeModel(
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
-      guarantorTrader = Some(Seq(TraderModel(
+      guarantorTrader = Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some("guarantor name"),
         address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
-      )))
+      ))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
       bodyRecordUniqueReference = 1,
@@ -631,13 +631,13 @@ trait ItemFixtures {
     ),
     movementGuarantee = MovementGuaranteeModel(
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
-      guarantorTrader = Some(Seq(TraderModel(
+      guarantorTrader = Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some("guarantor name"),
         address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
-      )))
+      ))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
       bodyRecordUniqueReference = 1,
@@ -757,13 +757,13 @@ trait ItemFixtures {
     ),
     movementGuarantee = MovementGuaranteeModel(
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
-      guarantorTrader = Some(Seq(TraderModel(
+      guarantorTrader = Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some("guarantor name"),
         address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
-      )))
+      ))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
       bodyRecordUniqueReference = 1,
@@ -889,13 +889,13 @@ trait ItemFixtures {
     ),
     movementGuarantee = MovementGuaranteeModel(
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
-      guarantorTrader = Some(Seq(TraderModel(
+      guarantorTrader = Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some("guarantor name"),
         address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
-      )))
+      ))
     ),
     bodyEadEsad = Seq(BodyEadEsadModel(
       bodyRecordUniqueReference = 1,

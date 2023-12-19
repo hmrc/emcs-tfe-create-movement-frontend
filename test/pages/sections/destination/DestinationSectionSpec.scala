@@ -19,303 +19,414 @@ package pages.sections.destination
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.info.DestinationTypePage
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.JsonOptionFormatter
+import viewmodels.taskList._
 
 class DestinationSectionSpec extends SpecBase with UserAddressFixtures with JsonOptionFormatter {
 
-  "isCompleted" - {
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    "when DestinationWarehouseExcisePage is given" - {
+  "status" - {
 
-      "when DestinationConsigneeDetails is false" - {
+    "when shouldStartFlowAtDestinationWarehouseExcise" - {
+      "must return Completed" - {
+        "when mandatory pages have an answer and DestinationConsigneeDetailsPage = true" in {
+          Seq(
+            GbTaxWarehouse,
+            EuTaxWarehouse
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseExcise === true,
+                s"shouldStartFlowAtDestinationWarehouseExcise returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-        "when Destination Business Name and address is given" - {
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationWarehouseExcisePage, "")
+                .set(DestinationConsigneeDetailsPage, true)
+              )
 
-          "must return true" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, false)
-              .set(DestinationBusinessNamePage, "business name")
-              .set(DestinationAddressPage, userAddressModelMax)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe true
+              DestinationSection.status mustBe Completed
           }
         }
 
-        "when Destination Business Name is NOT given" - {
+        "when mandatory pages have an answer and DestinationConsigneeDetailsPage = false" in {
+          Seq(
+            GbTaxWarehouse,
+            EuTaxWarehouse
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseExcise === true,
+                s"shouldStartFlowAtDestinationWarehouseExcise returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-          "must return false" in {
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationWarehouseExcisePage, "")
+                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
+              )
 
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, false)
-              .set(DestinationAddressPage, userAddressModelMax)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
-          }
-        }
-
-        "when Destination Address is NOT given" - {
-
-          "must return false" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, false)
-              .set(DestinationBusinessNamePage, "business name")
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
-          }
-        }
-
-        "when Destination Business Name and Destination Address are NOT given" - {
-
-          "must return false" in {
-
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseExcisePage, "excise")
-              .set(DestinationConsigneeDetailsPage, false)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe false
+              DestinationSection.status mustBe Completed
           }
         }
       }
 
-      "when DestinationConsigneeDetails is true" - {
+      "must return InProgress" - {
+        "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = true" in {
+          Seq(
+            GbTaxWarehouse,
+            EuTaxWarehouse
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseExcise === true,
+                s"shouldStartFlowAtDestinationWarehouseExcise returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-        "must return true" in {
+              val baseUserAnswers = emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationWarehouseExcisePage, "")
+                .set(DestinationConsigneeDetailsPage, true)
 
-          val userAnswers = emptyUserAnswers
-            .set(DestinationWarehouseExcisePage, "excise")
-            .set(DestinationConsigneeDetailsPage, true)
+              Seq(
+                DestinationConsigneeDetailsPage,
+              ).foreach {
+                page =>
+                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
+                    .remove(page)
+                  )
 
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-          DestinationSection.isCompleted mustBe true
-        }
-      }
-    }
-
-    "when DestinationWarehouseVatPage is given" - {
-
-      "when DestinationDetailsChoice is true" - {
-
-        "when DestinationConsigneeDetails is false" - {
-
-          "when Destination Business Name and address is given" - {
-
-            "must return true" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "business name")
-                .set(DestinationAddressPage, userAddressModelMax)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe true
-            }
-          }
-
-          "when Destination Business Name is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationAddressPage, userAddressModelMax)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Address is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "business name")
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Business Name and Destination Address are NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationWarehouseVatPage, "vat")
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
+                  DestinationSection.status mustBe InProgress
+              }
           }
         }
 
-        "when DestinationConsigneeDetails is true" - {
+        "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = false" in {
+          Seq(
+            GbTaxWarehouse,
+            EuTaxWarehouse
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseExcise === true,
+                s"shouldStartFlowAtDestinationWarehouseExcise returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-          "must return true" in {
+              val baseUserAnswers = emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationWarehouseExcisePage, "")
+                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
 
-            val userAnswers = emptyUserAnswers
-              .set(DestinationWarehouseVatPage, "vat")
-              .set(DestinationDetailsChoicePage, true)
-              .set(DestinationConsigneeDetailsPage, true)
+              Seq(
+                DestinationConsigneeDetailsPage,
+                DestinationBusinessNamePage,
+                DestinationAddressPage
+              ).foreach {
+                page =>
+                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
+                    .remove(page)
+                  )
 
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe true
+                  DestinationSection.status mustBe InProgress
+              }
           }
-
         }
       }
 
-      "when DestinationDetailsChoice is false" - {
+      "must return NotStarted" - {
+        "when no mandatory pages have an answer" in {
+          Seq(
+            GbTaxWarehouse,
+            EuTaxWarehouse
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseExcise === true,
+                s"shouldStartFlowAtDestinationWarehouseExcise returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-        "must return true" in {
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+              )
 
-          val userAnswers = emptyUserAnswers
-            .set(DestinationWarehouseVatPage, "vat")
-            .set(DestinationDetailsChoicePage, false)
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-          DestinationSection.isCompleted mustBe true
-        }
-      }
-
-      "when DestinationDetailsChoice is NOT given" - {
-
-        "must return true" in {
-
-          val userAnswers = emptyUserAnswers
-            .set(DestinationWarehouseVatPage, "vat")
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-          DestinationSection.isCompleted mustBe false
+              DestinationSection.status mustBe NotStarted
+          }
         }
       }
     }
 
-    "when DestinationWarehouseVatPage is NOT given (optional)" - {
+    "when shouldStartFlowAtDestinationWarehouseVat" - {
+      "must return Completed" - {
+        "when mandatory pages have an answer, DestinationDetailsChoicePage = true and DestinationConsigneeDetailsPage = true" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-      "when DestinationDetailsChoice is true" - {
-
-        "when DestinationConsigneeDetails is false" - {
-
-          "when Destination Business Name and address is given" - {
-
-            "must return true" in {
-
-              val userAnswers = emptyUserAnswers
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "business name")
-                .set(DestinationAddressPage, userAddressModelMax)
+                .set(DestinationConsigneeDetailsPage, true)
+              )
 
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe true
-            }
-          }
-
-          "when Destination Business Name is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationAddressPage, userAddressModelMax)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Address is NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "business name")
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
-          }
-
-          "when Destination Business Name and Destination Address are NOT given" - {
-
-            "must return false" in {
-
-              val userAnswers = emptyUserAnswers
-                .set(DestinationDetailsChoicePage, true)
-                .set(DestinationConsigneeDetailsPage, false)
-
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-              DestinationSection.isCompleted mustBe false
-            }
+              DestinationSection.status mustBe Completed
           }
         }
 
-        "when DestinationConsigneeDetails is true" - {
+        "when mandatory pages have an answer, DestinationDetailsChoicePage = true and DestinationConsigneeDetailsPage = false" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-          "must return true" in {
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationDetailsChoicePage, true)
+                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
+              )
 
-            val userAnswers = emptyUserAnswers
-              .set(DestinationDetailsChoicePage, true)
-              .set(DestinationConsigneeDetailsPage, true)
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-            DestinationSection.isCompleted mustBe true
+              DestinationSection.status mustBe Completed
           }
+        }
 
+        "when mandatory pages have an answer and DestinationDetailsChoicePage = false" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
+
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationDetailsChoicePage, false)
+              )
+
+              DestinationSection.status mustBe Completed
+          }
         }
       }
 
-      "when DestinationDetailsChoice is false" - {
+      "must return InProgress" - {
+        "when some, but not all, mandatory pages have an answer, DestinationDetailsChoicePage = true, DestinationConsigneeDetailsPage = false" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
 
-        "must return true" in {
+              val baseUserAnswers = emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationDetailsChoicePage, true)
+                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
 
-          val userAnswers = emptyUserAnswers
-            .set(DestinationDetailsChoicePage, false)
+              Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
+                page =>
+                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
+                    .remove(page)
+                  )
 
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+                  DestinationSection.status mustBe InProgress
+              }
 
-          DestinationSection.isCompleted mustBe true
+          }
         }
+
+        "when some, but not all, mandatory pages have an answer, DestinationDetailsChoicePage = true, DestinationConsigneeDetailsPage = missing" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationDetailsChoicePage, true)
+              )
+
+              DestinationSection.status mustBe InProgress
+          }
+
+        }
+
+        "when mandatory pages are missing but DestinationWarehouseVatPage has an answer" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationWarehouseVatPage, "")
+              )
+
+              DestinationSection.status mustBe InProgress
+          }
+        }
+      }
+
+      "must return NotStarted" - {
+        "when no mandatory pages have an answer" in {
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            ExemptedOrganisation
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationWarehouseVat === true,
+                s"shouldStartFlowAtDestinationWarehouseVat returned false for MovementScenario $destinationTypePageAnswer"
+              )
+
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+              )
+
+              DestinationSection.status mustBe NotStarted
+          }
+        }
+      }
+    }
+
+    "when shouldStartFlowAtDestinationBusinessName" - {
+      "must return Completed" - {
+        "when mandatory pages have an answer" in {
+          Seq(
+            DirectDelivery
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
+              )
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
+              )
+
+              DestinationSection.status mustBe Completed
+          }
+        }
+      }
+
+      "must return InProgress" - {
+        "when some, but not all, mandatory pages have an answer" in {
+          Seq(
+            DirectDelivery
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
+              )
+
+              val baseUserAnswers = emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress)
+
+              Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
+                page =>
+                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
+                    .remove(page)
+                  )
+
+                  DestinationSection.status mustBe InProgress
+              }
+          }
+        }
+      }
+
+      "must return NotStarted" - {
+        "when no mandatory pages have an answer" in {
+          Seq(
+            DirectDelivery
+          ).foreach {
+            implicit destinationTypePageAnswer =>
+              assert(
+                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
+              )
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, destinationTypePageAnswer)
+              )
+
+              DestinationSection.status mustBe NotStarted
+          }
+        }
+      }
+    }
+
+    "when canBeCompletedForTraderAndDestinationType = false" - {
+      "must return NotStarted" in {
+        MovementScenario.values
+          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .foreach {
+            movementScenario =>
+              implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(DestinationAddressPage, testUserAddress)
+                .set(DestinationBusinessNamePage, "")
+                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationDetailsChoicePage, true)
+                .set(DestinationWarehouseExcisePage, "")
+                .set(DestinationWarehouseVatPage, "")
+              )
+
+              DestinationSection.status mustBe NotStarted
+          }
+      }
+    }
+
+    "when DestinationTypePage is missing" - {
+      "must return NotStarted" in {
+        DestinationSection.status(dataRequest(request)) mustBe NotStarted
       }
     }
   }

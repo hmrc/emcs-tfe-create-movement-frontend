@@ -17,7 +17,7 @@
 package pages.sections.dispatch
 
 import models.requests.DataRequest
-import models.{GreatBritainWarehouseKeeper, NorthernIrelandWarehouseKeeper}
+import models._
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList._
@@ -43,5 +43,11 @@ case object DispatchSection extends Section[JsObject] {
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    (request.userTypeFromErn == GreatBritainWarehouseKeeper) || (request.userTypeFromErn == NorthernIrelandWarehouseKeeper)
+    Seq(
+      GreatBritainWarehouseKeeper,
+      NorthernIrelandWarehouseKeeper,
+      NorthernIrelandCertifiedConsignor,
+      NorthernIrelandTemporaryCertifiedConsignor
+    ).contains(request.userTypeFromErn)
+
 }

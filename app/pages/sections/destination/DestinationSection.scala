@@ -18,7 +18,7 @@ package pages.sections.destination
 
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
@@ -104,15 +104,17 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage) match {
-      case Some(value) if Seq(
+    request.userAnswers.get(DestinationTypePage).exists {
+      movementScenario => Seq(
         GbTaxWarehouse,
         EuTaxWarehouse,
         RegisteredConsignee,
         TemporaryRegisteredConsignee,
+        CertifiedConsignee,
+        TemporaryCertifiedConsignee,
         ExemptedOrganisation,
         DirectDelivery
-      ).contains(value) => true
-      case _ => false
+      ).contains(movementScenario)
     }
+
 }

@@ -301,6 +301,8 @@ class DraftMovementHelperSpec extends SpecBase {
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,
+              CertifiedConsignee,
+              TemporaryCertifiedConsignee,
               ExemptedOrganisation,
               DirectDelivery
             ).foreach {
@@ -317,6 +319,8 @@ class DraftMovementHelperSpec extends SpecBase {
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,
+              CertifiedConsignee,
+              TemporaryCertifiedConsignee,
               ExemptedOrganisation,
               DirectDelivery
             ).contains).foreach {

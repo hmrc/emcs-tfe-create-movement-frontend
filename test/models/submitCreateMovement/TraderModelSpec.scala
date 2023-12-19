@@ -336,7 +336,7 @@ class TraderModelSpec extends SpecBase {
       "DestinationType is invalid" in {
         MovementScenario
           .values
-          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
           .foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(

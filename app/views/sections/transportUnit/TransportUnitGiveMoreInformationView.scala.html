@@ -43,7 +43,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-      @h2(messages("transportUnit.subHeading", request.draftId), "govuk-caption-xl")
+      @h2(messages("transportUnit.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @{govukCharacterCount(CharacterCount(
             id = "value",

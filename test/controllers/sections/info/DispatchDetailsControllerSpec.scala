@@ -43,7 +43,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
   lazy val dispatchDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(testErn, NormalMode)
   lazy val dispatchDetailsSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onSubmit(testErn, testDraftId)
 
-  lazy val formProvider: DispatchDetailsFormProvider = new DispatchDetailsFormProvider()
+  lazy val formProvider: DispatchDetailsFormProvider = app.injector.instanceOf[DispatchDetailsFormProvider]
   lazy val form: Form[DispatchDetailsModel] = formProvider()
   lazy val view: DispatchDetailsView = app.injector.instanceOf[DispatchDetailsView]
 

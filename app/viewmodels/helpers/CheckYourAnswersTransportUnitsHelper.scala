@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.journeyType
+package viewmodels.helpers
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
+import models.requests.DataRequest
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.transportUnit.TransportUnitTypeSummary
+import viewmodels.govuk.summarylist._
 
-object GiveInformationOtherTransportMessages {
-  sealed trait ViewMessages extends BaseMessages {
-    _: i18n =>
-    val heading = "Give information about your other type of transport"
-    val title: String = titleHelper(heading)
+import javax.inject.Inject
 
-    val cyaLabel: String = "Information about other transport"
-    val cyaChangeHidden: String = "give information about your other type of transport"
+class CheckYourAnswersTransportUnitsHelper @Inject()() {
+
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    SummaryListViewModel(
+      rows = Seq(
+        TransportUnitTypeSummary.checkYourAnswersRow(Index(0))
+      ).flatten
+    )
   }
-
-  object English extends ViewMessages with BaseEnglish
-
 
 }

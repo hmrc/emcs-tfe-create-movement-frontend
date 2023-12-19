@@ -38,7 +38,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1(helper.heading(isDeferred), Some(messages("movementInformation.subHeading")), "govuk-heading-l")
+        @h1(helper.heading(isDeferred), Some(messages("movementInformation.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
         @helper.content(isDeferred)
 

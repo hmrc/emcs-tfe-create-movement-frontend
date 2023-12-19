@@ -23,7 +23,6 @@ object ImportNumberMessages {
     val heading = "Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation"
     val title: String = titleHelper(heading)
     val hint = "For example, 555 A12345B 14092016. You will have the chance to add more SAD numbers later."
-    val subHeading = "Single Administrative Document"
     val errorLength = "The number must be 21 characters or less"
     val errorXss = "Document reference must not include < and > and : and ;"
     val alphanumeric = "Document reference must only contain letters and numbers"

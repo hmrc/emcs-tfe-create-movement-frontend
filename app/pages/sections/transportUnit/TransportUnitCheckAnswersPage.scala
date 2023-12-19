@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.journeyType
+package pages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import pages.Page
 
-object GiveInformationOtherTransportMessages {
-  sealed trait ViewMessages extends BaseMessages {
-    _: i18n =>
-    val heading = "Give information about your other type of transport"
-    val title: String = titleHelper(heading)
-
-    val cyaLabel: String = "Information about other transport"
-    val cyaChangeHidden: String = "give information about your other type of transport"
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
-
-}
+object TransportUnitCheckAnswersPage extends Page

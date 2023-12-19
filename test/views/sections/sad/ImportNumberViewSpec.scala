@@ -47,11 +47,9 @@ class ImportNumberViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(view(form, testIndex1, NormalMode).toString())
 
-        val subHeadingCaptionSelector: String = "main .govuk-caption-xl"
-
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
-          subHeadingCaptionSelector -> messagesForLanguage.subHeading,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.sadSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,

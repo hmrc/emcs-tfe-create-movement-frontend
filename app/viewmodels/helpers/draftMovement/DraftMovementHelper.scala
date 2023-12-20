@@ -19,6 +19,8 @@ package viewmodels.helpers.draftMovement
 import models._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.sections.info.DispatchPlace
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
@@ -45,21 +47,28 @@ class DraftMovementHelper @Inject()() extends Logging {
 
   // disable for "line too long" warnings
   // noinspection ScalaStyle
-  def heading(implicit request: DataRequest[_], messages: Messages): String =
+  def heading(implicit request: DataRequest[_], messages: Messages): String = {
+
+    def dispatchPlaceHeading(dispatchPlace: DispatchPlace, destinationType: MovementScenario): String =
+      messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$dispatchPlace"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
+
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
       case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
 
       case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
-          case Some(value) =>
-            messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
+          case Some(dispatchPlace) =>
+            dispatchPlaceHeading(dispatchPlace, destinationType)
           case None =>
             logger.error(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
             throw MissingMandatoryPage(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
         }
 
-      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor, Some(destinationType)) =>
+      case (NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor, Some(destinationType@(CertifiedConsignee | TemporaryCertifiedConsignee))) =>
+        dispatchPlaceHeading(DispatchPlace.NorthernIreland, destinationType)
+
+      case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
         messages("draftMovement.heading.importFor", messages(s"destinationType.$destinationType"))
 
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
@@ -69,6 +78,7 @@ class DraftMovementHelper @Inject()() extends Logging {
         logger.error(s"[heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
         throw InvalidUserTypeException(s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
     }
+  }
 
   private[draftMovement] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
     sectionHeading = messages("draftMovement.section.movement"),

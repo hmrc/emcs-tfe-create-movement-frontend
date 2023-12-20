@@ -39,6 +39,8 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     Seq(
       RegisteredConsignee,
       TemporaryRegisteredConsignee,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee,
       ExemptedOrganisation
     ).contains(destinationTypePageAnswer)
 

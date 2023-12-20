@@ -75,7 +75,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GBWK123456789012"))
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GBWK123456789"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -94,10 +94,10 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must return a Bad Request and errors when more than 16 chars are submitted" in new Fixture() {
-      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GB123456789012345"))
+    "must return a Bad Request and errors when more than 13 chars are submitted" in new Fixture() {
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GB123456789011"))
 
-      val boundForm = form.bind(Map("value" -> "GB123456789012345"))
+      val boundForm = form.bind(Map("value" -> "GB123456789011"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

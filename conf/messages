@@ -511,16 +511,18 @@ firstTransporterVat.checkYourAnswers.label = VAT registration number
 
 consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
 consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
-consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code.
+consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, FR12345678900. This is sometimes referred to as a Temporary Registration Code.
 consigneeExcise.temporaryConsignee.error.noInput = Enter the authorisation reference
-consigneeExcise.temporaryConsignee.error.tooLong = The authorisation reference must be 16 characters or less
+consigneeExcise.temporaryConsignee.error.length = The authorisation reference must be 13 characters
 consigneeExcise.temporaryConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
+consigneeExcise.temporaryConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
 consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.
 consigneeExcise.error.noInput = Enter the consignee’s ERN
-consigneeExcise.error.tooLong = The ERN must be 13 characters or less
-consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+consigneeExcise.error.length = The consignee’s ERN must be 13 characters
+consigneeExcise.error.invalidCharacters = The consignee’s ERN must only contain letters and numbers
+consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
 
 transportUnitType.title = What will the goods be transported in?
@@ -582,8 +584,9 @@ dispatchWarehouseExcise.heading = What is the excise ID of the tax warehouse of 
 dispatchWarehouseExcise.hintText = This is sometimes called an excise registration number (ERN), starting with GB or XI. For example, GB00123456789.
 dispatchWarehouseExcise.checkYourAnswersLabel = Excise ID (ERN)
 dispatchWarehouseExcise.error.required = Enter the excise ID
-dispatchWarehouseExcise.error.length = Excise ID must be 16 characters or less
+dispatchWarehouseExcise.error.length = Excise ID must be 13 characters
 dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
+dispatchWarehouseExcise.error.format = Excise ID must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch
 
 dispatchUseConsignorDetails.title = Is the place of dispatch the same as the consignor details?

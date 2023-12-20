@@ -72,4 +72,24 @@ trait FieldBehaviours extends FormSpec {
       result.errors mustBe empty
     }
   }
+
+  def fieldWithERN(form: Form[_],
+                   fieldName: String,
+                   formatError: FormError): Unit = {
+
+    "not bind when the ERN is missing a 2 character prefix" in {
+      val result = form.bind(Map(fieldName -> "1100123456789")).apply(fieldName)
+      result.errors mustEqual Seq(formatError)
+    }
+
+    "not bind when the ERN has a symbol" in {
+      val result = form.bind(Map(fieldName -> "GB0-123456789")).apply(fieldName)
+      result.errors mustEqual Seq(formatError)
+    }
+
+    "bind when the ERN is valid" in {
+      val result = form.bind(Map(fieldName -> "GB00123456789")).apply(fieldName)
+      result.errors mustBe empty
+    }
+  }
 }

@@ -24,6 +24,7 @@ import play.api.data.FormError
 class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
 
   val fieldName = "value"
+  val fixedLength = 13
 
   "ConsigneeExciseFormProvider" - {
     val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)
@@ -40,28 +41,45 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
     }
 
-    "when the value is too long" - {
-      "must error with the expected msg key" in {
-        val maxLength = 13
-        val boundForm = form.bind(Map(fieldName -> "A" * (maxLength + 1)))
-        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.tooLong", Seq(maxLength)))
-      }
-      "must error with the expected msg key for the dynamic form" in {
-        val maxLength = 16
-        val boundForm = dynamicForm.bind(Map(fieldName -> "A" * (maxLength + 1)))
-        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.tooLong", Seq(maxLength)))
-      }
-    }
-
     "when the value contains invalid characters" - {
       "must error with the expected msg key" in {
-        val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+"))
+        val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+!"))
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.invalidCharacters", Seq(ALPHANUMERIC_REGEX)))
       }
       "must error with the expected msg key for the dynamic form" in {
-        val boundForm = dynamicForm.bind(Map(fieldName -> "!@£$%^&*()_+"))
+        val boundForm = dynamicForm.bind(Map(fieldName -> "!@£$%^&*()_+!"))
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.invalidCharacters", Seq(ALPHANUMERIC_REGEX)))
       }
+    }
+
+    "for the ERN form" - {
+      behave like fieldWithERN(
+        form = form,
+        fieldName = fieldName,
+        formatError = FormError(fieldName, "consigneeExcise.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
+      )
+
+      behave like fieldWithFixedLength(
+        form,
+        fieldName,
+        lengthError = FormError(fieldName, "consigneeExcise.error.length", Seq(fixedLength)),
+        fixedLength
+      )
+    }
+
+    "for the temporary authorisation reference form" - {
+      behave like fieldWithERN(
+        form = dynamicForm,
+        fieldName = fieldName,
+        formatError = FormError(fieldName, "consigneeExcise.temporaryConsignee.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
+      )
+
+      behave like fieldWithFixedLength(
+        dynamicForm,
+        fieldName,
+        lengthError = FormError(fieldName, "consigneeExcise.temporaryConsignee.error.length", Seq(fixedLength)),
+        fixedLength
+      )
     }
   }
 }

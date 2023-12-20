@@ -25,37 +25,46 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "dispatchWarehouseExcise.error.required"
   val xssKey = "dispatchWarehouseExcise.error.xss"
   val lengthKey = "dispatchWarehouseExcise.error.length"
-  val maxLength = 16
+  val formatKey = "dispatchWarehouseExcise.error.format"
+  val fixedLength = 13
 
   val form = new DispatchWarehouseExciseFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
+    val formatError = FormError(fieldName, formatKey, Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      "0" * maxLength
+      "GB00123456789"
     )
 
-    behave like fieldWithMaxLength(
+    behave like fieldWithFixedLength(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(fixedLength)),
+      fixedLength
     )
 
     behave like fieldWithXSSCharacters(
       form,
       fieldName,
-      requiredError = FormError(fieldName, xssKey, Seq(XSS_REGEX))
+      requiredError = FormError(fieldName, xssKey, Seq(XSS_REGEX)),
+      dataItem = "<javascript>!" //has to be 13 chars
     )
 
     behave like mandatoryField(
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
+    )
+
+    behave like fieldWithERN(
+      form,
+      fieldName,
+      formatError = formatError
     )
   }
 }

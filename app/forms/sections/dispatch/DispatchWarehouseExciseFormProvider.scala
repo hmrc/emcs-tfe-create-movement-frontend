@@ -16,7 +16,7 @@
 
 package forms.sections.dispatch
 
-import forms.XSS_REGEX
+import forms.{EXCISE_NUMBER_REGEX, XSS_REGEX}
 import forms.mappings.Mappings
 import play.api.data.Form
 
@@ -28,8 +28,9 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
         .verifying(firstError(
+          fixedLength(13, "dispatchWarehouseExcise.error.length"),
           regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
-          maxLength(16, "dispatchWarehouseExcise.error.length")
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.format")
         ))
     )
 }

@@ -181,16 +181,10 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): Option[TraderModel] = {
     guarantorArranger match {
-      case GuarantorArranger.Consignor => Some(applyConsignor.copy(traderExciseNumber = None))
-      case GuarantorArranger.Consignee =>
-        val consigneeTrader = applyConsignee
-        Some(TraderModel(
-          traderExciseNumber = None,
-          traderName = consigneeTrader.flatMap(_.traderName),
-          address = consigneeTrader.flatMap(_.address),
-          vatNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber),
-          eoriNumber = None
-        ))
+      case GuarantorArranger.Consignor => None
+      case GuarantorArranger.Consignee => None
+      case GuarantorArranger.NoGuarantorRequired => None
+      case GuarantorArranger.NoGuarantorRequiredUkToEu => None
       case _ => Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(GuarantorNamePage)),

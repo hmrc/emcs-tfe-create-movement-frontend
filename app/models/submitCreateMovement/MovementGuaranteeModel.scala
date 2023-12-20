@@ -24,7 +24,7 @@ import utils.ModelConstructorHelpers
 
 case class MovementGuaranteeModel(
                                    guarantorTypeCode: GuarantorArranger,
-                                   guarantorTrader: Option[TraderModel]
+                                   guarantorTrader: Option[Seq[TraderModel]]
                                  )
 
 object MovementGuaranteeModel extends ModelConstructorHelpers {
@@ -41,7 +41,7 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
       val guarantorArranger: GuarantorArranger = mandatoryPage(GuarantorArrangerPage)
       MovementGuaranteeModel(
         guarantorTypeCode = guarantorArranger,
-        guarantorTrader = TraderModel.applyGuarantor(guarantorArranger)
+        guarantorTrader = TraderModel.applyGuarantor(guarantorArranger).flatMap(trader => Some(Seq(trader)))
       )
     }
 

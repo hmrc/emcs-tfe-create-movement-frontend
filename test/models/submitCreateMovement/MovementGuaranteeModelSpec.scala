@@ -49,13 +49,13 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorVatPage, "vat")
         )
 
-        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(TraderModel(
+        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
           None,
           Some("name"),
           Some(AddressModel.fromUserAddress(testUserAddress)),
           Some("vat"),
           None
-        )))
+        ))))
       }
     }
   }

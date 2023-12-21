@@ -753,7 +753,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemWineOperationsChoicePage" - {
-        "to the ImportedWine Wine Choice page" in {
+        "to the ItemWineProductCategoryPage" in {
           navigator.nextPage(ItemWineOperationsChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }

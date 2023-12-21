@@ -494,7 +494,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to the ImportedWine Wine Choice page" - {
+        "to the ItemWineProductCategoryPage" - {
           "when the wine quantity is under 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))

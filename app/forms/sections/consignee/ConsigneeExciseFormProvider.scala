@@ -16,8 +16,8 @@
 
 package forms.sections.consignee
 
-import forms.ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
+import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import play.api.data.Form
 
 import javax.inject.Inject
@@ -26,19 +26,17 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
 
   def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean): Form[String] = {
-    val maxLengthValue = if (isNorthernIrishTemporaryRegisteredConsignee) 16 else 13
-
     val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
       "consigneeExcise.temporaryConsignee.error.noInput"
     } else {
       "consigneeExcise.error.noInput"
     }
 
-    val tooLongErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.tooLong"
+    val not13CharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
+      "consigneeExcise.temporaryConsignee.error.length"
     }
     else {
-      "consigneeExcise.error.tooLong"
+      "consigneeExcise.error.length"
     }
 
     val invalidCharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
@@ -48,10 +46,19 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
       "consigneeExcise.error.invalidCharacters"
     }
 
+    val formatErrorKey = if(isNorthernIrishTemporaryRegisteredConsignee) {
+      "consigneeExcise.temporaryConsignee.error.format"
+    } else {
+      "consigneeExcise.error.format"
+    }
+
     Form(
       "value" -> text(noInputErrorKey)
-        .verifying(maxLength(maxLengthValue, tooLongErrorKey))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey))
+        .verifying(firstError(
+          fixedLength(13, not13CharactersErrorKey),
+          regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey),
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, formatErrorKey)
+        ))
     )
   }
 

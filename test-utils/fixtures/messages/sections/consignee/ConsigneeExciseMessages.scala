@@ -25,7 +25,7 @@ object ConsigneeExciseMessages {
     val heading = "What is the consignee’s excise registration number (ERN)?"
     val title = titleHelper(heading)
     val temporaryConsigneeTitle = titleHelper(temporaryConsigneeHeading)
-    val temporaryConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code."
+    val temporaryConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, FR12345678900. This is sometimes referred to as a Temporary Registration Code."
     val hint = "An ERN contains 13 characters, starting with GB. It can be found on your approval letter."
   }
 

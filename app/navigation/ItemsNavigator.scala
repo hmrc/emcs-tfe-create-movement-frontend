@@ -391,7 +391,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case (Some(epc), Some(abv)) =>
         GoodsType(epc) match {
           case Beer =>
-            if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper).contains(UserType(userAnswers.ern))) {
+            if (Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, NorthernIrelandCertifiedConsignor, NorthernIrelandTemporaryCertifiedConsignor).contains(UserType(userAnswers.ern))) {
               itemsRoutes.ItemDegreesPlatoController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             } else if (Seq(GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper).contains(UserType(userAnswers.ern)) && abv < 8.5) {
               itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)

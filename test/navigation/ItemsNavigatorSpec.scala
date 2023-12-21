@@ -458,7 +458,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to the ImportedWine Wine Choice page" - {
+        "to the ItemWineProductCategoryPage" - {
 
           "when the user answers no and EPC is wine" in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers

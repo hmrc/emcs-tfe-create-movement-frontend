@@ -40,7 +40,7 @@ object ItemWineProductCategorySummary {
           ActionItemViewModel(
             content = "site.change",
             href = controllers.sections.items.routes.ItemWineProductCategoryController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = "changeItemWineProductCategory"
+            id = s"changeItemWineProductCategory${idx.displayIndex}"
           ).withVisuallyHiddenText(messages("itemWineProductCategory.change.hidden"))
         )
       )

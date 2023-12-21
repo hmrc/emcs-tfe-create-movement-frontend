@@ -61,7 +61,7 @@ class ItemWineProductCategorySummarySpec extends SpecBase with Matchers {
               ActionItemViewModel(
                 content = messagesForLanguage.change,
                 href = controllers.sections.items.routes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                id = "changeItemWineProductCategory"
+                id = "changeItemWineProductCategory1"
               ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
             )
           ))

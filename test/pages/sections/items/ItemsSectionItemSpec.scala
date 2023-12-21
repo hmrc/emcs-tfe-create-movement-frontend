@@ -37,7 +37,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return true" - {
 
-      "when Bulk Wine, ImportedWine from EU, with all mandatory and optional pages complete" in {
+      "when Bulk Wine, Imported from EU, with all mandatory and optional pages complete" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)

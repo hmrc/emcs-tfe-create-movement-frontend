@@ -18,17 +18,23 @@ package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object ItemImportedWineChoiceMessages {
+object ItemWineProductCategoryMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading: String = "Was the wine imported from an EU country?"
+    val heading: String = "What is the product category of the wine?"
     val title: String = titleHelper(heading)
 
-    val cyaLabel = "Wine imported from EU"
-    val cyaChangeHidden = "if wine is imported from EU"
+    val radioOptionWineWithout = "Wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)"
+    val radioOptionVarietal = "Varietal wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)"
+    val radioOptionWineWith = "Wine with a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)"
+    val radioOptionImportedWine = "Wine imported from outside the European Union"
+    val radioOptionOther = "Other"
 
-    val errorRequired = "Select yes if the wine was imported from an EU country"
+    val cyaLabel = "Product Category"
+    val cyaChangeHidden = "what is the product category of the wine"
+
+    val errorRequired = "Select the product category of the wine"
   }
 
   object English extends ViewMessages with BaseEnglish

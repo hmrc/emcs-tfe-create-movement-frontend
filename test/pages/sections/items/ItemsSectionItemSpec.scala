@@ -24,6 +24,7 @@ import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
 import models.sections.items.ItemWineGrowingZone.CIII_A
+import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
@@ -36,7 +37,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
     "must return true" - {
 
-      "when Bulk Wine, Imported from EU, with all mandatory and optional pages complete" in {
+      "when Bulk Wine, ImportedWine from EU, with all mandatory and optional pages complete" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
@@ -51,7 +52,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
           .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
@@ -62,7 +63,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         section.isCompleted mustBe true
       }
 
-      "when Bulk Wine, NOT Imported from EU, optional pages not supplied" in {
+      "when Bulk Wine, NOT ImportedWine from EU, optional pages not supplied" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
@@ -76,7 +77,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+          .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
           .set(ItemWineOriginPage(testIndex1), countryModelAU)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
@@ -97,7 +98,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -304,7 +305,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -331,7 +332,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
           .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
@@ -356,7 +357,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
           .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
@@ -380,7 +381,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
@@ -404,7 +405,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
@@ -427,7 +428,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
@@ -449,7 +450,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+          .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
@@ -471,7 +472,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+          .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
@@ -492,7 +493,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+          .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
         )
@@ -511,7 +512,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -533,7 +534,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -555,7 +556,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -577,7 +578,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -599,7 +600,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -621,7 +622,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -644,7 +645,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemProducerSizePage(testIndex1), BigInt("300"))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -665,7 +666,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -686,7 +687,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
@@ -890,7 +891,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
     "must return two items" - {
       "when wine and imported = false" in {
         val userAnswers: UserAnswers = emptyUserAnswers
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+          .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -901,7 +902,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
     "must return one item" - {
       "when wine and imported = true" in {
         val userAnswers: UserAnswers = emptyUserAnswers
-          .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -914,7 +915,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         GoodsType.values.filterNot(_ == GoodsType.Wine).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1152,11 +1153,11 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
   "wineBulkGrowingZoneAnswer" - {
     "must return a non-empty Seq" - {
-      "when quantity > 60 and imported choice = true" in {
+      "when quantity > 60 and not imported from the EU" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
 
         implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -1170,7 +1171,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
 
         implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -1181,18 +1182,18 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(60))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
 
         implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineBulkGrowingZoneAnswer mustBe Nil
       }
-      "when imported choice = false" in {
+      "when imported outside the EU" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+            .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1202,7 +1203,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when quantity is missing" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
 
         implicit val goodsType: GoodsType = GoodsType.Wine
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)

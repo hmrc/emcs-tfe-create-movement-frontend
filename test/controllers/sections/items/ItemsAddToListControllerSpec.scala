@@ -24,6 +24,7 @@ import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockItemsAddToListHelper
 import models.UserAnswers
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemWineProductCategory.Other
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel, ItemsAddToList}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items._
@@ -57,7 +58,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ItemQuantityPage(idx), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(idx), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(idx), false)
-          .set(ItemImportedWineFromEuChoicePage(idx), true)
+          .set(ItemWineProductCategoryPage(idx), Other)
           .set(ItemWineMoreInformationChoicePage(idx), false)
           .set(ItemSelectPackagingPage(idx, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(idx, testPackagingIndex1), "400")

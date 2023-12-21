@@ -17,21 +17,23 @@
 package controllers.sections.items
 
 import controllers.actions._
-import forms.sections.items.ItemImportedWineChoiceFormProvider
+import forms.sections.items.ItemWineProductCategoryFormProvider
 import models.requests.DataRequest
+import models.sections.items.ItemWineProductCategory
+import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemImportedWineFromEuChoicePage, ItemWineGrowingZonePage, ItemWineOriginPage}
+import pages.sections.items.{ItemWineGrowingZonePage, ItemWineOriginPage, ItemWineProductCategoryPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.sections.items.ItemImportedWineChoiceView
+import views.html.sections.items.ItemWineProductCategoryView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class ItemImportedWineChoiceController @Inject()(
+class ItemWineProductCategoryController @Inject()(
                                                   override val messagesApi: MessagesApi,
                                                   override val userAnswersService: UserAnswersService,
                                                   override val navigator: ItemsNavigator,
@@ -39,15 +41,15 @@ class ItemImportedWineChoiceController @Inject()(
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
                                                   override val userAllowList: UserAllowListAction,
-                                                  formProvider: ItemImportedWineChoiceFormProvider,
+                                                  formProvider: ItemWineProductCategoryFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  view: ItemImportedWineChoiceView
+                                                  view: ItemWineProductCategoryView,
                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        renderView(Ok, fillForm(ItemImportedWineFromEuChoicePage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(ItemWineProductCategoryPage(idx), formProvider()), idx, mode)
       }
     }
 
@@ -56,25 +58,26 @@ class ItemImportedWineChoiceController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          answer => saveAndRedirect(ItemImportedWineFromEuChoicePage(idx), answer, cleanseFunction(idx, answer), mode)
+          answer => saveAndRedirect(ItemWineProductCategoryPage(idx), answer, cleanseFunction(idx, answer), mode)
         )
       }
     }
 
-  private def cleanseFunction(idx: Index, wineInEu: Boolean)(implicit request: DataRequest[_]): UserAnswers = {
+  private def cleanseFunction(idx: Index, wineProductCategory: ItemWineProductCategory)(implicit request: DataRequest[_]): UserAnswers = {
     // if wine in eu, clear third country of origin
     // if not, clear wine growing zone
-    if(wineInEu) {
-      request.userAnswers.remove(ItemWineOriginPage(idx))
-    } else {
-      request.userAnswers.remove(ItemWineGrowingZonePage(idx))
+    wineProductCategory match {
+      case ImportedWine =>
+        request.userAnswers.remove(ItemWineGrowingZonePage(idx))
+      case _ =>
+        request.userAnswers.remove(ItemWineOriginPage(idx))
     }
   }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     Future.successful(status(view(
       form = form,
-      action = routes.ItemImportedWineChoiceController.onSubmit(request.ern, request.draftId, idx, mode)
+      action = routes.ItemWineProductCategoryController.onSubmit(request.ern, request.draftId, idx, mode)
     )))
 
 }

@@ -80,7 +80,7 @@ class ItemCheckAnswersHelper @Inject()(
       card = Some(CardViewModel(messages("itemCheckAnswers.wineDetailsCardTitle"), headingLevel = headingLevel, actions = None)),
       rows = Seq(
         itemWineOperationsChoiceSummary.row(idx),
-        ItemImportedWineChoiceSummary.row(idx),
+        ItemWineProductCategorySummary.row(idx),
         ItemWineGrowingZoneSummary.row(idx),
         ItemWineOriginSummary.row(idx),
         Some(itemWineMoreInformationSummary.row(idx))

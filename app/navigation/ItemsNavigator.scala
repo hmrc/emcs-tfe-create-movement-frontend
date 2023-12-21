@@ -20,6 +20,7 @@ import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsType._
 import models._
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items.{ItemGeographicalIndicationType, ItemsAddToList, ItemsPackagingAddToList}
 import pages.Page
 import pages.sections.items._
@@ -114,7 +115,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case _ =>
           userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
             case Some(Wine) =>
-              itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+              itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
               itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
           }
@@ -179,7 +180,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
       }
 
-    case ItemImportedWineFromEuChoicePage(idx) => itemImportedWineChoiceRouting(idx, NormalMode)
+    case ItemWineProductCategoryPage(idx) => itemWineProductCategoryRouting(idx, NormalMode)
 
     case ItemBulkPackagingSealTypePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -188,7 +189,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemWineOriginPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -275,7 +276,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineOperationsChoicePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case ItemImportedWineFromEuChoicePage(idx) => itemImportedWineChoiceRouting(idx, CheckMode)
+    case ItemWineProductCategoryPage(idx) => itemWineProductCategoryRouting(idx, CheckMode)
 
     case ItemWineGrowingZonePage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
@@ -306,7 +307,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           }
         case _ =>
-          (userAnswers.get(ItemImportedWineFromEuChoicePage(idx)), userAnswers.get(ItemsPackagingSectionItems(idx, Index(0)))) match {
+          (userAnswers.get(ItemWineProductCategoryPage(idx)), userAnswers.get(ItemsPackagingSectionItems(idx, Index(0)))) match {
             case (Some(_), _) | (_, Some(_)) =>
               // answer hasn't changed
               itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -314,7 +315,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               // answer has changed
               userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
                 case Some(Wine) =>
-                  itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+                  itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 case _ =>
                   itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
               }
@@ -464,7 +465,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             userAnswers.get(ItemQuantityPage(idx)) match {
               case Some(quantity) =>
                 if (quantity < 60) {
-                  itemsRoutes.ItemImportedWineChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+                  itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 } else {
                   itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 }
@@ -487,15 +488,14 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     }
   }
 
-  private def itemImportedWineChoiceRouting(idx: Index, mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
-
-    (userAnswers.get(ItemImportedWineFromEuChoicePage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
-      case (Some(true), Some(true), Some(quantity)) if quantity > 60 =>
-        itemsRoutes.ItemWineGrowingZoneController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
-      case (Some(true), _, _) =>
-        itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
-      case _ =>
+  private def itemWineProductCategoryRouting(idx: Index, mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
+    (userAnswers.get(ItemWineProductCategoryPage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {
+      case (Some(ImportedWine), _, _) =>
         itemsRoutes.ItemWineOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+      case (Some(_), Some(true), Some(quantity)) if quantity > 60 =>
+        itemsRoutes.ItemWineGrowingZoneController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
+      case _ =>
+        itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
     }
   }
 

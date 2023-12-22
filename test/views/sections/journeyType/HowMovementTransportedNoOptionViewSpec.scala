@@ -51,7 +51,7 @@ class HowMovementTransportedNoOptionViewSpec extends SpecBase with ViewBehaviour
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.p(1) -> messagesForLanguage.info,
-          Selectors.button -> messagesForLanguage.confirmAndContinue,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }

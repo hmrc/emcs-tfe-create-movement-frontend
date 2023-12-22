@@ -46,7 +46,7 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
     originTypeCode = mandatoryPage(DestinationTypePage).originType,
     dateOfDispatch = mandatoryPage(DispatchDetailsPage()).date.toString,
     timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter)),
-    importSad = if(request.isWarehouseKeeper) None else Some(ImportSadModel.apply)
+    importSad = Option.when (!request.isWarehouseKeeper && !request.isCertifiedConsignor) { ImportSadModel.apply }
   )
 
   implicit val fmt: OFormat[EadEsadDraftModel] = Json.format

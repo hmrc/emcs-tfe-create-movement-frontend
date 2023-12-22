@@ -21,6 +21,9 @@ import models.sections.guarantor.GuarantorArranger
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
+import models.sections.info.movementScenario.MovementScenario
+import pages.sections.info.DestinationTypePage
+import models.sections.info.movementScenario.MovementType
 
 case class MovementGuaranteeModel(
                                    guarantorTypeCode: GuarantorArranger,
@@ -33,8 +36,10 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
     val guarantorRequired: Boolean = mandatoryPage(GuarantorRequiredPage)
 
     if (!guarantorRequired) {
+      val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
+      
       MovementGuaranteeModel(
-        guarantorTypeCode = GuarantorArranger.NoGuarantorRequired, // TODO: when do we ever set it to "5"?
+        guarantorTypeCode = if(movementScenario.movementType == MovementType.UkToEu) GuarantorArranger.NoGuarantorRequiredUkToEu else GuarantorArranger.NoGuarantorRequired,
         guarantorTrader = None
       )
     } else {

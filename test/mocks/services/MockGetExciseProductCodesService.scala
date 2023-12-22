@@ -17,12 +17,13 @@
 package mocks.services
 
 import models.ExciseProductCode
-import org.scalamock.handlers.CallHandler1
+import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
 import services.GetExciseProductCodesService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
+import models.requests.DataRequest
 
 trait MockGetExciseProductCodesService extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockGetExciseProductCodesService extends MockFactory {
 
   object MockGetExciseProductCodesService {
 
-    def getExciseProductCodes(): CallHandler1[HeaderCarrier, Future[Seq[ExciseProductCode]]] =
-      (mockGetExciseProductCodesService.getExciseProductCodes()(_: HeaderCarrier)).expects(*)
+    def getExciseProductCodes(): CallHandler2[HeaderCarrier, DataRequest[_], Future[Seq[ExciseProductCode]]] =
+      (mockGetExciseProductCodesService.getExciseProductCodes()(_: HeaderCarrier, _: DataRequest[_])).expects(*, *)
   }
 }

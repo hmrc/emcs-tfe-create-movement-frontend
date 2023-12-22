@@ -35,12 +35,18 @@ import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.journeyType.HowMovementTransportedView
 
 import scala.concurrent.Future
+import views.html.sections.journeyType.HowMovementTransportedNoOptionView
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.transportUnit.TransportUnitType
 
 class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: HowMovementTransportedFormProvider = new HowMovementTransportedFormProvider()
   lazy val form: Form[HowMovementTransported] = formProvider()
   lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
+  lazy val onlyFixedView: HowMovementTransportedNoOptionView = app.injector.instanceOf[HowMovementTransportedNoOptionView]
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -55,6 +61,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
+      onlyFixedView,
       fakeUserAllowListAction
     )
   }
@@ -66,6 +73,24 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
+    }
+    
+    Seq(
+      MovementScenario.EuTaxWarehouse,
+      MovementScenario.TemporaryRegisteredConsignee,
+      MovementScenario.RegisteredConsignee,
+      MovementScenario.DirectDelivery,
+      MovementScenario.UnknownDestination,
+      MovementScenario.ExemptedOrganisation
+    ).foreach { scenario =>
+      s"must return OK and the onlyFixeView for guarantorNotRequired and destination type is ${scenario}" in new Test(Some(
+        emptyUserAnswers.copy(ern = testNorthernIrelandErn).set(GuarantorRequiredPage, false).set(DestinationTypePage, scenario)
+      )) {
+        val result = controller.onPageLoad(testNorthernIrelandErn, testDraftId, NormalMode)(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandErn), messages(request)).toString
+      }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -82,6 +107,25 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", HowMovementTransported.values.head.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page setting the answer to fixed transport when guarantorNotRequired and movement is uk to eu" in new Test(Some(
+      emptyUserAnswers.copy(ern = testNorthernIrelandErn).set(GuarantorRequiredPage, false).set(DestinationTypePage, MovementScenario.EuTaxWarehouse)
+    )) {
+
+      val expectedUserAnswers = emptyUserAnswers
+        .copy(ern = testNorthernIrelandErn)
+        .set(GuarantorRequiredPage, false)
+        .set(DestinationTypePage, MovementScenario.EuTaxWarehouse)
+        .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations)
+        .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onSubmit(testNorthernIrelandErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", HowMovementTransported.RailTransport.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

@@ -21,11 +21,14 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import pages.sections.guarantor._
 import play.api.test.FakeRequest
+import pages.sections.info.DestinationTypePage
+import models.sections.info.movementScenario.MovementScenario
+import models.response.MissingMandatoryPage
 
 class MovementGuaranteeModelSpec extends SpecBase {
   "apply" - {
     "must return a MovementGuaranteeModel" - {
-      "when no guarantor is required" in {
+      "with NoGuarantorRequredUkoEu when no guarantor is required, and movement is uk to ue" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
@@ -34,10 +37,29 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, "vat")
+            .set(DestinationTypePage, MovementScenario.EuTaxWarehouse),
+          testNorthernIrelandErn
+        )
+
+        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequiredUkToEu, None)
+      }
+
+      "with NoGuarantorRequred when no guarantor is required, and movement is uk to uk" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
+            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+            .set(GuarantorNamePage, "name")
+            .set(GuarantorAddressPage, testUserAddress)
+            .set(GuarantorVatPage, "vat")
+            .set(DestinationTypePage, MovementScenario.GbTaxWarehouse),
+          testNorthernIrelandErn
         )
 
         MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
       }
+
       "when guarantor is required" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
@@ -56,6 +78,24 @@ class MovementGuaranteeModelSpec extends SpecBase {
           Some("vat"),
           None
         ))))
+      }
+    }
+    "must throw a mandatory page exception" - {
+      "when guarantor is not required and no destination type has been answered" in {
+        
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
+            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+            .set(GuarantorNamePage, "name")
+            .set(GuarantorAddressPage, testUserAddress)
+            .set(GuarantorVatPage, "vat"),
+          testNorthernIrelandErn
+        )
+
+        val exception = intercept[MissingMandatoryPage](MovementGuaranteeModel.apply)
+        exception.message mustBe "Missing mandatory UserAnswer for page: 'destinationType'"
       }
     }
   }

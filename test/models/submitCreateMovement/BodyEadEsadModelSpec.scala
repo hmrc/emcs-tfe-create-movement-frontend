@@ -23,6 +23,7 @@ import models.GoodsType
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
+import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.items._
 import play.api.i18n.Messages
@@ -72,7 +73,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemBulkPackagingChoicePage(testIndex1), true)
             .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("seal type", Some("seal info")))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+            .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
             .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CII)
             .set(ItemWineOriginPage(testIndex1), countryModelGB)
             .set(ItemWineMoreInformationPage(testIndex1), Some("more wine info"))
@@ -142,7 +143,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), ItemPackaging("JR", "Jar"))
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "1")
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex2), ItemPackagingSealTypeModel("seal 2", Some("seal info")))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+            .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
             .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CII)
             .set(ItemWineOriginPage(testIndex1), countryModelGB)
             .set(ItemWineMoreInformationPage(testIndex1), Some("more wine info"))
@@ -215,7 +216,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemBulkPackagingChoicePage(testIndex1), true)
             .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.last)
             .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("seal type", Some("seal info")))
-            .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+            .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
             .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CII)
             .set(ItemWineOriginPage(testIndex1), countryModelGB)
             .set(ItemWineMoreInformationPage(testIndex1), Some("more wine info"))
@@ -243,7 +244,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex2), ItemPackaging("JR", "Jar"))
             .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex2), "1")
             .set(ItemPackagingSealTypePage(testIndex2, testPackagingIndex2), ItemPackagingSealTypeModel("seal 2", Some("seal info")))
-            .set(ItemImportedWineFromEuChoicePage(testIndex2), false)
+            .set(ItemWineProductCategoryPage(testIndex2), ImportedWine)
         )
 
         BodyEadEsadModel.apply mustBe Seq(

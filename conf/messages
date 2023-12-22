@@ -1295,11 +1295,16 @@ itemRemoveItem.title = Are you sure you want to remove this item?
 itemRemoveItem.heading = Are you sure you want to remove this item?
 itemRemoveItem.error.required = Select yes if you would like to remove the item
 
-itemImportedWineChoice.title = Was the wine imported from an EU country?
-itemImportedWineChoice.heading = Was the wine imported from an EU country?
-itemImportedWineChoice.error.required = Select yes if the wine was imported from an EU country
-itemImportedWineChoice.checkYourAnswersLabel = Wine imported from EU
-itemImportedWineChoice.change.hidden = if wine is imported from EU
+itemWineProductCategory.title = What is the product category of the wine?
+itemWineProductCategory.heading = What is the product category of the wine?
+itemWineProductCategory.1 = Wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)
+itemWineProductCategory.2 = Varietal wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)
+itemWineProductCategory.3 = Wine with a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)
+itemWineProductCategory.4 = Wine imported from outside the European Union
+itemWineProductCategory.5 = Other
+itemWineProductCategory.error.required = Select the product category of the wine
+itemWineProductCategory.checkYourAnswersLabel = Product Category
+itemWineProductCategory.change.hidden = what is the product category of the wine
 
 itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
 itemPackagingRemovePackage.heading = Are you sure you want to remove this packaging?

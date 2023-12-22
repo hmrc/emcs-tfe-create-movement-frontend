@@ -18,29 +18,33 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.ItemImportedWineFromEuChoicePage
+import pages.sections.items.ItemWineProductCategoryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ItemImportedWineChoiceSummary {
+object ItemWineProductCategorySummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val page = ItemImportedWineFromEuChoicePage(idx)
+    val page = ItemWineProductCategoryPage(idx)
 
     request.userAnswers.get(page).map { answer =>
+
+      val value: String = messages(s"itemWineProductCategory.$answer")
+
       SummaryListRowViewModel(
-        key = s"$page.checkYourAnswersLabel",
-        value = ValueViewModel(if (answer) "site.yes" else "site.no"),
+        key = "itemWineProductCategory.checkYourAnswersLabel",
+        value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             content = "site.change",
-            href = controllers.sections.items.routes.ItemImportedWineChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeItemImportedWineChoice${idx.displayIndex}")
-            .withVisuallyHiddenText(messages(s"$page.change.hidden"))
+            href = controllers.sections.items.routes.ItemWineProductCategoryController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            id = s"changeItemWineProductCategory${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("itemWineProductCategory.change.hidden"))
         )
       )
+
     }
   }
 }

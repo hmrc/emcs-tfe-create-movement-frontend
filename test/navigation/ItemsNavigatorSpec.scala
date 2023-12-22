@@ -22,6 +22,7 @@ import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
+import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{CheckMode, GoodsType, NormalMode, ReviewMode}
 import pages.Page
@@ -457,13 +458,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to the Imported Wine Choice page" - {
+        "to the ItemWineProductCategoryPage" - {
 
           "when the user answers no and EPC is wine" in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -493,13 +494,13 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to the Imported Wine Choice page" - {
+        "to the ItemWineProductCategoryPage" - {
           "when the wine quantity is under 60 litres" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemQuantityPage(testIndex1), BigDecimal(59.99))
-            ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
@@ -702,14 +703,14 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from the ItemImportedWineFromEuChoicePage" - {
+      "must go from the ItemWineProductCategoryPage" - {
 
         "to the Wine Growing Zone page" - {
 
           "when the user answers yes, moving in bulk and more than 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
               .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             ) mustBe itemsRoutes.ItemWineGrowingZoneController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -719,9 +720,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine More Information Choice page" - {
 
           "when the user answers yes, moving in Bulk but <= 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
               .set(ItemQuantityPage(testIndex1), BigDecimal(60))
             ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -731,9 +732,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine More Information Choice page" - {
 
           "when the user answers yes, NOT moving in Bulk > 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
               .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
@@ -743,18 +744,18 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine Origin page" - {
 
           "when the user answers no" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+              .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
             ) mustBe itemsRoutes.ItemWineOriginController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
       }
 
       "must go from the ItemWineOperationsChoicePage" - {
-        "to the Imported Wine Choice page" in {
+        "to the ItemWineProductCategoryPage" in {
           navigator.nextPage(ItemWineOperationsChoicePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
-            itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 
@@ -1014,14 +1015,14 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from the ItemImportedWineFromEuChoicePage" - {
+      "must go from the ItemWineProductCategoryPage" - {
 
         "to the Wine Growing Zone page" - {
 
           "when the user answers yes, moving in bulk and more than 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), CheckMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), CheckMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
               .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             ) mustBe itemsRoutes.ItemWineGrowingZoneController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
@@ -1031,9 +1032,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine More Information Choice page" - {
 
           "when the user answers yes, moving in Bulk but <= 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), CheckMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), CheckMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), true)
               .set(ItemQuantityPage(testIndex1), BigDecimal(60))
             ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
@@ -1043,9 +1044,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine More Information Choice page" - {
 
           "when the user answers yes, NOT moving in Bulk > 60 litres" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), CheckMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), CheckMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+              .set(ItemWineProductCategoryPage(testIndex1), Other)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
               .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             ) mustBe itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
@@ -1055,9 +1056,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Wine Origin page" - {
 
           "when the user answers no" in {
-            navigator.nextPage(ItemImportedWineFromEuChoicePage(testIndex1), CheckMode, emptyUserAnswers
+            navigator.nextPage(ItemWineProductCategoryPage(testIndex1), CheckMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), "W200")
-              .set(ItemImportedWineFromEuChoicePage(testIndex1), false)
+              .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
             ) mustBe itemsRoutes.ItemWineOriginController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
           }
         }
@@ -1134,7 +1135,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 CheckMode,
                 emptyUserAnswers
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                  .set(ItemImportedWineFromEuChoicePage(testIndex1), true)
+                  .set(ItemWineProductCategoryPage(testIndex1), Other)
               ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
             }
             "when ItemsPackagingSectionItems has an answer (answer has not changed)" in {
@@ -1155,7 +1156,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 emptyUserAnswers
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
                   .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-              ) mustBe itemsRoutes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+              ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
           "to ItemsPackagingIndex page" - {

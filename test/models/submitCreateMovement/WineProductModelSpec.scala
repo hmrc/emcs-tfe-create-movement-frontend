@@ -20,7 +20,8 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import models.{GoodsType, UserAnswers}
 import models.requests.DataRequest
-import models.sections.items.{ItemGeographicalIndicationType, ItemWineGrowingZone}
+import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
+import models.sections.items.{ItemGeographicalIndicationType, ItemWineGrowingZone, ItemWineProductCategory}
 import pages.sections.items._
 import play.api.test.FakeRequest
 
@@ -30,13 +31,13 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
                    epc: String = testEpcWine,
                    cnCode: String = testCnCodeWine,
                    geographicalIndicationChoice: ItemGeographicalIndicationType = ItemGeographicalIndicationType.ProtectedDesignationOfOrigin,
-                   importedChoice: Boolean = true
+                   importedChoice: ItemWineProductCategory = Other
                  ): UserAnswers =
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), epc)
       .set(ItemCommodityCodePage(testIndex1), cnCode)
       .set(ItemGeographicalIndicationChoicePage(testIndex1), geographicalIndicationChoice)
-      .set(ItemImportedWineFromEuChoicePage(testIndex1), importedChoice)
+      .set(ItemWineProductCategoryPage(testIndex1), importedChoice)
       .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CI)
       .set(ItemWineOriginPage(testIndex1), countryModelGB)
       .set(ItemWineMoreInformationPage(testIndex1), Some("more info"))
@@ -113,7 +114,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
       "when not from the EU" - {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
-          userAnswers(importedChoice = false)
+          userAnswers(importedChoice = ImportedWine)
         )
 
         WineProductModel.wineProductCategory(testIndex1) mustBe ItemWineCategory.ImportedWine

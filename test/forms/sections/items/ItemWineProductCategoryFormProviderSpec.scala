@@ -17,26 +17,27 @@
 package forms.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemImportedWineChoiceMessages
-import forms.behaviours.BooleanFieldBehaviours
+import fixtures.messages.sections.items.ItemWineProductCategoryMessages
+import forms.behaviours.OptionFieldBehaviours
+import models.sections.items.ItemWineProductCategory
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class ItemImportedWineChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
+class ItemWineProductCategoryFormProviderSpec extends SpecBase with OptionFieldBehaviours {
 
-  val requiredKey = "itemImportedWineChoice.error.required"
-  val invalidKey = "error.boolean"
+  val requiredKey = "itemWineProductCategory.error.required"
 
-  val form = new ItemImportedWineChoiceFormProvider()()
+  val form = new ItemWineProductCategoryFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
 
-    behave like booleanField(
+    behave like optionsField[ItemWineProductCategory](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues = ItemWineProductCategory.allValues,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(
@@ -48,7 +49,7 @@ class ItemImportedWineChoiceFormProviderSpec extends SpecBase with BooleanFieldB
 
   "Error Messages" - {
 
-    Seq(ItemImportedWineChoiceMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemWineProductCategoryMessages.English).foreach { messagesForLanguage =>
 
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 

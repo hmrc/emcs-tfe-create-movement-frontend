@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package forms.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import models.sections.items.ItemWineProductCategory
+import play.api.data.Form
 
-case class ItemImportedWineFromEuChoicePage(idx: Index) extends QuestionPage[Boolean] {
-  override val toString: String = "itemImportedWineChoice"
-  override val path: JsPath = ItemWineSection(idx).path \ toString
+import javax.inject.Inject
+
+class ItemWineProductCategoryFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[ItemWineProductCategory] =
+    Form(
+      "value" -> enumerable[ItemWineProductCategory]("itemWineProductCategory.error.required")
+    )
 }

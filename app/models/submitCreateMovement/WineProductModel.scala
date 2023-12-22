@@ -18,6 +18,7 @@ package models.submitCreateMovement
 
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType
+import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.libs.json.{Json, OFormat}
@@ -34,8 +35,8 @@ case class WineProductModel(
 object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter {
 
   private[submitCreateMovement] def wineProductCategory(idx: Index)(implicit request: DataRequest[_]): ItemWineCategory = {
-    // TODO: This WILL change with a new design
-    if (request.userAnswers.get(ItemImportedWineFromEuChoicePage(idx)).contains(false)) {
+
+    if (request.userAnswers.get(ItemWineProductCategoryPage(idx)).contains(ImportedWine)) {
       // if imported from outside EU
       ItemWineCategory.ImportedWine
     } else {

@@ -17,11 +17,12 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemImportedWineChoiceMessages
+import fixtures.messages.sections.items.ItemWineProductCategoryMessages
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.items.ItemWineProductCategory.{EuVarietalWineWithoutPdoOrPgi, EuWineWithPdoOrPgiOrGi, EuWineWithoutPdoOrPgi, ImportedWine, Other}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.ItemImportedWineFromEuChoicePage
+import pages.sections.items.ItemWineProductCategoryPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -30,11 +31,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemImportedWineChoiceSummarySpec extends SpecBase with Matchers {
+class ItemWineProductCategorySummarySpec extends SpecBase with Matchers {
 
-  "ItemImportedWineChoiceSummary" - {
+  "ItemWineProductCategorySummary" - {
 
-    val messagesForLanguage = ItemImportedWineChoiceMessages.English
+    val messagesForLanguage = ItemWineProductCategoryMessages.English
 
     s"when being rendered in lang code of 'en'" - {
 
@@ -46,7 +47,7 @@ class ItemImportedWineChoiceSummarySpec extends SpecBase with Matchers {
 
           implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          ItemImportedWineChoiceSummary.row(testIndex1) mustBe None
+          ItemWineProductCategorySummary.row(testIndex1) mustBe None
         }
       }
 
@@ -59,33 +60,31 @@ class ItemImportedWineChoiceSummarySpec extends SpecBase with Matchers {
             actions = Seq(
               ActionItemViewModel(
                 content = messagesForLanguage.change,
-                href = controllers.sections.items.routes.ItemImportedWineChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                id = "changeItemImportedWineChoice1"
+                href = controllers.sections.items.routes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                id = "changeItemWineProductCategory1"
               ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
             )
           ))
 
-        "answer is true" - {
+        Seq(
+          (EuWineWithoutPdoOrPgi, messagesForLanguage.radioOptionWineWithout),
+          (EuVarietalWineWithoutPdoOrPgi, messagesForLanguage.radioOptionVarietal),
+          (EuWineWithPdoOrPgiOrGi, messagesForLanguage.radioOptionWineWith),
+          (ImportedWine, messagesForLanguage.radioOptionImportedWine),
+          (Other, messagesForLanguage.radioOptionOther)
+        ) foreach { case (productCategory, expectedText) =>
 
-          "must output the expected row" in {
+          s"answer is ${productCategory.getClass.getSimpleName.stripSuffix("$")}" - {
+            "must output the expected row" in {
 
-            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), true))
+              implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+                dataRequest(FakeRequest(), emptyUserAnswers.set(ItemWineProductCategoryPage(testIndex1), productCategory))
 
-            ItemImportedWineChoiceSummary.row(testIndex1) mustBe expectedRow(messagesForLanguage.yes)
+              ItemWineProductCategorySummary.row(testIndex1) mustBe expectedRow(expectedText)
+            }
           }
         }
 
-        "answer is false" - {
-
-          "must output the expected row" in {
-
-            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemImportedWineFromEuChoicePage(testIndex1), false))
-
-            ItemImportedWineChoiceSummary.row(testIndex1) mustBe expectedRow(messagesForLanguage.no)
-          }
-        }
       }
     }
   }

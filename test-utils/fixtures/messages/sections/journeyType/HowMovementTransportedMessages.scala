@@ -30,6 +30,7 @@ object HowMovementTransportedMessages {
     val radioOption6: String = "Road transport"
     val radioOption7: String = "Sea transport"
     val radioOption8: String = "Other"
+    val info: String = "All movements of energy products between Northern Ireland and the European Union that do not require a guarantee must travel by fixed transport installations."
     val cyaLabel: String = "Type of transport"
     val cyaChangeHidden: String = "how will the goods be transported"
   }

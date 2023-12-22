@@ -28,6 +28,10 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Value
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import pages.sections.info.DestinationTypePage
+import models.sections.info.movementScenario.MovementScenario
+import pages.sections.guarantor.GuarantorRequiredPage
+import models.sections.journeyType.HowMovementTransported
 
 class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
@@ -50,6 +54,28 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
         }
         "when there's an answer" - {
 
+          "when guarantee not required and movement is uk to eu" - {
+
+            "must output the expected row without the link" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(DestinationTypePage, MovementScenario.EuTaxWarehouse)
+                  .set(GuarantorRequiredPage, false)
+                  .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations),
+                ern = testNorthernIrelandErn  
+              )
+
+              HowMovementTransportedSummary.row() mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(HtmlContent(messagesForLanguage.radioOption2)),
+                  actions = Seq()
+                )
+              )
+            }
+          }
           "when the show action link boolean is true" - {
 
             "must output the expected row" in {

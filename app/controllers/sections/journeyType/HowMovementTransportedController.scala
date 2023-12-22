@@ -30,10 +30,14 @@ import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSectio
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import views.html.sections.journeyType.HowMovementTransportedView
+import views.html.sections.journeyType.{HowMovementTransportedView, HowMovementTransportedNoOptionView}
 
 import javax.inject.Inject
 import scala.concurrent.Future
+import pages.sections.info.DestinationTypePage
+import pages.sections.guarantor.GuarantorRequiredPage
+import models.sections.info.movementScenario.MovementType
+import play.api.mvc.Result
 
 class HowMovementTransportedController @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -45,31 +49,46 @@ class HowMovementTransportedController @Inject()(
                                                   formProvider: HowMovementTransportedFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: HowMovementTransportedView,
+                                                  onlyFixedView: HowMovementTransportedNoOptionView,
                                                   val userAllowList: UserAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
+  private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
+    (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
+      case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
+      case _ => default
+    }
+  }
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
+      guarantorNotRequiredEuGuard(
+        onEuNotRequired = Ok(onlyFixedView(mode)),
+        default = Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
+      )
+    }
+
+  private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = 
+    if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
+      Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
+    } else {
+      val newUserAnswers = cleanseAnswers(answer)
+      saveAndRedirect(
+        page = HowMovementTransportedPage,
+        answer = answer,
+        currentAnswers = newUserAnswers,
+        mode = NormalMode
+      )
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        answer => if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
-          Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
-        } else {
-
-          val newUserAnswers = cleanseAnswers(answer)
-          saveAndRedirect(
-            page = HowMovementTransportedPage,
-            answer = answer,
-            currentAnswers = newUserAnswers,
-            mode = NormalMode
-          )
-        }
+      guarantorNotRequiredEuGuard(
+        onEuNotRequired = redirect(HowMovementTransported.FixedTransportInstallations, mode),
+        default = formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, mode))),
+          answer => redirect(answer, mode) 
+        )
       )
     }
 

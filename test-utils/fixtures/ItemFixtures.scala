@@ -70,6 +70,27 @@ trait ItemFixtures {
     categoryDescription = "Wine and fermented beverages other than wine and beer"
   )
 
+  val wineExciseProductCode300 = ExciseProductCode(
+    code = "W300",
+    description = "Still wine and still fermented beverages other than wine and beer",
+    category = "W",
+    categoryDescription = "Wine and fermented beverages other than wine and beer"
+  )
+
+  val energyExciseProductCode = ExciseProductCode(
+    code = "E430",
+    description = "Energy Products",
+    category = "E",
+    categoryDescription = "Energy products"
+  )
+
+  val spiritExciseProductCode = ExciseProductCode(
+    code = "S500",
+    description = "Spirit",
+    category = "S",
+    categoryDescription = "Spirit"
+  )
+
   val beerExciseProductCodeJson = Json.obj(
     "code" -> "B000",
     "description" -> "Beer",

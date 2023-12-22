@@ -22,3 +22,7 @@ yarn-debug.log
 yarn-error.log
 .bsp
 .DS_Store
+.bloop/
+.metals/
+project/.bloop/
+project/metals.sbt

@@ -24,6 +24,11 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.requests.DataRequest
+import play.api.test.FakeRequest
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
+import models.sections.info.movementScenario.MovementScenario
 
 class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProductCodesConnector with ItemFixtures {
 
@@ -36,18 +41,81 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
 
     "should return Seq[ExciseProductCode]" - {
 
-      "when Connector returns success from downstream" in {
+      "when Connector returns success from downstream and guarantor is required" in {
+
+        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
 
         val expectedResult = Seq(
           beerExciseProductCode,
-          wineExciseProductCode
+          wineExciseProductCode,
+          wineExciseProductCode300,
+          spiritExciseProductCode,
+          energyExciseProductCode
         )
 
-        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode))))
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
 
         val actualResults = testService.getExciseProductCodes().futureValue
 
         actualResults mustBe expectedResult
+      }
+
+      Seq(
+        testNorthernIrelandErn -> MovementScenario.GbTaxWarehouse,
+        testGreatBritainErn    -> MovementScenario.GbTaxWarehouse
+      ).foreach { case (userErn, scenario) =>
+        s"when Connector returns success from downstream, trader is an ${userErn.take(2)} trader, guarantor is not required and destinationType is ${scenario}" in {
+
+          implicit val request: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            ern = testNorthernIrelandErn,
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, false)
+              .set(DestinationTypePage, scenario)
+          )
+
+          val expectedResult = Seq(
+            beerExciseProductCode,
+            wineExciseProductCode,
+            wineExciseProductCode300
+          )
+
+          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
+
+          val actualResults = testService.getExciseProductCodes().futureValue
+
+          actualResults mustBe expectedResult
+        }
+      }
+
+      Seq(
+        MovementScenario.EuTaxWarehouse,
+        MovementScenario.TemporaryRegisteredConsignee,
+        MovementScenario.RegisteredConsignee,
+        MovementScenario.DirectDelivery,
+        MovementScenario.UnknownDestination,
+        MovementScenario.ExemptedOrganisation
+      ).foreach { scenario =>
+        s"when Connector returns success from downstream, trader is an XI trader, guarantor is not required and destinaionType is ${scenario}" in {
+
+          implicit val request: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            ern = testNorthernIrelandErn,
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, false)
+              .set(DestinationTypePage, scenario)
+          )
+
+          val expectedResult = Seq(
+            energyExciseProductCode
+          )
+
+          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
+
+          val actualResults = testService.getExciseProductCodes().futureValue
+
+          actualResults mustBe expectedResult
+        }
       }
     }
 
@@ -55,6 +123,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
 
       "when Connector returns failure from downstream" in {
 
+        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
         val expectedResult = "No excise product codes retrieved"
 
         MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Left(UnexpectedDownstreamResponseError)))

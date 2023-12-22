@@ -23,16 +23,26 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import models.requests.DataRequest
+import pages.sections.info.DestinationTypePage
+import pages.sections.guarantor.GuarantorRequiredPage
+import models.sections.info.movementScenario.MovementType
 
 @Singleton
 class GetExciseProductCodesService @Inject()(connector: GetExciseProductCodesConnector)
                                             (implicit ec: ExecutionContext) {
 
 
-  def getExciseProductCodes()(implicit hc: HeaderCarrier): Future[Seq[ExciseProductCode]] = {
+  private[services] def filterEPCCodes(epcs: Seq[ExciseProductCode])(implicit dataRequest: DataRequest[_]): Seq[ExciseProductCode] = (dataRequest.userAnswers.get(DestinationTypePage), dataRequest.userAnswers.get(GuarantorRequiredPage)) match {
+    case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToUk => epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
+    case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => epcs.filter(_.category.toUpperCase == "E")
+    case _ => epcs
+  }
+
+  def getExciseProductCodes()(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Future[Seq[ExciseProductCode]] = {
     connector.getExciseProductCodes().map {
       case Left(_) => throw ExciseProductCodesException("No excise product codes retrieved")
-      case Right(exciseProductCodes) => exciseProductCodes
+      case Right(exciseProductCodes) => filterEPCCodes(exciseProductCodes)
     }
   }
 }

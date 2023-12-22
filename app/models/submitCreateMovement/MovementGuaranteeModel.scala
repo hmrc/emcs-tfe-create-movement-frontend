@@ -39,7 +39,7 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
       val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
       
       MovementGuaranteeModel(
-        guarantorTypeCode = if(movementScenario.movementType == MovementType.UkToEu) GuarantorArranger.NoGuarantorRequiredUkToEu else GuarantorArranger.NoGuarantorRequired, // TODO: when do we ever set it to "5"?
+        guarantorTypeCode = if(movementScenario.movementType == MovementType.UkToEu) GuarantorArranger.NoGuarantorRequiredUkToEu else GuarantorArranger.NoGuarantorRequired,
         guarantorTrader = None
       )
     } else {

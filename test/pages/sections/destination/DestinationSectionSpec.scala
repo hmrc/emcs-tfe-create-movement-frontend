@@ -172,6 +172,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -194,6 +196,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -218,6 +222,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -241,6 +247,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -272,6 +280,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -293,6 +303,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -315,6 +327,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           Seq(
             RegisteredConsignee,
             TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
             ExemptedOrganisation
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -406,7 +420,17 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
     "when canBeCompletedForTraderAndDestinationType = false" - {
       "must return NotStarted" in {
         MovementScenario.values
-          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .filterNot(
+            Seq(
+              GbTaxWarehouse,
+              EuTaxWarehouse,
+              RegisteredConsignee,
+              TemporaryRegisteredConsignee,
+              CertifiedConsignee,
+              TemporaryCertifiedConsignee,
+              ExemptedOrganisation,
+              DirectDelivery
+            ).contains)
           .foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
@@ -431,4 +455,3 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
     }
   }
 }
-

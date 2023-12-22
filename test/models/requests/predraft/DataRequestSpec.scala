@@ -31,6 +31,8 @@ class DataRequestSpec extends SpecBase {
       ("XIWK123456789", NorthernIrelandWarehouseKeeper),
       ("XI00123456789", NorthernIrelandWarehouse),
       ("GB00123456789", GreatBritainWarehouse),
+      ("XIPA000000001", NorthernIrelandCertifiedConsignor),
+      ("XIPC000000001", NorthernIrelandTemporaryCertifiedConsignor),
       ("XI11123456789", Unknown)
     ).foreach {
       case (ern, userType) =>

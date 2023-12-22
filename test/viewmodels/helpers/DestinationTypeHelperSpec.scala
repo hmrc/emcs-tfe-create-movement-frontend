@@ -50,6 +50,7 @@ class DestinationTypeHelperSpec extends SpecBase {
             }
           }
       }
+
       Seq("GBRC", "XIRC").foreach {
         ern =>
           s"when ERN is a registered consignor and starts with $ern" - {
@@ -61,6 +62,22 @@ class DestinationTypeHelperSpec extends SpecBase {
             "heading" - {
               "must return the correct value" in {
                 helper.heading(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
+              }
+            }
+          }
+      }
+
+      Seq("XIPA", "XIPC").foreach {
+        ern =>
+          s"when ERN is a certified consignor and starts with $ern" - {
+            "title" - {
+              "must return the correct value" in {
+                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
+              }
+            }
+            "heading" - {
+              "must return the correct value" in {
+                helper.heading(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
               }
             }
           }

@@ -92,6 +92,35 @@ class EadEsadDraftModelSpec extends SpecBase {
             )
         }
       }
+
+      "when XIP_" in {
+        Seq("XIPA123", "XIPC123").foreach {
+          ern =>
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = fakeRequest,
+              answers = emptyUserAnswers
+                .set(LocalReferenceNumberPage(), testLrn)
+                .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
+                .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
+                .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
+                .set(ImportNumberPage(testIndex1), "sad 1")
+                .set(ImportNumberPage(testIndex2), "sad 2")
+                .set(ImportNumberPage(testIndex3), "sad 3")
+              ,
+              ern = ern
+            )
+
+            EadEsadDraftModel.apply mustBe EadEsadDraftModel(
+              localReferenceNumber = testLrn,
+              invoiceNumber = "inv ref",
+              invoiceDate = Some("2020-12-25"),
+              originTypeCode = OriginType.DutyPaid,
+              dateOfDispatch = "2020-10-31",
+              timeOfDispatch = Some("23:59:59"),
+              importSad = None
+            )
+        }
+      }
     }
 
     "must add seconds when no seconds are provided in time" in {

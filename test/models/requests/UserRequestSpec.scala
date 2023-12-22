@@ -29,6 +29,8 @@ class UserRequestSpec extends SpecBase {
       ("XIWK123456789", NorthernIrelandWarehouseKeeper),
       ("XI00123456789", NorthernIrelandWarehouse),
       ("GB00123456789", GreatBritainWarehouse),
+      ("XIPA123456789", NorthernIrelandCertifiedConsignor),
+      ("XIPC123456789", NorthernIrelandTemporaryCertifiedConsignor),
       ("XI11123456789", Unknown)
     ).foreach {
       case (ern, userType) =>

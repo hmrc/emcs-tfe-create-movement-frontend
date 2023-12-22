@@ -149,6 +149,74 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         )
       }
 
+      "when UserType is XIPA" - {
+        val ern: String = "XIPA123"
+
+        Seq(
+          CertifiedConsignee
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+
+        Seq(
+          TemporaryCertifiedConsignee
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+      }
+
+      "when UserType is XIPC" - {
+        val ern: String = "XIPC123"
+
+        Seq(
+          CertifiedConsignee
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+
+        Seq(
+          TemporaryCertifiedConsignee
+        ).foreach(
+          movementScenario =>
+            s"and destination is $movementScenario" in new Fixture(
+              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+
+              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+
+              status(result) mustBe SEE_OTHER
+              redirectLocation(result) mustBe
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            }
+        )
+      }
+
       "when UserType is XIWK" - {
         val ern: String = "XIWK123"
 

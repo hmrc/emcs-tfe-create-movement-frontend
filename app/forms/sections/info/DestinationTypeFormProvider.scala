@@ -32,7 +32,8 @@ class DestinationTypeFormProvider @Inject() extends Mappings with Logging {
     Form(
       "value" -> enumerable[MovementScenario](requiredKey = {
         request.userTypeFromErn match {
-          case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => "destinationType.error.required.movement"
+          case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+            "destinationType.error.required.movement"
           case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => "destinationType.error.required.import"
           case userType =>
             logger.error(s"[title] invalid UserType for CAM journey: $userType")

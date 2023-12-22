@@ -87,6 +87,8 @@ class DraftMovementHelperSpec extends SpecBase {
               ("XIWK123", NorthernIreland, EuTaxWarehouse),
               ("XIWK123", NorthernIreland, RegisteredConsignee),
               ("XIWK123", NorthernIreland, TemporaryRegisteredConsignee),
+              ("XIPA123", NorthernIreland, CertifiedConsignee),
+              ("XIPC123", NorthernIreland, TemporaryCertifiedConsignee),
               ("XIWK123", NorthernIreland, ExemptedOrganisation),
               ("XIWK123", NorthernIreland, UnknownDestination),
               ("XIWK123", NorthernIreland, DirectDelivery),
@@ -105,7 +107,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "must return the draftMovement.heading.importFor message" in {
             Seq[String](
               "GBRC123",
-              "XIRC123"
+              "XIRC123",
             ).foreach(
               ern =>
                 MovementScenario.values.foreach {
@@ -299,6 +301,8 @@ class DraftMovementHelperSpec extends SpecBase {
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,
+              CertifiedConsignee,
+              TemporaryCertifiedConsignee,
               ExemptedOrganisation,
               DirectDelivery
             ).foreach {
@@ -315,6 +319,8 @@ class DraftMovementHelperSpec extends SpecBase {
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,
+              CertifiedConsignee,
+              TemporaryCertifiedConsignee,
               ExemptedOrganisation,
               DirectDelivery
             ).contains).foreach {

@@ -26,6 +26,8 @@ class MovementScenarioSpec extends SpecBase {
 
   val warehouseKeeperDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123")
   val registeredConsignorDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBRC123")
+  val certifiedConsignorUserRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIPA123")
+  val tempCertifiedConsignorUserRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIPC123")
   val nonWKRCDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GB00123")
 
   "ExportWithCustomsDeclarationLodgedInTheUk" - {
@@ -359,6 +361,90 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](TemporaryRegisteredConsignee.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+  }
+
+  "CertifiedConsignee" - {
+    ".originType" - {
+      "when user is a certified consignor" - {
+        "must return DutyPaid" in {
+          CertifiedConsignee.originType(certifiedConsignorUserRequest) mustBe OriginType.DutyPaid
+        }
+      }
+      "when user is a temporary certified consignor" - {
+        "must return DutyPaid" in {
+          CertifiedConsignee.originType(tempCertifiedConsignorUserRequest) mustBe OriginType.DutyPaid
+        }
+      }
+      "when user is neither a certified consignor, nor a temporary certified consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](CertifiedConsignee.originType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".destinationType" - {
+      "must return CertifiedConsignee" in {
+        CertifiedConsignee.destinationType mustBe DestinationType.CertifiedConsignee
+      }
+    }
+    ".movementType" - {
+      "when user is a certified consignor" - {
+        "must return UkToEu" in {
+          CertifiedConsignee.movementType(certifiedConsignorUserRequest) mustBe MovementType.UkToEu
+        }
+      }
+      "when user is a temporary certified consignor" - {
+        "must return UkToEu" in {
+          CertifiedConsignee.movementType(tempCertifiedConsignorUserRequest) mustBe MovementType.UkToEu
+        }
+      }
+      "when user is neither a certified consignor, nor a temporary certified consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](CertifiedConsignee.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+  }
+
+  "TemporaryCertifiedConsignee" - {
+    ".originType" - {
+      "when user is a certified consignor" - {
+        "must return DutyPaid" in {
+          TemporaryCertifiedConsignee.originType(certifiedConsignorUserRequest) mustBe OriginType.DutyPaid
+        }
+      }
+      "when user is a temporary certified consignor" - {
+        "must return DutyPaid" in {
+          TemporaryCertifiedConsignee.originType(tempCertifiedConsignorUserRequest) mustBe OriginType.DutyPaid
+        }
+      }
+      "when user is neither a certified consignor, nor a temporary certified consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](TemporaryCertifiedConsignee.originType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".destinationType" - {
+      "must return TemporaryCertifiedConsignee" in {
+        TemporaryCertifiedConsignee.destinationType mustBe DestinationType.TemporaryCertifiedConsignee
+      }
+    }
+    ".movementType" - {
+      "when user is a certified consignor" - {
+        "must return UkToEu" in {
+          TemporaryCertifiedConsignee.movementType(certifiedConsignorUserRequest) mustBe MovementType.UkToEu
+        }
+      }
+      "when user is a temporary certified consignor" - {
+        "must return UkToEu" in {
+          TemporaryCertifiedConsignee.movementType(tempCertifiedConsignorUserRequest) mustBe MovementType.UkToEu
+        }
+      }
+      "when user is neither a certified consignor, nor a temporary certified consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](TemporaryCertifiedConsignee.movementType(nonWKRCDataRequest))
         }
       }
     }

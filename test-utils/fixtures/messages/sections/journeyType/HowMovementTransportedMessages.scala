@@ -22,6 +22,8 @@ object HowMovementTransportedMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "How will the goods be transported?"
     val title: String = titleHelper(heading)
+    val headingFixed: String = "How the goods will be transported"
+    val titleFixed: String = titleHelper(headingFixed)
     val radioOption1: String = "Air transport"
     val radioOption2: String = "Fixed transport installations"
     val radioOption3: String = "Inland waterway transport"

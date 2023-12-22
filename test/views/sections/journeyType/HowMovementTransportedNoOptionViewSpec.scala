@@ -47,11 +47,11 @@ class HowMovementTransportedNoOptionViewSpec extends SpecBase with ViewBehaviour
         implicit val doc: Document = Jsoup.parse(view(NormalMode).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
+          Selectors.title -> messagesForLanguage.titleFixed,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
-          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.h1 -> messagesForLanguage.headingFixed,
           Selectors.p(1) -> messagesForLanguage.info,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.button -> messagesForLanguage.confirmAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }

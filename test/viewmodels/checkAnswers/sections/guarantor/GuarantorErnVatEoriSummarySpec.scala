@@ -17,39 +17,42 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
-import fixtures.messages.sections.guarantor.GuarantorVatMessages
-import fixtures.messages.sections.guarantor.GuarantorVatMessages.ViewMessages
+import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages
+import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages.ViewMessages
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
+import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportPage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 
-class GuarantorVatSummarySpec extends SpecBase with Matchers {
+class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
 
-  "GuarantorVatSummary" - {
+  "GuarantorErnVatEoriSummary" - {
 
-    def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+    def expectedRow(key: String, value: String, showChangeLink: Boolean = false)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
       Some(
         SummaryListRowViewModel(
-          key = Key(Text(messagesForLanguage.cyaLabel)),
+          key = Key(Text(key)),
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
             href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
             id = "changeGuarantorVat"
-          ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+          ).withVisuallyHiddenText(messagesForLanguage.cyaVatLabel))
         )
       )
     }
 
-    Seq(GuarantorVatMessages.English).foreach { implicit messagesForLanguage =>
+    Seq(GuarantorErnVatEoriMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
@@ -58,7 +61,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GuarantorVatSummary.row mustBe None
+            GuarantorErnVatEoriSummary.row mustBe None
           }
         }
 
@@ -66,27 +69,80 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
-            GuarantorVatSummary.row mustBe None
+            GuarantorErnVatEoriSummary.row mustBe None
           }
         }
 
         "and there is a GuarantorRequiredPage answer of `yes`" - {
 
           "and there is a GuarantorArrangerPage answer of `Consignee`" - {
-            "then must not return a row" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
-              )
 
-              GuarantorVatSummary.row mustBe None
+            "and the goods are to be exported outside the UK or EU" - {
+
+              "and the consignee VAT section has been answered" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportPage, true)
+                    .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber,Some("VAT123"), None))
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+
+                )
+
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, "VAT123")
+              }
+
+              "and the consignee EORI section has been answered" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportPage, true)
+                    .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI123456789")))
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+
+                )
+
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaEoriLabel, "EORI123456789")
+              }
+
+            }
+
+            "and the goods are NOT to be exported outside the UK or EU" - {
+
+              "and the consignee ERN section hasn't been filled in yet" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportPage, false)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+                )
+
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided)
+              }
+
+              "and that section has been filled in" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportPage, false)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+                    .set(ConsigneeExcisePage, "GB12345678901")
+                )
+
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaErnLabel, "GB12345678901")
+              }
             }
           }
 
           "and there is a GuarantorArrangerPage answer of `Consignor`" - {
-            "then must not return a row" in {
+            "then must return the consignors ERN" in {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
@@ -94,11 +150,12 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorArrangerPage, Consignor)
               )
 
-              GuarantorVatSummary.row mustBe None
+              GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaErnLabel, request.ern)
             }
           }
 
           "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+
             "and there is no answer for GuarantorVatPage" - {
               "then must render not provided row with change link" in {
                 implicit lazy val request: DataRequest[_] = dataRequest(
@@ -108,7 +165,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                     .set(GuarantorArrangerPage, GoodsOwner)
                 )
 
-                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, messagesForLanguage.notProvided, true)
               }
             }
 
@@ -122,9 +179,10 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                     .set(GuarantorVatPage,"VAT123")
                 )
 
-                GuarantorVatSummary.row mustBe expectedRow("VAT123", true)
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, "VAT123", true)
               }
             }
+
           }
 
           "and there is a GuarantorArrangerPage answer of `Transporter`" - {
@@ -137,7 +195,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                     .set(GuarantorArrangerPage, Transporter)
                 )
 
-                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, messagesForLanguage.notProvided, true)
               }
             }
 
@@ -148,15 +206,15 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Transporter)
-                    .set(GuarantorVatPage, "TRAN123")
+                    .set(GuarantorVatPage, "VAT123")
                 )
 
-                GuarantorVatSummary.row mustBe expectedRow("TRAN123", true)
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, "VAT123", true)
               }
             }
+
           }
         }
-
       }
 
     }

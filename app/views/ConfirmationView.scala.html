@@ -54,19 +54,20 @@
     <p class="govuk-body no-print"><a class="govuk-link" href="javascript:if(window.print)window.print()" id="print-page">@messages("confirmation.printLink")</a> @messages("confirmation.printMessage")</p>
 
     @h2("confirmation.whatHappensNext")
-    <p class="govuk-body">@messages("confirmation.p1")</p>
-    <p class="govuk-body">
-        @messages("confirmation.p2.beforeLink")
-        @link(
-            exciseEnquiriesLink,
-            "confirmation.p2.link",
-            opensInNewTab = true,
-            id = Some("contactHmrc")
-        )
-        @messages("confirmation.p2.afterLink")
-    </p>
-    <p class="govuk-body">@messages("confirmation.p3")</p>
-    <p class="govuk-body">@messages("confirmation.p4")</p>
+    @p() {@messages("confirmation.p1")}
+    @p() {@messages("confirmation.p2")}
+    @p() {@messages("confirmation.p3")}
+    @p() {@messages("confirmation.p4")}
+
+    @h2("confirmation.ifYouNeedToChange")
+    @p() {@messages("confirmation.p5")}
+    @p() {@messages("confirmation.p6")}
+
+    @h2("confirmation.ifUnsuccessful")
+    @p() {@messages("confirmation.p7")}
+    @p() {@messages("confirmation.p8")}
+    @p() {@messages("confirmation.p9")}
+    @p() {@messages("confirmation.p10")}
 
     <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href=@returnToAccountLink>@messages("confirmation.returnToAccountLink")</a></p>
     @p(classes = "govuk-body no-print") {

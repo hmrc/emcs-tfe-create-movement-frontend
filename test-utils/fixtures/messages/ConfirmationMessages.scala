@@ -25,11 +25,23 @@ object ConfirmationMessages {
     val localReferenceNumber = "Local Reference Number"
     val dateOfSubmission = "Date of submission"
     val printText = "Print this screen to make a record of your submission."
+
     val whatHappensNextHeader = "What happens next"
-    val p1 = "If the submission is successful you’ll receive a 21 digit administrative reference code (ARC). This can take up to 15 minutes."
-    val p2 = "If unsuccessful, you’ll get an error which you must correct and resubmit until you get an ARC. Contact the HMRC excise helpline (opens in new tab) if you need more help or information about excise duties."
-    val p3 = "Goods must not be dispatched before an ARC has been allocated."
-    val p4 = "The ARC must be visible on either a printed eAD or any other commercial document, and must come with the goods."
+    val p1 = "If the submission is successful you’ll get a 21 digit administrative reference code (ARC) sent to your messages inbox. This can take up to 15 minutes."
+    val p2 = "Goods must not be dispatched before an ARC has been allocated."
+    val p3 = "The ARC must be visible on either a printed electronic Administrative Document (eAD) or any other commercial document, and must travel with the goods."
+    val p4 = "Once your goods have been delivered, you will receive a Report of Receipt from the consignee to let you know if the movement was satisfactory, or if there were any problems."
+
+    val ifYouNeedToChange = "If you need to change or cancel the movement"
+    val p5 = "If you need to cancel the movement this must be done before the goods are dispatched. While the goods are in transit you may submit a change of destination or an explanation of a delay."
+    val p6 = "Links to cancel, change the movement or explain a delay can be found in the movement overview."
+
+    val ifUnsuccessful = "If your submission is unsuccessful"
+    val p7 = "If unsuccessful, you’ll get an error message sent to your messages inbox."
+    val p8 = "The message will tell you what needs to be corrected. You must correct and resubmit the movement until you get an ARC."
+    val p9 = "If the error cannot be corrected, you must create a new movement."
+    val p10 = "Contact the HMRC excise helpline if you need more help or information about excise duties."
+
     val returnToAccountLink = "Return to account"
     val feedbackLink = "What did you think of this service? (opens in new tab) (takes 30 seconds)"
 

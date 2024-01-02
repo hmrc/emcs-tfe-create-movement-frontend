@@ -43,7 +43,7 @@ class ItemWineProductCategoryController @Inject()(
                                                   override val userAllowList: UserAllowListAction,
                                                   formProvider: ItemWineProductCategoryFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  view: ItemWineProductCategoryView,
+                                                  view: ItemWineProductCategoryView
                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

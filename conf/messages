@@ -1294,8 +1294,8 @@ itemPackagingProductType.p = The packaging type is: {0}
 itemPackagingProductType.yes = Yes
 itemPackagingProductType.no = No - the packaging contains more than one product type, required to be entered as separate items in this movement
 itemPackagingProductType.error.required = Select yes if there is only one product type in the package
-itemPackagingProductType.checkYourAnswersLabel = Contains one product type
-itemPackagingProductType.change.hidden = if the packaging contains one or more product types
+itemPackagingProductType.checkYourAnswersLabel = More than one item in the package
+itemPackagingProductType.change.hidden = if the packaging contains one or more items
 
 itemRemoveItem.title = Are you sure you want to remove this item?
 itemRemoveItem.heading = Are you sure you want to remove this item?

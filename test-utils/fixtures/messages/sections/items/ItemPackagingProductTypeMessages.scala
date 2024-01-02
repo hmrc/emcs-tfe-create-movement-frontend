@@ -30,8 +30,8 @@ object ItemPackagingProductTypeMessages {
     val noMoreThanOne = "No - the packaging contains more than one product type, required to be entered as separate items in this movement"
 
     val errorRequired = "Select yes if there is only one product type in the package"
-    val cyaLabel = "Contains one product type"
-    val cyaChangeHidden = "if the packaging contains one or more product types"
+    val cyaLabel = "More than one item in the package"
+    val cyaChangeHidden = "if the packaging contains one or more items"
   }
 
   object English extends ViewMessages with BaseEnglish

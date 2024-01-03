@@ -58,13 +58,25 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.movementInformationHeader,
             Selectors.p(1) -> messagesForLanguage.printText,
+
             Selectors.h2(2) -> messagesForLanguage.whatHappensNextHeader,
             Selectors.p(2) -> messagesForLanguage.p1,
             Selectors.p(3) -> messagesForLanguage.p2,
             Selectors.p(4) -> messagesForLanguage.p3,
             Selectors.p(5) -> messagesForLanguage.p4,
-            Selectors.p(6) -> messagesForLanguage.returnToAccountLink,
-            Selectors.p(7) -> messagesForLanguage.feedbackLink,
+
+            Selectors.h2(3) -> messagesForLanguage.ifYouNeedToChange,
+            Selectors.p(6) -> messagesForLanguage.p5,
+            Selectors.p(7) -> messagesForLanguage.p6,
+
+            Selectors.h2(4) -> messagesForLanguage.ifUnsuccessful,
+            Selectors.p(8) -> messagesForLanguage.p7,
+            Selectors.p(9) -> messagesForLanguage.p8,
+            Selectors.p(10) -> messagesForLanguage.p9,
+            Selectors.p(11) -> messagesForLanguage.p10,
+
+            Selectors.p(12) -> messagesForLanguage.returnToAccountLink,
+            Selectors.p(13) -> messagesForLanguage.feedbackLink,
           ))
 
           "have correct summary list" in {

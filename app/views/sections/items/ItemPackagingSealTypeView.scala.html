@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import viewmodels.LegendSize
 @import models.response.referenceData.ItemPackaging
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.InputWidth.Fixed40
@@ -57,7 +58,7 @@
         @govukInput(
             InputViewModel(
                 field = form("packaging-seal-type"),
-                label = LabelViewModel(Text(messages("itemPackagingSealType.heading"))).hidden
+                label = LabelViewModel(Text(messages("itemPackagingSealType.textAreaLabel"))).withCssClass(LegendSize.Medium.toString)
             ).withWidth(Fixed40)
         )
 

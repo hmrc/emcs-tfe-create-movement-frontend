@@ -28,6 +28,8 @@ object ItemPackagingSealTypeMessages {
 
     def p(packagingDescription: String) = s"The packaging type is: $packagingDescription."
 
+    val textAreaLabel = "Commercial seal type"
+
     val p2 = "Give more information (optional)"
     val hint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
 

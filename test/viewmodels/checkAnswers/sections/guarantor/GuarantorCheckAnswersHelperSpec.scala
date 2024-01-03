@@ -52,7 +52,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
           }
         }
       case value =>
-        "must render four rows" - {
+        "must render five rows" - {
           s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
@@ -62,7 +62,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(ConsigneeBusinessNamePage, s"$value name")
                 .set(ConsigneeAddressPage, testUserAddress)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
+            helper.summaryList()(request, msgs).rows.length mustBe 5
           }
         }
     }

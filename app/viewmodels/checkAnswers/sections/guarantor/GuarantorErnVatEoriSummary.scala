@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportVatType._
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
@@ -80,6 +80,8 @@ object GuarantorErnVatEoriSummary {
         "guarantorVat.checkYourAnswersLabel" -> vatNumber
       case (None, Some(ConsigneeExportVat(YesEoriNumber, _, Some(eoriNumber)))) =>
         "consigneeExportVat.eoriNumber.label" -> eoriNumber
+      case (None, Some(ConsigneeExportVat(No, _, _))) =>
+        "consigneeExportVat.checkYourAnswers.label.notKnown" -> "consigneeExportVat.checkYourAnswers.value.notKnown"
       case (None, None) =>
         "guarantorErn.checkYourAnswersLabel" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
     }

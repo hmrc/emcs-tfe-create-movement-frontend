@@ -22,7 +22,7 @@ import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages.ViewMess
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportVatType._
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportPage, ConsigneeExportVatPage}
@@ -107,6 +107,21 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 )
 
                 GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaEoriLabel, "EORI123456789")
+              }
+
+              "and the consignee doesn't know the VAT or EORI number " in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportPage, true)
+                    .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+
+                )
+
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaNoVatOrEoriLabel, "Number not known")
               }
 
             }

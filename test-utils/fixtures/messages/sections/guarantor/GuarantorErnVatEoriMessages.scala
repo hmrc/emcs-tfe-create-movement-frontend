@@ -27,6 +27,7 @@ object GuarantorErnVatEoriMessages {
     val cyaErnLabel = "ERN"
     val cyaVatLabel = "VAT registration number"
     val cyaEoriLabel = "EORI number"
+    val cyaNoVatOrEoriLabel = "VAT or EORI number"
 
     val consigneeErnNotProvided = "Consignee section not complete"
   }

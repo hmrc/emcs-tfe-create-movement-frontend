@@ -79,8 +79,40 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.cardTitle -> messagesForLanguage.transportUnit1,
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
-          Selectors.radioButton(2) -> messagesForLanguage.noOption,
+          Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for singular item that is incomplete" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage(testIndex1), Tractor)
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+
+        lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
+        val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
+        val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
+
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            optionalForm = Some(form),
+            transportUnits = helper,
+            mode = NormalMode
+          ).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.title,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.removeItemLink(1) -> messagesForLanguage.removeLink1WithHiddenText,
+          Selectors.cardTitle -> messagesForLanguage.transportUnit1,
+          Selectors.legendQuestion -> messagesForLanguage.question,
+          Selectors.radioButton(1) -> messagesForLanguage.yesOption,
+          Selectors.radioButton(2) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
         ))
@@ -120,7 +152,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.errorSummary(1) -> messagesForLanguage.errorMessage,
           Selectors.errorField -> messagesForLanguage.errorMessageHelper(messagesForLanguage.errorMessage),
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
-          Selectors.radioButton(2) -> messagesForLanguage.noOption,
+          Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -166,7 +198,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.cardTitle -> messagesForLanguage.transportUnit1,
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
-          Selectors.radioButton(2) -> messagesForLanguage.noOption,
+          Selectors.radioButton(2) -> messagesForLanguage.noOptionPlural,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft

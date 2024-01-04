@@ -48,7 +48,7 @@
         @h1(pluralSingular("transportUnitsAddToList.heading", transportUnits.size), classes = "govuk-heading-l")
 
         @transportUnits.map { transportUnit =>
-            @govukSummaryList(transportUnit)
+                @govukSummaryList(transportUnit)
         }
 
         @optionalForm.map { form =>

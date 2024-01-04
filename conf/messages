@@ -651,7 +651,7 @@ guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
 
-guarantorErn.checkYourAnswersLabel = ERN
+guarantorErn.checkYourAnswersLabel = Excise registration number (ERN)
 guarantorErn.checkYourAnswers.notProvided = {0} section not complete
 
 guarantorVat.3.title = What is the goods owner’s VAT registration number?

@@ -24,7 +24,7 @@ object GuarantorErnVatEoriMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
 
-    val cyaErnLabel = "ERN"
+    val cyaErnLabel = "Excise registration number (ERN)"
     val cyaVatLabel = "VAT registration number"
     val cyaEoriLabel = "EORI number"
     val cyaNoVatOrEoriLabel = "VAT or EORI number"

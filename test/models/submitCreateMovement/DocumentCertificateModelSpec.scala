@@ -64,13 +64,13 @@ class DocumentCertificateModelSpec extends SpecBase {
         DocumentCertificateModel.apply mustBe Some(Seq(
           DocumentCertificateModel(
             documentType = Some("1"),
-            documentReference = None,
+            documentReference = Some("1 reference"),
             documentDescription = None,
             referenceOfDocument = None
           ),
           DocumentCertificateModel(
             documentType = Some("2"),
-            documentReference = None,
+            documentReference = Some("2 reference"),
             documentDescription = None,
             referenceOfDocument = None
           )
@@ -95,13 +95,13 @@ class DocumentCertificateModelSpec extends SpecBase {
         DocumentCertificateModel.apply mustBe Some(Seq(
           DocumentCertificateModel(
             documentType = Some("1"),
-            documentReference = None,
+            documentReference = Some("1 reference"),
             documentDescription = None,
             referenceOfDocument = None
           ),
           DocumentCertificateModel(
             documentType = Some("2"),
-            documentReference = None,
+            documentReference = Some("2 reference"),
             documentDescription = None,
             referenceOfDocument = None
           ),

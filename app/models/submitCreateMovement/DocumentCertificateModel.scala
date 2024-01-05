@@ -55,8 +55,8 @@ object DocumentCertificateModel extends ModelConstructorHelpers {
                   )
                 } else {
                   DocumentCertificateModel(
-                    documentType = Some(documentType),
-                    documentReference = None,
+                    documentType = Some(mandatoryPage(DocumentTypePage(idx)).code),
+                    documentReference = Some(mandatoryPage(DocumentReferencePage(idx))),
                     documentDescription = None,
                     referenceOfDocument = None
                   )

@@ -16,11 +16,11 @@
 
 package models.sections.items
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ItemMaturationPeriodAgeModel(hasMaturationPeriodAge: Boolean,
                                         maturationPeriodAge: Option[String])
 
 object ItemMaturationPeriodAgeModel {
-  implicit val format = Json.format[ItemMaturationPeriodAgeModel]
+  implicit val format: OFormat[ItemMaturationPeriodAgeModel] = Json.format[ItemMaturationPeriodAgeModel]
 }

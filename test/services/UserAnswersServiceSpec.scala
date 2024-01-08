@@ -26,8 +26,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UserAnswersServiceSpec extends SpecBase with MockUserAnswersConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new UserAnswersService(mockUserAnswersConnector)
 

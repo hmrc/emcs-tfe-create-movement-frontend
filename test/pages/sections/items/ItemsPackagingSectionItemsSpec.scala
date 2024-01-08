@@ -20,6 +20,7 @@ import base.SpecBase
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.items.ItemPackagingSealTypeModel
+import pages.QuestionPage
 import play.api.test.FakeRequest
 
 class ItemsPackagingSectionItemsSpec extends SpecBase {
@@ -65,7 +66,7 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
         ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
       }
 
-      Seq(ItemSelectPackagingPage(testIndex1, testPackagingIndex1),
+      Seq[QuestionPage[Any]](ItemSelectPackagingPage(testIndex1, testPackagingIndex1),
         ItemPackagingQuantityPage(testIndex1, testPackagingIndex1),
         ItemPackagingProductTypePage(testIndex1, testPackagingIndex1)).foreach(
         page =>

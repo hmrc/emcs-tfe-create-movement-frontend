@@ -18,8 +18,7 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockSubmitCreateMovementConnector
-import models.response.UnexpectedDownstreamResponseError
-import models.response.SubmitCreateMovementException
+import models.response.{SubmitCreateMovementException, UnexpectedDownstreamResponseError}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,8 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMovementConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new SubmitCreateMovementService(mockSubmitCreateMovementConnector)
 

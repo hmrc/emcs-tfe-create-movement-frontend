@@ -16,11 +16,11 @@
 
 package models.sections.items
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ItemBrandNameModel(hasBrandName: Boolean,
                               brandName: Option[String])
 
 object ItemBrandNameModel {
-  implicit val format = Json.format[ItemBrandNameModel]
+  implicit val format: OFormat[ItemBrandNameModel] = Json.format[ItemBrandNameModel]
 }

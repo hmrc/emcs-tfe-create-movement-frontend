@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
 
-  implicit val ec = ExecutionContext.global
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val formProvider: ConsigneeExemptOrganisationFormProvider = new ConsigneeExemptOrganisationFormProvider()
   lazy val form: Form[ExemptOrganisationDetailsModel] = formProvider()

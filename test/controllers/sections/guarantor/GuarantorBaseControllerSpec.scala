@@ -19,13 +19,14 @@ package controllers.sections.guarantor
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger._
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -42,7 +43,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
   }
 
   class Test(ua: UserAnswers) {
-    implicit val dr = dataRequest(FakeRequest(), ua)
+    implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ua)
   }
 
   "withGuarantorRequiredAnswer" - {

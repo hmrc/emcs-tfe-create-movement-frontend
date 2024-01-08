@@ -21,6 +21,7 @@ import fixtures.UserAddressFixtures
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
+import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -128,7 +129,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
 
-              Seq(
+              Seq[QuestionPage[Any]](
                 DestinationConsigneeDetailsPage,
                 DestinationBusinessNamePage,
                 DestinationAddressPage

@@ -27,8 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new GetMemberStatesService(mockGetMemberStatesConnector)
 

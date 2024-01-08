@@ -17,7 +17,7 @@
 package models.response.referenceData
 
 import models.SelectOptionModel
-import play.api.libs.json.{JsError, JsObject, JsSuccess, Json, Reads}
+import play.api.libs.json.{JsError, JsObject, JsSuccess, Json, OFormat, Reads}
 
 case class ItemPackaging(packagingType: String, description: String) extends SelectOptionModel {
   override val code: String = packagingType
@@ -26,7 +26,7 @@ case class ItemPackaging(packagingType: String, description: String) extends Sel
 
 object ItemPackaging {
 
-  implicit val format = Json.format[ItemPackaging]
+  implicit val format: OFormat[ItemPackaging] = Json.format[ItemPackaging]
 
   implicit val seqReads: Reads[Seq[ItemPackaging]] = {
     case JsObject(underlying) => JsSuccess(underlying.map {

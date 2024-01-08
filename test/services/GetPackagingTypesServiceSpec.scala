@@ -17,8 +17,8 @@
 package services
 
 import base.SpecBase
-import mocks.connectors.{MockGetBulkPackagingTypesConnector, MockGetItemPackagingTypesConnector}
 import fixtures.ItemFixtures
+import mocks.connectors.{MockGetBulkPackagingTypesConnector, MockGetItemPackagingTypesConnector}
 import models.response.{PackagingTypesException, UnexpectedDownstreamResponseError}
 import models.sections.items.ItemBulkPackagingCode
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
@@ -32,8 +32,8 @@ class GetPackagingTypesServiceSpec extends SpecBase
   with MockGetItemPackagingTypesConnector
   with ItemFixtures {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new GetPackagingTypesService(mockGetBulkPackagingTypesConnector, mockGetItemPackagingTypesConnector)
 

@@ -47,8 +47,8 @@ class ItemsAddToListViewSpec extends SpecBase
   lazy val view = app.injector.instanceOf[ItemsAddToListView]
   lazy val form = app.injector.instanceOf[ItemsAddToListFormProvider].apply()
 
-  implicit lazy val ec = app.injector.instanceOf[ExecutionContext]
-  implicit lazy val hc = HeaderCarrier()
+  implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val helper = new ItemsAddToListHelper(
     tag = app.injector.instanceOf[tag],

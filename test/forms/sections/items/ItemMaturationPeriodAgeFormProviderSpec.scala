@@ -23,11 +23,11 @@ import models.GoodsType.Wine
 import models.sections.items.ItemMaturationPeriodAgeModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 
 class ItemMaturationPeriodAgeFormProviderSpec extends BooleanFieldBehaviours with GuiceOneAppPerSuite {
 
-  implicit lazy val messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
+  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(English.lang))
   lazy val form = new ItemMaturationPeriodAgeFormProvider()(Wine)
 
   "when binding 'Yes'" - {

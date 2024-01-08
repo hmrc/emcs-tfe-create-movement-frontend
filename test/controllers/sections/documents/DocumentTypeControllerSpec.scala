@@ -26,6 +26,7 @@ import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
 import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection, ReferenceAvailablePage}
 import play.api.data.Form
+import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -37,7 +38,7 @@ import scala.concurrent.Future
 
 class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService with DocumentTypeFixtures with MockGetDocumentTypesService {
 
-  implicit val msg = messages(FakeRequest())
+  implicit val msg: Messages = messages(FakeRequest())
 
   def documentTypeRoute(idx: Index = 0): String =
     routes.DocumentTypeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url

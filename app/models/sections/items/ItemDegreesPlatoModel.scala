@@ -16,11 +16,11 @@
 
 package models.sections.items
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ItemDegreesPlatoModel(hasDegreesPlato: Boolean,
                                  degreesPlato: Option[BigDecimal])
 
 object ItemDegreesPlatoModel {
-  implicit val format = Json.format[ItemDegreesPlatoModel]
+  implicit val format: OFormat[ItemDegreesPlatoModel] = Json.format[ItemDegreesPlatoModel]
 }

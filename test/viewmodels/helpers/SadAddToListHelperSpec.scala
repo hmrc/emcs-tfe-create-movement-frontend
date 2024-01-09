@@ -20,8 +20,10 @@ import base.SpecBase
 import controllers.sections.sad.{routes => sadRoutes}
 import fixtures.messages.sections.sad.SadAddToListMessages
 import models.UserAnswers
+import models.requests.DataRequest
 import pages.sections.sad._
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -30,9 +32,10 @@ import views.html.components.link
 
 class SadAddToListHelperSpec extends SpecBase {
 
+  implicit lazy val link: link = app.injector.instanceOf[link]
+
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    implicit lazy val link = app.injector.instanceOf[link]
-    implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
     lazy val helper: SadAddToListHelper = app.injector.instanceOf[SadAddToListHelper]
   }

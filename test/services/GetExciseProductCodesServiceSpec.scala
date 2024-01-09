@@ -19,21 +19,21 @@ package services
 import base.SpecBase
 import fixtures.ItemFixtures
 import mocks.connectors.MockGetExciseProductCodesConnector
+import models.requests.DataRequest
 import models.response.{ExciseProductCodesException, UnexpectedDownstreamResponseError}
+import models.sections.info.movementScenario.MovementScenario
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.requests.DataRequest
-import play.api.test.FakeRequest
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
-import models.sections.info.movementScenario.MovementScenario
 
 class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProductCodesConnector with ItemFixtures {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new GetExciseProductCodesService(mockGetExciseProductCodesConnector)
 

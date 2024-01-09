@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import models.UserAnswers
-import models.requests.DataRequest
+import models.requests.{DataRequest, UserRequest}
 import pages.sections.documents.DocumentsCertificatesPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -31,7 +31,7 @@ class CheckAnswersDocumentsHelperSpec extends SpecBase {
   class Setup(answers: UserAnswers = emptyUserAnswers) {
     lazy val checkAnswersDocumentsHelper = new CheckYourAnswersDocumentsHelper()
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
-    implicit val testUserRequest = userRequest(fakeDataRequest)
+    implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
     implicit val msgs: Messages = messages(fakeDataRequest)
   }
 

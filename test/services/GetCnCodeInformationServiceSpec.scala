@@ -29,8 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GetCnCodeInformationServiceSpec extends SpecBase with MockGetCnCodeInformationConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.global
 
   lazy val testService = new GetCnCodeInformationService(mockGetCnCodeInformationConnector)
 

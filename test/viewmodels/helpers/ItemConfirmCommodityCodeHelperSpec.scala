@@ -19,7 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.ItemFixtures
 import models.ReviewMode
-import models.requests.DataRequest
+import models.requests.{DataRequest, UserRequest}
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -38,7 +38,7 @@ class ItemConfirmCommodityCodeHelperSpec extends SpecBase with ItemFixtures {
 
   lazy val confirmCommodityCodeHelper = new ItemConfirmCommodityCodeHelper(itemExciseProductCodeSummary, itemCommodityCodeSummary)
   implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), answers)
-  implicit val testUserRequest = userRequest(fakeDataRequest)
+  implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
   implicit val msgs: Messages = messagesApi.preferred(fakeDataRequest)
 
   "ItemConfirmCommodityCodeHelper" - {

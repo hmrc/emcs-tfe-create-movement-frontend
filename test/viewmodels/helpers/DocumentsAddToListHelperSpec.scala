@@ -20,9 +20,11 @@ import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
+import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
@@ -32,11 +34,12 @@ import views.html.components.{link, span, tag}
 
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
+  implicit lazy val link: link = app.injector.instanceOf[link]
+  implicit lazy val span: span = app.injector.instanceOf[span]
+  implicit lazy val tag: tag = app.injector.instanceOf[tag]
+
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    implicit lazy val link = app.injector.instanceOf[link]
-    implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
-    implicit lazy val span = app.injector.instanceOf[span]
-    implicit lazy val tag = app.injector.instanceOf[tag]
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
     lazy val helper: DocumentsAddToListHelper = app.injector.instanceOf[DocumentsAddToListHelper]
   }

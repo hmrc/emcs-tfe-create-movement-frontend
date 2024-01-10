@@ -52,7 +52,7 @@ class ItemPackagingSealTypeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.label("packaging-seal-type") -> messagesForLanguage.textAreaLabel,
           Selectors.p(1) -> messagesForLanguage.p("Aerosol"),
-          Selectors.p(2) -> messagesForLanguage.p2,
+          Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft

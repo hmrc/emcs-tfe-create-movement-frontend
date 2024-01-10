@@ -960,9 +960,11 @@ goodsType.S.plural = spirits
 goodsType.E.singular = energy
 goodsType.E.plural = energies
 
-itemExciseProductCode.title = Choose the Excise Product Code (EPC) for the item
-itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for the item
+itemExciseProductCode.title = Choose the Excise Product Code (EPC) for item {0}
+itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.checkYourAnswersLabel = Excise product code
+itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
+itemExciseProductCode.label = Excise Product Code
 itemExciseProductCode.error.required = Choose the Excise product code
 itemExciseProductCode.change.hidden = Excise product code
 itemExciseProductCode.select.defaultValue = Choose Excise Product Code

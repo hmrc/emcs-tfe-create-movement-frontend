@@ -17,18 +17,23 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
 object ItemExciseProductCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Choose the Excise Product Code (EPC) for the item"
-    val title = titleHelper(heading)
+    def heading(idx: Index): String = s"Choose the Excise Product Code (EPC) for item ${idx.displayIndex}"
+
+    def title(idx: Index): String = titleHelper(heading(idx))
 
     val cyaLabel = "Excise product code"
     val cyaChangeHidden = "Excise product code"
 
     val defaultSelectOption = "Choose Excise Product Code"
     val beerSelectOption = "B000: Beer"
+
+    val label = "Excise Product Code"
+    val paragraph = "You will be asked to give information and packaging details about this item. You can return to this screen to add more items later."
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -52,13 +52,15 @@ class ItemExciseProductCodeViewSpec extends SpecBase with ViewBehaviours with It
         )
         val form = app.injector.instanceOf[ItemExciseProductCodeFormProvider].apply(Seq(beerExciseProductCode))
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, testIndex1).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.title -> messagesForLanguage.title(testIndex1),
+          Selectors.h1 -> messagesForLanguage.heading(testIndex1),
+          Selectors.p(1) -> messagesForLanguage.paragraph,
+          Selectors.label("excise-product-code") -> messagesForLanguage.label,
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,

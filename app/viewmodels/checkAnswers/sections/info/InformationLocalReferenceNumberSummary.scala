@@ -20,6 +20,7 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -30,13 +31,11 @@ object InformationLocalReferenceNumberSummary {
 
     request.userAnswers.get(LocalReferenceNumberPage()).map { lrn =>
 
-      val value: String = lrn
-
       val deferredType: String = if (deferredMovement) "deferred" else "new"
 
       SummaryListRowViewModel(
         key = s"localReferenceNumber.$deferredType.checkYourAnswersLabel",
-        value = ValueViewModel(value),
+        value = ValueViewModel(HtmlFormat.escape(lrn).toString()),
         actions = Seq(
           ActionItemViewModel(
             "site.change",

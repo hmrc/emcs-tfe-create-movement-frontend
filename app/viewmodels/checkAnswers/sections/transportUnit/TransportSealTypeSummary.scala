@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -45,5 +46,5 @@ object TransportSealTypeSummary {
   }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(TransportSealTypePage(idx)).fold(Text(messages("site.notProvided")))(answer => answer.sealType)
+    request.userAnswers.get(TransportSealTypePage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer.sealType).toString())
 }

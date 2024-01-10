@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.{ItemPackagingQuantityPage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,7 +34,7 @@ object ItemPackagingQuantitySummary {
       value =>
         SummaryListRowViewModel(
           key = "itemPackagingQuantity.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          value = ValueViewModel(HtmlFormat.escape(value).toString()),
           actions = {
             if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
               ActionItemViewModel(

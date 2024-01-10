@@ -20,6 +20,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.{ItemSelectPackagingPage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -31,7 +32,7 @@ object ItemSelectPackagingSummary  {
     answers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)).map { answer =>
       SummaryListRowViewModel(
         key = "itemSelectPackaging.checkYourAnswersLabel",
-        value = ValueViewModel(answer.description),
+        value = ValueViewModel(HtmlFormat.escape(answer.description).toString()),
         actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
           ActionItemViewModel(
             content = "site.change",

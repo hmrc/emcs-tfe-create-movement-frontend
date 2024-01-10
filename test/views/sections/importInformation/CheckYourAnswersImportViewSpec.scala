@@ -62,7 +62,7 @@ class CheckYourAnswersImportViewSpec extends SpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.caption,
+          Selectors.h2(1) -> messagesForLanguage.importInformationSection,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.customsOfficeCode,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))

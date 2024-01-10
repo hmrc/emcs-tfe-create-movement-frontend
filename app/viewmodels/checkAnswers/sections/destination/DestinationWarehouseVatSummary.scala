@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.sections.destination
 
 import models.CheckMode
 import models.requests.DataRequest
@@ -22,6 +22,7 @@ import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.destination.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -38,7 +39,7 @@ object DestinationWarehouseVatSummary {
     val vatPageAnswer: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
 
     val answer = (wasShownVatPage, vatPageAnswer) match {
-      case (_, Some(answer)) => Some(answer)
+      case (_, Some(answer)) => Some(HtmlFormat.escape(answer).toString())
       case (Some(true), _) => Some("site.notProvided")
       case _ => None
     }

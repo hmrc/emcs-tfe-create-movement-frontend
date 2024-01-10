@@ -24,8 +24,7 @@ import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -50,15 +49,7 @@ object TransportArrangerAddressSummary {
         case Some(Consignee) => Text(messages("transportArrangerAddress.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee")))
         case _ => Text(messages("site.notProvided"))
       }
-    } { address =>
-      HtmlContent(
-        HtmlFormat.fill(Seq(
-          Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
-          Html(address.town + "<br>"),
-          Html(address.postcode)
-        ))
-      )
-    }
+    }(_.toCheckYourAnswersFormat)
 
     SummaryListRowViewModel(
       key = "transportArrangerAddress.checkYourAnswers.label",
@@ -72,8 +63,7 @@ object TransportArrangerAddressSummary {
             mode = CheckMode
           ).url,
           id = "changeTransportArrangerAddress"
-        )
-          .withVisuallyHiddenText(messages("transportArrangerAddress.change.hidden"))
+        ).withVisuallyHiddenText(messages("transportArrangerAddress.change.hidden"))
       )
     )
   }

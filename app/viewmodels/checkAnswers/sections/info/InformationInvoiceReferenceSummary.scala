@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -40,7 +41,7 @@ object InformationInvoiceReferenceSummary {
     Some(
       SummaryListRowViewModel(
         key = "invoiceDetails.invoice-reference.checkYourAnswersLabel",
-        value = ValueViewModel(value),
+        value = ValueViewModel(HtmlFormat.escape(value).toString()),
         actions = Seq(
           ActionItemViewModel(
             "site.change",

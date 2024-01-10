@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemBulkPackagingSealTypePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -37,7 +38,7 @@ class ItemBulkPackagingSealTypeSummary @Inject()(link: link) {
         Seq(
           SummaryListRowViewModel(
             key = "itemPackagingSealType.sealType.checkYourAnswersLabel",
-            value = ValueViewModel(value.sealType),
+            value = ValueViewModel(HtmlFormat.escape(value.sealType).toString()),
             actions = Seq(
               ActionItemViewModel(
                 content = "site.change",
@@ -49,7 +50,7 @@ class ItemBulkPackagingSealTypeSummary @Inject()(link: link) {
           value.optSealInformation match {
             case Some(value) => SummaryListRowViewModel(
               key = "itemPackagingSealType.sealInformation.checkYourAnswersLabel",
-              value = ValueViewModel(value),
+              value = ValueViewModel(HtmlFormat.escape(value).toString()),
               actions = Seq(
                 ActionItemViewModel(
                   content = "site.change",

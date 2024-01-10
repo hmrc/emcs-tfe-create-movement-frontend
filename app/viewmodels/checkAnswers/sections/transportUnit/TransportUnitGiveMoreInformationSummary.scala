@@ -21,6 +21,7 @@ import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
 import play.api.i18n.Messages
 import play.api.mvc.Call
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -51,6 +52,8 @@ object TransportUnitGiveMoreInformationSummary {
   }
 
   private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages, link: views.html.components.link): Content =
-    optValue.fold[Content](HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue"))))(value => Text(value))
+    optValue.fold[Content](
+      HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue")))
+    )(value => Text(HtmlFormat.escape(value).toString()))
 
 }

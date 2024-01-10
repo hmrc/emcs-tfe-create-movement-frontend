@@ -77,9 +77,9 @@ object GuarantorErnVatEoriSummary {
       case (Some(ern), _) =>
         "guarantorErn.checkYourAnswersLabel" -> HtmlFormat.escape(ern).toString()
       case (None, Some(ConsigneeExportVat(YesVatNumber, Some(vatNumber), _))) =>
-        "guarantorVat.checkYourAnswersLabel" -> vatNumber
+        "guarantorVat.checkYourAnswersLabel" -> HtmlFormat.escape(vatNumber).toString()
       case (None, Some(ConsigneeExportVat(YesEoriNumber, _, Some(eoriNumber)))) =>
-        "consigneeExportVat.eoriNumber.label" -> eoriNumber
+        "consigneeExportVat.eoriNumber.label" -> HtmlFormat.escape(eoriNumber).toString()
       case (None, Some(ConsigneeExportVat(No, _, _))) =>
         "consigneeExportVat.checkYourAnswers.label.notKnown" -> "consigneeExportVat.checkYourAnswers.value.notKnown"
       case (None, None) =>
@@ -88,7 +88,7 @@ object GuarantorErnVatEoriSummary {
 
   private def getGuarantorVatSummary()(implicit request: DataRequest[_]): (String, String) =
     request.userAnswers.get(GuarantorVatPage) match {
-      case Some(vatNumber) => "guarantorVat.checkYourAnswersLabel" -> vatNumber
+      case Some(vatNumber) => "guarantorVat.checkYourAnswersLabel" -> HtmlFormat.escape(vatNumber).toString()
       case None => "guarantorVat.checkYourAnswersLabel" -> "site.notProvided"
     }
 

@@ -20,6 +20,7 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,7 +34,7 @@ object ConsigneeExemptOrganisationSummary {
 
         SummaryListRowViewModel(
           key = "consigneeExemptOrganisation.checkYourAnswersLabel",
-          value = ValueViewModel(s"${answer.memberState}:${answer.certificateSerialNumber}"),
+          value = ValueViewModel(HtmlFormat.escape(s"${answer.memberState}:${answer.certificateSerialNumber}").toString()),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",

@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,7 +35,7 @@ object TransportArrangerVatSummary {
         request.userAnswers.get(TransportArrangerVatPage).map { answer =>
           SummaryListRowViewModel(
             key = "transportArrangerVat.checkYourAnswers.label",
-            value = ValueViewModel(answer),
+            value = ValueViewModel(HtmlFormat.escape(answer).toString()),
             actions = Seq(
               ActionItemViewModel(
                 content = "site.change",

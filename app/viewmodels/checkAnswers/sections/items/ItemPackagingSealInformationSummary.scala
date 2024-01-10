@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.{ItemPackagingSealTypePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -35,7 +36,7 @@ class ItemPackagingSealInformationSummary @Inject()(link: views.html.components.
       case Some(info) =>
         SummaryListRowViewModel(
           key = "itemPackagingSealType.sealInformation.checkYourAnswersLabel",
-          value = ValueViewModel(info),
+          value = ValueViewModel(HtmlFormat.escape(info).toString()),
           actions = {
             if (!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
               ActionItemViewModel(

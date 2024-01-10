@@ -26,7 +26,6 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.DestinationWarehouseVatSummary
 import viewmodels.govuk.all.FluentSummaryList
 
 class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with UserAddressFixtures {

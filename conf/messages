@@ -512,6 +512,7 @@ firstTransporterVat.checkYourAnswersLabel = VAT registration number
 firstTransporterVat.change.hidden = first transporters VAT registration number
 
 firstTransporterCheckAnswers.heading = Check your answers
+firstTransporterCheckAnswers.title = Check your answers
 firstTransporterName.checkYourAnswers.label = Business name
 firstTransporterVat.checkYourAnswers.label = VAT registration number
 
@@ -839,7 +840,6 @@ importCustomsOfficeCode.checkYourAnswers.label = Customs office code
 
 checkYourAnswersImport.heading = Check your answers
 checkYourAnswersImport.title = Check your answers
-checkYourAnswersImport.hidden = This section is:
 
 destinationCheckAnswers.title = Check your answers
 destinationCheckAnswers.heading = Check your answers

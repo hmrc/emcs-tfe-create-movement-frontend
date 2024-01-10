@@ -20,6 +20,7 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -32,7 +33,7 @@ object ExportCustomsOfficeSummary {
 
         SummaryListRowViewModel(
           key = "exportCustomsOffice.checkYourAnswers.label",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",

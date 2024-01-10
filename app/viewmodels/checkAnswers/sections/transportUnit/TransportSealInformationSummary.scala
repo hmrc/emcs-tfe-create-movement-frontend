@@ -22,6 +22,7 @@ import models.sections.transportUnit.TransportSealTypeModel
 import models.{CheckMode, Index}
 import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -34,7 +35,7 @@ object TransportSealInformationSummary {
       request.userAnswers.get(TransportSealTypePage(idx)) match {
         case Some(TransportSealTypeModel(_, Some(info))) => SummaryListRowViewModel(
           key = "transportSealType.moreInfo.checkYourAnswersLabel",
-          value = ValueViewModel(info),
+          value = ValueViewModel(HtmlFormat.escape(info).toString()),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

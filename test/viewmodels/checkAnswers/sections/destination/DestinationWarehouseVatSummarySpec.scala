@@ -28,7 +28,6 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import utils.JsonOptionFormatter
-import viewmodels.checkAnswers.DestinationWarehouseVatSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

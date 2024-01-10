@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import pages.QuestionPage
 import pages.sections.firstTransporter.FirstTransporterNamePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -34,7 +35,7 @@ object FirstTransporterNameSummary {
 
     SummaryListRowViewModel(
       key = "firstTransporterName.checkYourAnswers.label",
-      value = ValueViewModel(Text(request.userAnswers.get(namePage).getOrElse(messages("site.notProvided")))),
+      value = ValueViewModel(Text(request.userAnswers.get(namePage).map(HtmlFormat.escape(_).toString).getOrElse(messages("site.notProvided")))),
       actions = if (!showActionLinks) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",

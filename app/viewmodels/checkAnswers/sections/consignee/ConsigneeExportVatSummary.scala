@@ -22,6 +22,7 @@ import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
 import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -56,7 +57,7 @@ object ConsigneeExportVatSummary {
   private def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
       key = s"consigneeExportVat.checkYourAnswers.label.$key",
-      value = ValueViewModel(value),
+      value = ValueViewModel(HtmlFormat.escape(value).toString()),
       actions = if (!showActionLinks) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",

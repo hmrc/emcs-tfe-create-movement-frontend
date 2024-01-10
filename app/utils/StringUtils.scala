@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.importInformation
+package utils
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import org.jsoup.Jsoup
 
-object CheckYourAnswersImportMessages {
-
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers"
-    val title: String = titleHelper(heading)
-    val customsOfficeCode: String = "Customs office code"
+object StringUtils {
+  def removeHtmlEscapedCharactersAndAddSmartQuotes(input: String): String = {
+    Jsoup.parse(input)
+      .text()
+      // single quotes followed by a space, or the end of the String, or following a letter/number
+      .replaceAll("(')(?=\\s|$)|(?<=[A-Za-z0-9])(')", "’")
+      // leftover '
+      .replaceAll("'", "‘")
   }
-
-  object English extends ViewMessages with BaseEnglish
 }

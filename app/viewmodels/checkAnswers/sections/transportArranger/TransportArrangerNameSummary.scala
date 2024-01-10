@@ -23,6 +23,7 @@ import models.sections.transportArranger.TransportArranger.{Consignee, Consignor
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -57,13 +58,13 @@ object TransportArrangerNameSummary {
   private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])(implicit request: DataRequest[_], messages: Messages): String = {
     transportArranger match {
       case Some(Consignor) => request.traderKnownFacts.traderName
-      case Some(Consignee) => request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(
+      case Some(Consignee) => request.userAnswers.get(ConsigneeBusinessNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
       )
-      case Some(arranger) => request.userAnswers.get(TransportArrangerNamePage).getOrElse(
+      case Some(arranger) => request.userAnswers.get(TransportArrangerNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
       )
-      case _ => request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided"))
+      case _ => request.userAnswers.get(TransportArrangerNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(messages("site.notProvided"))
     }
   }
 }

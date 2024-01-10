@@ -18,6 +18,7 @@ package viewmodels.govuk
 
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import utils.StringUtils
 
 object summarylist extends SummaryListFluency
 
@@ -113,8 +114,13 @@ trait SummaryListFluency {
 
   object ValueViewModel {
 
-    def apply(content: Content): Value =
-      Value(content = content)
+    def apply(content: Content): Value = {
+      val sanitisedContent = content match {
+        case Text(value) => Text(StringUtils.removeHtmlEscapedCharactersAndAddSmartQuotes(value))
+        case value => value
+      }
+      Value(content = sanitisedContent)
+    }
   }
 
   implicit class FluentValue(value: Value) {

@@ -93,7 +93,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, action, sampleEPCsSelectOptions)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form, action, sampleEPCsSelectOptions, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -111,7 +111,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "when valid data is submitted" - {
@@ -191,7 +191,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, action, sampleEPCsSelectOptions)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(boundForm, action, sampleEPCsSelectOptions, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

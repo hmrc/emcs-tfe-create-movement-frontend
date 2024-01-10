@@ -28,19 +28,20 @@
     govukSelect: GovukSelect,
     h1: components.h1,
     h2: components.h2,
+    p: components.p,
     continueOrExit: components.continueOrExit,
     autocompleteCss: HmrcAccessibleAutocompleteCss,
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], indexOfDocument: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form, messages("itemExciseProductCode.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title", indexOfDocument.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 
@@ -48,16 +49,18 @@
           @govukErrorSummary(ErrorSummaryViewModel(form))
       }
 
-      @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = indexOfDocument.displayIndex)
+
+      @p(){@messages("itemExciseProductCode.paragraph")}
 
       @govukSelect(
         Select(
           id = "excise-product-code",
           name = "excise-product-code",
           label = Label(
-            classes = "govuk-label--l",
-            isPageHeading = true,
-            content = Text(messages("itemExciseProductCode.heading"))
+            classes = "govuk-label--m",
+            isPageHeading = false,
+            content = Text(messages("itemExciseProductCode.label"))
           ),
           items = selectOptions,
           errorMessage = form.errors("excise-product-code") match {

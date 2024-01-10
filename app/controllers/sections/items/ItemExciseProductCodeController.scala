@@ -105,7 +105,8 @@ class ItemExciseProductCodeController @Inject()(
     Future.successful(status(view(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
-      selectOptions = selectItems
+      selectOptions = selectItems,
+      indexOfDocument = idx
     )))
   }
 }

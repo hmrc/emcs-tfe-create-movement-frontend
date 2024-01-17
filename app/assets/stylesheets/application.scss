@@ -17,5 +17,14 @@ $hmrc-assets-path: "/emcs/create-movement/assets/lib/hmrc-frontend/hmrc/assets/"
   float: none !important;
 }
 
+@media print {
+  header, nav, footer {
+    display: none;
+  }
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}
+
 @import "accessible-autocomplete";
 @import "active-trader-info";

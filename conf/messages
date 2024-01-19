@@ -522,6 +522,11 @@ consigneeExcise.temporaryConsignee.error.noInput = Enter the authorisation refer
 consigneeExcise.temporaryConsignee.error.length = The authorisation reference must be 13 characters
 consigneeExcise.temporaryConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
 consigneeExcise.temporaryConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
+
+consigneeExcise.temporaryCertifiedConsignee.heading = What is the Temporary Certified Consignee’s authorisation reference?
+consigneeExcise.temporaryCertifiedConsignee.title = What is the Temporary Certified Consignee’s authorisation reference?
+consigneeExcise.temporaryCertifiedConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Certified Consignee. For example, FR12345678900. This is sometimes referred to as a Temporary Registration Code.
+
 consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.

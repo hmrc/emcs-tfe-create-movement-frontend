@@ -16,11 +16,11 @@
 
 package pages.sections.consignee
 
-import models.sections.consignee.ConsigneeExportVat
+import models.sections.consignee.ConsigneeExportInformation
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object ConsigneeExportVatPage extends QuestionPage[ConsigneeExportVat] {
+case object ConsigneeExportInformationPage extends QuestionPage[ConsigneeExportInformation] {
   override val toString: String = "exportVatOrEori"
   override val path: JsPath = ConsigneeSection.path \ toString
 }

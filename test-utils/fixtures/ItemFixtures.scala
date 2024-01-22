@@ -376,7 +376,7 @@ trait ItemFixtures {
     // consignee
     .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
-    .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
     .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
     // consignor
     .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))

@@ -5,10 +5,10 @@ POST        /trader/:ern/draft/:draftId/consignee/export-uk-eu                  
 GET         /trader/:ern/draft/:draftId/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/consignee/export-vat                           controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/consignee/export-vat                           controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/consignee/export-vat/change                    controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/consignee/export-vat/change                    controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET        /trader/:ern/draft/:draftId/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/consignee/export-information/change               controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/consignee/export-information/change               controllers.sections.consignee.ConsigneeExportInformationController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
 GET        /trader/:ern/draft/:draftId/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)

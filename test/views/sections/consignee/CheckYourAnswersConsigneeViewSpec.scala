@@ -155,7 +155,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportVatPage, testVat)
+            .set(ConsigneeExportInformationPage, testVat)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
@@ -167,7 +167,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testDraftId,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportVatSummary.row(true),
+            ConsigneeExportInformationSummary.row(true),
             ConsigneeAddressSummary.row(true)
           ).flatten)
         ).toString())
@@ -189,7 +189,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change Vat Number" in {
           doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
         "have a link to change Address" in {
@@ -206,7 +206,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportVatPage, testEori)
+            .set(ConsigneeExportInformationPage, testEori)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
@@ -218,7 +218,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testDraftId,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportVatSummary.row(true),
+            ConsigneeExportInformationSummary.row(true),
             ConsigneeAddressSummary.row(true)
           ).flatten)
         ).toString())
@@ -240,7 +240,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change Eori Number" in {
           doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
         "have a link to change Address" in {

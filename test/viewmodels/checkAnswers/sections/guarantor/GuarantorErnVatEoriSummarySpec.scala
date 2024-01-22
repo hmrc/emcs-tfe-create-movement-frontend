@@ -21,11 +21,11 @@ import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages
 import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages.ViewMessages
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType._
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType._
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportPage, ConsigneeExportVatPage}
+import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportPage, ConsigneeExportInformationPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -85,7 +85,7 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber,Some("VAT123"), None))
+                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber,Some("VAT123"), None))
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
 
@@ -100,7 +100,7 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI123456789")))
+                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("EORI123456789")))
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
 
@@ -115,7 +115,7 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
+                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
 

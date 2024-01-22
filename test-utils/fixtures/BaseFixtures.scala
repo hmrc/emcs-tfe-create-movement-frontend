@@ -19,7 +19,7 @@ package fixtures
 import models._
 import models.response.SubmitCreateMovementResponse
 import models.response.referenceData.ItemPackaging
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.{DestinationType, MovementType, OriginType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
@@ -62,8 +62,8 @@ trait BaseFixtures {
   val testPackageBag = ItemPackaging("BG", "Bag")
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
-  val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))
-  val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
+  val testEori = ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some("1234"))
+  val testVat = ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("1234"), None)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,

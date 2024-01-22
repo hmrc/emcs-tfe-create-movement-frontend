@@ -18,7 +18,6 @@ package models.submitCreateMovement
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
@@ -119,7 +118,7 @@ class TraderModelSpec extends SpecBase {
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExcisePage, "consignee ern")
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+                .set(ConsigneeExportEoriPage, "consignee eori")
                 .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
             )
 
@@ -133,7 +132,7 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("vat no"), None))
+                .set(ConsigneeExportVatPage, "vat no")
                 .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
             )
 
@@ -160,7 +159,7 @@ class TraderModelSpec extends SpecBase {
           emptyUserAnswers
             .set(DestinationTypePage, UnknownDestination)
             .set(ConsigneeExcisePage, "consignee ern")
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+            .set(ConsigneeExportEoriPage, "consignee eori")
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
@@ -172,7 +171,7 @@ class TraderModelSpec extends SpecBase {
       implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
         emptyUserAnswers
           .set(ConsigneeExcisePage, "consignee ern")
-          .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+          .set(ConsigneeExportEoriPage, "consignee eori")
           .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
       )
 
@@ -257,7 +256,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
                   .set(ConsigneeBusinessNamePage, "consignee name")
                   .set(ConsigneeExcisePage, "consignee ern")
-                  .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+                  .set(ConsigneeExportEoriPage, "consignee eori")
                   .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
               )
 
@@ -392,7 +391,7 @@ class TraderModelSpec extends SpecBase {
             .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
             .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+            .set(ConsigneeExportEoriPage, "consignee eori")
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 

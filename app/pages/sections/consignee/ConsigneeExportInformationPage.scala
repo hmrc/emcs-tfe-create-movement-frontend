@@ -20,7 +20,7 @@ import models.sections.consignee.ConsigneeExportInformation
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object ConsigneeExportInformationPage extends QuestionPage[ConsigneeExportInformation] {
-  override val toString: String = "exportVatOrEori"
+case object ConsigneeExportInformationPage extends QuestionPage[Set[ConsigneeExportInformation]] {
+  override val toString: String = "exportInformation"
   override val path: JsPath = ConsigneeSection.path \ toString
 }

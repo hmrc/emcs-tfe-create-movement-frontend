@@ -52,8 +52,8 @@ class ConsigneeExportEoriViewSpec extends SpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.hint -> messagesForLanguage.hint,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

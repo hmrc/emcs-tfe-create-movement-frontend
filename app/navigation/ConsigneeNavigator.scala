@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.routes
-import models.sections.consignee.ConsigneeExportInformationType.YesVatNumber
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.consignee._
@@ -46,20 +46,25 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
       }
 
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      userAnswers.get(ConsigneeExportInformationPage) match {
+        case Some(answers) if answers.contains(VatNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case Some(answers) if answers.contains(EoriNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case Some(answers) if answers.contains(NoInformation) =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ =>
+          logger.warn("[ConsigneeNavigator][normalRoutes] - Unexpected answer for ConsigneeExportInformationPage")
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+
 
     case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
-      (userAnswers.get(ConsigneeExportInformationPage).map(_.exportType), userAnswers.get(ConsigneeExportVatPage)) match {
-        //TODO: implement when ETFE-3007 CAM-NEE13 is done. When both VAT and EORI selected
-        //TODO: go to CAM-NEE13: consignee-export-EORI
-//        case (Some(Both), Some(_)) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-        //Only VAT selected
-        //TODO: probably needs to change once ETFE-3007 CAM-NEE13 is done
-        case (Some(YesVatNumber), Some(_)) => controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case (optExportInformation, optConsigneeExportVat) => {
-          logger.warn(s"[ConsigneeNavigator][normalRoutes] - Invalid combination, consignee export information = $optExportInformation and consignee export VAT defined: ${optConsigneeExportVat.isDefined}")
-          controllers.routes.JourneyRecoveryController.onPageLoad()
-        }
+      userAnswers.get(ConsigneeExportInformationPage) match {
+        case Some(answers) if answers.contains(EoriNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 
     case ConsigneeExportEoriPage => (userAnswers: UserAnswers) =>

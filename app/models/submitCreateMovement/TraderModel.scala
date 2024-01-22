@@ -45,16 +45,16 @@ object TraderModel extends ModelConstructorHelpers {
 
       Some(TraderModel(
         // Consignee section has multiple entry points.
-        // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportInformationPage.
-        traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.vatNumber)) match {
+        // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
+        traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportVatPage)) match {
           case (Some(ern), _) => Some(ern)
-          case (_, Some(ern)) => Some(ern)
+          case (_, Some(vatNumber)) => Some(vatNumber)
           case _ => None
         },
         traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
         address = Some(AddressModel.fromUserAddress(consigneeAddress)),
         vatNumber = None,
-        eoriNumber = request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.eoriNumber)
+        eoriNumber = request.userAnswers.get(ConsigneeExportEoriPage)
       ))
     } else {
       None

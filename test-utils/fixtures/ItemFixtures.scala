@@ -18,7 +18,7 @@ package fixtures
 
 import models.UnitOfMeasure.{Kilograms, Litres20}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging, WineOperations}
-import models.sections.consignee._
+import models.sections.consignee.ConsigneeExportInformation.NoInformation
 import models.sections.documents.DocumentType
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info._
@@ -376,7 +376,7 @@ trait ItemFixtures {
     // consignee
     .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
-    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+    .set(ConsigneeExportInformationPage, Set(NoInformation))
     .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
     // consignor
     .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
@@ -467,7 +467,7 @@ trait ItemFixtures {
       traderName = Some("consignee name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
       vatNumber = None,
-      eoriNumber = Some("consignee eori")
+      eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("XIRC123"),
@@ -593,7 +593,7 @@ trait ItemFixtures {
       traderName = Some("consignee name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
       vatNumber = None,
-      eoriNumber = Some("consignee eori")
+      eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("XIWK123"),
@@ -725,7 +725,7 @@ trait ItemFixtures {
       traderName = Some("consignee name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
       vatNumber = None,
-      eoriNumber = Some("consignee eori")
+      eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("GBRC123"),
@@ -851,7 +851,7 @@ trait ItemFixtures {
       traderName = Some("consignee name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
       vatNumber = None,
-      eoriNumber = Some("consignee eori")
+      eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("GBWK123"),

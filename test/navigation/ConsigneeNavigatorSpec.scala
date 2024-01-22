@@ -18,8 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType.{No, YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
@@ -53,62 +52,6 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
           navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
             controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
-      }
-
-      "for the ConsigneeExportVatPage" - {
-
-        "must go to CAM-NEE13: consignee-export-EORI" - {
-
-          //TODO replace ignore to in when ETFE-3153 has been completed
-          "when the user has selected VAT and EORI on CAM-NEE11: consignee-export-information" ignore {
-
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
-              emptyUserAnswers
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), Some("eorinumber")))
-                .set(ConsigneeExportVatPage, "GB123456789")
-            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
-          }
-        }
-
-        "must go to CAM-NEE03: consignee-business-name" - {
-
-          "when the user has selected only VAT on CAM-NEE11: consignee-export-information" in {
-
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
-              emptyUserAnswers
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), None))
-                .set(ConsigneeExportVatPage, "GB123456789")
-            ) mustBe controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-          }
-        }
-
-        "must go to the journey recovery" - {
-
-          "when the user neither both options or VAT option have been selected" in {
-
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
-              emptyUserAnswers
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
-                .set(ConsigneeExportVatPage, "GB123456789")
-            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
-          }
-
-          "when no answer exists for ConsigneeExportVatPage" in {
-
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
-              emptyUserAnswers
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, None, None))
-            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
-          }
-
-          "when no answer exists for ConsigneeExportInformationPage" in {
-
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
-              emptyUserAnswers
-                .set(ConsigneeExportVatPage, "GB123456789")
-            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
-          }
         }
       }
 
@@ -167,45 +110,73 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       "for the ConsigneeExportInformationPage" - {
 
+        "must go to CAM-NEE12 export-vat page" - {
+          "when VAT has been selected" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, Set(VatNumber))
+
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "must go to CAM-NEE13 export-eori page" - {
+          "when EORI has been selected" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, Set(EoriNumber))
+
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
         "must go to CAM-NEE03 business name page" - {
-
-          "when YES - VAT Number is answered'" in {
+          "when neither VAT or EORI are selected" in {
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), None))
-
-            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-          }
-
-          "when YES - EORI Number is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("eorinumber")))
-
-            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-          }
-
-
-          "when NO is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
+              .set(ConsigneeExportInformationPage, Set(NoInformation))
 
             navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
+
+      }
+
+      "for the ConsigneeExportVatPage" - {
+
+        "must go to CAM-NEE13: consignee-export-EORI" - {
+          "when the user has selected VAT and EORI on CAM-NEE11: consignee-export-information" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "must go to CAM-NEE03: consignee-business-name" - {
+          "when the user has selected only VAT on CAM-NEE11: consignee-export-information" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, Set(VatNumber))
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
       }
 
       "for the ConsigneeExportEoriPage" - {
-
-        "must go to CAM-NEE03 business name page" in {
+        "must go to CAM-NEE03 consignee-business-name page" in {
           val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportEoriPage, "vatnumber")
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportEoriPage, testEori)
 
           navigator.nextPage(ConsigneeExportEoriPage, NormalMode, userAnswers) mustBe
             controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
         }
-
       }
 
       "for the CheckAnswersConsignee page" - {

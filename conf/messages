@@ -429,7 +429,6 @@ consigneeExportInformation.checkYourAnswers.label.yesEoriNumber = EORI Number
 consigneeExportInformation.checkYourAnswers.label.yesVatNumber = VAT Number
 consigneeExportInformation.checkYourAnswers.label.notKnown = VAT or EORI number
 consigneeExportInformation.checkYourAnswers.value.notKnown = Number not known
-consigneeExportInformation.error.required = Select consigneeExportVat
 consigneeExportInformation.change.hidden = VAT or EORI number of the person representing the consignor
 consigneeExportInformation.vatNumber.label = VAT number
 consigneeExportInformation.eoriNumber.label = EORI number

@@ -39,7 +39,7 @@ class ConsigneeExportInformationControllerSpec extends SpecBase with MockUserAns
   lazy val form: Form[ConsigneeExportInformation] = formProvider()
   lazy val view: ConsigneeExportInformationView = app.injector.instanceOf[ConsigneeExportInformationView]
 
-  lazy val consigneeExportVatRoute: String =
+  lazy val consigneeExportInformationRoute: String =
     controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
   lazy val consigneeExportVatRouteSubmit: String =
     controllers.sections.consignee.routes.ConsigneeExportInformationController.onSubmit(testErn, testDraftId, NormalMode).url

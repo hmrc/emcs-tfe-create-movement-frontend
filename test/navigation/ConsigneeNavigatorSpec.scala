@@ -56,6 +56,62 @@ class ConsigneeNavigatorSpec extends SpecBase {
         }
       }
 
+      "for the ConsigneeExportVatPage" - {
+
+        "must go to CAM-NEE13: consignee-export-EORI" - {
+
+          //TODO replace ignore to in when ETFE-3153 has been completed
+          "when the user has selected VAT and EORI on CAM-NEE11: consignee-export-information" ignore {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), Some("eorinumber")))
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "must go to CAM-NEE03: consignee-business-name" - {
+
+          "when the user has selected only VAT on CAM-NEE11: consignee-export-information" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), None))
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "must go to the journey recovery" - {
+
+          "when the user neither both options or VAT option have been selected" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
+          }
+
+          "when no answer exists for ConsigneeExportVatPage" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, None, None))
+            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
+          }
+
+          "when no answer exists for ConsigneeExportInformationPage" in {
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode,
+              emptyUserAnswers
+                .set(ConsigneeExportVatPage, "GB123456789")
+            ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
+          }
+        }
+      }
+
       "for the ConsigneeBusinessNamePage" - {
 
         "must go to CAM-NEE07" in {

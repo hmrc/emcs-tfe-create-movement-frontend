@@ -33,6 +33,8 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         ConsigneeExciseSummary.row(showActionLinks = true),
         ConsigneeExportInformationSummary.row(showActionLinks = true),
+        //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
+        //ConsigneeExportVatSummary.row(showActionLinks = true),
         ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
         ConsigneeAddressSummary.row(showActionLinks = true)
       ).flatten

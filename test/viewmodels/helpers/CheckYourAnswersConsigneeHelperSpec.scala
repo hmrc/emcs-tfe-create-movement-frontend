@@ -19,25 +19,24 @@ package viewmodels.helpers
 import base.SpecBase
 import models.UserAnswers
 import models.requests.{DataRequest, UserRequest}
+import pages.sections.consignee._
 import play.api.i18n.Messages
-import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
 
-class CheckAnswersConsigneeHelperSpec extends SpecBase {
+class CheckYourAnswersConsigneeHelperSpec extends SpecBase {
 
-  class Setup(ern: String = testErn, data: JsObject = Json.obj()) {
+  class Setup(ern: String = testErn, userAnswers: UserAnswers = emptyUserAnswers) {
     lazy val checkAnswersConsigneeHelper = new CheckYourAnswersConsigneeHelper()
-    val userAnswers: UserAnswers = UserAnswers(ern, testDraftId, data)
-    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers.copy(ern = ern))
     implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
     implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
   }
 
-  "CheckAnswersConsigneeHelper" - {
+  "CheckYourAnswersConsigneeHelper" - {
 
     ".buildSummaryRows should return the correct rows when" - {
       val testGbWarehouseErn = "GB00123456789"
@@ -45,13 +44,41 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       val testGbrcWarehouseErn = "GBRC123456789"
       val testXircWarehouseErn = "XIRC123456789"
 
-      val testWarehouseDataJson = testConsigneeBusinessNameJson ++ testConsigneeExciseJson(testGbWarehouseErn) ++ testConsigneeAddressJson
-      val testExemptDataJson = testConsigneeBusinessNameJson ++ testConsigneeExemptOrganisationJson ++ testConsigneeAddressJson
-      val testVatDataJson = testConsigneeBusinessNameJson ++ testConsigneeVatJson ++ testConsigneeAddressJson
-      val testEoriDataJson = testConsigneeBusinessNameJson ++ testConsigneeEoriJson ++ testConsigneeAddressJson
-      val testNoVatOrEoriDataJson = testConsigneeBusinessNameJson ++ testConsigneeAddressJson
+      val warehouseUserAnswers = {
+        emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          .set(ConsigneeExcisePage, testGbWarehouseErn)
+          .set(ConsigneeAddressPage, testUserAddress)
+      }
+      val exemptDataUserAnswers = {
+        emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
+          .set(ConsigneeAddressPage, testUserAddress)
+      }
+      val vatNumberUserAnswers = {
+        emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          .set(ConsigneeExportInformationPage, testVat)
+          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
+          //.set(ConsigneeExportVatPage, "1234")
+          .set(ConsigneeAddressPage, testUserAddress)
+      }
+      val eoriUserAnswers = {
+        emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          .set(ConsigneeExportInformationPage, testEori)
+          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
+          //.set(ConsigneeExportEoriPage, "1234")
+          .set(ConsigneeAddressPage, testUserAddress)
+      }
+      val noVatNumberOrEoriUserAnswers = {
+        emptyUserAnswers
+          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          .set(ConsigneeAddressPage, testUserAddress)
+      }
 
-      "the user type is GreatBritainWarehouse" in new Setup(testGbWarehouseErn, testWarehouseDataJson) {
+      "the user type is GreatBritainWarehouse" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -62,7 +89,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
       }
 
-      "the user type is NorthernIrelandWarehouse" in new Setup(testNiWarehouseErn, testWarehouseDataJson) {
+      "the user type is NorthernIrelandWarehouse" in new Setup(testNiWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -73,7 +100,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
       }
 
-      "the destination type is DirectDelivery" in new Setup(testGbWarehouseErn, testWarehouseDataJson) {
+      "the destination type is DirectDelivery" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -85,7 +112,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       }
 
       "the user type is GreatBritainRegisteredConsignor & destination type is TemporaryRegisteredConsignee" in
-        new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
+        new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
             ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -97,7 +124,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         }
 
       "the user type is GreatBritainRegisteredConsignor & destination type is RegisteredConsignee" in
-        new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
+        new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
             ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -109,7 +136,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         }
 
       "the user type is GreatBritainRegisteredConsignor & destination type is Export with dec in Uk" in
-        new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
+        new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
             ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -121,7 +148,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         }
 
       "the user type is NorthernIrelandRegisteredConsignor & destination type is RegisteredConsignee" in
-        new Setup(testXircWarehouseErn, testWarehouseDataJson) {
+        new Setup(testXircWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
             ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -133,7 +160,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         }
 
       "the user type is NorthernIrelandRegisteredConsignor & destination type is Export with dec in Eu" in
-        new Setup(testXircWarehouseErn, testWarehouseDataJson) {
+        new Setup(testXircWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
             ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -144,7 +171,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
         }
 
-      "the destination type is ExemptedOrganisations" in new Setup(testGbWarehouseErn, testExemptDataJson) {
+      "the destination type is ExemptedOrganisations" in new Setup(testGbWarehouseErn, exemptDataUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -155,7 +182,20 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
       }
 
-      "the user has selected yes VAT number" in new Setup(testGbWarehouseErn, testVatDataJson) {
+      "the user has selected yes VAT number" in new Setup(testGbWarehouseErn, vatNumberUserAnswers) {
+
+        val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
+          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
+          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
+          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
+          //ConsigneeExportVatSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
+          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+        ).flatten
+
+        checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
+      }
+
+      "the user has selected Yes Eori number" in new Setup(testGbWarehouseErn, eoriUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
@@ -166,18 +206,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
       }
 
-      "the user has selected Yes Eori number" in new Setup(testGbWarehouseErn, testEoriDataJson) {
-
-        val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
-        ).flatten
-
-        checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
-      }
-
-      "the user has selected no VAT or Eori number" in new Setup(testGbWarehouseErn, testNoVatOrEoriDataJson) {
+      "the user has selected no VAT or Eori number" in new Setup(testGbWarehouseErn, noVatNumberOrEoriUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),

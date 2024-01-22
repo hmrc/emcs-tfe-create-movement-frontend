@@ -398,6 +398,15 @@ journeyTimeHours.error.wholeNumber = Hours must only contain numbers
 journeyTimeHours.error.outOfRange = Hours must be between {0} and {1}
 journeyTimeHours.change.hidden = how many hours the journey will take
 
+consigneeExportVat.title = Enter the VAT registration number of the person representing the consignor at the office of export
+consigneeExportVat.heading = Enter the VAT registration number of the person representing the consignor at the office of export
+consigneeExportVat.hint = This is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789.
+consigneeExportVat.checkYourAnswersLabel = VAT registration number
+consigneeExportVat.error.required = Enter the VAT registration number
+consigneeExportVat.error.length = VAT registration number must be 16 characters or less
+consigneeExportVat.error.invalid = VAT registration number must only contain letters and numbers
+consigneeExportVat.change.hidden = VAT registration number of the person representing the consignor at the office of export
+
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?
 consigneeBusinessName.checkYourAnswersLabel = Trader name
@@ -405,13 +414,6 @@ consigneeBusinessName.error.required = Enter the consignee business name
 consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
 consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
 consigneeBusinessName.change.hidden = consignee trader name
-
-consigneeAddress.title = StringPageH1
-consigneeAddress.heading = StringPageH1
-consigneeAddress.checkYourAnswersLabel = consigneeAddress
-consigneeAddress.error.required = Enter a value
-consigneeAddress.error.length = Value must be N characters or less must be 100 characters or less
-consigneeAddress.change.hidden = ConsigneeAddress
 
 consigneeExport.title = Are the goods being exported outside of the UK and EU?
 consigneeExport.heading = Are the goods being exported outside of the UK and EU?

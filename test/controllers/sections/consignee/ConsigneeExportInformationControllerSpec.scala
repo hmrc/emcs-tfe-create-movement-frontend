@@ -41,7 +41,7 @@ class ConsigneeExportInformationControllerSpec extends SpecBase with MockUserAns
 
   lazy val consigneeExportInformationRoute: String =
     controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
-  lazy val consigneeExportVatRouteSubmit: String =
+  lazy val consigneeExportInformationRouteSubmit: String =
     controllers.sections.consignee.routes.ConsigneeExportInformationController.onSubmit(testErn, testDraftId, NormalMode).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {

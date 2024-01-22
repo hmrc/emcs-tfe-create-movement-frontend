@@ -48,7 +48,7 @@ object ConsigneeExportInformationSummary {
             draftId = request.userAnswers.draftId,
             mode = CheckMode
           ).url,
-          id = "changeConsigneeExportVat"
+          id = "changeConsigneeExportInformation"
         )
           .withVisuallyHiddenText(messages("consigneeExportInformation.change.hidden"))
       )

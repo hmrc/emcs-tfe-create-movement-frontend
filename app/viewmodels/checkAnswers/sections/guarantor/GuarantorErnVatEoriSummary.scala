@@ -18,10 +18,10 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType._
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType._
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportVatPage}
+import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportInformationPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -72,16 +72,16 @@ object GuarantorErnVatEoriSummary {
   private def getConsigneeSummary()(implicit request: DataRequest[_], messages: Messages): (String, String) =
     (
       request.userAnswers.get(ConsigneeExcisePage),
-      request.userAnswers.get(ConsigneeExportVatPage)
+      request.userAnswers.get(ConsigneeExportInformationPage)
     ) match {
       case (Some(ern), _) =>
         "guarantorErn.checkYourAnswersLabel" -> HtmlFormat.escape(ern).toString()
-      case (None, Some(ConsigneeExportVat(YesVatNumber, Some(vatNumber), _))) =>
+      case (None, Some(ConsigneeExportInformation(YesVatNumber, Some(vatNumber), _))) =>
         "guarantorVat.checkYourAnswersLabel" -> HtmlFormat.escape(vatNumber).toString()
-      case (None, Some(ConsigneeExportVat(YesEoriNumber, _, Some(eoriNumber)))) =>
-        "consigneeExportVat.eoriNumber.label" -> HtmlFormat.escape(eoriNumber).toString()
-      case (None, Some(ConsigneeExportVat(No, _, _))) =>
-        "consigneeExportVat.checkYourAnswers.label.notKnown" -> "consigneeExportVat.checkYourAnswers.value.notKnown"
+      case (None, Some(ConsigneeExportInformation(YesEoriNumber, _, Some(eoriNumber)))) =>
+        "consigneeExportInformation.eoriNumber.label" -> HtmlFormat.escape(eoriNumber).toString()
+      case (None, Some(ConsigneeExportInformation(No, _, _))) =>
+        "consigneeExportInformation.checkYourAnswers.label.notKnown" -> "consigneeExportInformation.checkYourAnswers.value.notKnown"
       case (None, None) =>
         "guarantorErn.checkYourAnswersLabel" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
     }

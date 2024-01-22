@@ -17,12 +17,12 @@
 package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
+import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
 import models.CheckMode
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType.YesEoriNumber
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.consignee.ConsigneeExportInformationPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -30,10 +30,10 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
-  "ConsigneeExportVatSummary" - {
+class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
+  "ConsigneeExportInformationSummary" - {
 
-    Seq(ConsigneeExportVatMessages.English).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -55,9 +55,9 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
             "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber,None, testEori.eoriNumber)))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber,None, testEori.eoriNumber)))
 
-              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportInformationSummary.row(showActionLinks = true) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaEoriLabel,
@@ -65,8 +65,8 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeConsigneeExportVat"
+                        href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                        id = "changeConsigneeExportInformation"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )

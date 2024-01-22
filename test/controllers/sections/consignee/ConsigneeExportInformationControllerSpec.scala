@@ -19,35 +19,35 @@ package controllers.sections.consignee
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
-import forms.sections.consignee.ConsigneeExportVatFormProvider
+import forms.sections.consignee.ConsigneeExportInformationFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType.YesEoriNumber
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
-import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.consignee.ConsigneeExportInformationPage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.sections.consignee.ConsigneeExportVatView
+import views.html.sections.consignee.ConsigneeExportInformationView
 
 import scala.concurrent.Future
 
-class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersService {
+class ConsigneeExportInformationControllerSpec extends SpecBase with MockUserAnswersService {
 
-  lazy val formProvider: ConsigneeExportVatFormProvider = new ConsigneeExportVatFormProvider()
-  lazy val form: Form[ConsigneeExportVat] = formProvider()
-  lazy val view: ConsigneeExportVatView = app.injector.instanceOf[ConsigneeExportVatView]
+  lazy val formProvider: ConsigneeExportInformationFormProvider = new ConsigneeExportInformationFormProvider()
+  lazy val form: Form[ConsigneeExportInformation] = formProvider()
+  lazy val view: ConsigneeExportInformationView = app.injector.instanceOf[ConsigneeExportInformationView]
 
-  lazy val consigneeExportVatRoute: String =
-    controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, NormalMode).url
-  lazy val consigneeExportVatRouteSubmit: String =
-    controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(testErn, testDraftId, NormalMode).url
+  lazy val consigneeExportInformationRoute: String =
+    controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val consigneeExportInformationRouteSubmit: String =
+    controllers.sections.consignee.routes.ConsigneeExportInformationController.onSubmit(testErn, testDraftId, NormalMode).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    val request = FakeRequest(GET, consigneeExportVatRoute)
+    val request = FakeRequest(GET, consigneeExportInformationRoute)
 
-    lazy val testController = new ConsigneeExportVatController(
+    lazy val testController = new ConsigneeExportInformationController(
       messagesApi,
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
@@ -61,7 +61,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     )
   }
 
-  "ConsigneeExportVat Controller" - {
+  "ConsigneeExportInformation Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
@@ -70,13 +70,13 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))))) {
+      Some(emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("EORI1234567890"))))) {
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form.fill(ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890"))),
+        form.fill(ConsigneeExportInformation(YesEoriNumber, None, Some("EORI1234567890"))),
         NormalMode
       )(dataRequest(request), messages(request)).toString
     }
@@ -84,11 +84,11 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(
         Future.successful(
-          emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("EORI1234567890")))
+          emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("EORI1234567890")))
         )
       )
 
-      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(
+      val req = FakeRequest(POST, consigneeExportInformationRouteSubmit).withFormUrlEncodedBody(
         ("exportType", YesEoriNumber.toString),
         ("eoriNumber", "EORI1234567890")
       )
@@ -100,7 +100,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(("exportType", "invalid value"))
+      val req = FakeRequest(POST, consigneeExportInformationRouteSubmit).withFormUrlEncodedBody(("exportType", "invalid value"))
 
       val boundForm = form.bind(Map("exportType" -> "invalid value"))
 
@@ -118,7 +118,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest(POST, consigneeExportVatRouteSubmit).withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
+      val req = FakeRequest(POST, consigneeExportInformationRouteSubmit).withFormUrlEncodedBody(("exportType", YesEoriNumber.toString))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

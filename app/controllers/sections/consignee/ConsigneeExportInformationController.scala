@@ -18,34 +18,34 @@ package controllers.sections.consignee
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import forms.sections.consignee.ConsigneeExportVatFormProvider
+import forms.sections.consignee.ConsigneeExportInformationFormProvider
 import models.Mode
 import navigation.ConsigneeNavigator
-import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.consignee.ConsigneeExportInformationPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import views.html.sections.consignee.ConsigneeExportVatView
+import views.html.sections.consignee.ConsigneeExportInformationView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class ConsigneeExportVatController @Inject()(
-                                              override val messagesApi: MessagesApi,
-                                              override val userAnswersService: UserAnswersService,
-                                              override val navigator: ConsigneeNavigator,
-                                              override val auth: AuthAction,
-                                              override val getData: DataRetrievalAction,
-                                              override val requireData: DataRequiredAction,
-                                              override val userAllowList: UserAllowListAction,
-                                              formProvider: ConsigneeExportVatFormProvider,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              view: ConsigneeExportVatView
+class ConsigneeExportInformationController @Inject()(
+                                                      override val messagesApi: MessagesApi,
+                                                      override val userAnswersService: UserAnswersService,
+                                                      override val navigator: ConsigneeNavigator,
+                                                      override val auth: AuthAction,
+                                                      override val getData: DataRetrievalAction,
+                                                      override val requireData: DataRequiredAction,
+                                                      override val userAllowList: UserAllowListAction,
+                                                      formProvider: ConsigneeExportInformationFormProvider,
+                                                      val controllerComponents: MessagesControllerComponents,
+                                                      view: ConsigneeExportInformationView
                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view(fillForm(ConsigneeExportVatPage, formProvider()), mode))
+      Ok(view(fillForm(ConsigneeExportInformationPage, formProvider()), mode))
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
@@ -54,7 +54,7 @@ class ConsigneeExportVatController @Inject()(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
-          saveAndRedirect(ConsigneeExportVatPage, value, mode)
+          saveAndRedirect(ConsigneeExportInformationPage, value, mode)
       )
     }
 }

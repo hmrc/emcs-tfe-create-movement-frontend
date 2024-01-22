@@ -18,7 +18,7 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.{ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 
@@ -29,7 +29,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
+            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )

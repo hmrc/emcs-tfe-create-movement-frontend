@@ -188,7 +188,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         }
 
         "have a link to change Vat Number" in {
-          doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
+          doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
             controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
@@ -239,7 +239,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         }
 
         "have a link to change Eori Number" in {
-          doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
+          doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
             controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 

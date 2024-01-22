@@ -66,7 +66,7 @@ class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
                         href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeConsigneeExportVat"
+                        id = "changeConsigneeExportInformation"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )

@@ -49,6 +49,12 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       DirectDelivery
     ).contains(destinationTypePageAnswer)
 
+  def shouldSkipDestinationDetailsChoice(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
+    ).contains(destinationTypePageAnswer)
+
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     request.userAnswers.get(DestinationTypePage) match {
       case Some(value) =>
@@ -79,9 +85,14 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case _ => NotStarted
     }
 
-  private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_]): TaskListStatus =
+  private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_], destinationTypePageAnswer: MovementScenario): TaskListStatus = {
+
+    val destinationDetailsChoice = if(shouldSkipDestinationDetailsChoice) Some(true) else {
+      request.userAnswers.get(DestinationDetailsChoicePage)
+    }
+
     (
-      request.userAnswers.get(DestinationDetailsChoicePage),
+      destinationDetailsChoice,
       request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
@@ -90,10 +101,11 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case (Some(true), Some(true), _, _) => Completed
       case (Some(true), Some(false), Some(_), Some(_)) => Completed
       case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) => InProgress
+      case (Some(_), _, _, _) if !shouldSkipDestinationDetailsChoice => InProgress
       case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
       case _ => NotStarted
     }
+  }
 
   private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus =
     (

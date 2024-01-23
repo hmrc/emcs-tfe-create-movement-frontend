@@ -17,9 +17,11 @@
 package navigation
 
 import controllers.sections.destination.routes
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.destination._
+import pages.sections.info.DestinationTypePage
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -31,7 +33,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationWarehouseExcisePage =>
       (userAnswers: UserAnswers) => routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationWarehouseVatPage =>
-      (userAnswers: UserAnswers) => routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      destinationWarehouseVatRouting()
     case DestinationDetailsChoicePage =>
       destinationDetailsChoiceRouting()
     case DestinationConsigneeDetailsPage =>
@@ -64,6 +66,14 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
+
+  private def destinationWarehouseVatRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+    userAnswers.get(DestinationTypePage) match {
+      case Some(CertifiedConsignee) | Some(TemporaryCertifiedConsignee) =>
+        routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+      case _ =>
+        routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+    }
 
   private def destinationDetailsChoiceRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DestinationDetailsChoicePage) match {

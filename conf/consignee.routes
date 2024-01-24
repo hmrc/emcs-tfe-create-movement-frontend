@@ -20,6 +20,11 @@ POST       /trader/:ern/draft/:draftId/consignee/consignee-excise               
 GET        /trader/:ern/draft/:draftId/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/draft/:draftId/consignee/consignee-export-eori                   controllers.sections.consignee.ConsigneeExportEoriController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/consignee/consignee-export-eori                   controllers.sections.consignee.ConsigneeExportEoriController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+GET        /trader/:ern/draft/:draftId/consignee/consignee-export-eori/change            controllers.sections.consignee.ConsigneeExportEoriController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST       /trader/:ern/draft/:draftId/consignee/consignee-export-eori/change            controllers.sections.consignee.ConsigneeExportEoriController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+
 GET         /trader/:ern/draft/:draftId/consignee/exempt-organisation                    controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/consignee/exempt-organisation                    controllers.sections.consignee.ConsigneeExemptOrganisationController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/consignee/exempt-organisation/change             controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

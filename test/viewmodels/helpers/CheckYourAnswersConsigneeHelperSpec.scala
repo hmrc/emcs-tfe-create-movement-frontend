@@ -27,16 +27,16 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
 
-class CheckYourAnswersConsigneeHelperSpec extends SpecBase {
+class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
   class Setup(ern: String = testErn, userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val checkAnswersConsigneeHelper = new CheckYourAnswersConsigneeHelper()
+    lazy val checkAnswersConsigneeHelper = new ConsigneeCheckAnswersHelper()
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers.copy(ern = ern))
     implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
     implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
   }
 
-  "CheckYourAnswersConsigneeHelper" - {
+  "CheckAnswersConsigneeHelper" - {
 
     ".buildSummaryRows should return the correct rows when" - {
       val testGbWarehouseErn = "GB00123456789"

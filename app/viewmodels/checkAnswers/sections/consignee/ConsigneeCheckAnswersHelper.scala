@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package viewmodels.checkAnswers.sections.consignee
 
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.consignee._
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class CheckYourAnswersConsigneeHelper @Inject()() {
+class ConsigneeCheckAnswersHelper @Inject()() {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
@@ -35,6 +34,7 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
         ConsigneeExportInformationSummary.row(showActionLinks = true),
         //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
         //ConsigneeExportVatSummary.row(showActionLinks = true),
+        //ConsigneeExportEoriSummary.row(showActionLinks = true),
         ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
         ConsigneeAddressSummary.row(showActionLinks = true)
       ).flatten

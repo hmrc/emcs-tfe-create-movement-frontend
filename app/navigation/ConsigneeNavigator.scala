@@ -62,6 +62,9 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
         }
       }
 
+    case ConsigneeExportEoriPage => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 

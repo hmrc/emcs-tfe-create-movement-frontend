@@ -200,6 +200,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
+          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
+          //ConsigneeExportEoriSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
 

@@ -18,14 +18,20 @@ package repository
 
 import base.SpecBase
 import models.UserAnswers
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.IntegrationPatience
 import pages.sections.info.DeferredMovementPage
+import play.api.test.Helpers._
 import repositories.SessionRepositoryImpl
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, PlayMongoRepositorySupport}
 
 import scala.concurrent.ExecutionContext
 
-class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[UserAnswers] with CleanMongoCollectionSupport with IntegrationPatience {
+class SessionRepositorySpec extends SpecBase
+  with PlayMongoRepositorySupport[UserAnswers]
+  with CleanMongoCollectionSupport
+  with IntegrationPatience
+  with BeforeAndAfterAll {
 
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
@@ -36,7 +42,11 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
 
   val userAnswers = emptyUserAnswers
     .set(DeferredMovementPage(), true)
-
+  
+  override protected def afterAll(): Unit = {
+    super.afterAll()
+    await(repository.collection.drop().toFuture())
+  }
 
   ".get" - {
     "return None when the repository is empty" in {

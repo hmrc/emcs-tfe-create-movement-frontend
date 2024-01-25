@@ -17,14 +17,16 @@
 package navigation
 
 import controllers.routes
+import models.sections.consignee.ConsigneeExportInformationType.YesVatNumber
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.consignee._
 import play.api.mvc.Call
+import utils.Logging
 
 import javax.inject.Inject
 
-class ConsigneeNavigator @Inject() extends BaseNavigator {
+class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
@@ -45,6 +47,20 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
 
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+
+    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+      (userAnswers.get(ConsigneeExportInformationPage).map(_.exportType), userAnswers.get(ConsigneeExportVatPage)) match {
+        //TODO: implement when ETFE-3007 CAM-NEE13 is done. When both VAT and EORI selected
+        //TODO: go to CAM-NEE13: consignee-export-EORI
+//        case (Some(Both), Some(_)) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        //Only VAT selected
+        //TODO: probably needs to change once ETFE-3007 CAM-NEE13 is done
+        case (Some(YesVatNumber), Some(_)) => controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case (optExportInformation, optConsigneeExportVat) => {
+          logger.warn(s"[ConsigneeNavigator][normalRoutes] - Invalid combination, consignee export information = $optExportInformation and consignee export VAT defined: ${optConsigneeExportVat.isDefined}")
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
 
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)

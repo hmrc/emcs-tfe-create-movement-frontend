@@ -196,6 +196,18 @@ class ConsigneeNavigatorSpec extends SpecBase {
         }
       }
 
+      "for the ConsigneeExportEoriPage" - {
+
+        "must go to CAM-NEE03 business name page" in {
+          val userAnswers = emptyUserAnswers
+            .set(ConsigneeExportEoriPage, "vatnumber")
+
+          navigator.nextPage(ConsigneeExportEoriPage, NormalMode, userAnswers) mustBe
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+        }
+
+      }
+
       "for the CheckAnswersConsignee page" - {
         "must go to the tasklist" in {
           navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe

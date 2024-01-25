@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package object forms {
-  private[forms] val TEXTAREA_MAX_LENGTH = 350
-  private[forms] val ALPHANUMERIC_REGEX = "^(?s)(?=.*[A-Za-z0-9]).{1,}$"
-  private[forms] val XSS_REGEX = "^(?s)(?!.*javascript)(?!.*[<>;:]).{1,}$"
-  private[forms] val ONLY_ALPHANUMERIC_REGEX = "^[A-Za-z0-9]*$"
-  private[forms] val CUSTOMS_OFFICE_CODE_REGEX = "^[A-Z]{2}[a-zA-Z0-9]{6}$"
-  private[forms] val EXCISE_NUMBER_REGEX = "[A-Z]{2}[a-zA-Z0-9]{11}"
-  private[forms] val EORI_NUMBER_REGEX = "[A-Z]{2}[A-Za-z0-9]{0,15}"
+package pages.sections.consignee
+
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object ConsigneeExportEoriPage extends QuestionPage[String] {
+  override val toString: String = "consigneeExportEori"
+  override val path: JsPath = ConsigneeSection.path \ toString
 }

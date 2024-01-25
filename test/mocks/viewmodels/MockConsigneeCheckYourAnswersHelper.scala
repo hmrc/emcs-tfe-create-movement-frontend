@@ -21,11 +21,11 @@ import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.helpers.CheckYourAnswersConsigneeHelper
+import viewmodels.checkAnswers.sections.consignee.ConsigneeCheckAnswersHelper
 
 trait MockConsigneeCheckYourAnswersHelper extends MockFactory {
 
-  lazy val mockConsigneeCheckYourAnswersHelper: CheckYourAnswersConsigneeHelper = mock[CheckYourAnswersConsigneeHelper]
+  lazy val mockConsigneeCheckYourAnswersHelper: ConsigneeCheckAnswersHelper = mock[ConsigneeCheckAnswersHelper]
 
   object MockConsigneeCheckAnswersHelper {
 

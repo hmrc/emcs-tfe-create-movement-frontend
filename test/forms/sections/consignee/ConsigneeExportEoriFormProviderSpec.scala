@@ -41,11 +41,12 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
       requiredError = FormError(fieldName, requiredKey)
     )
 
-    s"not bind strings longer than 17 in length" in {
-      val veryLongString = "123456789012345678"
-      val result = form.bind(Map(fieldName -> veryLongString)).apply(fieldName)
-      result.errors must contain only FormError(fieldName, lengthKey, Seq(maxLength))
-    }
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength,
+      FormError(fieldName, lengthKey, Seq(maxLength))
+    )
 
     behave like fieldWithEori(
       form = form,

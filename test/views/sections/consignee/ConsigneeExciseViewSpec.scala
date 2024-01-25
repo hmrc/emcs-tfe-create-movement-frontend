@@ -40,10 +40,17 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+        lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = false).toString())
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            form,
+            testOnwardRoute,
+            isNorthernIrishTemporaryRegisteredConsignee = false,
+            isNorthernIrishTemporaryCertifiedConsignee = false
+          ).toString()
+        )
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
@@ -54,21 +61,54 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
         ))
       }
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' with the dynamic content" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' when isNorthernIrishTemporaryRegisteredConsignee is true" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+        lazy val view = app.injector.instanceOf[ConsigneeExciseView]
         val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, isNorthernIrishTemporaryRegisteredConsignee = true).toString())
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            form,
+            testOnwardRoute,
+            isNorthernIrishTemporaryRegisteredConsignee = true,
+            isNorthernIrishTemporaryCertifiedConsignee = false
+          ).toString()
+        )
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.temporaryConsigneeTitle,
           Selectors.h1 -> messagesForLanguage.temporaryConsigneeHeading,
           Selectors.h2(1) -> messagesForLanguage.consigneeInformationSection,
           Selectors.hint -> messagesForLanguage.temporaryConsigneeHint,
+          Selectors.button -> messagesForLanguage.saveAndContinue
+        ))
+      }
+
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' when isNorthernIrishTemporaryCertifiedConsignee is true" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+        val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
+
+        implicit val doc: Document = Jsoup.parse(
+          view(
+            form,
+            testOnwardRoute,
+            isNorthernIrishTemporaryRegisteredConsignee = false,
+            isNorthernIrishTemporaryCertifiedConsignee = true
+          ).toString()
+        )
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.temporaryCertifiedConsigneeTitle,
+          Selectors.h1 -> messagesForLanguage.temporaryCertifiedConsigneeHeading,
+          Selectors.h2(1) -> messagesForLanguage.consigneeInformationSection,
+          Selectors.hint -> messagesForLanguage.temporaryCertifiedConsigneeHint,
           Selectors.button -> messagesForLanguage.saveAndContinue
         ))
       }

@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{Mode, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
@@ -51,7 +51,8 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
         Ok(view(
           fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)),
           routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
-          isNorthernIrishTemporaryRegisteredConsignee
+          isNorthernIrishTemporaryRegisteredConsignee,
+          isNorthernIrishTemporaryCertifiedConsignee
         ))
     }
 
@@ -65,7 +66,8 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
               BadRequest(view(
                 formWithErrors,
                 routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
-                isNorthernIrishTemporaryRegisteredConsignee
+                isNorthernIrishTemporaryRegisteredConsignee,
+                isNorthernIrishTemporaryCertifiedConsignee
               ))
             ),
           exciseRegistrationNumber =>
@@ -73,15 +75,25 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
         )
     }
 
-  private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
-    val isTemporaryRegisteredConsignee: Boolean =
-      request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
-    val isNorthernIrish = request.userTypeFromErn match {
+  private def isNorthernIrish(implicit request: DataRequest[_]) = {
+    request.userTypeFromErn match {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandWarehouseKeeper => true
       case _ => false
     }
+  }
+
+  private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
+    val isTemporaryRegisteredConsignee: Boolean =
+      request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
 
     isNorthernIrish && isTemporaryRegisteredConsignee
+  }
+
+  private def isNorthernIrishTemporaryCertifiedConsignee(implicit request: DataRequest[_]) = {
+    val isTemporaryCertifiedConsignee: Boolean =
+      request.userAnswers.get(DestinationTypePage).contains(TemporaryCertifiedConsignee)
+
+    isNorthernIrish && isTemporaryCertifiedConsignee
   }
 
 }

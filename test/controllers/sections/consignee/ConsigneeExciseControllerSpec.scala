@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
@@ -63,16 +63,37 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   }
 
   val userAnswersWithConsigneeExcise: UserAnswers = emptyUserAnswers.set(ConsigneeExcisePage, testErn)
-  val userAnswersWithDestinationType: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
+  val userAnswersWithDestinationTypeTemporaryRegisteredConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
+  val userAnswersWithDestinationTypeTemporaryCertifiedConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
 
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {
-      "when Destination type is TemporaryRegisteredConsignee and Northern Irish" in new Fixture(Some(userAnswersWithDestinationType)) {
-        val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      "when Destination type is TemporaryRegisteredConsignee and Northern Irish" in
+        new Fixture(Some(userAnswersWithDestinationTypeTemporaryRegisteredConsignee)) {
+          val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = true)(dataRequest(request), messages(request)).toString
-      }
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form,
+            consigneeExciseSubmit,
+            isNorthernIrishTemporaryRegisteredConsignee = true,
+            isNorthernIrishTemporaryCertifiedConsignee = false
+          )(dataRequest(request), messages(request)).toString
+        }
+
+      "when Destination type is TemporaryCertifiedConsignee and Northern Irish" in
+        new Fixture(Some(userAnswersWithDestinationTypeTemporaryCertifiedConsignee)) {
+          val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form,
+            consigneeExciseSubmit,
+            isNorthernIrishTemporaryRegisteredConsignee = false,
+            isNorthernIrishTemporaryCertifiedConsignee = true
+          )(dataRequest(request), messages(request)).toString
+        }
+
 
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
@@ -80,7 +101,12 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
         override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(request)).toString
+        contentAsString(result) mustEqual view(
+          form,
+          consigneeExciseSubmit,
+          isNorthernIrishTemporaryRegisteredConsignee = false,
+          isNorthernIrishTemporaryCertifiedConsignee = false
+        )(dataRequest(request), messages(request)).toString
       }
 
 
@@ -89,9 +115,13 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
         override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
 
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(testErn), consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(request)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(testErn),
+          consigneeExciseSubmit,
+          isNorthernIrishTemporaryRegisteredConsignee = false,
+          isNorthernIrishTemporaryCertifiedConsignee = false
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
@@ -114,7 +144,12 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, consigneeExciseSubmit, isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        consigneeExciseSubmit,
+        isNorthernIrishTemporaryRegisteredConsignee = false,
+        isNorthernIrishTemporaryCertifiedConsignee = false
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

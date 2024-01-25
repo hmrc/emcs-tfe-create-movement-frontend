@@ -316,6 +316,23 @@ class TraderModelSpec extends SpecBase {
           }
         }
       }
+      "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
+        "and shouldSkipDestinationDetailsChoice" in {
+          Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach {
+            movementScenario =>
+              implicit val dr: DataRequest[_] = dataRequest(
+                fakeRequest,
+                emptyUserAnswers
+                  .set(DestinationTypePage, movementScenario)
+                  .set(DestinationWarehouseVatPage, "destination ern")
+                  .set(DestinationBusinessNamePage, "destination name")
+                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+              )
+
+              TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
+          }
+        }
+      }
       "when DestinationTypePage means shouldStartFlowAtDestinationBusinessName" in {
         Seq(DirectDelivery).foreach {
           movementScenario =>

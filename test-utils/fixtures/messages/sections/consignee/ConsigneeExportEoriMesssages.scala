@@ -28,6 +28,9 @@ object ConsigneeExportEoriMesssages {
     val errorRequired = "Enter the EORI number"
     val errorLength = "EORI number must be 17 characters or less"
     val errorInvalid = "EORI number starts with a 2 letter country code, followed by up to 15 numbers or mixed numbers and letters"
+
+    val cyaLabel: String = "EORI number"
+    val cyaChangeHidden: String = "EORI number"
   }
 
   object English extends ViewMessages with BaseEnglish

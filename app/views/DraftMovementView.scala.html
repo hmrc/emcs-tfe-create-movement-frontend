@@ -34,7 +34,11 @@
 
 @()(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(helper.heading), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(
+  pageTitle = titleNoForm(helper.heading),
+  maybeShowActiveTrader = maybeShowActiveTrader(request),
+  showBackLink = false
+) {
 
     @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
     @p("govuk-body govuk-!-margin-bottom-0") {

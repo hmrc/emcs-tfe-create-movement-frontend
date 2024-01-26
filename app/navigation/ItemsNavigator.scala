@@ -113,8 +113,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
-            case Some(Wine) =>
+          userAnswers.get(ItemCommodityCodePage(idx)) match {
+            case Some(cnCode) if isWineCommodityCode(cnCode) =>
               itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
               itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -458,16 +458,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     }
 
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
-    userAnswers.get(ItemExciseProductCodePage(idx)) match {
-      case Some(epc) =>
+    (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemCommodityCodePage(idx))) match {
+      case (Some(epc), Some(cnCode)) =>
         GoodsType(epc) match {
           case Wine =>
             userAnswers.get(ItemQuantityPage(idx)) match {
               case Some(quantity) =>
-                if (quantity < 60) {
+                if (quantity <= 60 && isWineCommodityCode(cnCode)) {
                   itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-                } else {
+                } else if(isWineCommodityCode(cnCode)) {
                   itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+                } else {
+                  itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 }
               case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
             }
@@ -508,4 +510,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
   }
+
+  private[navigation] def isWineCommodityCode(cnCode: String): Boolean = cnCode == "22060010" || (cnCode.startsWith("2204") && cnCode != "22043096" && cnCode != "22043098")
 }

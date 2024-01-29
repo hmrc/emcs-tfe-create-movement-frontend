@@ -32,7 +32,8 @@ object GuarantorErnVatEoriSummary {
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
-      request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
+      request.userAnswers.get(GuarantorArrangerPage)
+        .map { arranger =>
 
         val (summaryListKey, summaryListValue) = arranger match {
           case Consignor => getConsignorSummary()

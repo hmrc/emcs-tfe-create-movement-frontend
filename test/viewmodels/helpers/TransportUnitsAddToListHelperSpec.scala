@@ -22,19 +22,22 @@ import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
-import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
 import pages.sections.transportUnit._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
-import views.html.components.link
+import views.html.components.{link, tag, span}
 
 class TransportUnitsAddToListHelperSpec extends SpecBase {
 
   implicit lazy val link: link = app.injector.instanceOf[link]
+  implicit lazy val tag: tag = app.injector.instanceOf[tag]
+  implicit lazy val span: span = app.injector.instanceOf[span]
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
     implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
@@ -81,6 +84,46 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 TransportSealChoiceSummary.row(testIndex1).get,
                 TransportSealTypeSummary.row(testIndex1).get,
                 TransportSealInformationSummary.row(testIndex1).get,
+                TransportUnitGiveMoreInformationSummary.row(testIndex1).get
+              )
+            )
+          )
+        }
+
+        s"when incomplete answers entered '${msg.lang.code}' for container unit type" in new Setup(
+          emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), Container)
+            .set(TransportUnitIdentityPage(testIndex1), "1234")) {
+          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
+
+          helper.allTransportUnitsSummary() mustBe Seq(
+            SummaryList(
+              card = Some(Card(
+                title = Some(
+                  CardTitle(
+                    HtmlContent(HtmlFormat.fill(
+                      Seq(
+                        span(msg.transportUnit1, Some("govuk-!-margin-right-2")),
+                        tag(
+                          message = "Incomplete",
+                          colour = "red"
+                        )
+                      )
+                    ))
+                  )
+                ),
+                actions = Some(Actions(items = Seq(
+                  ActionItem(
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                    content = Text(msg.remove),
+                    visuallyHiddenText = Some(msg.transportUnit1),
+                    attributes = Map("id" -> "removeTransportUnit1")
+                  )
+                ))))),
+              rows = Seq(
+                TransportUnitTypeSummary.row(testIndex1).get,
+                TransportUnitIdentitySummary.row(testIndex1).get,
+                TransportSealChoiceSummary.row(testIndex1).get,
                 TransportUnitGiveMoreInformationSummary.row(testIndex1).get
               )
             )

@@ -109,7 +109,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.removeItemLink(1) -> messagesForLanguage.removeLink1WithHiddenText,
-          Selectors.cardTitle -> messagesForLanguage.transportUnit1,
+          Selectors.cardTitle -> s"${messagesForLanguage.transportUnit1} ${messagesForLanguage.incomplete}",
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
           Selectors.radioButton(2) -> messagesForLanguage.laterOption,

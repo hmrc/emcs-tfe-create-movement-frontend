@@ -46,18 +46,12 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealChoiceSummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1, false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportSealChoice1"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
-                  )
+                  actions = Seq()
                 )
               )
           }
@@ -69,7 +63,7 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
 
-            TransportSealChoiceSummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

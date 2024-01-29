@@ -29,17 +29,21 @@ import viewmodels.implicits._
 
 object TransportUnitIdentitySummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     Some(SummaryListRowViewModel(
       key = "transportUnitIdentity.checkYourAnswersLabel",
       value = ValueViewModel(getValue(idx)),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.TransportUnitIdentityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-          s"changeTransportUnitIdentity${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
-      )
+      actions = if (sectionComplete) {
+        Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.TransportUnitIdentityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+            s"changeTransportUnitIdentity${idx.displayIndex}"
+          ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
+        )
+      } else {
+        Seq()
+      }
     ))
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =

@@ -45,18 +45,12 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+                  actions = Seq()
                 )
               )
           }
@@ -68,7 +62,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

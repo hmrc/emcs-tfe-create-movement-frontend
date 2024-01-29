@@ -19,7 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
 import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
@@ -31,7 +31,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
-import views.html.components.{link, tag, span}
+import views.html.components.{link, span, tag}
 
 class TransportUnitsAddToListHelperSpec extends SpecBase {
 
@@ -79,12 +79,12 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   )
                 ))))),
               rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1).get,
-                TransportUnitIdentitySummary.row(testIndex1).get,
-                TransportSealChoiceSummary.row(testIndex1).get,
-                TransportSealTypeSummary.row(testIndex1).get,
-                TransportSealInformationSummary.row(testIndex1).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1).get
+                TransportUnitTypeSummary.row(testIndex1, true).get,
+                TransportUnitIdentitySummary.row(testIndex1, true).get,
+                TransportSealChoiceSummary.row(testIndex1, true).get,
+                TransportSealTypeSummary.row(testIndex1, true).get,
+                TransportSealInformationSummary.row(testIndex1, true).get,
+                TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
               )
             )
           )
@@ -114,6 +114,12 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 ),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
+                    href = transportUnitRoutes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
+                    content = Text(msg.continueEditing),
+                    visuallyHiddenText = Some(msg.transportUnit1),
+                    attributes = Map("id" -> "editTransportUnit1")
+                  ),
+                  ActionItem(
                     href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
@@ -121,10 +127,10 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   )
                 ))))),
               rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1).get,
-                TransportUnitIdentitySummary.row(testIndex1).get,
-                TransportSealChoiceSummary.row(testIndex1).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1).get
+                TransportUnitTypeSummary.row(testIndex1, false).get,
+                TransportUnitIdentitySummary.row(testIndex1, false).get,
+                TransportSealChoiceSummary.row(testIndex1, false).get,
+                TransportUnitGiveMoreInformationSummary.row(testIndex1, false).get
               )
             )
           )
@@ -158,12 +164,12 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   )
                 ))))),
               rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1).get,
-                TransportUnitIdentitySummary.row(testIndex1).get,
-                TransportSealChoiceSummary.row(testIndex1).get,
-                TransportSealTypeSummary.row(testIndex1).get,
-                TransportSealInformationSummary.row(testIndex1).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1).get
+                TransportUnitTypeSummary.row(testIndex1, true).get,
+                TransportUnitIdentitySummary.row(testIndex1, true).get,
+                TransportSealChoiceSummary.row(testIndex1, true).get,
+                TransportSealTypeSummary.row(testIndex1, true).get,
+                TransportSealInformationSummary.row(testIndex1, true).get,
+                TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
               )
             ),
             SummaryList(
@@ -178,7 +184,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   )
                 ))))),
               rows = Seq(
-                TransportUnitTypeSummary.row(testIndex2).get
+                TransportUnitTypeSummary.row(testIndex2, true).get
               )
             )
           )

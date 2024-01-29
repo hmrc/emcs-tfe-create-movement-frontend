@@ -76,7 +76,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-              TransportUnitTypeSummary.row(testIndex1) mustBe None
+              TransportUnitTypeSummary.row(testIndex1, false) mustBe None
             }
           }
 
@@ -94,7 +94,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
                   implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
 
-                  TransportUnitTypeSummary.row(testIndex1) mustBe
+                  TransportUnitTypeSummary.row(testIndex1, true) mustBe
                     Some(
                       SummaryListRowViewModel(
                         key = messagesForLanguage.addToListLabel,

@@ -45,7 +45,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealTypeSummary.row(testIndex1) mustBe None
+            TransportSealTypeSummary.row(testIndex1, false) mustBe None
           }
 
           "must output no row if TransportSealChoicePage is false" in {
@@ -54,7 +54,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe None
+            TransportSealTypeSummary.row(testIndex1, false) mustBe None
           }
 
           "must output row with answer not provide if TransportSealChoicePage is true" in {
@@ -63,7 +63,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe
+            TransportSealTypeSummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.sealTypeCYA,
@@ -89,7 +89,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe None
+            TransportSealTypeSummary.row(testIndex1, false) mustBe None
           }
 
           "must output no row if TransportSealChoicePage is not answered" in {
@@ -98,7 +98,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe None
+            TransportSealTypeSummary.row(testIndex1, false) mustBe None
           }
 
           s"must output the expected row for TransportSealType and TransportSealChoicePage is true" in {
@@ -108,7 +108,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe
+            TransportSealTypeSummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.sealTypeCYA,

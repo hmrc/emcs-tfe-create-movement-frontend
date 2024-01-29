@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
+import controllers.sections.transportUnit.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportSealChoicePage
@@ -27,18 +28,22 @@ import viewmodels.implicits._
 
 object TransportSealChoiceSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     Some(
       SummaryListRowViewModel(
         key = "transportSealChoice.checkYourAnswersLabel",
         value = ValueViewModel(getValue(idx)),
-        actions = Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            id = s"changeTransportSealChoice${idx.displayIndex}")
-            .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
-        )
+        actions = if (sectionComplete) {
+          Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              href = routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              id = s"changeTransportSealChoice${idx.displayIndex}")
+              .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
+          )
+        } else {
+          Seq()
+        }
       ))
 
 

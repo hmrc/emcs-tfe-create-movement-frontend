@@ -41,6 +41,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
     val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child(${index})"
     val errorField: String = "p.govuk-error-message"
     val removeItemLink: Int => String =  index => s"#removeTransportUnit$index"
+    val editItemLink: Int => String = index => s"#editTransportUnit$index"
   }
 
   "TransportUnitAddToListView" - {
@@ -109,6 +110,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.removeItemLink(1) -> messagesForLanguage.removeLink1WithHiddenText,
+          Selectors.editItemLink(1) -> messagesForLanguage.editLink1WithHiddenText,
           Selectors.cardTitle -> s"${messagesForLanguage.transportUnit1} ${messagesForLanguage.incomplete}",
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,

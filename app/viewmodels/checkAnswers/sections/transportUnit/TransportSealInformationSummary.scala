@@ -30,19 +30,24 @@ import viewmodels.implicits._
 
 object TransportSealInformationSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] =
+  def row(idx: Index, sectionComplete: Boolean)
+         (implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] =
     request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
       request.userAnswers.get(TransportSealTypePage(idx)) match {
         case Some(TransportSealTypeModel(_, Some(info))) => SummaryListRowViewModel(
           key = "transportSealType.moreInfo.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(info).toString()),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-              s"changeTransportSealInformation${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
-          )
+          actions = if (sectionComplete) {
+            Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+                s"changeTransportSealInformation${idx.displayIndex}"
+              ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
+            )
+          } else {
+            Seq()
+          }
         )
         case _ => SummaryListRowViewModel(
           key = "transportSealType.moreInfo.checkYourAnswersLabel",

@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.sections.transportUnit
 
+import controllers.sections.transportUnit.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.transportUnit.TransportUnitGiveMoreInformationPage
@@ -31,22 +32,25 @@ import viewmodels.implicits._
 
 object TransportUnitGiveMoreInformationSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index, sectionComplete: Boolean)
+         (implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
     val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
-        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode))),
-      actions = {
+        routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode))),
+      actions = if (sectionComplete) {
         Seq(
           optMoreInformation.map(_ =>
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              href = routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
               id = s"changeTransportUnitMoreInformation${idx.displayIndex}"
             ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
           )
         ).flatten
+      } else {
+        Seq()
       }
     ))
   }

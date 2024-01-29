@@ -43,7 +43,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, false) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
@@ -62,7 +62,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), Some("value")))
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, true) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),

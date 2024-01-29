@@ -86,8 +86,4 @@ class ConsigneeExportInformationController @Inject()(
         action = routes.ConsigneeExportInformationController.onSubmit(request.ern, request.draftId, mode)
       )
     )
-
-
-  // cleanse when data changed
-
 }

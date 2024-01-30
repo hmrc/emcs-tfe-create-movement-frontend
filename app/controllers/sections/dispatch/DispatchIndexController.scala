@@ -19,8 +19,10 @@ package controllers.sections.dispatch
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import navigation.DispatchNavigator
 import pages.sections.dispatch.DispatchSection
+import pages.sections.info.DestinationTypePage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -41,7 +43,12 @@ class DispatchIndexController @Inject()(
       if (DispatchSection.isCompleted) {
         Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
-        Redirect(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
+        withAnswer(DestinationTypePage) {
+          case CertifiedConsignee | TemporaryCertifiedConsignee =>
+            Redirect(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
+          case _ =>
+            Redirect(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
+        }
       }
     }
 }

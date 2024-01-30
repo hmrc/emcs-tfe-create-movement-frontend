@@ -19,10 +19,12 @@ package controllers.sections.dispatch
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, ExemptedOrganisation, GbTaxWarehouse, TemporaryCertifiedConsignee}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
+import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,18 +35,20 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
     val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
 
     lazy val testController = new DispatchIndexController(
-      mockUserAnswersService,
-      new FakeDispatchNavigator(testOnwardRoute),
-      fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
-      dataRequiredAction,
-      fakeUserAllowListAction,
-      messagesControllerComponents
+      userAnswersService = mockUserAnswersService,
+      navigator = new FakeDispatchNavigator(testOnwardRoute),
+      auth = fakeAuthAction,
+      getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      requireData = dataRequiredAction,
+      userAllowList = fakeUserAllowListAction,
+      controllerComponents = messagesControllerComponents
     )
   }
 
   "DispatchIndexController" - {
+
     "when DispatchSection.isCompleted" - {
+
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
         .set(DispatchWarehouseExcisePage, "beans")
         .set(DispatchUseConsignorDetailsPage, true)
@@ -58,11 +62,35 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
       }
     }
 
-    "must redirect to the dispatch warehouse excise controller" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "when DispatchSetion is NOT complete" - {
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
+      Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach { destinationType =>
+
+        s"when $destinationType must redirect to the DispatchUseConsignorDetailsController" in new Fixture(Some(emptyUserAnswers
+          .set(DestinationTypePage, destinationType)
+        )) {
+
+          val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        }
+      }
+
+      Seq(GbTaxWarehouse, ExemptedOrganisation).foreach { destinationType =>
+
+        s"when $destinationType must redirect to the DispatchWarehouseExciseController" in new Fixture(Some(emptyUserAnswers
+          .set(DestinationTypePage, destinationType)
+        )) {
+
+          val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        }
+      }
     }
   }
 }

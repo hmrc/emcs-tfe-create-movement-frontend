@@ -18,7 +18,9 @@ package pages.sections.dispatch
 
 import models.requests.DataRequest
 import models._
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import pages.sections.Section
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList._
 
@@ -26,8 +28,17 @@ case object DispatchSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "dispatch"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(DispatchWarehouseExcisePage) match {
-      case Some(_) => request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
+
+    val isCertifiedConsigneeType = request.userAnswers.get(DestinationTypePage).fold(false)(Seq(
+      TemporaryCertifiedConsignee,
+      CertifiedConsignee
+    ).contains(_))
+
+    val hasDispatchWarehouseExciseOrCertifiedConsignee =
+      request.userAnswers.get(DispatchWarehouseExcisePage).isDefined || isCertifiedConsigneeType
+
+    hasDispatchWarehouseExciseOrCertifiedConsignee match {
+      case true => request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
         case Some(true) => Completed
         case Some(false) =>
           val remainingPages: Seq[Option[_]] = Seq(request.userAnswers.get(DispatchBusinessNamePage), request.userAnswers.get(DispatchAddressPage))
@@ -36,9 +47,10 @@ case object DispatchSection extends Section[JsObject] {
           } else {
             InProgress
           }
+        case None if isCertifiedConsigneeType => NotStarted
         case None => InProgress
       }
-      case None => NotStarted
+      case false => NotStarted
     }
   }
 

@@ -153,21 +153,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "XIPA123"
 
         Seq(
-          CertifiedConsignee
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-
-        Seq(
+          CertifiedConsignee,
           TemporaryCertifiedConsignee
         ).foreach(
           movementScenario =>
@@ -187,21 +173,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "XIPC123"
 
         Seq(
-          CertifiedConsignee
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-
-        Seq(
+          CertifiedConsignee,
           TemporaryCertifiedConsignee
         ).foreach(
           movementScenario =>

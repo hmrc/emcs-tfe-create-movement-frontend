@@ -38,7 +38,7 @@ import scala.concurrent.Future
 
 class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService with MockGetCnCodeInformationService with ItemFixtures {
 
-  val item: CnCodeInformationItem = CnCodeInformationItem("W200", "22060031")
+  val item: CnCodeInformationItem = CnCodeInformationItem(testEpcWine, testCnCodeWine)
 
   //Ensures a dummy item exists in the array for testing
   val defaultUserAnswers: UserAnswers = emptyUserAnswers

@@ -48,7 +48,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
       "if not Wine" in {
         GoodsType.values.filterNot(_ == GoodsType.Wine).map(gt => s"${gt.code}000").foreach {
           epc =>
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers(epc = epc))
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers(epc = epc, cnCode = testCnCodeBeer))
 
             WineProductModel.apply(testIndex1) mustBe None
         }
@@ -56,7 +56,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
     }
 
     "must return Some(WineProductModel)" - {
-      "if wine" in {
+      "if commodity code is wine" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers())
 
         val result = WineProductModel.apply(testIndex1)

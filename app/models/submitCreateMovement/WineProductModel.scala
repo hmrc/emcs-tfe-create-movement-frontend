@@ -16,13 +16,13 @@
 
 package models.submitCreateMovement
 
+import models.Index
 import models.requests.DataRequest
 import models.sections.items.ItemGeographicalIndicationType
 import models.sections.items.ItemWineProductCategory.ImportedWine
-import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.libs.json.{Json, OFormat}
-import utils.{JsonOptionFormatter, ModelConstructorHelpers}
+import utils.{CommodityCodeHelper, JsonOptionFormatter, ModelConstructorHelpers}
 
 case class WineProductModel(
                              wineProductCategory: String,
@@ -62,9 +62,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
 
   def apply(idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
 
-    val exciseProductCode = mandatoryPage(ItemExciseProductCodePage(idx))
-
-    if (GoodsType.apply(exciseProductCode) == GoodsType.Wine) {
+    if (request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)) {
       Some(
         WineProductModel(
           wineProductCategory = wineProductCategory(idx).toString,

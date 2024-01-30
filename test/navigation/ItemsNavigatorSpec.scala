@@ -468,7 +468,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
             ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
 
-          "when the user answers no, EPC is wine and CN code begins with '2204' but is not 22043096 / 22043098 " in {
+          "when the user answers no, and CN code begins with '2204' but is not 22043096 / 22043098 " in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -478,18 +478,17 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
 
         "to the Packaging Select (Items Packaging Index) page" - {
-          "when the user answers no and EPC is not wine" in {
-            GoodsType.values.filterNot(_ == GoodsType.Wine).foreach(
-              goodsType =>
-                navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
-                  .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
-                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
-            )
+          "when the user answers no and commodity code is not wine" in {
+              navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+                .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+                .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+
           }
 
           Seq("22043096", "22043098").foreach { cnCode =>
-            s"when the user answers no and EPC is Wine but the commodity code is $cnCode" in {
+            s"when the user answers no and the commodity code is $cnCode" in {
               navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemExciseProductCodePage(testIndex1), "W200")
                 .set(ItemCommodityCodePage(testIndex1), cnCode)
@@ -544,7 +543,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
 
         "to the Packaging Seal Choice (Bulk packaging) page" - {
-          "when goods type is not Wine" in {
+          "when commodity code is not Wine" in {
             GoodsType.values.filterNot(_ == GoodsType.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
@@ -555,7 +554,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
 
           Seq("22043096", "22043098").foreach { cnCode =>
-            s"when goods type is Wine but the commodity code is $cnCode" in {
+            s"when the commodity code is $cnCode" in {
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
                 .set(ItemExciseProductCodePage(testIndex1), "W300")
@@ -1207,6 +1206,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 emptyUserAnswers
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
                   .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+                  .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
               ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
@@ -1361,35 +1361,6 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
           controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
-      }
-    }
-
-    ".isWineCommodityCode" - {
-
-      "return true" - {
-
-        "the commodity code is 22060010" in {
-          navigator.isWineCommodityCode("22060010") mustBe true
-        }
-
-        "the commodity code starts with '2204' but is not '22043096' or '22043098'" in {
-          navigator.isWineCommodityCode("22041000") mustBe true
-        }
-      }
-
-      "return false" - {
-
-        "the commodity code is 22043096" in {
-          navigator.isWineCommodityCode("22043096") mustBe false
-        }
-
-        "the commodity code is 22043098" in {
-          navigator.isWineCommodityCode("22043098") mustBe false
-        }
-
-        "doesn't start with 2204" in {
-          navigator.isWineCommodityCode("22031000") mustBe false
-        }
       }
     }
   }

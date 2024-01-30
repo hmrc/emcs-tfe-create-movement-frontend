@@ -95,6 +95,23 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                 )
               )
           }
+
+          s"must output a row with no change link for TransportSealInformation if TransportSealChoicePage is true, and the transport section is incomplete" in {
+
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealInformationSummary.row(testIndex1, false) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.moreInfoCYA,
+                  value = Value(Text(transportSealTypeModelMax.moreInfo.value)),
+                  actions = Seq()
+                )
+              )
+          }
         }
 
         "when there's an answer but no more information has been added" - {

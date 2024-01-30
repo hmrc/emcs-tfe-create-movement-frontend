@@ -80,6 +80,26 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
             }
           }
 
+          "when there's an answer, but the section is incomplete" - {
+
+            s"must output the expected row, without the change link for Container" in {
+
+              val transportUnitType = TransportUnitType.Container
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
+
+              TransportUnitTypeSummary.row(testIndex1, false) mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.addToListLabel,
+                    value = Value(Text(messagesForLanguage.addToListValue(transportUnitType))),
+                    actions = Seq()
+                  )
+                )
+            }
+
+          }
+
           "when there's an answer" - {
 
             Seq(

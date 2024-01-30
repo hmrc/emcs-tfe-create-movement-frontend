@@ -57,7 +57,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
             TransportSealTypeSummary.row(testIndex1, false) mustBe None
           }
 
-          "must output row with answer not provide if TransportSealChoicePage is true" in {
+          "must output a row with answer not provided if TransportSealChoicePage is true" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealChoicePage(testIndex1), true)
@@ -75,6 +75,22 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                       id = "changeTransportSealType1"
                     ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
                   )
+                )
+              )
+          }
+
+          "must output a row with answer not provided and no change link, if TransportSealChoicePage is true and the transport unit section is incomplete" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealTypeSummary.row(testIndex1, false) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.sealTypeCYA,
+                  value = Value(Text(messagesForLanguage.notProvided)),
+                  actions = Seq()
                 )
               )
           }

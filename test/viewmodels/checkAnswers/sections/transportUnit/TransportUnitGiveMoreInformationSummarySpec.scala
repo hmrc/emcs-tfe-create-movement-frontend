@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import controllers.sections.transportUnit.routes
 
 class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers {
   "TransportUnitGiveMoreInformationSummary" - {
@@ -40,7 +41,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
 
         "when there's no answer" - {
 
-          "must output the expected data" in {
+          "must output the expected data with no change link" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             TransportUnitGiveMoreInformationSummary.row(testIndex1, false) mustBe Some(
@@ -48,7 +49,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
                   HtmlContent(link(
-                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     messagesForLanguage.valueWhenAnswerNotPresent))
                 ),
                 actions = Seq()
@@ -69,7 +70,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    href = routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     id = "changeTransportUnitMoreInformation1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

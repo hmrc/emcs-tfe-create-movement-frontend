@@ -19,7 +19,8 @@ package models.requests
 import models._
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import pages.sections.info.DispatchPlacePage
+import models.sections.info.movementScenario.MovementType.UkToEu
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.mvc.WrappedRequest
 import utils.Logging
 
@@ -47,4 +48,6 @@ case class DataRequest[A](request: UserRequest[A],
       logger.warn(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       None
   }
+
+  def isUkToEuMovement: Boolean = userAnswers.get(DestinationTypePage).map(_.movementType(this)).contains(UkToEu)
 }

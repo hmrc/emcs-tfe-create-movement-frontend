@@ -18,7 +18,9 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,27 +29,37 @@ import viewmodels.implicits._
 object GuarantorRequiredSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    if(request.isUkToEuMovement) {
+      request.userAnswers.get(HowMovementTransportedPage) match {
+        case Some(FixedTransportInstallations) | None =>
+          Some(renderSummary)
+        case _ =>
+          None
+      }
+    } else {
+      Some(renderSummary)
+    }
+  }
+
+  private def renderSummary(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val value = request.userAnswers.get(GuarantorRequiredPage) match {
       case Some(answer) => if (answer) "site.yes" else "site.no"
       case None => "site.notProvided"
     }
 
-    Some(
-      SummaryListRowViewModel(
-        key = "guarantorRequired.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-            "changeGuarantorRequired"
-          )
-            .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))
+    SummaryListRowViewModel(
+      key = "guarantorRequired.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          "changeGuarantorRequired"
         )
+          .withVisuallyHiddenText(messages("guarantorRequired.change.hidden"))
       )
     )
-
   }
 
 }

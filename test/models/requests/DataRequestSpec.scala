@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package models.requests.predraft
+package models.requests
 
 import base.SpecBase
 import models._
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import pages.sections.info.DispatchPlacePage
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementType.UkToEu
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.test.FakeRequest
 
 class DataRequestSpec extends SpecBase {
@@ -73,6 +75,66 @@ class DataRequestSpec extends SpecBase {
       "must return None" in {
         val request = dataRequest(FakeRequest())
         request.dispatchPlace mustBe None
+      }
+    }
+  }
+
+  "isUKtoEUMovement" - {
+
+    "when NI ern" - {
+
+      "when not Duty Paid" - {
+
+        implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers, testNorthernIrelandErn)
+
+        MovementScenario.valuesEu.collect {
+          case scenario if scenario.movementType == UkToEu =>
+            val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+
+            s"must return true when DestinationType is '$scenario'" in {
+              request.isUkToEuMovement mustBe true
+            }
+          case scenario =>
+            val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+
+            s"must return false when DestinationType is '$scenario'" in {
+              request.isUkToEuMovement mustBe false
+            }
+        }
+      }
+
+      "when Duty Paid" - {
+
+        implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers, testNIDutyPaidErn)
+
+        MovementScenario.valuesForDutyPaidTraders.collect {
+          case scenario if scenario.movementType == UkToEu =>
+            val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+
+            s"must return true when DestinationType is '$scenario'" in {
+              request.isUkToEuMovement mustBe true
+            }
+          case scenario =>
+            val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+
+            s"must return false when DestinationType is '$scenario'" in {
+              request.isUkToEuMovement mustBe false
+            }
+        }
+      }
+    }
+
+    "when GB ern" - {
+
+      implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers, testGreatBritainErn)
+
+      MovementScenario.valuesUk.foreach { scenario =>
+
+        val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
+
+        s"must return false when DestinationType is '$scenario'" in {
+          request.isUkToEuMovement mustBe false
+        }
       }
     }
   }

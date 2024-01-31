@@ -18,12 +18,15 @@ package controllers.sections.guarantor
 
 import controllers.actions._
 import models.NormalMode
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorSection
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class GuarantorIndexController @Inject()(
                                           override val userAnswersService: UserAnswersService,
@@ -36,12 +39,20 @@ class GuarantorIndexController @Inject()(
                                         ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       if (GuarantorSection.isCompleted) {
-        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, draftId))
+        Future(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, draftId)))
       } else {
-        Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode))
+        if(request.isUkToEuMovement) {
+          request.userAnswers.get(HowMovementTransportedPage) match {
+            case Some(FixedTransportInstallations) | None =>
+              Future(Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode)))
+            case Some(_) =>
+              saveAndRedirect(GuarantorRequiredPage, true, NormalMode)
+          }
+        } else {
+          Future(Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode)))
+        }
       }
     }
-
 }

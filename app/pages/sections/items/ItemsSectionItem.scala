@@ -56,7 +56,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       fiscalMarksAnswers
       ).forall(_.isDefined)
 
-  private[items] def packagingPagesComplete(implicit goodsType: GoodsType, request: DataRequest[_]): Boolean =
+  private[items] def packagingPagesComplete(implicit request: DataRequest[_]): Boolean =
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
       case (Some(_), Some(false)) =>
         ItemsPackagingSection(idx).isCompleted

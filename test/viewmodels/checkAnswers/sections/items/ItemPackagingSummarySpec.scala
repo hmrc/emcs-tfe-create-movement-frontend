@@ -134,10 +134,10 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
   }
 
   "constructBulkPackagingSummary" - {
-    "when EPC and bulk type are present" - {
+    "when bulk type is present" - {
       "must return Some(SummaryListRow) with an incomplete tag when an item is incomplete" in {
         val userAnswers = emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingSelectPage(testIndex1), testBulkPackagingType)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
 
@@ -161,7 +161,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
       }
       "must return Some(SummaryListRow) with no incomplete tag when an item is complete" in {
         val userAnswers = emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSelectPage(testIndex1), testBulkPackagingType)
 
@@ -177,15 +177,6 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
             ))
           )
         )
-      }
-      "must return None when EPC is missing" in {
-        val userAnswers = emptyUserAnswers
-          .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
-          .set(ItemBulkPackagingSelectPage(testIndex1), testBulkPackagingType)
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-        summary.constructBulkPackagingSummary(testIndex1) mustBe None
       }
       "must return None when bulkType is missing" in {
         val userAnswers = emptyUserAnswers

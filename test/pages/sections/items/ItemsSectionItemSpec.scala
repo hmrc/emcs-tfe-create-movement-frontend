@@ -705,6 +705,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when EPC is defined, ItemBulkPackagingChoicePage is false and ItemsPackagingSection is completed" in {
         val userAnswers = emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
@@ -712,7 +713,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe true
@@ -720,11 +720,11 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when EPC is defined, ItemBulkPackagingChoicePage is true and bulkPackagingPagesComplete is completed" in {
         val userAnswers = emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
           .set(ItemBulkPackagingSealChoicePage(testIndex1), false)
           .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe true
@@ -741,21 +741,19 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
       }
       "when ItemBulkPackagingChoicePage is not defined" - {
         val userAnswers = emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
           .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -763,9 +761,9 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when EPC is defined, ItemBulkPackagingChoicePage is false and ItemsPackagingSection is not completed" in {
         val userAnswers = emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false
@@ -773,9 +771,9 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
       "when EPC is defined, ItemBulkPackagingChoicePage is true and bulkPackagingPagesComplete is not completed" in {
         val userAnswers = emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
 
-        implicit val goodsType: GoodsType = GoodsType.Beer
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.packagingPagesComplete mustBe false

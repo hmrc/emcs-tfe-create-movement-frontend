@@ -83,7 +83,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           }
         }
 
-        "when the Journey Type has not been answered as FixedTransportInstallations" - {
+        "when the Journey Type has been answered as FixedTransportInstallations" - {
           "must redirect to the guarantor required controller" in new Fixture(
             Some(emptyUserAnswers
               .set(DestinationTypePage, DirectDelivery)

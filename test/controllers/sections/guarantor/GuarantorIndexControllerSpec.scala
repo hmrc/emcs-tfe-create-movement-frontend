@@ -99,7 +99,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           }
         }
 
-        "when the Journey Type has not been answered as anything other than FixedTransportInstallations" - {
+        "when the Journey Type has been answered as anything other than FixedTransportInstallations" - {
           "must save the GurantorRequired page as True and redirect to the onward route of that page" in new Fixture(
             Some(emptyUserAnswers
               .set(DestinationTypePage, DirectDelivery)

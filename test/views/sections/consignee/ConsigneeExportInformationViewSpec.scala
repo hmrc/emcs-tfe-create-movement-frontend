@@ -19,7 +19,6 @@ package views.sections.consignee
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
 import forms.sections.consignee.ConsigneeExportInformationFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -32,6 +31,7 @@ import views.{BaseSelectors, ViewBehaviours}
 class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
+  //scalastyle:off
   "ConsigneeExportInformationView" - {
 
     Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
@@ -47,15 +47,17 @@ class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
-            mode = NormalMode
+            testOnwardRoute
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.yesVatNumberRadioOption,
-          Selectors.radioButton(3) -> messagesForLanguage.yesEoriNumberRadioOption,
-          Selectors.radioButton(5) -> messagesForLanguage.noRadioOption,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
+          Selectors.checkboxItem(1) -> messagesForLanguage.checkboxItemForVat,
+          Selectors.checkboxItem(2) -> messagesForLanguage.checkboxItemForEori,
+          Selectors.checkboxDividerItem(3) -> messagesForLanguage.checkBoxItemDivider,
+          Selectors.checkboxItem(4) -> messagesForLanguage.checkboxItemForNoInfo,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

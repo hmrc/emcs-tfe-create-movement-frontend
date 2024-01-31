@@ -19,6 +19,7 @@ package viewmodels.helpers
 import base.SpecBase
 import models.UserAnswers
 import models.requests.{DataRequest, UserRequest}
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import pages.sections.consignee._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -26,11 +27,15 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
+import views.html.components.list
 
 class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
+  lazy val list: list = app.injector.instanceOf[list]
+
   class Setup(ern: String = testErn, userAnswers: UserAnswers = emptyUserAnswers) {
-    lazy val checkAnswersConsigneeHelper = new ConsigneeCheckAnswersHelper()
+
+    lazy val checkAnswersConsigneeHelper = new ConsigneeCheckAnswersHelper(list)
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers.copy(ern = ern))
     implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
     implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
@@ -59,17 +64,15 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       val vatNumberUserAnswers = {
         emptyUserAnswers
           .set(ConsigneeBusinessNamePage, "testBusinessName")
-          .set(ConsigneeExportInformationPage, testVat)
-          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
-          //.set(ConsigneeExportVatPage, "1234")
+          .set(ConsigneeExportInformationPage, Set(VatNumber))
+          .set(ConsigneeExportVatPage, testVat)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val eoriUserAnswers = {
         emptyUserAnswers
           .set(ConsigneeBusinessNamePage, "testBusinessName")
-          .set(ConsigneeExportInformationPage, testEori)
-          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
-          //.set(ConsigneeExportEoriPage, "1234")
+          .set(ConsigneeExportInformationPage, Set(EoriNumber))
+          .set(ConsigneeExportEoriPage, testEori)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val noVatNumberOrEoriUserAnswers = {
@@ -186,9 +189,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
-          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
-          //ConsigneeExportVatSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
+          ConsigneeExportInformationSummary(list).row()(fakeDataRequest, msgs),
+          ConsigneeExportVatSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
 
@@ -199,9 +201,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
-          //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
-          //ConsigneeExportEoriSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
+          ConsigneeExportInformationSummary(list).row()(fakeDataRequest, msgs),
+          ConsigneeExportEoriSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,62 +18,103 @@ package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
-import models.CheckMode
+import models.NormalMode
 import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType.YesEoriNumber
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportInformationPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.list
 
 class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
+  lazy val list: list = app.injector.instanceOf[list]
+
   "ConsigneeExportInformationSummary" - {
 
     Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
-
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "must output the expected data" in {
-
+        "when there is no answer" - {
+          "must output no summary row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+            ConsigneeExportInformationSummary(list).row() mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "when there are multiple answers" - {
+          "must output the expected row" in {
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation.values)
+            )
 
-          "when the show action link boolean is true" - {
-
-            "must output the expected row" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber,None, testEori.eoriNumber)))
-
-              ConsigneeExportInformationSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaEoriLabel,
-                    value = Value(Text(testEori.eoriNumber.get)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeConsigneeExportInformation"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+            ConsigneeExportInformationSummary(list).row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = ValueViewModel(
+                    HtmlContent(list(Seq(
+                      Html(messagesForLanguage.cyaValueVatNumber),
+                      Html(messagesForLanguage.cyaValueEoriNumber),
+                      Html(messagesForLanguage.cyaValueNoInformation)
+                    )))
+                  ),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url,
+                      id = "changeConsigneeExportInformation"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
-            }
+              )
           }
         }
+
+        Seq(
+          ConsigneeExportInformation.VatNumber -> messagesForLanguage.cyaValueVatNumber,
+          ConsigneeExportInformation.EoriNumber -> messagesForLanguage.cyaValueEoriNumber,
+          ConsigneeExportInformation.NoInformation -> messagesForLanguage.cyaValueNoInformation,
+        ).foreach {
+          case (identification, text) =>
+            s"when there is only one answer of $identification" - {
+
+              "must output the expected row" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportInformationPage, Set(identification))
+                )
+
+                ConsigneeExportInformationSummary(list).row() mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(text)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+            }
+        }
+
       }
     }
   }

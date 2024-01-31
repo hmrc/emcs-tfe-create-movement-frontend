@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages
 import fixtures.messages.sections.guarantor.GuarantorErnVatEoriMessages.ViewMessages
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType._
+import models.sections.consignee.ConsigneeExportInformation.{NoInformation, VatNumber}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportPage, ConsigneeExportInformationPage}
+import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportInformationPage, ConsigneeExportPage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -85,7 +84,8 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber,Some("VAT123"), None))
+                    .set(ConsigneeExportInformationPage, Set(VatNumber))
+                    .set(ConsigneeExportVatPage, "VAT123")
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
 
@@ -94,34 +94,19 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, "VAT123")
               }
 
-              "and the consignee EORI section has been answered" in {
+              "and the consignee doesn't provide either the VAT or EORI number " in {
 
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("EORI123456789")))
+                    .set(ConsigneeExportInformationPage, Set(NoInformation))
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
 
                 )
 
-                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaEoriLabel, "EORI123456789")
-              }
-
-              "and the consignee doesn't know the VAT or EORI number " in {
-
-                implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(ConsigneeExportPage, true)
-                    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
-                    .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, Consignee)
-
-                )
-
-                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaNoVatOrEoriLabel, "Number not known")
+                GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided)
               }
 
             }
@@ -191,7 +176,7 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, GoodsOwner)
-                    .set(GuarantorVatPage,"VAT123")
+                    .set(GuarantorVatPage, "VAT123")
                 )
 
                 GuarantorErnVatEoriSummary.row mustBe expectedRow(messagesForLanguage.cyaVatLabel, "VAT123", true)

@@ -23,6 +23,7 @@ import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
 import models.UserAnswers
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
@@ -34,6 +35,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
 import viewmodels.govuk.SummaryListFluency
+import views.html.components.list
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
@@ -49,6 +51,8 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
+    lazy val list: list = app.injector.instanceOf[list]
+
     val ernList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
       ConsigneeExciseSummary.row(showActionLinks = true),
@@ -61,9 +65,17 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
-    val vatEoriList: Seq[SummaryListRow] = Seq(
+    val vatList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExportInformationSummary.row(showActionLinks = true),
+      ConsigneeExportInformationSummary(list).row(),
+      ConsigneeExportVatSummary.row(showActionLinks = true),
+      ConsigneeAddressSummary.row(showActionLinks = true)
+    ).flatten
+
+    val eoriList: Seq[SummaryListRow] = Seq(
+      ConsigneeBusinessNameSummary.row(showActionLinks = true),
+      ConsigneeExportInformationSummary(list).row(),
+      ConsigneeExportEoriSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
@@ -75,8 +87,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       rows = exemptedList
     ).withCssClass("govuk-!-margin-bottom-9")
 
-    val vatEoriSummaryList: SummaryList = SummaryListViewModel(
-      rows = vatEoriList
+    val vatSummaryList: SummaryList = SummaryListViewModel(
+      rows = vatList
+    ).withCssClass("govuk-!-margin-bottom-9")
+
+    val eoriSummaryList: SummaryList = SummaryListViewModel(
+      rows = eoriList
     ).withCssClass("govuk-!-margin-bottom-9")
 
     lazy val testController = new CheckYourAnswersConsigneeController(
@@ -151,11 +167,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportInformationPage, testEori)
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportEoriPage, testEori)
             .set(DestinationTypePage, EuTaxWarehouse)
         )) {
 
-        MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
+        MockConsigneeCheckAnswersHelper.summaryList().returns(eoriSummaryList)
 
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
@@ -164,7 +181,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          vatEoriSummaryList
+          eoriSummaryList
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK
@@ -176,11 +193,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportInformationPage, testVat)
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
             .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 
-        MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
+        MockConsigneeCheckAnswersHelper.summaryList().returns(vatSummaryList)
 
 
         val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
@@ -189,7 +207,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          vatEoriSummaryList
+          vatSummaryList
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK

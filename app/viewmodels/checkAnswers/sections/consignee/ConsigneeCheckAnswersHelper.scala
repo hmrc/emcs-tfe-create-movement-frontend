@@ -20,10 +20,11 @@ import models.requests.DataRequest
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.summarylist._
+import views.html.components.list
 
 import javax.inject.Inject
 
-class ConsigneeCheckAnswersHelper @Inject()() {
+class ConsigneeCheckAnswersHelper @Inject()(list: list) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
@@ -31,10 +32,9 @@ class ConsigneeCheckAnswersHelper @Inject()() {
         ConsigneeExportSummary.row(showActionLinks = true),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         ConsigneeExciseSummary.row(showActionLinks = true),
-        ConsigneeExportInformationSummary.row(showActionLinks = true),
-        //TODO: uncomment when ETFE-3007 CAM-NEE13 has been done
-        //ConsigneeExportVatSummary.row(showActionLinks = true),
-        //ConsigneeExportEoriSummary.row(showActionLinks = true),
+        ConsigneeExportInformationSummary(list).row(),
+        ConsigneeExportVatSummary.row(showActionLinks = true),
+        ConsigneeExportEoriSummary.row(showActionLinks = true),
         ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
         ConsigneeAddressSummary.row(showActionLinks = true)
       ).flatten

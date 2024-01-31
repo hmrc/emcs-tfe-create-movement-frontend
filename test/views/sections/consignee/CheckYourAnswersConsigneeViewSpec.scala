@@ -18,8 +18,9 @@ package views.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages
-import models.CheckMode
+import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.info.movementScenario.MovementScenario._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -30,6 +31,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import viewmodels.checkAnswers.sections.consignee._
+import views.html.components.list
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -155,11 +157,13 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportInformationPage, testVat)
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVat)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val list: list = app.injector.instanceOf[list]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -167,7 +171,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testDraftId,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportInformationSummary.row(true),
+            ConsigneeExportInformationSummary(list).row(),
+            ConsigneeExportVatSummary.row(true),
             ConsigneeAddressSummary.row(true)
           ).flatten)
         ).toString())
@@ -177,8 +182,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.vat,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.vat,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
 
@@ -187,9 +193,14 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
-        "have a link to change Vat Number" in {
+        "have a link to change identifications" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
+        }
+
+        "have a link to change Vat Number" in {
+          doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
+            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
         "have a link to change Address" in {
@@ -206,11 +217,13 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportInformationPage, testEori)
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportEoriPage, testEori)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+       lazy val list: list = app.injector.instanceOf[list]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -218,7 +231,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testDraftId,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportInformationSummary.row(true),
+            ConsigneeExportInformationSummary(list).row(),
+            ConsigneeExportEoriSummary.row(true),
             ConsigneeAddressSummary.row(true)
           ).flatten)
         ).toString())
@@ -228,8 +242,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.eori,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.eori,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
 
@@ -238,9 +253,14 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
-        "have a link to change Eori Number" in {
+        "have a link to change identifications" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
+        }
+
+        "have a link to change Eori Number" in {
+          doc.getElementById("changeConsigneeExportEori").attr("href") mustBe
+            controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
         "have a link to change Address" in {

@@ -16,55 +16,48 @@
 
 package viewmodels.checkAnswers.sections.consignee
 
-import models.CheckMode
+import models.NormalMode
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType.{YesEoriNumber, YesVatNumber}
 import pages.sections.consignee.ConsigneeExportInformationPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.list
 
-object ConsigneeExportInformationSummary {
+import javax.inject.Inject
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+case class ConsigneeExportInformationSummary @Inject()(list: list) {
+
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
     request.userAnswers.get(ConsigneeExportInformationPage).flatMap {
-      case ConsigneeExportInformation(YesVatNumber, Some(vat), _) => Some(summaryRow(showActionLinks, YesVatNumber.toString, vat))
-      case ConsigneeExportInformation(YesEoriNumber, _, Some(eori)) => Some(summaryRow(showActionLinks, YesEoriNumber.toString, eori))
-      case _ => Some(notKnownSummaryRow())
+      case identifications =>
+        Some(
+          summaryRow(
+            list(
+              identifications.map { provided =>
+                Html(messages(s"consigneeExportInformation.checkYourAnswers.value.$provided"))
+              }.toSeq
+            )
+          )
+        )
     }
+  }
 
-  private def notKnownSummaryRow()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+  private def summaryRow(value: Html)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
-      key = "consigneeExportInformation.checkYourAnswers.label.notKnown",
-      value = ValueViewModel("consigneeExportInformation.checkYourAnswers.value.notKnown"),
+      key = "consigneeExportInformation.checkYourAnswers.label",
+      value = ValueViewModel(HtmlContent(value)),
       actions = Seq(
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(
             ern = request.userAnswers.ern,
             draftId = request.userAnswers.draftId,
-            mode = CheckMode
-          ).url,
-          id = "changeConsigneeExportInformation"
-        )
-          .withVisuallyHiddenText(messages("consigneeExportInformation.change.hidden"))
-      )
-    )
-
-  private def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
-    SummaryListRowViewModel(
-      key = s"consigneeExportInformation.checkYourAnswers.label.$key",
-      value = ValueViewModel(HtmlFormat.escape(value).toString()),
-      actions = if (!showActionLinks) Seq() else Seq(
-        ActionItemViewModel(
-          content = "site.change",
-          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(
-            ern = request.userAnswers.ern,
-            draftId = request.userAnswers.draftId,
-            mode = CheckMode
+            mode = NormalMode
           ).url,
           id = "changeConsigneeExportInformation"
         )

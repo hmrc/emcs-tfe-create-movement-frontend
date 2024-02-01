@@ -18,21 +18,41 @@ package pages.sections.dispatch
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.info.movementScenario.DestinationType
+import models.sections.info.movementScenario.MovementScenario.CertifiedConsignee
+import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
 
 class DispatchSectionSpec extends SpecBase {
+
   "isCompleted" - {
+
     "must return true" - {
+
       "when Consignor details question is 'yes' and Consignor section is completed" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, true)
         )
         DispatchSection.isCompleted mustBe true
       }
+
       "when Consignor details question is 'no' and the rest of the flow is completed" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, false)
+          .set(DispatchBusinessNamePage, "beans")
+          .set(DispatchAddressPage, testUserAddress)
+        )
+        DispatchSection.isCompleted mustBe true
+      }
+
+      "when the DispatchWarehouseExcisePage is None, the destination type is CertifiedConsignee and the other pages are answered" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DestinationTypePage, CertifiedConsignee)
           .set(DispatchUseConsignorDetailsPage, false)
           .set(DispatchBusinessNamePage, "beans")
           .set(DispatchAddressPage, testUserAddress)
@@ -42,21 +62,37 @@ class DispatchSectionSpec extends SpecBase {
     }
 
     "must return false" - {
+
       "when not started" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         DispatchSection.isCompleted mustBe false
       }
+
       "when only DispatchWarehouseExcisePage is completed" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
         )
         DispatchSection.isCompleted mustBe false
       }
+
       "when Consignor details question is 'no' and the rest of the flow is not completed" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, false)
           .set(DispatchBusinessNamePage, "beans")
+        )
+        DispatchSection.isCompleted mustBe false
+      }
+
+      "when the DispatchWarehouseExcisePage is None, the destination type is CertifiedConsignee and the other pages are NOT answered" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DestinationTypePage, CertifiedConsignee)
+          .set(DispatchUseConsignorDetailsPage, false)
+          .set(DispatchAddressPage, testUserAddress)
         )
         DispatchSection.isCompleted mustBe false
       }

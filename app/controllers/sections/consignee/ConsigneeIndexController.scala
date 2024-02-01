@@ -84,13 +84,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
       userTypeFromErn == NorthernIrelandWarehouseKeeper && validDestinationTypes.contains(destinationTypePageAnswer)
     }
 
-    val xipaOrXipcAndPermCertifiedDestinationType: Boolean = {
-      val xipaOrXipc = Seq(NorthernIrelandCertifiedConsignor, NorthernIrelandTemporaryCertifiedConsignor).contains(userTypeFromErn)
-      val permCertifiedDestinationType = destinationTypePageAnswer == CertifiedConsignee
-      xipaOrXipc && permCertifiedDestinationType
-    }
-
-    gbwkAndSpecificDestinationTypes || xiwkAndSpecificDestinationTypes || xipaOrXipcAndPermCertifiedDestinationType
+    gbwkAndSpecificDestinationTypes || xiwkAndSpecificDestinationTypes
   }
 
   private def shouldStartFlowFromConsigneeExcise(
@@ -123,8 +117,8 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
 
     val xipaOrXipcAndTempCertifiedDestinationType: Boolean = {
       val xipaOrXipc = Seq(NorthernIrelandCertifiedConsignor, NorthernIrelandTemporaryCertifiedConsignor).contains(userTypeFromErn)
-      val tempCertifiedDestinationType = destinationTypePageAnswer == TemporaryCertifiedConsignee
-      xipaOrXipc && tempCertifiedDestinationType
+      val certifiedDestinationType = Seq(CertifiedConsignee, TemporaryCertifiedConsignee).contains(destinationTypePageAnswer)
+      xipaOrXipc && certifiedDestinationType
     }
 
     validDestinationTypesRegardlessOfUserTypes || gbrcAndValidDestinationType || xircAndValidDestinationType || xiwkAndRegisteredConsignee || xipaOrXipcAndTempCertifiedDestinationType

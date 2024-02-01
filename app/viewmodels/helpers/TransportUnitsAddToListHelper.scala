@@ -96,7 +96,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tag: tag, spa
     }
   }
 
-  private def createCardTitle(idx: Index, transportUnitSectionStatus: TaskListStatus)(implicit request: DataRequest[_], messages: Messages): CardTitle = {
+  private def createCardTitle(idx: Index, transportUnitSectionStatus: TaskListStatus)(implicit messages: Messages): CardTitle = {
     if (transportUnitSectionStatus == Completed) {
       CardTitle(Text(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex)))
     } else {

@@ -50,7 +50,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, false) mustBe None
           }
         }
 
@@ -62,7 +62,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, true) mustBe None
           }
 
           s"must output no rows if TransportSealChoicePage is not present" in {
@@ -70,7 +70,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, true) mustBe None
           }
 
           s"must output the expected row for TransportSealInformation if TransportSealChoicePage is true" in {
@@ -80,7 +80,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe
+            TransportSealInformationSummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -95,6 +95,23 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                 )
               )
           }
+
+          s"must output a row with no change link for TransportSealInformation if TransportSealChoicePage is true, and the transport section is incomplete" in {
+
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealInformationSummary.row(testIndex1, false) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.moreInfoCYA,
+                  value = Value(Text(transportSealTypeModelMax.moreInfo.value)),
+                  actions = Seq()
+                )
+              )
+          }
         }
 
         "when there's an answer but no more information has been added" - {
@@ -104,7 +121,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, true) mustBe None
           }
 
           s"must output no rows if TransportSealChoicePage is not present" in {
@@ -112,7 +129,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, true) mustBe None
           }
 
           s"must output a row with a link to add more information and TransportSealChoicePage is true" in {
@@ -122,7 +139,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe
+            TransportSealInformationSummary.row(testIndex1, true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,

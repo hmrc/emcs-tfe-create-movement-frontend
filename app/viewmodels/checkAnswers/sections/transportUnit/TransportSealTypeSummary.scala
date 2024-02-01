@@ -29,18 +29,22 @@ import viewmodels.implicits._
 
 object TransportSealTypeSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
       SummaryListRowViewModel(
         key = "transportSealType.sealType.checkYourAnswersLabel",
         value = ValueViewModel(getValue(idx)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            s"changeTransportSealType${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
-        )
+        actions = if (sectionComplete) {
+          Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
+              s"changeTransportSealType${idx.displayIndex}"
+            ).withVisuallyHiddenText(messages("transportSealType.sealType.change.hidden"))
+          )
+        } else {
+          Seq()
+        }
       )
     }
   }

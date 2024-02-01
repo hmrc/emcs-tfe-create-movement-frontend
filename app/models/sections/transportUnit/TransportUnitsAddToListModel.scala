@@ -49,8 +49,9 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
     def radioItem(value: TransportUnitsAddToListModel, index: Int): RadioItem = RadioItem(
       content = if (index == 1) {
         Text(pluralSingular(s"transportUnitsAddToList.${value.toString}", numberOfTransportUnits))
-      }
-      else Text(messages(s"transportUnitsAddToList.${value.toString}")),
+      } else {
+        Text(messages(s"transportUnitsAddToList.${value.toString}"))
+      },
       value = Some(value.toString),
       id = Some(s"value_$index")
     )

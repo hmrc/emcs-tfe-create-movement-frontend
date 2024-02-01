@@ -460,23 +460,41 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "to the ItemWineProductCategoryPage" - {
 
-          "when the user answers no and EPC is wine" in {
+          "when the user answers no, EPC is wine and CN code is 22060010" in {
+            navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
+              .set(ItemCommodityCodePage(testIndex1), "22060010")
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+            ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+
+          "when the user answers no, and CN code begins with '2204' but is not 22043096 / 22043098 " in {
             navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              .set(ItemCommodityCodePage(testIndex1), "22041091")
             ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
         "to the Packaging Select (Items Packaging Index) page" - {
-          "when the user answers no and EPC is not wine" in {
-            GoodsType.values.filterNot(_ == GoodsType.Wine).foreach(
-              goodsType =>
-                navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
-                  .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}200")
-                  .set(ItemBulkPackagingChoicePage(testIndex1), false)
-                ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
-            )
+          "when the user answers no and commodity code is not wine" in {
+              navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
+                .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+                .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+
+          }
+
+          Seq("22043096", "22043098").foreach { cnCode =>
+            s"when the user answers no and the commodity code is $cnCode" in {
+              navigator.nextPage(ItemBulkPackagingChoicePage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), "W200")
+                .set(ItemCommodityCodePage(testIndex1), cnCode)
+                .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              ) mustBe itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
           }
         }
 
@@ -485,31 +503,63 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       "must go from the ItemBulkPackagingSelectPage" - {
 
         "to the Wine Operations Choice page" - {
-          "when the wine quantity is equal or over 60 litres" in {
+          "when the wine quantity is over 60 litres and CN code is 22060010" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+              .set(ItemCommodityCodePage(testIndex1), "22060010")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60.001))
+            ) mustBe itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+
+          "when the wine quantity is over 60 litres and CN code starts with '2204' but is not 22043096 / 22043098" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
+              .set(ItemCommodityCodePage(testIndex1), "22041091")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60.001))
             ) mustBe itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
         "to the ItemWineProductCategoryPage" - {
-          "when the wine quantity is under 60 litres" in {
+          "when the wine quantity is equal to or under 60 litres and CN code is 22060010" in {
             navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-              .set(ItemQuantityPage(testIndex1), BigDecimal(59.99))
+              .set(ItemCommodityCodePage(testIndex1), "22060010")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
+            ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+
+          "when the wine quantity is equal to or under 60 litres and CN code starts with '2204' but is not 22043096 / 22043098" in {
+            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
+              .set(ItemCommodityCodePage(testIndex1), "22041091")
+              .set(ItemQuantityPage(testIndex1), BigDecimal(60))
             ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
         }
 
         "to the Packaging Seal Choice (Bulk packaging) page" - {
-          "when goods type is not Wine" in {
+          "when commodity code is not Wine" in {
             GoodsType.values.filterNot(_ == GoodsType.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
                 .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
+                .set(ItemCommodityCodePage(testIndex1), "000000")
+              ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+
+          Seq("22043096", "22043098").foreach { cnCode =>
+            s"when the commodity code is $cnCode" in {
+              navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+                .set(ItemExciseProductCodePage(testIndex1), "W300")
+                .set(ItemCommodityCodePage(testIndex1), cnCode)
+                .set(ItemQuantityPage(testIndex1), BigDecimal(60))
               ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
@@ -1156,6 +1206,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 emptyUserAnswers
                   .set(ItemBulkPackagingChoicePage(testIndex1), false)
                   .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+                  .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
               ) mustBe itemsRoutes.ItemWineProductCategoryController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }

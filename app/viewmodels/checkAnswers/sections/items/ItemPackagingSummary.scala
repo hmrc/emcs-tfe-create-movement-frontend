@@ -16,9 +16,9 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import models.Index
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging
-import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
@@ -85,11 +85,7 @@ class ItemPackagingSummary @Inject()(
   }
 
   private[items] def constructBulkPackagingSummary(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    for {
-      epc <- request.userAnswers.get(ItemExciseProductCodePage(itemIdx))
-      bulkType <- request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx))
-    } yield {
-      implicit val goodsType: GoodsType = GoodsType.apply(epc)
+    request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx)).map { bulkType =>
       SummaryListRowViewModel(
         key = "itemsAddToList.packagesCyaLabel",
         value = ValueViewModel(HtmlContent(

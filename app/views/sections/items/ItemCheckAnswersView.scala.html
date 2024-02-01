@@ -16,8 +16,8 @@
 
 @import models.requests.DataRequest
 @import models.response.referenceData.CnCodeInformation
-@import pages.sections.items.ItemBulkPackagingChoicePage
 @import viewmodels.helpers.ItemCheckAnswersHelper
+@import utils.CommodityCodeHelper
 
 @this(
         layout: templates.Layout,
@@ -43,7 +43,7 @@
 
         @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
-        @if(GoodsType.apply(cnCodeInformation.exciseProductCode) == GoodsType.Wine) {
+        @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
             @govukSummaryList(helper.constructWineDetailsCard(idx))
         }
 

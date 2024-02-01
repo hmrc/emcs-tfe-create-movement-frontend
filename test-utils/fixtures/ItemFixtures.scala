@@ -170,10 +170,10 @@ trait ItemFixtures {
 
   val testEpcWine: String = "W200"
   val testGoodsTypeWine: GoodsType = GoodsType.apply(testEpcWine)
-  val testCnCodeWine: String = "22060031"
+  val testCnCodeWine: String = "22060010"
   val testCommodityCodeWine: CnCodeInformation = CnCodeInformation(
     cnCode = testCnCodeWine,
-    cnCodeDescription = "Sparkling cider and perry",
+    cnCodeDescription = "Piquette",
     exciseProductCode = testEpcWine,
     exciseProductCodeDescription = "Still wine and still fermented beverages other than wine and beer",
     unitOfMeasure = Litres20

@@ -26,6 +26,7 @@ import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
 import queries.{ItemsCount, ItemsPackagingCount}
+import utils.CommodityCodeHelper
 
 import javax.inject.Inject
 
@@ -113,8 +114,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
-            case Some(Wine) =>
+          userAnswers.get(ItemCommodityCodePage(idx)) match {
+            case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
               itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             case _ =>
               itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -313,8 +314,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
             case _ =>
               // answer has changed
-              userAnswers.get(ItemExciseProductCodePage(idx)).map(GoodsType.apply(_)) match {
-                case Some(Wine) =>
+              userAnswers.get(ItemCommodityCodePage(idx)) match {
+                case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
                   itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 case _ =>
                   itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -458,22 +459,19 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     }
 
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
-    userAnswers.get(ItemExciseProductCodePage(idx)) match {
-      case Some(epc) =>
-        GoodsType(epc) match {
-          case Wine =>
-            userAnswers.get(ItemQuantityPage(idx)) match {
-              case Some(quantity) =>
-                if (quantity < 60) {
-                  itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-                } else {
-                  itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-                }
-              case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    userAnswers.get(ItemCommodityCodePage(idx)) match {
+      case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
+        userAnswers.get(ItemQuantityPage(idx)) match {
+          case Some(quantity) =>
+            if (quantity <= 60) {
+              itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            } else {
+              itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
-          case _ =>
-            itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
+      case Some(_) =>
+          itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }

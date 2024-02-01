@@ -19,7 +19,6 @@ package views.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemCheckAnswersMessages
-import models.GoodsType
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -63,19 +62,15 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
       }
 
       "must not render the Wine card" - {
-        GoodsType.values.filterNot(_ == GoodsType.Wine).foreach {
-          goodsType =>
-            s"when goodsType is $goodsType" in {
-              implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+        s"when the commodity code is not 22060010 or begins 2204 (except 22043096 / 22043098)" in {
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-              val view = app.injector.instanceOf[ItemCheckAnswersView]
+          val view = app.injector.instanceOf[ItemCheckAnswersView]
 
-              val epc = s"${goodsType.code}000"
-              implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(exciseProductCode = epc), testOnwardRoute).toString())
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(cnCode = testCnCodeSpirit), testOnwardRoute).toString())
 
-              doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails
-            }
+          doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails
         }
       }
     }

@@ -48,7 +48,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
     lazy val testController = new DispatchUseConsignorDetailsController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDispatchNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

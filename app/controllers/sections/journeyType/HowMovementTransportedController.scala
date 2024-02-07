@@ -50,7 +50,7 @@ class HowMovementTransportedController @Inject()(
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: HowMovementTransportedView,
                                                   onlyFixedView: HowMovementTransportedNoOptionView,
-                                                  val userAllowList: UserAllowListAction
+                                                  val betaAllowList: BetaAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {

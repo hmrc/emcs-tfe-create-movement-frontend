@@ -57,7 +57,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),

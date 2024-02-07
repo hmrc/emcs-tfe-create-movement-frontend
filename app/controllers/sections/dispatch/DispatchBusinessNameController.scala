@@ -36,7 +36,7 @@ class DispatchBusinessNameController @Inject()(override val messagesApi: Message
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                               override val userAllowList: UserAllowListAction,
+                                               override val betaAllowList: BetaAllowListAction,
                                                formProvider: DispatchBusinessNameFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: DispatchBusinessNameView

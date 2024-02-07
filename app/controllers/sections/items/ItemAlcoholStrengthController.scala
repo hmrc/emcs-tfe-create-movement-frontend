@@ -38,7 +38,7 @@ class ItemAlcoholStrengthController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                               override val userAllowList: UserAllowListAction,
+                                               override val betaAllowList: BetaAllowListAction,
                                                formProvider: ItemAlcoholStrengthFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ItemAlcoholStrengthView

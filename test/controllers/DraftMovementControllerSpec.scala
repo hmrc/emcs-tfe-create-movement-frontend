@@ -34,7 +34,7 @@ class DraftMovementControllerSpec extends SpecBase {
     lazy val testController = new DraftMovementController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,

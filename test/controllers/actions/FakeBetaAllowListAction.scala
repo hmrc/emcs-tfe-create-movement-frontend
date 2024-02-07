@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package connectors.userAllowList
-import models.requests.CheckUserAllowListRequest
-import models.response.ErrorResponse
-import uk.gov.hmrc.http.HeaderCarrier
+package controllers.actions
 
+import fixtures.BaseFixtures
+import models.requests.UserRequest
+import play.api.mvc._
+
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeUserAllowListConnector extends UserAllowListConnector {
-  override def check(checkRequest: CheckUserAllowListRequest)
-                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
-    Future.successful(Right(true))
+class FakeBetaAllowListAction @Inject()() extends BetaAllowListAction with BaseFixtures {
+  override protected def refine[A](request: UserRequest[A]): Future[Either[Result, UserRequest[A]]] = Future.successful(Right(request))
+
+  override protected def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

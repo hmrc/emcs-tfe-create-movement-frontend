@@ -60,7 +60,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),

@@ -55,7 +55,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

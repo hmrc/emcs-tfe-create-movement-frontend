@@ -64,7 +64,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       mockGetPackagingTypesService,

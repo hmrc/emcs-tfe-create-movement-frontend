@@ -65,7 +65,7 @@ class ItemsPackagingAddToListControllerSpec extends SpecBase with MockUserAnswer
     lazy val testController = new ItemsPackagingAddToListController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),

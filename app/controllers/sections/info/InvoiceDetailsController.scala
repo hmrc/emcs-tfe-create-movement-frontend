@@ -45,7 +45,7 @@ class InvoiceDetailsController @Inject()(
                                           val requirePreDraftData: PreDraftDataRequiredAction,
                                           val getData: DataRetrievalAction,
                                           val requireData: DataRequiredAction,
-                                          val userAllowList: UserAllowListAction,
+                                          val betaAllowList: BetaAllowListAction,
                                           formProvider: InvoiceDetailsFormProvider,
                                           val userAnswersService: UserAnswersService,
                                           val controllerComponents: MessagesControllerComponents,

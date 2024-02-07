@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{AuthAction, UserAllowListAction}
+import controllers.actions.{AuthAction, BetaAllowListAction}
 import models.UserAnswers
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -28,11 +28,11 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 val preDraftService: PreDraftService,
                                 val userAnswersService: UserAnswersService,
                                 authAction: AuthAction,
-                                userAllowed: UserAllowListAction,
+                                betaAllowList: BetaAllowListAction,
                                 val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowed) { request =>
+    (authAction(ern) andThen betaAllowList) { request =>
 
       // clear down any in flight pre draft and start again
       preDraftService.set(

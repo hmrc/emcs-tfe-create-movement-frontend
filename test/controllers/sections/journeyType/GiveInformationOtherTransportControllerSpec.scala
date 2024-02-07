@@ -51,7 +51,7 @@ class GiveInformationOtherTransportControllerSpec extends SpecBase with MockUser
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
-      fakeUserAllowListAction
+      fakeBetaAllowListAction
     )
   }
 

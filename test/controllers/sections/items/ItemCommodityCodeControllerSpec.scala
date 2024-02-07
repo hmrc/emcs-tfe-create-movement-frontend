@@ -56,7 +56,7 @@ class ItemCommodityCodeControllerSpec extends SpecBase
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       mockGetCommodityCodesService,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

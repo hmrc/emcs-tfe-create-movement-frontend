@@ -41,7 +41,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
     lazy val testController = new CheckYourAnswersConsignorController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,

@@ -86,8 +86,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
 
-  def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
-
   def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   private def traderKnownFactsReferenceDataService: String =
@@ -124,4 +122,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
+
+  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
+
+  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
 }

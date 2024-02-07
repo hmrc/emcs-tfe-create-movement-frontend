@@ -46,7 +46,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new ImportCustomsOfficeCodeController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeImportInformationNavigator(testOnwardRoute),

@@ -40,7 +40,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
-                                                  override val userAllowList: UserAllowListAction,
+                                                  override val betaAllowList: BetaAllowListAction,
                                                   formProvider: DestinationBusinessNameFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: DestinationBusinessNameView

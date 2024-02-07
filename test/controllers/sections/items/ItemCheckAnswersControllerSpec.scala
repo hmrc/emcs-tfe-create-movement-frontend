@@ -51,7 +51,7 @@ class ItemCheckAnswersControllerSpec extends SpecBase
     val controller: ItemCheckAnswersController = new ItemCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

@@ -51,7 +51,7 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
-      userAllowList = fakeUserAllowListAction,
+      betaAllowList = fakeBetaAllowListAction,
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view

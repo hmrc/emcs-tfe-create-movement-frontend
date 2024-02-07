@@ -48,7 +48,7 @@ class ItemCommercialDescriptionControllerSpec extends SpecBase with MockUserAnsw
     lazy val controller = new ItemCommercialDescriptionController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

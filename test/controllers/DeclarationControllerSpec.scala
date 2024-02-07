@@ -51,7 +51,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
     val controller: DeclarationController = new DeclarationController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),

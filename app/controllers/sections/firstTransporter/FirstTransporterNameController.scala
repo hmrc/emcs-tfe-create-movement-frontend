@@ -37,7 +37,7 @@ class FirstTransporterNameController @Inject()(
                                                 override val auth: AuthAction,
                                                 override val getData: DataRetrievalAction,
                                                 override val requireData: DataRequiredAction,
-                                                override val userAllowList: UserAllowListAction,
+                                                override val betaAllowList: BetaAllowListAction,
                                                 formProvider: FirstTransporterNameFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: FirstTransporterNameView

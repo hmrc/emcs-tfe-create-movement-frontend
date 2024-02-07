@@ -53,7 +53,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
     lazy val controller = new ItemDegreesPlatoController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

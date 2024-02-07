@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package connectors.userAllowList
+package connectors.betaAllowList
 
 import base.SpecBase
 import mocks.connectors.MockHttpClient
-import models.requests.CheckUserAllowListRequest
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.BeforeAndAfterAll
 import play.api.http.{HeaderNames, MimeTypes, Status}
@@ -26,13 +25,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserAllowListConnectorSpec extends SpecBase
+class BetaAllowListConnectorSpec extends SpecBase
   with Status with MimeTypes with HeaderNames with MockHttpClient with BeforeAndAfterAll {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val connector = new UserAllowListConnectorImpl(mockHttpClient, appConfig)
+  lazy val connector = new BetaAllowListConnector(mockHttpClient, appConfig)
 
   "check" - {
 
@@ -40,14 +39,11 @@ class UserAllowListConnectorSpec extends SpecBase
 
       "when downstream call is successful" in {
 
-        val checkRequest = CheckUserAllowListRequest(testErn)
-
-        MockHttpClient.post(
-          url = s"${appConfig.userAllowListBaseUrl}/emcs-tfe/createMovement/check",
-          body = checkRequest
+        MockHttpClient.get(
+          url = s"${appConfig.emcsTfeBaseUrl}/beta/eligibility/$testErn/createMovement"
         ).returns(Future.successful(Right(true)))
 
-        connector.check(checkRequest).futureValue mustBe Right(true)
+        connector.check(testErn).futureValue mustBe Right(true)
       }
     }
 
@@ -55,14 +51,11 @@ class UserAllowListConnectorSpec extends SpecBase
 
       "when downstream call fails" in {
 
-        val checkRequest = CheckUserAllowListRequest(testErn)
-
-        MockHttpClient.post(
-          url = s"${appConfig.userAllowListBaseUrl}/emcs-tfe/createMovement/check",
-          body = checkRequest
+        MockHttpClient.get(
+          url = s"${appConfig.emcsTfeBaseUrl}/beta/eligibility/$testErn/createMovement"
         ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
-        connector.check(checkRequest).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+        connector.check(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

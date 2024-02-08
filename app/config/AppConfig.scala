@@ -80,13 +80,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   private def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
 
-  private def userAllowListService: String = servicesConfig.baseUrl("user-allow-list")
-
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
-
-  def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
-
-  def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {

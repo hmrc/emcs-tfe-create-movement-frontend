@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeBetaAllowListAction}
 import mocks.viewmodels.MockCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
@@ -42,7 +42,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
     val controller = new CheckYourAnswersController(
       messagesApi,
       app.injector.instanceOf[FakeAuthAction],
-      app.injector.instanceOf[FakeUserAllowListAction],
+      app.injector.instanceOf[FakeBetaAllowListAction],
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),

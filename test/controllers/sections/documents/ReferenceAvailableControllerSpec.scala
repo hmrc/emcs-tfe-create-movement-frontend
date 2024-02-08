@@ -50,7 +50,7 @@ class ReferenceAvailableControllerSpec extends SpecBase with MockUserAnswersServ
     lazy val testController = new ReferenceAvailableController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),

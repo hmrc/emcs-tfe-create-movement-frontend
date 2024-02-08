@@ -18,7 +18,6 @@ package pages.sections.dispatch
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.info.movementScenario.DestinationType
 import models.sections.info.movementScenario.MovementScenario.CertifiedConsignee
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest

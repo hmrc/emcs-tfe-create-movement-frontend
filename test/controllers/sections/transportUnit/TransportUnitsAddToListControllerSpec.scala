@@ -57,7 +57,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

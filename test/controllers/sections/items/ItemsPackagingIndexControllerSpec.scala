@@ -42,7 +42,7 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

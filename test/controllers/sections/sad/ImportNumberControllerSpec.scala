@@ -47,7 +47,7 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

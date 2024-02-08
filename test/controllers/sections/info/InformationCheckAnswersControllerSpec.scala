@@ -57,7 +57,7 @@ class InformationCheckAnswersControllerSpec extends SpecBase
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       MockInformationCheckAnswersHelper,
       Helpers.stubMessagesControllerComponents(),
       view

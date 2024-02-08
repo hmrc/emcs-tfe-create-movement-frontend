@@ -49,7 +49,7 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
     lazy val testController = new DocumentsRemoveFromListController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

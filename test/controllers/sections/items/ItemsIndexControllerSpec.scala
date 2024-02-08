@@ -40,7 +40,7 @@ class ItemsIndexControllerSpec extends SpecBase with MockUserAnswersService with
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

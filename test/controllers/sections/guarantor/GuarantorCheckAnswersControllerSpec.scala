@@ -50,7 +50,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       mockGuarantorCheckAnswersHelper,
       messagesControllerComponents,
       view

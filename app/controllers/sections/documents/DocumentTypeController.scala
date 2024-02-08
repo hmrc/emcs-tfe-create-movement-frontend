@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class DocumentTypeController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         override val userAnswersService: UserAnswersService,
-                                        override val userAllowList: UserAllowListAction,
+                                        override val betaAllowList: BetaAllowListAction,
                                         override val navigator: DocumentsNavigator,
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,

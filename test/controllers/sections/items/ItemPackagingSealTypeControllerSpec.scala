@@ -48,7 +48,7 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
     lazy val controller = new ItemPackagingSealTypeController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

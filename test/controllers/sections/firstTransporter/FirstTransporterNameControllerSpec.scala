@@ -49,7 +49,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

@@ -53,7 +53,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService w
     lazy val controller = new ItemBrandNameController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

@@ -50,7 +50,7 @@ class ItemPackagingProductTypeControllerSpec extends SpecBase with MockUserAnswe
     lazy val controller = new ItemPackagingProductTypeController(
       messagesApi = messagesApi,
       userAnswersService = mockUserAnswersService,
-      userAllowList = fakeUserAllowListAction,
+      betaAllowList = fakeBetaAllowListAction,
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

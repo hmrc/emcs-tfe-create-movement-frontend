@@ -56,7 +56,7 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
     lazy val controller = new ItemConfirmCommodityCodeController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       mockUserAnswersService,
       dataRequiredAction,

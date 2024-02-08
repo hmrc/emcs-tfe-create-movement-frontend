@@ -37,7 +37,7 @@ class ConsigneeExportController @Inject()(
                                            override val auth: AuthAction,
                                            override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,
-                                           override val userAllowList: UserAllowListAction,
+                                           override val betaAllowList: BetaAllowListAction,
                                            formProvider: ConsigneeExportFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: ConsigneeExportView

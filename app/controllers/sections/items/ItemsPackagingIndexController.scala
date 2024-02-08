@@ -31,7 +31,7 @@ class ItemsPackagingIndexController @Inject()(
                                       override val auth: AuthAction,
                                       override val getData: DataRetrievalAction,
                                       override val requireData: DataRequiredAction,
-                                      override val userAllowList: UserAllowListAction,
+                                      override val betaAllowList: BetaAllowListAction,
                                       val controllerComponents: MessagesControllerComponents
                                     ) extends BaseItemsNavigationController with AuthActionHelper {
 

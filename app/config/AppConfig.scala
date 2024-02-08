@@ -80,15 +80,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   private def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
 
-  private def userAllowListService: String = servicesConfig.baseUrl("user-allow-list")
-
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
-
-  def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
-
-  def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
-
-  def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {
@@ -124,4 +116,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
+
+  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
+
+  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
 }

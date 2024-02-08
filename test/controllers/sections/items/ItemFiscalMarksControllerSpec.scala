@@ -46,7 +46,7 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
     lazy val controller = new ItemFiscalMarksController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

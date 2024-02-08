@@ -44,7 +44,7 @@ class InformationCheckAnswersController @Inject()(
                                                    val requirePreDraftData: PreDraftDataRequiredAction,
                                                    val getData: DataRetrievalAction,
                                                    val requireData: DataRequiredAction,
-                                                   val userAllowList: UserAllowListAction,
+                                                   val betaAllowList: BetaAllowListAction,
                                                    val cyaHelper: InformationCheckAnswersHelper,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: InformationCheckAnswersView

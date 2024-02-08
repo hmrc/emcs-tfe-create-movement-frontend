@@ -50,7 +50,7 @@ class ItemGeographicalIndicationChoiceControllerSpec extends SpecBase with MockU
     lazy val controller = new ItemGeographicalIndicationChoiceController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

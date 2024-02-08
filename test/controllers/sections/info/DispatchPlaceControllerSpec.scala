@@ -55,7 +55,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
-      fakeUserAllowListAction
+      fakeBetaAllowListAction
     )
   }
 

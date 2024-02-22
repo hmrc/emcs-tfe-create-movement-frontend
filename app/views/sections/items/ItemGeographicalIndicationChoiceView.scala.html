@@ -45,7 +45,7 @@
       @govukRadios(
         RadiosViewModel(
           field = form("value"),
-          legend = LegendViewModel(Text(messages("itemGeographicalIndicationChoice.legend", goodsType.toSingularOutput()))).withCssClass(LegendSize.Large.toString),
+          legend = LegendViewModel(Text(messages("itemGeographicalIndicationChoice.legend", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large),
           items = ItemGeographicalIndicationType.options
         ).withHint(HintViewModel(messages("itemGeographicalIndicationChoice.hint")))
       )

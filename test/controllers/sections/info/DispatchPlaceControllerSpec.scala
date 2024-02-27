@@ -59,8 +59,8 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
     )
   }
 
-  val northernIrelandUserAnswers: UserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
-  val greatBritainUserAnswers: UserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
+  val northernIrelandUserAnswers: UserAnswers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+  val greatBritainUserAnswers: UserAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
 
   "DispatchPlace Controller" - {
 

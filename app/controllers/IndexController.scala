@@ -38,7 +38,8 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
       preDraftService.set(
         UserAnswers(
           ern = ern,
-          draftId = request.sessionId
+          draftId = request.sessionId,
+          hasBeenSubmitted = false
         )
       )
 

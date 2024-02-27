@@ -19,6 +19,7 @@ package mocks.services
 import models.UserAnswers
 import org.scalamock.handlers.{CallHandler2, CallHandler3}
 import org.scalamock.scalatest.MockFactory
+import pages.DeclarationPage
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -38,7 +39,8 @@ trait MockUserAnswersService extends MockFactory {
       (mockUserAnswersService.set(_: UserAnswers)(_: HeaderCarrier))
         .expects(where { (actualAnswers, _) =>
           actualAnswers.ern == userAnswers.ern &&
-            actualAnswers.data == userAnswers.data
+            //Declaration page stores a LocalDateTime which can't be asserted against reliably
+            actualAnswers.data - DeclarationPage == userAnswers.data - DeclarationPage
         })
 
     def set(): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =

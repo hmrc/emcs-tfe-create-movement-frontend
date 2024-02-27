@@ -28,7 +28,8 @@ import scala.annotation.unused
 final case class UserAnswers(ern: String,
                              draftId: String,
                              data: JsObject = Json.obj(),
-                             lastUpdated: Instant = Instant.now) {
+                             lastUpdated: Instant = Instant.now,
+                             hasBeenSubmitted: Boolean) {
 
   /**
    * @param pages a Seq of pages you want to leave in UserAnswers
@@ -91,13 +92,15 @@ object UserAnswers {
   val draftId = "draftId"
   val data = "data"
   val lastUpdated = "lastUpdated"
+  val hasBeenSubmitted = "hasBeenSubmitted"
 
   val reads: Reads[UserAnswers] =
     (
       (__ \ ern).read[String] and
         (__ \ draftId).read[String] and
         (__ \ data).read[JsObject] and
-        (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat)
+        (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
+        (__ \ hasBeenSubmitted).read[Boolean]
       )(UserAnswers.apply _)
 
   val writes: OWrites[UserAnswers] =
@@ -105,7 +108,8 @@ object UserAnswers {
       (__ \ ern).write[String] and
         (__ \ draftId).write[String] and
         (__ \ data).write[JsObject] and
-        (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat)
+        (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat) and
+        (__ \ hasBeenSubmitted).write[Boolean]
       )(unlift(UserAnswers.unapply))
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

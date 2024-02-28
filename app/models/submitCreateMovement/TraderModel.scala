@@ -31,11 +31,11 @@ import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
 
-case class TraderModel(traderExciseNumber: Option[String],
-                       traderName: Option[String],
-                       address: Option[AddressModel],
-                       vatNumber: Option[String],
-                       eoriNumber: Option[String])
+case class TraderModel(traderExciseNumber: Option[String] = None,
+                       traderName: Option[String] = None,
+                       address: Option[AddressModel] = None,
+                       vatNumber: Option[String] = None,
+                       eoriNumber: Option[String] = None)
 
 object TraderModel extends ModelConstructorHelpers {
 
@@ -93,64 +93,50 @@ object TraderModel extends ModelConstructorHelpers {
     }
   }
 
-  //noinspection ScalaStyle
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
-      if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
-        val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
-        val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
+      DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario) ->
+        DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario) match {
+        case (true, _) =>
+          val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
+          val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
 
-        if (useConsigneeDetails) {
-          val consigneeTrader = applyConsignee
+          if (useConsigneeDetails) {
+            applyConsignee.map(_.copy(traderExciseNumber = Some(exciseId), vatNumber = None, eoriNumber = None))
+          } else {
+            Some(TraderModel(
+              traderExciseNumber = Some(exciseId),
+              traderName = Some(mandatoryPage(DestinationBusinessNamePage)),
+              address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage)))
+            ))
+          }
+        case (_, true) =>
+          val vatNumber: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+          val useConsigneeDetails: Boolean = request.userAnswers.get(DestinationConsigneeDetailsPage).exists(_.booleanValue())
+
+          val giveAddressAndBusinessName: Boolean =
+            if (DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true else mandatoryPage(DestinationDetailsChoicePage)
+
+          giveAddressAndBusinessName -> useConsigneeDetails match {
+            case (true, true) =>
+              applyConsignee.map(_.copy(traderExciseNumber = vatNumber, vatNumber = None, eoriNumber = None))
+            case (true, false) =>
+              Some(TraderModel(
+                traderExciseNumber = vatNumber,
+                traderName = request.userAnswers.get(DestinationBusinessNamePage),
+                address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
+              ))
+            case (false, _) =>
+              Some(TraderModel(
+                traderExciseNumber = vatNumber
+              ))
+          }
+        case _ =>
           Some(TraderModel(
-            traderExciseNumber = Some(exciseId),
-            traderName = consigneeTrader.flatMap(_.traderName),
-            address = consigneeTrader.flatMap(_.address),
-            vatNumber = None,
-            eoriNumber = None
-          ))
-        } else {
-          Some(TraderModel(
-            traderExciseNumber = Some(exciseId),
-            traderName = Some(mandatoryPage(DestinationBusinessNamePage)),
-            address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage))),
-            vatNumber = None,
-            eoriNumber = None
-          ))
-        }
-      } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario)) {
-
-        val exciseId: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
-
-        val giveAddressAndBusinessName: Boolean =
-          if(DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true
-          else mandatoryPage(DestinationDetailsChoicePage)
-
-        if (giveAddressAndBusinessName) {
-          Some(TraderModel(
-            traderExciseNumber = exciseId,
+            traderExciseNumber = None,
             traderName = request.userAnswers.get(DestinationBusinessNamePage),
-            address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress),
-            vatNumber = None,
-            eoriNumber = None
+            address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
           ))
-        } else {
-          Some(TraderModel(
-            traderExciseNumber = exciseId,
-            traderName = None,
-            address = None,
-            vatNumber = None,
-            eoriNumber = None
-          ))
-        }
-      } else {
-        Some(TraderModel(
-          traderExciseNumber = None,
-          traderName = request.userAnswers.get(DestinationBusinessNamePage),
-          address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress),
-          vatNumber = None,
-          eoriNumber = None
-        ))
       }
     } else {
       None

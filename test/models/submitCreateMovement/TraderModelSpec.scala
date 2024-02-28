@@ -282,7 +282,27 @@ class TraderModelSpec extends SpecBase {
         }
       }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
-        "when giveAddressAndBusinessName = true" in {
+        "when giveAddressAndBusinessName = true, and use consignee address = true" in {
+          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
+            movementScenario =>
+              implicit val dr: DataRequest[_] = dataRequest(
+                fakeRequest,
+                emptyUserAnswers
+                  .set(ConsigneeBusinessNamePage, "consignee name")
+                  .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                  .set(DestinationTypePage, movementScenario)
+                  .set(DestinationWarehouseVatPage, "destination ern")
+                  .set(DestinationDetailsChoicePage, true)
+                  .set(DestinationConsigneeDetailsPage, true)
+                  .set(DestinationBusinessNamePage, "destination name")
+                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+              )
+
+              TraderModel.applyDeliveryPlace(movementScenario) mustBe
+                Some(consigneeTraderWithNeitherErnNorVatNo.copy(traderExciseNumber = Some("destination ern")))
+          }
+        }
+        "when giveAddressAndBusinessName = true, and use consignee address = false" in {
           Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
@@ -291,6 +311,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, true)
+                  .set(DestinationConsigneeDetailsPage, false)
                   .set(DestinationBusinessNamePage, "destination name")
                   .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
               )
@@ -307,6 +328,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, false)
+                  .set(DestinationConsigneeDetailsPage, false)
                   .set(DestinationBusinessNamePage, "destination name")
                   .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
               )

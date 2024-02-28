@@ -48,6 +48,18 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
       }
     }
 
+    "when XIPA" - {
+      s"must return OfficeModel(XI$dispatchOfficeSuffix)" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = emptyUserAnswers,
+          ern = "XIPA123"
+        )
+
+        SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
+      }
+    }
+
     "when XIRC" - {
       s"must return OfficeModel(XI$dispatchOfficeSuffix)" in {
         implicit val dr: DataRequest[_] = dataRequest(

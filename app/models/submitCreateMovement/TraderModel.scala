@@ -92,13 +92,11 @@ object TraderModel extends ModelConstructorHelpers {
       None
     }
   }
-  
+
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
-
       DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario) ->
         DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario) match {
-
         case (true, _) =>
           val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
           val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
@@ -112,25 +110,27 @@ object TraderModel extends ModelConstructorHelpers {
               address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage)))
             ))
           }
-
         case (_, true) =>
           val vatNumber: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+          val useConsigneeDetails: Boolean = request.userAnswers.get(DestinationConsigneeDetailsPage).exists(_.booleanValue())
 
           val giveAddressAndBusinessName: Boolean =
             if (DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true else mandatoryPage(DestinationDetailsChoicePage)
 
-          if (giveAddressAndBusinessName) {
-            Some(TraderModel(
-              traderExciseNumber = vatNumber,
-              traderName = request.userAnswers.get(DestinationBusinessNamePage),
-              address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
-            ))
-          } else {
-            Some(TraderModel(
-              traderExciseNumber = vatNumber
-            ))
+          giveAddressAndBusinessName -> useConsigneeDetails match {
+            case (true, true) =>
+              applyConsignee.map(_.copy(traderExciseNumber = vatNumber, vatNumber = None, eoriNumber = None))
+            case (true, false) =>
+              Some(TraderModel(
+                traderExciseNumber = vatNumber,
+                traderName = request.userAnswers.get(DestinationBusinessNamePage),
+                address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
+              ))
+            case (false, _) =>
+              Some(TraderModel(
+                traderExciseNumber = vatNumber
+              ))
           }
-
         case _ =>
           Some(TraderModel(
             traderExciseNumber = None,
@@ -138,7 +138,6 @@ object TraderModel extends ModelConstructorHelpers {
             address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
           ))
       }
-
     } else {
       None
     }

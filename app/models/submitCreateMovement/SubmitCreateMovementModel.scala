@@ -17,7 +17,7 @@
 package models.submitCreateMovement
 
 import config.AppConfig
-import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
+import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
@@ -56,7 +56,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
   private[submitCreateMovement]def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
 
     val referenceNumber = UserType(request.ern) match {
-      case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+      case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor | NorthernIrelandCertifiedConsignor =>
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
       case NorthernIrelandWarehouseKeeper =>
         mandatoryPage(DispatchPlacePage) + appConfig.destinationOfficeSuffix

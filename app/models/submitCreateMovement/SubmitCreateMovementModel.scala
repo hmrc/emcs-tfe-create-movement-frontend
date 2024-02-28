@@ -17,7 +17,7 @@
 package models.submitCreateMovement
 
 import config.AppConfig
-import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
+import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
@@ -55,18 +55,16 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
 
   private[submitCreateMovement]def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
 
-    val userType = UserType(request.ern)
-
-    // TODO will need to align for duty paid traders
-    OfficeModel(
-      if(userType == NorthernIrelandRegisteredConsignor) {
+    val referenceNumber = UserType(request.ern) match {
+      case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
-      } else if(userType == NorthernIrelandWarehouseKeeper) {
+      case NorthernIrelandWarehouseKeeper =>
         mandatoryPage(DispatchPlacePage) + appConfig.destinationOfficeSuffix
-      } else {
+      case _ =>
         DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
-      }
-    )
+    }
+
+    OfficeModel(referenceNumber)
   }
 
   def apply(implicit request: DataRequest[_], messages: Messages, appConfig: AppConfig): SubmitCreateMovementModel = {

@@ -68,7 +68,8 @@ trait BaseFixtures {
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
     draftId = testDraftId,
-    lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
+    lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS),
+    hasBeenSubmitted = false
   )
 
   val testMinTraderKnownFacts: TraderKnownFacts = TraderKnownFacts(

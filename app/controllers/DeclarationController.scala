@@ -63,8 +63,8 @@ class DeclarationController @Inject()(
         service.submit(submitCreateMovementModel).flatMap {
           response =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
-
-            saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+            val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true)
+            saveAndRedirect(DeclarationPage, LocalDateTime.now(), updatedAnswers, NormalMode)
         }.recover {
           case exception =>
             logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")

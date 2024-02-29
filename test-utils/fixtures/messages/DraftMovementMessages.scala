@@ -26,6 +26,8 @@ object DraftMovementMessages {
     def headingImportFor(input1: String): String = s"Import for $input1"
     def titleImportFor(input1: String): String = titleHelper(headingImportFor(input1))
 
+    val notificationBanner704Content = "Some sections need updating before you can resubmit this movement"
+    val headingWhen704ErrorsPresent = "Update your movement information"
     val movementSectionHeading: String = "Movement"
     val movementDetails: String = "Movement details"
 

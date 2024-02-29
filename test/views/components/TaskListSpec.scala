@@ -42,7 +42,8 @@ class TaskListSpec extends SpecBase {
               TaskListSectionRow("Row 2", "ern-2", Some("link"), None, Some(InProgress)),
               TaskListSectionRow("Row 3", "ern-2", Some("link"), None, Some(NotStarted)),
               TaskListSectionRow("Row 4", "ern-4", None, None, Some(CannotStartYet)),
-              TaskListSectionRow("Row 4", "ern-4", None, None, None),
+              TaskListSectionRow("Row 5", "ern-4", None, None, Some(UpdateNeeded)),
+              TaskListSectionRow("Row 6", "ern-4", None, None, None),
             )),
             TaskListSection("Test 2", Seq(
               TaskListSectionRow("Row 1", "ern-1", None, None, Some(CannotStartYet))
@@ -131,6 +132,21 @@ class TaskListSpec extends SpecBase {
                 val tag = row.select("strong.app-task-list__tag")
                 tag.text() mustBe messagesForLanguage.cannotStartYet
                 tag.hasClass("govuk-tag--grey") mustBe true
+              }
+            }
+
+            "for the 5th row" - {
+
+              val row = section.select(sectionRow(5))
+
+              "should have the correct text" in {
+                row.select("span").text() mustBe "Row 5"
+              }
+
+              "should have the correct status text AND colour" in {
+                val tag = row.select("strong.app-task-list__tag")
+                tag.text() mustBe messagesForLanguage.updateNeeded
+                tag.hasClass("govuk-tag--orange") mustBe true
               }
             }
           }

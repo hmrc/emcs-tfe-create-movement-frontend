@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.info
+package fixtures
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.MovementSubmissionFailure
 
-object InformationCheckAnswersMessages {
+trait MovementSubmissionFailureFixtures {
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers"
-    val title: String = titleHelper(heading)
-    val sectionSubheading = "Movement information"
-
-    val lrnSubmissionFailure = "The Local Reference Number (LRN) entered has been used before"
-  }
-
-  object English extends ViewMessages with BaseEnglish
+  val movementSubmissionFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = "4403",
+    errorReason = "Oh no! Duplicate LRN The LRN is already known and is therefore not unique according to the specified rules",
+    errorLocation = Some("/IE813[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    originalAttributeValue = Some("lrnie8155639254"),
+    hasFixed = false
+  )
 
 }

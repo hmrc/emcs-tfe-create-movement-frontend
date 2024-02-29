@@ -35,6 +35,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
     ern = testErn,
     draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS),
+    submissionFailures = Seq.empty,
     hasBeenSubmitted = true
   )
 

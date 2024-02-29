@@ -22,12 +22,15 @@
 package models
 
 import base.SpecBase
-import pages.QuestionPage
+import fixtures.MovementSubmissionFailureFixtures
+import pages.{DeclarationPage, QuestionPage}
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.libs.json._
 import queries.Derivable
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 
-class UserAnswersSpec extends SpecBase {
+class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
     override val toString: String = "TestPage"
@@ -360,16 +363,14 @@ class UserAnswersSpec extends SpecBase {
         override val path: JsPath = __ \ toString
       }
 
-      val baseUserAnswers = UserAnswers(ern = "my ern", draftId = "my draftId", hasBeenSubmitted = false)
-
       "must only return pages in the supplied Seq" in {
-        val existingUserAnswers = baseUserAnswers
+        val existingUserAnswers = emptyUserAnswers
           .set(page1, "foo")
           .set(page2, "bar")
           .set(page3, "wizz")
 
         existingUserAnswers.filterForPages(Seq(page1, page2)) mustBe {
-          baseUserAnswers.copy(data = Json.obj(
+          emptyUserAnswers.copy(data = Json.obj(
             page1.toString -> "foo",
             page2.toString -> "bar"
           ))
@@ -377,11 +378,123 @@ class UserAnswersSpec extends SpecBase {
       }
 
       "must return an empty Seq if none of the supplied pages are in UserAnswers" in {
-        val existingUserAnswers = baseUserAnswers
+        val existingUserAnswers = emptyUserAnswers
           .set(page1, "foo")
           .set(page3, "wizz")
 
-        existingUserAnswers.filterForPages(Seq(page2)) mustBe baseUserAnswers
+        existingUserAnswers.filterForPages(Seq(page2)) mustBe emptyUserAnswers
+      }
+    }
+
+    "when calling haveAllSubmissionErrorsBeenFixed" - {
+
+      def userAnswers(hasFixed: Boolean) = emptyUserAnswers.copy(
+        submissionFailures = Seq(movementSubmissionFailure.copy(hasFixed = hasFixed))
+      )
+
+      "return true" - {
+
+        "when there are no errors" in {
+
+          emptyUserAnswers.haveAllSubmissionErrorsBeenFixed mustBe true
+        }
+
+        "when all the errors have been fixed" in {
+
+          userAnswers(hasFixed = true).haveAllSubmissionErrorsBeenFixed mustBe true
+        }
+      }
+
+      "return false" - {
+
+        "when an error hasn't been fixed" in {
+
+          userAnswers(hasFixed = false).haveAllSubmissionErrorsBeenFixed mustBe false
+        }
+
+        "when multiple errors exist and only one hasn't been fixed" in {
+
+          emptyUserAnswers.copy(
+            submissionFailures = Seq(movementSubmissionFailure.copy(hasFixed = true),
+              movementSubmissionFailure.copy(hasFixed = false),
+              movementSubmissionFailure.copy(hasFixed = true))
+          ).haveAllSubmissionErrorsBeenFixed mustBe false
+        }
+      }
+    }
+
+    "when calling isSubmissionErrorOnPage" - {
+
+      "must return true" - {
+
+        s"when the page is $LocalReferenceNumberPage and the error is $localReferenceNumberError and not fixed" in {
+          emptyUserAnswers.copy(
+            submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false))
+          ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe true
+        }
+      }
+
+      "must return false" - {
+
+        s"for $LocalReferenceNumberPage" - {
+
+          s"when the error is not a $localReferenceNumberError" in {
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasFixed = false))
+            ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe false
+          }
+
+          s"when the error is $localReferenceNumberError but fixed" in {
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = true))
+            ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe false
+          }
+
+          "no errors exist" in {
+            emptyUserAnswers.isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe false
+          }
+        }
+
+        "the page is not matched" in {
+          emptyUserAnswers.isSubmissionErrorOnPage(DeclarationPage) mustBe false
+        }
+      }
+    }
+
+    "when calling getOriginalAttributeValueForPage" - {
+
+      "must return Some(_)" - {
+
+        "for the LRN page" - {
+
+          s"when the error type is $localReferenceNumberError and an original attribute value exists" in {
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false, originalAttributeValue = Some("LRN1")))
+            ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe Some("LRN1")
+          }
+        }
+      }
+
+      "must return None" - {
+
+        "for the LRN page" - {
+
+          s"when the error type is not $localReferenceNumberError" in {
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasFixed = false, originalAttributeValue = Some("LRN1")))
+            ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe None
+          }
+
+          "when the original value is not defined" in {
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false, originalAttributeValue = None))
+            ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe None
+          }
+        }
+
+        "the page is not matched" in {
+          emptyUserAnswers.getOriginalAttributeValueForPage(DeclarationPage) mustBe None
+        }
       }
     }
   }

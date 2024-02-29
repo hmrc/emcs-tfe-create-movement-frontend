@@ -17,20 +17,29 @@
 package viewmodels.checkAnswers.sections.info
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import fixtures.messages.sections.info.LocalReferenceNumberMessages.ViewMessages
 import models.CheckMode
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 import viewmodels.govuk.summarylist._
+import views.html.components.tag
 
 
-class InformationLocalReferenceNumberSummarySpec extends SpecBase {
+class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementSubmissionFailureFixtures {
 
-  private def expectedRow(value: String, deferredMovement: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  val summary: InformationLocalReferenceNumberSummary = app.injector.instanceOf[InformationLocalReferenceNumberSummary]
+  val tag: tag = app.injector.instanceOf[tag]
+
+  private def expectedRow(value: String,
+                          deferredMovement: Boolean,
+                          hasUpdateNeededTag: Boolean = false)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
 
     val cyaLabel: String = if (deferredMovement) messagesForLanguage.deferredCyaLabel else messagesForLanguage.newCyaLabel
     val cyaChangeHidden: String = if (deferredMovement) messagesForLanguage.deferredCyaChangeHidden else messagesForLanguage.newCyaChangeHidden
@@ -38,7 +47,10 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
     Some(
       SummaryListRowViewModel(
         key = Key(Text(cyaLabel)),
-        value = Value(Text(value)),
+        value = Value(HtmlContent(HtmlFormat.fill(Seq(
+          Some(Html(value)),
+          if(hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
+        ).flatten))),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
           href = controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(testErn, CheckMode).url,
@@ -52,15 +64,15 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
-      "and this is a deferred movement" - {
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+      "and this is a deferred movement" - {
 
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            InformationLocalReferenceNumberSummary.row(deferredMovement = true) mustBe None
+            summary.row(deferredMovement = true) mustBe None
           }
         }
 
@@ -68,7 +80,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
-            InformationLocalReferenceNumberSummary.row(deferredMovement = true) mustBe expectedRow(value = testLrn, deferredMovement = true)
+            summary.row(deferredMovement = true) mustBe expectedRow(value = testLrn, deferredMovement = true)
           }
         }
 
@@ -76,13 +88,11 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
 
       "and this is NOT a deferred movement" - {
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            InformationLocalReferenceNumberSummary.row(deferredMovement = false) mustBe None
+            summary.row(deferredMovement = false) mustBe None
           }
         }
 
@@ -90,10 +100,33 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
-            InformationLocalReferenceNumberSummary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
+            summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
           }
         }
 
+      }
+
+      "and there is a 704 error" - {
+
+        "must render an 'Update Needed' tag against the LRN - when the error has not been fixed" in {
+
+          implicit lazy val request = dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false)))
+              .set(LocalReferenceNumberPage(), testLrn))
+
+          summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false, hasUpdateNeededTag = true)
+        }
+
+        "must not render an 'Update Needed' tag against the LRN - when the error has been fixed" in {
+
+          implicit lazy val request = dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = true)))
+              .set(LocalReferenceNumberPage(), testLrn))
+
+          summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
+        }
       }
     }
   }

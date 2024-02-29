@@ -20,14 +20,20 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.taskList.UpdateNeeded
 
-object InformationLocalReferenceNumberSummary {
+import javax.inject.Inject
+
+class InformationLocalReferenceNumberSummary @Inject()(tag: views.html.components.tag) {
 
   def row(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    val hasUnfixedLRNError = request.userAnswers.isSubmissionErrorOnPage(LocalReferenceNumberPage(false))
 
     request.userAnswers.get(LocalReferenceNumberPage()).map { lrn =>
 
@@ -35,7 +41,10 @@ object InformationLocalReferenceNumberSummary {
 
       SummaryListRowViewModel(
         key = s"localReferenceNumber.$deferredType.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(lrn).toString()),
+        value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+          Some(HtmlFormat.escape(lrn)),
+          if(hasUnfixedLRNError) Some(updateNeededTag()) else None
+        ).flatten))),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
@@ -51,4 +60,9 @@ object InformationLocalReferenceNumberSummary {
     }
   }
 
+  private def updateNeededTag()(implicit messages: Messages): Html = tag(
+    message = messages(UpdateNeeded.msgKey),
+    colour = "orange",
+    extraClasses = "float-none govuk-!-margin-left-1"
+  )
 }

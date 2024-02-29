@@ -17,6 +17,7 @@
 package views.sections.info
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.InformationCheckAnswersMessages
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -25,12 +26,15 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 import views.html.sections.info.InformationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
+class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+    val fixLRNLink = "#fix-local-reference-number"
+  }
 
   "InformationArrangerCheckAnswers view" - {
 
@@ -41,9 +45,9 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[InformationCheckAnswersView]
+        lazy val view = app.injector.instanceOf[InformationCheckAnswersView]
 
-        implicit val doc: Document = Jsoup.parse(view(
+        implicit def doc(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
           SummaryList(Seq()),
           controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftSubmit(testErn)
         ).toString())
@@ -54,6 +58,25 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
+
+        "when there is a 704 error" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+          .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false))))
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.sectionSubheading,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure,
+            Selectors.button -> messagesForLanguage.confirmAnswers
+          ))
+
+          "link to the LRN page" in {
+            doc.select(Selectors.fixLRNLink).attr("href") mustBe controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn, testDraftId).url
+          }
+        }
       }
     }
   }

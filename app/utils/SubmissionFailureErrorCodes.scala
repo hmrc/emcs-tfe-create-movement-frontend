@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package fixtures.messages
+package utils
 
-object TaskListStatusMessages {
-
-  sealed trait ViewMessages { _: i18n =>
-    val completed: String = "Completed"
-    val inProgress: String = "In Progress"
-    val notStartedYet: String = "Not Started"
-    val cannotStartYet: String = "Cannot Start Yet"
-    val updateNeeded: String = "Update Needed"
-  }
-
-  object English extends ViewMessages with BaseEnglish
+object SubmissionFailureErrorCodes {
+  val localReferenceNumberError = "4402"
 }

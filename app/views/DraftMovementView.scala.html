@@ -29,18 +29,35 @@
         link: components.link,
         taskList: components.taskList,
         helper: DraftMovementHelper,
+        notificationBanner: GovukNotificationBanner,
         saveAndContinue: components.saveAndContinue
 )
 
 @()(implicit request: DataRequest[_], messages: Messages)
 
+@headerAndTitle = @{
+  if(request.userAnswers.submissionFailures.nonEmpty) {
+    "draftMovement.subHeading.error.704"
+  } else {
+    helper.heading
+  }
+}
+
 @layout(
-  pageTitle = titleNoForm(helper.heading),
+  pageTitle = titleNoForm(headerAndTitle),
   maybeShowActiveTrader = maybeShowActiveTrader(request),
   showBackLink = false
 ) {
 
-    @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
+  @if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+    @notificationBanner(NotificationBanner(
+      title = Text(messages("errors.704.notificationBanner.title")),
+      content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content"))))
+    ))
+  }
+
+    @h1(headerAndTitle, Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
     @p("govuk-body govuk-!-margin-bottom-0") {
         @messages("draftMovement.lrn", request.userAnswers.get(LocalReferenceNumberPage()).getOrElse(messages("draftMovement.notProvided")))
     }

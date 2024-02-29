@@ -17,17 +17,23 @@
 package forms.sections.info
 
 import forms.mappings.Mappings
+import models.requests.DataRequest
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class LocalReferenceNumberFormProvider @Inject() extends Mappings {
 
-  def apply(isDeferred: Boolean): Form[String] =
+  def apply(isDeferred: Boolean)(implicit dataRequest: DataRequest[_]): Form[String] = {
+    val optOriginalValueSentInPreviousSubmission = dataRequest.userAnswers.getOriginalAttributeValueForPage(LocalReferenceNumberPage())
     Form(
       "value" -> text(errMsgForKey("required")(isDeferred))
         .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
+        //TODO: can getOrElse be changed to something else?
+        .verifying(isNotEqualTo(optOriginalValueSentInPreviousSubmission.getOrElse(""), "errors.704.lrn.input"))
     )
+  }
 
   private def errMsgForKey(key: String)(isDeferred: Boolean) = {
     val infix = if (isDeferred) "deferred" else "new"

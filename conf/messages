@@ -44,6 +44,7 @@ taskListStatus.inProgress = In Progress
 taskListStatus.notStarted = Not Started
 taskListStatus.cannotStartYet = Cannot Start Yet
 taskListStatus.incomplete = Incomplete
+taskListStatus.updateNeeded = Update Needed
 
 unitOfMeasure.kilograms.short = kg
 unitOfMeasure.kilograms.long = kilograms
@@ -321,6 +322,7 @@ importInformation.subHeading = Import information
 documents.subHeading = Documents
 items.subHeading = Item information
 draftMovement.subHeading = Draft movement
+draftMovement.subHeading.error.704 = Update your movement information
 subHeading.hidden = This section is
 
 checkYourAnswersJourneyType.title = Check your answers
@@ -1426,3 +1428,9 @@ itemsAddToList.error.required = Select yes if you need to add another item
 transportUnitCheckAnswers.title = Check your answers
 transportUnitCheckAnswers.heading = Check your answers
 transportUnitCheckAnswers.heading.transportUnits = Transport units
+
+# Submission failures (704) messages
+errors.704.notificationBanner.title = Update needed
+errors.704.notificationBanner.content = Some sections need updating before you can resubmit this movement
+errors.704.lrn = The Local Reference Number (LRN) entered has been used before
+errors.704.lrn.input = The Local Reference Number (LRN) entered has been used before so you must now enter different details

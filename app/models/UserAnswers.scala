@@ -16,11 +16,13 @@
 
 package models
 
-import pages.QuestionPage
+import pages.{Page, QuestionPage}
 import pages.sections.Section
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 import java.time.Instant
 import scala.annotation.unused
@@ -28,6 +30,7 @@ import scala.annotation.unused
 final case class UserAnswers(ern: String,
                              draftId: String,
                              data: JsObject = Json.obj(),
+                             submissionFailures: Seq[MovementSubmissionFailure],
                              lastUpdated: Instant = Instant.now,
                              hasBeenSubmitted: Boolean) {
 
@@ -82,6 +85,21 @@ final case class UserAnswers(ern: String,
     case JsError(errors) =>
       throw JsResultException(errors)
   }
+
+  def haveAllSubmissionErrorsBeenFixed: Boolean = submissionFailures.forall(_.hasFixed)
+
+  def isSubmissionErrorOnPage(page: Page): Boolean =
+    page match {
+      case LocalReferenceNumberPage(_) => submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasFixed)
+      case _ => false
+    }
+
+  def getOriginalAttributeValueForPage(page: Page): Option[String] =
+    page match {
+      case LocalReferenceNumberPage(_) => submissionFailures.find(_.errorType == localReferenceNumberError).flatMap(_.originalAttributeValue)
+      case _ => None
+    }
+
 }
 
 object UserAnswers {
@@ -93,12 +111,14 @@ object UserAnswers {
   val data = "data"
   val lastUpdated = "lastUpdated"
   val hasBeenSubmitted = "hasBeenSubmitted"
+  val submissionFailures = "submissionFailures"
 
   val reads: Reads[UserAnswers] =
     (
       (__ \ ern).read[String] and
         (__ \ draftId).read[String] and
         (__ \ data).read[JsObject] and
+        (__ \ submissionFailures).readNullable[Seq[MovementSubmissionFailure]].map(_.getOrElse(Seq.empty)) and
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).read[Boolean]
       )(UserAnswers.apply _)
@@ -108,6 +128,7 @@ object UserAnswers {
       (__ \ ern).write[String] and
         (__ \ draftId).write[String] and
         (__ \ data).write[JsObject] and
+        (__ \ submissionFailures).write[Seq[MovementSubmissionFailure]] and
         (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).write[Boolean]
       )(unlift(UserAnswers.unapply))

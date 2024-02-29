@@ -17,12 +17,15 @@
 package forms.sections.info
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
-class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
+class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
   val fieldName = "value"
   val maxLength = 22
@@ -31,7 +34,7 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
 
     "when movement is deferred" - {
 
-      val form = new LocalReferenceNumberFormProvider().apply(isDeferred = true)
+      val form = new LocalReferenceNumberFormProvider().apply(isDeferred = true)(dataRequest(FakeRequest()))
 
       "when a value is not provided" - {
 
@@ -54,7 +57,7 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
 
     "when movement is NOT deferred (new)" - {
 
-      val form = new LocalReferenceNumberFormProvider().apply(isDeferred = false)
+      val form = new LocalReferenceNumberFormProvider().apply(isDeferred = false)(dataRequest(FakeRequest()))
 
       "when a value is not provided" - {
 
@@ -81,6 +84,20 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
           val boundForm = form.bind(Map(fieldName -> "A" * maxLength))
           boundForm.value mustBe Some("A" * maxLength)
         }
+      }
+    }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new LocalReferenceNumberFormProvider().apply(isDeferred = false)(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false, originalAttributeValue = Some("LRN1"))
+        ))))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(fieldName -> "LRN1"))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "errors.704.lrn.input", Seq()))
       }
     }
   }
@@ -111,6 +128,11 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
         "have the correct error message for length (new)" in {
           msgs("localReferenceNumber.new.error.length") mustBe
             messagesForLanguage.newErrorLength
+        }
+
+        "have the correct error message for a submission failure" in {
+          msgs("errors.704.lrn.input") mustBe
+            messagesForLanguage.submissionFailureError
         }
       }
     }

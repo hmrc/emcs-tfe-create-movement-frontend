@@ -31,6 +31,7 @@ object LocalReferenceNumberMessages {
     val newErrorLength: String = "Unique reference must be 22 characters or less"
     val newCyaLabel: String = "Unique reference (LRN)"
     val newCyaChangeHidden: String = "Unique reference (LRN)"
+    val submissionFailureError: String = "The Local Reference Number (LRN) entered has been used before so you must now enter different details"
 
     val deferredHeading: String = "Enter the Local Reference Number (LRN) for the deferred movement"
     val deferredTitle: String = titleHelper(deferredHeading)
@@ -39,6 +40,8 @@ object LocalReferenceNumberMessages {
     val deferredErrorLength: String = "LRN must be 22 characters or less"
     val deferredCyaLabel: String = "Local Reference Number (LRN)"
     val deferredCyaChangeHidden: String = "Local Reference Number (LRN)"
+
+    val lrnSubmissionFailure = "The Local Reference Number (LRN) entered has been used before"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -70,6 +70,7 @@ trait BaseFixtures {
     draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS),
     submissionFailures = Seq.empty,
+    submittedDraftId = None,
     hasBeenSubmitted = false
   )
 
@@ -197,15 +198,16 @@ trait BaseFixtures {
     transportDetails = Seq()
   )
 
-  val successResponseChRISJson: JsValue = Json.obj("receipt" -> testConfirmationReference, "receiptDate" -> "2023-06-07T10:11:12.000")
+  val successResponseChRISJson: JsValue = Json.obj("receipt" -> testConfirmationReference, "receiptDate" -> "2023-06-07T10:11:12.000", "submittedDraftId" -> s"$testDraftId")
   val successResponseEISJson: JsValue = Json.parse(
     s"""{
        | "status": "OK",
        | "message": "$testConfirmationReference",
-       | "emcsCorrelationId": "3e8dae97-b586-4cef-8511-68ac12da9028"
+       | "emcsCorrelationId": "3e8dae97-b586-4cef-8511-68ac12da9028",
+       | "submittedDraftId": "$testDraftId"
        |}""".stripMargin)
   val submitCreateMovementResponseEIS: SubmitCreateMovementResponse =
-    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS")
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS", submittedDraftId = testDraftId)
   val submitCreateMovementResponseChRIS: SubmitCreateMovementResponse =
-    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS")
+    SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS", submittedDraftId = testDraftId)
 }

@@ -32,7 +32,8 @@ final case class UserAnswers(ern: String,
                              data: JsObject = Json.obj(),
                              submissionFailures: Seq[MovementSubmissionFailure],
                              lastUpdated: Instant = Instant.now,
-                             hasBeenSubmitted: Boolean) {
+                             hasBeenSubmitted: Boolean,
+                             submittedDraftId: Option[String]) {
 
   /**
    * @param pages a Seq of pages you want to leave in UserAnswers
@@ -112,6 +113,7 @@ object UserAnswers {
   val lastUpdated = "lastUpdated"
   val hasBeenSubmitted = "hasBeenSubmitted"
   val submissionFailures = "submissionFailures"
+  val submittedDraftId = "submittedDraftId"
 
   val reads: Reads[UserAnswers] =
     (
@@ -120,7 +122,8 @@ object UserAnswers {
         (__ \ data).read[JsObject] and
         (__ \ submissionFailures).readNullable[Seq[MovementSubmissionFailure]].map(_.getOrElse(Seq.empty)) and
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
-        (__ \ hasBeenSubmitted).read[Boolean]
+        (__ \ hasBeenSubmitted).read[Boolean] and
+        (__ \ submittedDraftId).readNullable[String]
       )(UserAnswers.apply _)
 
   val writes: OWrites[UserAnswers] =
@@ -130,7 +133,8 @@ object UserAnswers {
         (__ \ data).write[JsObject] and
         (__ \ submissionFailures).write[Seq[MovementSubmissionFailure]] and
         (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat) and
-        (__ \ hasBeenSubmitted).write[Boolean]
+        (__ \ hasBeenSubmitted).write[Boolean] and
+        (__ \ submittedDraftId).writeNullable[String]
       )(unlift(UserAnswers.unapply))
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

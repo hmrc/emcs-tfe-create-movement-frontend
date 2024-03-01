@@ -63,7 +63,7 @@ class DeclarationController @Inject()(
         service.submit(submitCreateMovementModel).flatMap {
           response =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
-            val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true)
+            val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(response.submittedDraftId))
             saveAndRedirect(DeclarationPage, LocalDateTime.now(), updatedAnswers, NormalMode)
         }.recover {
           case exception =>

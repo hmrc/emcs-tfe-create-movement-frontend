@@ -67,18 +67,20 @@ trait BaseNavigationController extends BaseController with Logging {
     if(request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
      request.userAnswers
     } else {
-      val indexOfError = Try(page match {
-        case LocalReferenceNumberPage(_) => request.userAnswers.submissionFailures.indexWhere(_.errorType == localReferenceNumberError)
-      })
-      indexOfError.fold(
-        _ => {
-          request.userAnswers
-        },
+      val indexOfError = page match {
+        case LocalReferenceNumberPage(_) => Some(request.userAnswers.submissionFailures.indexWhere(_.errorType == localReferenceNumberError))
+        case _ => None
+      }
+      indexOfError.fold(request.userAnswers) {
         index => {
-          val error = request.userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
-          request.userAnswers.copy(submissionFailures = request.userAnswers.submissionFailures.updated(index, error))
+          if(index == -1) {
+            request.userAnswers
+          } else {
+            val error = request.userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
+            request.userAnswers.copy(submissionFailures = request.userAnswers.submissionFailures.updated(index, error))
+          }
         }
-      )
+      }
     }
   }
 

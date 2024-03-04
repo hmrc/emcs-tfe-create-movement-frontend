@@ -37,7 +37,7 @@
 
     @formHelper(action) {
 
-      @if(request.userAnswers.isSubmissionErrorOnPage(LocalReferenceNumberPage(false)) && form.errors.isEmpty) {
+      @if(LocalReferenceNumberPage(false).isMovementSubmissionError && form.errors.isEmpty) {
         @notificationBanner(NotificationBanner(
           title = Text(messages("errors.704.notificationBanner.title")),
           content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.lrn"))))

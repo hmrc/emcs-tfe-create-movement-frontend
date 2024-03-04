@@ -33,7 +33,7 @@ class InformationLocalReferenceNumberSummary @Inject()(tag: views.html.component
 
   def row(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val hasUnfixedLRNError = request.userAnswers.isSubmissionErrorOnPage(LocalReferenceNumberPage(false))
+    val hasUnfixedLRNError = LocalReferenceNumberPage(deferredMovement).isMovementSubmissionError
 
     request.userAnswers.get(LocalReferenceNumberPage()).map { lrn =>
 

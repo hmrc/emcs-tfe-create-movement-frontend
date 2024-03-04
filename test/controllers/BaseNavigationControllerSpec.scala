@@ -303,6 +303,15 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
         result mustBe expectedUserAnswers
       }
 
+      "when the error (in the submission failure list) doesn't exist for the page" in new Test {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0000")))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          expectedUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
       "there is no mapping for an error" in new Test {
 
         val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))

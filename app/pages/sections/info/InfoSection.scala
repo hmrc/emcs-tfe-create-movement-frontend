@@ -33,7 +33,7 @@ object InfoSection extends Section[JsObject] {
       request.userAnswers.get(DispatchDetailsPage())
     )
 
-    if(request.userAnswers.isSubmissionErrorOnPage(LocalReferenceNumberPage())) {
+    if(LocalReferenceNumberPage().isMovementSubmissionError) {
       UpdateNeeded
     } else if (requiredPages.forall(_.nonEmpty)) {
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {

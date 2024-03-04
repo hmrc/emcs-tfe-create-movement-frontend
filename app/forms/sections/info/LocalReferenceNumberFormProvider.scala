@@ -26,7 +26,7 @@ import javax.inject.Inject
 class LocalReferenceNumberFormProvider @Inject() extends Mappings {
 
   def apply(isDeferred: Boolean)(implicit dataRequest: DataRequest[_]): Form[String] = {
-    val optOriginalValueSentInPreviousSubmission = dataRequest.userAnswers.getOriginalAttributeValueForPage(LocalReferenceNumberPage())
+    val optOriginalValueSentInPreviousSubmission = LocalReferenceNumberPage().getOriginalAttributeValue
     Form(
       "value" -> text(errMsgForKey("required")(isDeferred))
         .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))

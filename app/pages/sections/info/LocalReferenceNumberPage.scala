@@ -16,10 +16,20 @@
 
 package pages.sections.info
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 case class LocalReferenceNumberPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[String] {
   override val toString: String = "localReferenceNumber"
   override val path: JsPath = InfoSection.path \ toString
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+    request.userAnswers.submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasBeenFixed)
+  }
+
+  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] = {
+  request.userAnswers.submissionFailures.find(_.errorType == localReferenceNumberError).flatMap(_.originalAttributeValue)
+  }
 }

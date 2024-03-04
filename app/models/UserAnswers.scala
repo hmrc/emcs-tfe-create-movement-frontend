@@ -89,18 +89,6 @@ final case class UserAnswers(ern: String,
 
   def haveAllSubmissionErrorsBeenFixed: Boolean = submissionFailures.forall(_.hasBeenFixed)
 
-  def isSubmissionErrorOnPage(page: Page): Boolean =
-    page match {
-      case LocalReferenceNumberPage(_) => submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasBeenFixed)
-      case _ => false
-    }
-
-  def getOriginalAttributeValueForPage(page: Page): Option[String] =
-    page match {
-      case LocalReferenceNumberPage(_) => submissionFailures.find(_.errorType == localReferenceNumberError).flatMap(_.originalAttributeValue)
-      case _ => None
-    }
-
 }
 
 object UserAnswers {

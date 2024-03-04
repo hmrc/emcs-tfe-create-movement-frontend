@@ -87,11 +87,11 @@ final case class UserAnswers(ern: String,
       throw JsResultException(errors)
   }
 
-  def haveAllSubmissionErrorsBeenFixed: Boolean = submissionFailures.forall(_.hasFixed)
+  def haveAllSubmissionErrorsBeenFixed: Boolean = submissionFailures.forall(_.hasBeenFixed)
 
   def isSubmissionErrorOnPage(page: Page): Boolean =
     page match {
-      case LocalReferenceNumberPage(_) => submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasFixed)
+      case LocalReferenceNumberPage(_) => submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasBeenFixed)
       case _ => false
     }
 

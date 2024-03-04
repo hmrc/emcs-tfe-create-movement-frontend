@@ -296,7 +296,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
       "when all errors have been fixed" in new Test {
 
-        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(hasFixed = true)))
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = true)))
 
         val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
           expectedUserAnswers, request = FakeRequest()))
@@ -319,7 +319,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
         val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError)))
 
-        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = true)))
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
 
         val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
           originalUserAnswers, request = FakeRequest()))

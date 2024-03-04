@@ -25,7 +25,7 @@ trait MovementSubmissionFailureFixtures {
     errorReason = "Oh no! Duplicate LRN The LRN is already known and is therefore not unique according to the specified rules",
     errorLocation = Some("/IE813[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
     originalAttributeValue = Some("lrnie8155639254"),
-    hasFixed = false
+    hasBeenFixed = false
   )
 
 }

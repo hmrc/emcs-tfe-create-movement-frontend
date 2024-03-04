@@ -388,8 +388,8 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
     "when calling haveAllSubmissionErrorsBeenFixed" - {
 
-      def userAnswers(hasFixed: Boolean) = emptyUserAnswers.copy(
-        submissionFailures = Seq(movementSubmissionFailure.copy(hasFixed = hasFixed))
+      def userAnswers(hasBeenFixed: Boolean) = emptyUserAnswers.copy(
+        submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = hasBeenFixed))
       )
 
       "return true" - {
@@ -401,7 +401,7 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
         "when all the errors have been fixed" in {
 
-          userAnswers(hasFixed = true).haveAllSubmissionErrorsBeenFixed mustBe true
+          userAnswers(hasBeenFixed = true).haveAllSubmissionErrorsBeenFixed mustBe true
         }
       }
 
@@ -409,15 +409,15 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
         "when an error hasn't been fixed" in {
 
-          userAnswers(hasFixed = false).haveAllSubmissionErrorsBeenFixed mustBe false
+          userAnswers(hasBeenFixed = false).haveAllSubmissionErrorsBeenFixed mustBe false
         }
 
         "when multiple errors exist and only one hasn't been fixed" in {
 
           emptyUserAnswers.copy(
-            submissionFailures = Seq(movementSubmissionFailure.copy(hasFixed = true),
-              movementSubmissionFailure.copy(hasFixed = false),
-              movementSubmissionFailure.copy(hasFixed = true))
+            submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = true),
+              movementSubmissionFailure.copy(hasBeenFixed = false),
+              movementSubmissionFailure.copy(hasBeenFixed = true))
           ).haveAllSubmissionErrorsBeenFixed mustBe false
         }
       }
@@ -429,7 +429,7 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
         s"when the page is $LocalReferenceNumberPage and the error is $localReferenceNumberError and not fixed" in {
           emptyUserAnswers.copy(
-            submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false))
+            submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))
           ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe true
         }
       }
@@ -440,13 +440,13 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
           s"when the error is not a $localReferenceNumberError" in {
             emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasFixed = false))
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false))
             ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe false
           }
 
           s"when the error is $localReferenceNumberError but fixed" in {
             emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = true))
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true))
             ).isSubmissionErrorOnPage(LocalReferenceNumberPage()) mustBe false
           }
 
@@ -469,7 +469,7 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
           s"when the error type is $localReferenceNumberError and an original attribute value exists" in {
             emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false, originalAttributeValue = Some("LRN1")))
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
             ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe Some("LRN1")
           }
         }
@@ -481,13 +481,13 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
           s"when the error type is not $localReferenceNumberError" in {
             emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasFixed = false, originalAttributeValue = Some("LRN1")))
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
             ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe None
           }
 
           "when the original value is not defined" in {
             emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false, originalAttributeValue = None))
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = None))
             ).getOriginalAttributeValueForPage(LocalReferenceNumberPage()) mustBe None
           }
         }

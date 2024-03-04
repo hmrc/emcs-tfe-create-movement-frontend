@@ -279,17 +279,23 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
 
   }
 
-  "isNotEqualTo" - {
+  "isNotEqualToOptExistingAnswer" - {
 
     "must return Valid if the form value is different to the existing value" in {
 
-      val result = isNotEqualTo("existing", "errorKey")("new")
+      val result = isNotEqualToOptExistingAnswer(Some("existing"), "errorKey")("new")
+      result mustEqual Valid
+    }
+
+    "must return Valid if the existing value is empty" in {
+
+      val result = isNotEqualToOptExistingAnswer(None, "errorKey")("new")
       result mustEqual Valid
     }
 
     "must return Invalid if the form value is the same as the existing value" in {
 
-      val result = isNotEqualTo("existing", "errorKey")("existing")
+      val result = isNotEqualToOptExistingAnswer(Some("existing"), "errorKey")("existing")
       result mustEqual Invalid("errorKey")
     }
   }

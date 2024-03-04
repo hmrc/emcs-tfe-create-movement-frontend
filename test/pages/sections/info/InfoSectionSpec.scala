@@ -36,7 +36,7 @@ class InfoSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
       "when the LRN is a duplicate (704 response)" in {
         InfoSection.status(dataRequest(FakeRequest(), answers = emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))
         ))) mustBe UpdateNeeded
       }
     }

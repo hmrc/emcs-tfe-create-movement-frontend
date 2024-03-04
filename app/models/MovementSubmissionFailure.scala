@@ -23,7 +23,7 @@ case class MovementSubmissionFailure(
                                       errorReason: String,
                                       errorLocation: Option[String],
                                       originalAttributeValue: Option[String],
-                                      hasFixed: Boolean
+                                      hasBeenFixed: Boolean
                                     )
 
 object MovementSubmissionFailure {

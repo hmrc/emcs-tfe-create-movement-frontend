@@ -112,7 +112,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
           implicit lazy val request = dataRequest(FakeRequest(),
             emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = false)))
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false)))
               .set(LocalReferenceNumberPage(), testLrn))
 
           summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false, hasUpdateNeededTag = true)
@@ -122,7 +122,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
           implicit lazy val request = dataRequest(FakeRequest(),
             emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasFixed = true)))
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
               .set(LocalReferenceNumberPage(), testLrn))
 
           summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)

@@ -30,8 +30,7 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text(errMsgForKey("required")(isDeferred))
         .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
-        //TODO: can getOrElse be changed to something else?
-        .verifying(isNotEqualTo(optOriginalValueSentInPreviousSubmission.getOrElse(""), "errors.704.lrn.input"))
+        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "errors.704.lrn.input"))
     )
   }
 

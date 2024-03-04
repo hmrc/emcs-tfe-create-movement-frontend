@@ -75,7 +75,7 @@ trait BaseNavigationController extends BaseController with Logging {
           request.userAnswers
         },
         index => {
-          val error = request.userAnswers.submissionFailures(index).copy(hasFixed = true)
+          val error = request.userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
           request.userAnswers.copy(submissionFailures = request.userAnswers.submissionFailures.updated(index, error))
         }
       )

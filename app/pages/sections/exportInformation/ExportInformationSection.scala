@@ -21,13 +21,15 @@ import models.sections.info.movementScenario.MovementScenario.{ExportWithCustoms
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, NotStarted, TaskListStatus, UpdateNeeded}
 
 case object ExportInformationSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "exportInformation"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
+    if(ExportCustomsOfficePage.isMovementSubmissionError) {
+      UpdateNeeded
+    } else if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
       Completed
     } else {
       NotStarted

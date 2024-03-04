@@ -23,12 +23,12 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class ExportInformationCheckAnswersHelper @Inject()() {
+class ExportInformationCheckAnswersHelper @Inject()(exportCustomsOfficeSummary: ExportCustomsOfficeSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        ExportCustomsOfficeSummary.row(showActionLinks = true)
+        exportCustomsOfficeSummary.row(showActionLinks = true)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

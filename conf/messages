@@ -1436,7 +1436,12 @@ errors.704.notificationBanner.content = Some sections need updating before you c
 
 # EMCS Core Error Number 4402:
 errors.704.lrn = The Local Reference Number (LRN) entered has been used before
+errors.704.exportOffice = The export customs office code you have entered is not valid
 errors.704.lrn.input = The Local Reference Number (LRN) entered has been used before so you must now enter different details
+
+# EMCS Core Error Number 4425:
+errors.704.exportOffice = The export customs office code you have entered is not valid
+errors.704.exportOffice.input = The export customs office code you have entered is not valid so you must now enter different details
 
 # EMCS Core Error Number 4451:
 errors.704.importCustomsOfficeCode = The import customs office code you have entered is not valid

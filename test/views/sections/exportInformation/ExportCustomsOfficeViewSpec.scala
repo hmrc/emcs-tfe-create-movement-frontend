@@ -17,33 +17,34 @@
 package views.sections.exportInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.FormError
 import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours {
+class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
   class Fixture(lang: Lang, euExport: Boolean) {
 
-    implicit val msgs: Messages = messages(Seq(lang))
-    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+    implicit lazy val msgs: Messages = messages(Seq(lang))
+    implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-   lazy val view = app.injector.instanceOf[ExportCustomsOfficeView]
-    val form = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
+    lazy val view = app.injector.instanceOf[ExportCustomsOfficeView]
+    lazy val form = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
 
-    implicit val doc: Document = Jsoup.parse(
-      view(
-        form = form,
-        action = testOnwardRoute,
-        euExport
-      ).toString())
+    implicit def doc(isFormError: Boolean = false)(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
+      form = if(isFormError) form.withError(FormError("key", "msg")) else form,
+      action = testOnwardRoute,
+      euExport
+    ).toString())
   }
 
   object Selectors extends BaseSelectors
@@ -65,7 +66,26 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.hint -> messagesForLanguage.hint(euExport),
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
-            ))
+            ))(doc())
+          }
+        }
+
+        "when there is a 704 error" - new Fixture(messagesForLanguage.lang, true) {
+
+          override implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false))))
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.exportInformationSection,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerContent -> messagesForLanguage.submissionFailureError
+          ))(doc())
+
+          "not show the notification banner when there is an error" - {
+            doc(isFormError = true).select(".govuk-error-summary").isEmpty mustBe false
+            doc(isFormError = true).select(".govuk-notification-banner").isEmpty mustBe true
           }
         }
       }

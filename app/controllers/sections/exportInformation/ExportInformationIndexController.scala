@@ -23,6 +23,7 @@ import navigation.ExportInformationNavigator
 import pages.sections.exportInformation.ExportInformationSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class ExportInformationIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (ExportInformationSection.isCompleted) {
+      if (ExportInformationSection.isCompleted || ExportInformationSection.status == UpdateNeeded) {
         Redirect(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(ern, draftId))
       } else {
         Redirect(controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(ern, draftId, NormalMode))

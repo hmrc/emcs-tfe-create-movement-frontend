@@ -18,6 +18,7 @@ package controllers.sections.exportInformation
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeExportInformationNavigator
@@ -25,8 +26,9 @@ import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
 
-class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService {
+class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(testErn, testDraftId).url)
@@ -46,6 +48,18 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
   "ExportInformationIndexController" - {
     "when ExportInformationSection.isCompleted" - {
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.set(ExportCustomsOfficePage, ""))) {
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+      }
+    }
+
+    "when ExportInformationSection == UpdateNeeded" - {
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.copy(
+        submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false))
+      ).set(ExportCustomsOfficePage, ""))) {
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustEqual SEE_OTHER

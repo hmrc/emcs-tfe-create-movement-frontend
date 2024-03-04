@@ -23,6 +23,7 @@ import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.sections.UpdateNeededTag
 import viewmodels.govuk.summarylist._
 import viewmodels.helpers.TagHelper
 import viewmodels.implicits._

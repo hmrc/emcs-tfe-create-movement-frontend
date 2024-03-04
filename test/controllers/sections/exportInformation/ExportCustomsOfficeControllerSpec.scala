@@ -26,7 +26,7 @@ import navigation.FakeNavigators.FakeExportInformationNavigator
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
-import play.api.mvc.Call
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.exportInformation.ExportCustomsOfficeView
@@ -37,16 +37,16 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
 
   val defaultUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheEu)
 
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, exportCustomsOfficeRoute)
+
   lazy val formProvider: ExportCustomsOfficeFormProvider = new ExportCustomsOfficeFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider()(dataRequest(request))
   lazy val view: ExportCustomsOfficeView = app.injector.instanceOf[ExportCustomsOfficeView]
 
   lazy val exportCustomsOfficeRoute: String = routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, NormalMode).url
   lazy val exportCustomsOfficeSubmitAction: Call = routes.ExportCustomsOfficeController.onSubmit(testErn, testDraftId, NormalMode)
 
-
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-    val request = FakeRequest(GET, exportCustomsOfficeRoute)
 
     lazy val testController = new ExportCustomsOfficeController(
       messagesApi,

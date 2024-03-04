@@ -17,18 +17,24 @@
 package viewmodels.checkAnswers.sections.exportInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
+import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import views.html.components.tag
 
-class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
+class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers with MovementSubmissionFailureFixtures {
+
+  lazy val summary: ExportCustomsOfficeSummary = app.injector.instanceOf[ExportCustomsOfficeSummary]
+  lazy val tag: tag = app.injector.instanceOf[tag]
 
   "ExportCustomsOfficeSummary" - {
     Seq(ExportCustomsOfficeMessages.English).foreach { messagesForLanguage =>
@@ -37,6 +43,22 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
+        def expectedRow(hasUpdateNeededTag: Boolean = false): Option[SummaryListRow] = {
+          Some(SummaryListRowViewModel(
+            key = Key(Text(messagesForLanguage.cyaLabel)),
+            value = Value(HtmlContent(HtmlFormat.fill(Seq(
+              Some(Html(testExportCustomsOffice)),
+              if(hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
+            ).flatten))),
+            actions = Seq(
+              ActionItemViewModel(
+                content = Text(messagesForLanguage.change),
+                href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                id = "changeExportCustomsOffice"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+            )
+          ))
+        }
 
         "when there's no answer" - {
 
@@ -44,7 +66,7 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ExportCustomsOfficeSummary.row(showActionLinks = true) mustBe None
+            summary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -56,19 +78,31 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ExportCustomsOfficePage, testExportCustomsOffice))
 
-              ExportCustomsOfficeSummary.row(showActionLinks = true) mustBe
-                Some(SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(testExportCustomsOffice)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeExportCustomsOffice"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                ))
+              summary.row(showActionLinks = true) mustBe expectedRow()
             }
+          }
+        }
+
+        "and there is a 704 error" - {
+
+          "must render an 'Update Needed' tag against the LRN - when the error has not been fixed" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false)))
+                .set(ExportCustomsOfficePage, testExportCustomsOffice))
+
+            summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = true)
+          }
+
+          "must not render an 'Update Needed' tag against the LRN - when the error has been fixed" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = true)))
+                .set(ExportCustomsOfficePage, testExportCustomsOffice))
+
+            summary.row(showActionLinks = true) mustBe expectedRow()
           }
         }
       }

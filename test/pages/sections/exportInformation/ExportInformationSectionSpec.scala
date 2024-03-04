@@ -17,10 +17,13 @@
 package pages.sections.exportInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
-class ExportInformationSectionSpec extends SpecBase {
+class ExportInformationSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
   "isCompleted" - {
     "must return true" - {
       "when finished" in {
@@ -33,6 +36,29 @@ class ExportInformationSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         ExportInformationSection.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+
+    s"must return $UpdateNeeded" - {
+
+      "when a 704 error exists in this section" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false)))
+        )
+        ExportInformationSection.status mustBe UpdateNeeded
+      }
+    }
+
+    s"must return $NotStarted" - {
+
+      s"when there is no answer for $ExportCustomsOfficePage" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        ExportInformationSection.status mustBe NotStarted
       }
     }
   }

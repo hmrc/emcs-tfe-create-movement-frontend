@@ -21,7 +21,6 @@ import models._
 import models.requests.DataRequest
 import navigation.BaseNavigator
 import pages.QuestionPage
-import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, Reads}
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
@@ -29,7 +28,6 @@ import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -49,7 +47,7 @@ trait BaseNavigationController extends BaseController with Logging {
                         (implicit request: DataRequest[_], format: Format[A]): Future[Result] = {
     val answersWithErrorMessageFixed = markErrorAsFixedIfPresent(page)
     save(page, answer, answersWithErrorMessageFixed).map { updatedAnswers =>
-        Redirect(navigator.nextPage(page, mode, updatedAnswers))
+      Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
   }
 
@@ -64,21 +62,16 @@ trait BaseNavigationController extends BaseController with Logging {
     }
 
   private[controllers] def markErrorAsFixedIfPresent(page: QuestionPage[_])(implicit request: DataRequest[_]): UserAnswers = {
-    if(request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
-     request.userAnswers
+    if (request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+      request.userAnswers
     } else {
-      val indexOfError = page match {
-        case LocalReferenceNumberPage(_) => Some(request.userAnswers.submissionFailures.indexWhere(_.errorType == localReferenceNumberError))
-        case _ => None
-      }
-      indexOfError.fold(request.userAnswers) {
-        index => {
-          if(index == -1) {
-            request.userAnswers
-          } else {
-            val error = request.userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
-            request.userAnswers.copy(submissionFailures = request.userAnswers.submissionFailures.updated(index, error))
-          }
+      val errorIndexes = page.indexesOfMovementSubmissionErrors
+      errorIndexes.foldLeft(request.userAnswers) { (userAnswers, index) =>
+        if (index == -1) {
+          userAnswers
+        } else {
+          val error = userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
+          request.userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, error))
         }
       }
     }

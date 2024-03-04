@@ -23,11 +23,9 @@ package models
 
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
-import pages.{DeclarationPage, QuestionPage}
-import pages.sections.info.LocalReferenceNumberPage
+import pages.QuestionPage
 import play.api.libs.json._
 import queries.Derivable
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 
 class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {

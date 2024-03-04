@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
-import models.requests.UserRequest
+import models.requests.{DataRequest, UserRequest}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
@@ -331,6 +331,33 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
         val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
 
         val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          originalUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
+      "when there is multiple mapping for the page and all the errors have not been fixed" in new Test {
+
+        case object TestPage extends QuestionPage[String] {
+          override val path: JsPath = JsPath
+
+          override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] = {
+            Seq(0, 1)
+          }
+        }
+
+        val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = "0001"),
+          movementSubmissionFailure.copy(errorType = "0002"),
+          movementSubmissionFailure.copy(errorType = "0003")
+        ))
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = true),
+          movementSubmissionFailure.copy(errorType = "0002", hasBeenFixed = true),
+          movementSubmissionFailure.copy(errorType = "0003")
+        ))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(TestPage)(dataRequest(answers =
           originalUserAnswers, request = FakeRequest()))
         result mustBe expectedUserAnswers
       }

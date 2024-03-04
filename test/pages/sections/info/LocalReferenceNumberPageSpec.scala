@@ -86,4 +86,27 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
     }
   }
 
+  "when calling indexesOfMovementSubmissionErrors" - {
+
+    "must return Seq(-1)" - {
+
+      s"when the $localReferenceNumberError error type does not exist in the submission failures" in {
+        page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
+        ))) mustBe Seq(-1)
+      }
+    }
+
+    "must return Seq(<index>)" - {
+
+      s"when the $localReferenceNumberError error type exists in the submission failures" in {
+        page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None),
+            movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = None)
+        )))) mustBe Seq(1)
+      }
+    }
+  }
+
 }

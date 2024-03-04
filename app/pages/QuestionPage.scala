@@ -24,4 +24,6 @@ trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
   def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] = None
 
   def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = false
+
+  def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] = Seq.empty
 }

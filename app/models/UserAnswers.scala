@@ -16,13 +16,11 @@
 
 package models
 
-import pages.{Page, QuestionPage}
+import pages.QuestionPage
 import pages.sections.Section
-import pages.sections.info.LocalReferenceNumberPage
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 import java.time.Instant
 import scala.annotation.unused

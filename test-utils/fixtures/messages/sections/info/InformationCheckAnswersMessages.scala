@@ -24,6 +24,8 @@ object InformationCheckAnswersMessages {
     val heading = "Check your answers"
     val title: String = titleHelper(heading)
     val sectionSubheading = "Movement information"
+
+    val lrnSubmissionFailure = "The Local Reference Number (LRN) entered has been used before"
   }
 
   object English extends ViewMessages with BaseEnglish

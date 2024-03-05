@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
   lazy val formProvider: LocalReferenceNumberFormProvider = new LocalReferenceNumberFormProvider()
-  lazy val form: Form[String] = formProvider(isDeferred = false)
+  lazy val form: Form[String] = formProvider(isDeferred = false)(dataRequest(FakeRequest()))
   lazy val view: LocalReferenceNumberView = app.injector.instanceOf[LocalReferenceNumberView]
 
   lazy val localReferenceNumberPreDraftSubmitRoute: Call =

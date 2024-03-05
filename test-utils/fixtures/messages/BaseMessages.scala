@@ -60,6 +60,7 @@ trait BaseMessages { _: i18n =>
   val continueEditing: String = "Continue editing"
   val sectionNotComplete: String => String = section => s"$section section not complete"
   val incomplete: String = "Incomplete"
+  val notificationBannerTitle = "Update needed"
 }
 
 trait BaseEnglish extends BaseMessages with EN

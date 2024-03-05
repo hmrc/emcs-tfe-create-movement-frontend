@@ -22,12 +22,13 @@
 package models
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import pages.QuestionPage
 import play.api.libs.json._
 import queries.Derivable
 
 
-class UserAnswersSpec extends SpecBase {
+class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
     override val toString: String = "TestPage"
@@ -360,16 +361,14 @@ class UserAnswersSpec extends SpecBase {
         override val path: JsPath = __ \ toString
       }
 
-      val baseUserAnswers = UserAnswers(ern = "my ern", draftId = "my draftId", hasBeenSubmitted = false)
-
       "must only return pages in the supplied Seq" in {
-        val existingUserAnswers = baseUserAnswers
+        val existingUserAnswers = emptyUserAnswers
           .set(page1, "foo")
           .set(page2, "bar")
           .set(page3, "wizz")
 
         existingUserAnswers.filterForPages(Seq(page1, page2)) mustBe {
-          baseUserAnswers.copy(data = Json.obj(
+          emptyUserAnswers.copy(data = Json.obj(
             page1.toString -> "foo",
             page2.toString -> "bar"
           ))
@@ -377,11 +376,48 @@ class UserAnswersSpec extends SpecBase {
       }
 
       "must return an empty Seq if none of the supplied pages are in UserAnswers" in {
-        val existingUserAnswers = baseUserAnswers
+        val existingUserAnswers = emptyUserAnswers
           .set(page1, "foo")
           .set(page3, "wizz")
 
-        existingUserAnswers.filterForPages(Seq(page2)) mustBe baseUserAnswers
+        existingUserAnswers.filterForPages(Seq(page2)) mustBe emptyUserAnswers
+      }
+    }
+
+    "when calling haveAllSubmissionErrorsBeenFixed" - {
+
+      def userAnswers(hasBeenFixed: Boolean) = emptyUserAnswers.copy(
+        submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = hasBeenFixed))
+      )
+
+      "return true" - {
+
+        "when there are no errors" in {
+
+          emptyUserAnswers.haveAllSubmissionErrorsBeenFixed mustBe true
+        }
+
+        "when all the errors have been fixed" in {
+
+          userAnswers(hasBeenFixed = true).haveAllSubmissionErrorsBeenFixed mustBe true
+        }
+      }
+
+      "return false" - {
+
+        "when an error hasn't been fixed" in {
+
+          userAnswers(hasBeenFixed = false).haveAllSubmissionErrorsBeenFixed mustBe false
+        }
+
+        "when multiple errors exist and only one hasn't been fixed" in {
+
+          emptyUserAnswers.copy(
+            submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = true),
+              movementSubmissionFailure.copy(hasBeenFixed = false),
+              movementSubmissionFailure.copy(hasBeenFixed = true))
+          ).haveAllSubmissionErrorsBeenFixed mustBe false
+        }
       }
     }
   }

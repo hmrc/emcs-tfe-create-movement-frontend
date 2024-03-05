@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LocalReferenceNumberHelper
+@import pages.sections.info.LocalReferenceNumberPage
 
 @this(
         layout: templates.Layout,
@@ -25,6 +26,8 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         h1: components.h1,
+        p: components.p,
+        notificationBanner: GovukNotificationBanner,
         helper: LocalReferenceNumberHelper
 )
 
@@ -33,6 +36,13 @@
 @layout(pageTitle = helper.title(form, isDeferred), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
+
+      @if(LocalReferenceNumberPage(false).isMovementSubmissionError && form.errors.isEmpty) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.lrn"))))
+        ))
+      }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -15,21 +15,33 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.info.LocalReferenceNumberPage
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         h1: components.h1,
         govukSummaryList: GovukSummaryList,
+        notificationBanner: GovukNotificationBanner,
+        link: components.link,
+        p: components.p,
         govukButton: GovukButton
 )
-
 
 @(list: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("informationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = submitAction) {
+
+      @if(LocalReferenceNumberPage(false).isMovementSubmissionError) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading") {
+            link(controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId).url, "errors.704.lrn", id = Some("fix-local-reference-number"))
+          })
+        ))
+      }
 
         @h1("informationCheckAnswers.heading", Some(messages("movementInformation.subHeading")), "govuk-heading-l")
 

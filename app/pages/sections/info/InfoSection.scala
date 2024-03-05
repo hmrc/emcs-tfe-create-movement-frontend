@@ -20,7 +20,7 @@ import models.NorthernIrelandWarehouseKeeper
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 object InfoSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
@@ -33,7 +33,9 @@ object InfoSection extends Section[JsObject] {
       request.userAnswers.get(DispatchDetailsPage())
     )
 
-    if (requiredPages.forall(_.nonEmpty)) {
+    if(LocalReferenceNumberPage().isMovementSubmissionError) {
+      UpdateNeeded
+    } else if (requiredPages.forall(_.nonEmpty)) {
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
         if (request.userAnswers.get(DispatchPlacePage).nonEmpty) {
           Completed

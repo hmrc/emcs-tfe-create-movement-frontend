@@ -44,10 +44,12 @@ trait BaseNavigationController extends BaseController with Logging {
     }
 
   def saveAndRedirect[A](page: QuestionPage[A], answer: A, mode: Mode)
-                        (implicit request: DataRequest[_], format: Format[A]): Future[Result] =
-    save(page, answer).map { updatedAnswers =>
+                        (implicit request: DataRequest[_], format: Format[A]): Future[Result] = {
+    val answersWithErrorMessageFixed = markErrorAsFixedIfPresent(page)
+    save(page, answer, answersWithErrorMessageFixed).map { updatedAnswers =>
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
+  }
 
   private def save[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {
@@ -59,10 +61,21 @@ trait BaseNavigationController extends BaseController with Logging {
       } yield updatedAnswers
     }
 
-  private def save[A](page: QuestionPage[A], answer: A)
-                     (implicit request: DataRequest[_], format: Format[A]): Future[UserAnswers] =
-    save(page, answer, request.userAnswers)
-
+  private[controllers] def markErrorAsFixedIfPresent(page: QuestionPage[_])(implicit request: DataRequest[_]): UserAnswers = {
+    if (request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+      request.userAnswers
+    } else {
+      val errorIndexes = page.indexesOfMovementSubmissionErrors
+      errorIndexes.foldLeft(request.userAnswers) { (userAnswers, index) =>
+        if (index == -1) {
+          userAnswers
+        } else {
+          val error = userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
+          request.userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, error))
+        }
+      }
+    }
+  }
 
   def submitAndTrimWhitespaceFromTextarea[PageType](page: QuestionPage[PageType],
                                                     formProvider: BaseTextareaFormProvider[PageType]

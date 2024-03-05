@@ -16,15 +16,23 @@
 
 package models.response
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class SubmitCreateMovementResponse(receipt: String, downstreamService: String)
+case class SubmitCreateMovementResponse(receipt: String, downstreamService: String, submittedDraftId: String)
 
 object SubmitCreateMovementResponse {
-  implicit val reads: Reads[SubmitCreateMovementResponse] =
-    (__ \ "message").read[String].map(SubmitCreateMovementResponse(_, "EIS")) or
-      (__ \ "receipt").read[String].map(SubmitCreateMovementResponse(_, "ChRIS"))
+  implicit val reads: Reads[SubmitCreateMovementResponse] = for {
+    submittedDraftId <- (__ \ "submittedDraftId").read[String]
+    optMessage <- (__ \ "message").readNullable[String]
+    optReceipt <- (__ \ "receipt").readNullable[String]
+  } yield {
+    if(optMessage.isDefined) {
+      SubmitCreateMovementResponse(optMessage.get, "EIS", submittedDraftId)
+    } else {
+      SubmitCreateMovementResponse(optReceipt.get, "ChRIS", submittedDraftId)
+    }
+  }
+
 
   implicit val writes: OWrites[SubmitCreateMovementResponse] =
     (o: SubmitCreateMovementResponse) => Json.obj("receipt" -> o.receipt)

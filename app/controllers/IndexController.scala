@@ -39,6 +39,8 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
         UserAnswers(
           ern = ern,
           draftId = request.sessionId,
+          submissionFailures = Seq.empty,
+          submittedDraftId = None,
           hasBeenSubmitted = false
         )
       )

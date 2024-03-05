@@ -35,7 +35,9 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
     ern = testErn,
     draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS),
-    hasBeenSubmitted = true
+    submissionFailures = Seq.empty,
+    hasBeenSubmitted = true,
+    submittedDraftId = None
   )
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()

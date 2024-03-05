@@ -21,6 +21,7 @@ import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 
 class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
@@ -42,14 +43,14 @@ class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
           "when the movement is deferred" - {
 
             "must output the expected title" in {
-              helper.title(form(isDeferred = true), isDeferred = true) mustBe langMessages.deferredTitle
+              helper.title(form(isDeferred = true)(dataRequest(FakeRequest())), isDeferred = true) mustBe langMessages.deferredTitle
             }
           }
 
           "when the movement is NOT deferred" - {
 
             "must output the expected title" in {
-              helper.title(form(isDeferred = false), isDeferred = false) mustBe langMessages.newTitle
+              helper.title(form(isDeferred = false)(dataRequest(FakeRequest())), isDeferred = false) mustBe langMessages.newTitle
             }
           }
         }

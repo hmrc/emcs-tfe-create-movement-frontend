@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package TestControllers
+package controllers
 
 import base.SpecBase
-import controllers.{BaseController, BaseNavigationController}
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
-import models.requests.UserRequest
+import models.requests.{DataRequest, UserRequest}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.QuestionPage
+import pages.sections.info.LocalReferenceNumberPage
+import pages.{DeclarationPage, QuestionPage}
 import play.api.libs.json.{JsObject, JsPath, __}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
@@ -32,10 +33,11 @@ import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 import scala.concurrent.Future
 
-class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockUserAnswersService {
+class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockUserAnswersService with MovementSubmissionFailureFixtures {
   trait Test {
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -278,6 +280,86 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
           )
 
         result mustBe false
+      }
+    }
+  }
+
+  "markErrorAsFixedIfPresent" - {
+
+    "return the same user answers" - {
+
+      "when there are no errors" in new Test {
+
+        val result = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers = emptyUserAnswers, request = FakeRequest()))
+        result mustBe emptyUserAnswers
+      }
+
+      "when all errors have been fixed" in new Test {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = true)))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          expectedUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
+      "when the error (in the submission failure list) doesn't exist for the page" in new Test {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0000")))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          expectedUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
+      "there is no mapping for an error" in new Test {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(DeclarationPage)(dataRequest(answers =
+          expectedUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+    }
+
+    "return updated user answers" - {
+
+      "when there is a mapping for the page and all the errors have not been fixed" in new Test {
+
+        val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError)))
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          originalUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
+      "when there is multiple mapping for the page and all the errors have not been fixed" in new Test {
+
+        case object TestPage extends QuestionPage[String] {
+          override val path: JsPath = JsPath
+
+          override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] = {
+            Seq(0, 1)
+          }
+        }
+
+        val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = "0001"),
+          movementSubmissionFailure.copy(errorType = "0002"),
+          movementSubmissionFailure.copy(errorType = "0003")
+        ))
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = true),
+          movementSubmissionFailure.copy(errorType = "0002", hasBeenFixed = true),
+          movementSubmissionFailure.copy(errorType = "0003")
+        ))
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(TestPage)(dataRequest(answers =
+          originalUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
       }
     }
   }

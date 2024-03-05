@@ -17,19 +17,22 @@
 package views.sections.info
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import forms.sections.info.LocalReferenceNumberFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 import views.html.sections.info.LocalReferenceNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
-class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
+class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
  lazy val view = app.injector.instanceOf[LocalReferenceNumberView]
   val form = app.injector.instanceOf[LocalReferenceNumberFormProvider]
@@ -45,11 +48,14 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
+        implicit def doc(isDeferred: Boolean = false, isFormError: Boolean = false)(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
+          isDeferred = isDeferred,
+          if(isFormError) form(isDeferred).withError(FormError("key", "msg")) else form(isDeferred),
+          controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
+        ).toString())
+
         "when movement is Deferred" - {
 
-          implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = true, form(isDeferred = true), controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
-          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.deferredTitle,
@@ -57,14 +63,10 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h1 -> messagesForLanguage.deferredHeading,
             Selectors.p(1) -> messagesForLanguage.deferredP1,
             Selectors.button -> messagesForLanguage.continue
-          ))
+          ))(doc(isDeferred = true))
         }
 
         "when movement is NOT Deferred (new)" - {
-
-          implicit val doc: Document = Jsoup.parse(view(
-            isDeferred = false, form(isDeferred = false), controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
-          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.newTitle,
@@ -73,7 +75,26 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours {
             Selectors.p(1) -> messagesForLanguage.newP1,
             Selectors.p(2) -> messagesForLanguage.newP2,
             Selectors.button -> messagesForLanguage.continue
-          ))
+          ))(doc())
+        }
+
+        "when there is a 704 error" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+            .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))))
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.newTitle,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.movementInformationSection,
+            Selectors.h1 -> messagesForLanguage.newHeading,
+            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure
+          ))(doc())
+
+          "not show the notification banner when there is an error" - {
+            doc(isFormError = true).select(".govuk-error-summary").isEmpty mustBe false
+            doc(isFormError = true).select(".govuk-notification-banner").isEmpty mustBe true
+          }
         }
       }
     }

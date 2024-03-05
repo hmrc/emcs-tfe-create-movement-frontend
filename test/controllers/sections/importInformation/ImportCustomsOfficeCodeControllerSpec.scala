@@ -34,7 +34,7 @@ import scala.concurrent.Future
 class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: ImportCustomsOfficeCodeFormProvider = new ImportCustomsOfficeCodeFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider()(dataRequest(FakeRequest()))
   lazy val view: ImportCustomsOfficeCodeView = app.injector.instanceOf[ImportCustomsOfficeCodeView]
 
   lazy val importCustomsOfficeSubmitAction: Call =

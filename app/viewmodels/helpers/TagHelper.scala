@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-package utils
+package viewmodels.helpers
 
-object SubmissionFailureErrorCodes {
-  val localReferenceNumberError = "4402"
-  val importCustomsOfficeCodeError = "4451"
+import play.api.i18n.Messages
+import play.twirl.api.Html
+import viewmodels.taskList.UpdateNeeded
+
+import javax.inject.Inject
+
+class TagHelper @Inject()(tag: views.html.components.tag) {
+
+  def updateNeededTag()(implicit messages: Messages): Html = tag(
+    message = messages(UpdateNeeded.msgKey),
+    colour = "orange",
+    extraClasses = "float-none govuk-!-margin-left-1"
+  )
+
 }

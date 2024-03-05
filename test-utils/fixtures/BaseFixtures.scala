@@ -44,6 +44,7 @@ trait BaseFixtures {
   val testDraftId: String = "draftId"
   val testVatNumber: String = "123456789"
   val testExportCustomsOffice: String = "AA123456"
+  val testImportCustomsOffice: String = "GB000040"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testSubmissionDate: LocalDateTime = LocalDateTime.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"

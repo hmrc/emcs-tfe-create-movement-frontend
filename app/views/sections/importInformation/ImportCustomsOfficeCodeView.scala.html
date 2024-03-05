@@ -17,6 +17,7 @@
 @import config.AppConfig
 @import models.requests.DataRequest
 @import viewmodels.LabelSize
+@import pages.sections.importInformation.ImportCustomsOfficeCodePage
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -26,6 +27,7 @@
         h1: components.h1,
         h2: components.h2,
         p: components.p,
+        notificationBanner: GovukNotificationBanner,
         link: components.link,
         continueOrExit: components.continueOrExit,
         appConfig: AppConfig)
@@ -42,6 +44,13 @@
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
+
+        @if(ImportCustomsOfficeCodePage.isMovementSubmissionError && form.errors.isEmpty) {
+            @notificationBanner(NotificationBanner(
+                title = Text(messages("errors.704.notificationBanner.title")),
+                content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.importCustomsOfficeCode"))))
+            ))
+        }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

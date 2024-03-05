@@ -17,18 +17,24 @@
 package viewmodels.checkAnswers.sections.importInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.importInformation.ImportCustomsOfficeCodeMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import viewmodels.helpers.TagHelper
 
-class ImportCustomsOfficeCodeSummarySpec extends SpecBase with Matchers {
+class ImportCustomsOfficeCodeSummarySpec extends SpecBase with Matchers with MovementSubmissionFailureFixtures {
+
+  lazy val tagHelper = app.injector.instanceOf[TagHelper]
+  lazy val importCustomsOfficeCodeSummary = app.injector.instanceOf[ImportCustomsOfficeCodeSummary]
 
   "ImportCustomsOfficeCodeSummary" - {
 
@@ -38,13 +44,29 @@ class ImportCustomsOfficeCodeSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
+        def expectedSummaryListRow(showActionLinks: Boolean = true, has704Error: Boolean = false) =
+          SummaryListRowViewModel(
+            key = Key(Text(messagesForLanguage.cyaLabel)),
+            value = Value(HtmlContent(HtmlFormat.fill(Seq(
+              Some(Html("AB123456")),
+              Option.when(has704Error)(tagHelper.updateNeededTag())
+            ).flatten))),
+            actions = if (!showActionLinks) Seq() else Seq(
+              ActionItemViewModel(
+                content = Text(messagesForLanguage.change),
+                href = controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                id = "changeImportCustomsOfficeCode"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+            )
+          )
+
         "when there's no answer" - {
 
           "must output the expected data" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ImportCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe None
+            importCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe None
           }
         }
 
@@ -56,20 +78,8 @@ class ImportCustomsOfficeCodeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456"))
 
-              ImportCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("AB123456")),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeImportCustomsOfficeCode"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
-                  )
-                )
+              importCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe
+                Some(expectedSummaryListRow())
             }
           }
 
@@ -79,14 +89,40 @@ class ImportCustomsOfficeCodeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456"))
 
-              ImportCustomsOfficeCodeSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("AB123456")),
-                    actions = Seq()
-                  )
+              importCustomsOfficeCodeSummary.row(showActionLinks = false) mustBe
+                Some(expectedSummaryListRow(showActionLinks = false))
+            }
+          }
+
+          "when a 704 error exists for this answer that is not fixed" - {
+
+            "must output the expected row with the update needed tag" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456").copy(
+                  submissionFailures = Seq(importCustomsOfficeCodeFailure)
                 )
+              )
+
+              importCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe
+                Some(expectedSummaryListRow(has704Error = true))
+            }
+          }
+
+          "when a 704 error exists for this answer BUT the issue has been fixed" - {
+
+            "must output the expected row without the update needed tag" in {
+
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456").copy(
+                  submissionFailures = Seq(importCustomsOfficeCodeFailure.copy(hasBeenFixed = true))
+                )
+              )
+
+              importCustomsOfficeCodeSummary.row(showActionLinks = true) mustBe
+                Some(expectedSummaryListRow())
             }
           }
         }

@@ -29,7 +29,8 @@ import viewmodels.checkAnswers.sections.importInformation.ImportCustomsOfficeCod
 class CheckAnswersImportHelperSpec extends SpecBase {
 
   class Setup(ern: String = testErn) {
-    lazy val checkAnswersImportHelper = new CheckYourAnswersImportHelper()
+    lazy val importCustomsOfficeCodeSummary = app.injector.instanceOf[ImportCustomsOfficeCodeSummary]
+    lazy val checkAnswersImportHelper = app.injector.instanceOf[CheckYourAnswersImportHelper]
     val userAnswers: UserAnswers = emptyUserAnswers.set(ImportCustomsOfficeCodePage, "AB123456")
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
     implicit val msgs: Messages = messages(fakeDataRequest)
@@ -44,7 +45,7 @@ class CheckAnswersImportHelperSpec extends SpecBase {
 
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ImportCustomsOfficeCodeSummary.row(true)(fakeDataRequest, msgs),
+          importCustomsOfficeCodeSummary.row(true)(fakeDataRequest, msgs),
         ).flatten
 
         checkAnswersImportHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)

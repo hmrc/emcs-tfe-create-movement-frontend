@@ -16,19 +16,23 @@
 
 package forms.sections.importInformation
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class ImportCustomsOfficeCodeFormProviderSpec extends StringFieldBehaviours {
+class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
   val requiredKey = "importCustomsOfficeCode.error.required"
   val lengthKey = "importCustomsOfficeCode.error.length"
   val xssKey = "importCustomsOfficeCode.error.invalidCharacter"
   val regexKey = "importCustomsOfficeCode.error.customsOfficeCodeRegex"
+  val errorMsg704Key = "errors.704.importCustomsOfficeCode.input"
   val requiredLength = 8
 
-  val form = new ImportCustomsOfficeCodeFormProvider()()
+  val form = new ImportCustomsOfficeCodeFormProvider().apply()(dataRequest(FakeRequest()))
 
   ".value" - {
 
@@ -64,6 +68,16 @@ class ImportCustomsOfficeCodeFormProviderSpec extends StringFieldBehaviours {
       val boundForm = form.bind(Map(fieldName -> "GB345678"))
       boundForm.errors mustBe Seq()
       boundForm.value mustBe Some("GB345678")
+    }
+
+    "not bind a value that matches the existing answer when a 704 has been returned for that field" in {
+
+      val form = new ImportCustomsOfficeCodeFormProvider().apply()(
+        dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(importCustomsOfficeCodeFailure)))
+      )
+
+      val boundForm = form.bind(Map(fieldName -> testImportCustomsOffice))
+      boundForm.errors mustBe Seq(FormError(fieldName, errorMsg704Key, Seq()))
     }
   }
 }

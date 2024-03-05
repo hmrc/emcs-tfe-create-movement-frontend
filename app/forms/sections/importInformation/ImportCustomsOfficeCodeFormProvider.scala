@@ -18,6 +18,8 @@ package forms.sections.importInformation
 
 import forms.mappings.Mappings
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import models.requests.DataRequest
+import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.data.Form
 
 import javax.inject.Inject
@@ -26,13 +28,14 @@ class ImportCustomsOfficeCodeFormProvider @Inject() extends Mappings {
 
   val maxLength = 8
 
-  def apply(): Form[String] =
+  def apply()(implicit request: DataRequest[_]): Form[String] =
     Form(
       "value" -> text("importCustomsOfficeCode.error.required")
         .verifying(firstError(
           fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
           regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex")
+          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex"),
         ))
+        .verifying(isNotEqualToOptExistingAnswer(ImportCustomsOfficeCodePage.getOriginalAttributeValue, "errors.704.importCustomsOfficeCode.input"))
     )
 }

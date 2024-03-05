@@ -17,14 +17,23 @@
 package fixtures
 
 import models.MovementSubmissionFailure
+import utils.SubmissionFailureErrorCodes
 
-trait MovementSubmissionFailureFixtures {
+trait MovementSubmissionFailureFixtures extends BaseFixtures {
 
   val movementSubmissionFailure: MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = "4403",
+    errorType = SubmissionFailureErrorCodes.localReferenceNumberError,
     errorReason = "Oh no! Duplicate LRN The LRN is already known and is therefore not unique according to the specified rules",
-    errorLocation = Some("/IE813[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
-    originalAttributeValue = Some("lrnie8155639254"),
+    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    originalAttributeValue = Some(testLrn),
+    hasBeenFixed = false
+  )
+
+  val importCustomsOfficeCodeFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = SubmissionFailureErrorCodes.importCustomsOfficeCodeError,
+    errorReason = "The customs office reference number you have entered is not valid. Please amend your entry and resubmit",
+    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    originalAttributeValue = Some(testImportCustomsOffice),
     hasBeenFixed = false
   )
 

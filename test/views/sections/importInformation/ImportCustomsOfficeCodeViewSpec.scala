@@ -17,26 +17,29 @@
 package views.sections.importInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.importInformation.ImportCustomsOfficeCodeMessages
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import models.requests.DataRequest
-import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor, UserType}
+import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor, UserAnswers, UserType}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.importInformation.ImportCustomsOfficeCodePage
+import play.api.data.FormError
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.importInformation.ImportCustomsOfficeCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours {
+class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
-  class Fixture(lang: Lang, userType: UserType) {
+  class Fixture(lang: Lang, userType: UserType, userAnswers: UserAnswers = emptyUserAnswers) {
 
     implicit val msgs: Messages = messages(Seq(lang))
-    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-   lazy val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
+    lazy val view = app.injector.instanceOf[ImportCustomsOfficeCodeView]
     val form = app.injector.instanceOf[ImportCustomsOfficeCodeFormProvider].apply()
 
     implicit val doc: Document = Jsoup.parse(
@@ -57,16 +60,37 @@ class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours {
 
         Seq(GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor).foreach { userType =>
 
-          s"when user type is '$userType'" - new Fixture(messagesForLanguage.lang, userType) {
+          s"when user type is '$userType'" - {
 
-            behave like pageWithExpectedElementsAndMessages(Seq(
-              Selectors.title -> messagesForLanguage.title(userType),
-              Selectors.h1 -> messagesForLanguage.heading(userType),
-              Selectors.subHeadingCaptionSelector -> messagesForLanguage.importInformationSection,
-              Selectors.p(1) -> messagesForLanguage.paragraph(userType),
-              Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
-            ))
+            "when no 704 error exists" - new Fixture(messagesForLanguage.lang, userType) {
+
+              behave like pageWithExpectedElementsAndMessages(Seq(
+                Selectors.title -> messagesForLanguage.title(userType),
+                Selectors.h1 -> messagesForLanguage.heading(userType),
+                Selectors.subHeadingCaptionSelector -> messagesForLanguage.importInformationSection,
+                Selectors.p(1) -> messagesForLanguage.paragraph(userType),
+                Selectors.button -> messagesForLanguage.saveAndContinue,
+                Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+              ))
+
+              behave like pageWithElementsNotPresent(Seq(
+                Selectors.notificationBannerTitle,
+                Selectors.notificationBannerContent
+              ))
+            }
+
+            "when a 704 error exists for the page" - {
+
+              val userAnswers = emptyUserAnswers.copy(submissionFailures = Seq(importCustomsOfficeCodeFailure))
+
+              "must render with the Update needed banner" - new Fixture(messagesForLanguage.lang, userType, userAnswers) {
+
+                behave like pageWithExpectedElementsAndMessages(Seq(
+                  Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+                  Selectors.notificationBannerContent -> messagesForLanguage.importCustomsOffice704Error
+                ))
+              }
+            }
           }
         }
       }

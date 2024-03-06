@@ -29,7 +29,6 @@ object CountryMessages {
     val italy: String = "Italy"
     val luxembourg: String = "Luxembourg"
     val malta: String = "Malta"
-    val netherlands: String = "Netherlands"
     val poland: String = "Poland"
     val portugal: String = "Portugal"
     val romania: String = "Romania"

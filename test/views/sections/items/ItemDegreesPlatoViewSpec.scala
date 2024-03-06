@@ -68,10 +68,9 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
           Selectors.bullet(8)  -> countryMessages.italy,
           Selectors.bullet(9)  -> countryMessages.luxembourg,
           Selectors.bullet(10) -> countryMessages.malta,
-          Selectors.bullet(11) -> countryMessages.netherlands,
-          Selectors.bullet(12) -> countryMessages.poland,
-          Selectors.bullet(13) -> countryMessages.portugal,
-          Selectors.bullet(14) -> countryMessages.romania,
+          Selectors.bullet(11) -> countryMessages.poland,
+          Selectors.bullet(12) -> countryMessages.portugal,
+          Selectors.bullet(13) -> countryMessages.romania,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

@@ -87,8 +87,12 @@ class ItemRemoveItemController @Inject()(
 
   private[controllers] def updateItemSubmissionFailureIndexes(indexOfRemovedItem: Index, userAnswers: UserAnswers) = {
 
+    val userAnswersWithSubmissionFailureRemovedAtIndex = userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
+      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
+    ))
+
     val itemIndexesToAmend: Seq[Int] =
-      userAnswers.submissionFailures
+      userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures
         .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
         .collect { case itemError =>
           val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
@@ -99,10 +103,10 @@ class ItemRemoveItemController @Inject()(
 
     val indexOfSubmissionFailuresNeedingUpdate =
       itemIndexesToAmend.map { erroredItemIdx =>
-        userAnswers.submissionFailures.indexWhere(_.errorLocation.exists(_.contains(s"$BODYEADESAD[$erroredItemIdx]"))) -> erroredItemIdx
+        userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures.indexWhere(_.errorLocation.exists(_.contains(s"$BODYEADESAD[$erroredItemIdx]"))) -> erroredItemIdx
       }
 
-    val reIndexedErrorLocations = indexOfSubmissionFailuresNeedingUpdate.foldLeft(userAnswers) {
+    indexOfSubmissionFailuresNeedingUpdate.foldLeft(userAnswersWithSubmissionFailureRemovedAtIndex) {
       case (userAnswers, (index, erroredIndex)) =>
 
         val submissionFailureForItem = userAnswers.submissionFailures(index)
@@ -115,9 +119,5 @@ class ItemRemoveItemController @Inject()(
 
         userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, updatedItem))
     }
-
-    reIndexedErrorLocations.copy(submissionFailures = reIndexedErrorLocations.submissionFailures.filterNot(
-      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
-    ))
   }
 }

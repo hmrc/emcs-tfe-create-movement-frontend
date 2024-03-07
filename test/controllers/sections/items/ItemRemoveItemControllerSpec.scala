@@ -234,6 +234,21 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
           result.submissionFailures mustBe Seq(movementSubmissionFailure)
         }
       }
+
+      "when removing an item before another item" - {
+
+        val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(
+          itemQuantityFailure(1).copy(originalAttributeValue = Some("1")),
+          itemQuantityFailure(2)
+        ))
+
+        "should remove the item failure AND reindex XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(0), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(itemQuantityFailure(1))
+        }
+      }
     }
   }
 }

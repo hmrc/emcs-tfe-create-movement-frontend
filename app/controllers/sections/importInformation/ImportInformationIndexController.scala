@@ -21,6 +21,7 @@ import controllers.actions._
 import models.NormalMode
 import pages.sections.importInformation.ImportInformationSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class ImportInformationIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (ImportInformationSection.isCompleted) {
+      if (ImportInformationSection.isCompleted || ImportInformationSection.status == UpdateNeeded) {
         Redirect(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(ern, draftId))
       } else {
         Redirect(controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(ern, draftId, NormalMode))

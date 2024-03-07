@@ -18,6 +18,7 @@ package controllers.sections.importInformation
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import pages.sections.importInformation._
@@ -26,7 +27,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 
-class ImportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService {
+class ImportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
   class Test(userAnswers: Option[UserAnswers]) {
 
@@ -53,6 +54,21 @@ class ImportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
           Some(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn, testDraftId).url)
       }
     }
+
+    "when ImportInformationSection has status `UpdateNeeded`" - {
+      "must redirect to the CYA controller" in new Test(Some(
+        emptyUserAnswers
+          .set(ImportCustomsOfficeCodePage, "")
+          .copy(submissionFailures = Seq(importCustomsOfficeCodeFailure))
+      )) {
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onPageLoad(testErn, testDraftId).url)
+      }
+    }
+
     "must redirect to the Import Customs Office Code controller" in new Test(Some(emptyUserAnswers)) {
       val result = controller.onPageLoad(testErn, testDraftId)(request)
 

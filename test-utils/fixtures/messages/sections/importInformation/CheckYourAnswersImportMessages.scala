@@ -24,6 +24,8 @@ object CheckYourAnswersImportMessages {
     val heading = "Check your answers"
     val title: String = titleHelper(heading)
     val customsOfficeCode: String = "Customs office code"
+
+    val importCustomsOffice704Error = "The import customs office code you have entered is not valid"
   }
 
   object English extends ViewMessages with BaseEnglish

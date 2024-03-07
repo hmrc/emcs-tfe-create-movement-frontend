@@ -16,12 +16,16 @@
 
 @import models.requests.DataRequest
 @import viewmodels.helpers.CheckAnswersHelper
+@import pages.sections.importInformation.ImportCustomsOfficeCodePage
 
 @this(layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
         h1: components.h1,
         h2: components.h2,
+        notificationBanner: GovukNotificationBanner,
+        link: components.link,
+        p: components.p,
         saveAndContinue: components.saveAndContinue)
 
 @(ern: String, lrn: String, summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
@@ -29,6 +33,19 @@
     @layout(pageTitle = titleNoForm(messages("checkYourAnswersImport.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(controllers.sections.importInformation.routes.CheckYourAnswersImportController.onSubmit(ern, lrn)) {
+
+            @if(ImportCustomsOfficeCodePage.isMovementSubmissionError) {
+                @notificationBanner(NotificationBanner(
+                    title = Text(messages("errors.704.notificationBanner.title")),
+                    content = HtmlContent(p("govuk-notification-banner__heading") {
+                        link(
+                            controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+                            "errors.704.importCustomsOfficeCode",
+                            id = Some("fix-import-customs-office-code")
+                        )
+                    })
+                ))
+            }
 
             @h2("importInformation.subHeading", classes= "govuk-caption-xl", hiddenContent = Some("subHeading.hidden"))
 

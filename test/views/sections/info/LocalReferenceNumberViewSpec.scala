@@ -64,6 +64,11 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours with Mov
             Selectors.p(1) -> messagesForLanguage.deferredP1,
             Selectors.button -> messagesForLanguage.continue
           ))(doc(isDeferred = true))
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.notificationBannerTitle,
+            Selectors.notificationBannerContent
+          ))(doc())
         }
 
         "when movement is NOT Deferred (new)" - {
@@ -75,6 +80,11 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours with Mov
             Selectors.p(1) -> messagesForLanguage.newP1,
             Selectors.p(2) -> messagesForLanguage.newP2,
             Selectors.button -> messagesForLanguage.continue
+          ))(doc())
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.notificationBannerTitle,
+            Selectors.notificationBannerContent
           ))(doc())
         }
 

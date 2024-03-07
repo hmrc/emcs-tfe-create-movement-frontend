@@ -67,6 +67,11 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with Move
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))(doc())
+
+            behave like pageWithElementsNotPresent(Seq(
+              Selectors.notificationBannerTitle,
+              Selectors.notificationBannerContent
+            ))(doc())
           }
         }
 

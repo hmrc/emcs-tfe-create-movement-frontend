@@ -23,13 +23,13 @@ import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.checkAnswers.sections.UpdateNeededTag
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
 import javax.inject.Inject
 
-class ExportCustomsOfficeSummary @Inject()(val tag: views.html.components.tag) extends UpdateNeededTag {
+class ExportCustomsOfficeSummary @Inject()(tagHelper: TagHelper) {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
 
@@ -42,7 +42,7 @@ class ExportCustomsOfficeSummary @Inject()(val tag: views.html.components.tag) e
           key = "exportCustomsOffice.checkYourAnswers.label",
           value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
             Some(HtmlFormat.escape(answer)),
-            if(hasUnfixedExportCustomsOfficeNumberError) Some(updateNeededTag()) else None
+            if(hasUnfixedExportCustomsOfficeNumberError) Some(tagHelper.updateNeededTag()) else None
           ).flatten))),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(

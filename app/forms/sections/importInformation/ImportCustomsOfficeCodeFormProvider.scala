@@ -34,7 +34,7 @@ class ImportCustomsOfficeCodeFormProvider @Inject() extends Mappings {
         .verifying(firstError(
           fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
           regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex"),
+          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex")
         ))
         .verifying(isNotEqualToOptExistingAnswer(ImportCustomsOfficeCodePage.getOriginalAttributeValue, "errors.704.importCustomsOfficeCode.input"))
     )

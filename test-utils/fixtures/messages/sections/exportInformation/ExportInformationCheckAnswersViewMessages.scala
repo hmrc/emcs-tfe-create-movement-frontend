@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package utils
+package fixtures.messages.sections.exportInformation
 
-object SubmissionFailureErrorCodes {
-  val localReferenceNumberError = "4402"
-  val importCustomsOfficeCodeError = "4451"
-  val exportCustomsOfficeNumberError = "4425"
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+
+object ExportInformationCheckAnswersViewMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+
+    val heading: String = "Check your answers"
+    val title: String = titleHelper(heading)
+
+    val exportCustomsOfficeSubmissionFailure = "The export customs office code you have entered is not valid"
+  }
+
+  object English extends ViewMessages with BaseEnglish
+
 }

@@ -17,13 +17,16 @@
 package forms.sections.exportInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.FormError
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
 
-class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehaviours {
+class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
   val requiredKey = "exportCustomsOffice.error.required"
   val lengthKey = "exportCustomsOffice.error.length"
@@ -31,7 +34,7 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
   val regexKey = "exportCustomsOffice.error.customOfficeRegex"
   val requiredLength = 8
 
-  val form = new ExportCustomsOfficeFormProvider()()
+  val form = new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest()))
 
   ".value" - {
 
@@ -68,6 +71,20 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
       boundForm.errors mustBe Seq()
       boundForm.value mustBe Some("GB345678")
     }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false, originalAttributeValue = Some(testExportCustomsOffice))
+        ))))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(fieldName -> testExportCustomsOffice))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "errors.704.exportOffice.input", Seq()))
+      }
+    }
   }
 
   "Error Messages" - {
@@ -100,6 +117,11 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
 
           msgs("exportCustomsOffice.error.customOfficeRegex") mustBe
             messagesForLanguage.errorCustomOfficeRegex
+        }
+
+        "have the correct error message for a submission failure" in {
+          msgs("errors.704.exportOffice.input") mustBe
+            messagesForLanguage.submissionFailureErrorInput
         }
       }
     }

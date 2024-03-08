@@ -16,21 +16,26 @@
 
 package forms.sections.exportInformation
 
+import forms.mappings.Mappings
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import models.requests.DataRequest
+import pages.sections.exportInformation.ExportCustomsOfficePage
+import play.api.data.Form
 
 import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
 
 class ExportCustomsOfficeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply()(implicit dataRequest: DataRequest[_]): Form[String] = {
+    val optOriginalValueSentInPreviousSubmission = ExportCustomsOfficePage.getOriginalAttributeValue
     Form(
       "value" -> text("exportCustomsOffice.error.required")
         .verifying(firstError(
           fixedLength(8, "exportCustomsOffice.error.length"),
           regexp(XSS_REGEX, s"exportCustomsOffice.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, s"exportCustomsOffice.error.customOfficeRegex")
+          regexp(CUSTOMS_OFFICE_CODE_REGEX, s"exportCustomsOffice.error.customOfficeRegex"),
+          isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "errors.704.exportOffice.input")
         ))
     )
+  }
 }

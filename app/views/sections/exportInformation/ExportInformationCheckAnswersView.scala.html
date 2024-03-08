@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.exportInformation.ExportCustomsOfficePage
 
 @this(
     layout: templates.Layout,
@@ -23,6 +24,9 @@
     h1: components.h1,
     h2: components.h2,
     govukSummaryList: GovukSummaryList,
+    link: components.link,
+    p: components.p,
+    notificationBanner: GovukNotificationBanner,
     saveAndContinue: components.saveAndContinue
 )
 
@@ -32,11 +36,20 @@
 
     @formHelper(action = submitAction) {
 
-        @h1("exportInformationCheckAnswers.heading", Some(messages("exportInformation.subHeading")), "govuk-heading-l")
+      @if(ExportCustomsOfficePage.isMovementSubmissionError) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading") {
+            link(controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(request.ern, request.draftId, CheckMode).url, "errors.704.exportOffice", id = Some("fix-export-office-number"))
+          })
+        ))
+      }
 
-        @govukSummaryList(list)
+      @h1("exportInformationCheckAnswers.heading", Some(messages("exportInformation.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @saveAndContinue("site.confirmAnswers")
+      @govukSummaryList(list)
+
+      @saveAndContinue("site.confirmAnswers")
     }
 }
 

@@ -39,6 +39,9 @@ object ExportCustomsOfficeMessages {
 
     val cyaLabel = "Customs office code"
     val cyaChangeHidden = "customs office code"
+
+    val submissionFailureErrorInput = "The export customs office code you have entered is not valid so you must now enter different details"
+    val submissionFailureError = "The export customs office code you have entered is not valid"
   }
 
   object English extends ViewMessages with BaseEnglish

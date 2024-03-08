@@ -48,7 +48,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
   def itemQuantitySubmitAction(idx: Index = testIndex1): Call = routes.ItemQuantityController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
   lazy val formProvider: ItemQuantityFormProvider = new ItemQuantityFormProvider()
-  lazy val form: Form[BigDecimal] = formProvider()
+  lazy val form: Form[BigDecimal] = formProvider(testIndex1)(dataRequest(FakeRequest()))
   lazy val view: ItemQuantityView = app.injector.instanceOf[ItemQuantityView]
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
@@ -110,7 +110,7 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, itemQuantitySubmitAction(), Wine, Litres20)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, itemQuantitySubmitAction(), Wine, Litres20, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -126,7 +126,8 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
         form.fill(BigDecimal(1.5)),
         itemQuantitySubmitAction(),
         Wine,
-        Litres20
+        Litres20,
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -150,7 +151,8 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
         boundForm,
         itemQuantitySubmitAction(),
         Wine,
-        Litres20
+        Litres20,
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

@@ -47,13 +47,15 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
     lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
     lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
     lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
+    lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
       itemCommodityCodeSummary = itemCommodityCodeSummary,
       itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
       itemWineMoreInformationSummary = itemWineMoreInformationSummary,
-      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary
+      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary,
+      itemQuantitySummary = itemQuantitySummary
     )
   }
 

@@ -35,7 +35,8 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemCommodityCodeSummary: ItemCommodityCodeSummary,
                                         itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary,
                                         itemWineMoreInformationSummary: ItemWineMoreInformationSummary,
-                                        itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary
+                                        itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary,
+                                        itemQuantitySummary: ItemQuantitySummary
                                       ) {
 
   private val headingLevel = 3
@@ -68,7 +69,7 @@ class ItemCheckAnswersHelper @Inject()(
     SummaryListViewModel(
       card = Some(CardViewModel(messages("itemCheckAnswers.quantityCardTitle"), headingLevel = headingLevel, actions = None)),
       rows = Seq(
-        ItemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
+        itemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
         ItemNetMassSummary.row(idx),
         ItemGrossMassSummary.row(idx)
       ).flatten

@@ -33,7 +33,7 @@ import viewmodels.taskList.InProgress
 
 import javax.inject.Inject
 
-class DocumentsAddToListHelper @Inject()(tag: views.html.components.tag, span: views.html.components.span) extends TagFluency {
+class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.components.span) extends TagFluency {
 
 
   def allDocumentsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
@@ -67,10 +67,7 @@ class DocumentsAddToListHelper @Inject()(tag: views.html.components.tag, span: v
     DocumentSection(idx).status match {
       case InProgress => CardTitle(HtmlContent(HtmlFormat.fill(Seq(
         span(messages("documentsAddToList.documentCardTitle", idx.displayIndex), Some("govuk-!-margin-right-2")),
-        tag(
-          message = messages("taskListStatus.incomplete"),
-          colour = "red"
-        )
+        tagHelper.incompleteTag()
       ))))
       case _ => CardTitle(HtmlContent(span(messages("documentsAddToList.documentCardTitle", idx.displayIndex))))
     }

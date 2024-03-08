@@ -1446,3 +1446,11 @@ errors.704.exportOffice.input = The export customs office code you have entered 
 # EMCS Core Error Number 4451:
 errors.704.importCustomsOfficeCode = The import customs office code you have entered is not valid
 errors.704.importCustomsOfficeCode.input = The import customs office code you have entered is not valid so you must now enter different details
+
+errors.704.items.notificationBanner.p = Some information needs updating
+
+# EMCS Core Error Number 4407:
+errors.704.items.quantity.addToList = Item {0} quantity
+errors.704.items.quantity.cya = The item quantity is over the approved limit for the Temporary Registered Consignee
+errors.704.items.quantity = The item quantity is over the approved limit for the Temporary Registered Consignee
+errors.704.items.quantity.input = The item quantity is over the approved limit for the Temporary Registered Consignee so you must now enter different details

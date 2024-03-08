@@ -84,7 +84,7 @@ class ExportInformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours
           Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.exportInformationSection,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+          Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
           Selectors.notificationBannerContent -> messagesForLanguage.exportCustomsOfficeSubmissionFailure,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))(doc)

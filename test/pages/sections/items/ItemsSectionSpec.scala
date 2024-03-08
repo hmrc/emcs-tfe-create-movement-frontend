@@ -17,13 +17,13 @@
 package pages.sections.items
 
 import base.SpecBase
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.requests.DataRequest
 import models.sections.items.ItemsAddToList
 import play.api.test.FakeRequest
 import viewmodels.taskList._
 
-class ItemsSectionSpec extends SpecBase with ItemFixtures {
+class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 
   "status" - {
 
@@ -44,6 +44,18 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.set(ItemsAddToListPage, ItemsAddToList.No))
 
         ItemsSection.status mustBe Completed
+      }
+    }
+
+    "must return UpdateNeeded" - {
+
+      "when there is a Quantity-related submission failure within the Items section" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.copy(
+          submissionFailures = Seq(itemQuantityFailure(1))
+        ))
+
+        ItemsSection.status mustBe UpdateNeeded
       }
     }
 

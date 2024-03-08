@@ -18,6 +18,7 @@
 @import models.response.referenceData.CnCodeInformation
 @import viewmodels.helpers.ItemCheckAnswersHelper
 @import utils.CommodityCodeHelper
+@import pages.sections.items.ItemQuantityPage
 
 @this(
         layout: templates.Layout,
@@ -26,6 +27,9 @@
         h1: components.h1,
         h2: components.h2,
         govukSummaryList: GovukSummaryList,
+        notificationBanner: GovukNotificationBanner,
+        p: components.p,
+        link: components.link,
         helper: ItemCheckAnswersHelper
 )
 
@@ -35,21 +39,31 @@
 
     @formHelper(action) {
 
-        @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
+      @if(ItemQuantityPage(idx).isMovementSubmissionError) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+            Html(messages("errors.704.items.notificationBanner.p")),
+            link(controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url, "errors.704.items.quantity.cya", id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+          ))))
+        ))
+      }
 
-        @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
+      @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 
-        @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
+      @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
 
-        @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
+      @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
 
-        @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
-            @govukSummaryList(helper.constructWineDetailsCard(idx))
-        }
+      @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
-        @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+      @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
+          @govukSummaryList(helper.constructWineDetailsCard(idx))
+      }
 
-        @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
+      @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+
+      @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }
 }
 

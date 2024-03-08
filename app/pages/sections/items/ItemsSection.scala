@@ -21,17 +21,17 @@ import models.sections.items.ItemsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
-import viewmodels.taskList
-import viewmodels.taskList.{InProgress, TaskListStatus}
+import viewmodels.taskList._
 
 case object ItemsSection extends Section[JsObject] {
 
   override val path: JsPath = JsPath \ "items"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (request.userAnswers.get(ItemsCount), request.userAnswers.get(ItemsAddToListPage)) match {
-      case (Some(0) | None, _) => taskList.NotStarted
-      case (_, Some(ItemsAddToList.No)) =>
+    (request.userAnswers.get(ItemsCount), request.userAnswers.get(ItemsAddToListPage), ItemsSectionItems.isMovementSubmissionError) match {
+      case (_, _, true) => UpdateNeeded
+      case (Some(0) | None, _, _) => NotStarted
+      case (_, Some(ItemsAddToList.No), _) =>
         ItemsSectionItems.status
       case _ => InProgress
     }

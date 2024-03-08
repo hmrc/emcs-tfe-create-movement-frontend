@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import controllers.sections.items.routes
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemsAddToListMessages
 import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
@@ -35,25 +35,30 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.checkAnswers.sections.items._
-import views.html.components.{span, tag}
+import views.html.components.span
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCnCodeInformationService {
+class ItemsAddToListHelperSpec extends SpecBase
+  with ItemFixtures
+  with MockGetCnCodeInformationService
+  with MovementSubmissionFailureFixtures {
 
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val span: span = app.injector.instanceOf[span]
-  implicit lazy val tag: tag = app.injector.instanceOf[tag]
+  implicit lazy val tagHelper: TagHelper = app.injector.instanceOf[TagHelper]
   lazy val itemPackagingSummary: ItemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
+  lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
 
   val headingLevel = 2
 
   lazy val helper = new ItemsAddToListHelper(
-    tag = tag,
+    tagHelper = tagHelper,
     span = span,
     cnCodeInformationService = mockGetCnCodeInformationService,
-    itemPackagingSummary = itemPackagingSummary
+    itemPackagingSummary = itemPackagingSummary,
+    itemQuantitySummary = itemQuantitySummary
   )
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
@@ -110,7 +115,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
                   itemPackagingSummary.row(testIndex1).get
                 )
               )
@@ -135,7 +140,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                   title = Some(CardTitle(
                     content = HtmlContent(HtmlFormat.fill(Seq(
                       span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                      tag(messagesForLanguage.incomplete, "red")
+                      tagHelper.incompleteTag()
                     ))),
                     headingLevel = Some(headingLevel)
                   )),
@@ -157,7 +162,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get
                 )
               )
             )
@@ -178,7 +183,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                   title = Some(CardTitle(
                     content = HtmlContent(HtmlFormat.fill(Seq(
                       span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                      tag(messagesForLanguage.incomplete, "red")
+                      tagHelper.incompleteTag()
                     ))),
                     headingLevel = Some(headingLevel)
                   )),
@@ -200,7 +205,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
                   itemPackagingSummary.row(testIndex1).get
                 )
               )
@@ -227,7 +232,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                   title = Some(CardTitle(
                     content = HtmlContent(HtmlFormat.fill(Seq(
                       span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                      tag(messagesForLanguage.incomplete, "red")
+                      tagHelper.incompleteTag()
                     ))),
                     headingLevel = Some(headingLevel)
                   )),
@@ -249,7 +254,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
                   itemPackagingSummary.row(testIndex1).get
                 )
               )
@@ -297,7 +302,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
                   itemPackagingSummary.row(testIndex1).get
                 )
               ),
@@ -306,7 +311,7 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                   title = Some(CardTitle(
                     content = HtmlContent(HtmlFormat.fill(Seq(
                       span(messagesForLanguage.itemCardTitle(testIndex2), Some("govuk-!-margin-right-2")),
-                      tag(messagesForLanguage.incomplete, "red")
+                      tagHelper.incompleteTag()
                     ))),
                     headingLevel = Some(headingLevel)
                   )),
@@ -328,6 +333,50 @@ class ItemsAddToListHelperSpec extends SpecBase with ItemFixtures with MockGetCn
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex2, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex2, showChangeLinks = false).get
+                )
+              )
+            )
+          }
+
+          s"when the item has a submission failure" in new Setup(
+            singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
+          ) {
+
+            val item = CnCodeInformationItem(testEpcWine, testCnCodeWine)
+
+            MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
+              .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
+
+            helper.allItemsSummary.futureValue mustBe Seq(
+              SummaryList(
+                card = Some(Card(
+                  title = Some(CardTitle(
+                    content = HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
+                      tagHelper.updateNeededTag(withNoFloat = false)
+                    ))),
+                    headingLevel = Some(headingLevel)
+                  )),
+                  actions = Some(Actions(items = Seq(
+                    ActionItem(
+                      href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                      content = Text(messagesForLanguage.change),
+                      visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                      attributes = Map("id" -> "changeItem-1")
+                    ),
+                    ActionItem(
+                      href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                      content = Text(messagesForLanguage.remove),
+                      visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                      attributes = Map("id" -> "removeItem-1")
+                    )
+                  )))
+                )),
+                rows = Seq(
+                  ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
+                  ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemPackagingSummary.row(testIndex1).get
                 )
               )
             )

@@ -16,6 +16,8 @@
 
 package pages.sections.items
 
+import config.Constants.BODYEADESAD
+import models.UserAnswers
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
@@ -37,6 +39,22 @@ case object ItemsSectionItems extends Section[JsObject] {
           InProgress
         }
     }
+
+  def indexesOfItemsWithSubmissionFailures(userAnswers: UserAnswers): Seq[Int] =
+    userAnswers.submissionFailures
+      .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
+      .collect { case itemError =>
+        val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
+        val lookup(index) = itemError.errorLocation.get
+        index.toInt
+      }
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+    request.userAnswers.get(ItemsCount) match {
+      case Some(0) | None => false
+      case Some(count) => (0 until count).exists(ItemsSectionItem(_).isMovementSubmissionError)
+    }
+  }
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

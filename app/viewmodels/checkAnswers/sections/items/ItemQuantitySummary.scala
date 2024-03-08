@@ -21,21 +21,30 @@ import models.requests.DataRequest
 import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items.ItemQuantityPage
 import play.api.i18n.Messages
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-object ItemQuantitySummary {
+import javax.inject.Inject
+
+class ItemQuantitySummary @Inject()(tagHelper: TagHelper) {
 
   def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true)
          (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemQuantityPage(idx)
+    lazy val hasUnfixedQuantityError = page.isMovementSubmissionError
 
     request.userAnswers.get(page).map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage())),
+          value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+            Some(Html(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage()))),
+            if(hasUnfixedQuantityError) Some(tagHelper.updateNeededTag()) else None
+          ).flatten))),
           actions = if (!showChangeLinks) Seq() else Seq(ActionItemViewModel(
             href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "site.change",

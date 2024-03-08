@@ -20,8 +20,9 @@ import controllers.actions._
 import forms.sections.items.ItemRemoveItemFormProvider
 import models.Index
 import models.requests.DataRequest
+import models.{Index, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemsSectionItem
+import pages.sections.items.{ItemsSectionItem, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

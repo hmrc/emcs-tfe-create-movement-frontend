@@ -23,7 +23,7 @@ import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 
 class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
-  val page = LocalReferenceNumberPage()
+  val page: LocalReferenceNumberPage = LocalReferenceNumberPage()
 
   "when calling isSubmissionErrorOnPage" - {
 

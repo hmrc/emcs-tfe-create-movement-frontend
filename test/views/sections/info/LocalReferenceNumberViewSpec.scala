@@ -97,7 +97,7 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours with Mov
             Selectors.title -> messagesForLanguage.newTitle,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.movementInformationSection,
             Selectors.h1 -> messagesForLanguage.newHeading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure
           ))(doc())
 

@@ -49,14 +49,14 @@ class ItemQuantityController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        renderView(Ok, fillForm(ItemQuantityPage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(ItemQuantityPage(idx), formProvider(idx)), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        formProvider().bindFromRequest().fold(
+        formProvider(idx).bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           saveAndRedirect(ItemQuantityPage(idx), _, mode)
         )
@@ -71,7 +71,8 @@ class ItemQuantityController @Inject()(
             form = form,
             action = routes.ItemQuantityController.onSubmit(request.ern, request.draftId, idx, mode),
             goodsType = goodsType,
-            unitOfMeasure = cnCodeInfo.unitOfMeasure
+            unitOfMeasure = cnCodeInfo.unitOfMeasure,
+            idx = idx
           ))
       }
     }

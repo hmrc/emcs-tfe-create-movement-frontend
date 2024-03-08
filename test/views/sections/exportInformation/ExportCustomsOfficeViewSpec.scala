@@ -84,7 +84,7 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with Move
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.exportInformationSection,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.submissionFailureError
           ))(doc())
 

@@ -19,7 +19,6 @@ package pages.sections.importInformation
 import models.requests.DataRequest
 import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor}
 import pages.sections.Section
-import pages.sections.info.LocalReferenceNumberPage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, NotStarted, TaskListStatus, UpdateNeeded}
 

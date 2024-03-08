@@ -1446,4 +1446,8 @@ errors.704.exportOffice.input = The export customs office code you have entered 
 # EMCS Core Error Number 4451:
 errors.704.importCustomsOfficeCode = The import customs office code you have entered is not valid
 errors.704.importCustomsOfficeCode.input = The import customs office code you have entered is not valid so you must now enter different details
-errors.704.exportOffice.input = The export customs office code you have entered is not valid so you must now enter different details
+
+errors.704.dispatchWareHouseExciseID = The excise ID for the tax warehouse of dispatch is not valid
+errors.704.dispatchWareHouseExciseID.input = The excise ID for the tax warehouse of dispatch is not valid so you must now enter different details
+errors.704.dispatchWareHouseConsignorLinkExciseID = Excise ID entered for the tax warehouse of dispatch is not linked with the consignor
+errors.704.dispatchWareHouseConsignorLinkExciseID.input = Excise ID entered for the tax warehouse of dispatch is not linked with the consignor so you must now enter different details

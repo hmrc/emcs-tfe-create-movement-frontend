@@ -16,11 +16,14 @@
 
 package forms.sections.dispatch
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
+class DispatchWarehouseExciseFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
   val requiredKey = "dispatchWarehouseExcise.error.required"
   val xssKey = "dispatchWarehouseExcise.error.xss"
@@ -28,7 +31,7 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
   val formatKey = "dispatchWarehouseExcise.error.format"
   val fixedLength = 13
 
-  val form = new DispatchWarehouseExciseFormProvider()()
+  val form = new DispatchWarehouseExciseFormProvider()()(dataRequest(FakeRequest()))
 
   ".value" - {
 

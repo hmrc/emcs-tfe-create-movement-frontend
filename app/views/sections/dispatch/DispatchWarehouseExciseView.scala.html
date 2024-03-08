@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import pages.sections.dispatch.DispatchWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
@@ -26,6 +27,8 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    p: components.p,
+    notificationBanner: GovukNotificationBanner,
     continueOrExit: components.continueOrExit
 )
 
@@ -34,6 +37,15 @@
 @layout(pageTitle = title(form, messages("dispatchWarehouseExcise.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)) {
+
+        @defining(DispatchWarehouseExcisePage.get704ErrorCodeMessage(request)) { errorMsg =>
+            @if(DispatchWarehouseExcisePage.isMovementSubmissionError && form.errors.isEmpty) {
+                @notificationBanner(NotificationBanner(
+                    title = Text(messages("errors.704.notificationBanner.title")),
+                    content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages({errorMsg}))))
+                ))
+            }
+        }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

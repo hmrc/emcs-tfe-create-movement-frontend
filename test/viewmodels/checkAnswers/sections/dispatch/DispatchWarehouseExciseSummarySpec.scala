@@ -30,6 +30,8 @@ import viewmodels.implicits._
 
 class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
+  lazy val summary: DispatchWarehouseExciseSummary = app.injector.instanceOf[DispatchWarehouseExciseSummary]
+
   "DispatchWarehouseExciseSummary" - {
 
     Seq(DispatchWarehouseExciseMessages.English).foreach { messagesForLanguage =>
@@ -44,7 +46,7 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DispatchWarehouseExciseSummary.row() mustBe None
+            summary.row() mustBe None
           }
         }
 
@@ -54,7 +56,7 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchWarehouseExcisePage, "GB123456789"))
 
-            DispatchWarehouseExciseSummary.row() mustBe
+            summary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

@@ -16,10 +16,26 @@
 
 package pages.sections.dispatch
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils.SubmissionFailureErrorCodes.{dispatchWarehouseExciseIDConsignorLinkError, dispatchWarehouseExciseIDInvalid, dispatchWarehouseExciseIDInvalid2}
 
 case object DispatchWarehouseExcisePage extends QuestionPage[String] {
   override val toString: String = "dispatchWarehouseExcise"
   override val path: JsPath = DispatchSection.path \ toString
+
+
+  def get704ErrorCodeMessage(implicit request: DataRequest[_]): String =
+    if (request.userAnswers.submissionFailures.exists(error => error.errorType == dispatchWarehouseExciseIDInvalid || error.errorType == dispatchWarehouseExciseIDInvalid2)) "errors.704.dispatchWareHouseExciseID.input"
+    else "errors.704.dispatchWareHouseConsignorLinkExciseID.input"
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.submissionFailures.exists(error => (error.errorType == dispatchWarehouseExciseIDInvalid || error.errorType == dispatchWarehouseExciseIDInvalid2 || error.errorType == dispatchWarehouseExciseIDConsignorLinkError) && !error.hasBeenFixed)
+
+  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] = {
+    request.userAnswers.submissionFailures.find(_.errorType == dispatchWarehouseExciseIDInvalid).flatMap(_.originalAttributeValue)
+  }
+
+  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
+    Seq(request.userAnswers.submissionFailures.indexWhere(_.errorType == dispatchWarehouseExciseIDInvalid), request.userAnswers.submissionFailures.indexWhere(_.errorType == dispatchWarehouseExciseIDInvalid2), request.userAnswers.submissionFailures.indexWhere(_.errorType == dispatchWarehouseExciseIDConsignorLinkError))
 }

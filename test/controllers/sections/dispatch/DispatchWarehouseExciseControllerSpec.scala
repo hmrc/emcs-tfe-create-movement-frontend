@@ -24,6 +24,7 @@ import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.data.Form
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.dispatch.DispatchWarehouseExciseView
@@ -32,8 +33,9 @@ import scala.concurrent.Future
 
 class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, dispatchWarehouseExciseRoute)
   lazy val formProvider: DispatchWarehouseExciseFormProvider = new DispatchWarehouseExciseFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider()(dataRequest(request))
   lazy val view: DispatchWarehouseExciseView = app.injector.instanceOf[DispatchWarehouseExciseView]
 
   lazy val dispatchWarehouseExciseRoute: String =

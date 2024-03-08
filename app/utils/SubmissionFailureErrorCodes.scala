@@ -21,4 +21,7 @@ object SubmissionFailureErrorCodes {
   val importCustomsOfficeCodeError = "4451"
   val exportCustomsOfficeNumberError = "4425"
   val itemQuantityError = "4407"
+  val dispatchWarehouseExciseIDInvalid = "4404"
+  val dispatchWarehouseExciseIDInvalid2 = "4458"
+  val dispatchWarehouseExciseIDConsignorLinkError = "4461"
 }

@@ -15,12 +15,16 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.dispatch.DispatchWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
     h1: components.h1,
+    link: components.link,
+    p: components.p,
+    notificationBanner: GovukNotificationBanner,
     govukSummaryList: GovukSummaryList,
     h2: components.h2
 )
@@ -31,9 +35,18 @@
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-        @h2(messages("dispatch.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @defining(DispatchWarehouseExcisePage.get704ErrorCodeMessage(request)) { errorMsg =>
+            @if(DispatchWarehouseExcisePage.isMovementSubmissionError) {
+                @notificationBanner(NotificationBanner(
+                    title = Text(messages("errors.704.notificationBanner.title")),
+                        content = HtmlContent(p("govuk-notification-banner__heading") {
+                        link(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, NormalMode).url, errorMsg, id = Some("fix-dispatch-warehouse-excise"))
+                    })
+                ))
+            }
+        }
 
-        @h1(messages("dispatchCheckAnswers.heading"))
+        @h1("dispatchCheckAnswers.heading", Some(messages("dispatch.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
         @govukSummaryList(list)
 

@@ -35,9 +35,10 @@ import viewmodels.implicits._
 class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
   class Setup(userAnswers: UserAnswers) {
+    lazy val dispatchWarehouseExciseSummary = app.injector.instanceOf[DispatchWarehouseExciseSummary]
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
     implicit val msgs: Messages = messages(FakeRequest())
-    lazy val dispatchCheckAnswersSummary = new DispatchCheckAnswersHelper()
+    lazy val dispatchCheckAnswersSummary = app.injector.instanceOf[DispatchCheckAnswersHelper]
   }
 
   "CheckAnswersDispatchHelper" - {
@@ -53,7 +54,7 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
         val expectedResult: SummaryList = SummaryList(Seq(
           DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
           DispatchBusinessNameSummary.row()(fakeDataRequest, msgs),
-          DispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
+          dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
           DispatchAddressSummary.row()(fakeDataRequest, msgs)
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
@@ -76,7 +77,7 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
               actions = Seq()
             )
           ),
-          DispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
+          dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
           Some(SummaryListRowViewModel(
             key = DispatchCheckAnswersMessages.English.addressLabel,
             value = ValueViewModel(Text(DispatchCheckAnswersMessages.English.consignorSectionNotComplete)),

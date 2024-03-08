@@ -18,19 +18,29 @@ package forms.sections.dispatch
 
 import forms.{EXCISE_NUMBER_REGEX, XSS_REGEX}
 import forms.mappings.Mappings
+import models.requests.DataRequest
+import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.data.Form
+import utils.SubmissionFailureErrorCodes.{dispatchWarehouseExciseIDConsignorLinkError, dispatchWarehouseExciseIDInvalid, dispatchWarehouseExciseIDInvalid2}
 
 import javax.inject.Inject
 
 class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply()(implicit dataRequest: DataRequest[_]): Form[String] = {
+    val optOriginalValueSentInPreviousSubmission = DispatchWarehouseExcisePage.getOriginalAttributeValue
+    println("*"*20)
+    println(optOriginalValueSentInPreviousSubmission)
+    val errorKey = if (dataRequest.userAnswers.submissionFailures.exists(error => error.errorType == dispatchWarehouseExciseIDInvalid || error.errorType == dispatchWarehouseExciseIDInvalid2)) "errors.704.dispatchWareHouseExciseID.input"
+    else if (dataRequest.userAnswers.submissionFailures.exists(error => error.errorType == dispatchWarehouseExciseIDConsignorLinkError)) "errors.704.dispatchWareHouseConsignorLinkExciseID.input" else ""
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
         .verifying(firstError(
           fixedLength(13, "dispatchWarehouseExcise.error.length"),
           regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
-          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.format")
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.format"),
+          isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, errorKey)
         ))
     )
+  }
 }

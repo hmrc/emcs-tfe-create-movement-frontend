@@ -47,12 +47,12 @@ class DispatchWarehouseExciseController @Inject()(
 
   def onPageLoad(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      renderView(Ok, fillForm(DispatchWarehouseExcisePage, formProvider()), mode)
+      renderView(Ok, fillForm(DispatchWarehouseExcisePage, formProvider()(request)), mode)
     }
 
   def onSubmit(ern: String, lrn: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
-      formProvider().bindFromRequest().fold(
+      formProvider()(request).bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         saveAndRedirect(DispatchWarehouseExcisePage, _, mode)
       )

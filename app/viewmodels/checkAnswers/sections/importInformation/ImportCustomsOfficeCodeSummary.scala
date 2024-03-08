@@ -21,19 +21,29 @@ import models.requests.DataRequest
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-object ImportCustomsOfficeCodeSummary {
+import javax.inject.Inject
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+class ImportCustomsOfficeCodeSummary @Inject()(tagHelper: TagHelper) {
+
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    val hasUnfixedError = ImportCustomsOfficeCodePage.isMovementSubmissionError
+
     request.userAnswers.get(ImportCustomsOfficeCodePage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "importCustomsOfficeCode.checkYourAnswers.label",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString()),
+          value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+            Some(HtmlFormat.escape(answer)),
+            if (hasUnfixedError) Some(tagHelper.updateNeededTag()) else None
+          ).flatten))),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
@@ -48,5 +58,6 @@ object ImportCustomsOfficeCodeSummary {
           )
         )
     }
+  }
 
 }

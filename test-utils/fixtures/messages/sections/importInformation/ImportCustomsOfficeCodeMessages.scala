@@ -40,6 +40,8 @@ object ImportCustomsOfficeCodeMessages {
         "This code is also known as a customs office reference number. Search for UK customs office codes (opens in new tab)."
       }
 
+    val importCustomsOffice704Error = "The import customs office code you have entered is not valid"
+
     val cyaLabel: String = "Customs office code"
     val cyaChangeHidden: String = "customs office code"
   }

@@ -37,6 +37,7 @@ import views.html.sections.importInformation.CheckYourAnswersImportView
 class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFluency
   with MockCheckYourAnswersImportHelper with MockUserAnswersService {
 
+  lazy val importCustomsOfficeCodeSummary = app.injector.instanceOf[ImportCustomsOfficeCodeSummary]
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
   implicit val msgs: Messages = messages(request)
@@ -44,7 +45,7 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
   lazy val view: CheckYourAnswersImportView = app.injector.instanceOf[CheckYourAnswersImportView]
 
   val summaryList: SummaryList = SummaryListViewModel(
-    rows = Seq(ImportCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
+    rows = Seq(importCustomsOfficeCodeSummary.row(showActionLinks = true)).flatten
   ).withCssClass("govuk-!-margin-bottom-9")
 
   class Fixture(userAnswers: Option[UserAnswers]) {

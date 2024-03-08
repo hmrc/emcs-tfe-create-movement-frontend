@@ -20,16 +20,16 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
-import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
-class InformationLocalReferenceNumberSummary @Inject()(tag: views.html.components.tag) {
+class InformationLocalReferenceNumberSummary @Inject()(tagHelper: TagHelper) {
 
   def row(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
@@ -43,7 +43,7 @@ class InformationLocalReferenceNumberSummary @Inject()(tag: views.html.component
         key = s"localReferenceNumber.$deferredType.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
           Some(HtmlFormat.escape(lrn)),
-          if(hasUnfixedLRNError) Some(updateNeededTag()) else None
+          if (hasUnfixedLRNError) Some(tagHelper.updateNeededTag()) else None
         ).flatten))),
         actions = Seq(
           ActionItemViewModel(
@@ -59,10 +59,4 @@ class InformationLocalReferenceNumberSummary @Inject()(tag: views.html.component
       )
     }
   }
-
-  private def updateNeededTag()(implicit messages: Messages): Html = tag(
-    message = messages(UpdateNeeded.msgKey),
-    colour = "orange",
-    extraClasses = "float-none govuk-!-margin-left-1"
-  )
 }

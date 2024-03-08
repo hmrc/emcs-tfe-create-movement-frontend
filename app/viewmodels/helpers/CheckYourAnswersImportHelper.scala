@@ -24,12 +24,12 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class CheckYourAnswersImportHelper @Inject()() {
+class CheckYourAnswersImportHelper @Inject()(importCustomsOfficeCodeSummary: ImportCustomsOfficeCodeSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        ImportCustomsOfficeCodeSummary.row(showActionLinks = true)
+        importCustomsOfficeCodeSummary.row(showActionLinks = true)
       ).flatten
     )
   }

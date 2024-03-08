@@ -17,10 +17,13 @@
 package pages.sections.importInformation
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
+import viewmodels.taskList.{Completed, NotStarted, UpdateNeeded}
 
-class ImportInformationSectionSpec extends SpecBase {
+class ImportInformationSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
+
   "isCompleted" - {
     "must return true" - {
       "when finished" in {
@@ -33,6 +36,36 @@ class ImportInformationSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         ImportInformationSection.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+    "must return UpdateNeeded" - {
+      "when a 704 error exists and has NOT been fixed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(importCustomsOfficeCodeFailure)
+        ))
+        ImportInformationSection.status mustBe UpdateNeeded
+      }
+    }
+
+    "must return Complete" - {
+      "when a 704 error exists that has been fixed" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(ImportCustomsOfficeCodePage, testImportCustomsOffice)
+              .copy(submissionFailures = Seq(importCustomsOfficeCodeFailure.copy(hasBeenFixed = true))
+          ))
+          ImportInformationSection.status mustBe Completed
+      }
+    }
+
+    "must return NotStarted" - {
+      "when no answer exists" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        ImportInformationSection.status mustBe NotStarted
       }
     }
   }

@@ -42,20 +42,35 @@
     @formHelper(action) {
 
       @if(ItemsSectionItems.isMovementSubmissionError) {
-        @notificationBanner(NotificationBanner(
-          title = Text(messages("errors.704.notificationBanner.title")),
-          content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-            /* TODO: handle when multiple errors
-                Html(messages("errors.704.items.notificationBanner.p")),
-            */
-            list(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers).flatMap {
-              indexOfItemWithSubmissionFailures => Seq(
-                Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
-                  link(controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url, "errors.704.items.quantity.cya", id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+        @defining(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers)) { indexesOfItemWithSubmissionFailures =>
+          @notificationBanner(NotificationBanner(
+            title = Text(messages("errors.704.notificationBanner.title")),
+            content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
+              if(indexesOfItemWithSubmissionFailures.size == 1) {
+                Seq(Option.when(ItemQuantityPage(indexesOfItemWithSubmissionFailures.head - 1).isMovementSubmissionError)(
+                  link(
+                    controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+                    "errors.704.items.quantity.cya",
+                    id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+                )).flatten
+              } else {
+                Seq(
+                  Html(messages("errors.704.items.notificationBanner.p")),
+                  list(indexesOfItemWithSubmissionFailures.flatMap {
+                    indexOfItemWithSubmissionFailures => Seq(
+                      Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
+                        link(
+                          controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+                          "errors.704.items.quantity.cya",
+                          id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+                      )
+                    ).flatten
+                  }, id = Some("list-of-submission-failures"))
                 )
-              ).flatten
-            }))
-          )))))
+              }
+            ))))
+          )
+        }
       }
 
       @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")

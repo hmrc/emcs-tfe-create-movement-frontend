@@ -57,12 +57,13 @@
                     Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
                       link(
                         controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, Index(indexOfItemWithSubmissionFailures - 1), CheckMode).url,
-                        messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures)
+                        messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures),
+                        id = Some(s"fix-item-$indexOfItemWithSubmissionFailures-quantity")
                       )
                     )
                   ).flatten
-              }))
-          )))))
+              }, id = Some("list-of-submission-failures")))))))
+        )
       }
 
       @formOpt.map{ form =>

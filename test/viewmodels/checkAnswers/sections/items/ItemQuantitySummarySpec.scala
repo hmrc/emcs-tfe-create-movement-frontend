@@ -74,13 +74,20 @@ class ItemQuantitySummarySpec extends SpecBase with MovementSubmissionFailureFix
             summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms) mustBe summaryRow()
           }
 
-          "must return a row" +
-            " (with the update needed tag when a submission failure exists)" in new Test(
+          "must return a row (with the update needed tag when a submission failure exists)" in new Test(
             emptyUserAnswers
               .copy(submissionFailures = Seq(itemQuantityFailure(1)))
               .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
           ) {
             summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms) mustBe summaryRow(hasUpdateNeededTag = true)
+          }
+
+          "must return a row (with no update needed tag when a submission failure exists but the 'showUpdateNeededTag' is false)" in new Test(
+            emptyUserAnswers
+              .copy(submissionFailures = Seq(itemQuantityFailure(1)))
+              .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
+          ) {
+            summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms, showUpdateNeededTag = false) mustBe summaryRow(hasUpdateNeededTag = false)
           }
         }
 

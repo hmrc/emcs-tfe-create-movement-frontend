@@ -33,6 +33,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
 
   object Selectors extends BaseSelectors {
     val fixQuantityErrorAtIndex: Int => String = index => s"#fix-item-$index-quantity"
+    val notificationBannerList = s".govuk-notification-banner .govuk-list"
   }
 
   val view: ItemCheckAnswersView = app.injector.instanceOf[ItemCheckAnswersView]
@@ -80,7 +81,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
 
       "when there is a 704 error" - {
 
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
           .copy(submissionFailures = Seq(itemQuantityFailure(1))))
 
         implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
@@ -90,7 +91,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
-          Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerContentForQuantity,
+          Selectors.notificationBannerList -> messagesForLanguage.notificationBannerContentForQuantity,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
 

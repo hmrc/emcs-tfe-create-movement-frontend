@@ -18,7 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.ItemsNavigator
@@ -28,7 +28,10 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 
-class ItemsIndexControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
+class ItemsIndexControllerSpec extends SpecBase
+  with MockUserAnswersService
+  with ItemFixtures
+  with MovementSubmissionFailureFixtures {
 
   class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -50,6 +53,19 @@ class ItemsIndexControllerSpec extends SpecBase with MockUserAnswersService with
     "when ItemsSectionItems.isCompleted" - {
 
       "must redirect to the Items Add to List controller" in new Test(Some(singleCompletedWineItem)) {
+
+        val result = controller.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsAddToListController.onPageLoad(testErn, testDraftId).url
+      }
+    }
+
+    "when ItemsSectionItems status is UpdateNeeded" - {
+
+      "must redirect to the Items Add to List controller" in new Test(Some(
+        singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
+      )) {
 
         val result = controller.onPageLoad(testErn, testDraftId)(request)
 

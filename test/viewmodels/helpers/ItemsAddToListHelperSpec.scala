@@ -375,7 +375,7 @@ class ItemsAddToListHelperSpec extends SpecBase
                 rows = Seq(
                   ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
                   ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false).get,
+                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false, showUpdateNeededTag = false).get,
                   itemPackagingSummary.row(testIndex1).get
                 )
               )

@@ -23,6 +23,7 @@ import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndica
 import models.sections.items.ItemWineProductCategory.Other
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import play.api.test.FakeRequest
+import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
 class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 
@@ -54,6 +55,26 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         )
 
         ItemsSectionItems.isCompleted mustBe false
+      }
+    }
+  }
+
+  "status" - {
+
+    "should return UpdateNeeded" - {
+
+      "when a submission failure exists for this item" in {
+
+        val answers = singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
+        ItemsSectionItems.status(dataRequest(FakeRequest(), answers)) mustBe UpdateNeeded
+      }
+    }
+
+    "should return NotStarted" - {
+
+      "when there are no items" in {
+
+        ItemsSectionItems.status(dataRequest(FakeRequest(), emptyUserAnswers)) mustBe NotStarted
       }
     }
   }
@@ -150,7 +171,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
       "when there are no item submission failures" - {
         ItemsSectionItems.indexesOfItemsWithSubmissionFailures(
           emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))
-        )mustBe Seq()
+        ) mustBe Seq()
       }
     }
   }

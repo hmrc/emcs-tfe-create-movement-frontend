@@ -83,7 +83,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       rows = Seq(
         ItemBrandNameSummary.row(item.idx, showChangeLinks = false),
         ItemCommercialDescriptionSummary.row(item.idx, showChangeLinks = false),
-        item.unitOfMeasure.flatMap(itemQuantitySummary.row(item.idx, _, showChangeLinks = false)),
+        item.unitOfMeasure.flatMap(itemQuantitySummary.row(item.idx, _, showChangeLinks = false, showUpdateNeededTag = false)),
         itemPackagingSummary.row(item.idx)
       ).flatten
     ).withCard(

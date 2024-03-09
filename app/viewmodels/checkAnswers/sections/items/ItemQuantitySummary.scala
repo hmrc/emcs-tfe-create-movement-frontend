@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 class ItemQuantitySummary @Inject()(tagHelper: TagHelper) {
 
-  def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true)
+  def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true, showUpdateNeededTag: Boolean = true)
          (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemQuantityPage(idx)
     lazy val hasUnfixedQuantityError = page.isMovementSubmissionError
@@ -43,7 +43,7 @@ class ItemQuantitySummary @Inject()(tagHelper: TagHelper) {
           key = s"$page.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
             Some(Html(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage()))),
-            if(hasUnfixedQuantityError) Some(tagHelper.updateNeededTag()) else None
+            if(hasUnfixedQuantityError && showUpdateNeededTag) Some(tagHelper.updateNeededTag()) else None
           ).flatten))),
           actions = if (!showChangeLinks) Seq() else Seq(ActionItemViewModel(
             href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,

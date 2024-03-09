@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
 
@@ -30,9 +30,10 @@ case object ItemsSectionItems extends Section[JsObject] {
   val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(ItemsCount) match {
-      case Some(0) | None => NotStarted
-      case Some(count) =>
+    (request.userAnswers.get(ItemsCount), isMovementSubmissionError) match {
+      case (_, true) => UpdateNeeded
+      case (Some(0) | None, _) => NotStarted
+      case (Some(count), _) =>
         if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
           Completed
         } else {

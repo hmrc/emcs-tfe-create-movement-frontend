@@ -98,7 +98,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
         "must save the timestamp and redirect" in new Test() {
           MockAppConfig.destinationOfficeSuffix.returns("004098")
           MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(submitCreateMovementResponseEIS))
-          MockUserAnswersService.set(baseFullUserAnswers.copy(hasBeenSubmitted = true)).returns(Future.successful(
+          MockUserAnswersService.set(baseFullUserAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(testDraftId))).returns(Future.successful(
             baseFullUserAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(testDraftId))
               .set(DeclarationPage, LocalDateTime.now())
           ))

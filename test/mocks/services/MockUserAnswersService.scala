@@ -41,7 +41,9 @@ trait MockUserAnswersService extends MockFactory {
           actualAnswers.ern == userAnswers.ern &&
             //Declaration page stores a LocalDateTime which can't be asserted against reliably
             actualAnswers.data - DeclarationPage == userAnswers.data - DeclarationPage &&
-            actualAnswers.submissionFailures == userAnswers.submissionFailures
+            actualAnswers.submissionFailures == userAnswers.submissionFailures &&
+            actualAnswers.hasBeenSubmitted == userAnswers.hasBeenSubmitted &&
+            actualAnswers.submittedDraftId == userAnswers.submittedDraftId
         })
 
     def set(): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =

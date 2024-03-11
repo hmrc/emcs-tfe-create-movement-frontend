@@ -20,4 +20,5 @@ object SubmissionFailureErrorCodes {
   val localReferenceNumberError = "4402"
   val importCustomsOfficeCodeError = "4451"
   val exportCustomsOfficeNumberError = "4425"
+  val itemQuantityError = "4407"
 }

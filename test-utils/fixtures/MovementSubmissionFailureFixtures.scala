@@ -37,4 +37,12 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     hasBeenFixed = false
   )
 
+  def itemQuantityFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = SubmissionFailureErrorCodes.itemQuantityError,
+    errorReason = "The quantitiy entered exceeds the amount approved for this Temporary Consignment Authorisation (TCA). Please check and amend your entry.",
+    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/Quantity[1]"),
+    originalAttributeValue = Some("10000"),
+    hasBeenFixed = false
+  )
+
 }

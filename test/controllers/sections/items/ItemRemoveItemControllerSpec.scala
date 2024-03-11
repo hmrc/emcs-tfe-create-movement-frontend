@@ -18,10 +18,10 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import forms.sections.items.ItemRemoveItemFormProvider
 import mocks.services.MockUserAnswersService
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.ItemExciseProductCodePage
 import play.api.mvc.{AnyContentAsEmpty, Call}
@@ -31,7 +31,7 @@ import views.html.sections.items.ItemRemoveItemView
 
 import scala.concurrent.Future
 
-class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
+class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures with MovementSubmissionFailureFixtures {
 
   lazy val formProvider = new ItemRemoveItemFormProvider()
   lazy val form = formProvider()
@@ -87,10 +87,17 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
       contentAsString(result) mustEqual view(form, action)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the Index Controller when yes is selected (removing the section)" in new Test(Some(baseUserAnswers)) {
+    "must redirect to the Index Controller when yes is selected (removing the section) AND cleanse any submissionFailureMessages" in new Test(
+      Some(baseUserAnswers.copy(submissionFailures = Seq(
+        itemQuantityFailure(1).copy(originalAttributeValue = Some("1")),
+        itemQuantityFailure(2)
+      )))
+    ) {
 
       MockUserAnswersService.set(
-        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+          .copy(submissionFailures = Seq(itemQuantityFailure(1)))
       ).returns(
         Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))
       )
@@ -130,6 +137,118 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+  }
+
+  ".updateItemSubmissionFailureIndexes" - {
+
+    "when multiple errors for multiple items exists" - {
+
+      val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(
+        movementSubmissionFailure,
+        itemQuantityFailure(1),
+        itemQuantityFailure(4),
+        itemQuantityFailure(10),
+        movementSubmissionFailure,
+        itemQuantityFailure(20),
+        itemQuantityFailure(11)
+      ))
+
+      "when removing an item at the start (first item with error)" - {
+
+        "should remove the item failure AND reindex XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(0), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(
+            movementSubmissionFailure,
+            itemQuantityFailure(3),
+            itemQuantityFailure(9),
+            movementSubmissionFailure,
+            itemQuantityFailure(19),
+            itemQuantityFailure(10)
+          )
+        }
+      }
+
+      "when removing an item at a mid-point" - {
+
+        "should remove the item failure AND reindex XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(3), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(
+            movementSubmissionFailure,
+            itemQuantityFailure(1),
+            itemQuantityFailure(9),
+            movementSubmissionFailure,
+            itemQuantityFailure(19),
+            itemQuantityFailure(10)
+          )
+        }
+      }
+
+      "when removing an item at the end (last item with error)" - {
+
+        "should remove the item failure AND reindex XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(19), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(
+            movementSubmissionFailure,
+            itemQuantityFailure(1),
+            itemQuantityFailure(4),
+            itemQuantityFailure(10),
+            movementSubmissionFailure,
+            itemQuantityFailure(11)
+          )
+        }
+      }
+
+      "when removing an item that doesn't have an error against it" - {
+
+        "should update all subsequent XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(15), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(
+            movementSubmissionFailure,
+            itemQuantityFailure(1),
+            itemQuantityFailure(4),
+            itemQuantityFailure(10),
+            movementSubmissionFailure,
+            itemQuantityFailure(19),
+            itemQuantityFailure(11)
+          )
+        }
+      }
+
+      "when removing an item and not submission failures exist for any items" - {
+
+        val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))
+
+        "should return the submission failures unaffected" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(15), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(movementSubmissionFailure)
+        }
+      }
+
+      "when removing an item before another item" - {
+
+        val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(
+          itemQuantityFailure(1).copy(originalAttributeValue = Some("1")),
+          itemQuantityFailure(2)
+        ))
+
+        "should remove the item failure AND reindex XPath for ErrorLocations to synchronise them with the new array order" in new Test(Some(userAnswersWithFailures)) {
+
+          val result = controller.updateItemSubmissionFailureIndexes(Index(0), userAnswersWithFailures)
+
+          result.submissionFailures mustBe Seq(itemQuantityFailure(1))
+        }
+      }
     }
   }
 }

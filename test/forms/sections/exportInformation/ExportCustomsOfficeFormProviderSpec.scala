@@ -24,7 +24,7 @@ import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 
 class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
@@ -76,7 +76,7 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
 
       val form = new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest(),
         answers = emptyUserAnswers.copy(submissionFailures = Seq(
-          movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false, originalAttributeValue = Some(testExportCustomsOffice))
+          movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false, originalAttributeValue = Some(testExportCustomsOffice))
         ))))
 
       "must error with the expected msg key" in {

@@ -45,6 +45,8 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, consigneeExciseRoute)
 
+    implicit val dr = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
+
     lazy val form: Form[String] = formProvider(true)
 
     lazy val testController = new ConsigneeExciseController(

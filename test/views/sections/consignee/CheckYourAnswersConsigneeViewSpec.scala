@@ -37,6 +37,8 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
+  lazy val consigneeExciseSummary: ConsigneeExciseSummary = app.injector.instanceOf[ConsigneeExciseSummary]
+
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
 
@@ -67,7 +69,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testDraftId,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExciseSummary.row(true),
+            consigneeExciseSummary.row(true),
             ConsigneeAddressSummary.row(true)
           ).flatten)
         ).toString())

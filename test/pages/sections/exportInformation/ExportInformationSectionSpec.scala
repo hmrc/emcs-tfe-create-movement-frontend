@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
 class ExportInformationSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
@@ -47,7 +47,7 @@ class ExportInformationSectionSpec extends SpecBase with MovementSubmissionFailu
       "when a 704 error exists in this section" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false)))
+          emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false)))
         )
         ExportInformationSection.status mustBe UpdateNeeded
       }

@@ -23,7 +23,7 @@ import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
 import viewmodels.taskList.{Completed, InProgress, NotStarted, UpdateNeeded}
 
 import java.time.{LocalDate, LocalTime}
@@ -36,7 +36,7 @@ class InfoSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
       "when the LRN is a duplicate (704 response)" in {
         InfoSection.status(dataRequest(FakeRequest(), answers = emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false))
         ))) mustBe UpdateNeeded
       }
     }

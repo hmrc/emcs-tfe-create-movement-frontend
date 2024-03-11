@@ -19,7 +19,7 @@ package pages.sections.exportInformation
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 
 class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -29,24 +29,24 @@ class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailur
 
     "must return true" - {
 
-      s"when the error is $exportCustomsOfficeNumberError and not fixed" in {
+      s"when the error is ${ExportCustomsOfficeNumberError.code} and not fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false))
         ))) mustBe true
       }
     }
 
     "must return false" - {
 
-      s"when the error is not a $exportCustomsOfficeNumberError" in {
+      s"when the error is not a ${ExportCustomsOfficeNumberError.code}" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false))
         ))) mustBe false
       }
 
-      s"when the error is $exportCustomsOfficeNumberError but fixed" in {
+      s"when the error is ${ExportCustomsOfficeNumberError.code} but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = true))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = true))
         ))) mustBe false
       }
 
@@ -60,17 +60,17 @@ class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailur
 
     "must return Some(_)" - {
 
-      s"when the error type is $exportCustomsOfficeNumberError and an original attribute value exists" in {
+      s"when the error type is ${ExportCustomsOfficeNumberError.code} and an original attribute value exists" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
         ))) mustBe Some("LRN1")
       }
     }
 
     "must return None" - {
 
-      s"when the error type is not $exportCustomsOfficeNumberError" in {
+      s"when the error type is not ${ExportCustomsOfficeNumberError.code}" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
@@ -80,7 +80,7 @@ class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailur
       "when the original value is not defined" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false, originalAttributeValue = None))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe None
       }
     }
@@ -90,7 +90,7 @@ class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailur
 
     "must return Seq(-1)" - {
 
-      s"when the $exportCustomsOfficeNumberError error type does not exist in the submission failures" in {
+      s"when the ${ExportCustomsOfficeNumberError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe Seq(-1)
@@ -99,11 +99,11 @@ class ExportCustomsOfficePageSpec extends SpecBase with MovementSubmissionFailur
 
     "must return Seq(<index>)" - {
 
-      s"when the $exportCustomsOfficeNumberError error type exists in the submission failures" in {
+      s"when the ${ExportCustomsOfficeNumberError.code} error type exists in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None),
-            movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false, originalAttributeValue = None)
+            movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false, originalAttributeValue = None)
           )))) mustBe Seq(1)
       }
     }

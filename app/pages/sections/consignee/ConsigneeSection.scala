@@ -21,7 +21,7 @@ import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath, Reads}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus, UpdateNeeded}
 
 import scala.annotation.unused
 
@@ -29,21 +29,22 @@ case object ConsigneeSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "consignee"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (
-      request.userAnswers.get(ConsigneeExportPage),
-      request.userAnswers.get(ConsigneeExcisePage),
-      request.userAnswers.get(ConsigneeExemptOrganisationPage)
-    ) match {
-      case (Some(value), _, _) =>
-        value match {
-          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportInformationPage))
-          case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
-        }
-      case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case _ => NotStarted
+    if(ConsigneeExcisePage.isMovementSubmissionError) UpdateNeeded else {
+      (
+        request.userAnswers.get(ConsigneeExportPage),
+        request.userAnswers.get(ConsigneeExcisePage),
+        request.userAnswers.get(ConsigneeExemptOrganisationPage)
+      ) match {
+        case (Some(value), _, _) =>
+          value match {
+            case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportInformationPage))
+            case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+          }
+        case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
+        case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
+        case _ => NotStarted
+      }
     }
-
   }
 
   /**

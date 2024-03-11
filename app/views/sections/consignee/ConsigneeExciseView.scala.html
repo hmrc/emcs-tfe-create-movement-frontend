@@ -16,14 +16,19 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LabelSize
+@import pages.sections.consignee.ConsigneeExcisePage
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
         govukButton: GovukButton,
+        notificationBanner: GovukNotificationBanner,
         h1: components.h1,
         h2: components.h2,
+        link: components.link,
+        list: components.list,
+        p: components.p,
         continueOrExit: components.continueOrExit)
 
 @(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean, isNorthernIrishTemporaryCertifiedConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
@@ -40,6 +45,15 @@
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.isEmpty && ConsigneeExcisePage.isMovementSubmissionError) {
+            @notificationBanner(NotificationBanner(
+                title = Text(messages("errors.704.notificationBanner.title")),
+                content = HtmlContent(p("govuk-notification-banner__heading")(list(ConsigneeExcisePage.getMovementSubmissionErrors.map { error =>
+                    Html(messages(error.messageKey))
+                })))
+            ))
+        }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

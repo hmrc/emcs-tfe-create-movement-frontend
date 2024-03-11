@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -78,7 +78,7 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with Move
         "when there is a 704 error" - new Fixture(messagesForLanguage.lang, true) {
 
           override implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false))))
+            .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false))))
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,

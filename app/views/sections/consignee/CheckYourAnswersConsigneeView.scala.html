@@ -16,18 +16,38 @@
 
 @import models.requests.DataRequest
 @import viewmodels.helpers.CheckAnswersHelper
+@import pages.sections.consignee.ConsigneeExcisePage
 
-@this(layout: templates.Layout,
-        govukSummaryList: GovukSummaryList,
-        formHelper: FormWithCSRF,
-        h1: components.h1,
-        saveAndContinue: components.saveAndContinue)
+@this(
+    layout: templates.Layout,
+    govukSummaryList: GovukSummaryList,
+    formHelper: FormWithCSRF,
+    h1: components.h1,
+    p: components.p,
+    notificationBanner: GovukNotificationBanner,
+    link: components.link,
+    list: components.list,
+    saveAndContinue: components.saveAndContinue
+)
 
 @(submitAction: Call, ern: String, lrn: String, summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
     @layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignee.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(submitAction) {
+
+            @if(ConsigneeExcisePage.isMovementSubmissionError) {
+                @notificationBanner(NotificationBanner(
+                    title = Text(messages("errors.704.notificationBanner.title")),
+                    content = HtmlContent(list(ConsigneeExcisePage.getMovementSubmissionErrors.map { error =>
+                        link(
+                            link = error.route().url,
+                            messageKey = error.messageKey,
+                            id = Some(error.id)
+                        )
+                    }))
+                ))
+            }
 
             @h1("checkYourAnswersConsignee.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
 

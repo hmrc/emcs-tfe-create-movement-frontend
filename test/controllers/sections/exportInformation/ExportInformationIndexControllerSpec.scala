@@ -26,7 +26,7 @@ import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 
 class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
@@ -58,7 +58,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
 
     "when ExportInformationSection == UpdateNeeded" - {
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.copy(
-        submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false))
+        submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false))
       ).set(ExportCustomsOfficePage, ""))) {
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 

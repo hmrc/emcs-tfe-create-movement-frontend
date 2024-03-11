@@ -28,6 +28,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
@@ -47,8 +48,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
         withAnswer(DestinationTypePage) {
           destinationTypePageAnswer =>
             val ur: UserRequest[_] = dataRequest.request
-
-            if (ConsigneeSection.isCompleted) {
+            if (ConsigneeSection.isCompleted || ConsigneeSection.status == UpdateNeeded) {
               Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, draftId))
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {

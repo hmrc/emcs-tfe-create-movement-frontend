@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 
@@ -89,7 +89,7 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers with Movemen
 
             implicit lazy val request = dataRequest(FakeRequest(),
               emptyUserAnswers
-                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false)))
+                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false)))
                 .set(ExportCustomsOfficePage, testExportCustomsOffice))
 
             summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = true)
@@ -99,7 +99,7 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers with Movemen
 
             implicit lazy val request = dataRequest(FakeRequest(),
               emptyUserAnswers
-                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = true)))
+                .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = true)))
                 .set(ExportCustomsOfficePage, testExportCustomsOffice))
 
             summary.row(showActionLinks = true) mustBe expectedRow()

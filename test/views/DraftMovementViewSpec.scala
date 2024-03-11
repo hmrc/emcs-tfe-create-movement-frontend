@@ -27,7 +27,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
 import views.html.DraftMovementView
 
 class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
@@ -46,7 +46,7 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
-            emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false)))
+            emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false)))
           )
 
           implicit val doc: Document = Jsoup.parse(view().toString())

@@ -19,7 +19,7 @@ package pages.sections.importInformation
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.importCustomsOfficeCodeError
+import utils.SubmissionFailureErrorCodes.ImportCustomsOfficeCodeError
 
 class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -29,7 +29,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return true" - {
 
-      s"when the error is $importCustomsOfficeCodeError and not fixed" in {
+      s"when the error is ${ImportCustomsOfficeCodeError.code} and not fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(importCustomsOfficeCodeFailure)
         ))) mustBe true
@@ -38,13 +38,13 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return false" - {
 
-      s"when the error is not a $importCustomsOfficeCodeError" in {
+      s"when the error is not a ${ImportCustomsOfficeCodeError.code}" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure)
         ))) mustBe false
       }
 
-      s"when the error is $importCustomsOfficeCodeError but fixed" in {
+      s"when the error is ${ImportCustomsOfficeCodeError.code} but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(importCustomsOfficeCodeFailure.copy(hasBeenFixed = true))
         ))) mustBe false
@@ -60,7 +60,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return Some(_)" - {
 
-      s"when the error type is $importCustomsOfficeCodeError and an original attribute value exists" in {
+      s"when the error type is ${ImportCustomsOfficeCodeError.code} and an original attribute value exists" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(importCustomsOfficeCodeFailure)
@@ -70,7 +70,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return None" - {
 
-      s"when the error type is not $importCustomsOfficeCodeError" in {
+      s"when the error type is not ${ImportCustomsOfficeCodeError.code}" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure)
@@ -90,7 +90,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return Seq(-1)" - {
 
-      s"when the $importCustomsOfficeCodeError error type does not exist in the submission failures" in {
+      s"when the ${ImportCustomsOfficeCodeError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure)
         ))) mustBe Seq(-1)
@@ -99,7 +99,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
     "must return Seq(<index>)" - {
 
-      s"when the $importCustomsOfficeCodeError error type exists in the submission failures" in {
+      s"when the ${ImportCustomsOfficeCodeError.code} error type exists in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure, importCustomsOfficeCodeFailure)
         ))) mustBe Seq(1)

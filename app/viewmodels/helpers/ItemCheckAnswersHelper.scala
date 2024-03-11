@@ -21,12 +21,15 @@ import models.response.referenceData.CnCodeInformation
 import models.{CheckMode, GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.ItemsPackagingCount
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, NotificationBanner, Text}
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukNotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.{link, list, p}
 
 import javax.inject.Inject
 
@@ -36,7 +39,10 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary,
                                         itemWineMoreInformationSummary: ItemWineMoreInformationSummary,
                                         itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary,
-                                        itemQuantitySummary: ItemQuantitySummary
+                                        itemQuantitySummary: ItemQuantitySummary,
+                                        p: p,
+                                        list: list,
+                                        link: link
                                       ) {
 
   private val headingLevel = 3
@@ -139,5 +145,36 @@ class ItemCheckAnswersHelper @Inject()(
       case Some(value) => (0 until value).map(packageIdx => packageTypeRow(Index(packageIdx)))
       case None => Nil
     }).flatten
+  }
+
+  def showNotificationBannerWhenSubmissionError(idx: Index)(implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
+    val indexesOfItemsWithSubmissionFailures = ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers)
+    NotificationBanner(
+      title = Text(messages("errors.704.notificationBanner.title")),
+      content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
+        if (indexesOfItemsWithSubmissionFailures.size == 1) {
+          Seq(Option.when(ItemQuantityPage(indexesOfItemsWithSubmissionFailures.head - 1).isMovementSubmissionError)(
+            link(
+              controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+              "errors.704.items.quantity.cya",
+              id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+          )).flatten
+        } else {
+          Seq(
+            Html(messages("errors.704.items.notificationBanner.p")),
+            list(indexesOfItemsWithSubmissionFailures.flatMap {
+              indexOfItemWithSubmissionFailures =>
+                Seq(
+                  Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
+                    link(
+                      controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+                      "errors.704.items.quantity.cya",
+                      id = Some(s"fix-item-${idx.displayIndex}-quantity"))
+                  )
+                ).flatten
+            }, id = Some("list-of-submission-failures"))
+          )
+        }
+      ))))
   }
 }

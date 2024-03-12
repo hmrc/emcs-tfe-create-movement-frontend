@@ -17,7 +17,7 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items._
 import models.requests.DataRequest
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
@@ -27,13 +27,17 @@ import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.notificationbanner.NotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList, SummaryListRow, Value}
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.{link, list, p}
 
-class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
+class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
@@ -47,13 +51,21 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
     lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
     lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
     lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
+    lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
+    lazy val p: p = app.injector.instanceOf[p]
+    lazy val list: list = app.injector.instanceOf[list]
+    lazy val link: link = app.injector.instanceOf[link]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
       itemCommodityCodeSummary = itemCommodityCodeSummary,
       itemWineOperationsChoiceSummary = itemWineOperationsChoiceSummary,
       itemWineMoreInformationSummary = itemWineMoreInformationSummary,
-      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary
+      itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary,
+      itemQuantitySummary = itemQuantitySummary,
+      p = p,
+      list = list,
+      link = link
     )
   }
 
@@ -213,6 +225,52 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures {
                 ).withVisuallyHiddenText(ItemBulkPackagingChoiceMessages.English.cyaChangeHidden("tobacco"))
               )
             )
+          )
+        }
+      }
+    }
+
+    "showNotificationBannerWhenSubmissionError" - {
+
+      "when there is one 704 error" - {
+
+        "return the correct notification banner" in new Test(
+          singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
+        ) {
+
+          helper.showNotificationBannerWhenSubmissionError(testIndex1) mustBe NotificationBanner(
+            title = Text(msgs("errors.704.notificationBanner.title")),
+            content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(link(
+              controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
+              "errors.704.items.quantity.cya",
+              id = Some(s"fix-item-1-quantity"))))))
+          )
+        }
+      }
+
+      "when there are multiple 704 errors" - {
+
+        "return the correct notification banner" in new Test(
+          singleCompletedWineItem
+            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(1)))
+        ) {
+
+          helper.showNotificationBannerWhenSubmissionError(testIndex1) mustBe NotificationBanner(
+            title = Text(msgs("errors.704.notificationBanner.title")),
+            content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+              Html(msgs("errors.704.items.notificationBanner.p")),
+              list(Seq(
+                link(
+                  controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
+                  "errors.704.items.quantity.cya",
+                  id = Some(s"fix-item-1-quantity")
+                ),
+                link(
+                  controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
+                  "errors.704.items.quantity.cya",
+                  id = Some(s"fix-item-1-quantity")
+                )), id = Some("list-of-submission-failures"))
+            ))))
           )
         }
       }

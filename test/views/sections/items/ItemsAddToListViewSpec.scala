@@ -17,13 +17,16 @@
 package views.sections.items
 
 import base.SpecBase
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemsAddToListMessages
 import forms.sections.items.ItemsAddToListFormProvider
 import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
+import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemWineProductCategory.Other
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.items._
@@ -31,9 +34,9 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
-import viewmodels.checkAnswers.sections.items.ItemPackagingSummary
-import viewmodels.helpers.ItemsAddToListHelper
-import views.html.components.{span, tag}
+import viewmodels.checkAnswers.sections.items.{ItemPackagingSummary, ItemQuantitySummary}
+import viewmodels.helpers.{ItemsAddToListHelper, TagHelper}
+import views.html.components.span
 import views.html.sections.items.ItemsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -41,8 +44,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ItemsAddToListViewSpec extends SpecBase
   with ViewBehaviours
-   with ItemFixtures
-  with MockGetCnCodeInformationService {
+  with ItemFixtures
+  with MockGetCnCodeInformationService
+  with MovementSubmissionFailureFixtures {
 
   lazy val view = app.injector.instanceOf[ItemsAddToListView]
   lazy val form = app.injector.instanceOf[ItemsAddToListFormProvider].apply()
@@ -51,10 +55,11 @@ class ItemsAddToListViewSpec extends SpecBase
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val helper = new ItemsAddToListHelper(
-    tag = app.injector.instanceOf[tag],
+    tagHelper = app.injector.instanceOf[TagHelper],
     span = app.injector.instanceOf[span],
     cnCodeInformationService = mockGetCnCodeInformationService,
-    itemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
+    itemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary],
+    itemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
   )
 
   object Selectors extends BaseSelectors {
@@ -64,6 +69,7 @@ class ItemsAddToListViewSpec extends SpecBase
     val removeItemLink: Int => String = index => s"#removeItem-$index"
     val changeItemLink: Int => String = index => s"#changeItem-$index"
     val editItemLink: Int => String = index => s"#editItem-$index"
+    val notificationBannerList = s".govuk-notification-banner .govuk-list"
   }
 
   "ItemsAddToListView" - {
@@ -179,6 +185,97 @@ class ItemsAddToListViewSpec extends SpecBase
             Selectors.radioButton(1),
             Selectors.radioButton(2),
             Selectors.radioButton(4)
+          ))
+        }
+
+        s"when being rendered for singular item (submission failure)" - {
+
+          val item = CnCodeInformationItem(testEpcWine, testCnCodeWine)
+
+          MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
+            .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1))))
+
+          implicit val doc: Document = Jsoup.parse(view(
+            formOpt = Some(form),
+            onSubmitCall = testOnwardRoute,
+            items = helper.allItemsSummary.futureValue,
+            showNoOption = true
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(count = 1),
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
+            Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerParagraphForItems,
+            Selectors.notificationBannerList -> messagesForLanguage.notificationBannerContentForQuantity(1),
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.h1 -> messagesForLanguage.heading(count = 1),
+            //TODO: not sure why this is index 2?
+            Selectors.cardTitle(2) -> s"${messagesForLanguage.itemCardTitle(testIndex1)} ${messagesForLanguage.updateNeededTag}",
+            Selectors.removeItemLink(1) -> messagesForLanguage.removeItem(testIndex1),
+            Selectors.legendQuestion -> messagesForLanguage.h2,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no1,
+            Selectors.radioButton(4) -> messagesForLanguage.moreLater,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        s"when being rendered for 2 items (both have submission failures)" - {
+
+          val item = CnCodeInformationItem(testEpcWine, testCnCodeWine)
+
+          MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
+            .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
+
+          val userAnswers = singleCompletedWineItem
+            .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+            .set(ItemCommodityCodePage(testIndex2), testCnCodeWine)
+            .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+            .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
+            .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
+            .set(ItemGeographicalIndicationChoicePage(testIndex2), NoGeographicalIndication)
+            .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
+            .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+            .set(ItemBulkPackagingChoicePage(testIndex2), false)
+            .set(ItemWineProductCategoryPage(testIndex2), Other)
+            .set(ItemWineMoreInformationChoicePage(testIndex2), false)
+            .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
+            .set(ItemPackagingProductTypePage(testIndex2, testPackagingIndex1), true)
+            .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            userAnswers.copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(2))))
+
+          implicit val doc: Document = Jsoup.parse(view(
+            formOpt = Some(form),
+            onSubmitCall = testOnwardRoute,
+            items = helper.allItemsSummary.futureValue,
+            showNoOption = true
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(count = 2),
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
+            Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerParagraphForItems,
+            Selectors.notificationBannerList -> s"${messagesForLanguage.notificationBannerContentForQuantity(1)} ${messagesForLanguage.notificationBannerContentForQuantity(2)}",
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.h1 -> messagesForLanguage.heading(count = 2),
+            //TODO: not sure why this is index 2?
+            Selectors.cardTitle(2) -> s"${messagesForLanguage.itemCardTitle(testIndex1)} ${messagesForLanguage.updateNeededTag}",
+            Selectors.removeItemLink(1) -> messagesForLanguage.removeItem(testIndex1),
+            Selectors.cardTitle(3) -> s"${messagesForLanguage.itemCardTitle(testIndex2)} ${messagesForLanguage.updateNeededTag}",
+            Selectors.removeItemLink(2) -> messagesForLanguage.removeItem(testIndex2),
+            Selectors.legendQuestion -> messagesForLanguage.h2,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no2,
+            Selectors.radioButton(4) -> messagesForLanguage.moreLater,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
       }

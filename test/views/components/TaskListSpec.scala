@@ -145,7 +145,7 @@ class TaskListSpec extends SpecBase {
 
               "should have the correct status text AND colour" in {
                 val tag = row.select("strong.app-task-list__tag")
-                tag.text() mustBe messagesForLanguage.updateNeeded
+                tag.text() mustBe messagesForLanguage.updateNeededTag
                 tag.hasClass("govuk-tag--orange") mustBe true
               }
             }

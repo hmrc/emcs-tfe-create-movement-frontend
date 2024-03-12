@@ -48,6 +48,8 @@ object ItemsAddToListMessages {
 
     val packagesCyaLabel: String = "Packaging"
     def packagesCyaValue(quantity: String, description: String): String = s"${quantity}x $description"
+
+    val notificationBannerContentForQuantity: Int => String = index => s"Item $index quantity"
   }
 
   object English extends ViewMessages with BaseEnglish

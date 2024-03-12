@@ -16,11 +16,13 @@
 
 package pages.sections.items
 
+import config.Constants.BODYEADESAD
+import models.UserAnswers
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
 
@@ -28,15 +30,32 @@ case object ItemsSectionItems extends Section[JsObject] {
   val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(ItemsCount) match {
-      case Some(0) | None => NotStarted
-      case Some(count) =>
+    (request.userAnswers.get(ItemsCount), isMovementSubmissionError) match {
+      case (_, true) => UpdateNeeded
+      case (Some(0) | None, _) => NotStarted
+      case (Some(count), _) =>
         if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
           Completed
         } else {
           InProgress
         }
     }
+
+  def indexesOfItemsWithSubmissionFailures(userAnswers: UserAnswers): Seq[Int] =
+    userAnswers.submissionFailures
+      .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
+      .collect { case itemError =>
+        val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
+        val lookup(index) = itemError.errorLocation.get
+        index.toInt
+      }
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+    request.userAnswers.get(ItemsCount) match {
+      case Some(0) | None => false
+      case Some(count) => (0 until count).exists(ItemsSectionItem(_).isMovementSubmissionError)
+    }
+  }
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

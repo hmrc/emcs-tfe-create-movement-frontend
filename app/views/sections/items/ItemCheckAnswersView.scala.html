@@ -18,6 +18,8 @@
 @import models.response.referenceData.CnCodeInformation
 @import viewmodels.helpers.ItemCheckAnswersHelper
 @import utils.CommodityCodeHelper
+@import pages.sections.items.ItemQuantityPage
+@import pages.sections.items.ItemsSectionItems
 
 @this(
         layout: templates.Layout,
@@ -26,6 +28,10 @@
         h1: components.h1,
         h2: components.h2,
         govukSummaryList: GovukSummaryList,
+        notificationBanner: GovukNotificationBanner,
+        p: components.p,
+        list: components.list,
+        link: components.link,
         helper: ItemCheckAnswersHelper
 )
 
@@ -35,21 +41,27 @@
 
     @formHelper(action) {
 
-        @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
-
-        @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
-
-        @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
-
-        @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
-
-        @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
-            @govukSummaryList(helper.constructWineDetailsCard(idx))
+      @if(ItemsSectionItems.isMovementSubmissionError) {
+        @defining(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers)) { indexesOfItemWithSubmissionFailures =>
+          @notificationBanner(helper.showNotificationBannerWhenSubmissionError(idx))
         }
+      }
 
-        @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+      @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 
-        @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
+      @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
+
+      @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
+
+      @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
+
+      @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
+          @govukSummaryList(helper.constructWineDetailsCard(idx))
+      }
+
+      @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+
+      @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }
 }
 

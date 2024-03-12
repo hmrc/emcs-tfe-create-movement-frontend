@@ -17,24 +17,24 @@
 package viewmodels.helpers
 
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
-import models.{Index, NormalMode}
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType.FixedTransport
+import models.{Index, NormalMode}
 import pages.sections.transportUnit.{TransportUnitSection, TransportUnitTypePage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.TransportUnitsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, Card, CardTitle, SummaryList}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
 import viewmodels.govuk.summarylist._
 import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
-import views.html.components.{link, span, tag}
+import views.html.components.{link, span}
 
 import javax.inject.Inject
 
-class TransportUnitsAddToListHelper @Inject()(implicit link: link, tag: tag, span: span) {
+class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: TagHelper, span: span) {
 
   def allTransportUnitsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
     request.userAnswers.get(TransportUnitsCount) match {
@@ -104,10 +104,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tag: tag, spa
         HtmlContent(HtmlFormat.fill(
           Seq(
             span(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex), Some("govuk-!-margin-right-2")),
-            tag(
-              message = messages("taskListStatus.incomplete"),
-              colour = "red"
-            )
+            tagHelper.incompleteTag()
           )
         ))
       )

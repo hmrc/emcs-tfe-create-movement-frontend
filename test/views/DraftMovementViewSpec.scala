@@ -53,7 +53,7 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.titleHelper(messagesForLanguage.headingWhen704ErrorsPresent),
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.notificationBanner704Content,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.headingWhen704ErrorsPresent

@@ -31,7 +31,6 @@ import utils.SubmissionFailureErrorCodes.localReferenceNumberError
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 
-
 class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   val summary: InformationLocalReferenceNumberSummary = app.injector.instanceOf[InformationLocalReferenceNumberSummary]

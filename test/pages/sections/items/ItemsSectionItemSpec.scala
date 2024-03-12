@@ -17,7 +17,7 @@
 package pages.sections.items
 
 import base.SpecBase
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.GoodsType.{Beer, Energy}
 import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
@@ -29,7 +29,7 @@ import models.sections.items._
 import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
 
-class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
+class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 
   val section: ItemsSectionItem = ItemsSectionItem(testIndex1)
 
@@ -697,6 +697,33 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
 
         section.isCompleted mustBe false
       }
+
+      "when there is a submission failure message within the item" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
+          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
+          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex1), true)
+          .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
+          .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
+          .set(ItemWineProductCategoryPage(testIndex1), Other)
+          .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
+          .set(ItemWineMoreInformationChoicePage(testIndex1), true)
+          .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
+          .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
+          .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("Seal", Some("Seal Info")))
+          .copy(submissionFailures = Seq(itemQuantityFailure(1)))
+        )
+
+        section.isCompleted mustBe false
+      }
     }
   }
 
@@ -1275,6 +1302,35 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures {
     "must return an empty Seq" - {
       "if false" in {
         section.mandatoryIf(condition = false)(fRes) mustBe Nil
+      }
+    }
+  }
+
+  "isMovementSubmissionError" - {
+
+    "return true" - {
+
+      "when a quantity submission error exists in the items section" in {
+
+        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(1))))) mustBe true
+      }
+    }
+
+    "return false" - {
+
+      "when there are no submission failures" in {
+
+        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers)) mustBe false
+      }
+
+      "when there are no item submission failures" in {
+
+        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure)))) mustBe false
+      }
+
+      "when there are item submission failures but not at this index" in {
+
+        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe false
       }
     }
   }

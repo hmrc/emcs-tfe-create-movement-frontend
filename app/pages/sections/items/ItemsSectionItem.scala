@@ -24,7 +24,7 @@ import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import utils.{CommodityCodeHelper, JsonOptionFormatter}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
 
@@ -36,7 +36,9 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       case Some(epc) =>
         implicit val goodsType: GoodsType = GoodsType(epc)
 
-        if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
+        if(isMovementSubmissionError) {
+          UpdateNeeded
+        } else if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed
         } else {
           InProgress
@@ -166,6 +168,10 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     })
 
   private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = Seq(
+    ItemQuantityPage(idx).isMovementSubmissionError
+  ).contains(true)
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

@@ -33,16 +33,17 @@ import utils.Logging
 import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommercialDescriptionSummary, ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
-import viewmodels.taskList.{Completed, InProgress}
+import viewmodels.taskList.{Completed, InProgress, UpdateNeeded}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
-                                     span: views.html.components.span,
+class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      cnCodeInformationService: GetCnCodeInformationService,
-                                     itemPackagingSummary: ItemPackagingSummary) extends TagFluency with Logging {
+                                     itemPackagingSummary: ItemPackagingSummary,
+                                     itemQuantitySummary: ItemQuantitySummary,
+                                     tagHelper: TagHelper) extends TagFluency with Logging {
 
   private val headingLevel = 2
 
@@ -82,7 +83,7 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
       rows = Seq(
         ItemBrandNameSummary.row(item.idx, showChangeLinks = false),
         ItemCommercialDescriptionSummary.row(item.idx, showChangeLinks = false),
-        item.unitOfMeasure.flatMap(ItemQuantitySummary.row(item.idx, _, showChangeLinks = false)),
+        item.unitOfMeasure.flatMap(itemQuantitySummary.row(item.idx, _, showChangeLinks = false, showUpdateNeededTag = false)),
         itemPackagingSummary.row(item.idx)
       ).flatten
     ).withCard(
@@ -99,16 +100,15 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
 
   private def cardTitle(item: ItemsAddToListItemModel)(implicit messages: Messages): CardTitle =
     item.status match {
-      case InProgress => CardTitle(
-        content = HtmlContent(HtmlFormat.fill(Seq(
-          span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex), Some("govuk-!-margin-right-2")),
-          tag(
-            message = messages("taskListStatus.incomplete"),
-            colour = "red"
-          )
-        ))),
-        headingLevel = Some(headingLevel)
-      )
+      case status@(InProgress | UpdateNeeded) =>
+        val statusTag = if (status == InProgress) tagHelper.incompleteTag() else tagHelper.updateNeededTag(withNoFloat = false)
+        CardTitle(
+          content = HtmlContent(HtmlFormat.fill(Seq(
+            span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex), Some("govuk-!-margin-right-2")),
+            statusTag
+          ))),
+          headingLevel = Some(headingLevel)
+        )
       case _ => CardTitle(
         content = HtmlContent(span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex))),
         headingLevel = Some(headingLevel)
@@ -117,7 +117,7 @@ class ItemsAddToListHelper @Inject()(tag: views.html.components.tag,
 
   private def changeLink(item: ItemsAddToListItemModel)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] = {
     item.status match {
-      case Completed =>
+      case Completed | UpdateNeeded =>
         Some(ActionItemViewModel(
           content = Text(messages("site.change")),
           href = routes.ItemCheckAnswersController.onPageLoad(request.ern, request.draftId, item.idx).url,

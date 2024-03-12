@@ -84,7 +84,7 @@ class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours with 
               "must render with the Update needed banner" - new Fixture(messagesForLanguage.lang, userType, userAnswers) {
 
                 behave like pageWithExpectedElementsAndMessages(Seq(
-                  Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+                  Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
                   Selectors.notificationBannerContent -> messagesForLanguage.importCustomsOffice704Error
                 ))
               }

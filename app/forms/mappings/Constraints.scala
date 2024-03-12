@@ -196,7 +196,7 @@ trait Constraints {
         Invalid(errorKey)
     }
 
-  protected def isNotEqualToOptExistingAnswer(existingAnswer: Option[String], errorKey: String): Constraint[String] =
+  protected def isNotEqualToOptExistingAnswer[A](existingAnswer: Option[A], errorKey: String): Constraint[A] =
     Constraint {
       case answer if !existingAnswer.contains(answer) =>
         Valid

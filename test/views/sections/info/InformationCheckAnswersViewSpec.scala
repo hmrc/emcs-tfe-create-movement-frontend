@@ -68,7 +68,7 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.sectionSubheading,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure,
             Selectors.button -> messagesForLanguage.confirmAnswers
           ))

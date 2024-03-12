@@ -17,6 +17,8 @@
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
 @import models.sections.items.ItemsAddToList
+@import pages.sections.items.ItemsSectionItems
+@import pages.sections.items.ItemQuantityPage
 
 @this(
     layout: templates.Layout,
@@ -27,6 +29,10 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    notificationBanner: GovukNotificationBanner,
+    p: components.p,
+    link: components.link,
+    list: components.list,
     continueOrExit: components.continueOrExit
 )
 
@@ -41,31 +47,50 @@
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-        @formOpt.map{ form =>
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-            }
-        }
+      @if(ItemsSectionItems.isMovementSubmissionError && (formOpt.isEmpty || !formOpt.exists(_.hasErrors))) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+                Html(messages("errors.704.items.notificationBanner.p")),
+                list(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers).flatMap {
+                  indexOfItemWithSubmissionFailures => Seq(
+                    Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
+                      link(
+                        controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, Index(indexOfItemWithSubmissionFailures - 1), CheckMode).url,
+                        messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures),
+                        id = Some(s"fix-item-$indexOfItemWithSubmissionFailures-quantity")
+                      )
+                    )
+                  ).flatten
+              }, id = Some("list-of-submission-failures")))))))
+        )
+      }
+
+      @formOpt.map{ form =>
+          @if(form.errors.nonEmpty) {
+              @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+          }
+      }
 
 
-        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @h1(pluralSingular("itemsAddToList.heading", items.length), classes = "govuk-heading-l")
+      @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+      @h1(pluralSingular("itemsAddToList.heading", items.length), classes = "govuk-heading-l")
 
-        @items.map { document =>
-            @govukSummaryList(document)
-        }
+      @items.map { document =>
+          @govukSummaryList(document)
+      }
 
-        @formOpt.map { form =>
-            @govukRadios(
-                RadiosViewModel(
-                    field  = form("value"),
-                    legend = LegendViewModel(Text(messages("itemsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
-                    items  = ItemsAddToList.options(items.length, showNoOption)
-                )
-            )
-        }
+      @formOpt.map { form =>
+          @govukRadios(
+              RadiosViewModel(
+                  field  = form("value"),
+                  legend = LegendViewModel(Text(messages("itemsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
+                  items  = ItemsAddToList.options(items.length, showNoOption)
+              )
+          )
+      }
 
-        @continueOrExit()
+      @continueOrExit()
 
     }
 }

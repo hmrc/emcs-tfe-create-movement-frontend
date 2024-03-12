@@ -89,7 +89,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
 //        Selectors.title -> English.title,
 //        Selectors.h1 -> English.heading,
 //        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
-        Selectors.notificationBannerContent -> English.ernSubmissionFailure,
+        Selectors.notificationBannerError(1) -> English.ernSubmissionFailure,
 //        Selectors.h2(1) -> English.consigneeInformationSection,
 //        Selectors.hint -> English.hint,
 //        Selectors.button -> English.saveAndContinue

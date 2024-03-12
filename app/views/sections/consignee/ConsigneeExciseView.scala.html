@@ -49,9 +49,11 @@
         @if(form.errors.isEmpty && ConsigneeExcisePage.isMovementSubmissionError) {
             @notificationBanner(NotificationBanner(
                 title = Text(messages("errors.704.notificationBanner.title")),
-                content = HtmlContent(p("govuk-notification-banner__heading")(list(ConsigneeExcisePage.getMovementSubmissionErrors.map { error =>
-                    Html(messages(error.messageKey))
-                })))
+                content = HtmlContent(
+                    list(ConsigneeExcisePage.getMovementSubmissionErrors.map { error =>
+                        Html(messages(error.messageKey))
+                    })
+                )
             ))
         }
 

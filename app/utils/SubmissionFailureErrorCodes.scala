@@ -158,6 +158,33 @@ object SubmissionFailureErrorCodes {
       controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
   }
 
+  case object ExciseIdForTaxWarehouseOfDestinationInvalidError extends ErrorCode {
+    override val code = "4406"
+    override val messageKey = "errors.704.exciseIdForTaxWarehouseOfDestinationInvalid"
+    override val id = "excise-id-for-tax-warehouse-of-destination-invalid-error"
+
+    override def route()(implicit request: DataRequest[_]): Call =
+      controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  }
+
+  case object ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError extends ErrorCode {
+    override val code = "4421"
+    override val messageKey = "errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee"
+    override val id = "excise-id-for-tax-warehouse-of-destination-needs-consignee-error"
+
+    override def route()(implicit request: DataRequest[_]): Call =
+      controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  }
+
+  case object ExciseIdForTaxWarehouseInvalid extends ErrorCode {
+    override val code = "4456"
+    override val messageKey = "errors.704.exciseIdForTaxWarehouseInvalid"
+    override val id = "excise-id-for-tax-warehouse-invalid-error"
+
+    override def route()(implicit request: DataRequest[_]): Call =
+      controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  }
+
   object ErrorCode {
 
     //scalastyle:off cyclomatic.complexity

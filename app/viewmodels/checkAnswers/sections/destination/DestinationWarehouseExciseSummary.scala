@@ -21,19 +21,36 @@ import models.requests.DataRequest
 import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-object DestinationWarehouseExciseSummary {
+import javax.inject.Inject
+
+class DestinationWarehouseExciseSummary @Inject()(tagHelper: TagHelper) {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(DestinationWarehouseExcisePage).map {
       answer =>
 
+        val hasUnfixedError = DestinationWarehouseExcisePage.isMovementSubmissionError
+
+        val summaryListRowViewValue = ValueViewModel(
+          HtmlContent(
+            HtmlFormat.fill(Seq(
+              Some(HtmlFormat.escape(answer)),
+              if (hasUnfixedError) Some(tagHelper.updateNeededTag()) else None
+            ).flatten)
+          )
+        )
+
+        ValueViewModel(HtmlFormat.escape(answer).toString)
+
         SummaryListRowViewModel(
           key = "destinationWarehouseExcise.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = summaryListRowViewValue, // ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

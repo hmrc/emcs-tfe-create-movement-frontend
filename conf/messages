@@ -842,6 +842,7 @@ destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be
 destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehouse must not include < and > and : and ;
 destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
 destinationWarehouseExcise.change.hidden = Warehouse excise ID
+destinationWarehouseExcise.updateOriginalSubmission = You must update the excise ID for the destination tax warehouse so that it is different to the original submission
 
 informationCheckAnswers.title = Check your answers
 informationCheckAnswers.heading = Check your answers
@@ -1502,3 +1503,15 @@ errors.704.registeredConsignorToRegisteredConsignee.input = A registered consign
 # EMCS Core Error Number 4455:
 errors.704.consigneeRoleInvalid = The consignee Excise Registration Number is not valid for this type of movement
 errors.704.consigneeRoleInvalid.input = The consignee Excise Registration Number is not valid for this type of movement you must now enter different details
+
+# EMCS Core Error Number 4406
+errors.704.exciseIdForTaxWarehouseOfDestinationInvalid = The excise ID for the tax warehouse of destination you have entered is not valid
+errors.704.exciseIdForTaxWarehouseOfDestinationInvalid.input = The excise ID for the tax warehouse of destination you have entered is not valid so you must now enter different details
+
+# EMCS Core Error Number 4421
+errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee = The excise ID for the tax warehouse of destination must be linked to the consignee
+errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee.input = The excise ID for the tax warehouse of destination must be linked to the consignee so you must now enter different details
+
+# EMCS Core Error Number 4456
+errors.704.exciseIdForTaxWarehouseInvalid = The excise ID for the tax warehouse of destination is not valid
+errors.704.exciseIdForTaxWarehouseInvalid.input = The excise ID for the tax warehouse of destination is not valid so you must now enter different details

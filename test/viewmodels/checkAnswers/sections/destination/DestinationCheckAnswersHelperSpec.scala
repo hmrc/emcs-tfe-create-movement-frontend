@@ -33,7 +33,8 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
   class Setup(userAnswers: UserAnswers) {
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
     implicit val msgs: Messages = messages(FakeRequest())
-    lazy val dispatchCheckAnswersSummary = new DestinationCheckAnswersHelper()
+    lazy val destinationWarehouseExciseSummary = app.injector.instanceOf[DestinationWarehouseExciseSummary]
+    lazy val dispatchCheckAnswersSummary = new DestinationCheckAnswersHelper(destinationWarehouseExciseSummary)
   }
 
   "CheckAnswersDestinationHelper" - {
@@ -54,7 +55,7 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
             DestinationDetailsChoiceSummary.row(),
             DestinationConsigneeDetailsSummary.row(),
             Some(DestinationBusinessNameSummary.row()),
-            DestinationWarehouseExciseSummary.row(),
+            destinationWarehouseExciseSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
@@ -93,7 +94,7 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
 
           val expectedResult = SummaryList(Seq(
             Some(DestinationBusinessNameSummary.row()),
-            DestinationWarehouseExciseSummary.row(),
+            destinationWarehouseExciseSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
 

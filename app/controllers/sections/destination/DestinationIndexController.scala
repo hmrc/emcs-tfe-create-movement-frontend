@@ -25,6 +25,7 @@ import pages.sections.destination.DestinationSection
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ class DestinationIndexController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
-          if (DestinationSection.isCompleted) {
+          if (DestinationSection.isCompleted || DestinationSection.status == UpdateNeeded) {
             Redirect(routes.DestinationCheckAnswersController.onPageLoad(ern, draftId))
           } else {
             if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise) {

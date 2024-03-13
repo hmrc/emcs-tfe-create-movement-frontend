@@ -23,6 +23,7 @@ import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.consignee.ConsigneeExcisePage
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -70,20 +71,11 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
     s"when ERN needs updating and there is NO form error" - {
 
       implicit val msgs: Messages = messages(Seq(English.lang))
+
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
-        emptyUserAnswers.copy(submissionFailures = Seq(
-          consigneeExciseFailure,
-          consigneeExciseFailure.copy(errorType = LinkIsPendingError.code),
-          consigneeExciseFailure.copy(errorType = LinkIsAlreadyUsedError.code),
-          consigneeExciseFailure.copy(errorType = LinkIsWithdrawnError.code),
-          consigneeExciseFailure.copy(errorType = LinkIsCancelledError.code),
-          consigneeExciseFailure.copy(errorType = LinkIsExpiredError.code),
-          consigneeExciseFailure.copy(errorType = LinkMissingOrInvalidError.code),
-          consigneeExciseFailure.copy(errorType = DirectDeliveryNotAllowedError.code),
-          consigneeExciseFailure.copy(errorType = ConsignorNotAuthorisedError.code),
-          consigneeExciseFailure.copy(errorType = RegisteredConsignorToRegisteredConsigneeError.code),
-          consigneeExciseFailure.copy(errorType = ConsigneeRoleInvalidError.code)
-        ))
+        emptyUserAnswers.copy(submissionFailures =
+          ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
+        )
       )
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]

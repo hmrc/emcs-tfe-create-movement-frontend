@@ -24,8 +24,6 @@ import models.requests.DataRequest
 import models.{GreatBritainRegisteredConsignor, NorthernIrelandRegisteredConsignor, UserAnswers, UserType}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.importInformation.ImportCustomsOfficeCodePage
-import play.api.data.FormError
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

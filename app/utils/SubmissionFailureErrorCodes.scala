@@ -38,7 +38,7 @@ object SubmissionFailureErrorCodes {
   }
 
   case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-    override val code = "4402"
+    override val code = itemQuantityError
     override val messageKey = s"errors.704.items.quantity${if(isForAddToList) ".addToList" else ""}"
     override val id = s"fix-item-${idx.displayIndex}-quantity"
     override def route()(implicit request: DataRequest[_]): Call =
@@ -48,7 +48,7 @@ object SubmissionFailureErrorCodes {
   }
 
   case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-    override val code = "4451"
+    override val code = itemDegreesPlatoError
     override val messageKey = s"errors.704.items.degreesPlato${if(isForAddToList) ".addToList"  else ""}"
     override val id = s"fix-item-${idx.displayIndex}-degrees-plato"
     override def route()(implicit request: DataRequest[_]): Call =

@@ -183,7 +183,6 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
         }
 
-      //TODO comeback and fix this, passing when it shouldn't?
       "the Consignee ERN needs to be updated" in new Setup(testGbWarehouseErn, ernNeedsUpdatingUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(

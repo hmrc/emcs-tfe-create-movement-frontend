@@ -18,6 +18,7 @@ package views.sections.consignee
 
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
+import fixtures.messages.TaskListStatusMessages
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages.English
 import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
@@ -42,9 +43,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
-
     val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
-
+    val tag = ".govuk-tag--orange"
   }
 
   "CheckYourAnswersConsignee view" - {
@@ -107,6 +107,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         emptyUserAnswers.copy(submissionFailures =
           ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
         )
+        .set(ConsigneeExcisePage, testErn)
       )
 
       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
@@ -125,7 +126,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h1 -> English.heading,
         Selectors.subHeadingCaptionSelector -> English.caption,
         Selectors.notificationBannerTitle -> English.notificationBannerTitle,
-        //        Selectors.govukSummaryListKey(1) -> English.ern,
+        Selectors.govukSummaryListKey(1) -> English.ern,
+        Selectors.tag -> TaskListStatusMessages.English.updateNeeded,
         Selectors.notificationBannerError(1) -> English.invalidOrMissingConsignee,
         Selectors.notificationBannerError(2) -> English.linkIsPending,
         Selectors.notificationBannerError(3) -> English.linkIsAlreadyUsed,
@@ -313,7 +315,5 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
       }
     }
-
-
   }
 }

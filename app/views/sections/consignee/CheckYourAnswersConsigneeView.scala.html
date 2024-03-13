@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.helpers.CheckAnswersHelper
 @import pages.sections.consignee.ConsigneeExcisePage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
     layout: templates.Layout,
@@ -27,6 +28,7 @@
     notificationBanner: GovukNotificationBanner,
     link: components.link,
     list: components.list,
+    errorNotificationBannerHelper: ErrorNotificationBannerHelper,
     saveAndContinue: components.saveAndContinue
 )
 
@@ -37,15 +39,9 @@
         @formHelper(submitAction) {
 
             @if(ConsigneeExcisePage.isMovementSubmissionError) {
-                @notificationBanner(NotificationBanner(
-                    title = Text(messages("errors.704.notificationBanner.title")),
-                    content = HtmlContent(list(ConsigneeExcisePage.getMovementSubmissionErrors.map { error =>
-                        link(
-                            link = error.route().url,
-                            messageKey = error.messageKey,
-                            id = Some(error.id)
-                        )
-                    }))
+                @notificationBanner(errorNotificationBannerHelper.content(
+                    errors = ConsigneeExcisePage.getMovementSubmissionErrors,
+                    withLinks = true
                 ))
             }
 

@@ -19,13 +19,13 @@ package viewmodels.helpers
 import controllers.sections.items.routes
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.sections.items.ItemsAddToListItemModel
-import models.{Index, NormalMode}
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemsSectionItem}
+import models.{CheckMode, Index, NormalMode}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemDegreesPlatoPage, ItemExciseProductCodePage, ItemQuantityPage, ItemsSectionItem, ItemsSectionItems}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,6 +34,7 @@ import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommerc
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
 import viewmodels.taskList.{Completed, InProgress, UpdateNeeded}
+import views.html.components.{link, list, p}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,6 +44,9 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary,
                                      itemQuantitySummary: ItemQuantitySummary,
+                                     p: p,
+                                     list: list,
+                                     link: link,
                                      tagHelper: TagHelper) extends TagFluency with Logging {
 
   private val headingLevel = 2
@@ -160,4 +164,32 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
         ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex)))
       case _ => None
     }
+
+  def showNotificationBannerWhenSubmissionError()(implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
+    NotificationBanner(
+      title = Text(messages("errors.704.notificationBanner.title")),
+      content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+        Html(messages("errors.704.items.notificationBanner.p")),
+        list(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers).distinct.flatMap {
+          indexOfItemWithSubmissionFailures =>
+            val index = Index(indexOfItemWithSubmissionFailures - 1)
+            Seq(
+              Option.when(ItemQuantityPage(index).isMovementSubmissionError)(
+                link(
+                  controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, index, CheckMode).url,
+                  messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures),
+                  id = Some(s"fix-item-${index.displayIndex}-quantity")
+                )
+              ),
+              Option.when(ItemDegreesPlatoPage(index).isMovementSubmissionError)(
+                link(
+                  controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, index, CheckMode).url,
+                  messages("errors.704.items.degreesPlato.addToList", indexOfItemWithSubmissionFailures),
+                  id = Some(s"fix-item-${index.displayIndex}-degrees-plato")
+                )
+              )
+            ).flatten
+        }, id = Some("list-of-submission-failures"))
+    )))))
+  }
 }

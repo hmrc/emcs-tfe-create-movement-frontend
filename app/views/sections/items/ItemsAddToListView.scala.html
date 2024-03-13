@@ -15,10 +15,10 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.LegendSize
 @import models.sections.items.ItemsAddToList
-@import pages.sections.items.ItemsSectionItems
-@import pages.sections.items.ItemQuantityPage
+@import pages.sections.items.{ItemDegreesPlatoPage, ItemQuantityPage, ItemsSectionItems}
+@import viewmodels.LegendSize
+@import viewmodels.helpers.ItemsAddToListHelper
 
 @this(
     layout: templates.Layout,
@@ -33,13 +33,14 @@
     p: components.p,
     link: components.link,
     list: components.list,
+    helper: ItemsAddToListHelper,
     continueOrExit: components.continueOrExit
 )
 
 @(formOpt: Option[Form[_]], onSubmitCall: Call, items: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = formOpt.fold(titleNoForm(pluralSingular("itemsAddToList.title", items.length))){
+    pageTitle = formOpt.fold(titleNoForm(pluralSingular("itemsAddToList.title", items.length))) {
         form => title(form, pluralSingular("itemsAddToList.title", items.length))
     },
     maybeShowActiveTrader = maybeShowActiveTrader(request)
@@ -48,25 +49,10 @@
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
       @if(ItemsSectionItems.isMovementSubmissionError && (formOpt.isEmpty || !formOpt.exists(_.hasErrors))) {
-        @notificationBanner(NotificationBanner(
-          title = Text(messages("errors.704.notificationBanner.title")),
-          content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(messages("errors.704.items.notificationBanner.p")),
-                list(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers).flatMap {
-                  indexOfItemWithSubmissionFailures => Seq(
-                    Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
-                      link(
-                        controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, Index(indexOfItemWithSubmissionFailures - 1), CheckMode).url,
-                        messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures),
-                        id = Some(s"fix-item-$indexOfItemWithSubmissionFailures-quantity")
-                      )
-                    )
-                  ).flatten
-              }, id = Some("list-of-submission-failures")))))))
-        )
+        @notificationBanner(helper.showNotificationBannerWhenSubmissionError())
       }
 
-      @formOpt.map{ form =>
+      @formOpt.map { form =>
           @if(form.errors.nonEmpty) {
               @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
           }

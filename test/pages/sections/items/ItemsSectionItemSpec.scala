@@ -1314,6 +1314,11 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
         section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(1))))) mustBe true
       }
+
+      "when a degrees plato submission error exists in the items section" in {
+
+        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemDegreesPlatoFailure(1))))) mustBe true
+      }
     }
 
     "return false" - {
@@ -1332,6 +1337,51 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
         section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe false
       }
+    }
+  }
+
+  "numberOfSubmissionFailuresForItem" - {
+
+    "return 0" - {
+
+      "when no submission failures exist" in {
+
+        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq()))) mustBe 0
+      }
+
+      "when no submission failures exist for this item" in {
+
+        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe 0
+      }
+
+      "when submission failures exist for this item but all are fixed" in {
+        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1).copy(hasBeenFixed = true),
+            itemDegreesPlatoFailure(1).copy(hasBeenFixed = true)
+          )
+        ))) mustBe 0
+      }
+    }
+
+    "return the number of submission failures that exist (returning only the number of errors that haven't been fixed)" - {
+      section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+        submissionFailures = Seq(
+          itemQuantityFailure(1).copy(hasBeenFixed = false),
+          itemDegreesPlatoFailure(1).copy(hasBeenFixed = true)
+        )
+      ))) mustBe 1
+    }
+
+    "return the number of submission failures that exist (where all errors haven't been fixed)" - {
+      section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+        submissionFailures = Seq(
+          itemQuantityFailure(1),
+          itemDegreesPlatoFailure(1),
+          itemDegreesPlatoFailure(2),
+          itemDegreesPlatoFailure(2)
+        )
+      ))) mustBe 2
     }
   }
 }

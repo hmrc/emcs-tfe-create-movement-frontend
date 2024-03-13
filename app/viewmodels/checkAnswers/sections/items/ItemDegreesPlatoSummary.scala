@@ -21,19 +21,27 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemDegreesPlatoPage
 import play.api.i18n.Messages
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-object ItemDegreesPlatoSummary {
+import javax.inject.Inject
+
+class ItemDegreesPlatoSummary @Inject()(tagHelper: TagHelper) {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemDegreesPlatoPage(idx)
+    lazy val hasUnfixedDegreesPlatoError = page.isMovementSubmissionError
 
     def row(value: String = "site.no"): SummaryListRow = SummaryListRowViewModel(
       key = s"$page.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlContent(messages(value))),
+      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+        Some(Html(messages(value))),
+        if (hasUnfixedDegreesPlatoError) Some(tagHelper.updateNeededTag()) else None
+      ).flatten))),
       actions = Seq(ActionItemViewModel(
         href = routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
         content = "site.change",

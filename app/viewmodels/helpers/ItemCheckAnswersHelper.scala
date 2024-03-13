@@ -24,7 +24,6 @@ import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import queries.ItemsPackagingCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, NotificationBanner, Text}
-import uk.gov.hmrc.govukfrontend.views.html.components.GovukNotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
@@ -40,6 +39,7 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemWineMoreInformationSummary: ItemWineMoreInformationSummary,
                                         itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary,
                                         itemQuantitySummary: ItemQuantitySummary,
+                                        itemDegreesPlatoSummary: ItemDegreesPlatoSummary,
                                         p: p,
                                         list: list,
                                         link: link
@@ -57,7 +57,7 @@ class ItemCheckAnswersHelper @Inject()(
         ItemBrandNameSummary.row(idx),
         ItemCommercialDescriptionSummary.row(idx),
         ItemAlcoholStrengthSummary.row(idx),
-        ItemDegreesPlatoSummary.row(idx),
+        itemDegreesPlatoSummary.row(idx),
         ItemMaturationPeriodAgeSummary.row(idx),
         ItemDensitySummary.row(idx),
         ItemFiscalMarksChoiceSummary.row(idx),
@@ -106,11 +106,11 @@ class ItemCheckAnswersHelper @Inject()(
       (
         notBulkPackagingSummaryListRows(idx, cnCodeInformation),
         Some(Actions(items = Seq(ActionItemViewModel(
-            "site.change",
-            href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, idx).url,
-            s"changeItemPackaging${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages(s"${ItemsPackagingAddToListPage(idx)}.change.hidden")))))
-        )
+          "site.change",
+          href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, idx).url,
+          s"changeItemPackaging${idx.displayIndex}"
+        ).withVisuallyHiddenText(messages(s"${ItemsPackagingAddToListPage(idx)}.change.hidden")))))
+      )
     }
 
     SummaryListViewModel(
@@ -120,7 +120,7 @@ class ItemCheckAnswersHelper @Inject()(
   }
 
   private[helpers] def bulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
-                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
+                                                   (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     Seq(
       ItemBulkPackagingChoiceSummary.row(idx, GoodsType.apply(cnCodeInformation.exciseProductCode)),
       ItemBulkPackagingSelectSummary.row(idx),
@@ -128,7 +128,7 @@ class ItemCheckAnswersHelper @Inject()(
     ).flatten ++ itemBulkPackagingSealTypeSummary.rows(idx)
 
   private[helpers] def notBulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
-                                          (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
+                                                      (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
     def packageTypeRow(packageIndex: Index): Option[SummaryListRow] = {
       (request.userAnswers.get(ItemSelectPackagingPage(idx, packageIndex)), request.userAnswers.get(ItemPackagingQuantityPage(idx, packageIndex))) match {
         case (Some(packaging), Some(quantity)) => Some(SummaryListRowViewModel(
@@ -147,32 +147,35 @@ class ItemCheckAnswersHelper @Inject()(
     }).flatten
   }
 
-  def showNotificationBannerWhenSubmissionError(idx: Index)(implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
-    val indexesOfItemsWithSubmissionFailures = ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers)
+  def showNotificationBannerWhenSubmissionError(idx: Index)
+                                               (implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
+    val numberOfErrorsForItem = ItemsSectionItem(idx).numberOfSubmissionFailuresForItem
+    val errorLinks = Seq(
+      Option.when(ItemQuantityPage(idx).isMovementSubmissionError)(
+        link(
+          link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          messageKey = "errors.704.items.quantity.cya",
+          id = Some(s"fix-item-${idx.displayIndex}-quantity")
+        )
+      ),
+      Option.when(ItemDegreesPlatoPage(idx).isMovementSubmissionError)(
+        link(
+          link = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
+          messageKey = "errors.704.items.degreesPlato.cya",
+          id = Some(s"fix-item-${idx.displayIndex}-degrees-plato")
+        )
+      )
+    )
     NotificationBanner(
       title = Text(messages("errors.704.notificationBanner.title")),
       content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
-        if (indexesOfItemsWithSubmissionFailures.size == 1) {
-          Seq(Option.when(ItemQuantityPage(indexesOfItemsWithSubmissionFailures.head - 1).isMovementSubmissionError)(
-            link(
-              controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-              "errors.704.items.quantity.cya",
-              id = Some(s"fix-item-${idx.displayIndex}-quantity"))
-          )).flatten
+        if (numberOfErrorsForItem == 1) {
+          errorLinks.flatten
         } else {
           Seq(
             Html(messages("errors.704.items.notificationBanner.p")),
-            list(indexesOfItemsWithSubmissionFailures.flatMap {
-              indexOfItemWithSubmissionFailures =>
-                Seq(
-                  Option.when(ItemQuantityPage(indexOfItemWithSubmissionFailures - 1).isMovementSubmissionError)(
-                    link(
-                      controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-                      "errors.704.items.quantity.cya",
-                      id = Some(s"fix-item-${idx.displayIndex}-quantity"))
-                  )
-                ).flatten
-            }, id = Some("list-of-submission-failures"))
+            list(
+              errorLinks.flatten, id = Some("list-of-submission-failures"))
           )
         }
       ))))

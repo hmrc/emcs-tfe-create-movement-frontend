@@ -17,6 +17,7 @@
 package views.sections.items
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.CountryMessages
 import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
@@ -24,13 +25,14 @@ import models.GoodsType.Beer
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemDegreesPlatoView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
+class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
   object Selectors extends BaseSelectors
 
@@ -43,10 +45,16 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemDegreesPlatoView]
-        val form = app.injector.instanceOf[ItemDegreesPlatoFormProvider].apply()
+        lazy val view = app.injector.instanceOf[ItemDegreesPlatoView]
+        val form = app.injector.instanceOf[ItemDegreesPlatoFormProvider].apply(testIndex1)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
+        implicit def doc(isFormError: Boolean = false)(implicit request: DataRequest[_]): Document =
+          Jsoup.parse(view(
+            if(isFormError) form.withError(FormError("key", "msg")) else form,
+            testOnwardRoute,
+            Beer,
+            testIndex1
+          ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
@@ -73,7 +81,26 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours {
           Selectors.bullet(13) -> countryMessages.romania,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+        ))(doc())
+
+        "when there is a 704 error" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+            .copy(submissionFailures = Seq(itemDegreesPlatoFailure(1))))
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
+            Selectors.notificationBannerContent -> messagesForLanguage.degreesPlatoSubmissionFailure
+          ))(doc())
+
+          "not show the notification banner when there is an error" - {
+            doc(isFormError = true).select(".govuk-error-summary").isEmpty mustBe false
+            doc(isFormError = true).select(".govuk-notification-banner").isEmpty mustBe true
+          }
+        }
       }
     }
   }

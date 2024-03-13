@@ -66,8 +66,7 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "must redirect to the index controller when index is out of bounds (for GET)" in new Test(Some(
-      emptyUserAnswers
-        .set(ImportNumberPage(testIndex1), "answer")
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
 

@@ -45,4 +45,12 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     hasBeenFixed = false
   )
 
+  def itemDegreesPlatoFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = SubmissionFailureErrorCodes.itemDegreesPlatoError,
+    errorReason = "The alcoholic strength for wine and spirits you have entered is not valid.  Please amend your entry and resubmit",
+    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/DegreePlato[1]"),
+    originalAttributeValue = Some("10"),
+    hasBeenFixed = false
+  )
+
 }

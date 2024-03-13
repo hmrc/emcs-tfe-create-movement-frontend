@@ -20,8 +20,9 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import viewmodels.taskList.UpdateNeeded
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class TagHelper @Inject()(tag: views.html.components.tag) {
 
   def updateNeededTag(withNoFloat: Boolean = true)(implicit messages: Messages): Html = tag(

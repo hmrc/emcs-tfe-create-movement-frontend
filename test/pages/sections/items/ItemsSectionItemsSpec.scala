@@ -160,6 +160,22 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
 
         ItemsSectionItems.indexesOfItemsWithSubmissionFailures(userAnswersWithFailures) mustBe Seq(1, 4, 10, 20, 11)
       }
+
+      "when multiple errors exist for the same item - returning only distinct values" in {
+
+        val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(
+          movementSubmissionFailure,
+          itemQuantityFailure(1),
+          itemDegreesPlatoFailure(1),
+          itemQuantityFailure(4),
+          itemQuantityFailure(10),
+          movementSubmissionFailure,
+          itemQuantityFailure(20),
+          itemQuantityFailure(11)
+        ))
+
+        ItemsSectionItems.indexesOfItemsWithSubmissionFailures(userAnswersWithFailures) mustBe Seq(1, 4, 10, 20, 11)
+      }
     }
 
     "should return an empty list" - {

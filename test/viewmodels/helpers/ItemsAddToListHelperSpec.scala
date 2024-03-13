@@ -35,7 +35,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.checkAnswers.sections.items._
-import views.html.components.span
+import views.html.components._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,7 +58,10 @@ class ItemsAddToListHelperSpec extends SpecBase
     span = span,
     cnCodeInformationService = mockGetCnCodeInformationService,
     itemPackagingSummary = itemPackagingSummary,
-    itemQuantitySummary = itemQuantitySummary
+    itemQuantitySummary = itemQuantitySummary,
+    p = app.injector.instanceOf[p],
+    list = app.injector.instanceOf[list],
+    link = app.injector.instanceOf[link]
   )
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {

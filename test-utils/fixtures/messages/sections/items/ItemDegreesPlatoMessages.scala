@@ -41,6 +41,8 @@ object ItemDegreesPlatoMessages {
     val errorDegreesPlatoOutsideRange = s"Enter an amount with up to ${ItemDegreesPlatoFormProvider.maxDecimalPlacesValue} decimal places between ${ItemDegreesPlatoFormProvider.minValue} and ${ItemDegreesPlatoFormProvider.maxValue}"
     val errorDegreesPlatoTooManyDP = s"Amount can have up to ${ItemDegreesPlatoFormProvider.maxDecimalPlacesValue} decimal places"
 
+    val degreesPlatoSubmissionFailure = "Invalid degree plato for beer"
+
   }
 
   object English extends ViewMessages with BaseEnglish

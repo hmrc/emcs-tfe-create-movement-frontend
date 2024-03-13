@@ -21,4 +21,5 @@ object SubmissionFailureErrorCodes {
   val importCustomsOfficeCodeError = "4451"
   val exportCustomsOfficeNumberError = "4425"
   val itemQuantityError = "4407"
+  val itemDegreesPlatoError = "4445"
 }

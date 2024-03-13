@@ -72,6 +72,15 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
       contentAsString(result) mustEqual view(form.fill("answer"), testIndex1, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
+    "must redirect to the index controller when index is out of bounds (for GET)" in new Test(Some(
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex3, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
+    }
+
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -80,6 +89,15 @@ class ImportNumberControllerSpec extends SpecBase with MockUserAnswersService {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the index controller when index is out of bounds (for POST)" in new Test(Some(
+      emptyUserAnswers.set(ImportNumberPage(testIndex1), "answer")
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex3, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.sad.routes.SadIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {

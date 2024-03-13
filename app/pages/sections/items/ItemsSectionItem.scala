@@ -169,8 +169,28 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
 
+  /**
+   * Constructs a list of item pages (which could have submission failures) and checks if there are
+   * submission failures (that have not been fixed) for each. Returns the count of `true` occurrences.
+   *
+   * @return number of submission failures for this item
+   */
+  def numberOfSubmissionFailuresForItem(implicit request: DataRequest[_]): Int = {
+    Seq(
+      ItemQuantityPage(idx).isMovementSubmissionError,
+      ItemDegreesPlatoPage(idx).isMovementSubmissionError
+    ).count(identity)
+  }
+
+  /**
+   * Constructs a list of item pages (which could have submission failures) and checks if there are
+   * submission failures (that have not been fixed).
+   *
+   * @return true/false depending on if there is an outstanding submission failure within this item
+   */
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = Seq(
-    ItemQuantityPage(idx).isMovementSubmissionError
+    ItemQuantityPage(idx).isMovementSubmissionError,
+    ItemDegreesPlatoPage(idx).isMovementSubmissionError
   ).contains(true)
 
   // $COVERAGE-OFF$

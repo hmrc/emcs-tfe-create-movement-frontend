@@ -108,13 +108,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     ))
 
     val itemIndexesToAmend: Seq[Int] =
-      userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures
-        .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
-        .collect { case itemError =>
-          val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
-          val lookup(index) = itemError.errorLocation.get
-          index.toInt
-        }
+      ItemsSectionItems.indexesOfItemsWithSubmissionFailures(userAnswersWithSubmissionFailureRemovedAtIndex)
         .filter(_ > (indexOfRemovedItem.position + 1))
 
     val indexOfSubmissionFailuresNeedingUpdate =

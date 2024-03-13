@@ -49,14 +49,14 @@ class ItemDegreesPlatoController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        renderView(Ok, fillForm(ItemDegreesPlatoPage(idx), formProvider()), idx, mode)
+        renderView(Ok, fillForm(ItemDegreesPlatoPage(idx), formProvider(idx)), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        formProvider().bindFromRequest().fold(
+        formProvider(idx).bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
           handleSubmittedForm(_, idx, mode)
         )
@@ -68,7 +68,8 @@ class ItemDegreesPlatoController @Inject()(
       Future.successful(status(view(
         form = form,
         action = routes.ItemDegreesPlatoController.onSubmit(request.ern, request.draftId, idx, mode),
-        goodsType = goodsType
+        goodsType = goodsType,
+        idx = idx
       )))
     }
 
@@ -78,7 +79,7 @@ class ItemDegreesPlatoController @Inject()(
       renderView(
         status = BadRequest,
         form =
-          formProvider()
+          formProvider(idx)
             .fill(degreesPlatoModel)
             .withError(degreesPlatoField, messages(requiredErrorKey)),
         idx = idx,

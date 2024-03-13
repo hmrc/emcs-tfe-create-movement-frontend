@@ -44,8 +44,8 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
   def itemDegreesPlatoSubmitAction(idx: Index = testIndex1): Call = routes.ItemDegreesPlatoController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
   lazy val formProvider: ItemDegreesPlatoFormProvider = new ItemDegreesPlatoFormProvider()
-  lazy val form: Form[ItemDegreesPlatoModel] = formProvider()
   lazy val view: ItemDegreesPlatoView = app.injector.instanceOf[ItemDegreesPlatoView]
+  lazy val form: Form[ItemDegreesPlatoModel] = formProvider(testIndex1)(dataRequest(FakeRequest()))
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -85,7 +85,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form, itemDegreesPlatoSubmitAction(), Wine, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -97,7 +97,8 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form.fill(ItemDegreesPlatoModel(hasDegreesPlato = true, Some(5))),
         itemDegreesPlatoSubmitAction(),
-        Wine
+        Wine,
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -115,7 +116,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
     "must return a Bad Request and errors when invalid data is submitted (no brand name supplied)" in new Fixture() {
@@ -126,7 +127,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "true")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, itemDegreesPlatoSubmitAction(), Wine, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

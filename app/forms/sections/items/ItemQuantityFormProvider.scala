@@ -35,8 +35,8 @@ class ItemQuantityFormProvider @Inject() extends Mappings {
         .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
         .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
         .verifying(isNotEqualToOptExistingAnswer(
-          ItemQuantityPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
-          "errors.704.items.quantity.input")
+          existingAnswer = ItemQuantityPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
+          errorKey = "errors.704.items.quantity.input")
         )
     )
 }

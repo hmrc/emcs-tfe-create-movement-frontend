@@ -32,7 +32,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.notificationbanner.NotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList, SummaryListRow, Value}
-import viewmodels.checkAnswers.sections.items._
+import viewmodels.checkAnswers.sections.items.{ItemDegreesPlatoSummary, _}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import views.html.components.{link, list, p}
@@ -52,6 +52,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
     lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
     lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
     lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
+    lazy val itemDegreesPlatoSummary: ItemDegreesPlatoSummary = app.injector.instanceOf[ItemDegreesPlatoSummary]
     lazy val p: p = app.injector.instanceOf[p]
     lazy val list: list = app.injector.instanceOf[list]
     lazy val link: link = app.injector.instanceOf[link]
@@ -63,6 +64,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       itemWineMoreInformationSummary = itemWineMoreInformationSummary,
       itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary,
       itemQuantitySummary = itemQuantitySummary,
+      itemDegreesPlatoSummary = itemDegreesPlatoSummary,
       p = p,
       list = list,
       link = link
@@ -251,8 +253,9 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       "when there are multiple 704 errors" - {
 
         "return the correct notification banner" in new Test(
+          //Should be beer (for degree plato) but for testing purposes, it doesn't particularly matter
           singleCompletedWineItem
-            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(1)))
+            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemDegreesPlatoFailure(1)))
         ) {
 
           helper.showNotificationBannerWhenSubmissionError(testIndex1) mustBe NotificationBanner(
@@ -266,9 +269,9 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
                   id = Some(s"fix-item-1-quantity")
                 ),
                 link(
-                  controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                  "errors.704.items.quantity.cya",
-                  id = Some(s"fix-item-1-quantity")
+                  controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
+                  "errors.704.items.degreesPlato.cya",
+                  id = Some(s"fix-item-1-degrees-plato")
                 )), id = Some("list-of-submission-failures"))
             ))))
           )

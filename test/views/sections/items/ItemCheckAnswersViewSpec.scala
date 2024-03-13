@@ -104,7 +104,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
       "when there are multiple 704 errors" - {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
-          .copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(1))))
+          .copy(submissionFailures = Seq(itemQuantityFailure(1), itemDegreesPlatoFailure(1))))
 
         implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
 
@@ -112,7 +112,23 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           doc.select(Selectors.notificationBannerList).isEmpty mustBe false
           doc.select(Selectors.notificationBannerContent).first().ownText() mustBe messagesForLanguage.notificationBannerParagraphForItems
           doc.select(Selectors.notificationBannerListElement(1)).text mustBe messagesForLanguage.notificationBannerContentForQuantity
-          doc.select(Selectors.notificationBannerListElement(2)).text mustBe messagesForLanguage.notificationBannerContentForQuantity
+          doc.select(Selectors.notificationBannerListElement(2)).text mustBe messagesForLanguage.notificationBannerContentForDegreesPlato
+        }
+      }
+
+      "when there is a 704 error (in another item)" - {
+
+        "don't show the notification banner" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
+            .copy(submissionFailures = Seq(itemQuantityFailure(2))))
+
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.notificationBannerList,
+            Selectors.notificationBannerContent
+          ))
         }
       }
     }

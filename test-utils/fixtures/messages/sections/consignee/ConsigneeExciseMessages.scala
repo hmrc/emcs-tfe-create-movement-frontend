@@ -29,8 +29,18 @@ object ConsigneeExciseMessages {
     val hint = "An ERN contains 13 characters, starting with GB. It can be found on your approval letter."
     val cyaLabel = "Excise registration number (ERN)"
     val cyaChangeHidden = "consignee excise registration number" //TODO check this content
-    val ernSubmissionFailure = "The consignee Excise Registration Number is not valid for the destination type of this movement"
 
+    val invalidOrMissingConsignee = "The consignee Excise Registration Number is not valid for the destination type of this movement"
+    val linkIsPending = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending"
+    val linkIsAlreadyUsed = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has already been used"
+    val linkIsWithdrawn = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been withdrawn"
+    val linkIsCancelled = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been cancelled"
+    val linkIsExpired = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has expired"
+    val linkMissingOrInvalid = "The temporary authorisation reference entered is invalid because the consignee’s Temporary Certificate of Authority is not held on EMCS"
+    val directDeliveryNotAllowed = "The consignee entered is not allowed to receive direct deliveries"
+    val consignorNotAuthorised = "The consignor is not authorised to trade with the temporary registered consignee"
+    val registeredConsignorToRegisteredConsignee = "A registered consignor cannot send goods to a registered consignee"
+    val consigneeRoleInvalid = "The consignee Excise Registration Number is not valid for this type of movement"
 
     val temporaryCertifiedConsigneeHeading = "What is the Temporary Certified Consignee’s authorisation reference?"
     val temporaryCertifiedConsigneeTitle = titleHelper(temporaryCertifiedConsigneeHeading)

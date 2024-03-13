@@ -27,6 +27,7 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes._
 import views.html.sections.consignee.ConsigneeExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -35,42 +36,54 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
 
   "Consignee Excise view" - {
 
-//    s"when being rendered in lang code of '${English.lang.code}'" - {
-//
-//      implicit val msgs: Messages = messages(Seq(English.lang))
-//      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-//
-//      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-//      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
-//
-//      implicit val doc: Document = Jsoup.parse(
-//        view(
-//          form,
-//          testOnwardRoute,
-//          isNorthernIrishTemporaryRegisteredConsignee = false,
-//          isNorthernIrishTemporaryCertifiedConsignee = false
-//        ).toString()
-//      )
-//
-//      behave like pageWithExpectedElementsAndMessages(Seq(
-//        Selectors.title -> English.title,
-//        Selectors.h1 -> English.heading,
-//        Selectors.h2(1) -> English.consigneeInformationSection,
-//        Selectors.hint -> English.hint,
-//        Selectors.button -> English.saveAndContinue
-//      ))
-//
-//      behave like pageWithElementsNotPresent(Seq(
-//        Selectors.notificationBannerTitle,
-//        Selectors.notificationBannerContent
-//      ))
-//    }
+    s"when being rendered in lang code of '${English.lang.code}'" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
+
+      implicit val doc: Document = Jsoup.parse(
+        view(
+          form,
+          testOnwardRoute,
+          isNorthernIrishTemporaryRegisteredConsignee = false,
+          isNorthernIrishTemporaryCertifiedConsignee = false
+        ).toString()
+      )
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.h2(1) -> English.consigneeInformationSection,
+        Selectors.hint -> English.hint,
+        Selectors.button -> English.saveAndContinue
+      ))
+
+      behave like pageWithElementsNotPresent(Seq(
+        Selectors.notificationBannerTitle,
+        Selectors.notificationBannerContent
+      ))
+    }
 
     s"when ERN needs updating and there is NO form error" - {
 
       implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
-        emptyUserAnswers.copy(submissionFailures = Seq(consigneeExciseFailure))
+        emptyUserAnswers.copy(submissionFailures = Seq(
+          consigneeExciseFailure,
+          consigneeExciseFailure.copy(errorType = LinkIsPendingError.code),
+          consigneeExciseFailure.copy(errorType = LinkIsAlreadyUsedError.code),
+          consigneeExciseFailure.copy(errorType = LinkIsWithdrawnError.code),
+          consigneeExciseFailure.copy(errorType = LinkIsCancelledError.code),
+          consigneeExciseFailure.copy(errorType = LinkIsExpiredError.code),
+          consigneeExciseFailure.copy(errorType = LinkMissingOrInvalidError.code),
+          consigneeExciseFailure.copy(errorType = DirectDeliveryNotAllowedError.code),
+          consigneeExciseFailure.copy(errorType = ConsignorNotAuthorisedError.code),
+          consigneeExciseFailure.copy(errorType = RegisteredConsignorToRegisteredConsigneeError.code),
+          consigneeExciseFailure.copy(errorType = ConsigneeRoleInvalidError.code)
+        ))
       )
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
@@ -86,111 +99,111 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       )
 
       behave like pageWithExpectedElementsAndMessages(Seq(
-//        Selectors.title -> English.title,
-//        Selectors.h1 -> English.heading,
-//        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
-        Selectors.notificationBannerError(1) -> English.ernSubmissionFailure,
-//        Selectors.h2(1) -> English.consigneeInformationSection,
-//        Selectors.hint -> English.hint,
-//        Selectors.button -> English.saveAndContinue
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
+        Selectors.notificationBannerError(1) -> English.invalidOrMissingConsignee,
+        Selectors.notificationBannerError(2) -> English.linkIsPending,
+        Selectors.notificationBannerError(3) -> English.linkIsAlreadyUsed,
+        Selectors.notificationBannerError(4) -> English.linkIsWithdrawn,
+        Selectors.notificationBannerError(5) -> English.linkIsCancelled,
+        Selectors.notificationBannerError(6) -> English.linkIsExpired,
+        Selectors.notificationBannerError(7) -> English.linkMissingOrInvalid,
+        Selectors.notificationBannerError(8) -> English.directDeliveryNotAllowed,
+        Selectors.notificationBannerError(9) -> English.consignorNotAuthorised,
+        Selectors.notificationBannerError(10) -> English.registeredConsignorToRegisteredConsignee,
+        Selectors.notificationBannerError(11) -> English.consigneeRoleInvalid,
+        Selectors.subHeadingCaptionSelector -> English.consigneeInformationSection,
+        Selectors.hint -> English.hint,
+        Selectors.button -> English.saveAndContinue
       ))
     }
 
-//    s"when ERN needs updating and there is a form error" - {
-//
-//      implicit val msgs: Messages = messages(Seq(English.lang))
-//      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
-//        emptyUserAnswers.copy(submissionFailures = Seq(consigneeExciseFailure))
-//      )
-//
-//      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-//      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
-//
-//      implicit val doc: Document = Jsoup.parse(
-//        view(
-//          form = form.withError(FormError("key", "msg")),
-//          testOnwardRoute,
-//          isNorthernIrishTemporaryRegisteredConsignee = false,
-//          isNorthernIrishTemporaryCertifiedConsignee = false
-//        ).toString()
-//      )
-//
-//      behave like pageWithExpectedElementsAndMessages(Seq(
-//        Selectors.title -> English.title,
-//        Selectors.h1 -> English.heading,
-//        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
-//        Selectors.notificationBannerContent -> English.ernSubmissionFailure,
-//        Selectors.h2(1) -> English.consigneeInformationSection,
-//        Selectors.hint -> English.hint,
-//        Selectors.button -> English.saveAndContinue
-//      ))
-//
-//      "not show the notification banner when there is an error" in {
-//        doc.select(".govuk-error-summary").isEmpty mustBe false
-//        doc.select(".govuk-notification-banner").isEmpty mustBe true
-//      }
-//    }
-//
-//    s"when being rendered in lang code of '${English.lang.code}' when isNorthernIrishTemporaryRegisteredConsignee is true" - {
-//
-//      implicit val msgs: Messages = messages(Seq(English.lang))
-//      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-//
-//      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-//      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
-//
-//      implicit val doc: Document = Jsoup.parse(
-//        view(
-//          form,
-//          testOnwardRoute,
-//          isNorthernIrishTemporaryRegisteredConsignee = true,
-//          isNorthernIrishTemporaryCertifiedConsignee = false
-//        ).toString()
-//      )
-//
-//      behave like pageWithExpectedElementsAndMessages(Seq(
-//        Selectors.title -> English.temporaryConsigneeTitle,
-//        Selectors.h1 -> English.temporaryConsigneeHeading,
-//        Selectors.h2(1) -> English.consigneeInformationSection,
-//        Selectors.hint -> English.temporaryConsigneeHint,
-//        Selectors.button -> English.saveAndContinue
-//      ))
-//
-//      behave like pageWithElementsNotPresent(Seq(
-//        Selectors.notificationBannerTitle,
-//        Selectors.notificationBannerContent
-//      ))
-//    }
-//
-//    s"when being rendered in lang code of '${English.lang.code}' when isNorthernIrishTemporaryCertifiedConsignee is true" - {
-//
-//      implicit val msgs: Messages = messages(Seq(English.lang))
-//      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-//
-//      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-//      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
-//
-//      implicit val doc: Document = Jsoup.parse(
-//        view(
-//          form,
-//          testOnwardRoute,
-//          isNorthernIrishTemporaryRegisteredConsignee = false,
-//          isNorthernIrishTemporaryCertifiedConsignee = true
-//        ).toString()
-//      )
-//
-//      behave like pageWithExpectedElementsAndMessages(Seq(
-//        Selectors.title -> English.temporaryCertifiedConsigneeTitle,
-//        Selectors.h1 -> English.temporaryCertifiedConsigneeHeading,
-//        Selectors.h2(1) -> English.consigneeInformationSection,
-//        Selectors.hint -> English.temporaryCertifiedConsigneeHint,
-//        Selectors.button -> English.saveAndContinue
-//      ))
-//
-//      behave like pageWithElementsNotPresent(Seq(
-//        Selectors.notificationBannerTitle,
-//        Selectors.notificationBannerContent
-//      ))
-//    }
+    s"when ERN needs updating and there is a form error" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+        emptyUserAnswers.copy(submissionFailures = Seq(consigneeExciseFailure))
+      )
+
+      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(false)
+
+      implicit val doc: Document = Jsoup.parse(
+        view(
+          form = form.withError(FormError("key", "msg")),
+          testOnwardRoute,
+          isNorthernIrishTemporaryRegisteredConsignee = false,
+          isNorthernIrishTemporaryCertifiedConsignee = false
+        ).toString()
+      )
+
+      "not show the notification banner when there is an error" in {
+        doc.select(".govuk-error-summary").isEmpty mustBe false
+        doc.select(".govuk-notification-banner").isEmpty mustBe true
+      }
+    }
+
+    s"when being rendered in lang code of '${English.lang.code}' when isNorthernIrishTemporaryRegisteredConsignee is true" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
+
+      implicit val doc: Document = Jsoup.parse(
+        view(
+          form,
+          testOnwardRoute,
+          isNorthernIrishTemporaryRegisteredConsignee = true,
+          isNorthernIrishTemporaryCertifiedConsignee = false
+        ).toString()
+      )
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.temporaryConsigneeTitle,
+        Selectors.h1 -> English.temporaryConsigneeHeading,
+        Selectors.h2(1) -> English.consigneeInformationSection,
+        Selectors.hint -> English.temporaryConsigneeHint,
+        Selectors.button -> English.saveAndContinue
+      ))
+
+      behave like pageWithElementsNotPresent(Seq(
+        Selectors.notificationBannerTitle,
+        Selectors.notificationBannerContent
+      ))
+    }
+
+    s"when being rendered in lang code of '${English.lang.code}' when isNorthernIrishTemporaryCertifiedConsignee is true" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+      lazy val view = app.injector.instanceOf[ConsigneeExciseView]
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(true)
+
+      implicit val doc: Document = Jsoup.parse(
+        view(
+          form,
+          testOnwardRoute,
+          isNorthernIrishTemporaryRegisteredConsignee = false,
+          isNorthernIrishTemporaryCertifiedConsignee = true
+        ).toString()
+      )
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.temporaryCertifiedConsigneeTitle,
+        Selectors.h1 -> English.temporaryCertifiedConsigneeHeading,
+        Selectors.h2(1) -> English.consigneeInformationSection,
+        Selectors.hint -> English.temporaryCertifiedConsigneeHint,
+        Selectors.button -> English.saveAndContinue
+      ))
+
+      behave like pageWithElementsNotPresent(Seq(
+        Selectors.notificationBannerTitle,
+        Selectors.notificationBannerContent
+      ))
+    }
   }
 }

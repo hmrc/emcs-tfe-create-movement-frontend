@@ -25,6 +25,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import queries.ItemsPackagingCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import utils.SubmissionFailureErrorCodes.ErrorCode
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -147,37 +148,28 @@ class ItemCheckAnswersHelper @Inject()(
     }).flatten
   }
 
-  def showNotificationBannerWhenSubmissionError(idx: Index)
-                                               (implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
-    val numberOfErrorsForItem = ItemsSectionItem(idx).numberOfSubmissionFailuresForItem
-    val errorLinks = Seq(
-      Option.when(ItemQuantityPage(idx).isMovementSubmissionError)(
+  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[ErrorCode])
+                                               (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
+    Option.when(itemErrors.nonEmpty) {
+      val errorLinks = itemErrors.map { itemError =>
         link(
-          link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          messageKey = "errors.704.items.quantity.cya",
-          id = Some(s"fix-item-${idx.displayIndex}-quantity")
+          link = itemError.route().url,
+          messageKey = itemError.messageKey,
+          id = Some(itemError.id)
         )
-      ),
-      Option.when(ItemDegreesPlatoPage(idx).isMovementSubmissionError)(
-        link(
-          link = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
-          messageKey = "errors.704.items.degreesPlato.cya",
-          id = Some(s"fix-item-${idx.displayIndex}-degrees-plato")
-        )
-      )
-    )
-    NotificationBanner(
-      title = Text(messages("errors.704.notificationBanner.title")),
-      content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
-        if (numberOfErrorsForItem == 1) {
-          errorLinks.flatten
-        } else {
-          Seq(
-            Html(messages("errors.704.items.notificationBanner.p")),
-            list(
-              errorLinks.flatten, id = Some("list-of-submission-failures"))
-          )
-        }
-      ))))
+      }
+      NotificationBanner(
+        title = Text(messages("errors.704.notificationBanner.title")),
+        content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
+          if (itemErrors.size == 1) {
+            errorLinks
+          } else {
+            Seq(
+              Html(messages("errors.704.items.notificationBanner.p")),
+              list(errorLinks, id = Some("list-of-submission-failures"))
+            )
+          }
+        ))))
+    }
   }
 }

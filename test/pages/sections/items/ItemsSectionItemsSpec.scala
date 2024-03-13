@@ -23,6 +23,7 @@ import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndica
 import models.sections.items.ItemWineProductCategory.Other
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
 class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
@@ -188,6 +189,98 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         ItemsSectionItems.indexesOfItemsWithSubmissionFailures(
           emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))
         ) mustBe Seq()
+      }
+    }
+  }
+
+  "getSubmissionFailuresForItems" - {
+
+    val twoCompletedItems = singleCompletedWineItem
+      .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+      .set(ItemCommodityCodePage(testIndex2), testCnCodeWine)
+      .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+      .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
+      .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
+      .set(ItemGeographicalIndicationChoicePage(testIndex2), NoGeographicalIndication)
+      .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
+      .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+      .set(ItemBulkPackagingChoicePage(testIndex2), false)
+      .set(ItemWineProductCategoryPage(testIndex2), Other)
+      .set(ItemWineMoreInformationChoicePage(testIndex2), false)
+      .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
+      .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
+      .set(ItemPackagingProductTypePage(testIndex2, testPackagingIndex1), true)
+      .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
+
+    "return an empty list" - {
+
+      "when no items exist" in {
+
+        ItemsSectionItems.getSubmissionFailuresForItems()(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq()))) mustBe Seq.empty
+      }
+
+      "when no submission failures exist" in {
+
+        ItemsSectionItems.getSubmissionFailuresForItems()(dataRequest(FakeRequest(), singleCompletedWineItem.copy(submissionFailures = Seq()))) mustBe Seq.empty
+      }
+
+      "when submission failures exist but all are fixed" in {
+        ItemsSectionItems.getSubmissionFailuresForItems()(dataRequest(FakeRequest(), twoCompletedItems.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1).copy(hasBeenFixed = true),
+            itemDegreesPlatoFailure(1).copy(hasBeenFixed = true),
+            itemQuantityFailure(2).copy(hasBeenFixed = true),
+            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+          )
+        ))) mustBe Seq.empty
+      }
+    }
+
+    "return the submission failures that exist" - {
+      "returning only the number of errors that haven't been fixed" in {
+        ItemsSectionItems.getSubmissionFailuresForItems()(dataRequest(FakeRequest(), twoCompletedItems.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1).copy(hasBeenFixed = false),
+            itemDegreesPlatoFailure(1).copy(hasBeenFixed = true),
+            itemQuantityFailure(2).copy(hasBeenFixed = true),
+            itemDegreesPlatoFailure(2).copy(hasBeenFixed = false)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = false),
+          ItemDegreesPlatoError(testIndex2, isForAddToList = false),
+        )
+      }
+
+      "when all errors haven't been fixed" in {
+        ItemsSectionItems.getSubmissionFailuresForItems()(dataRequest(FakeRequest(), twoCompletedItems.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1),
+            itemDegreesPlatoFailure(1),
+            itemQuantityFailure(2),
+            itemDegreesPlatoFailure(2)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = false),
+          ItemDegreesPlatoError(testIndex1, isForAddToList = false),
+          ItemQuantityError(testIndex2, isForAddToList = false),
+          ItemDegreesPlatoError(testIndex2, isForAddToList = false)
+        )
+      }
+
+      "when the user is on the add to list page" in {
+        ItemsSectionItems.getSubmissionFailuresForItems(isOnAddToList = true)(dataRequest(FakeRequest(), twoCompletedItems.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1),
+            itemDegreesPlatoFailure(1),
+            itemQuantityFailure(2),
+            itemDegreesPlatoFailure(2)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = true),
+          ItemDegreesPlatoError(testIndex1, isForAddToList = true),
+          ItemQuantityError(testIndex2, isForAddToList = true),
+          ItemDegreesPlatoError(testIndex2, isForAddToList = true)
+        )
       }
     }
   }

@@ -19,7 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.itemQuantityError
+import utils.SubmissionFailureErrorCodes.{ItemQuantityError, itemQuantityError}
 
 class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -143,6 +143,53 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
             itemQuantityFailure(2),
             movementSubmissionFailure
           )))) mustBe Seq(1)
+      }
+    }
+  }
+
+  "when calling getSubmissionErrorCode" - {
+
+    "should return Some" - {
+
+      Seq(true, false).foreach { isOnAddToList =>
+
+        s"when isOnAddToList = $isOnAddToList" - {
+
+          "and a submission failure exists at this index" in {
+
+            page.getSubmissionErrorCode(isOnAddToList)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+              submissionFailures = Seq(
+                itemQuantityFailure(1),
+                itemQuantityFailure(2),
+                movementSubmissionFailure
+              )))) mustBe Some(ItemQuantityError(testIndex2, isOnAddToList))
+          }
+        }
+      }
+    }
+
+    "should return None" - {
+
+      "when no submission failures exist" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq.empty))) mustBe None
+      }
+
+      "when no quantity submission failures exist" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            movementSubmissionFailure
+          )))) mustBe None
+      }
+
+      "when a quantity submission failure exists but at a different index" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1),
+            movementSubmissionFailure
+          )))) mustBe None
       }
     }
   }

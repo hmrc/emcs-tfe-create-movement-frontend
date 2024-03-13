@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
+import utils.SubmissionFailureErrorCodes.ErrorCode
 import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
@@ -68,12 +69,14 @@ case object ItemsSectionItems extends Section[JsObject] {
       }
       .distinct
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[ErrorCode] = {
     request.userAnswers.get(ItemsCount) match {
-      case Some(0) | None => false
-      case Some(count) => (0 until count).exists(ItemsSectionItem(_).isMovementSubmissionError)
+      case Some(0) | None => Seq.empty
+      case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
   }
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

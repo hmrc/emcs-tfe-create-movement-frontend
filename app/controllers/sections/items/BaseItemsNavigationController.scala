@@ -102,10 +102,17 @@ trait BaseItemsNavigationController extends BaseNavigationController {
       }
     }
 
+  /**
+   * This function first removes the submission failure at the specified index. It then finds the submission failure index (i.e. BodyEadEsad[X]) of every
+   * item (that is after this one - if any exist) with errors and then zips the submission failures with an index (so we know the new array index of the submission failure) and finds
+   * all errors at the submission failure index (i.e. BodyEadEsad[X]) and maps them to X.
+   *
+   * Then the new user answers (with the requested error removed) is then iterated over for each error and its error location is shifted down by 1.
+   * The tests available in BaseItemsNavigationControllerSpec provide a more detailed view.
+   *
+   */
   private[controllers] def updateItemSubmissionFailureIndexes(indexOfRemovedItem: Index, userAnswers: UserAnswers): UserAnswers = {
-    val userAnswersWithSubmissionFailureRemovedAtIndex = userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
-      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
-    ))
+    val userAnswersWithSubmissionFailureRemovedAtIndex = removeItemSubmissionFailure(indexOfRemovedItem, userAnswers)
 
     val itemIndexesToAmend: Seq[Int] =
       ItemsSectionItems.indexesOfItemsWithSubmissionFailures(userAnswersWithSubmissionFailureRemovedAtIndex)
@@ -113,21 +120,28 @@ trait BaseItemsNavigationController extends BaseNavigationController {
 
     val indexOfSubmissionFailuresNeedingUpdate =
       itemIndexesToAmend.map { erroredItemIdx =>
-        userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures.indexWhere(_.errorLocation.exists(_.contains(s"$BODYEADESAD[$erroredItemIdx]"))) -> erroredItemIdx
+        userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures.zipWithIndex.filter(_._1.errorLocation.exists(_.contains(s"$BODYEADESAD[$erroredItemIdx]"))).map(_._2) -> erroredItemIdx
       }
 
     indexOfSubmissionFailuresNeedingUpdate.foldLeft(userAnswersWithSubmissionFailureRemovedAtIndex) {
-      case (userAnswers, (index, erroredIndex)) =>
+      case (userAnswers, (indexes, erroredIndex)) =>
 
-        val submissionFailureForItem = userAnswers.submissionFailures(index)
+        indexes.foldLeft(userAnswers) { (userAnswers, index) =>
+          val submissionFailureForItem = userAnswers.submissionFailures(index)
 
-        val updatedItem = submissionFailureForItem.copy(errorLocation =
-          submissionFailureForItem.errorLocation.map(
-            _.replace(s"$BODYEADESAD[$erroredIndex]", s"$BODYEADESAD[${erroredIndex - 1}]")
+          val updatedItem = submissionFailureForItem.copy(errorLocation =
+            submissionFailureForItem.errorLocation.map(
+              _.replace(s"$BODYEADESAD[$erroredIndex]", s"$BODYEADESAD[${erroredIndex - 1}]")
+            )
           )
-        )
 
-        userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, updatedItem))
+          userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, updatedItem))
+        }
     }
   }
+
+  private[controllers] def removeItemSubmissionFailure(indexOfRemovedItem: Index, userAnswers: UserAnswers): UserAnswers =
+    userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
+    _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
+  ))
 }

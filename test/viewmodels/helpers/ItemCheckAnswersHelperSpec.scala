@@ -17,8 +17,8 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items._
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.requests.DataRequest
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items._
@@ -32,7 +32,8 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.notificationbanner.NotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList, SummaryListRow, Value}
-import viewmodels.checkAnswers.sections.items.{ItemDegreesPlatoSummary, _}
+import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
+import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import views.html.components.{link, list, p}
@@ -234,31 +235,37 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
 
     "showNotificationBannerWhenSubmissionError" - {
 
+      "return None" - {
+
+        "when no submission failures are provided" in new Test(singleCompletedWineItem) {
+          helper.showNotificationBannerWhenSubmissionError(Seq.empty) mustBe None
+        }
+      }
+
       "when there is one 704 error" - {
 
-        "return the correct notification banner" in new Test(
-          singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
-        ) {
+        "return the correct notification banner" in new Test(singleCompletedWineItem) {
 
-          helper.showNotificationBannerWhenSubmissionError(testIndex1) mustBe NotificationBanner(
+          helper.showNotificationBannerWhenSubmissionError(Seq(
+            ItemQuantityError(testIndex1, isForAddToList = false)
+          )) mustBe Some(NotificationBanner(
             title = Text(msgs("errors.704.notificationBanner.title")),
             content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(link(
               controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
               "errors.704.items.quantity.cya",
               id = Some(s"fix-item-1-quantity"))))))
-          )
+          ))
         }
       }
 
       "when there are multiple 704 errors" - {
 
-        "return the correct notification banner" in new Test(
-          //Should be beer (for degree plato) but for testing purposes, it doesn't particularly matter
-          singleCompletedWineItem
-            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemDegreesPlatoFailure(1)))
-        ) {
+        "return the correct notification banner" in new Test(singleCompletedWineItem) {
 
-          helper.showNotificationBannerWhenSubmissionError(testIndex1) mustBe NotificationBanner(
+          helper.showNotificationBannerWhenSubmissionError(Seq(
+            ItemQuantityError(testIndex1, isForAddToList = false),
+            ItemDegreesPlatoError(testIndex1, isForAddToList = false)
+          )) mustBe Some(NotificationBanner(
             title = Text(msgs("errors.704.notificationBanner.title")),
             content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
               Html(msgs("errors.704.items.notificationBanner.p")),
@@ -274,7 +281,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
                   id = Some(s"fix-item-1-degrees-plato")
                 )), id = Some("list-of-submission-failures"))
             ))))
-          )
+          ))
         }
       }
     }

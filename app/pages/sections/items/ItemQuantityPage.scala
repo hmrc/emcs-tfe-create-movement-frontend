@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.{Index, MovementSubmissionFailure}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes.itemQuantityError
+import utils.SubmissionFailureErrorCodes.{ErrorCode, itemQuantityError}
 
 case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
   override val toString: String = "itemQuantity"
@@ -31,17 +31,21 @@ case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
     submissionFailure =>
       submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == itemQuantityError
 
-  private def getSubmissionError(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] = {
+  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] = {
     request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex)
   }
 
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
-    getSubmissionError.exists(!_.hasBeenFixed)
+    getMovementSubmissionFailure.exists(!_.hasBeenFixed)
   }
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    getSubmissionError.flatMap(_.originalAttributeValue)
+    getMovementSubmissionFailure.flatMap(_.originalAttributeValue)
 
   override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
     Seq(request.userAnswers.submissionFailures.indexWhere(isQuantityErrorAtIndex))
+
+  def getSubmissionErrorCode(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Option[ErrorCode] = {
+    request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex).filter(!_.hasBeenFixed).map(error => ErrorCode(error.errorType, idx, isOnAddToList))
+  }
 }

@@ -19,8 +19,8 @@ package viewmodels.helpers
 import controllers.sections.items.routes
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.sections.items.ItemsAddToListItemModel
-import models.{CheckMode, Index, NormalMode}
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemDegreesPlatoPage, ItemExciseProductCodePage, ItemQuantityPage, ItemsSectionItem, ItemsSectionItems}
+import models.{Index, NormalMode}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemsSectionItem}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import queries.{ItemsCount, ItemsPackagingCount}
@@ -30,6 +30,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import utils.SubmissionFailureErrorCodes.ErrorCode
 import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommercialDescriptionSummary, ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
@@ -50,7 +51,6 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      tagHelper: TagHelper) extends TagFluency with Logging {
 
   private val headingLevel = 2
-
 
   def allItemsSummary(implicit request: DataRequest[_], messages: Messages, headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Seq[SummaryList]] =
     getAddedItems match {
@@ -165,31 +165,21 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       case _ => None
     }
 
-  def showNotificationBannerWhenSubmissionError()(implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
-    NotificationBanner(
-      title = Text(messages("errors.704.notificationBanner.title")),
-      content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-        Html(messages("errors.704.items.notificationBanner.p")),
-        list(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers).distinct.flatMap {
-          indexOfItemWithSubmissionFailures =>
-            val index = Index(indexOfItemWithSubmissionFailures - 1)
-            Seq(
-              Option.when(ItemQuantityPage(index).isMovementSubmissionError)(
-                link(
-                  controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, index, CheckMode).url,
-                  messages("errors.704.items.quantity.addToList", indexOfItemWithSubmissionFailures),
-                  id = Some(s"fix-item-${index.displayIndex}-quantity")
-                )
-              ),
-              Option.when(ItemDegreesPlatoPage(index).isMovementSubmissionError)(
-                link(
-                  controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, index, CheckMode).url,
-                  messages("errors.704.items.degreesPlato.addToList", indexOfItemWithSubmissionFailures),
-                  id = Some(s"fix-item-${index.displayIndex}-degrees-plato")
-                )
-              )
-            ).flatten
-        }, id = Some("list-of-submission-failures"))
-    )))))
+  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[ErrorCode])
+                                               (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
+    Option.when(itemErrors.nonEmpty) {
+      NotificationBanner(
+        title = Text(messages("errors.704.notificationBanner.title")),
+        content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+          Html(messages("errors.704.items.notificationBanner.p")),
+          list(itemErrors.map { error =>
+            link(
+              link = error.route().url,
+              messageKey = messages(error.messageKey, error.index.get.displayIndex),
+              id = Some(error.id)
+            )
+          }, id = Some("list-of-submission-failures"))
+        )))))
+    }
   }
 }

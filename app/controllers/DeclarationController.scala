@@ -21,7 +21,7 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
 import models.requests.DataRequest
-import models.response.{MissingMandatoryPage, UnfixedSubmissionFailuresException}
+import models.response.MissingMandatoryPage
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage

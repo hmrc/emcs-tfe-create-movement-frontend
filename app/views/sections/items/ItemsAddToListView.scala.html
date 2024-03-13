@@ -48,14 +48,14 @@
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-      @if(ItemsSectionItems.isMovementSubmissionError && (formOpt.isEmpty || !formOpt.exists(_.hasErrors))) {
-        @notificationBanner(helper.showNotificationBannerWhenSubmissionError())
+      @if(formOpt.isEmpty || !formOpt.exists(_.hasErrors)) {
+        @helper.showNotificationBannerWhenSubmissionError(ItemsSectionItems.getSubmissionFailuresForItems(isOnAddToList = true)).map(notificationBanner(_))
       }
 
       @formOpt.map { form =>
-          @if(form.errors.nonEmpty) {
-              @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-          }
+        @if(form.errors.nonEmpty) {
+          @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+        }
       }
 
 

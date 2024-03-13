@@ -28,6 +28,7 @@ import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
+import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
 
 class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 
@@ -1340,48 +1341,69 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
   }
 
-  "numberOfSubmissionFailuresForItem" - {
+  "getSubmissionFailuresForItem" - {
 
-    "return 0" - {
+    "return an empty list" - {
 
       "when no submission failures exist" in {
 
-        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq()))) mustBe 0
+        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq()))) mustBe Seq.empty
       }
 
       "when no submission failures exist for this item" in {
 
-        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe 0
+        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe Seq.empty
       }
 
       "when submission failures exist for this item but all are fixed" in {
-        section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemQuantityFailure(1).copy(hasBeenFixed = true),
             itemDegreesPlatoFailure(1).copy(hasBeenFixed = true)
           )
-        ))) mustBe 0
+        ))) mustBe Seq.empty
       }
     }
 
-    "return the number of submission failures that exist (returning only the number of errors that haven't been fixed)" - {
-      section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-        submissionFailures = Seq(
-          itemQuantityFailure(1).copy(hasBeenFixed = false),
-          itemDegreesPlatoFailure(1).copy(hasBeenFixed = true)
+    "return the submission failures that exist" - {
+      "returning only the number of errors that haven't been fixed" in {
+        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1).copy(hasBeenFixed = false),
+            itemDegreesPlatoFailure(1).copy(hasBeenFixed = true)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = false)
         )
-      ))) mustBe 1
-    }
+      }
 
-    "return the number of submission failures that exist (where all errors haven't been fixed)" - {
-      section.numberOfSubmissionFailuresForItem(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-        submissionFailures = Seq(
-          itemQuantityFailure(1),
-          itemDegreesPlatoFailure(1),
-          itemDegreesPlatoFailure(2),
-          itemDegreesPlatoFailure(2)
+      "when all errors haven't been fixed" in {
+        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1),
+            itemDegreesPlatoFailure(1),
+            itemQuantityFailure(2),
+            itemDegreesPlatoFailure(2)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = false),
+          ItemDegreesPlatoError(testIndex1, isForAddToList = false)
         )
-      ))) mustBe 2
+      }
+
+      "when the user is on the add to list page" in {
+        section.getSubmissionFailuresForItem(isOnAddToList = true)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemQuantityFailure(1),
+            itemDegreesPlatoFailure(1),
+            itemQuantityFailure(2),
+            itemDegreesPlatoFailure(2)
+          )
+        ))) mustBe Seq(
+          ItemQuantityError(testIndex1, isForAddToList = true),
+          ItemDegreesPlatoError(testIndex1, isForAddToList = true)
+        )
+      }
     }
   }
 }

@@ -19,7 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.itemDegreesPlatoError
+import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, itemDegreesPlatoError}
 
 class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -143,6 +143,53 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
             itemDegreesPlatoFailure(2),
             movementSubmissionFailure
           )))) mustBe Seq(1)
+      }
+    }
+  }
+
+  "when calling getSubmissionErrorCode" - {
+
+    "should return Some" - {
+
+      Seq(true, false).foreach { isOnAddToList =>
+
+        s"when isOnAddToList = $isOnAddToList" - {
+
+          "and a submission failure exists at this index" in {
+
+            page.getSubmissionErrorCode(isOnAddToList)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+              submissionFailures = Seq(
+                itemDegreesPlatoFailure(1),
+                itemDegreesPlatoFailure(2),
+                movementSubmissionFailure
+              )))) mustBe Some(ItemDegreesPlatoError(testIndex2, isOnAddToList))
+          }
+        }
+      }
+    }
+
+    "should return None" - {
+
+      "when no submission failures exist" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq.empty))) mustBe None
+      }
+
+      "when no quantity submission failures exist" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            movementSubmissionFailure
+          )))) mustBe None
+      }
+
+      "when a quantity submission failure exists but at a different index" in {
+
+        page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
+          submissionFailures = Seq(
+            itemDegreesPlatoFailure(1),
+            movementSubmissionFailure
+          )))) mustBe None
       }
     }
   }

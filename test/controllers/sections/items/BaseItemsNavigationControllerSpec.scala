@@ -123,6 +123,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
         movementSubmissionFailure,
         itemQuantityFailure(1),
         itemQuantityFailure(4),
+        itemDegreesPlatoFailure(4),
         itemQuantityFailure(10),
         movementSubmissionFailure,
         itemQuantityFailure(20),
@@ -138,6 +139,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
           result.submissionFailures mustBe Seq(
             movementSubmissionFailure,
             itemQuantityFailure(3),
+            itemDegreesPlatoFailure(3),
             itemQuantityFailure(9),
             movementSubmissionFailure,
             itemQuantityFailure(19),
@@ -173,6 +175,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
             movementSubmissionFailure,
             itemQuantityFailure(1),
             itemQuantityFailure(4),
+            itemDegreesPlatoFailure(4),
             itemQuantityFailure(10),
             movementSubmissionFailure,
             itemQuantityFailure(11)
@@ -190,6 +193,7 @@ class BaseItemsNavigationControllerSpec extends SpecBase
             movementSubmissionFailure,
             itemQuantityFailure(1),
             itemQuantityFailure(4),
+            itemDegreesPlatoFailure(4),
             itemQuantityFailure(10),
             movementSubmissionFailure,
             itemQuantityFailure(19),
@@ -223,6 +227,40 @@ class BaseItemsNavigationControllerSpec extends SpecBase
 
           result.submissionFailures mustBe Seq(itemQuantityFailure(1))
         }
+      }
+    }
+  }
+
+  ".removeItemSubmissionFailure" - {
+
+    val userAnswersWithFailures = emptyUserAnswers.copy(submissionFailures = Seq(
+      movementSubmissionFailure,
+      itemQuantityFailure(1),
+      itemQuantityFailure(2),
+      movementSubmissionFailure
+    ))
+
+    "should remove the submission failure at the specified index" in new Test(userAnswersWithFailures) {
+
+      val result = controller.removeItemSubmissionFailure(testIndex1, userAnswersWithFailures)
+
+      result.submissionFailures mustBe Seq(movementSubmissionFailure, itemQuantityFailure(2), movementSubmissionFailure)
+    }
+
+    "return the original user answers" - {
+
+      "when no submission failures exist" in new Test(emptyUserAnswers) {
+
+        val result = controller.removeItemSubmissionFailure(testIndex1, emptyUserAnswers)
+
+        result.submissionFailures mustBe Seq()
+      }
+
+      "when no submission failures exist at this index" in new Test(emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2), movementSubmissionFailure))) {
+
+        val result = controller.removeItemSubmissionFailure(testIndex1, emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure, itemQuantityFailure(2))))
+
+        result.submissionFailures mustBe Seq(movementSubmissionFailure, itemQuantityFailure(2))
       }
     }
   }

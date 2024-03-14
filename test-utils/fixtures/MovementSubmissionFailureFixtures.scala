@@ -17,7 +17,7 @@
 package fixtures
 
 import models.MovementSubmissionFailure
-import utils.SubmissionFailureErrorCodes.{ImportCustomsOfficeCodeError, InvalidOrMissingConsigneeError, ItemQuantityError, LocalReferenceNumberError}
+import utils.SubmissionFailureErrorCodes._
 
 trait MovementSubmissionFailureFixtures extends BaseFixtures {
 
@@ -40,6 +40,14 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   val consigneeExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = InvalidOrMissingConsigneeError.code,
     errorReason = "Invalid or missing Consignee on SEED",
+    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    originalAttributeValue = Some(testErn),
+    hasBeenFixed = false
+  )
+
+  val destinationWarehouseExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = ExciseIdForTaxWarehouseOfDestinationInvalidError.code,
+    errorReason = "The excise ID for the tax warehouse of destination is not valid",
     errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
     originalAttributeValue = Some(testErn),
     hasBeenFixed = false

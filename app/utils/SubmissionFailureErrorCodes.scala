@@ -204,6 +204,9 @@ object SubmissionFailureErrorCodes {
       case "4420" => ConsignorNotAuthorisedError
       case "4423" => RegisteredConsignorToRegisteredConsigneeError
       case "4455" => ConsigneeRoleInvalidError
+      case "4406" => ExciseIdForTaxWarehouseOfDestinationInvalidError
+      case "4421" => ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError
+      case "4456" => ExciseIdForTaxWarehouseInvalid
     }
   }
 }

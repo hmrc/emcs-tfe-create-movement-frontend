@@ -50,7 +50,7 @@ class DestinationWarehouseExciseSummary @Inject()(tagHelper: TagHelper) {
 
         SummaryListRowViewModel(
           key = "destinationWarehouseExcise.checkYourAnswersLabel",
-          value = summaryListRowViewValue, // ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = summaryListRowViewValue,
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

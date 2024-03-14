@@ -81,18 +81,18 @@ class DeclarationControllerSpec extends SpecBase
         contentAsString(res) mustBe view(submitRoute).toString()
       }
       //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-//      "must return the declaration page (all submission failures have been fixed)" in new Test(
-//        baseFullUserAnswers.copy(submissionFailures = Seq(
-//          itemQuantityFailure(1).copy(hasBeenFixed = true),
-//          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-//        ))
-//      ) {
-//        MockAppConfig.destinationOfficeSuffix.returns("004098")
-//        val res = controller.onPageLoad(ern, testDraftId)(request)
-//
-//        status(res) mustBe OK
-//        contentAsString(res) mustBe view(submitRoute).toString()
-//      }
+      //      "must return the declaration page (all submission failures have been fixed)" in new Test(
+      //        baseFullUserAnswers.copy(submissionFailures = Seq(
+      //          itemQuantityFailure(1).copy(hasBeenFixed = true),
+      //          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+      //        ))
+      //      ) {
+      //        MockAppConfig.destinationOfficeSuffix.returns("004098")
+      //        val res = controller.onPageLoad(ern, testDraftId)(request)
+      //
+      //        status(res) mustBe OK
+      //        contentAsString(res) mustBe view(submitRoute).toString()
+      //      }
 
       "when creating a request model fails" - {
         "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
@@ -102,17 +102,17 @@ class DeclarationControllerSpec extends SpecBase
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
         }
         //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-//        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
-//          baseFullUserAnswers.copy(submissionFailures = Seq(
-//            itemQuantityFailure(1).copy(hasBeenFixed = true),
-//            itemDegreesPlatoFailure(2).copy(hasBeenFixed = false)
-//          ))
-//        ) {
-//          val res = controller.onPageLoad(ern, testDraftId)(request)
-//
-//          status(res) mustBe SEE_OTHER
-//          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-//        }
+        //        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
+        //          baseFullUserAnswers.copy(submissionFailures = Seq(
+        //            itemQuantityFailure(1).copy(hasBeenFixed = true),
+        //            itemDegreesPlatoFailure(2).copy(hasBeenFixed = false)
+        //          ))
+        //        ) {
+        //          val res = controller.onPageLoad(ern, testDraftId)(request)
+        //
+        //          status(res) mustBe SEE_OTHER
+        //          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+        //        }
 
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
@@ -187,17 +187,17 @@ class DeclarationControllerSpec extends SpecBase
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
         }
         //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-//        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
-//          baseFullUserAnswers.copy(submissionFailures = Seq(
-//            itemQuantityFailure(1).copy(hasBeenFixed = false),
-//            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-//          ))
-//        ) {
-//          val res = controller.onSubmit(ern, testDraftId)(request)
-//
-//          status(res) mustBe SEE_OTHER
-//          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-//        }
+        //        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
+        //          baseFullUserAnswers.copy(submissionFailures = Seq(
+        //            itemQuantityFailure(1).copy(hasBeenFixed = false),
+        //            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+        //          ))
+        //        ) {
+        //          val res = controller.onSubmit(ern, testDraftId)(request)
+        //
+        //          status(res) mustBe SEE_OTHER
+        //          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+        //        }
 
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))

@@ -89,7 +89,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
           idx
       }
 
-      if(indexesOfItemsToBeRemoved.isEmpty) f(request) else {
+      if (indexesOfItemsToBeRemoved.isEmpty) f(request) else {
 
         val updatedAnswers = indexesOfItemsToBeRemoved.foldLeft(request.userAnswers) {
           case (userAnswers, idxToRemove) =>
@@ -142,6 +142,6 @@ trait BaseItemsNavigationController extends BaseNavigationController {
 
   private[controllers] def removeItemSubmissionFailure(indexOfRemovedItem: Index, userAnswers: UserAnswers): UserAnswers =
     userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
-    _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
-  ))
+      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
+    ))
 }

@@ -33,26 +33,32 @@ object SubmissionFailureErrorCodes {
     val code: String
     val messageKey: String
     val id: String
+
     def route()(implicit request: DataRequest[_]): Call
+
     val index: Option[Index] = None
   }
 
   case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
     override val code = itemQuantityError
-    override val messageKey = s"errors.704.items.quantity${if(isForAddToList) ".addToList" else ""}"
+    override val messageKey = s"errors.704.items.quantity${if (isForAddToList) ".addToList" else ""}"
     override val id = s"fix-item-${idx.displayIndex}-quantity"
+
     override def route()(implicit request: DataRequest[_]): Call =
       controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
     override val index = Some(idx)
 
   }
 
   case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
     override val code = itemDegreesPlatoError
-    override val messageKey = s"errors.704.items.degreesPlato${if(isForAddToList) ".addToList"  else ""}"
+    override val messageKey = s"errors.704.items.degreesPlato${if (isForAddToList) ".addToList" else ""}"
     override val id = s"fix-item-${idx.displayIndex}-degrees-plato"
+
     override def route()(implicit request: DataRequest[_]): Call =
       controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
     override val index = Some(idx)
   }
 

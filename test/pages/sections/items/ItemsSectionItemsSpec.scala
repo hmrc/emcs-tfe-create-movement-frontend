@@ -17,8 +17,10 @@
 package pages.sections.items
 
 import base.SpecBase
+import config.Constants.BODYEADESAD
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.requests.DataRequest
+import models.response.InvalidRegexException
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.Other
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
@@ -189,6 +191,18 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         ItemsSectionItems.indexesOfItemsWithSubmissionFailures(
           emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure))
         ) mustBe Seq()
+      }
+    }
+
+    "should throw an exception" - {
+
+      s"when the errorLocation does not have a $BODYEADESAD" in {
+
+        intercept[InvalidRegexException](ItemsSectionItems.indexesOfItemsWithSubmissionFailures(
+          emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(1).copy(
+            errorLocation = Some(s"$BODYEADESAD[]")
+          )))
+        )).getMessage mustBe s"[indexesOfItemsWithSubmissionFailures] Invalid item error location received: Some($BODYEADESAD[])"
       }
     }
   }

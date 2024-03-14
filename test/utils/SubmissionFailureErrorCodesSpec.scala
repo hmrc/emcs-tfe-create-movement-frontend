@@ -27,7 +27,7 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       Seq(true, false).foreach { isForAddToList =>
 
         s"when isForAddToList = $isForAddToList" in {
-           ErrorCode.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
+          ErrorCode.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
         }
       }
     }

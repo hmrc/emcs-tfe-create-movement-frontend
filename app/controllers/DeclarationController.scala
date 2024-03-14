@@ -80,8 +80,8 @@ class DeclarationController @Inject()(
         Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
 
       //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-//      case Failure(_: UnfixedSubmissionFailuresException) =>
-//        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
+      //      case Failure(_: UnfixedSubmissionFailuresException) =>
+      //        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
 
       case Failure(exception) =>
         logger.error(s"[withSubmitCreateMovementModel] Error thrown when creating request model to submit: ${exception.getMessage}")

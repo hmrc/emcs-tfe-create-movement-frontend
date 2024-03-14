@@ -63,3 +63,5 @@ case class PackagingTypesException(message: String) extends Exception(message) w
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class ReferenceDataException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
+case class InvalidRegexException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

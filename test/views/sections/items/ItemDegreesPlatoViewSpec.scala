@@ -50,7 +50,7 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with Movemen
 
         implicit def doc(isFormError: Boolean = false)(implicit request: DataRequest[_]): Document =
           Jsoup.parse(view(
-            if(isFormError) form.withError(FormError("key", "msg")) else form,
+            if (isFormError) form.withError(FormError("key", "msg")) else form,
             testOnwardRoute,
             Beer,
             testIndex1
@@ -66,15 +66,15 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with Movemen
           //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
           Selectors.radioButton(3) -> messagesForLanguage.no,
           Selectors.summary(1) -> messagesForLanguage.detailsSummaryHeading,
-          Selectors.bullet(1)  -> countryMessages.austria,
-          Selectors.bullet(2)  -> countryMessages.belgium,
-          Selectors.bullet(3)  -> countryMessages.bulgaria,
-          Selectors.bullet(4)  -> countryMessages.czechia,
-          Selectors.bullet(5)  -> countryMessages.germany,
-          Selectors.bullet(6)  -> countryMessages.greece,
-          Selectors.bullet(7)  -> countryMessages.spain,
-          Selectors.bullet(8)  -> countryMessages.italy,
-          Selectors.bullet(9)  -> countryMessages.luxembourg,
+          Selectors.bullet(1) -> countryMessages.austria,
+          Selectors.bullet(2) -> countryMessages.belgium,
+          Selectors.bullet(3) -> countryMessages.bulgaria,
+          Selectors.bullet(4) -> countryMessages.czechia,
+          Selectors.bullet(5) -> countryMessages.germany,
+          Selectors.bullet(6) -> countryMessages.greece,
+          Selectors.bullet(7) -> countryMessages.spain,
+          Selectors.bullet(8) -> countryMessages.italy,
+          Selectors.bullet(9) -> countryMessages.luxembourg,
           Selectors.bullet(10) -> countryMessages.malta,
           Selectors.bullet(11) -> countryMessages.poland,
           Selectors.bullet(12) -> countryMessages.portugal,

@@ -37,7 +37,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       case Some(epc) =>
         implicit val goodsType: GoodsType = GoodsType(epc)
 
-        if(isMovementSubmissionError) {
+        if (isMovementSubmissionError) {
           UpdateNeeded
         } else if (itemPagesWithoutPackagingComplete(epc) && packagingPagesComplete) {
           Completed

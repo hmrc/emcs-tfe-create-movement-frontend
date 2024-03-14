@@ -29,31 +29,31 @@ import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
 case class SubmitCreateMovementModel(
-                                movementType: MovementType,
-                                attributes: AttributesModel,
-                                consigneeTrader: Option[TraderModel],
-                                consignorTrader: TraderModel,
-                                placeOfDispatchTrader: Option[TraderModel],
-                                dispatchImportOffice: Option[OfficeModel],
-                                complementConsigneeTrader: Option[ComplementConsigneeTraderModel],
-                                deliveryPlaceTrader: Option[TraderModel],
-                                deliveryPlaceCustomsOffice: Option[OfficeModel],
-                                competentAuthorityDispatchOffice: OfficeModel,
-                                transportArrangerTrader: Option[TraderModel],
-                                firstTransporterTrader: Option[TraderModel],
-                                documentCertificate: Option[Seq[DocumentCertificateModel]],
-                                headerEadEsad: HeaderEadEsadModel,
-                                transportMode: TransportModeModel,
-                                movementGuarantee: MovementGuaranteeModel,
-                                bodyEadEsad: Seq[BodyEadEsadModel],
-                                eadEsadDraft: EadEsadDraftModel,
-                                transportDetails: Seq[TransportDetailsModel]
-                              )
+                                      movementType: MovementType,
+                                      attributes: AttributesModel,
+                                      consigneeTrader: Option[TraderModel],
+                                      consignorTrader: TraderModel,
+                                      placeOfDispatchTrader: Option[TraderModel],
+                                      dispatchImportOffice: Option[OfficeModel],
+                                      complementConsigneeTrader: Option[ComplementConsigneeTraderModel],
+                                      deliveryPlaceTrader: Option[TraderModel],
+                                      deliveryPlaceCustomsOffice: Option[OfficeModel],
+                                      competentAuthorityDispatchOffice: OfficeModel,
+                                      transportArrangerTrader: Option[TraderModel],
+                                      firstTransporterTrader: Option[TraderModel],
+                                      documentCertificate: Option[Seq[DocumentCertificateModel]],
+                                      headerEadEsad: HeaderEadEsadModel,
+                                      transportMode: TransportModeModel,
+                                      movementGuarantee: MovementGuaranteeModel,
+                                      bodyEadEsad: Seq[BodyEadEsadModel],
+                                      eadEsadDraft: EadEsadDraftModel,
+                                      transportDetails: Seq[TransportDetailsModel]
+                                    )
 
 object SubmitCreateMovementModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[SubmitCreateMovementModel] = Json.format
 
-  private[submitCreateMovement]def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
+  private[submitCreateMovement] def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
 
     val referenceNumber = UserType(request.ern) match {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor | NorthernIrelandCertifiedConsignor =>

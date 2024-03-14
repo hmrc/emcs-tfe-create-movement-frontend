@@ -24,7 +24,7 @@ import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -60,7 +60,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("excise")),
+                  value = Value(HtmlContent("excise")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
@@ -71,8 +71,9 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
                 )
               )
           }
-
+          // TODO same test as above?
           "must output the expected row when user answers no" in {
+
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseExcisePage, "excise"))
 
@@ -80,7 +81,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("excise")),
+                  value = Value(HtmlContent("excise")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,

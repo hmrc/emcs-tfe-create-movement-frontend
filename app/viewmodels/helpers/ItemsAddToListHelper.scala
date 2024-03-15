@@ -22,18 +22,20 @@ import models.sections.items.ItemsAddToListItemModel
 import models.{Index, NormalMode}
 import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemsSectionItem}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import utils.SubmissionFailureErrorCodes.ErrorCode
 import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommercialDescriptionSummary, ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
 import viewmodels.taskList.{Completed, InProgress, UpdateNeeded}
+import views.html.components.{link, list, p}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,10 +45,12 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary,
                                      itemQuantitySummary: ItemQuantitySummary,
+                                     p: p,
+                                     list: list,
+                                     link: link,
                                      tagHelper: TagHelper) extends TagFluency with Logging {
 
   private val headingLevel = 2
-
 
   def allItemsSummary(implicit request: DataRequest[_], messages: Messages, headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Seq[SummaryList]] =
     getAddedItems match {
@@ -160,4 +164,22 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
         ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex)))
       case _ => None
     }
+
+  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[ErrorCode])
+                                               (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
+    Option.when(itemErrors.nonEmpty) {
+      NotificationBanner(
+        title = Text(messages("errors.704.notificationBanner.title")),
+        content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
+          Html(messages("errors.704.items.notificationBanner.p")),
+          list(itemErrors.map { error =>
+            link(
+              link = error.route().url,
+              messageKey = messages(error.messageKey, error.index.get.displayIndex),
+              id = Some(error.id)
+            )
+          }, id = Some("list-of-submission-failures"))
+        )))))
+    }
+  }
 }

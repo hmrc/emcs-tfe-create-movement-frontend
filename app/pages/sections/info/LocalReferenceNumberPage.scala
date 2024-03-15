@@ -29,7 +29,7 @@ case class LocalReferenceNumberPage(isOnPreDraftFlow: Boolean = true) extends Qu
     request.userAnswers.submissionFailures.exists(error => error.errorType == localReferenceNumberError && !error.hasBeenFixed)
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-  request.userAnswers.submissionFailures.find(_.errorType == localReferenceNumberError).flatMap(_.originalAttributeValue)
+    request.userAnswers.submissionFailures.find(_.errorType == localReferenceNumberError).flatMap(_.originalAttributeValue)
 
   override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
     Seq(request.userAnswers.submissionFailures.indexWhere(_.errorType == localReferenceNumberError))

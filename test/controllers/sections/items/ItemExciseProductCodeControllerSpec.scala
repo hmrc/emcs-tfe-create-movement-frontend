@@ -157,7 +157,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           redirectLocation(result).value mustEqual testOnwardRoute.url
         }
         "and only clear down the current item's answers when the previous answer is different to the new answer" +
-          " (and remove any 704 errors)" in new Fixture(Some(
+          " (and remove any 704 errors at this index only)" in new Fixture(Some(
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
             .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
@@ -169,12 +169,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-              .copy(submissionFailures = Seq(itemQuantityFailure(1).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
+              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ).returns(Future.successful(
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-              .copy(submissionFailures = Seq(itemQuantityFailure(1).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
+              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ))
 
           val result: Future[Result] =

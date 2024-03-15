@@ -16,14 +16,17 @@
 
 package forms.sections.items
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.behaviours.BooleanFieldBehaviours
 import models.sections.items
 import models.sections.items.ItemDegreesPlatoModel
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class ItemDegreesPlatoFormProviderSpec extends BooleanFieldBehaviours {
+class ItemDegreesPlatoFormProviderSpec extends SpecBase with BooleanFieldBehaviours with MovementSubmissionFailureFixtures {
 
-  val form = new ItemDegreesPlatoFormProvider()()
+  val form = new ItemDegreesPlatoFormProvider()(testIndex2)(dataRequest(FakeRequest()))
 
   "when binding 'Yes'" - {
 
@@ -90,6 +93,26 @@ class ItemDegreesPlatoFormProviderSpec extends BooleanFieldBehaviours {
           ItemDegreesPlatoFormProvider.degreesPlatoField,
           ItemDegreesPlatoFormProvider.rangeErrorKey,
           Seq(ItemDegreesPlatoFormProvider.minValue, ItemDegreesPlatoFormProvider.maxValue)
+        ))
+      }
+    }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new ItemDegreesPlatoFormProvider()(testIndex2)(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(itemDegreesPlatoFailure(2)))
+      ))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(
+          ItemDegreesPlatoFormProvider.hasDegreesPlatoField -> "true",
+          ItemDegreesPlatoFormProvider.degreesPlatoField -> "10"
+        ))
+        boundForm.errors mustBe Seq(FormError(
+          ItemDegreesPlatoFormProvider.degreesPlatoField,
+          ItemDegreesPlatoFormProvider.sameInputAsOriginalSubmissionErrorKey,
+          Seq()
         ))
       }
     }

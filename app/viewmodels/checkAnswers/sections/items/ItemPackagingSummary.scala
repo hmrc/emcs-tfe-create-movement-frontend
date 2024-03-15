@@ -75,12 +75,12 @@ class ItemPackagingSummary @Inject()(
           case (itemPackaging, Some(quantity)) => (itemPackaging, quantity)
         }
         .zipWithIndex.map {
-          case ((itemPackaging, quantity), packageIdx) =>
-            HtmlFormat.fill(
-              Html(messages("itemsAddToList.packagesCyaValue", quantity, itemPackaging.description)) +:
-                (if (ItemsPackagingSectionItems(itemIdx, Index(packageIdx)).isCompleted) Seq() else Seq(incompleteTag()))
-            )
-        }
+        case ((itemPackaging, quantity), packageIdx) =>
+          HtmlFormat.fill(
+            Html(messages("itemsAddToList.packagesCyaValue", quantity, itemPackaging.description)) +:
+              (if (ItemsPackagingSectionItems(itemIdx, Index(packageIdx)).isCompleted) Seq() else Seq(incompleteTag()))
+          )
+      }
     }
   }
 

@@ -19,46 +19,46 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemQuantityError, itemQuantityError}
+import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, itemDegreesPlatoError}
 
-class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
+class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
-  val page: ItemQuantityPage = ItemQuantityPage(testIndex2)
+  val page: ItemDegreesPlatoPage = ItemDegreesPlatoPage(testIndex2)
 
   "when calling isSubmissionErrorOnPage" - {
 
     "must return true" - {
 
-      s"when the error is $itemQuantityError and not fixed (at the specified index)" in {
+      s"when the error is $itemDegreesPlatoError and not fixed (at the specified index)" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2))
         ))) mustBe true
       }
     }
 
     "must return false" - {
 
-      s"when the error at the index is not a $itemQuantityError" in {
+      s"when the error at the index is not a $itemDegreesPlatoError" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(errorType = "0000"))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorType = "0000"))
         ))) mustBe false
       }
 
-      s"when the error at the index is $itemQuantityError but fixed" in {
+      s"when the error at the index is $itemDegreesPlatoError but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(hasBeenFixed = true))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(hasBeenFixed = true))
         ))) mustBe false
       }
 
       "when the error exists but not at the specified index" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(1))
+          submissionFailures = Seq(itemDegreesPlatoFailure(1))
         ))) mustBe false
       }
 
       "when the error has no error location" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(errorLocation = None))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorLocation = None))
         ))) mustBe false
       }
 
@@ -72,39 +72,39 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Some(_)" - {
 
-      s"when the error type is $itemQuantityError and an original attribute value exists (at the specified index)" in {
+      s"when the error type is $itemDegreesPlatoError and an original attribute value exists (at the specified index)" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2))
-        ))) mustBe Some("10000")
+          submissionFailures = Seq(itemDegreesPlatoFailure(2))
+        ))) mustBe Some("10")
       }
     }
 
     "must return None" - {
 
-      s"when the error at the index is not $itemQuantityError" in {
+      s"when the error at the index is not $itemDegreesPlatoError" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(errorType = "0000"))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorType = "0000"))
         ))) mustBe None
       }
 
       "when the error exists but not at the specified index" in {
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(1))
+          submissionFailures = Seq(itemDegreesPlatoFailure(1))
         ))) mustBe None
       }
 
       "when the error has no error location" in {
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(errorLocation = None))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorLocation = None))
         ))) mustBe None
       }
 
       "when the original value is not defined" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = None))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(originalAttributeValue = None))
         ))) mustBe None
       }
     }
@@ -114,7 +114,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Seq(-1)" - {
 
-      s"when the $itemQuantityError error type does not exist in the submission failures" in {
+      s"when the $itemDegreesPlatoError error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe Seq(-1)
@@ -122,13 +122,13 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
       "when the error has no error location" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(2).copy(errorLocation = None))
+          submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorLocation = None))
         ))) mustBe Seq(-1)
       }
 
       "when the error exists but not at the specified index" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(itemQuantityFailure(1))
+          submissionFailures = Seq(itemDegreesPlatoFailure(1))
         ))) mustBe Seq(-1)
       }
 
@@ -136,11 +136,11 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Seq(<index>)" - {
 
-      s"when the $itemQuantityError error type exists in the submission failures (at the specified index)" in {
+      s"when the $itemDegreesPlatoError error type exists in the submission failures (at the specified index)" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
-            itemQuantityFailure(1),
-            itemQuantityFailure(2),
+            itemDegreesPlatoFailure(1),
+            itemDegreesPlatoFailure(2),
             movementSubmissionFailure
           )))) mustBe Seq(1)
       }
@@ -159,10 +159,10 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
             page.getSubmissionErrorCode(isOnAddToList)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
               submissionFailures = Seq(
-                itemQuantityFailure(1),
-                itemQuantityFailure(2),
+                itemDegreesPlatoFailure(1),
+                itemDegreesPlatoFailure(2),
                 movementSubmissionFailure
-              )))) mustBe Some(ItemQuantityError(testIndex2, isOnAddToList))
+              )))) mustBe Some(ItemDegreesPlatoError(testIndex2, isOnAddToList))
           }
         }
       }
@@ -187,7 +187,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
         page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
-            itemQuantityFailure(1),
+            itemDegreesPlatoFailure(1),
             movementSubmissionFailure
           )))) mustBe None
       }

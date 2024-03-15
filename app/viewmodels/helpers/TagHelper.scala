@@ -20,14 +20,15 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import viewmodels.taskList.UpdateNeeded
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class TagHelper @Inject()(tag: views.html.components.tag) {
 
   def updateNeededTag(withNoFloat: Boolean = true)(implicit messages: Messages): Html = tag(
     message = messages(UpdateNeeded.msgKey),
     colour = "orange",
-    extraClasses = if(withNoFloat) "float-none govuk-!-margin-left-1" else ""
+    extraClasses = if (withNoFloat) "float-none govuk-!-margin-left-1" else ""
   )
 
   def incompleteTag()(implicit messages: Messages): Html = tag(

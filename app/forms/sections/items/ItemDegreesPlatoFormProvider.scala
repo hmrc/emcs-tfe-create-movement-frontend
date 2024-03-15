@@ -17,7 +17,10 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
+import models.Index
+import models.requests.DataRequest
 import models.sections.items.ItemDegreesPlatoModel
+import pages.sections.items.ItemDegreesPlatoPage
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text => playText}
 
@@ -27,7 +30,7 @@ class ItemDegreesPlatoFormProvider @Inject() extends Mappings {
 
   import ItemDegreesPlatoFormProvider._
 
-  def apply(): Form[ItemDegreesPlatoModel] =
+  def apply(idx: Index)(implicit request: DataRequest[_]): Form[ItemDegreesPlatoModel] =
     Form(
       mapping(
         hasDegreesPlatoField -> boolean(radioRequired),
@@ -37,10 +40,14 @@ class ItemDegreesPlatoFormProvider @Inject() extends Mappings {
             .transform[BigDecimal](BigDecimal(_), _.toString())
             .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
             .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
+            .verifying(isNotEqualToOptExistingAnswer(
+              existingAnswer = ItemDegreesPlatoPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
+              errorKey = sameInputAsOriginalSubmissionErrorKey
+            ))
         )
       )(ItemDegreesPlatoModel.apply)(ItemDegreesPlatoModel.unapply)
         .transform[ItemDegreesPlatoModel](
-          model => if(!model.hasDegreesPlato) model.copy(degreesPlato = None) else model, identity
+          model => if (!model.hasDegreesPlato) model.copy(degreesPlato = None) else model, identity
         )
     )
 }
@@ -59,4 +66,5 @@ object ItemDegreesPlatoFormProvider {
   val nonNumericErrorKey = "itemDegreesPlato.amount.error.nonNumeric"
   val rangeErrorKey = "itemDegreesPlato.amount.error.range"
   val maxDecimalPlacesErrorKey = "itemDegreesPlato.amount.error.decimalPlaces"
+  val sameInputAsOriginalSubmissionErrorKey = "errors.704.items.degreesPlato.input"
 }

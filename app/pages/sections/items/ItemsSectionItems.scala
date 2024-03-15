@@ -19,9 +19,11 @@ package pages.sections.items
 import config.Constants.BODYEADESAD
 import models.UserAnswers
 import models.requests.DataRequest
+import models.response.InvalidRegexException
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
+import utils.SubmissionFailureErrorCodes.ErrorCode
 import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
@@ -41,21 +43,43 @@ case object ItemsSectionItems extends Section[JsObject] {
         }
     }
 
+  /**
+   * Picks out the index of the submission failure (1-indexed) and returns a list of all distinct occurrences.
+   * For example, if the submission failures have:
+   * <code>
+   * <pre>
+   * "errorLocation" : ".../BodyEadEsad[1]/DegreePlato[1]",
+   * ...
+   * "errorLocation" : ".../BodyEadEsad[1]/DegreePlato[1]",
+   * ...
+   * "errorLocation" : ".../BodyEadEsad[2]/DegreePlato[1]",
+   * ...
+   * "errorLocation" : ".../BodyEadEsad[2]/DegreePlato[1]"
+   * </pre>
+   * </code>
+   * Then this function will return Seq(1, 2).
+   *
+   * @return the (distinct) submission failure indexes of items with errors (regardless of them being fixed)
+   */
   def indexesOfItemsWithSubmissionFailures(userAnswers: UserAnswers): Seq[Int] =
     userAnswers.submissionFailures
-      .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
-      .collect { case itemError =>
+      .collect { case itemError if itemError.errorLocation.exists(_.contains(BODYEADESAD)) =>
         val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
-        val lookup(index) = itemError.errorLocation.get
-        index.toInt
+        itemError.errorLocation.get match {
+          case lookup(index) => index.toInt
+          case _ => throw InvalidRegexException(s"[indexesOfItemsWithSubmissionFailures] Invalid item error location received: ${itemError.errorLocation}")
+        }
       }
+      .distinct
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[ErrorCode] = {
     request.userAnswers.get(ItemsCount) match {
-      case Some(0) | None => false
-      case Some(count) => (0 until count).exists(ItemsSectionItem(_).isMovementSubmissionError)
+      case Some(0) | None => Seq.empty
+      case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
   }
+
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

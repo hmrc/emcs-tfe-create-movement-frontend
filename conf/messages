@@ -1454,3 +1454,9 @@ errors.704.items.quantity.addToList = Item {0} quantity
 errors.704.items.quantity.cya = The item quantity is over the approved limit for the Temporary Registered Consignee
 errors.704.items.quantity = The item quantity is over the approved limit for the Temporary Registered Consignee
 errors.704.items.quantity.input = You must update the item quantity so that it is different to the original submission
+
+# EMCS Core Error Number 4445:
+errors.704.items.degreesPlato.addToList = Item {0} degree plato
+errors.704.items.degreesPlato.cya = Invalid degree plato for beer
+errors.704.items.degreesPlato = Invalid degree plato for beer
+errors.704.items.degreesPlato.input = You must update the degree plato so that it is different to the original submission

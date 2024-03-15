@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
-@import viewmodels.LegendSize
-@import models.GoodsType
 @import forms.sections.items.ItemDegreesPlatoFormProvider
+@import models.GoodsType
+@import models.requests.DataRequest
+@import pages.sections.items.ItemDegreesPlatoPage
 @import viewmodels.InputWidth.Fixed4
+@import viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -27,64 +28,73 @@
         govukRadios: GovukRadios,
         govukInput: GovukInput,
         govukButton: GovukButton,
+        notificationBanner: GovukNotificationBanner,
         h1: components.h1,
         h2: components.h2,
+        p: components.p,
         details: components.details,
         bullets: components.bullets,
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemDegreesPlato.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+      @if(ItemDegreesPlatoPage(idx).isMovementSubmissionError && form.errors.isEmpty) {
+        @notificationBanner(NotificationBanner(
+          title = Text(messages("errors.704.notificationBanner.title")),
+          content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.items.degreesPlato"))))
+        ))
+      }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+      @if(form.errors.nonEmpty) {
+          @govukErrorSummary(ErrorSummaryViewModel(form))
+      }
 
-        @govukRadios(
-            RadiosViewModel.apply(
-                field = form("hasDegreesPlato"),
-                items = Seq(
-                    RadioItem(
-                        id      = Some(form(ItemDegreesPlatoFormProvider.hasDegreesPlatoField).id),
-                        value   = Some("true"),
-                        content = Text(messages("site.yes")),
-                        conditionalHtml = Some(degreesPlatoAmount)
-                    ),
-                    RadioItem(
-                        id      = Some(s"${form(ItemDegreesPlatoFormProvider.hasDegreesPlatoField).id}-no"),
-                        value   = Some("false"),
-                        content = Text(messages("site.no"))
-                    )
-                ),
-                legend = LegendViewModel(Text(messages("itemDegreesPlato.heading", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
-            )
-        )
+      @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @details("itemDegreesPlato.details") {
-            @bullets(Seq(
-                Html(messages("country.austria")),
-                Html(messages("country.belgium")),
-                Html(messages("country.bulgaria")),
-                Html(messages("country.czechia")),
-                Html(messages("country.germany")),
-                Html(messages("country.greece")),
-                Html(messages("country.spain")),
-                Html(messages("country.italy")),
-                Html(messages("country.luxembourg")),
-                Html(messages("country.malta")),
-                Html(messages("country.poland")),
-                Html(messages("country.portugal")),
-                Html(messages("country.romania"))
-            ))
-        }
+      @govukRadios(
+          RadiosViewModel.apply(
+              field = form("hasDegreesPlato"),
+              items = Seq(
+                  RadioItem(
+                      id      = Some(form(ItemDegreesPlatoFormProvider.hasDegreesPlatoField).id),
+                      value   = Some("true"),
+                      content = Text(messages("site.yes")),
+                      conditionalHtml = Some(degreesPlatoAmount)
+                  ),
+                  RadioItem(
+                      id      = Some(s"${form(ItemDegreesPlatoFormProvider.hasDegreesPlatoField).id}-no"),
+                      value   = Some("false"),
+                      content = Text(messages("site.no"))
+                  )
+              ),
+              legend = LegendViewModel(Text(messages("itemDegreesPlato.heading", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
+          )
+      )
 
-        @continueOrExit()
+      @details("itemDegreesPlato.details") {
+          @bullets(Seq(
+              Html(messages("country.austria")),
+              Html(messages("country.belgium")),
+              Html(messages("country.bulgaria")),
+              Html(messages("country.czechia")),
+              Html(messages("country.germany")),
+              Html(messages("country.greece")),
+              Html(messages("country.spain")),
+              Html(messages("country.italy")),
+              Html(messages("country.luxembourg")),
+              Html(messages("country.malta")),
+              Html(messages("country.poland")),
+              Html(messages("country.portugal")),
+              Html(messages("country.romania"))
+          ))
+      }
+
+      @continueOrExit()
     }
 }
 

@@ -20,6 +20,7 @@
 @import utils.CommodityCodeHelper
 @import pages.sections.items.ItemQuantityPage
 @import pages.sections.items.ItemsSectionItems
+@import pages.sections.items.ItemsSectionItem
 
 @this(
         layout: templates.Layout,
@@ -41,11 +42,7 @@
 
     @formHelper(action) {
 
-      @if(ItemsSectionItems.isMovementSubmissionError) {
-        @defining(ItemsSectionItems.indexesOfItemsWithSubmissionFailures(request.userAnswers)) { indexesOfItemWithSubmissionFailures =>
-          @notificationBanner(helper.showNotificationBannerWhenSubmissionError(idx))
-        }
-      }
+      @helper.showNotificationBannerWhenSubmissionError(ItemsSectionItem(idx).getSubmissionFailuresForItem()).map(notificationBanner(_))
 
       @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 

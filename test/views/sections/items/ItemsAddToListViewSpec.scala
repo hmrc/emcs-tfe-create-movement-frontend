@@ -36,7 +36,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.checkAnswers.sections.items.{ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.helpers.{ItemsAddToListHelper, TagHelper}
-import views.html.components.span
+import views.html.components._
 import views.html.sections.items.ItemsAddToListView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -59,7 +59,10 @@ class ItemsAddToListViewSpec extends SpecBase
     span = app.injector.instanceOf[span],
     cnCodeInformationService = mockGetCnCodeInformationService,
     itemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary],
-    itemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
+    itemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary],
+    p = app.injector.instanceOf[p],
+    list = app.injector.instanceOf[list],
+    link = app.injector.instanceOf[link]
   )
 
   object Selectors extends BaseSelectors {

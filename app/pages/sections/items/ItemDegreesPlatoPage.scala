@@ -34,9 +34,8 @@ case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlat
   private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isDegreePlatoErrorAtIndex)
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
     getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-  }
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)

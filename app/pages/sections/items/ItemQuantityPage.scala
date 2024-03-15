@@ -31,13 +31,11 @@ case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
     submissionFailure =>
       submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == ItemQuantityError.code
 
-  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] = {
+  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex)
-  }
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
     getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-  }
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)

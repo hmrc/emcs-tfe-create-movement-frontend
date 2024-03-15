@@ -61,4 +61,12 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     hasBeenFixed = false
   )
 
+  def itemExciseProductCodeFailure(errorCode: ErrorCode, itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = errorCode.code,
+    errorReason = "Not used",
+    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/ExciseProductCode[1]"),
+    originalAttributeValue = Some("B000"),
+    hasBeenFixed = false
+  )
+
 }

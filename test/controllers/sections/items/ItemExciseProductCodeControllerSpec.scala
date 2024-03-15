@@ -45,7 +45,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
   val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
   lazy val formProvider: ItemExciseProductCodeFormProvider = new ItemExciseProductCodeFormProvider()
-  lazy val form: Form[String] = formProvider.apply(sampleEPCs)
+  lazy val form: Form[String] = formProvider.apply(sampleEPCs, testIndex1)(dataRequest(FakeRequest()))
   lazy val view: ItemExciseProductCodeView = app.injector.instanceOf[ItemExciseProductCodeView]
 
   class Fixture(val userAnswers: Option[UserAnswers]) {

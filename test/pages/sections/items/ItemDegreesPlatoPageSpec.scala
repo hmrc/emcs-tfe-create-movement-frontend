@@ -175,7 +175,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
         page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq.empty))) mustBe None
       }
 
-      "when no quantity submission failures exist" in {
+      "when no degrees plato submission failures exist" in {
 
         page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
@@ -183,7 +183,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
           )))) mustBe None
       }
 
-      "when a quantity submission failure exists but at a different index" in {
+      "when a degrees plato submission failure exists but at a different index" in {
 
         page.getSubmissionErrorCode(isOnAddToList = false)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(

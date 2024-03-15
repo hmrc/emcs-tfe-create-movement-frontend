@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 @import views.html.helper.CSPNonce
+@import pages.sections.items.ItemExciseProductCodePage
 
 @this(
     layout: templates.Layout,
@@ -29,27 +30,42 @@
     h1: components.h1,
     h2: components.h2,
     p: components.p,
+    list: components.list,
+    notificationBanner: GovukNotificationBanner,
     continueOrExit: components.continueOrExit,
     autocompleteCss: HmrcAccessibleAutocompleteCss,
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], indexOfDocument: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form, messages("itemExciseProductCode.title", indexOfDocument.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
+
+      @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
+        @defining(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false)) { errors =>
+          @notificationBanner(NotificationBanner(
+            title = Text(messages("errors.704.notificationBanner.title")),
+            //TODO: move this logic to ErrorNotificationBannerHelper
+            content = if(errors.length == 1) HtmlContent(p("govuk-notification-banner__heading")(Html(messages(errors.head.messageKey)))) else
+              HtmlContent(HtmlFormat.fill(Seq(
+                list(errors.map(error => Html(messages(error.messageKey))), id = Some("list-of-excise-product-code-submission-failures"))
+              )))
+          ))
+        }
+      }
 
       @if(form.errors.nonEmpty) {
           @govukErrorSummary(ErrorSummaryViewModel(form))
       }
 
-      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = indexOfDocument.displayIndex)
+      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = idx.displayIndex)
 
       @p(){@messages("itemExciseProductCode.paragraph")}
 

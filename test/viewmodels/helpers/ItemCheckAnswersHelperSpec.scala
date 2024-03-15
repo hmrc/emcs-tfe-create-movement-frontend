@@ -252,7 +252,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
             title = Text(msgs("errors.704.notificationBanner.title")),
             content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(link(
               controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-              "errors.704.items.quantity.cya",
+              "errors.704.items.quantity",
               id = Some(s"fix-item-1-quantity"))))))
           ))
         }
@@ -272,12 +272,12 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
               list(Seq(
                 link(
                   controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                  "errors.704.items.quantity.cya",
+                  "errors.704.items.quantity",
                   id = Some(s"fix-item-1-quantity")
                 ),
                 link(
                   controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                  "errors.704.items.degreesPlato.cya",
+                  "errors.704.items.degreesPlato",
                   id = Some(s"fix-item-1-degrees-plato")
                 )), id = Some("list-of-submission-failures"))
             ))))

@@ -178,6 +178,58 @@ object ItemDegreesPlatoError {
   val code = "4445"
 }
 
+case class ItemExciseProductCodeConsignorNotApprovedToSendError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
+  override val code = itemExciseProductCodeConsignorNotApprovedToSendError
+  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
+    s"errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSendError"
+  }
+  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-consignor-not-approved-to-send"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
+  override val index = Some(idx)
+}
+
+case class ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
+  override val code = itemExciseProductCodeConsigneeNotApprovedToReceiveError
+  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
+    s"errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError"
+  }
+  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-consignee-not-approved-to-receive"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
+  override val index = Some(idx)
+}
+
+case class ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
+  override val code = itemExciseProductCodeDestinationNotApprovedToReceiveError
+  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
+    s"errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError"
+  }
+  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-destination-not-approved-to-receive"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
+  override val index = Some(idx)
+}
+
+case class ItemExciseProductCodeDispatchPlaceNotAllowedError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
+  override val code = itemExciseProductCodeDispatchPlaceNotAllowed
+  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
+    s"errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed"
+  }
+  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-dispatch-place-not-allowed"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+
+  override val index = Some(idx)
+}
+
 object SubmissionError {
 
   //scalastyle:off cyclomatic.complexity

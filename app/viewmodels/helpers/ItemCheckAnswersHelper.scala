@@ -169,7 +169,8 @@ class ItemCheckAnswersHelper @Inject()(
               list(errorLinks, id = Some("list-of-submission-failures"))
             )
           }
-        ))))
+        )))
+      )
     }
   }
 }

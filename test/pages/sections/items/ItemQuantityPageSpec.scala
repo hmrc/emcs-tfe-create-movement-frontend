@@ -19,7 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemQuantityError, itemQuantityError}
+import utils.ItemQuantityError
 
 class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -29,7 +29,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return true" - {
 
-      s"when the error is $itemQuantityError and not fixed (at the specified index)" in {
+      s"when the error is ${ItemQuantityError.code} and not fixed (at the specified index)" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemQuantityFailure(2))
         ))) mustBe true
@@ -38,13 +38,13 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return false" - {
 
-      s"when the error at the index is not a $itemQuantityError" in {
+      s"when the error at the index is not a ${ItemQuantityError.code}" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemQuantityFailure(2).copy(errorType = "0000"))
         ))) mustBe false
       }
 
-      s"when the error at the index is $itemQuantityError but fixed" in {
+      s"when the error at the index is ${ItemQuantityError.code} but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemQuantityFailure(2).copy(hasBeenFixed = true))
         ))) mustBe false
@@ -72,7 +72,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Some(_)" - {
 
-      s"when the error type is $itemQuantityError and an original attribute value exists (at the specified index)" in {
+      s"when the error type is ${ItemQuantityError.code} and an original attribute value exists (at the specified index)" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemQuantityFailure(2))
@@ -82,7 +82,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return None" - {
 
-      s"when the error at the index is not $itemQuantityError" in {
+      s"when the error at the index is not ${ItemQuantityError.code}" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemQuantityFailure(2).copy(errorType = "0000"))
@@ -114,7 +114,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Seq(-1)" - {
 
-      s"when the $itemQuantityError error type does not exist in the submission failures" in {
+      s"when the ${ItemQuantityError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe Seq(-1)
@@ -136,7 +136,7 @@ class ItemQuantityPageSpec extends SpecBase with MovementSubmissionFailureFixtur
 
     "must return Seq(<index>)" - {
 
-      s"when the $itemQuantityError error type exists in the submission failures (at the specified index)" in {
+      s"when the ${ItemQuantityError.code} error type exists in the submission failures (at the specified index)" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemQuantityFailure(1),

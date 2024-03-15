@@ -28,7 +28,7 @@ import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import utils.SubmissionFailureErrorCodes.exportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 import viewmodels.checkAnswers.sections.exportInformation.ExportCustomsOfficeSummary
 import views.html.sections.exportInformation.ExportInformationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
@@ -42,7 +42,7 @@ class ExportInformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
       emptyUserAnswers
-        .copy(submissionFailures = if(withErrorMessage) Seq(movementSubmissionFailure.copy(errorType = exportCustomsOfficeNumberError, hasBeenFixed = false)) else Seq.empty)
+        .copy(submissionFailures = if(withErrorMessage) Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false)) else Seq.empty)
         .set(FirstTransporterNamePage, "Transporter name")
         .set(FirstTransporterVatPage, "GB123456789")
         .set(FirstTransporterAddressPage, testUserAddress)

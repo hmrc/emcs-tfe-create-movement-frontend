@@ -20,20 +20,27 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeExcisePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
+import javax.inject.Inject
 
-object ConsigneeExciseSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExcisePage).map {
-      answer =>
+class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
 
+  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    val hasUnfixedConsigneeExciseError = ConsigneeExcisePage.isMovementSubmissionError
+    request.userAnswers.get(ConsigneeExcisePage).map { answer =>
         SummaryListRowViewModel(
           key = "consigneeExcise.checkYourAnswersLabel",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+            Some(HtmlFormat.escape(answer)),
+            if (hasUnfixedConsigneeExciseError) Some(tagHelper.updateNeededTag()) else None
+          ).flatten))),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
@@ -43,4 +50,5 @@ object ConsigneeExciseSummary {
           )
         )
     }
+  }
 }

@@ -25,7 +25,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import queries.ItemsPackagingCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import utils.SubmissionFailureErrorCodes.ErrorCode
+import utils.SubmissionError
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -148,7 +148,7 @@ class ItemCheckAnswersHelper @Inject()(
     }).flatten
   }
 
-  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[ErrorCode])
+  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[SubmissionError])
                                                (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
     Option.when(itemErrors.nonEmpty) {
       val errorLinks = itemErrors.map { itemError =>

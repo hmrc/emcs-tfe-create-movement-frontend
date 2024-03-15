@@ -16,14 +16,18 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LabelSize
+@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import pages.sections.consignee.ConsigneeExcisePage
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
         govukButton: GovukButton,
+        notificationBanner: GovukNotificationBanner,
         h1: components.h1,
         h2: components.h2,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         continueOrExit: components.continueOrExit)
 
 @(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean, isNorthernIrishTemporaryCertifiedConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
@@ -41,8 +45,13 @@
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(
+                errors = ConsigneeExcisePage.getMovementSubmissionErrors
+            ).map(notificationBanner(_))
         }
 
         @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

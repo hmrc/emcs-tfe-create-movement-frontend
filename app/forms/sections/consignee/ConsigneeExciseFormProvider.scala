@@ -18,6 +18,8 @@ package forms.sections.consignee
 
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
+import models.requests.DataRequest
+import pages.sections.consignee.ConsigneeExcisePage
 import play.api.data.Form
 
 import javax.inject.Inject
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
 
-  def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean): Form[String] = {
+  def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_]): Form[String] = {
+
     val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
       "consigneeExcise.temporaryConsignee.error.noInput"
     } else {
@@ -59,8 +62,10 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
           regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey),
           regexpUnlessEmpty(EXCISE_NUMBER_REGEX, formatErrorKey)
         ))
+        .verifying(isNotEqualToOptExistingAnswer(
+          existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,
+          errorKey = "consigneeExcise.error.submissionError"
+        ))
     )
   }
-
-
 }

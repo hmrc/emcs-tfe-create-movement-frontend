@@ -17,7 +17,6 @@
 package utils
 
 import base.SpecBase
-import utils.SubmissionFailureErrorCodes.{ErrorCode, ItemDegreesPlatoError, ItemQuantityError}
 
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
@@ -27,7 +26,7 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       Seq(true, false).foreach { isForAddToList =>
 
         s"when isForAddToList = $isForAddToList" in {
-          ErrorCode.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
+          SubmissionError.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
         }
       }
     }
@@ -37,9 +36,49 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       Seq(true, false).foreach { isForAddToList =>
 
         s"when isForAddToList = $isForAddToList" in {
-          ErrorCode.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
+          SubmissionError.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
         }
       }
+    }
+
+    "must return the correct SubmissionError" - {
+
+      Seq(
+        LocalReferenceNumberError,
+        ImportCustomsOfficeCodeError,
+        ExportCustomsOfficeNumberError,
+        InvalidOrMissingConsigneeError,
+        LinkIsPendingError,
+        LinkIsAlreadyUsedError,
+        LinkIsWithdrawnError,
+        LinkIsCancelledError,
+        LinkIsExpiredError,
+        LinkMissingOrInvalidError,
+        DirectDeliveryNotAllowedError,
+        ConsignorNotAuthorisedError,
+        RegisteredConsignorToRegisteredConsigneeError,
+        ConsigneeRoleInvalidError
+      ).foreach { submissionError =>
+
+        s"when given error code ${submissionError.code}" in {
+
+          val expectedResult = submissionError
+          val actualResult = SubmissionError(submissionError.code)
+
+          actualResult mustBe expectedResult
+        }
+      }
+    }
+
+    "when given an invalid error code" in {
+
+      val actualResult = intercept[IllegalArgumentException] {
+        SubmissionError("invalid code")
+      }.getMessage
+
+      val expectedResult = "Invalid submission error code: invalid code"
+
+      actualResult mustBe expectedResult
     }
   }
 }

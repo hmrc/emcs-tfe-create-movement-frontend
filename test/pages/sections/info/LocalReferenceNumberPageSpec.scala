@@ -19,7 +19,7 @@ package pages.sections.info
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.LocalReferenceNumberError
 
 class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -29,24 +29,24 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
 
     "must return true" - {
 
-      s"when the error is $localReferenceNumberError and not fixed" in {
+      s"when the error is ${LocalReferenceNumberError.code} and not fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false))
         ))) mustBe true
       }
     }
 
     "must return false" - {
 
-      s"when the error is not a $localReferenceNumberError" in {
+      s"when the error is not a ${LocalReferenceNumberError.code}" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false))
         ))) mustBe false
       }
 
-      s"when the error is $localReferenceNumberError but fixed" in {
+      s"when the error is ${LocalReferenceNumberError.code} but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true))
         ))) mustBe false
       }
 
@@ -60,17 +60,17 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
 
     "must return Some(_)" - {
 
-      s"when the error type is $localReferenceNumberError and an original attribute value exists" in {
+      s"when the error type is ${LocalReferenceNumberError.code} and an original attribute value exists" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
         ))) mustBe Some("LRN1")
       }
     }
 
     "must return None" - {
 
-      s"when the error type is not $localReferenceNumberError" in {
+      s"when the error type is not ${LocalReferenceNumberError.code}" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "4403", hasBeenFixed = false, originalAttributeValue = Some("LRN1")))
@@ -80,7 +80,7 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
       "when the original value is not defined" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = None))
+          submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe None
       }
     }
@@ -88,22 +88,22 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
 
   "when calling indexesOfMovementSubmissionErrors" - {
 
-    "must return Seq(-1)" - {
+    "must return Seq.empty" - {
 
-      s"when the $localReferenceNumberError error type does not exist in the submission failures" in {
+      s"when the ${LocalReferenceNumberError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
-        ))) mustBe Seq(-1)
+        ))) mustBe Seq.empty
       }
     }
 
     "must return Seq(<index>)" - {
 
-      s"when the $localReferenceNumberError error type exists in the submission failures" in {
+      s"when the ${LocalReferenceNumberError.code} error type exists in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None),
-            movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = None)
+            movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false, originalAttributeValue = None)
         )))) mustBe Seq(1)
       }
     }

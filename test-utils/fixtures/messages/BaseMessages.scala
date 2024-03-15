@@ -62,6 +62,7 @@ trait BaseMessages { _: i18n =>
   val incomplete: String = "Incomplete"
   val updateNeededTag: String = "Update Needed"
   val updateNeeded = "Update needed"
+  val notificationBannerParagraph = "Some information needs updating"
   val notificationBannerParagraphForItems = "Some information needs updating"
 }
 

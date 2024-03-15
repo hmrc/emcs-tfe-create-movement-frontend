@@ -42,6 +42,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
   with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
 
   lazy val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+  lazy val consigneeExciseSummary: ConsigneeExciseSummary = app.injector.instanceOf[ConsigneeExciseSummary]
 
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
     FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
@@ -55,7 +56,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
     val ernList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExciseSummary.row(showActionLinks = true),
+      consigneeExciseSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 

@@ -23,6 +23,7 @@ site.opensInNewTab = (opens in new tab)
 site.item = item
 site.noResultsFound = No results found
 site.divider = or
+site.warning = Warning:
 
 country.austria = Austria
 country.belgium = Belgium
@@ -977,6 +978,7 @@ itemExciseProductCode.title = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.checkYourAnswersLabel = Excise product code
 itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
+itemExciseProductCode.warningText = Changing the EPC code removes any information completed for this item and you will be asked to enter new item information
 itemExciseProductCode.label = Excise Product Code
 itemExciseProductCode.error.required = Choose the Excise product code
 itemExciseProductCode.error.submissionFailure = You must update the Excise Product Code so that it is different to the original submission

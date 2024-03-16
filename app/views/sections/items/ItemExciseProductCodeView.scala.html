@@ -32,12 +32,13 @@
     p: components.p,
     list: components.list,
     notificationBanner: GovukNotificationBanner,
+    warningText: components.warningText,
     continueOrExit: components.continueOrExit,
     autocompleteCss: HmrcAccessibleAutocompleteCss,
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], idx: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
@@ -92,6 +93,10 @@
           )
         )
       )
+
+      @if(mode == CheckMode) {
+        @warningText{@messages("itemExciseProductCode.warningText")}
+      }
 
       @continueOrExit()
     }

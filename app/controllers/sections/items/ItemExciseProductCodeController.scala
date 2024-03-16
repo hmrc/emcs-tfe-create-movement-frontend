@@ -106,7 +106,8 @@ class ItemExciseProductCodeController @Inject()(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
       selectOptions = selectItems,
-      idx = idx
+      idx = idx,
+      mode = mode
     )))
   }
 }

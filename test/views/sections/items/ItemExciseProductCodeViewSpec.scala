@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import forms.sections.items.ItemExciseProductCodeFormProvider
+import models.{CheckMode, Mode, NormalMode}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -63,11 +64,12 @@ class ItemExciseProductCodeViewSpec extends SpecBase
         )
         val form = app.injector.instanceOf[ItemExciseProductCodeFormProvider].apply(Seq(beerExciseProductCode), testIndex1)
 
-        implicit def doc(isFormError: Boolean = false)(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
+        implicit def doc(isFormError: Boolean = false, mode: Mode = NormalMode)(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
           if (isFormError) form.withError(FormError("key", "msg")) else form,
           testOnwardRoute,
           selectOptions,
-          testIndex1
+          testIndex1,
+          mode
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -88,6 +90,23 @@ class ItemExciseProductCodeViewSpec extends SpecBase
           Selectors.notificationBannerContent,
           Selectors.notificationBannerList
         ))(doc())
+
+        "when in CheckMode" - {
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
+            Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+            Selectors.title -> messagesForLanguage.title(testIndex1),
+            Selectors.h1 -> messagesForLanguage.heading(testIndex1),
+            Selectors.p(1) -> messagesForLanguage.paragraph,
+            Selectors.label("excise-product-code") -> messagesForLanguage.label,
+            Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
+            Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
+            Selectors.warningText -> messagesForLanguage.warningText,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))(doc(mode = CheckMode))
+        }
 
         "when there is a single 704 error" - {
 

@@ -64,6 +64,7 @@ trait BaseMessages { _: i18n =>
   val updateNeeded = "Update needed"
   val notificationBannerParagraph = "Some information needs updating"
   val notificationBannerParagraphForItems = "Some information needs updating"
+  val warning: String = "Warning:"
 }
 
 trait BaseEnglish extends BaseMessages with EN

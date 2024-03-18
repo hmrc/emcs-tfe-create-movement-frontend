@@ -27,9 +27,6 @@
         notificationBanner: GovukNotificationBanner,
         h1: components.h1,
         h2: components.h2,
-        link: components.link,
-        list: components.list,
-        p: components.p,
         errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         continueOrExit: components.continueOrExit)
 
@@ -48,14 +45,13 @@
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 
-        @if(form.errors.isEmpty && ConsigneeExcisePage.isMovementSubmissionError) {
-            @notificationBanner(errorNotificationBannerHelper.content(
-                errors = ConsigneeExcisePage.getMovementSubmissionErrors
-            ))
-        }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(
+                errors = ConsigneeExcisePage.getMovementSubmissionErrors
+            ).map(notificationBanner(_))
         }
 
         @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

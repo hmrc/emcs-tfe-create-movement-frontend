@@ -64,7 +64,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
         ))
         .verifying(isNotEqualToOptExistingAnswer(
           existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,
-          errorKey = "errors.704.consigneeErn.input"
+          errorKey = "consigneeExcise.error.submissionError"
         ))
     )
   }

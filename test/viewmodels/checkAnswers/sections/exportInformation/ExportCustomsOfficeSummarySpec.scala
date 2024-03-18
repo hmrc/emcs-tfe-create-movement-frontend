@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
-import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 

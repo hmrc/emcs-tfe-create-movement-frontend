@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
-import utils.SubmissionFailureErrorCodes.InvalidOrMissingConsigneeError
+import utils.InvalidOrMissingConsigneeError
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 
@@ -84,7 +84,7 @@ class ConsigneeExciseSummarySpec extends SpecBase with Matchers with MovementSub
         }
       }
 
-      "and there is a 704 error" - {
+      "when there is a 704 error" - {
 
         "must render an 'Update Needed' tag against the ERN - when the error has not been fixed" in {
 

@@ -19,11 +19,11 @@ package pages.sections.info
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 
 class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
-  val page = LocalReferenceNumberPage()
+  val page: LocalReferenceNumberPage = LocalReferenceNumberPage()
 
   "when calling isSubmissionErrorOnPage" - {
 
@@ -88,12 +88,12 @@ class LocalReferenceNumberPageSpec extends SpecBase with MovementSubmissionFailu
 
   "when calling indexesOfMovementSubmissionErrors" - {
 
-    "must return Seq(-1)" - {
+    "must return Seq.empty" - {
 
       s"when the ${LocalReferenceNumberError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
-        ))) mustBe Seq(-1)
+        ))) mustBe Seq.empty
       }
     }
 

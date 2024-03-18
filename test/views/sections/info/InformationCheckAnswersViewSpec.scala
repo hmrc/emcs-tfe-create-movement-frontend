@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 import views.html.sections.info.InformationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -68,7 +68,7 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.sectionSubheading,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure,
             Selectors.button -> messagesForLanguage.confirmAnswers
           ))

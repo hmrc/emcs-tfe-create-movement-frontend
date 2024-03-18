@@ -16,14 +16,16 @@
 
 package forms.sections.items
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.behaviours.BooleanFieldBehaviours
 import forms.sections.items.ItemQuantityFormProvider._
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours {
+class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours with SpecBase with MovementSubmissionFailureFixtures {
 
-  val form = new ItemQuantityFormProvider()()
-
+  val form = new ItemQuantityFormProvider()(testIndex1)(dataRequest(FakeRequest()))
 
   "when binding valid values" - {
 
@@ -111,6 +113,19 @@ class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours {
           rangeErrorKey,
           Seq(minValue, maxValue)
         ))
+      }
+    }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new ItemQuantityFormProvider()(testIndex2)(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2)))
+      ))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(fieldName -> "10000"))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "errors.704.items.quantity.input", Seq()))
       }
     }
   }

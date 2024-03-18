@@ -23,7 +23,7 @@ import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 
 class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 

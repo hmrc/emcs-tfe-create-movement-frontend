@@ -17,13 +17,14 @@
 package forms.sections.consignee
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.test.FakeRequest
 
-class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite with SpecBase {
+class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite with SpecBase with MovementSubmissionFailureFixtures {
 
   val fieldName = "value"
   val fixedLength = 13
@@ -84,5 +85,20 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         fixedLength
       )
     }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new ConsigneeExciseFormProvider().apply(false)(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(
+          consigneeExciseFailure.copy(originalAttributeValue = Some(testErn))
+        ))))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(fieldName -> testErn))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.submissionError", Seq()))
+      }
+    }
+
   }
 }

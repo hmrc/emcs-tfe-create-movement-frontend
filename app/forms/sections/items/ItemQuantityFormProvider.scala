@@ -17,21 +17,27 @@
 package forms.sections.items
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
+import models.Index
+import models.requests.DataRequest
+import pages.sections.items.ItemQuantityPage
 import play.api.data.Form
 
 class ItemQuantityFormProvider @Inject() extends Mappings {
 
   import ItemQuantityFormProvider._
 
-  def apply(): Form[BigDecimal] =
+  def apply(idx: Index)(implicit dataRequest: DataRequest[_]): Form[BigDecimal] =
     Form(
       fieldName -> text(requiredErrorKey)
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
         .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
         .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
+        .verifying(isNotEqualToOptExistingAnswer(
+          existingAnswer = ItemQuantityPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
+          errorKey = "errors.704.items.quantity.input")
+        )
     )
 }
 

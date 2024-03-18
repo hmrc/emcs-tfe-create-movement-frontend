@@ -18,7 +18,7 @@ package controllers.sections.items
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import fixtures.ItemFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import forms.sections.items.ItemExciseProductCodeFormProvider
 import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
 import models.{ExciseProductCode, NormalMode, UserAnswers}
@@ -37,7 +37,8 @@ import scala.concurrent.Future
 class ItemExciseProductCodeControllerSpec extends SpecBase
   with MockUserAnswersService
   with MockGetExciseProductCodesService
-  with ItemFixtures {
+  with ItemFixtures
+  with MovementSubmissionFailureFixtures {
 
   val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
@@ -155,10 +156,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
         }
-        "and only clear down the current item's answers when the previous answer is different to the new answer" in new Fixture(Some(
+        "and only clear down the current item's answers when the previous answer is different to the new answer" +
+          " (and remove any 704 errors at this index only)" in new Fixture(Some(
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
             .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
         )) {
           MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
@@ -166,10 +169,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ).returns(Future.successful(
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ))
 
           val result: Future[Result] =

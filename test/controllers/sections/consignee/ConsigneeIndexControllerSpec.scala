@@ -18,6 +18,7 @@ package controllers.sections.consignee
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
 import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnswers}
@@ -30,7 +31,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService {
+class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -56,6 +57,24 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
           .set(ConsigneeBusinessNamePage, "")
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )) {
+
+        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId).url)
+      }
+    }
+    "must redirect to CheckYourAnswersConsigneeController" - {
+      "when ConsigneeSection status is UpdateNeeded" in new Fixture(
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, ExemptedOrganisation)
+          .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
+          .set(ConsigneeExcisePage, "AA12345678901")
+          .set(ConsigneeBusinessNamePage, "")
+          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .copy(submissionFailures = Seq(consigneeExciseFailure))
         )) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)

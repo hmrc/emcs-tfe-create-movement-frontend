@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,31 +21,37 @@ import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.notificationbanner.NotificationBanner
-import utils.SubmissionFailureErrorCodes.ErrorCode
+import utils.SubmissionError
 import views.html.components._
 
 import javax.inject.Inject
 
 class ErrorNotificationBannerHelper @Inject()(list: list, p: p, link: link){
 
-  def content(errors: Seq[ErrorCode], withLinks: Boolean = false)(implicit request: DataRequest[_], messages: Messages): NotificationBanner = {
-    NotificationBanner(
-      title = Text(messages("errors.704.notificationBanner.title")),
-      content = if(withLinks) {
-        HtmlContent(
-          HtmlFormat.fill(Seq(
-            p()(Html(messages("errors.704.notificationBanner.content"))),
-            list(errors.map { error => link(
-              link = error.route().url,
-              messageKey = error.messageKey,
-              id = Some(error.id)
-            )})
-          )))
-      } else {
-        HtmlContent(list(errors.map { error =>
-          Html(messages(error.messageKey))
-        }))
-      }
-    )
+  def content(errors: Seq[SubmissionError], withLinks: Boolean = false)
+             (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
+    Option.when(errors.nonEmpty) {
+      NotificationBanner(
+        title = Text(messages("errors.704.notificationBanner.title")),
+        content = if (errors.length == 1) {
+          HtmlContent(p("govuk-notification-banner__heading")(singleErrorContent(errors.head, withLinks)))
+        } else {
+          HtmlContent(
+            HtmlFormat.fill(Seq(
+              p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.p"))),
+              list(errors.map(singleErrorContent(_, withLinks)))
+            ))
+          )
+        }
+      )
+    }
   }
+
+  private def singleErrorContent(error: SubmissionError, withLink: Boolean)
+                                (implicit request: DataRequest[_], messages: Messages): Html =
+    if(withLink) {
+      link(error.route().url, error.messageKey, Some(error.id))
+    } else {
+      Html(messages(error.messageKey))
+    }
 }

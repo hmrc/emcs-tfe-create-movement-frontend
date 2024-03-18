@@ -93,7 +93,7 @@ class CheckYourAnswersImportViewSpec extends SpecBase with ViewBehaviours with M
         "must render with the Update needed banner" - new Fixture(messagesForLanguage.lang, userAnswers) {
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.importCustomsOffice704Error
           ))
         }

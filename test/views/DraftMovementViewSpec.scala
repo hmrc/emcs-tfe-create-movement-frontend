@@ -27,7 +27,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 import views.html.DraftMovementView
 
 class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
@@ -53,7 +53,7 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.titleHelper(messagesForLanguage.headingWhen704ErrorsPresent),
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.notificationBanner704Content,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.headingWhen704ErrorsPresent

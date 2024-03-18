@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -84,7 +84,7 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with Move
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.exportInformationSection,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.submissionFailureError
           ))(doc())
 

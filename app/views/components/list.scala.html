@@ -16,9 +16,12 @@
 
 @this()
 
-@(content: Seq[Html])
+@(
+        content: Seq[Html],
+        id: Option[String] = None
+)
 
-<ul class="govuk-list">
+<ul class="govuk-list" @id.map(x => s" id=$x")>
     @content.map { bullet =>
         <li>@bullet</li>
     }

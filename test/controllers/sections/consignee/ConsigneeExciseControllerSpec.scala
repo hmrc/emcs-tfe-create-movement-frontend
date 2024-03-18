@@ -21,6 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.MockUserAnswersService
+import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -45,7 +46,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, consigneeExciseRoute)
 
-    implicit val dr = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
+    implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
 
     lazy val form: Form[String] = formProvider(true)
 

@@ -24,10 +24,7 @@
     govukSummaryList: GovukSummaryList,
     formHelper: FormWithCSRF,
     h1: components.h1,
-    p: components.p,
     notificationBanner: GovukNotificationBanner,
-    link: components.link,
-    list: components.list,
     errorNotificationBannerHelper: ErrorNotificationBannerHelper,
     saveAndContinue: components.saveAndContinue
 )
@@ -38,12 +35,10 @@
 
         @formHelper(submitAction) {
 
-            @if(ConsigneeExcisePage.isMovementSubmissionError) {
-                @notificationBanner(errorNotificationBannerHelper.content(
-                    errors = ConsigneeExcisePage.getMovementSubmissionErrors,
-                    withLinks = true
-                ))
-            }
+            @errorNotificationBannerHelper.content(
+                errors = ConsigneeExcisePage.getMovementSubmissionErrors,
+                withLinks = true
+            ).map(notificationBanner(_))
 
             @h1("checkYourAnswersConsignee.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
 

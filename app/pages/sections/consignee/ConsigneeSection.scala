@@ -29,7 +29,9 @@ case object ConsigneeSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "consignee"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if(ConsigneeExcisePage.isMovementSubmissionError) UpdateNeeded else {
+    if(ConsigneeExcisePage.isMovementSubmissionError) {
+      UpdateNeeded
+    } else {
       (
         request.userAnswers.get(ConsigneeExportPage),
         request.userAnswers.get(ConsigneeExcisePage),

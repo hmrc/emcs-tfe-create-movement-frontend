@@ -541,19 +541,9 @@ consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.length = The consignee’s ERN must be 13 characters
 consigneeExcise.error.invalidCharacters = The consignee’s ERN must only contain letters and numbers
 consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
-consigneeExcise.error.4405 = The consignee Excise Registration Number is not valid for the destination type of this movement
-consigneeExcise.error.4413 = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending
-consigneeExcise.error.4414 = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has already been used
-consigneeExcise.error.4415 = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been withdrawn
-consigneeExcise.error.4416 = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been cancelled
-consigneeExcise.error.4417 = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has expired
-consigneeExcise.error.4418 = The temporary authorisation reference entered is invalid because the consignee's Temporary Certificate of Authority is not held on EMCS
-consigneeExcise.error.4419 = The consignee entered is not allowed to receive direct deliveries
-consigneeExcise.error.4420 = The consignor is not authorised to trade with the temporary registered consignee
-consigneeExcise.error.4423 = A registered consignor cannot send goods to a registered consignee
-consigneeExcise.error.4455 = The consignee Excise Registration Number is not valid for this type of movement
+consigneeExcise.error.submissionError = You must update the consignee ID so that it is different to the original submission
 consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
-consigneeExcise.change.hidden = consignee excise registration number
+consigneeExcise.change.hidden = consignee excise registration number (ERN)
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?
@@ -1446,6 +1436,8 @@ transportUnitCheckAnswers.heading.transportUnits = Transport units
 # ==================================
 errors.704.notificationBanner.title = Update needed
 errors.704.notificationBanner.content = Some sections need updating before you can resubmit this movement
+errors.704.notificationBanner.p = Some information needs updating
+
 
 # EMCS Core Error Number 4402:
 errors.704.lrn = The Local Reference Number (LRN) entered has been used before
@@ -1460,49 +1452,52 @@ errors.704.exportOffice.input = The export customs office code you have entered 
 errors.704.importCustomsOfficeCode = The import customs office code you have entered is not valid
 errors.704.importCustomsOfficeCode.input = The import customs office code you have entered is not valid so you must now enter different details
 
+errors.704.items.notificationBanner.p = Some information needs updating
+
+# EMCS Core Error Number 4407:
+errors.704.items.quantity.addToList = Item {0} quantity
+errors.704.items.quantity.cya = The item quantity is over the approved limit for the Temporary Registered Consignee
+errors.704.items.quantity = The item quantity is over the approved limit for the Temporary Registered Consignee
+errors.704.items.quantity.input = You must update the item quantity so that it is different to the original submission
+
+# EMCS Core Error Number 4445:
+errors.704.items.degreesPlato.addToList = Item {0} degree plato
+errors.704.items.degreesPlato.cya = Invalid degree plato for beer
+errors.704.items.degreesPlato = Invalid degree plato for beer
+errors.704.items.degreesPlato.input = You must update the degree plato so that it is different to the original submission
+
 # EMCS Core Error Number 4405:
 errors.704.invalidOrMissingConsignee = The consignee Excise Registration Number is not valid for the destination type of this movement
-errors.704.invalidOrMissingConsignee.input = The consignee Excise Registration Number is not valid for the destination type of this movement you must now enter different details
 
 # EMCS Core Error Number 4413:
 errors.704.linkIsPending = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending
-errors.704.linkIsPending.input = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending you must now enter different details
 
 # EMCS Core Error Number 4414:
 errors.704.linkIsAlreadyUsed = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has already been used
-errors.704.linkIsAlreadyUsed.input = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has already been used you must now enter different details
 
 # EMCS Core Error Number 4415:
 errors.704.linkIsWithdrawn = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been withdrawn
-errors.704.linkIsWithdrawn.input = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been withdrawn you must now enter different details
 
 # EMCS Core Error Number 4416:
 errors.704.linkIsCancelled = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been cancelled
-errors.704.linkIsCancelled.input = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been cancelled you must now enter different details
 
 # EMCS Core Error Number 4417:
 errors.704.linkIsExpired = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has expired
-errors.704.linkIsExpired.input = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has expired you must now enter different details
 
 # EMCS Core Error Number 4418:
 errors.704.linkMissingOrInvalid = The temporary authorisation reference entered is invalid because the consignee’s Temporary Certificate of Authority is not held on EMCS
-errors.704.linkMissingOrInvalid.input = The temporary authorisation reference entered is invalid because the consignee’s Temporary Certificate of Authority is not held on EMCS you must now enter different details
 
 # EMCS Core Error Number 4419:
 errors.704.directDeliveryNotAllowed = The consignee entered is not allowed to receive direct deliveries
-errors.704.directDeliveryNotAllowed.input = The consignee entered is not allowed to receive direct deliveries you must now enter different details
 
 # EMCS Core Error Number 4420:
 errors.704.consignorNotAuthorised = The consignor is not authorised to trade with the temporary registered consignee
-errors.704.consignorNotAuthorised.input = The consignor is not authorised to trade with the temporary registered consignee you must now enter different details
 
 # EMCS Core Error Number 4423:
 errors.704.registeredConsignorToRegisteredConsignee = A registered consignor cannot send goods to a registered consignee
-errors.704.registeredConsignorToRegisteredConsignee.input = A registered consignor cannot send goods to a registered consignee you must now enter different details
 
 # EMCS Core Error Number 4455:
 errors.704.consigneeRoleInvalid = The consignee Excise Registration Number is not valid for this type of movement
-errors.704.consigneeRoleInvalid.input = The consignee Excise Registration Number is not valid for this type of movement you must now enter different details
 
 # EMCS Core Error Number 4406
 errors.704.exciseIdForTaxWarehouseOfDestinationInvalid = The excise ID for the tax warehouse of destination you have entered is not valid

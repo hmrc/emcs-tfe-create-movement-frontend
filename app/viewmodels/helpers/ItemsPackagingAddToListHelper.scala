@@ -33,7 +33,7 @@ import viewmodels.taskList.InProgress
 
 import javax.inject.Inject
 
-class ItemsPackagingAddToListHelper @Inject()(tag: views.html.components.tag,
+class ItemsPackagingAddToListHelper @Inject()(tagHelper: TagHelper,
                                               span: views.html.components.span,
                                               itemPackagingSealInformationSummary: ItemPackagingSealInformationSummary) extends TagFluency {
 
@@ -69,10 +69,7 @@ class ItemsPackagingAddToListHelper @Inject()(tag: views.html.components.tag,
     ItemsPackagingSectionItems(itemIdx, packageIdx).status match {
       case InProgress => CardTitle(HtmlContent(HtmlFormat.fill(Seq(
         span(messages("itemsPackagingAddToList.packageCardTitle", packageIdx.displayIndex), Some("govuk-!-margin-right-2")),
-        tag(
-          message = messages("taskListStatus.incomplete"),
-          colour = "red"
-        )
+        tagHelper.incompleteTag()
       ))))
       case _ => CardTitle(HtmlContent(span(messages("itemsPackagingAddToList.packageCardTitle", packageIdx.displayIndex))))
     }

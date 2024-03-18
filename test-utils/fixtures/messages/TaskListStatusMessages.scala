@@ -18,12 +18,11 @@ package fixtures.messages
 
 object TaskListStatusMessages {
 
-  sealed trait ViewMessages { _: i18n =>
+  sealed trait ViewMessages {
     val completed: String = "Completed"
     val inProgress: String = "In Progress"
     val notStartedYet: String = "Not Started"
     val cannotStartYet: String = "Cannot Start Yet"
-    val updateNeeded: String = "Update Needed"
   }
 
   object English extends ViewMessages with BaseEnglish

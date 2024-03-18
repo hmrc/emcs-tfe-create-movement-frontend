@@ -42,14 +42,12 @@
 
     @formHelper(action = onSubmitCall) {
 
-        @if(form.errors.isEmpty && DestinationWarehouseExcisePage.isMovementSubmissionError) {
-            @notificationBanner(errorNotificationBannerHelper.content(
-                errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors
-            ))
-        }
-
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(
+                errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors
+            ).map(notificationBanner(_))
         }
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

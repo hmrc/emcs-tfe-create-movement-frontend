@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
 class ExportInformationSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {

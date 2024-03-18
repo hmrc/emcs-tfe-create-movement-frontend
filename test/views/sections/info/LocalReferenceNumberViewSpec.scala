@@ -28,7 +28,7 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 import views.html.sections.info.LocalReferenceNumberView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -97,7 +97,7 @@ class LocalReferenceNumberViewSpec extends SpecBase with ViewBehaviours with Mov
             Selectors.title -> messagesForLanguage.newTitle,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.movementInformationSection,
             Selectors.h1 -> messagesForLanguage.newHeading,
-            Selectors.notificationBannerTitle -> messagesForLanguage.notificationBannerTitle,
+            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerContent -> messagesForLanguage.lrnSubmissionFailure
           ))(doc())
 

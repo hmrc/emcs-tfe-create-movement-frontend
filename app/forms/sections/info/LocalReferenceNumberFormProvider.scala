@@ -26,11 +26,10 @@ import javax.inject.Inject
 class LocalReferenceNumberFormProvider @Inject() extends Mappings {
 
   def apply(isDeferred: Boolean)(implicit dataRequest: DataRequest[_]): Form[String] = {
-    val optOriginalValueSentInPreviousSubmission = LocalReferenceNumberPage().getOriginalAttributeValue
     Form(
       "value" -> text(errMsgForKey("required")(isDeferred))
         .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
-        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "errors.704.lrn.input"))
+        .verifying(isNotEqualToOptExistingAnswer(LocalReferenceNumberPage().getOriginalAttributeValue, "errors.704.lrn.input"))
     )
   }
 

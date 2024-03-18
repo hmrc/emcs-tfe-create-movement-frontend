@@ -37,7 +37,7 @@ class TagHelperSpec extends SpecBase {
         val result = tagHelper.updateNeededTag()
 
         result mustBe tag(
-          message = messagesForLang.updateNeeded,
+          message = messagesForLang.updateNeededTag,
           colour = "orange",
           extraClasses = "float-none govuk-!-margin-left-1"
         )

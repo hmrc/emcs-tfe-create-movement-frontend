@@ -16,6 +16,8 @@
 
 package views
 
+import utils.SubmissionError
+
 trait BaseSelectors {
 
   val title = "title"
@@ -52,6 +54,8 @@ trait BaseSelectors {
   def summary(i: Int) = s"main details:nth-of-type($i) summary"
 
   def summaryCardHeading(i: Int) = s"main .govuk-summary-card:nth-of-type($i) .govuk-summary-card__title"
+
+  def submissionError(error: SubmissionError) = s"#${error.id}"
 }
 
 object BaseSelectors extends BaseSelectors

@@ -32,6 +32,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
+import utils._
 import viewmodels.checkAnswers.sections.consignee._
 import views.html.components.list
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
@@ -100,7 +101,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       }
     }
 
-    s"when being rendered in lang code of '${English.lang.code}' for ERN WIP'" - {
+    s"when being rendered in with a Consignee Excise Submission Error'" - {
       implicit val msgs: Messages = messages(Seq(English.lang))
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
@@ -125,24 +126,29 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.subHeadingCaptionSelector -> English.caption,
-        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
+        Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.govukSummaryListKey(1) -> English.ern,
-        Selectors.tag -> TaskListStatusMessages.English.updateNeeded,
-        Selectors.notificationBannerError(1) -> English.invalidOrMissingConsignee,
-        Selectors.notificationBannerError(2) -> English.linkIsPending,
-        Selectors.notificationBannerError(3) -> English.linkIsAlreadyUsed,
-        Selectors.notificationBannerError(4) -> English.linkIsWithdrawn,
-        Selectors.notificationBannerError(5) -> English.linkIsCancelled,
-        Selectors.notificationBannerError(6) -> English.linkIsExpired,
-        Selectors.notificationBannerError(7) -> English.linkMissingOrInvalid,
-        Selectors.notificationBannerError(8) -> English.directDeliveryNotAllowed,
-        Selectors.notificationBannerError(9) -> English.consignorNotAuthorised,
-        Selectors.notificationBannerError(10) -> English.registeredConsignorToRegisteredConsignee,
-        Selectors.notificationBannerError(11) -> English.consigneeRoleInvalid,
+        Selectors.tag -> TaskListStatusMessages.English.updateNeededTag,
+        Selectors.submissionError(InvalidOrMissingConsigneeError) -> English.invalidOrMissingConsignee,
+        Selectors.submissionError(LinkIsPendingError) -> English.linkIsPending,
+        Selectors.submissionError(LinkIsAlreadyUsedError) -> English.linkIsAlreadyUsed,
+        Selectors.submissionError(LinkIsWithdrawnError) -> English.linkIsWithdrawn,
+        Selectors.submissionError(LinkIsCancelledError) -> English.linkIsCancelled,
+        Selectors.submissionError(LinkIsExpiredError) -> English.linkIsExpired,
+        Selectors.submissionError(LinkMissingOrInvalidError) -> English.linkMissingOrInvalid,
+        Selectors.submissionError(DirectDeliveryNotAllowedError) -> English.directDeliveryNotAllowed,
+        Selectors.submissionError(ConsignorNotAuthorisedError) -> English.consignorNotAuthorised,
+        Selectors.submissionError(RegisteredConsignorToRegisteredConsigneeError) -> English.registeredConsignorToRegisteredConsignee,
+        Selectors.submissionError(ConsigneeRoleInvalidError) -> English.consigneeRoleInvalid,
         Selectors.button -> English.confirmAnswers,
       ))
 
-
+      "link to the consignee excise page" in {
+        val route = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+        ConsigneeExcisePage.possibleErrors.foreach(
+          error => doc.select(Selectors.submissionError(error)).attr("href") mustBe route
+        )
+      }
     }
 
     s"when being rendered in lang code of '${English.lang.code}' for Exempted Organisation'" - {

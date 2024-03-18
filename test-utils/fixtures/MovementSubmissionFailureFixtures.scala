@@ -17,7 +17,7 @@
 package fixtures
 
 import models.MovementSubmissionFailure
-import utils.SubmissionFailureErrorCodes._
+import utils._
 
 trait MovementSubmissionFailureFixtures extends BaseFixtures {
 
@@ -58,6 +58,14 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     errorReason = "The quantitiy entered exceeds the amount approved for this Temporary Consignment Authorisation (TCA). Please check and amend your entry.",
     errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/Quantity[1]"),
     originalAttributeValue = Some("10000"),
+    hasBeenFixed = false
+  )
+
+  def itemDegreesPlatoFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = ItemDegreesPlatoError.code,
+    errorReason = "The alcoholic strength for wine and spirits you have entered is not valid.  Please amend your entry and resubmit",
+    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/DegreePlato[1]"),
+    originalAttributeValue = Some("10"),
     hasBeenFixed = false
   )
 

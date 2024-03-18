@@ -93,7 +93,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         Selectors.hint -> English.text,
         Selectors.button -> English.saveAndContinue,
         Selectors.link(1) -> English.returnToDraft,
-        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
+        Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.notificationBannerError(1) -> English.exciseIdForTaxWarehouseOfDestinationInvalid,
         Selectors.notificationBannerError(2) -> English.exciseIdForTaxWarehouseOfDestinationNeedsConsignee,
         Selectors.notificationBannerError(3) -> English.exciseIdForTaxWarehouseInvalid,

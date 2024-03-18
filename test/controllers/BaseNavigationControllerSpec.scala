@@ -33,7 +33,7 @@ import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 
 import scala.concurrent.Future
 

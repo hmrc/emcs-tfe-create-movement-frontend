@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import models.CheckMode
-import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario._
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
@@ -43,7 +43,13 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
         "when there's no answer" - {
 
-          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation) foreach { destinationType =>
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
+            ExemptedOrganisation
+          ) foreach { destinationType =>
 
             s"when the destination type is ${destinationType.toString}" - {
 

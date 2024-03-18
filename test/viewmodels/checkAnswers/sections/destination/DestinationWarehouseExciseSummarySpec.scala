@@ -29,7 +29,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
-import utils.SubmissionFailureErrorCodes._
+import utils.{ExciseIdForTaxWarehouseInvalid, ExciseIdForTaxWarehouseOfDestinationInvalidError, ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import views.html.components.tag
@@ -41,7 +41,6 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
   lazy val tag: tag = app.injector.instanceOf[tag]
 
   "DestinationWarehouseExciseSummary" - {
-
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 

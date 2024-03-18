@@ -33,13 +33,13 @@ import javax.inject.Inject
 class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val hasUnfixedLRNError = ConsigneeExcisePage.isMovementSubmissionError
+    val hasUnfixedConsigneeExciseError = ConsigneeExcisePage.isMovementSubmissionError
     request.userAnswers.get(ConsigneeExcisePage).map { answer =>
         SummaryListRowViewModel(
           key = "consigneeExcise.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
             Some(HtmlFormat.escape(answer)),
-            if (hasUnfixedLRNError) Some(tagHelper.updateNeededTag()) else None
+            if (hasUnfixedConsigneeExciseError) Some(tagHelper.updateNeededTag()) else None
           ).flatten))),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(

@@ -16,22 +16,14 @@
 
 package pages.sections.importInformation
 
-import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes.ImportCustomsOfficeCodeError
+import utils.{ImportCustomsOfficeCodeError, SubmissionError}
 
 case object ImportCustomsOfficeCodePage extends QuestionPage[String] {
 
   override val toString: String = "importCustomsOfficeCode"
   override val path: JsPath = ImportInformationSection.path \ toString
 
-  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    request.userAnswers.submissionFailures.find(_.errorType == ImportCustomsOfficeCodeError.code).flatMap(_.originalAttributeValue)
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.submissionFailures.exists(error => error.errorType == ImportCustomsOfficeCodeError.code && !error.hasBeenFixed)
-
-  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
-    Seq(request.userAnswers.submissionFailures.indexWhere(_.errorType == ImportCustomsOfficeCodeError.code))
+  override val possibleErrors: Seq[SubmissionError] = Seq(ImportCustomsOfficeCodeError)
 }

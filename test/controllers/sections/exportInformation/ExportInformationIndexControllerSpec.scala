@@ -26,7 +26,7 @@ import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 
 class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 

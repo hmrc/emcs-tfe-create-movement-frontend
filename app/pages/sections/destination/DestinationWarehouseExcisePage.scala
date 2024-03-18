@@ -16,41 +16,18 @@
 
 package pages.sections.destination
 
-import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes._
+import utils.{ExciseIdForTaxWarehouseInvalid, ExciseIdForTaxWarehouseOfDestinationInvalidError, ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError, SubmissionError}
 
 case object DestinationWarehouseExcisePage extends QuestionPage[String] {
   override val toString: String = "destinationWarehouseExcise"
   override val path: JsPath = DestinationSection.path \ toString
 
-  val possibleErrors: Seq[ErrorCode] = Seq(
+  override val possibleErrors: Seq[SubmissionError] = Seq(
     ExciseIdForTaxWarehouseOfDestinationInvalidError,
     ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError,
     ExciseIdForTaxWarehouseInvalid
   )
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
-    request.userAnswers.submissionFailures.exists(error =>
-      possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed
-    )
-  }
-
-  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    request.userAnswers.submissionFailures.find(error =>
-      possibleErrors.map(_.code).contains(error.errorType)
-    ).flatMap(_.originalAttributeValue)
-
-  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
-    request.userAnswers.submissionFailures.zipWithIndex.collect {
-      case (error, index) if possibleErrors.map(_.code).contains(error.errorType) => index
-    }
-
-  override def getMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[ErrorCode] = {
-    request.userAnswers.submissionFailures.collect {
-      case error if possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed => ErrorCode(error.errorType)
-    }
-  }
 
 }

@@ -28,6 +28,8 @@ object ItemQuantityMessages {
 
     val cyaLabel = "Quantity"
     val cyaChangeHidden = "item quantity"
+
+    val quantitySubmissionFailure = "The item quantity is over the approved limit for the Temporary Registered Consignee"
   }
 
   object English extends ViewMessages with BaseEnglish

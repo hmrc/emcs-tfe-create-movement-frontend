@@ -28,7 +28,6 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes._
 import views.html.sections.consignee.ConsigneeExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -93,7 +92,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
-        Selectors.notificationBannerTitle -> English.notificationBannerTitle,
+        Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.notificationBannerError(1) -> English.invalidOrMissingConsignee,
         Selectors.notificationBannerError(2) -> English.linkIsPending,
         Selectors.notificationBannerError(3) -> English.linkIsAlreadyUsed,

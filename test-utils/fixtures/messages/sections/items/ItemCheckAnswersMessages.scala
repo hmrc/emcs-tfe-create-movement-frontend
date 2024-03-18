@@ -36,6 +36,9 @@ object ItemCheckAnswersMessages {
 
     def packagingKey(idx: Index): String = s"Packaging type ${idx.displayIndex}"
     def packagingValue(quantity: String, packagingType: String): String = s"${quantity}x $packagingType"
+
+    val notificationBannerContentForQuantity: String = "The item quantity is over the approved limit for the Temporary Registered Consignee"
+    val notificationBannerContentForDegreesPlato: String = "Invalid degree plato for beer"
   }
 
   object English extends ViewMessages with BaseEnglish

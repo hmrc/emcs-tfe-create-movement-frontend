@@ -19,7 +19,7 @@ package pages.sections.importInformation
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.ImportCustomsOfficeCodeError
+import utils.ImportCustomsOfficeCodeError
 
 class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -88,12 +88,12 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
   "when calling indexesOfMovementSubmissionErrors" - {
 
-    "must return Seq(-1)" - {
+    "must return Seq.empty" - {
 
       s"when the ${ImportCustomsOfficeCodeError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure)
-        ))) mustBe Seq(-1)
+        ))) mustBe Seq.empty
       }
     }
 

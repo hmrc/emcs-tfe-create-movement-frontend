@@ -16,10 +16,9 @@
 
 package controllers.sections.items
 
-import config.Constants.BODYEADESAD
 import controllers.actions._
 import forms.sections.items.ItemRemoveItemFormProvider
-import models.{Index, UserAnswers}
+import models.Index
 import models.requests.DataRequest
 import navigation.ItemsNavigator
 import pages.sections.items.ItemsSectionItem
@@ -82,42 +81,6 @@ class ItemRemoveItemController @Inject()(
       }
     } else {
       Future(Redirect(routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId)))
-    }
-  }
-
-  private[controllers] def updateItemSubmissionFailureIndexes(indexOfRemovedItem: Index, userAnswers: UserAnswers) = {
-
-    val userAnswersWithSubmissionFailureRemovedAtIndex = userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
-      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
-    ))
-
-    val itemIndexesToAmend: Seq[Int] =
-      userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures
-        .filter(_.errorLocation.exists(_.contains(BODYEADESAD)))
-        .collect { case itemError =>
-          val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
-          val lookup(index) = itemError.errorLocation.get
-          index.toInt
-        }
-        .filter(_ > (indexOfRemovedItem.position + 1))
-
-    val indexOfSubmissionFailuresNeedingUpdate =
-      itemIndexesToAmend.map { erroredItemIdx =>
-        userAnswersWithSubmissionFailureRemovedAtIndex.submissionFailures.indexWhere(_.errorLocation.exists(_.contains(s"$BODYEADESAD[$erroredItemIdx]"))) -> erroredItemIdx
-      }
-
-    indexOfSubmissionFailuresNeedingUpdate.foldLeft(userAnswersWithSubmissionFailureRemovedAtIndex) {
-      case (userAnswers, (index, erroredIndex)) =>
-
-        val submissionFailureForItem = userAnswers.submissionFailures(index)
-
-        val updatedItem = submissionFailureForItem.copy(errorLocation =
-          submissionFailureForItem.errorLocation.map(
-            _.replace(s"$BODYEADESAD[$erroredIndex]", s"$BODYEADESAD[${erroredIndex - 1}]")
-          )
-        )
-
-        userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, updatedItem))
     }
   }
 }

@@ -23,7 +23,7 @@ import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.LocalReferenceNumberError
+import utils.LocalReferenceNumberError
 import viewmodels.taskList.{Completed, InProgress, NotStarted, UpdateNeeded}
 
 import java.time.{LocalDate, LocalTime}

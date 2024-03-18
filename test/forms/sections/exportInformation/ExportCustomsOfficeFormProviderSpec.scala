@@ -24,7 +24,7 @@ import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.ExportCustomsOfficeNumberError
+import utils.ExportCustomsOfficeNumberError
 
 class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 

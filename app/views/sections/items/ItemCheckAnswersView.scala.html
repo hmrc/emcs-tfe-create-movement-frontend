@@ -18,6 +18,9 @@
 @import models.response.referenceData.CnCodeInformation
 @import viewmodels.helpers.ItemCheckAnswersHelper
 @import utils.CommodityCodeHelper
+@import pages.sections.items.ItemQuantityPage
+@import pages.sections.items.ItemsSectionItems
+@import pages.sections.items.ItemsSectionItem
 
 @this(
         layout: templates.Layout,
@@ -26,6 +29,10 @@
         h1: components.h1,
         h2: components.h2,
         govukSummaryList: GovukSummaryList,
+        notificationBanner: GovukNotificationBanner,
+        p: components.p,
+        list: components.list,
+        link: components.link,
         helper: ItemCheckAnswersHelper
 )
 
@@ -35,21 +42,23 @@
 
     @formHelper(action) {
 
-        @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
+      @helper.showNotificationBannerWhenSubmissionError(ItemsSectionItem(idx).getSubmissionFailuresForItem()).map(notificationBanner(_))
 
-        @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
+      @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 
-        @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
+      @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
 
-        @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
+      @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
 
-        @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
-            @govukSummaryList(helper.constructWineDetailsCard(idx))
-        }
+      @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
-        @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+      @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
+          @govukSummaryList(helper.constructWineDetailsCard(idx))
+      }
 
-        @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
+      @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+
+      @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
     }
 }
 

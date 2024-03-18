@@ -35,12 +35,10 @@
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-        @if(DestinationWarehouseExcisePage.isMovementSubmissionError) {
-                @notificationBanner(errorNotificationBannerHelper.content(
-                    errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,
-                    withLinks = true
-                ))
-        }
+        @errorNotificationBannerHelper.content(
+            errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,
+            withLinks = true
+        ).map(notificationBanner(_))
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 

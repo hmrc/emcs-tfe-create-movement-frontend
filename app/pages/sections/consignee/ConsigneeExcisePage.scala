@@ -16,17 +16,16 @@
 
 package pages.sections.consignee
 
-import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes._
+import utils._
 
 case object ConsigneeExcisePage extends QuestionPage[String] {
 
   override val toString: String = "exciseRegistrationNumber"
   override val path: JsPath = ConsigneeSection.path \ toString
 
-  val possibleErrors = Seq(
+  override val possibleErrors: Seq[SubmissionError] = Seq(
     InvalidOrMissingConsigneeError,
     LinkIsPendingError,
     LinkIsAlreadyUsedError,
@@ -39,26 +38,4 @@ case object ConsigneeExcisePage extends QuestionPage[String] {
     RegisteredConsignorToRegisteredConsigneeError,
     ConsigneeRoleInvalidError
   )
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
-    request.userAnswers.submissionFailures.exists(error =>
-      possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed
-    )
-  }
-
-  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    request.userAnswers.submissionFailures.find(error =>
-      possibleErrors.map(_.code).contains(error.errorType)
-    ).flatMap(_.originalAttributeValue)
-
-  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
-    request.userAnswers.submissionFailures.zipWithIndex.collect {
-      case (error, index) if possibleErrors.map(_.code).contains(error.errorType) => index
-    }
-
-  override def getMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[ErrorCode] = {
-    request.userAnswers.submissionFailures.collect {
-      case error if possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed => ErrorCode(error.errorType)
-    }
-  }
 }

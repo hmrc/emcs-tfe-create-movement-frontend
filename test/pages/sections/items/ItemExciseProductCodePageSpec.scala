@@ -124,61 +124,6 @@ class ItemExciseProductCodePageSpec extends SpecBase with MovementSubmissionFail
     }
   }
 
-  "when calling indexesOfMovementSubmissionErrors" - {
-
-    "must return Seq()" - {
-
-      possibleErrorCodes().foreach { errorCode =>
-
-        s"for error code = ${errorCode.code}" - {
-
-          s"when the error type does not exist in the submission failures" in {
-            page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
-            ))) mustBe Seq()
-          }
-
-          "when the error has no error location" in {
-            page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-              submissionFailures = Seq(itemExciseProductCodeFailure(possibleErrorCodes().head, itemIndex = 2).copy(errorLocation = None))
-            ))) mustBe Seq()
-          }
-
-          "when the error exists but not at the specified index" in {
-            page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-              submissionFailures = Seq(itemExciseProductCodeFailure(possibleErrorCodes().head, itemIndex = 1))
-            ))) mustBe Seq()
-          }
-        }
-      }
-    }
-
-    "must return Seq(<index>)" - {
-
-      s"when only one error type exists in the submission failures (at the specified index)" in {
-        page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(
-            itemExciseProductCodeFailure(possibleErrorCodes().head, itemIndex = 1),
-            itemExciseProductCodeFailure(possibleErrorCodes().head, itemIndex = 2),
-            movementSubmissionFailure
-          )))) mustBe Seq(1)
-      }
-    }
-
-    "must return Seq(<index>, <index>, ...)" - {
-
-      //scalastyle:off
-      s"when only multiple error types exists in the submission failures (at the specified index)" in {
-        page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures =
-            Seq(itemExciseProductCodeFailure(possibleErrorCodes().head, itemIndex = 1)) ++
-              possibleErrorCodes().map(itemExciseProductCodeFailure(_, itemIndex = 2)) ++
-              Seq(movementSubmissionFailure)
-        ))) mustBe Seq(1, 2, 3, 4)
-      }
-    }
-  }
-
   "when calling getSubmissionErrorCodes" - {
 
     "should return Some" - {

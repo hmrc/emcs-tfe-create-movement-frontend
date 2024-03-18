@@ -23,6 +23,8 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import utils.SubmissionFailureErrorCodes._
 
+// indexesOfMovementSubmissionErrors is not needed here because when the user
+// changes their answer, all the errors for this item are deleted
 case class ItemExciseProductCodePage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "itemExciseProductCode"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
@@ -46,9 +48,6 @@ case class ItemExciseProductCodePage(idx: Index) extends QuestionPage[String] {
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)
-
-  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
-    request.userAnswers.submissionFailures.zipWithIndex.filter(errorToIndex => isExciseProductCodeAtIndex(errorToIndex._1)).map(_._2)
 
   def getSubmissionErrorCodes(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Seq[ErrorCode] =
     request.userAnswers.submissionFailures.filter(isExciseProductCodeAtIndex).filter(!_.hasBeenFixed).map(error => ErrorCode(error.errorType, idx, isOnAddToList))

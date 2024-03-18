@@ -114,7 +114,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return Seq(-1)" - {
 
-      s"when the  error type does not exist in the submission failures" in {
+      s"when the ${ItemDegreesPlatoError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe Seq(-1)

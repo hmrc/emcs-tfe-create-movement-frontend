@@ -42,7 +42,7 @@ trait BaseSelectors {
   val dateDay = s".govuk-date-input .govuk-date-input__item:nth-of-type(1)"
   val dateMonth = s".govuk-date-input .govuk-date-input__item:nth-of-type(2)"
   val dateYear = s".govuk-date-input .govuk-date-input__item:nth-of-type(3)"
-  val notificationBannerTitle = "#govuk-notification-banner-title"
+  val notificationBannerTitle = ".govuk-notification-banner__title"
   val notificationBannerContent = ".govuk-notification-banner__heading"
   val notificationBannerError: Int => String = i => s".govuk-notification-banner__content li:nth-of-type($i)"
 

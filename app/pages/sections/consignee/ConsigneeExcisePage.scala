@@ -38,8 +38,4 @@ case object ConsigneeExcisePage extends QuestionPage[String] {
     RegisteredConsignorToRegisteredConsigneeError,
     ConsigneeRoleInvalidError
   )
-
-//  override def getMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[SubmissionError] = Seq(InvalidOrMissingConsigneeError)
-//
-//  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = true
 }

@@ -53,7 +53,7 @@ class CheckYourAnswersImportViewSpec extends SpecBase with ViewBehaviours with M
 
   object Selectors extends BaseSelectors{
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
-    val fixLink = "#fix-import-customs-office-code"
+    val fixLink = "#import-customs-office-code-error"
   }
 
   "CheckYourAnswersImportView" - {

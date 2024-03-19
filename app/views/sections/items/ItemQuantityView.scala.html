@@ -19,6 +19,7 @@
 @import models.GoodsType
 @import viewmodels.LabelSize
 @import pages.sections.items.ItemQuantityPage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
         layout: templates.Layout,
@@ -30,6 +31,7 @@
         h2: components.h2,
         p: components.p,
         notificationBanner: GovukNotificationBanner,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         continueOrExit: components.continueOrExit
 )
 
@@ -40,15 +42,10 @@
 
   @formHelper(action) {
 
-    @if(ItemQuantityPage(idx).isMovementSubmissionError && form.errors.isEmpty) {
-      @notificationBanner(NotificationBanner(
-        title = Text(messages("errors.704.notificationBanner.title")),
-        content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.items.quantity"))))
-      ))
-    }
-
     @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
+      @govukErrorSummary(ErrorSummaryViewModel(form))
+    } else {
+      @errorNotificationBannerHelper.content(Seq(ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList = false)).flatten, hasContentHeading = false).map(notificationBanner(_))
     }
 
     @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

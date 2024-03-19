@@ -18,9 +18,8 @@
 @import models.response.referenceData.CnCodeInformation
 @import viewmodels.helpers.ItemCheckAnswersHelper
 @import utils.CommodityCodeHelper
-@import pages.sections.items.ItemQuantityPage
-@import pages.sections.items.ItemsSectionItems
 @import pages.sections.items.ItemsSectionItem
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
         layout: templates.Layout,
@@ -33,7 +32,8 @@
         p: components.p,
         list: components.list,
         link: components.link,
-        helper: ItemCheckAnswersHelper
+        helper: ItemCheckAnswersHelper,
+        notificationBannerHelper: ErrorNotificationBannerHelper
 )
 
 @(idx: Index, cnCodeInformation: CnCodeInformation, action: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -42,7 +42,7 @@
 
     @formHelper(action) {
 
-      @helper.showNotificationBannerWhenSubmissionError(ItemsSectionItem(idx).getSubmissionFailuresForItem()).map(notificationBanner(_))
+      @notificationBannerHelper.content(ItemsSectionItem(idx).getSubmissionFailuresForItem(), withLinks = true).map(notificationBanner(_))
 
       @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 

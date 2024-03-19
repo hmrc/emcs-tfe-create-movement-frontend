@@ -45,7 +45,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
   val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
   lazy val formProvider: ItemExciseProductCodeFormProvider = new ItemExciseProductCodeFormProvider()
-  lazy val form: Form[String] = formProvider.apply(sampleEPCs)
+  lazy val form: Form[String] = formProvider.apply(sampleEPCs, testIndex1)(dataRequest(FakeRequest()))
   lazy val view: ItemExciseProductCodeView = app.injector.instanceOf[ItemExciseProductCodeView]
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
@@ -94,7 +94,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, action, sampleEPCsSelectOptions, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form, action, sampleEPCsSelectOptions, testIndex1, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -112,7 +112,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(form.fill("B000"), action, sampleEPCsSelectOptionsWithBeerSelected, testIndex1, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "when valid data is submitted" - {
@@ -196,7 +196,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
-        view(boundForm, action, sampleEPCsSelectOptions, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(boundForm, action, sampleEPCsSelectOptions, testIndex1, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

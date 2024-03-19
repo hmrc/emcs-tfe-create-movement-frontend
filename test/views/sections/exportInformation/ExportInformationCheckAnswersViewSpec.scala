@@ -59,7 +59,7 @@ class ExportInformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours
   }
 
   object Selectors extends BaseSelectors {
-    val fixExportCustomOfficeError = "#fix-export-office-number"
+    val exportCustomOfficeError = "#export-customs-office-number-error"
 
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
   }
@@ -90,7 +90,7 @@ class ExportInformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours
         ))(doc)
 
         "link to the export customs office page" in {
-          doc.select(Selectors.fixExportCustomOfficeError).attr("href") mustBe controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url
+          doc.select(Selectors.exportCustomOfficeError).attr("href") mustBe controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
       }
     }

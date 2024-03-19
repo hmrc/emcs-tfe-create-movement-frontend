@@ -18,6 +18,7 @@
 @import models.requests.DataRequest
 @import viewmodels.LabelSize
 @import pages.sections.importInformation.ImportCustomsOfficeCodePage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -28,6 +29,7 @@
         h2: components.h2,
         p: components.p,
         notificationBanner: GovukNotificationBanner,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         link: components.link,
         continueOrExit: components.continueOrExit,
         appConfig: AppConfig)
@@ -45,15 +47,10 @@
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 
-        @if(ImportCustomsOfficeCodePage.isMovementSubmissionError && form.errors.isEmpty) {
-            @notificationBanner(NotificationBanner(
-                title = Text(messages("errors.704.notificationBanner.title")),
-                content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.importCustomsOfficeCode"))))
-            ))
-        }
-
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+          @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+          @errorNotificationBannerHelper.content(ImportCustomsOfficeCodePage.getMovementSubmissionErrors, hasContentHeading = false).map(notificationBanner(_))
         }
 
         @h2(messages("importInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

@@ -27,20 +27,24 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 import views.html.components.p
 
-class ItemExciseProductCodeSummary @Inject()(p: p) {
+class ItemExciseProductCodeSummary @Inject()(p: p, tagHelper: TagHelper) {
 
   def row(idx: Index, cnCodeInformation: CnCodeInformation, mode: Mode)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     lazy val page = ItemExciseProductCodePage(idx)
+    lazy val hasUnfixedEPCError = page.isMovementSubmissionError
+
     SummaryListRowViewModel(
       key = s"$page.checkYourAnswersLabel",
       value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-        p()(Html(cnCodeInformation.exciseProductCode)),
-        p()(Html(cnCodeInformation.exciseProductCodeDescription))
-      )))),
+        Some(p()(Html(cnCodeInformation.exciseProductCode))),
+        Some(p()(Html(cnCodeInformation.exciseProductCodeDescription))),
+        if (hasUnfixedEPCError) Some(tagHelper.updateNeededTag()) else None
+      ).flatten))),
       actions = Seq(ActionItemViewModel(
         href = routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, mode).url,
         content = "site.change",

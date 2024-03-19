@@ -18,30 +18,50 @@ package utils
 
 import base.SpecBase
 
+import scala.collection.Seq
+
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
   "ErrorCode.apply" - {
 
-    "should return ItemQuantityError for error code: 4407" - {
+    "for indexed errors" - {
       Seq(true, false).foreach { isForAddToList =>
 
-        s"when isForAddToList = $isForAddToList" in {
-          SubmissionError.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
+        s"when isForAddToList = $isForAddToList" - {
+
+          "should return ItemQuantityError for error code: 4407" - {
+            SubmissionError.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
+          }
+
+          "should return ItemDegreesPlatoError for error code: 4445" - {
+
+            SubmissionError.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
+          }
+
+          "should return ItemExciseProductCodeConsignorNotApprovedToSendError for error code: 4408" - {
+
+            SubmissionError.apply("4408", testIndex1, isForAddToList) mustBe ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList)
+          }
+
+          "should return ItemExciseProductCodeConsigneeNotApprovedToReceiveError for error code: 4409" - {
+
+            SubmissionError.apply("4409", testIndex1, isForAddToList) mustBe ItemExciseProductCodeConsigneeNotApprovedToReceiveError(testIndex1, isForAddToList)
+          }
+
+          "should return ItemExciseProductCodeDestinationNotApprovedToReceiveError for error code: 4410" - {
+
+            SubmissionError.apply("4410", testIndex1, isForAddToList) mustBe ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList)
+          }
+
+          "should return ItemExciseProductCodeDispatchPlaceNotAllowedError for error code: 4527" - {
+
+            SubmissionError.apply("4527", testIndex1, isForAddToList) mustBe ItemExciseProductCodeDispatchPlaceNotAllowedError(testIndex1, isForAddToList)
+          }
         }
       }
     }
 
-    "should return ItemDegreesPlatoError for error code: 4445" - {
-
-      Seq(true, false).foreach { isForAddToList =>
-
-        s"when isForAddToList = $isForAddToList" in {
-          SubmissionError.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
-        }
-      }
-    }
-
-    "must return the correct SubmissionError" - {
+    "must return the correct SubmissionError (non-indexed)" - {
 
       Seq(
         LocalReferenceNumberError,
@@ -70,10 +90,21 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       }
     }
 
-    "when given an invalid error code" in {
+    "when given an invalid error code (non-indexed)" in {
 
       val actualResult = intercept[IllegalArgumentException] {
         SubmissionError("invalid code")
+      }.getMessage
+
+      val expectedResult = "Invalid submission error code: invalid code"
+
+      actualResult mustBe expectedResult
+    }
+
+    "when given an invalid error code (indexed)" in {
+
+      val actualResult = intercept[IllegalArgumentException] {
+        SubmissionError("invalid code", testIndex1)
       }.getMessage
 
       val expectedResult = "Invalid submission error code: invalid code"

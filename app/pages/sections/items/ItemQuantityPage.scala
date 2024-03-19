@@ -16,28 +16,25 @@
 
 package pages.sections.items
 
-import config.Constants.BODYEADESAD
 import models.requests.DataRequest
 import models.{Index, MovementSubmissionFailure}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
 import utils.{ItemQuantityError, SubmissionError}
 
 case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
   override val toString: String = "itemQuantity"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 
-  private def isQuantityErrorAtIndex: MovementSubmissionFailure => Boolean =
-    submissionFailure =>
-      submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == ItemQuantityError.code
+  private def isQuantityErrorAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
+    submissionHasItemErrorAtIndex(idx, submissionFailure) && submissionFailure.errorType == ItemQuantityError.code
 
-  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] = {
+  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex)
-  }
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
     getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-  }
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)

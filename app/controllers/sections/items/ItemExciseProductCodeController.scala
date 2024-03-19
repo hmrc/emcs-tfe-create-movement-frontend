@@ -58,7 +58,7 @@ class ItemExciseProductCodeController @Inject()(
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
               existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx))
             )
-            renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
+            renderView(Ok, formProvider(exciseProductCodes, idx), idx, selectItems, mode)
         }
       }
     }
@@ -68,7 +68,7 @@ class ItemExciseProductCodeController @Inject()(
       validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            formProvider(exciseProductCodes).bindFromRequest().fold(
+            formProvider(exciseProductCodes, idx).bindFromRequest().fold(
               formWithErrors => {
                 val selectItems = SelectItemHelper.constructSelectItems(
                   exciseProductCodes,
@@ -106,7 +106,8 @@ class ItemExciseProductCodeController @Inject()(
       form = form,
       action = routes.ItemExciseProductCodeController.onSubmit(request.ern, request.draftId, idx, mode),
       selectOptions = selectItems,
-      indexOfDocument = idx
+      idx = idx,
+      mode = mode
     )))
   }
 }

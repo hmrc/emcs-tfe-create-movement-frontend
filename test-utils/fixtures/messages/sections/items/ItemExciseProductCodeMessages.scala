@@ -34,6 +34,13 @@ object ItemExciseProductCodeMessages {
 
     val label = "Excise Product Code"
     val paragraph = "You will be asked to give information and packaging details about this item. You can return to this screen to add more items later."
+
+    val warningText = s"$warning Changing the EPC code removes any information completed for this item and you will be asked to enter new item information"
+
+    val itemExciseProductCodeConsignorNotApprovedToSendError = "The excise product code for this item must be one that the consignor is approved to send"
+    val itemExciseProductCodeConsigneeNotApprovedToReceiveError = "The excise product code for this item must be one that the consignee is approved to receive"
+    val itemExciseProductCodeDestinationNotApprovedToReceiveError = "The excise product code for this item must be one that the tax warehouse of destination is approved to receive"
+    val itemExciseProductCodeDispatchPlaceNotAllowed = "The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code"
   }
 
   object English extends ViewMessages with BaseEnglish

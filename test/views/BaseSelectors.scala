@@ -56,6 +56,8 @@ trait BaseSelectors {
   def summaryCardHeading(i: Int) = s"main .govuk-summary-card:nth-of-type($i) .govuk-summary-card__title"
 
   def submissionError(error: SubmissionError) = s"#${error.id}"
+
+  val warningText = ".govuk-warning-text__text"
 }
 
 object BaseSelectors extends BaseSelectors

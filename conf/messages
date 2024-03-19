@@ -23,6 +23,7 @@ site.opensInNewTab = (opens in new tab)
 site.item = item
 site.noResultsFound = No results found
 site.divider = or
+site.warning = Warning:
 
 country.austria = Austria
 country.belgium = Belgium
@@ -978,8 +979,10 @@ itemExciseProductCode.title = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.checkYourAnswersLabel = Excise product code
 itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
+itemExciseProductCode.warningText = Changing the EPC code removes any information completed for this item and you will be asked to enter new item information
 itemExciseProductCode.label = Excise Product Code
 itemExciseProductCode.error.required = Choose the Excise product code
+itemExciseProductCode.error.submissionFailure = You must update the Excise Product Code so that it is different to the original submission
 itemExciseProductCode.change.hidden = Excise product code
 itemExciseProductCode.select.defaultValue = Choose Excise Product Code
 
@@ -1452,17 +1455,13 @@ errors.704.exportOffice.input = The export customs office code you have entered 
 errors.704.importCustomsOfficeCode = The import customs office code you have entered is not valid
 errors.704.importCustomsOfficeCode.input = The import customs office code you have entered is not valid so you must now enter different details
 
-errors.704.items.notificationBanner.p = Some information needs updating
-
 # EMCS Core Error Number 4407:
 errors.704.items.quantity.addToList = Item {0} quantity
-errors.704.items.quantity.cya = The item quantity is over the approved limit for the Temporary Registered Consignee
 errors.704.items.quantity = The item quantity is over the approved limit for the Temporary Registered Consignee
 errors.704.items.quantity.input = You must update the item quantity so that it is different to the original submission
 
 # EMCS Core Error Number 4445:
 errors.704.items.degreesPlato.addToList = Item {0} degree plato
-errors.704.items.degreesPlato.cya = Invalid degree plato for beer
 errors.704.items.degreesPlato = Invalid degree plato for beer
 errors.704.items.degreesPlato.input = You must update the degree plato so that it is different to the original submission
 
@@ -1498,6 +1497,14 @@ errors.704.registeredConsignorToRegisteredConsignee = A registered consignor can
 
 # EMCS Core Error Number 4455:
 errors.704.consigneeRoleInvalid = The consignee Excise Registration Number is not valid for this type of movement
+
+# EMCS Core Error Number 4408, 4409, 4410, 4527
+errors.704.items.exciseProductCode = Item {0} excise product code
+
+errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSendError = The excise product code for this item must be one that the consignor is approved to send
+errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
+errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
+errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
 
 # EMCS Core Error Number 4406
 errors.704.exciseIdForTaxWarehouseOfDestinationInvalid = The excise ID for the tax warehouse of destination you have entered is not valid

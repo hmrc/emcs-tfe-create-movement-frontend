@@ -33,7 +33,7 @@ import views.{BaseSelectors, ViewBehaviours}
 class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
   object Selectors extends BaseSelectors {
-    val fixLRNLink = "#fix-local-reference-number"
+    val fixLRNLink = "#local-reference-number-error"
   }
 
   "InformationArrangerCheckAnswers view" - {

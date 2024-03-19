@@ -19,6 +19,7 @@
 @import config.AppConfig
 @import viewmodels.LabelSize
 @import pages.sections.exportInformation.ExportCustomsOfficePage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
         layout: templates.Layout,
@@ -30,6 +31,7 @@
         h2: components.h2,
         p: components.p,
         notificationBanner: GovukNotificationBanner,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         link: components.link,
         appConfig: AppConfig,
         continueOrExit: components.continueOrExit
@@ -41,15 +43,10 @@
 
     @formHelper(action) {
 
-      @if(ExportCustomsOfficePage.isMovementSubmissionError && form.errors.isEmpty) {
-        @notificationBanner(NotificationBanner(
-          title = Text(messages("errors.704.notificationBanner.title")),
-          content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.exportOffice"))))
-        ))
-      }
-
       @if(form.errors.nonEmpty) {
-          @govukErrorSummary(ErrorSummaryViewModel(form))
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+      } else {
+        @errorNotificationBannerHelper.content(ExportCustomsOfficePage.getMovementSubmissionErrors, hasContentHeading = false).map(notificationBanner(_))
       }
 
       @h2(messages("exportInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

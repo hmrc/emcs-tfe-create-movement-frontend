@@ -25,6 +25,7 @@ import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.info.LocalReferenceNumberPage
+import pages.sections.items.ItemQuantityPage
 import pages.{DeclarationPage, QuestionPage}
 import play.api.libs.json.{JsObject, JsPath, __}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
@@ -308,6 +309,17 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
         val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0000")))
 
         val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
+          expectedUserAnswers, request = FakeRequest()))
+        result mustBe expectedUserAnswers
+      }
+
+      "when there is no error for an indexed page (returns -1 from page object method)" in new Test {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures =
+          Seq(itemDegreesPlatoFailure(itemIndex = 2))
+        )
+
+        val result: UserAnswers = testController.markErrorAsFixedIfPresent(ItemQuantityPage(testIndex1))(dataRequest(answers =
           expectedUserAnswers, request = FakeRequest()))
         result mustBe expectedUserAnswers
       }

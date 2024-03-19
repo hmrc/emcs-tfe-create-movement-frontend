@@ -19,13 +19,13 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes._
+import utils._
 
 class ItemExciseProductCodePageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   val page: ItemExciseProductCodePage = ItemExciseProductCodePage(testIndex2)
 
-  def possibleErrorCodes(isForAddToList: Boolean = false): Seq[ErrorCode] = Seq(
+  def possibleErrorCodes(isForAddToList: Boolean = false): Seq[SubmissionError] = Seq(
     ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex2, isForAddToList),
     ItemExciseProductCodeConsigneeNotApprovedToReceiveError(testIndex2, isForAddToList),
     ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex2, isForAddToList),

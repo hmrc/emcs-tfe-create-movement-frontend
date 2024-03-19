@@ -31,7 +31,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import utils.SubmissionFailureErrorCodes.ItemExciseProductCodeConsignorNotApprovedToSendError
+import utils._
 import viewmodels.govuk.summarylist._
 import views.html.components.{p, tag}
 

@@ -24,6 +24,7 @@ sealed trait SubmissionError {
   val code: String
   val messageKey: String
   val id: String
+
   def route()(implicit request: DataRequest[_]): Call
 
   val index: Option[Index] = None
@@ -33,6 +34,7 @@ case object LocalReferenceNumberError extends SubmissionError {
   override val code = "4402"
   override val messageKey = "errors.704.lrn"
   override val id = "local-reference-number-error"
+
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId)
 }
@@ -41,6 +43,7 @@ case object ImportCustomsOfficeCodeError extends SubmissionError {
   override val code = "4451"
   override val messageKey = "errors.704.importCustomsOfficeCode"
   override val id = "import-customs-office-code-error"
+
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
@@ -49,6 +52,7 @@ case object ExportCustomsOfficeNumberError extends SubmissionError {
   override val code = "4425"
   override val messageKey = "errors.704.exportOffice"
   override val id = "export-customs-office-number-error"
+
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
@@ -57,6 +61,7 @@ case object InvalidOrMissingConsigneeError extends SubmissionError {
   override val code = "4405"
   override val messageKey = "errors.704.invalidOrMissingConsignee"
   override val id = "invalid-or-missing-consignee-error"
+
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
@@ -65,6 +70,7 @@ case object LinkIsPendingError extends SubmissionError {
   override val code = "4413"
   override val messageKey = "errors.704.linkIsPending"
   override val id = "link-is-pending-error"
+
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
@@ -160,6 +166,7 @@ case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends Submis
 
   override val index = Some(idx)
 }
+
 object ItemQuantityError {
   val code = "4407"
 }
@@ -174,12 +181,13 @@ case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends Su
 
   override val index = Some(idx)
 }
+
 object ItemDegreesPlatoError {
   val code = "4445"
 }
 
-case class ItemExciseProductCodeConsignorNotApprovedToSendError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-  override val code = itemExciseProductCodeConsignorNotApprovedToSendError
+case class ItemExciseProductCodeConsignorNotApprovedToSendError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
+  override val code = ItemExciseProductCodeConsignorNotApprovedToSendError.code
   override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
     s"errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSendError"
   }
@@ -191,8 +199,12 @@ case class ItemExciseProductCodeConsignorNotApprovedToSendError(idx: Index, isFo
   override val index = Some(idx)
 }
 
-case class ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-  override val code = itemExciseProductCodeConsigneeNotApprovedToReceiveError
+object ItemExciseProductCodeConsignorNotApprovedToSendError {
+  val code = "4408"
+}
+
+case class ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
+  override val code = ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code
   override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
     s"errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError"
   }
@@ -204,8 +216,12 @@ case class ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx: Index, i
   override val index = Some(idx)
 }
 
-case class ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-  override val code = itemExciseProductCodeDestinationNotApprovedToReceiveError
+object ItemExciseProductCodeConsigneeNotApprovedToReceiveError {
+  val code = "4409"
+}
+
+case class ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
+  override val code = ItemExciseProductCodeDestinationNotApprovedToReceiveError.code
   override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
     s"errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError"
   }
@@ -217,8 +233,12 @@ case class ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx: Index,
   override val index = Some(idx)
 }
 
-case class ItemExciseProductCodeDispatchPlaceNotAllowedError(idx: Index, isForAddToList: Boolean) extends ErrorCode {
-  override val code = itemExciseProductCodeDispatchPlaceNotAllowed
+object ItemExciseProductCodeDestinationNotApprovedToReceiveError {
+  val code = "4410"
+}
+
+case class ItemExciseProductCodeDispatchPlaceNotAllowedError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
+  override val code = ItemExciseProductCodeDispatchPlaceNotAllowedError.code
   override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
     s"errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed"
   }
@@ -228,6 +248,10 @@ case class ItemExciseProductCodeDispatchPlaceNotAllowedError(idx: Index, isForAd
     controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
 
   override val index = Some(idx)
+}
+
+object ItemExciseProductCodeDispatchPlaceNotAllowedError {
+  val code = "4527"
 }
 
 object SubmissionError {
@@ -255,6 +279,10 @@ object SubmissionError {
   def apply(errorType: String, idx: Index, isForAddToList: Boolean = false): SubmissionError = errorType match {
     case ItemQuantityError.code => ItemQuantityError(idx, isForAddToList)
     case ItemDegreesPlatoError.code => ItemDegreesPlatoError(idx, isForAddToList)
+    case ItemExciseProductCodeConsignorNotApprovedToSendError.code => ItemExciseProductCodeConsignorNotApprovedToSendError(idx, isForAddToList)
+    case ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code => ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx, isForAddToList)
+    case ItemExciseProductCodeDestinationNotApprovedToReceiveError.code => ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx, isForAddToList)
+    case ItemExciseProductCodeDispatchPlaceNotAllowedError.code => ItemExciseProductCodeDispatchPlaceNotAllowedError(idx, isForAddToList)
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 }

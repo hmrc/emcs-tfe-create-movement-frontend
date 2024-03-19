@@ -28,7 +28,8 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemExciseProductCodeConsigneeNotApprovedToReceiveError, ItemExciseProductCodeConsignorNotApprovedToSendError, ItemExciseProductCodeDestinationNotApprovedToReceiveError, ItemExciseProductCodeDispatchPlaceNotAllowedError}
+import utils.ItemExciseProductCodeDestinationNotApprovedToReceiveError
+import utils._
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemExciseProductCodeView
 import views.{BaseSelectors, ViewBehaviours}

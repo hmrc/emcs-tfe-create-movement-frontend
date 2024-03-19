@@ -16,12 +16,12 @@
 
 package pages.sections.items
 
-import config.Constants.BODYEADESAD
 import models.requests.DataRequest
 import models.{Index, MovementSubmissionFailure}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes._
+import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
+import utils._
 
 // indexesOfMovementSubmissionErrors is not needed here because when the user
 // changes their answer, all the errors for this item are deleted
@@ -30,14 +30,14 @@ case class ItemExciseProductCodePage(idx: Index) extends QuestionPage[String] {
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 
   private val itemExciseProductCodesError: Seq[String] = Seq(
-    itemExciseProductCodeConsignorNotApprovedToSendError,
-    itemExciseProductCodeConsigneeNotApprovedToReceiveError,
-    itemExciseProductCodeDestinationNotApprovedToReceiveError,
-    itemExciseProductCodeDispatchPlaceNotAllowed
+    ItemExciseProductCodeConsignorNotApprovedToSendError.code,
+    ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code,
+    ItemExciseProductCodeDestinationNotApprovedToReceiveError.code,
+    ItemExciseProductCodeDispatchPlaceNotAllowedError.code
   )
 
   private def isExciseProductCodeAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-    submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) &&
+    submissionHasItemErrorAtIndex(idx, submissionFailure) &&
       itemExciseProductCodesError.contains(submissionFailure.errorType)
 
   private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
@@ -49,6 +49,8 @@ case class ItemExciseProductCodePage(idx: Index) extends QuestionPage[String] {
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)
 
-  def getSubmissionErrorCodes(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Seq[ErrorCode] =
-    request.userAnswers.submissionFailures.filter(isExciseProductCodeAtIndex).filter(!_.hasBeenFixed).map(error => ErrorCode(error.errorType, idx, isOnAddToList))
+  def getSubmissionErrorCodes(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Seq[SubmissionError] =
+    request.userAnswers.submissionFailures.collect {
+      case error if isExciseProductCodeAtIndex(error) && !error.hasBeenFixed => SubmissionError(error.errorType, idx, isOnAddToList)
+    }
 }

@@ -21,6 +21,20 @@ import models.{Index, MovementSubmissionFailure}
 
 object IndexedSubmissionFailureHelper {
 
+  /**
+   * Takes the index of an item (zero-indexed) and then attempts to find the existence of an error at
+   * the index + 1. It adds one because CORE returns errors that are 1-indexed. For example, when the error messages (from CORE) looks like this:
+   * <code>
+   * <pre>
+   * "errorLocation" : ".../BodyEadEsad[1]/DegreePlato[1]",
+   * </pre>
+   * </code>
+   * This method would return true if Index(0) was passed in, but would return false if Index(1) is passed in.
+   *
+   * @param idx Index of item (zero-indexed)
+   * @param movementSubmissionFailure submission failure from CORE (error location is 1-indexed)
+   * @return boolean based on whether an item submission failure exists for this item
+   */
   def submissionHasItemErrorAtIndex(idx: Index, movementSubmissionFailure: MovementSubmissionFailure): Boolean =
     movementSubmissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]"))
 }

@@ -67,8 +67,10 @@ trait BaseNavigationController extends BaseController with Logging {
     } else {
       val errorIndexes = page.indexesOfMovementSubmissionErrors
       errorIndexes.foldLeft(request.userAnswers) { (userAnswers, index) =>
-        val error = userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
-        request.userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, error))
+        if(index == -1) userAnswers else {
+          val error = userAnswers.submissionFailures(index).copy(hasBeenFixed = true)
+          request.userAnswers.copy(submissionFailures = userAnswers.submissionFailures.updated(index, error))
+        }
       }
     }
   }

@@ -23,6 +23,7 @@ import models.{GoodsType, Index, UserAnswers}
 import pages.sections.items._
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
+import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
 
 import scala.concurrent.Future
 
@@ -141,7 +142,5 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   }
 
   private[controllers] def removeItemSubmissionFailure(indexOfRemovedItem: Index, userAnswers: UserAnswers): UserAnswers =
-    userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(
-      _.errorLocation.exists(_.contains(s"$BODYEADESAD[${indexOfRemovedItem.position + 1}]"))
-    ))
+    userAnswers.copy(submissionFailures = userAnswers.submissionFailures.filterNot(submissionHasItemErrorAtIndex(indexOfRemovedItem, _)))
 }

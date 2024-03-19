@@ -16,12 +16,12 @@
 
 package pages.sections.items
 
-import config.Constants.BODYEADESAD
 import models.requests.DataRequest
 import models.sections.items.ItemDegreesPlatoModel
 import models.{Index, MovementSubmissionFailure}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
 import utils.{ItemDegreesPlatoError, SubmissionError}
 
 case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlatoModel] {
@@ -29,14 +29,13 @@ case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlat
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 
   private def isDegreePlatoErrorAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-    submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == ItemDegreesPlatoError.code
+    submissionHasItemErrorAtIndex(idx, submissionFailure) && submissionFailure.errorType == ItemDegreesPlatoError.code
 
   private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isDegreePlatoErrorAtIndex)
 
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
     getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-  }
 
   override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
     getMovementSubmissionFailure.flatMap(_.originalAttributeValue)

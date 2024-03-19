@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class ErrorNotificationBannerHelper @Inject()(list: list, p: p, link: link){
 
-  def content(errors: Seq[SubmissionError], withLinks: Boolean = false)
+  def content(errors: Seq[SubmissionError], withLinks: Boolean = false, hasContentHeading: Boolean = true)
              (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
     Option.when(errors.nonEmpty) {
       NotificationBanner(
@@ -38,9 +38,9 @@ class ErrorNotificationBannerHelper @Inject()(list: list, p: p, link: link){
         } else {
           HtmlContent(
             HtmlFormat.fill(Seq(
-              p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.p"))),
-              list(errors.map(singleErrorContent(_, withLinks)))
-            ))
+              if(hasContentHeading) Some(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.p")))) else None,
+              Some(list(errors.map(singleErrorContent(_, withLinks)), id = Some("list-of-submission-failures")))
+            ).flatten)
           )
         }
       )
@@ -48,10 +48,12 @@ class ErrorNotificationBannerHelper @Inject()(list: list, p: p, link: link){
   }
 
   private def singleErrorContent(error: SubmissionError, withLink: Boolean)
-                                (implicit request: DataRequest[_], messages: Messages): Html =
+                                (implicit request: DataRequest[_], messages: Messages): Html = {
+    val message = error.index.map(idx => messages(error.messageKey, idx.displayIndex)).getOrElse(messages(error.messageKey))
     if(withLink) {
-      link(error.route().url, error.messageKey, Some(error.id))
+      link(error.route().url, message, id = Some(error.id))
     } else {
-      Html(messages(error.messageKey))
+      Html(message)
     }
+  }
 }

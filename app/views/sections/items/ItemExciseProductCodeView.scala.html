@@ -15,8 +15,10 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.items.ItemExciseProductCodePage
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 @import views.html.helper.CSPNonce
 
 @this(
@@ -29,27 +31,34 @@
     h1: components.h1,
     h2: components.h2,
     p: components.p,
+    notificationBannerHelper: ErrorNotificationBannerHelper,
+    notificationBanner: GovukNotificationBanner,
+    warningText: components.warningText,
     continueOrExit: components.continueOrExit,
     autocompleteCss: HmrcAccessibleAutocompleteCss,
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], indexOfDocument: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form, messages("itemExciseProductCode.title", indexOfDocument.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
+
+      @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
+        @notificationBannerHelper.content(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false), hasContentHeading = false).map(notificationBanner(_))
+      }
 
       @if(form.errors.nonEmpty) {
           @govukErrorSummary(ErrorSummaryViewModel(form))
       }
 
-      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = indexOfDocument.displayIndex)
+      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = idx.displayIndex)
 
       @p(){@messages("itemExciseProductCode.paragraph")}
 
@@ -76,6 +85,10 @@
           )
         )
       )
+
+      @if(mode == CheckMode) {
+        @warningText{@messages("itemExciseProductCode.warningText")}
+      }
 
       @continueOrExit()
     }

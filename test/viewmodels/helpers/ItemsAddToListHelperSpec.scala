@@ -412,7 +412,7 @@ class ItemsAddToListHelperSpec extends SpecBase
             )) mustBe Some(NotificationBanner(
               title = Text(msgs("errors.704.notificationBanner.title")),
               content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.items.notificationBanner.p")),
+                Html(msgs("errors.704.notificationBanner.p")),
                 list(Seq(
                   link(
                     link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
@@ -432,7 +432,7 @@ class ItemsAddToListHelperSpec extends SpecBase
             )) mustBe Some(NotificationBanner(
               title = Text(msgs("errors.704.notificationBanner.title")),
               content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.items.notificationBanner.p")),
+                Html(msgs("errors.704.notificationBanner.p")),
                 list(Seq(
                   link(
                     link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
@@ -458,7 +458,7 @@ class ItemsAddToListHelperSpec extends SpecBase
             )) mustBe Some(NotificationBanner(
               title = Text(msgs("errors.704.notificationBanner.title")),
               content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.items.notificationBanner.p")),
+                Html(msgs("errors.704.notificationBanner.p")),
                 list(Seq(
                   link(
                     link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,

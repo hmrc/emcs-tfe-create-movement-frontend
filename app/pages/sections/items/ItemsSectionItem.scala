@@ -170,10 +170,15 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
 
 
-  def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = Seq(
-    ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList),
-    ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList)
-  ).flatten
+  def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = {
+    val itemExciseProductCodeErrors = ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList)
+    Seq(
+      ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList),
+      ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList),
+      //Prevent duplicate links in notification banner on add to list
+      if(isOnAddToList) itemExciseProductCodeErrors.headOption else itemExciseProductCodeErrors
+    ).flatten
+  }
 
   /**
    * Constructs a list of item pages (which could have submission failures) and checks if there are

@@ -20,6 +20,7 @@
 @import pages.sections.items.ItemDegreesPlatoPage
 @import viewmodels.InputWidth.Fixed4
 @import viewmodels.LegendSize
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
         layout: templates.Layout,
@@ -29,6 +30,7 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         notificationBanner: GovukNotificationBanner,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         h1: components.h1,
         h2: components.h2,
         p: components.p,
@@ -43,15 +45,10 @@
 
     @formHelper(action, 'autoComplete -> "off") {
 
-      @if(ItemDegreesPlatoPage(idx).isMovementSubmissionError && form.errors.isEmpty) {
-        @notificationBanner(NotificationBanner(
-          title = Text(messages("errors.704.notificationBanner.title")),
-          content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.items.degreesPlato"))))
-        ))
-      }
-
       @if(form.errors.nonEmpty) {
           @govukErrorSummary(ErrorSummaryViewModel(form))
+      } else {
+        @errorNotificationBannerHelper.content(Seq(ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList = false)).flatten, hasContentHeading = false).map(notificationBanner(_))
       }
 
       @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

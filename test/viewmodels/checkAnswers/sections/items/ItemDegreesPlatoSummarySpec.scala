@@ -83,7 +83,7 @@ class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers with MovementSu
             ) {
               summary.row(idx = testIndex1) mustBe Some(summaryRow(messagesForLanguage.no))
             }
-            "must return a row (with the update needed tag when a submission failure exists)" in new Test(
+            "must return a row with the update needed tag when a submission failure exists" in new Test(
               emptyUserAnswers
                 .copy(submissionFailures = Seq(itemDegreesPlatoFailure(1)))
                 .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = Some(BigDecimal(1.59))))

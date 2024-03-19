@@ -608,6 +608,7 @@ dispatchWarehouseExcise.error.required = Enter the excise ID
 dispatchWarehouseExcise.error.length = Excise ID must be 13 characters
 dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
 dispatchWarehouseExcise.error.format = Excise ID must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
+dispatchWarehouseExcise.error.submissionError = You must update the excise ID for the dispatching tax warehouse so that it is different to the original submission
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch
 
 dispatchUseConsignorDetails.title = Is the place of dispatch the same as the consignor details?
@@ -1465,6 +1466,9 @@ errors.704.items.degreesPlato.addToList = Item {0} degree plato
 errors.704.items.degreesPlato = Invalid degree plato for beer
 errors.704.items.degreesPlato.input = You must update the degree plato so that it is different to the original submission
 
+# EMCS Core Error Number 4404:
+errors.704.dispatchWarehouseInvalidOrMissingOnSeedError = The excise ID for the tax warehouse of dispatch is not valid
+
 # EMCS Core Error Number 4405:
 errors.704.invalidOrMissingConsignee = The consignee Excise Registration Number is not valid for the destination type of this movement
 
@@ -1506,6 +1510,12 @@ errors.704.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError = The
 
 # EMCS Core Error Number 4456
 errors.704.placeOfDestinationExciseIdForTaxWarehouseInvalidError = The excise ID for the tax warehouse of destination is not valid
+
+# EMCS Core Error Number 4458:
+errors.704.dispatchWarehouseInvalidError = The excise ID for the tax warehouse of dispatch is not valid
+
+# EMCS Core Error Number 4461:
+errors.704.dispatchWarehouseConsignorDoesNotManageWarehouseError = Excise ID entered for the tax warehouse of dispatch is not linked with the consignor
 
 # EMCS Core Error Number 4408, 4409, 4410, 4527
 errors.704.items.exciseProductCode = Item {0} excise product code

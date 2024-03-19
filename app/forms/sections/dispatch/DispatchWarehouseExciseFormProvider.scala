@@ -18,19 +18,25 @@ package forms.sections.dispatch
 
 import forms.{EXCISE_NUMBER_REGEX, XSS_REGEX}
 import forms.mappings.Mappings
+import models.requests.DataRequest
+import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply()(implicit request: DataRequest[_]): Form[String] =
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
         .verifying(firstError(
           fixedLength(13, "dispatchWarehouseExcise.error.length"),
           regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
           regexpUnlessEmpty(EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.format")
+        ))
+        .verifying(isNotEqualToOptExistingAnswer(
+          existingAnswer = DispatchWarehouseExcisePage.getOriginalAttributeValue,
+          errorKey = "dispatchWarehouseExcise.error.submissionError"
         ))
     )
 }

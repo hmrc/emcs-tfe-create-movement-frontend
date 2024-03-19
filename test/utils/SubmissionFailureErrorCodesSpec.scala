@@ -25,7 +25,6 @@ import controllers.sections.importInformation.routes._
 import controllers.sections.exportInformation.routes._
 import controllers.sections.destination.routes._
 import controllers.sections.info.routes._
-
 import models.CheckMode
 import models.requests.DataRequest
 import play.api.mvc.AnyContentAsEmpty
@@ -91,7 +90,10 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         ConsigneeRoleInvalidError -> "4455",
         PlaceOfDestinationExciseIdInvalidError -> "4406",
         PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> "4412",
-        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> "4456"
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> "4456",
+        DispatchWarehouseInvalidOrMissingOnSeedError -> "4404",
+        DispatchWarehouseInvalidError -> "4458",
+        DispatchWarehouseConsignorDoesNotManageWarehouseError -> "4461"
       ).foreach {
         case (submissionError, expectedErrorCode) =>
 

@@ -17,31 +17,35 @@
 package views.sections.dispatch
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.dispatch.DispatchWarehouseExciseMessages
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.dispatch.DispatchWarehouseExcisePage
+import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.dispatch.DispatchWarehouseExciseView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
+class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
   object Selectors extends BaseSelectors
 
   "DispatchWarehouseExciseView" - {
 
     Seq(DispatchWarehouseExciseMessages.English).foreach { messagesForLanguage =>
 
+      lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
+
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[DispatchWarehouseExciseView]
         val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
@@ -55,6 +59,52 @@ class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))
       }
+
+      s"when there is a submission failure and there is NO form error '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+          emptyUserAnswers.copy(submissionFailures =
+            DispatchWarehouseExcisePage.possibleErrors.map(error => dispatchWarehouseInvalidOrMissingOnSeedError.copy(error.code))
+          )
+        )
+
+        val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.title,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
+          Selectors.notificationBannerError(1) -> messagesForLanguage.dispatchWarehouseInvalidOrMissingOnSeedError,
+          Selectors.notificationBannerError(2) -> messagesForLanguage.dispatchWarehouseInvalidError,
+          Selectors.notificationBannerError(3) -> messagesForLanguage.dispatchWarehouseConsignorDoesNotManageWarehouseError,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.dispatchSection,
+          Selectors.hint -> messagesForLanguage.hintText,
+          Selectors.button -> messagesForLanguage.saveAndContinue
+        ))
+      }
+
+      "when there is a submission failure but there is a form error" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+          emptyUserAnswers.copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
+        )
+
+        val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form.withError(FormError("key", "msg")), NormalMode).toString())
+
+        "not show the notification banner when there is an error" in {
+          doc.select(".govuk-error-summary").isEmpty mustBe false
+          doc.select(".govuk-notification-banner").isEmpty mustBe true
+        }
+      }
+
     }
   }
 }

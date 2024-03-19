@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: DispatchWarehouseExciseFormProvider = new DispatchWarehouseExciseFormProvider()
-  lazy val form: Form[String] = formProvider()
+
   lazy val view: DispatchWarehouseExciseView = app.injector.instanceOf[DispatchWarehouseExciseView]
 
   lazy val dispatchWarehouseExciseRoute: String =
@@ -41,6 +41,8 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
+    implicit val dr = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
+    lazy val form: Form[String] = formProvider()
 
     lazy val testController = new DispatchWarehouseExciseController(
       messagesApi,

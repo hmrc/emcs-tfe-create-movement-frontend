@@ -17,12 +17,14 @@
 package pages.sections.dispatch
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.CertifiedConsignee
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
+import viewmodels.taskList.UpdateNeeded
 
-class DispatchSectionSpec extends SpecBase {
+class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   "isCompleted" - {
 
@@ -94,6 +96,20 @@ class DispatchSectionSpec extends SpecBase {
           .set(DispatchAddressPage, testUserAddress)
         )
         DispatchSection.isCompleted mustBe false
+      }
+    }
+
+    "must return UpdateNeeded" - {
+      "when there is a Dispatch Submission Error" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DispatchWarehouseExcisePage, "beans")
+            .set(DispatchUseConsignorDetailsPage, false)
+            .set(DispatchBusinessNamePage, "beans")
+            .set(DispatchAddressPage, testUserAddress)
+            .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
+        )
+        DispatchSection.status mustBe UpdateNeeded
       }
     }
   }

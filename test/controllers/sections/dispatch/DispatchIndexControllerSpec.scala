@@ -18,6 +18,7 @@ package controllers.sections.dispatch
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, ExemptedOrganisation, GbTaxWarehouse, TemporaryCertifiedConsignee}
 import models.{NormalMode, UserAnswers}
@@ -26,10 +27,13 @@ import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
+import scala.concurrent.Future
+
+class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(testErn, testDraftId).url)
@@ -47,6 +51,22 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   "DispatchIndexController" - {
 
+    "when DispatchSection.status is UpdateNeeded" -{
+      "must redirect to DispatchCheckAnswersController" in new Fixture(
+          Some(emptyUserAnswers
+            .set(DispatchWarehouseExcisePage, "beans")
+            .set(DispatchUseConsignorDetailsPage, true)
+            .set(ConsignorAddressPage, testUserAddress)
+            .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
+          )) {
+
+          val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        }
+    }
     "when DispatchSection.isCompleted" - {
 
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers

@@ -16,11 +16,14 @@
 
 package forms.sections.dispatch
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
+class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with SpecBase with MovementSubmissionFailureFixtures {
 
   val requiredKey = "dispatchWarehouseExcise.error.required"
   val xssKey = "dispatchWarehouseExcise.error.xss"
@@ -28,9 +31,9 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
   val formatKey = "dispatchWarehouseExcise.error.format"
   val fixedLength = 13
 
-  val form = new DispatchWarehouseExciseFormProvider()()
 
   ".value" - {
+    val form = new DispatchWarehouseExciseFormProvider()()(dataRequest(FakeRequest()))
 
     val fieldName = "value"
     val formatError = FormError(fieldName, formatKey, Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
@@ -66,5 +69,20 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       formatError = formatError
     )
+  }
+
+  "when a submission failure exists and the input is the same as the previous one" - {
+
+    val fieldName = "value"
+    val form = new DispatchWarehouseExciseFormProvider().apply()(dataRequest(FakeRequest(),
+      answers = emptyUserAnswers.copy(submissionFailures = Seq(
+        dispatchWarehouseInvalidOrMissingOnSeedError.copy(originalAttributeValue = Some(testErn))
+      ))))
+
+    "must error with the expected msg key" in {
+
+      val boundForm = form.bind(Map(fieldName -> testErn))
+      boundForm.errors.headOption mustBe Some(FormError(fieldName, "dispatchWarehouseExcise.error.submissionError", Seq()))
+    }
   }
 }

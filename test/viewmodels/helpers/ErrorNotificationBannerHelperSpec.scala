@@ -104,7 +104,7 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
               list(Seq(
                 Html(English.invalidOrMissingConsignee),
                 Html(English.linkIsPending),
-              ))
+              ), id = Some("list-of-submission-failures"))
             ))
           )
         ))
@@ -134,7 +134,7 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
                   English.linkIsPending,
                   Some(LinkIsPendingError.id)
                 )
-              ))
+              ), id = Some("list-of-submission-failures"))
             ))
           )
         ))
@@ -142,6 +142,37 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
         val actualResult = helper.content(
           errors = Seq(InvalidOrMissingConsigneeError, LinkIsPendingError),
           withLinks = true
+        )
+
+        actualResult mustBe expectedResult
+      }
+
+      "the hasContentHeading is set to false, hiding the 'Some information needs updating' text" in new Setup {
+
+        val expectedResult = Some(NotificationBanner(
+          title = Text(English.updateNeeded),
+          content = HtmlContent(
+            HtmlFormat.fill(Seq(
+              list(Seq(
+                link(
+                  InvalidOrMissingConsigneeError.route().url,
+                  English.invalidOrMissingConsignee,
+                  Some(InvalidOrMissingConsigneeError.id)
+                ),
+                link(
+                  LinkIsPendingError.route().url,
+                  English.linkIsPending,
+                  Some(LinkIsPendingError.id)
+                )
+              ), id = Some("list-of-submission-failures"))
+            ))
+          )
+        ))
+
+        val actualResult = helper.content(
+          errors = Seq(InvalidOrMissingConsigneeError, LinkIsPendingError),
+          withLinks = true,
+          hasContentHeading = false
         )
 
         actualResult mustBe expectedResult

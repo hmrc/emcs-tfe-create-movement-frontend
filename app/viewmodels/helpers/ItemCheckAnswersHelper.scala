@@ -21,11 +21,9 @@ import models.response.referenceData.CnCodeInformation
 import models.{CheckMode, GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import queries.ItemsPackagingCount
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import utils.SubmissionError
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -146,31 +144,5 @@ class ItemCheckAnswersHelper @Inject()(
       case Some(value) => (0 until value).map(packageIdx => packageTypeRow(Index(packageIdx)))
       case None => Nil
     }).flatten
-  }
-
-  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[SubmissionError])
-                                               (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
-    Option.when(itemErrors.nonEmpty) {
-      val errorLinks = itemErrors.map { itemError =>
-        link(
-          link = itemError.route().url,
-          messageKey = itemError.messageKey,
-          id = Some(itemError.id)
-        )
-      }
-      NotificationBanner(
-        title = Text(messages("errors.704.notificationBanner.title")),
-        content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(
-          if (itemErrors.size == 1) {
-            errorLinks
-          } else {
-            Seq(
-              Html(messages("errors.704.items.notificationBanner.p")),
-              list(errorLinks, id = Some("list-of-submission-failures"))
-            )
-          }
-        )))
-      )
-    }
   }
 }

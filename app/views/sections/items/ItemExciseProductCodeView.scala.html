@@ -15,10 +15,11 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.items.ItemExciseProductCodePage
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 @import views.html.helper.CSPNonce
-@import pages.sections.items.ItemExciseProductCodePage
 
 @this(
     layout: templates.Layout,
@@ -30,7 +31,7 @@
     h1: components.h1,
     h2: components.h2,
     p: components.p,
-    list: components.list,
+    notificationBannerHelper: ErrorNotificationBannerHelper,
     notificationBanner: GovukNotificationBanner,
     warningText: components.warningText,
     continueOrExit: components.continueOrExit,
@@ -50,16 +51,7 @@
     @formHelper(action = action) {
 
       @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
-        @defining(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false)) { errors =>
-          @notificationBanner(NotificationBanner(
-            title = Text(messages("errors.704.notificationBanner.title")),
-            //TODO: move this logic to ErrorNotificationBannerHelper
-            content = if(errors.length == 1) HtmlContent(p("govuk-notification-banner__heading")(Html(messages(errors.head.messageKey)))) else
-              HtmlContent(HtmlFormat.fill(Seq(
-                list(errors.map(error => Html(messages(error.messageKey))), id = Some("list-of-excise-product-code-submission-failures"))
-              )))
-          ))
-        }
+        @notificationBannerHelper.content(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false), hasContentHeading = false).map(notificationBanner(_))
       }
 
       @if(form.errors.nonEmpty) {

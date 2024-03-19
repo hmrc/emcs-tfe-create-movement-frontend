@@ -170,7 +170,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       NotificationBanner(
         title = Text(messages("errors.704.notificationBanner.title")),
         content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-          Html(messages("errors.704.items.notificationBanner.p")),
+          Html(messages("errors.704.notificationBanner.p")),
           list(itemErrors.map { error =>
             link(
               link = error.route().url,

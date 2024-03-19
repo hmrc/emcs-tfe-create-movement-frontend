@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import pages.sections.info.LocalReferenceNumberPage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
         layout: templates.Layout,
@@ -23,6 +24,7 @@
         h1: components.h1,
         govukSummaryList: GovukSummaryList,
         notificationBanner: GovukNotificationBanner,
+        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         link: components.link,
         p: components.p,
         govukButton: GovukButton
@@ -34,14 +36,10 @@
 
     @formHelper(action = submitAction) {
 
-      @if(LocalReferenceNumberPage(false).isMovementSubmissionError) {
-        @notificationBanner(NotificationBanner(
-          title = Text(messages("errors.704.notificationBanner.title")),
-          content = HtmlContent(p("govuk-notification-banner__heading") {
-            link(controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId).url, "errors.704.lrn", id = Some("fix-local-reference-number"))
-          })
-        ))
-      }
+        @errorNotificationBannerHelper.content(
+          errors = LocalReferenceNumberPage(false).getMovementSubmissionErrors,
+          withLinks = true
+        ).map(notificationBanner(_))
 
         @h1("informationCheckAnswers.heading", Some(messages("movementInformation.subHeading")), "govuk-heading-l")
 

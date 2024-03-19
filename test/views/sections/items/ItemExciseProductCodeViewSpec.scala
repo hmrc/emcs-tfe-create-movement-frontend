@@ -42,7 +42,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
   object Selectors extends BaseSelectors {
     def selectOption(nthChild: Int) = s"#excise-product-code > option:nth-child($nthChild)"
 
-    val notificationBannerList: String = "#list-of-excise-product-code-submission-failures"
+    val notificationBannerList: String = "#list-of-submission-failures"
 
     val notificationBannerListElement: Int => String = index => s"$notificationBannerList > li:nth-of-type($index)"
 

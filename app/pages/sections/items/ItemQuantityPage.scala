@@ -28,7 +28,7 @@ case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 
   private def isQuantityErrorAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-      submissionHasItemErrorAtIndex(idx, submissionFailure) && submissionFailure.errorType == ItemQuantityError.code
+    submissionHasItemErrorAtIndex(idx, submissionFailure) && submissionFailure.errorType == ItemQuantityError.code
 
   private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex)

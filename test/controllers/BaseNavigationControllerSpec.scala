@@ -33,7 +33,7 @@ import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.LocalReferenceNumberError
 
 import scala.concurrent.Future
 
@@ -326,9 +326,9 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
       "when there is a mapping for the page and all the errors have not been fixed" in new Test {
 
-        val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError)))
+        val originalUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code)))
 
-        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true)))
 
         val result: UserAnswers = testController.markErrorAsFixedIfPresent(LocalReferenceNumberPage())(dataRequest(answers =
           originalUserAnswers, request = FakeRequest()))

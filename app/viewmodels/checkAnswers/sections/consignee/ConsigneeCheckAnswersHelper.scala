@@ -24,14 +24,14 @@ import views.html.components.list
 
 import javax.inject.Inject
 
-class ConsigneeCheckAnswersHelper @Inject()(list: list) {
+class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: ConsigneeExciseSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
         ConsigneeExportSummary.row(showActionLinks = true),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
-        ConsigneeExciseSummary.row(showActionLinks = true),
+        consigneeExciseSummary.row(showActionLinks = true),
         ConsigneeExportInformationSummary(list).row(),
         ConsigneeExportVatSummary.row(showActionLinks = true),
         ConsigneeExportEoriSummary.row(showActionLinks = true),

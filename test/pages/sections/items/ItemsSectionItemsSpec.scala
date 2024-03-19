@@ -25,7 +25,7 @@ import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndica
 import models.sections.items.ItemWineProductCategory.Other
 import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
+import utils.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
 
 class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {

@@ -18,12 +18,31 @@ package pages
 
 import models.requests.DataRequest
 import queries.{Gettable, Settable}
+import utils.SubmissionError
 
 trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
 
-  def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] = None
+  val possibleErrors: Seq[SubmissionError] = Seq.empty
 
-  def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = false
+  def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = {
+    request.userAnswers.submissionFailures.exists(error =>
+      possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed
+    )
+  }
 
-  def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] = Seq.empty
+  def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
+    request.userAnswers.submissionFailures.find(error =>
+      possibleErrors.map(_.code).contains(error.errorType)
+    ).flatMap(_.originalAttributeValue)
+
+  def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
+    request.userAnswers.submissionFailures.zipWithIndex.collect {
+      case (error, index) if possibleErrors.map(_.code).contains(error.errorType) => index
+    }
+
+  def getMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[SubmissionError] = {
+    request.userAnswers.submissionFailures.collect {
+      case error if possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed => SubmissionError(error.errorType)
+    }
+  }
 }

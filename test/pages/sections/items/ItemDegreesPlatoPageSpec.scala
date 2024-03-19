@@ -19,7 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, itemDegreesPlatoError}
+import utils.ItemDegreesPlatoError
 
 class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
@@ -29,7 +29,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return true" - {
 
-      s"when the error is $itemDegreesPlatoError and not fixed (at the specified index)" in {
+      s"when the error is ${ItemDegreesPlatoError.code} and not fixed (at the specified index)" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemDegreesPlatoFailure(2))
         ))) mustBe true
@@ -38,13 +38,13 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return false" - {
 
-      s"when the error at the index is not a $itemDegreesPlatoError" in {
+      s"when the error at the index is not a ${ItemDegreesPlatoError.code}" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorType = "0000"))
         ))) mustBe false
       }
 
-      s"when the error at the index is $itemDegreesPlatoError but fixed" in {
+      s"when the error at the index is ${ItemDegreesPlatoError.code} but fixed" in {
         page.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(hasBeenFixed = true))
         ))) mustBe false
@@ -72,7 +72,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return Some(_)" - {
 
-      s"when the error type is $itemDegreesPlatoError and an original attribute value exists (at the specified index)" in {
+      s"when the error type is ${ItemDegreesPlatoError.code} and an original attribute value exists (at the specified index)" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemDegreesPlatoFailure(2))
@@ -82,7 +82,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return None" - {
 
-      s"when the error at the index is not $itemDegreesPlatoError" in {
+      s"when the error at the index is not ${ItemDegreesPlatoError.code}" in {
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(itemDegreesPlatoFailure(2).copy(errorType = "0000"))
@@ -114,7 +114,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return Seq(-1)" - {
 
-      s"when the $itemDegreesPlatoError error type does not exist in the submission failures" in {
+      s"when the ${ItemDegreesPlatoError.code} error type does not exist in the submission failures" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(movementSubmissionFailure.copy(errorType = "0001", hasBeenFixed = false, originalAttributeValue = None))
         ))) mustBe Seq(-1)
@@ -136,7 +136,7 @@ class ItemDegreesPlatoPageSpec extends SpecBase with MovementSubmissionFailureFi
 
     "must return Seq(<index>)" - {
 
-      s"when the $itemDegreesPlatoError error type exists in the submission failures (at the specified index)" in {
+      s"when the ${ItemDegreesPlatoError.code} error type exists in the submission failures (at the specified index)" in {
         page.indexesOfMovementSubmissionErrors(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemDegreesPlatoFailure(1),

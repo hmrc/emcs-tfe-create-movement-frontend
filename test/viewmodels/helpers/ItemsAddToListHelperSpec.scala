@@ -18,8 +18,8 @@ package viewmodels.helpers
 
 import base.SpecBase
 import controllers.sections.items.routes
-import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemsAddToListMessages
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
 import models.requests.{CnCodeInformationItem, DataRequest}
@@ -35,7 +35,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.NotificationBanner
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
+import utils.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.checkAnswers.sections.items._
 import views.html.components._
 

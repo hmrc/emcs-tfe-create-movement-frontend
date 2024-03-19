@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.LocalReferenceNumberError
 import views.html.sections.info.InformationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -62,7 +62,7 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
         "when there is a 704 error" - {
 
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
-          .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false))))
+          .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false))))
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,

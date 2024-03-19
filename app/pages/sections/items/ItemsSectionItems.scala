@@ -23,7 +23,7 @@ import models.response.InvalidRegexException
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
-import utils.SubmissionFailureErrorCodes.ErrorCode
+import utils.SubmissionError
 import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
@@ -72,7 +72,7 @@ case object ItemsSectionItems extends Section[JsObject] {
       }
       .distinct
 
-  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[ErrorCode] = {
+  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = {
     request.userAnswers.get(ItemsCount) match {
       case Some(0) | None => Seq.empty
       case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))

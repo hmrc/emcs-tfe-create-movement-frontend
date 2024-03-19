@@ -18,18 +18,18 @@ package pages.sections.items
 
 import config.Constants.BODYEADESAD
 import models.requests.DataRequest
-import models.{Index, MovementSubmissionFailure}
 import models.sections.items.ItemDegreesPlatoModel
+import models.{Index, MovementSubmissionFailure}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.SubmissionFailureErrorCodes.{ErrorCode, itemDegreesPlatoError}
+import utils.{ItemDegreesPlatoError, SubmissionError}
 
 case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlatoModel] {
   override val toString: String = "itemDegreesPlato"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 
   private def isDegreePlatoErrorAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-    submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == itemDegreesPlatoError
+    submissionFailure.errorLocation.exists(_.contains(s"$BODYEADESAD[${idx.position + 1}]")) && submissionFailure.errorType == ItemDegreesPlatoError.code
 
   private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
     request.userAnswers.submissionFailures.find(isDegreePlatoErrorAtIndex)
@@ -44,8 +44,10 @@ case class ItemDegreesPlatoPage(idx: Index) extends QuestionPage[ItemDegreesPlat
   override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
     Seq(request.userAnswers.submissionFailures.indexWhere(isDegreePlatoErrorAtIndex))
 
-  def getSubmissionErrorCode(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Option[ErrorCode] = {
-    request.userAnswers.submissionFailures.find(isDegreePlatoErrorAtIndex).filter(!_.hasBeenFixed).map(error => ErrorCode(error.errorType, idx, isOnAddToList))
+  def getSubmissionErrorCode(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Option[SubmissionError] = {
+    request.userAnswers.submissionFailures.find(isDegreePlatoErrorAtIndex).filter(!_.hasBeenFixed).map(
+      error => SubmissionError(error.errorType, idx, isOnAddToList)
+    )
   }
 }
 

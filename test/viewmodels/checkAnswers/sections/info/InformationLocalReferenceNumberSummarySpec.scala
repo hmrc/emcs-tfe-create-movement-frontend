@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.LocalReferenceNumberError
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 
@@ -111,7 +111,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
           implicit lazy val request = dataRequest(FakeRequest(),
             emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false)))
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false)))
               .set(LocalReferenceNumberPage(), testLrn))
 
           summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false, hasUpdateNeededTag = true)
@@ -121,7 +121,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
           implicit lazy val request = dataRequest(FakeRequest(),
             emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = true)))
+              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true)))
               .set(LocalReferenceNumberPage(), testLrn))
 
           summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)

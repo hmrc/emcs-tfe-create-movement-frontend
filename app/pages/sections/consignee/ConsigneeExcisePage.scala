@@ -18,8 +18,24 @@ package pages.sections.consignee
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils._
 
 case object ConsigneeExcisePage extends QuestionPage[String] {
+
   override val toString: String = "exciseRegistrationNumber"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  override val possibleErrors: Seq[SubmissionError] = Seq(
+    InvalidOrMissingConsigneeError,
+    LinkIsPendingError,
+    LinkIsAlreadyUsedError,
+    LinkIsWithdrawnError,
+    LinkIsCancelledError,
+    LinkIsExpiredError,
+    LinkMissingOrInvalidError,
+    DirectDeliveryNotAllowedError,
+    ConsignorNotAuthorisedError,
+    RegisteredConsignorToRegisteredConsigneeError,
+    ConsigneeRoleInvalidError
+  )
 }

@@ -17,12 +17,12 @@
 package fixtures
 
 import models.MovementSubmissionFailure
-import utils.SubmissionFailureErrorCodes
+import utils._
 
 trait MovementSubmissionFailureFixtures extends BaseFixtures {
 
   val movementSubmissionFailure: MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = SubmissionFailureErrorCodes.localReferenceNumberError,
+    errorType = LocalReferenceNumberError.code,
     errorReason = "Oh no! Duplicate LRN The LRN is already known and is therefore not unique according to the specified rules",
     errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
     originalAttributeValue = Some(testLrn),
@@ -30,15 +30,23 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   )
 
   val importCustomsOfficeCodeFailure: MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = SubmissionFailureErrorCodes.importCustomsOfficeCodeError,
+    errorType = ImportCustomsOfficeCodeError.code,
     errorReason = "The customs office reference number you have entered is not valid. Please amend your entry and resubmit",
     errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
     originalAttributeValue = Some(testImportCustomsOffice),
     hasBeenFixed = false
   )
 
+  val consigneeExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = InvalidOrMissingConsigneeError.code,
+    errorReason = "Invalid or missing Consignee on SEED",
+    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    originalAttributeValue = Some(testErn),
+    hasBeenFixed = false
+  )
+
   def itemQuantityFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = SubmissionFailureErrorCodes.itemQuantityError,
+    errorType = ItemQuantityError.code,
     errorReason = "The quantitiy entered exceeds the amount approved for this Temporary Consignment Authorisation (TCA). Please check and amend your entry.",
     errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/Quantity[1]"),
     originalAttributeValue = Some("10000"),
@@ -46,7 +54,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   )
 
   def itemDegreesPlatoFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = SubmissionFailureErrorCodes.itemDegreesPlatoError,
+    errorType = ItemDegreesPlatoError.code,
     errorReason = "The alcoholic strength for wine and spirits you have entered is not valid.  Please amend your entry and resubmit",
     errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/DegreePlato[1]"),
     originalAttributeValue = Some("10"),

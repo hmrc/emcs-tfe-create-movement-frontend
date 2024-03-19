@@ -17,12 +17,14 @@
 package pages.sections.consignee
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.NoInformation
 import models.{ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
+import viewmodels.taskList.UpdateNeeded
 
-class ConsigneeSectionSpec extends SpecBase {
+class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
   "isCompleted" - {
     "must return true" - {
       "when user starts on ConsigneeExportUkEu and selects yes" in {
@@ -82,6 +84,20 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", "")))
         ConsigneeSection.isCompleted mustBe false
       }
+    }
+  }
+
+  "must return UpdateNeeded" - {
+    "when there is a Consignee Submission Error" in {
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+        emptyUserAnswers
+          .set(ConsigneeExportPage, false)
+          .set(ConsigneeExcisePage, "")
+          .set(ConsigneeBusinessNamePage, "")
+          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .copy(submissionFailures = Seq(consigneeExciseFailure))
+      )
+      ConsigneeSection.status mustBe UpdateNeeded
     }
   }
 }

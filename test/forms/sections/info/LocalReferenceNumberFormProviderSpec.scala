@@ -23,7 +23,7 @@ import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.localReferenceNumberError
+import utils.LocalReferenceNumberError
 
 class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBehaviours with MovementSubmissionFailureFixtures {
 
@@ -91,7 +91,7 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
 
       val form = new LocalReferenceNumberFormProvider().apply(isDeferred = false)(dataRequest(FakeRequest(),
         answers = emptyUserAnswers.copy(submissionFailures = Seq(
-          movementSubmissionFailure.copy(errorType = localReferenceNumberError, hasBeenFixed = false, originalAttributeValue = Some("LRN1"))
+          movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false, originalAttributeValue = Some("LRN1"))
         ))))
 
       "must error with the expected msg key" in {

@@ -28,7 +28,7 @@ import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
-import utils.SubmissionFailureErrorCodes.{ItemDegreesPlatoError, ItemQuantityError}
+import utils.{ItemDegreesPlatoError, ItemQuantityError}
 
 class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 

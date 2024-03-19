@@ -29,8 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{NotificationBanner, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import utils.SubmissionFailureErrorCodes.ErrorCode
+import utils.{Logging, SubmissionError}
 import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommercialDescriptionSummary, ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
@@ -165,7 +164,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       case _ => None
     }
 
-  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[ErrorCode])
+  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[SubmissionError])
                                                (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
     Option.when(itemErrors.nonEmpty) {
       NotificationBanner(

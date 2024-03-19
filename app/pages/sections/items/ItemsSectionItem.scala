@@ -23,8 +23,7 @@ import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import utils.SubmissionFailureErrorCodes.ErrorCode
-import utils.{CommodityCodeHelper, JsonOptionFormatter}
+import utils.{CommodityCodeHelper, JsonOptionFormatter, SubmissionError}
 import viewmodels.taskList._
 
 case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
@@ -171,7 +170,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
 
 
-  def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[ErrorCode] = Seq(
+  def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = Seq(
     ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList),
     ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList)
   ).flatten

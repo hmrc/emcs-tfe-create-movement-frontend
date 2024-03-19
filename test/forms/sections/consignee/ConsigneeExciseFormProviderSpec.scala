@@ -16,19 +16,23 @@
 
 package forms.sections.consignee
 
+import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite with SpecBase with MovementSubmissionFailureFixtures {
 
   val fieldName = "value"
   val fixedLength = 13
 
   "ConsigneeExciseFormProvider" - {
-    val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)
-    val dynamicForm = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = true)
+
+    val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)(dataRequest(FakeRequest()))
+    val dynamicForm = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = true)(dataRequest(FakeRequest()))
 
     "when a value is not provided" - {
       "must error with the expected msg key" in {
@@ -81,5 +85,20 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         fixedLength
       )
     }
+
+    "when a submission failure exists and the input is the same as the previous one" - {
+
+      val form = new ConsigneeExciseFormProvider().apply(false)(dataRequest(FakeRequest(),
+        answers = emptyUserAnswers.copy(submissionFailures = Seq(
+          consigneeExciseFailure.copy(originalAttributeValue = Some(testErn))
+        ))))
+
+      "must error with the expected msg key" in {
+
+        val boundForm = form.bind(Map(fieldName -> testErn))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.submissionError", Seq()))
+      }
+    }
+
   }
 }

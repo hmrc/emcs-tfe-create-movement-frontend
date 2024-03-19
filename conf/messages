@@ -1510,3 +1510,36 @@ errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee.input = The excise
 # EMCS Core Error Number 4456
 errors.704.exciseIdForTaxWarehouseInvalid = The excise ID for the tax warehouse of destination is not valid
 errors.704.exciseIdForTaxWarehouseInvalid.input = The excise ID for the tax warehouse of destination is not valid so you must now enter different details
+
+# EMCS Core Error Number 4405:
+errors.704.invalidOrMissingConsignee = The consignee Excise Registration Number is not valid for the destination type of this movement
+
+# EMCS Core Error Number 4413:
+errors.704.linkIsPending = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending
+
+# EMCS Core Error Number 4414:
+errors.704.linkIsAlreadyUsed = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has already been used
+
+# EMCS Core Error Number 4415:
+errors.704.linkIsWithdrawn = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been withdrawn
+
+# EMCS Core Error Number 4416:
+errors.704.linkIsCancelled = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has been cancelled
+
+# EMCS Core Error Number 4417:
+errors.704.linkIsExpired = The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority has expired
+
+# EMCS Core Error Number 4418:
+errors.704.linkMissingOrInvalid = The temporary authorisation reference entered is invalid because the consignee’s Temporary Certificate of Authority is not held on EMCS
+
+# EMCS Core Error Number 4419:
+errors.704.directDeliveryNotAllowed = The consignee entered is not allowed to receive direct deliveries
+
+# EMCS Core Error Number 4420:
+errors.704.consignorNotAuthorised = The consignor is not authorised to trade with the temporary registered consignee
+
+# EMCS Core Error Number 4423:
+errors.704.registeredConsignorToRegisteredConsignee = A registered consignor cannot send goods to a registered consignee
+
+# EMCS Core Error Number 4455:
+errors.704.consigneeRoleInvalid = The consignee Excise Registration Number is not valid for this type of movement

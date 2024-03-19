@@ -174,6 +174,7 @@ case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends Su
 
   override val index = Some(idx)
 }
+
 object ItemDegreesPlatoError {
   val code = "4445"
 }

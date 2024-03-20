@@ -103,7 +103,14 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
           "must not render an 'Update Needed' tag against the Destination Section, " +
             "when an error relevant to the section has been fixed" in {
             implicit lazy val request =
-              requestWithTestErnSet(ExciseIdForTaxWarehouseInvalid.code, hasBeenFixed = true)
+
+              dataRequest(FakeRequest(),
+                emptyUserAnswers.copy(submissionFailures = Seq(
+                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseOfDestinationInvalidError.code, hasBeenFixed = true),
+                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError.code, hasBeenFixed = true),
+                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseInvalid.code, hasBeenFixed = true)
+                )).set(DestinationWarehouseExcisePage, testErn))
+
 
             destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = false)
           }

@@ -25,7 +25,7 @@ import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import utils.{ExciseIdForTaxWarehouseOfDestinationInvalidError, JsonOptionFormatter}
+import utils.JsonOptionFormatter
 import viewmodels.taskList._
 
 class DestinationSectionSpec extends SpecBase

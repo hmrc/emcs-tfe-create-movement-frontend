@@ -264,7 +264,7 @@ case object ExciseIdForTaxWarehouseOfDestinationInvalidError extends SubmissionE
 }
 
 case object ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError extends SubmissionError {
-  override val code = "4421"
+  override val code = "4412"
   override val messageKey = "errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee"
   override val id = "excise-id-for-tax-warehouse-of-destination-needs-consignee-error"
 

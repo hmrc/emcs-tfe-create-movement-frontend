@@ -72,35 +72,37 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       }
     }
 
-    "must return the correct SubmissionError (non-indexed)" - {
+    "must return the correct SubmissionError and code (non-indexed)" - {
 
       Seq(
-        LocalReferenceNumberError,
-        ImportCustomsOfficeCodeError,
-        ExportCustomsOfficeNumberError,
-        InvalidOrMissingConsigneeError,
-        LinkIsPendingError,
-        LinkIsAlreadyUsedError,
-        LinkIsWithdrawnError,
-        LinkIsCancelledError,
-        LinkIsExpiredError,
-        LinkMissingOrInvalidError,
-        DirectDeliveryNotAllowedError,
-        ConsignorNotAuthorisedError,
-        RegisteredConsignorToRegisteredConsigneeError,
-        ConsigneeRoleInvalidError,
-        ExciseIdForTaxWarehouseOfDestinationInvalidError,
-        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError,
-        ExciseIdForTaxWarehouseInvalid
-      ).foreach { submissionError =>
+        LocalReferenceNumberError -> "4402",
+        ImportCustomsOfficeCodeError -> "4451",
+        ExportCustomsOfficeNumberError -> "4425",
+        InvalidOrMissingConsigneeError -> "4405",
+        LinkIsPendingError -> "4413",
+        LinkIsAlreadyUsedError -> "4414",
+        LinkIsWithdrawnError -> "4415",
+        LinkIsCancelledError -> "4416",
+        LinkIsExpiredError -> "4417",
+        LinkMissingOrInvalidError -> "4418",
+        DirectDeliveryNotAllowedError -> "4419",
+        ConsignorNotAuthorisedError -> "4420",
+        RegisteredConsignorToRegisteredConsigneeError -> "4423",
+        ConsigneeRoleInvalidError -> "4455",
+        ExciseIdForTaxWarehouseOfDestinationInvalidError -> "4406",
+        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError -> "4412",
+        ExciseIdForTaxWarehouseInvalid -> "4456"
+      ).foreach {
+        case (submissionError, expectedErrorCode) =>
 
-        s"when given error code ${submissionError.code}" in {
+          s"when given error code ${submissionError.code}" in {
 
-          val expectedResult = submissionError
-          val actualResult = SubmissionError(submissionError.code)
+            val expectedResult = submissionError
+            val actualResult = SubmissionError(submissionError.code)
 
-          actualResult mustBe expectedResult
-        }
+            actualResult mustBe expectedResult
+            actualResult.code mustBe expectedErrorCode
+          }
       }
     }
 

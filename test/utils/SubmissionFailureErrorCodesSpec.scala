@@ -77,7 +77,10 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         DirectDeliveryNotAllowedError,
         ConsignorNotAuthorisedError,
         RegisteredConsignorToRegisteredConsigneeError,
-        ConsigneeRoleInvalidError
+        ConsigneeRoleInvalidError,
+        ExciseIdForTaxWarehouseOfDestinationInvalidError,
+        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError,
+        ExciseIdForTaxWarehouseInvalid
       ).foreach { submissionError =>
 
         s"when given error code ${submissionError.code}" in {

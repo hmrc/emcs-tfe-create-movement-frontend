@@ -124,8 +124,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage).exists {
-      movementScenario =>
-        Seq(
+      movementScenario => Seq(
           GbTaxWarehouse,
           EuTaxWarehouse,
           RegisteredConsignee,

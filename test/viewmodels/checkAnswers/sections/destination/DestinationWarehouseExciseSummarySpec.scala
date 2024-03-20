@@ -31,7 +31,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import utils.{ExciseIdForTaxWarehouseInvalid, ExciseIdForTaxWarehouseOfDestinationInvalidError, ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError}
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 import views.html.components.tag
 
 
@@ -58,30 +57,11 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
 
       "when there's an answer" - {
 
-        "must output the expected row when user answers yes" in {
+        "must output the expected row" in {
+
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseExcisePage, "XIRC123456789"))
+
           destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = false)
-        }
-
-        // TODO same test as above?
-        "must output the expected row when user answers no" in {
-
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseExcisePage, "XIRC123456789"))
-
-          destinationWarehouseExciseSummary.row() mustBe
-            Some(
-              SummaryListRowViewModel(
-                key = English.cyaLabel,
-                value = Value(HtmlContent("XIRC123456789")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = English.change,
-                    href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                    id = "changeDestinationWarehouseExcise"
-                  ).withVisuallyHiddenText(English.cyaChangeHidden)
-                )
-              )
-            )
         }
 
         "and there is a 704 error" - {
@@ -120,7 +100,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
             destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = true)
           }
 
-          "must not an 'Update Needed' tag against the Destination Section, " +
+          "must not render an 'Update Needed' tag against the Destination Section, " +
             "when an error relevant to the section has been fixed" in {
             implicit lazy val request =
               requestWithTestErnSet(ExciseIdForTaxWarehouseInvalid.code, hasBeenFixed = true)

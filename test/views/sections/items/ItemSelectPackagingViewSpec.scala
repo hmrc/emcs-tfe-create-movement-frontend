@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSelectPackagingMessages
 import forms.sections.items.ItemSelectPackagingFormProvider
-import models.GoodsType.Wine
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -51,15 +50,15 @@ class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours with Item
           selectOptions = testItemPackagingTypes,
           defaultTextMessageKey = "itemSelectPackaging.select.defaultValue"
         )
-        val form = app.injector.instanceOf[ItemSelectPackagingFormProvider].apply(Wine, testItemPackagingTypes)
+        val form = app.injector.instanceOf[ItemSelectPackagingFormProvider].apply(testIndex1, testItemPackagingTypes)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, Wine).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, selectOptions, testIndex1).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title("wine"),
-          Selectors.h1 -> messagesForLanguage.heading("wine"),
+          Selectors.title -> messagesForLanguage.title(testIndex1.displayIndex),
+          Selectors.h1 -> messagesForLanguage.heading(testIndex1.displayIndex),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.hint -> messagesForLanguage.hint(testIndex1.displayIndex),
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.aerosolSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,

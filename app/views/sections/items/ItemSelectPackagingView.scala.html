@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import models.GoodsType
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
@@ -34,14 +33,14 @@
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, selectOptions: Seq[SelectItem], itemsIndex: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
     @autocompleteJavascript()
     <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form, messages("itemSelectPackaging.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemSelectPackaging.title", itemsIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 
@@ -58,9 +57,9 @@
                 label = Label(
                     classes = "govuk-label--l",
                     isPageHeading = true,
-                    content = Text(messages("itemSelectPackaging.heading", goodsType.toSingularOutput()))
+                    content = Text(messages("itemSelectPackaging.heading", itemsIndex.displayIndex))
                 ),
-                hint = Some(HintViewModel(Text(messages("itemSelectPackaging.hint")))),
+                hint = Some(HintViewModel(Text(messages("itemSelectPackaging.hint", itemsIndex.displayIndex)))),
                 items = selectOptions,
                 errorMessage = form.errors("packaging") match {
                 case Nil => None

@@ -19,6 +19,17 @@ package utils
 import base.SpecBase
 
 import scala.collection.Seq
+import controllers.sections.consignee.routes._
+import controllers.sections.items.routes._
+import controllers.sections.importInformation.routes._
+import controllers.sections.exportInformation.routes._
+import controllers.sections.destination.routes._
+import controllers.sections.info.routes._
+
+import models.CheckMode
+import models.requests.DataRequest
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
@@ -90,6 +101,47 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
 
           actualResult mustBe expectedResult
         }
+      }
+    }
+
+    "must have the expected route" in {
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+      val itemIndex = 1
+      val isForAddToList = true
+
+      Seq(
+        LocalReferenceNumberError -> LocalReferenceNumberController.onPageLoad(testErn, testDraftId).url,
+        ImportCustomsOfficeCodeError -> ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ExportCustomsOfficeNumberError -> ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        InvalidOrMissingConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsPendingError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsAlreadyUsedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsWithdrawnError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsCancelledError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsExpiredError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkMissingOrInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        DirectDeliveryNotAllowedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ConsignorNotAuthorisedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        RegisteredConsignorToRegisteredConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ConsigneeRoleInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ItemQuantityError(itemIndex, isForAddToList) -> ItemQuantityController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemDegreesPlatoError(itemIndex, isForAddToList) -> ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeConsignorNotApprovedToSendError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeConsigneeNotApprovedToReceiveError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeDestinationNotApprovedToReceiveError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ExciseIdForTaxWarehouseOfDestinationInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ExciseIdForTaxWarehouseInvalid -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+      ).foreach {
+        case (error, expectedUrl) =>
+          error.route().url mustBe expectedUrl
       }
     }
 

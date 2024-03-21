@@ -27,6 +27,10 @@ object DestinationCheckAnswersMessages {
     val traderNameChangeHidden = "Trader name"
     val addressLabel: String = "Address"
     val addressChangeHidden: String = "Address"
+
+    val placeOfDestinationExciseIdInvalidError = "The excise ID for the tax warehouse of destination is not valid"
+    val placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError = "The excise ID for the tax warehouse of destination must be linked to the consignee"
+    val placeOfDestinationExciseIdForTaxWarehouseInvalidError = "The excise ID for the tax warehouse of destination is not valid"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -19,6 +19,17 @@ package utils
 import base.SpecBase
 
 import scala.collection.Seq
+import controllers.sections.consignee.routes._
+import controllers.sections.items.routes._
+import controllers.sections.importInformation.routes._
+import controllers.sections.exportInformation.routes._
+import controllers.sections.destination.routes._
+import controllers.sections.info.routes._
+
+import models.CheckMode
+import models.requests.DataRequest
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
@@ -61,32 +72,78 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       }
     }
 
-    "must return the correct SubmissionError (non-indexed)" - {
+    "must return the correct SubmissionError and code (non-indexed)" - {
 
       Seq(
-        LocalReferenceNumberError,
-        ImportCustomsOfficeCodeError,
-        ExportCustomsOfficeNumberError,
-        InvalidOrMissingConsigneeError,
-        LinkIsPendingError,
-        LinkIsAlreadyUsedError,
-        LinkIsWithdrawnError,
-        LinkIsCancelledError,
-        LinkIsExpiredError,
-        LinkMissingOrInvalidError,
-        DirectDeliveryNotAllowedError,
-        ConsignorNotAuthorisedError,
-        RegisteredConsignorToRegisteredConsigneeError,
-        ConsigneeRoleInvalidError
-      ).foreach { submissionError =>
+        LocalReferenceNumberError -> "4402",
+        ImportCustomsOfficeCodeError -> "4451",
+        ExportCustomsOfficeNumberError -> "4425",
+        InvalidOrMissingConsigneeError -> "4405",
+        LinkIsPendingError -> "4413",
+        LinkIsAlreadyUsedError -> "4414",
+        LinkIsWithdrawnError -> "4415",
+        LinkIsCancelledError -> "4416",
+        LinkIsExpiredError -> "4417",
+        LinkMissingOrInvalidError -> "4418",
+        DirectDeliveryNotAllowedError -> "4419",
+        ConsignorNotAuthorisedError -> "4420",
+        RegisteredConsignorToRegisteredConsigneeError -> "4423",
+        ConsigneeRoleInvalidError -> "4455",
+        PlaceOfDestinationExciseIdInvalidError -> "4406",
+        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> "4412",
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> "4456"
+      ).foreach {
+        case (submissionError, expectedErrorCode) =>
 
-        s"when given error code ${submissionError.code}" in {
+          s"when given error code ${submissionError.code}" in {
 
-          val expectedResult = submissionError
-          val actualResult = SubmissionError(submissionError.code)
+            val expectedResult = submissionError
+            val actualResult = SubmissionError(submissionError.code)
 
-          actualResult mustBe expectedResult
-        }
+            actualResult mustBe expectedResult
+            actualResult.code mustBe expectedErrorCode
+          }
+      }
+    }
+
+    "must have the expected route" in {
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+      val itemIndex = 1
+      val isForAddToList = true
+
+      Seq(
+        LocalReferenceNumberError -> LocalReferenceNumberController.onPageLoad(testErn, testDraftId).url,
+        ImportCustomsOfficeCodeError -> ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ExportCustomsOfficeNumberError -> ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        InvalidOrMissingConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsPendingError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsAlreadyUsedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsWithdrawnError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsCancelledError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkIsExpiredError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        LinkMissingOrInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        DirectDeliveryNotAllowedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ConsignorNotAuthorisedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        RegisteredConsignorToRegisteredConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ConsigneeRoleInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        ItemQuantityError(itemIndex, isForAddToList) -> ItemQuantityController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemDegreesPlatoError(itemIndex, isForAddToList) -> ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeConsignorNotApprovedToSendError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeConsigneeNotApprovedToReceiveError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeDestinationNotApprovedToReceiveError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex, isForAddToList) ->
+          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
+        PlaceOfDestinationExciseIdInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+      ).foreach {
+        case (error, expectedUrl) =>
+          error.route().url mustBe expectedUrl
       }
     }
 

@@ -17,7 +17,7 @@
 package pages.sections.destination
 
 import base.SpecBase
-import fixtures.UserAddressFixtures
+import fixtures.{MovementSubmissionFailureFixtures, UserAddressFixtures}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
@@ -28,11 +28,27 @@ import play.api.test.FakeRequest
 import utils.JsonOptionFormatter
 import viewmodels.taskList._
 
-class DestinationSectionSpec extends SpecBase with UserAddressFixtures with JsonOptionFormatter {
+class DestinationSectionSpec extends SpecBase
+  with UserAddressFixtures
+  with JsonOptionFormatter
+  with MovementSubmissionFailureFixtures {
 
   val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "status" - {
+
+    "when DestinationWarehouseExcisePage has a MovementSubmissionError" - {
+      "must return UpdateNeeded" - {
+
+        implicit val dr: DataRequest[_] = dataRequest(request,
+          emptyUserAnswers
+            .set(DestinationWarehouseExcisePage, destinationWarehouseExciseFailure.errorType)
+            .copy(submissionFailures = Seq(destinationWarehouseExciseFailure))
+        )
+
+        DestinationSection.status mustBe UpdateNeeded
+      }
+    }
 
     "when shouldStartFlowAtDestinationWarehouseExcise" - {
       "must return Completed" - {

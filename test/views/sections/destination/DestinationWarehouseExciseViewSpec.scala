@@ -17,48 +17,108 @@
 package views.sections.destination
 
 import base.SpecBase
-import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
+import fixtures.MovementSubmissionFailureFixtures
+import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationWarehouseExciseView
 import views.{BaseSelectors, ViewBehaviours}
+import controllers.sections.destination.routes
+import play.api.data.FormError
 
-class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
+class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
+
+  lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
 
   object Selectors extends BaseSelectors
 
   "Destination Warehouse Excise view" - {
 
-    Seq(DestinationWarehouseExciseMessages.English).foreach { messagesForLanguage =>
+    s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
 
-       lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
-        val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+      implicit val doc: Document =
+        Jsoup.parse(view(
+          form = form,
+          onSubmitCall = routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
+        ).toString())
 
-        implicit val doc: Document =
-          Jsoup.parse(view(
-            form = form,
-            onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
-          ).toString())
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.h2(1) -> English.destinationSection,
+        Selectors.hint -> English.text,
+        Selectors.button -> English.saveAndContinue,
+        Selectors.link(1) -> English.returnToDraft
+      ))
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.destinationSection,
-          Selectors.hint -> messagesForLanguage.text,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+      behave like pageWithElementsNotPresent(Seq(
+        Selectors.notificationBannerTitle,
+        Selectors.notificationBannerContent
+      ))
+    }
+
+    "when ERN needs updating and there is NO form error" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+        emptyUserAnswers.copy(submissionFailures =
+          DestinationWarehouseExcisePage.possibleErrors.map(error => destinationWarehouseExciseFailure.copy(error.code))
+        )
+      )
+
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+
+
+      implicit val doc: Document =
+        Jsoup.parse(view(
+          form = form,
+          onSubmitCall = routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
+        ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.hint -> English.text,
+        Selectors.button -> English.saveAndContinue,
+        Selectors.link(1) -> English.returnToDraft,
+        Selectors.notificationBannerTitle -> English.updateNeeded,
+        Selectors.notificationBannerError(1) -> English.placeOfDestinationExciseIdInvalidError,
+        Selectors.notificationBannerError(2) -> English.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError,
+        Selectors.notificationBannerError(3) -> English.placeOfDestinationExciseIdForTaxWarehouseInvalidError,
+      ))
+
+    }
+
+    s"when ERN needs updating and there is a form error" - {
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+        emptyUserAnswers.copy(submissionFailures = Seq(destinationWarehouseExciseFailure)
+        )
+      )
+
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+
+      implicit val doc: Document =
+        Jsoup.parse(view(
+          form = form.withError(FormError("key", "msg")),
+          onSubmitCall = routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, NormalMode)
+        ).toString())
+
+      "not show the notification banner when there is an error" in {
+        doc.select(".govuk-error-summary").isEmpty mustBe false
+        doc.select(".govuk-notification-banner").isEmpty mustBe true
       }
     }
   }

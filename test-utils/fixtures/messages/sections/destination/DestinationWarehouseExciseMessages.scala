@@ -30,6 +30,11 @@ object DestinationWarehouseExciseMessages {
     val errorLength: String = "Excise ID of the tax warehouse must be 16 characters or less"
     val errorInvalidCharacters: String = "Excise ID of the tax warehouse must not include < and > and : and ;"
     val text: String = "This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789."
+
+    val placeOfDestinationExciseIdInvalidError = "The excise ID for the tax warehouse of destination is not valid"
+    val placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError = "The excise ID for the tax warehouse of destination must be linked to the consignee"
+    val placeOfDestinationExciseIdForTaxWarehouseInvalidError = "The excise ID for the tax warehouse of destination is not valid"
+
   }
 
   object English extends ViewMessages with BaseEnglish

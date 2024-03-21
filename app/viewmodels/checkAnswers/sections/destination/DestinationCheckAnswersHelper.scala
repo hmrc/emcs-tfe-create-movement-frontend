@@ -23,7 +23,7 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class DestinationCheckAnswersHelper @Inject()() {
+class DestinationCheckAnswersHelper @Inject()(destinationWarehouseExciseSummary: DestinationWarehouseExciseSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
@@ -38,7 +38,7 @@ class DestinationCheckAnswersHelper @Inject()() {
 
 
   private def exciseOrVatRow()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    (DestinationWarehouseVatSummary.row(), DestinationWarehouseExciseSummary.row()) match {
+    (DestinationWarehouseVatSummary.row(), destinationWarehouseExciseSummary.row()) match {
       case (Some(vatRow), _) => Some(vatRow)
       case (_, Some(exciseRow)) => Some(exciseRow)
       case _ => None

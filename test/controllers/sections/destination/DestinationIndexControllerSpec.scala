@@ -18,6 +18,7 @@ package controllers.sections.destination
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
@@ -29,7 +30,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService {
+class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService with MovementSubmissionFailureFixtures {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
@@ -52,6 +53,19 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
         .set(DestinationTypePage, TemporaryRegisteredConsignee)
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, false))) {
+
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+      }
+    }
+
+    "when DestinationSection is not completed, and DestinationSection.status == UpdateNeeded" - {
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
+        .set(DestinationTypePage, TemporaryRegisteredConsignee)
+        .set(DestinationDetailsChoicePage, false)
+        .copy(submissionFailures = Seq(destinationWarehouseExciseFailure)))) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 

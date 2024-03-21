@@ -17,20 +17,24 @@
 package forms.sections.destination
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 
-class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFieldBehaviours {
+class DestinationWarehouseExciseFormProviderSpec extends SpecBase
+  with StringFieldBehaviours
+  with MovementSubmissionFailureFixtures {
 
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
   val maxLength = 16
   val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
-  val form = new DestinationWarehouseExciseFormProvider()()
+  val form = new DestinationWarehouseExciseFormProvider().apply()(dataRequest(FakeRequest()))
 
   ".value" - {
 
@@ -84,6 +88,23 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
 
         msgs(invalidCharactersKey) mustBe
           English.errorInvalidCharacters
+      }
+
+      "when a submission failure exists and the input is the same as the previous one" - {
+        val form = new DestinationWarehouseExciseFormProvider().apply()(
+          dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.copy(
+              submissionFailures = Seq(destinationWarehouseExciseFailure.copy(originalAttributeValue = Some(testErn)))
+            )
+          )
+        )
+
+        "must error with the expected msg key" in {
+          val boundForm = form.bind(Map("value" -> testErn))
+
+          boundForm.errors.headOption mustBe Some(FormError("value", "destinationWarehouseExcise.error.submissionError", Seq()))
+        }
       }
     }
   }

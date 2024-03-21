@@ -17,6 +17,8 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import pages.sections.destination.DestinationWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
@@ -24,10 +26,11 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    notificationBanner: GovukNotificationBanner,
     continueOrExit: components.continueOrExit,
     h1: components.h1,
     h2: components.h2,
-    p: components.p
+    errorNotificationBannerHelper: ErrorNotificationBannerHelper
 )
 
 @(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -38,6 +41,11 @@
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(
+                errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,
+                hasContentHeading = false
+            ).map(notificationBanner(_))
         }
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

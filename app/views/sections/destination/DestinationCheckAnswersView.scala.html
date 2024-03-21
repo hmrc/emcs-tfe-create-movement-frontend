@@ -15,6 +15,8 @@
  *@
 
 @import models.requests.DataRequest
+@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import pages.sections.destination.DestinationWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
@@ -22,7 +24,9 @@
     govukButton: GovukButton,
     h1: components.h1,
     govukSummaryList: GovukSummaryList,
-    h2: components.h2
+    h2: components.h2,
+    notificationBanner: GovukNotificationBanner,
+    errorNotificationBannerHelper: ErrorNotificationBannerHelper
 )
 
 @(list: SummaryList, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -30,6 +34,11 @@
 @layout(pageTitle = titleNoForm(messages("destinationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+
+        @errorNotificationBannerHelper.content(
+            errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,
+            withLinks = true
+        ).map(notificationBanner(_))
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 

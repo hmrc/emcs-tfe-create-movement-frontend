@@ -18,16 +18,23 @@ package forms.sections.destination
 
 import forms.XSS_REGEX
 import forms.mappings.Mappings
+import models.requests.DataRequest
+import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+
+  def apply()(implicit dataRequest: DataRequest[_]): Form[String] = {
+    val optOriginalValueSentInPreviousSubmission = DestinationWarehouseExcisePage.getOriginalAttributeValue
+
     Form(
       "value" -> text("destinationWarehouseExcise.error.required")
         .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"))
         .verifying(maxLength(16, "destinationWarehouseExcise.error.length"))
+        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.error.submissionError"))
     )
+  }
 }

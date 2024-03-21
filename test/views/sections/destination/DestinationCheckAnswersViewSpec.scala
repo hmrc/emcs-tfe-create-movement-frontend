@@ -17,40 +17,69 @@
 package views.sections.destination
 
 import base.SpecBase
-import fixtures.messages.sections.destination.DestinationCheckAnswersMessages
+import fixtures.MovementSubmissionFailureFixtures
+import fixtures.messages.TaskListStatusMessages
+import fixtures.messages.sections.destination.DestinationCheckAnswersMessages.English
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import utils.{PlaceOfDestinationExciseIdForTaxWarehouseInvalidError, PlaceOfDestinationExciseIdInvalidError, PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError}
+import viewmodels.checkAnswers.sections.destination.DestinationWarehouseExciseSummary
 import views.html.sections.destination.DestinationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
-  object Selectors extends BaseSelectors
+class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
+  object Selectors extends BaseSelectors {
+    val tag = ".govuk-tag--orange"
+  }
+
+  implicit val msgs: Messages = messages(Seq(English.lang))
+  lazy val destinationWarehouseExciseSummary: DestinationWarehouseExciseSummary = app.injector.instanceOf[DestinationWarehouseExciseSummary]
+  lazy val view = app.injector.instanceOf[DestinationCheckAnswersView]
 
   "Destination Business Name view" - {
 
-    Seq(DestinationCheckAnswersMessages.English).foreach { messagesForLanguage =>
+    s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+      implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq.empty), testOnwardRoute).toString())
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.subHeadingCaptionSelector -> English.destinationSection,
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.button -> English.confirmAnswers
+      ))
+    }
 
-       lazy val view = app.injector.instanceOf[DestinationCheckAnswersView]
+    s"when being rendered with Destination Warehouse Excise errors in lang code of '${English.lang.code}'" - {
 
-        implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq.empty), testOnwardRoute).toString())
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+        emptyUserAnswers.copy(submissionFailures =
+          DestinationWarehouseExcisePage.possibleErrors.map(error => destinationWarehouseExciseFailure.copy(error.code))
+        )
+          .set(DestinationWarehouseExcisePage, testErn)
+      )
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.confirmAnswers
-        ))
-      }
+      implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq(destinationWarehouseExciseSummary.row().get)), testOnwardRoute).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.subHeadingCaptionSelector -> English.destinationSection,
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.button -> English.confirmAnswers,
+        Selectors.notificationBannerTitle -> English.updateNeeded,
+        Selectors.tag -> TaskListStatusMessages.English.updateNeededTag,
+        Selectors.submissionError(PlaceOfDestinationExciseIdInvalidError) -> English.placeOfDestinationExciseIdInvalidError,
+        Selectors.submissionError(PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError) -> English.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError,
+        Selectors.submissionError(PlaceOfDestinationExciseIdForTaxWarehouseInvalidError) -> English.placeOfDestinationExciseIdForTaxWarehouseInvalidError,
+      ))
+
     }
   }
 }

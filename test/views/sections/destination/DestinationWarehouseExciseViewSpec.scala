@@ -35,6 +35,8 @@ import play.api.data.FormError
 
 class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
+  lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
+
   object Selectors extends BaseSelectors
 
   "Destination Warehouse Excise view" - {
@@ -44,7 +46,6 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
       implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-      lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
       val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
 
       implicit val doc: Document =
@@ -77,7 +78,6 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
       val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
 
 
@@ -108,7 +108,6 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
       val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
 
       implicit val doc: Document =

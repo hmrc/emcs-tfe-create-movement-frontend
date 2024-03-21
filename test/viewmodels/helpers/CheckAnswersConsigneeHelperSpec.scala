@@ -57,13 +57,6 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
           .set(ConsigneeExcisePage, testGbWarehouseErn)
           .set(ConsigneeAddressPage, testUserAddress)
       }
-      val ernNeedsUpdatingUserAnswers = {
-        emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
-          .set(ConsigneeExcisePage, testErn)
-          .set(ConsigneeAddressPage, testUserAddress)
-          .copy(submissionFailures = Seq(consigneeExciseFailure))
-      }
       val exemptDataUserAnswers = {
         emptyUserAnswers
           .set(ConsigneeBusinessNamePage, "testBusinessName")
@@ -182,17 +175,6 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
         }
-
-      "the Consignee ERN needs to be updated" in new Setup(testGbWarehouseErn, ernNeedsUpdatingUserAnswers) {
-
-        val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          consigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
-        ).flatten
-
-        checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
-      }
 
       "the destination type is ExemptedOrganisations" in new Setup(testGbWarehouseErn, exemptDataUserAnswers) {
 

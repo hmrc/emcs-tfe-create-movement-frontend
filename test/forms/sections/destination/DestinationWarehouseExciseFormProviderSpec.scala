@@ -103,7 +103,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
         "must error with the expected msg key" in {
           val boundForm = form.bind(Map("value" -> testErn))
 
-          boundForm.errors.headOption mustBe Some(FormError("value", "destinationWarehouseExcise.updateOriginalSubmission", Seq()))
+          boundForm.errors.headOption mustBe Some(FormError("value", "destinationWarehouseExcise.error.submissionError", Seq()))
         }
       }
     }

@@ -24,7 +24,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   val movementSubmissionFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = LocalReferenceNumberError.code,
     errorReason = "Oh no! Duplicate LRN The LRN is already known and is therefore not unique according to the specified rules",
-    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    errorLocation = None,
     originalAttributeValue = Some(testLrn),
     hasBeenFixed = false
   )
@@ -32,7 +32,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   val importCustomsOfficeCodeFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = ImportCustomsOfficeCodeError.code,
     errorReason = "The customs office reference number you have entered is not valid. Please amend your entry and resubmit",
-    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    errorLocation = None,
     originalAttributeValue = Some(testImportCustomsOffice),
     hasBeenFixed = false
   )
@@ -40,15 +40,15 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   val consigneeExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = InvalidOrMissingConsigneeError.code,
     errorReason = "Invalid or missing Consignee on SEED",
-    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    errorLocation = None,
     originalAttributeValue = Some(testErn),
     hasBeenFixed = false
   )
 
   val destinationWarehouseExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = ExciseIdForTaxWarehouseOfDestinationInvalidError.code,
-    errorReason = "The excise ID for the tax warehouse of destination is not valid",
-    errorLocation = Some("/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/EadEsadDraft[1]/LocalReferenceNumber[1]"),
+    errorReason = "Invalid or missing Place of Delivery on SEED",
+    errorLocation = None,
     originalAttributeValue = Some(testErn),
     hasBeenFixed = false
   )

@@ -43,7 +43,8 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         } else {
             @errorNotificationBannerHelper.content(
-                errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors
+                errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,
+                hasContentHeading = false
             ).map(notificationBanner(_))
         }
 

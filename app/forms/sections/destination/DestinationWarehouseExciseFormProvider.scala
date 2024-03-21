@@ -34,7 +34,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
       "value" -> text("destinationWarehouseExcise.error.required")
         .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"))
         .verifying(maxLength(16, "destinationWarehouseExcise.error.length"))
-        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.updateOriginalSubmission"))
+        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.error.submissionError"))
     )
   }
 }

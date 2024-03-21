@@ -29,7 +29,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
-import utils.{ExciseIdForTaxWarehouseInvalid, ExciseIdForTaxWarehouseOfDestinationInvalidError, ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError}
+import utils.{PlaceOfDestinationExciseIdForTaxWarehouseInvalidError, PlaceOfDestinationExciseIdInvalidError, PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError}
 import viewmodels.govuk.summarylist._
 import views.html.components.tag
 
@@ -79,7 +79,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
           "must render an 'Update Needed' tag against the Destination Section, " +
             "when an ExciseIdForTaxWarehouseOfDestinationInvalidError has not been fixed" in {
             implicit lazy val request =
-              requestWithTestErnSet(ExciseIdForTaxWarehouseOfDestinationInvalidError.code, hasBeenFixed = false)
+              requestWithTestErnSet(PlaceOfDestinationExciseIdInvalidError.code, hasBeenFixed = false)
 
             destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = true)
           }
@@ -87,7 +87,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
           "must render an 'Update Needed' tag against the Destination Section, " +
             "when an ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError has not been fixed" in {
             implicit lazy val request =
-              requestWithTestErnSet(ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError.code, hasBeenFixed = false)
+              requestWithTestErnSet(PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError.code, hasBeenFixed = false)
 
             destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = true)
           }
@@ -95,7 +95,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
           "must render an 'Update Needed' tag against the Destination Section, " +
             "when an ExciseIdForTaxWarehouseInvalid has not been fixed" in {
             implicit lazy val request =
-              requestWithTestErnSet(ExciseIdForTaxWarehouseInvalid.code, hasBeenFixed = false)
+              requestWithTestErnSet(PlaceOfDestinationExciseIdForTaxWarehouseInvalidError.code, hasBeenFixed = false)
 
             destinationWarehouseExciseSummary.row() mustBe expectedRow(hasUpdateNeededTag = true)
           }
@@ -106,9 +106,9 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers with 
 
               dataRequest(FakeRequest(),
                 emptyUserAnswers.copy(submissionFailures = Seq(
-                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseOfDestinationInvalidError.code, hasBeenFixed = true),
-                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError.code, hasBeenFixed = true),
-                  movementSubmissionFailure.copy(errorType = ExciseIdForTaxWarehouseInvalid.code, hasBeenFixed = true)
+                  movementSubmissionFailure.copy(errorType = PlaceOfDestinationExciseIdInvalidError.code, hasBeenFixed = true),
+                  movementSubmissionFailure.copy(errorType = PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError.code, hasBeenFixed = true),
+                  movementSubmissionFailure.copy(errorType = PlaceOfDestinationExciseIdForTaxWarehouseInvalidError.code, hasBeenFixed = true)
                 )).set(DestinationWarehouseExcisePage, testErn))
 
 

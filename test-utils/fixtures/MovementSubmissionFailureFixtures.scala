@@ -46,7 +46,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
   )
 
   val destinationWarehouseExciseFailure: MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = ExciseIdForTaxWarehouseOfDestinationInvalidError.code,
+    errorType = PlaceOfDestinationExciseIdInvalidError.code,
     errorReason = "Invalid or missing Place of Delivery on SEED",
     errorLocation = None,
     originalAttributeValue = Some(testErn),

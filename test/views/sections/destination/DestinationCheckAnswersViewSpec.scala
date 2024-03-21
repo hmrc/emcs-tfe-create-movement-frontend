@@ -28,7 +28,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import utils.{ExciseIdForTaxWarehouseInvalid, ExciseIdForTaxWarehouseOfDestinationInvalidError, ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError}
+import utils.{PlaceOfDestinationExciseIdForTaxWarehouseInvalidError, PlaceOfDestinationExciseIdInvalidError, PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError}
 import viewmodels.checkAnswers.sections.destination.DestinationWarehouseExciseSummary
 import views.html.sections.destination.DestinationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
@@ -75,9 +75,9 @@ class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
         Selectors.button -> English.confirmAnswers,
         Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.tag -> TaskListStatusMessages.English.updateNeededTag,
-        Selectors.submissionError(ExciseIdForTaxWarehouseOfDestinationInvalidError) -> English.exciseIdForTaxWarehouseOfDestinationInvalid,
-        Selectors.submissionError(ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError) -> English.exciseIdForTaxWarehouseOfDestinationNeedsConsignee,
-        Selectors.submissionError(ExciseIdForTaxWarehouseInvalid) -> English.exciseIdForTaxWarehouseInvalid,
+        Selectors.submissionError(PlaceOfDestinationExciseIdInvalidError) -> English.placeOfDestinationExciseIdInvalidError,
+        Selectors.submissionError(PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError) -> English.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError,
+        Selectors.submissionError(PlaceOfDestinationExciseIdForTaxWarehouseInvalidError) -> English.placeOfDestinationExciseIdForTaxWarehouseInvalidError,
       ))
 
     }

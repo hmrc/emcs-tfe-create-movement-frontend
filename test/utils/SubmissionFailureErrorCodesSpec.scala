@@ -89,9 +89,9 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         ConsignorNotAuthorisedError -> "4420",
         RegisteredConsignorToRegisteredConsigneeError -> "4423",
         ConsigneeRoleInvalidError -> "4455",
-        ExciseIdForTaxWarehouseOfDestinationInvalidError -> "4406",
-        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError -> "4412",
-        ExciseIdForTaxWarehouseInvalid -> "4456"
+        PlaceOfDestinationExciseIdInvalidError -> "4406",
+        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> "4412",
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> "4456"
       ).foreach {
         case (submissionError, expectedErrorCode) =>
 
@@ -138,9 +138,9 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
           ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
         ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex, isForAddToList) ->
           ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ExciseIdForTaxWarehouseOfDestinationInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ExciseIdForTaxWarehouseInvalid -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+        PlaceOfDestinationExciseIdInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
       ).foreach {
         case (error, expectedUrl) =>
           error.route().url mustBe expectedUrl

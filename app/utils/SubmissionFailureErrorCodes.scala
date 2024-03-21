@@ -254,27 +254,27 @@ object ItemExciseProductCodeDispatchPlaceNotAllowedError {
   val code = "4527"
 }
 
-case object ExciseIdForTaxWarehouseOfDestinationInvalidError extends SubmissionError {
+case object PlaceOfDestinationExciseIdInvalidError extends SubmissionError {
   override val code = "4406"
-  override val messageKey = "errors.704.exciseIdForTaxWarehouseOfDestinationInvalid"
+  override val messageKey = "errors.704.placeOfDestinationExciseIdInvalidError"
   override val id = "excise-id-for-tax-warehouse-of-destination-invalid-error"
 
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
 
-case object ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError extends SubmissionError {
+case object PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError extends SubmissionError {
   override val code = "4412"
-  override val messageKey = "errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee"
+  override val messageKey = "errors.704.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError"
   override val id = "excise-id-for-tax-warehouse-of-destination-needs-consignee-error"
 
   override def route()(implicit request: DataRequest[_]): Call =
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
 
-case object ExciseIdForTaxWarehouseInvalid extends SubmissionError {
+case object PlaceOfDestinationExciseIdForTaxWarehouseInvalidError extends SubmissionError {
   override val code = "4456"
-  override val messageKey = "errors.704.exciseIdForTaxWarehouseInvalid"
+  override val messageKey = "errors.704.placeOfDestinationExciseIdForTaxWarehouseInvalidError"
   override val id = "excise-id-for-tax-warehouse-invalid-error"
 
   override def route()(implicit request: DataRequest[_]): Call =
@@ -299,9 +299,9 @@ object SubmissionError {
     case ConsignorNotAuthorisedError.code => ConsignorNotAuthorisedError
     case RegisteredConsignorToRegisteredConsigneeError.code => RegisteredConsignorToRegisteredConsigneeError
     case ConsigneeRoleInvalidError.code => ConsigneeRoleInvalidError
-    case ExciseIdForTaxWarehouseOfDestinationInvalidError.code => ExciseIdForTaxWarehouseOfDestinationInvalidError
-    case ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError.code => ExciseIdForTaxWarehouseOfDestinationNeedsConsigneeError
-    case ExciseIdForTaxWarehouseInvalid.code => ExciseIdForTaxWarehouseInvalid
+    case PlaceOfDestinationExciseIdInvalidError.code => PlaceOfDestinationExciseIdInvalidError
+    case PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError.code => PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError
+    case PlaceOfDestinationExciseIdForTaxWarehouseInvalidError.code => PlaceOfDestinationExciseIdForTaxWarehouseInvalidError
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 

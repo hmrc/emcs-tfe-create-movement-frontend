@@ -1499,13 +1499,13 @@ errors.704.registeredConsignorToRegisteredConsignee = A registered consignor can
 errors.704.consigneeRoleInvalid = The consignee Excise Registration Number is not valid for this type of movement
 
 # EMCS Core Error Number 4406
-errors.704.exciseIdForTaxWarehouseOfDestinationInvalid = The excise ID for the tax warehouse of destination is not valid
+errors.704.placeOfDestinationExciseIdInvalidError = The excise ID for the tax warehouse of destination is not valid
 
 # EMCS Core Error Number 4421
-errors.704.exciseIdForTaxWarehouseOfDestinationNeedsConsignee = The excise ID for the tax warehouse of destination must be linked to the consignee
+errors.704.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError = The excise ID for the tax warehouse of destination must be linked to the consignee
 
 # EMCS Core Error Number 4456
-errors.704.exciseIdForTaxWarehouseInvalid = The excise ID for the tax warehouse of destination is not valid
+errors.704.placeOfDestinationExciseIdForTaxWarehouseInvalidError = The excise ID for the tax warehouse of destination is not valid
 
 # EMCS Core Error Number 4408, 4409, 4410, 4527
 errors.704.items.exciseProductCode = Item {0} excise product code

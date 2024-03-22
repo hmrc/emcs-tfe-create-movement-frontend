@@ -26,6 +26,10 @@ object DispatchWarehouseExciseMessages {
     val hintText = "This is sometimes called an excise registration number (ERN), starting with GB or XI. For example, GB00123456789."
     val cyaLabel = "Excise ID (ERN)"
     val cyaChangeHidden = "Excise ID (ERN) of the tax warehouse of dispatch"
+
+    val dispatchWarehouseInvalidOrMissingOnSeedError = "The excise ID for the tax warehouse of dispatch is not valid"
+    val dispatchWarehouseInvalidError = "The excise ID for the tax warehouse of dispatch is not valid"
+    val dispatchWarehouseConsignorDoesNotManageWarehouseError = "Excise ID entered for the tax warehouse of dispatch is not linked with the consignor"
   }
 
   object English extends ViewMessages with BaseEnglish

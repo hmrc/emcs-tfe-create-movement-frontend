@@ -17,18 +17,23 @@
 package viewmodels.checkAnswers.sections.dispatch
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.dispatch.DispatchWarehouseExciseMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Value}
+import utils._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.tag
 
-class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
+class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers with MovementSubmissionFailureFixtures {
+
+  lazy val dispatchWarehouseExciseSummary: DispatchWarehouseExciseSummary = app.injector.instanceOf[DispatchWarehouseExciseSummary]
+  lazy val tag: tag = app.injector.instanceOf[tag]
 
   "DispatchWarehouseExciseSummary" - {
 
@@ -44,7 +49,7 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DispatchWarehouseExciseSummary.row() mustBe None
+            dispatchWarehouseExciseSummary.row() mustBe None
           }
         }
 
@@ -54,11 +59,11 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchWarehouseExcisePage, "GB123456789"))
 
-            DispatchWarehouseExciseSummary.row() mustBe
+            dispatchWarehouseExciseSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("GB123456789")),
+                  value = Value(HtmlContent("GB123456789")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
@@ -68,6 +73,53 @@ class DispatchWarehouseExciseSummarySpec extends SpecBase with Matchers {
                   )
                 )
               )
+          }
+
+          "and there is a 704 error" - {
+
+            "must render an 'Update Needed' tag against the ERN - when the error has not been fixed" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(),
+                emptyUserAnswers
+                  .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = dispatchWarehouseInvalidOrMissingOnSeedError.errorType, hasBeenFixed = false)))
+                  .set(DispatchWarehouseExcisePage, testErn))
+
+              dispatchWarehouseExciseSummary.row() mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(HtmlContent(testErn + tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1").toString())),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "dispatchWarehouseExcise"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
+            }
+
+            "must not render an 'Update Needed' tag against the ERN - when the error has been fixed" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(),
+                emptyUserAnswers
+                  .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = dispatchWarehouseInvalidOrMissingOnSeedError.errorType, hasBeenFixed = true)))
+                  .set(DispatchWarehouseExcisePage, testErn))
+
+              dispatchWarehouseExciseSummary.row() mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(HtmlContent(testErn)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "dispatchWarehouseExcise"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
+            }
           }
         }
       }

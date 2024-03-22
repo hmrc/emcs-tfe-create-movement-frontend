@@ -23,14 +23,14 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class DispatchCheckAnswersHelper @Inject()() {
+class DispatchCheckAnswersHelper @Inject()(dispatchWarehouseExciseSummary: DispatchWarehouseExciseSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
         DispatchUseConsignorDetailsSummary.row(),
         DispatchBusinessNameSummary.row(),
-        DispatchWarehouseExciseSummary.row(),
+        dispatchWarehouseExciseSummary.row(),
         DispatchAddressSummary.row()
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")

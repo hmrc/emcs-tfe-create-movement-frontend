@@ -25,6 +25,7 @@ import pages.sections.dispatch.DispatchSection
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import viewmodels.taskList.UpdateNeeded
 
 import javax.inject.Inject
 
@@ -40,7 +41,7 @@ class DispatchIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (DispatchSection.isCompleted) {
+      if (DispatchSection.isCompleted || DispatchSection.status  == UpdateNeeded) {
         Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
         withAnswer(DestinationTypePage) {

@@ -61,6 +61,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     hasBeenFixed = false
   )
 
+
   def itemDegreesPlatoFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = ItemDegreesPlatoError.code,
     errorReason = "The alcoholic strength for wine and spirits you have entered is not valid.  Please amend your entry and resubmit",
@@ -74,6 +75,14 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     errorReason = "Not used",
     errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/ExciseProductCode[1]"),
     originalAttributeValue = Some("B000"),
+    hasBeenFixed = false
+  )
+
+  val dispatchWarehouseInvalidOrMissingOnSeedError: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = DispatchWarehouseInvalidOrMissingOnSeedError.code,
+    errorReason = "The Excise Warehouse Registration Number you have entered is not recognised by SEED. Please amend your entry.",
+    errorLocation = None,
+    originalAttributeValue = Some(testErn),
     hasBeenFixed = false
   )
 

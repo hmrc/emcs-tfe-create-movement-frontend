@@ -17,6 +17,8 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import pages.sections.dispatch.DispatchWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
@@ -24,8 +26,10 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    notificationBanner: GovukNotificationBanner,
     h1: components.h1,
     h2: components.h2,
+    errorNotificationBannerHelper: ErrorNotificationBannerHelper,
     continueOrExit: components.continueOrExit
 )
 
@@ -35,8 +39,14 @@
 
     @formHelper(action = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)) {
 
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(
+                errors = DispatchWarehouseExcisePage.getMovementSubmissionErrors,
+                hasContentHeading = false
+            ).map(notificationBanner(_))
         }
 
         @h2(messages("dispatch.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

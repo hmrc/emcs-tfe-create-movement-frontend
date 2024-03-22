@@ -156,6 +156,33 @@ case object ConsigneeRoleInvalidError extends SubmissionError {
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
 
+case object DispatchWarehouseInvalidOrMissingOnSeedError extends SubmissionError {
+  override val code = "4404"
+  override val messageKey = "errors.704.dispatchWarehouseInvalidOrMissingOnSeedError"
+  override val id = "dispatch-warehouse-invalid-or-missing-on-seed-error"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+}
+
+case object DispatchWarehouseInvalidError extends SubmissionError {
+  override val code = "4458"
+  override val messageKey = "errors.704.dispatchWarehouseInvalidError"
+  override val id = "dispatch-warehouse-invalid-error"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+}
+
+case object DispatchWarehouseConsignorDoesNotManageWarehouseError extends SubmissionError {
+  override val code = "4461"
+  override val messageKey = "errors.704.dispatchWarehouseConsignorDoesNotManageWarehouseError"
+  override val id = "dispatch-warehouse-consignor-does-not-manage-warehouse-error"
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+}
+
 case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
   override val code = ItemQuantityError.code
   override val messageKey = s"errors.704.items.quantity${if (isForAddToList) ".addToList" else ""}"
@@ -302,6 +329,9 @@ object SubmissionError {
     case PlaceOfDestinationExciseIdInvalidError.code => PlaceOfDestinationExciseIdInvalidError
     case PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError.code => PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError
     case PlaceOfDestinationExciseIdForTaxWarehouseInvalidError.code => PlaceOfDestinationExciseIdForTaxWarehouseInvalidError
+    case DispatchWarehouseInvalidOrMissingOnSeedError.code => DispatchWarehouseInvalidOrMissingOnSeedError
+    case DispatchWarehouseInvalidError.code => DispatchWarehouseInvalidError
+    case DispatchWarehouseConsignorDoesNotManageWarehouseError.code => DispatchWarehouseConsignorDoesNotManageWarehouseError
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 

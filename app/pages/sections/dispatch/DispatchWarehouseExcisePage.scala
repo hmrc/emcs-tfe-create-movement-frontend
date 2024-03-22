@@ -18,8 +18,15 @@ package pages.sections.dispatch
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import utils._
 
 case object DispatchWarehouseExcisePage extends QuestionPage[String] {
   override val toString: String = "dispatchWarehouseExcise"
   override val path: JsPath = DispatchSection.path \ toString
+
+  override val possibleErrors = Seq(
+    DispatchWarehouseInvalidOrMissingOnSeedError,
+    DispatchWarehouseInvalidError,
+    DispatchWarehouseConsignorDoesNotManageWarehouseError
+  )
 }

@@ -15,6 +15,8 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.dispatch.DispatchWarehouseExcisePage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
     layout: templates.Layout,
@@ -22,6 +24,8 @@
     govukButton: GovukButton,
     h1: components.h1,
     govukSummaryList: GovukSummaryList,
+    notificationBanner: GovukNotificationBanner,
+    errorNotificationBannerHelper: ErrorNotificationBannerHelper,
     h2: components.h2
 )
 
@@ -30,6 +34,11 @@
 @layout(pageTitle = titleNoForm(messages("dispatchCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+
+        @errorNotificationBannerHelper.content(
+            errors = DispatchWarehouseExcisePage.getMovementSubmissionErrors,
+            withLinks = true
+        ).map(notificationBanner(_))
 
         @h2(messages("dispatch.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 

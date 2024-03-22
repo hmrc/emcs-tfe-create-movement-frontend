@@ -19,7 +19,6 @@ package forms.sections.items
 import base.SpecBase
 import fixtures.ItemFixtures
 import forms.behaviours.StringFieldBehaviours
-import models.GoodsType.Wine
 import models.response.referenceData.ItemPackaging
 import play.api.data.{Form, FormError}
 import play.api.test.FakeRequest
@@ -28,7 +27,7 @@ class ItemSelectPackagingFormProviderSpec extends SpecBase with StringFieldBehav
 
   val requiredKey = "itemSelectPackaging.error.required"
 
-  val form: Form[ItemPackaging] = new ItemSelectPackagingFormProvider().apply(Wine, testItemPackagingTypes)(messages(FakeRequest()))
+  val form: Form[ItemPackaging] = new ItemSelectPackagingFormProvider().apply(testIndex1, testItemPackagingTypes)(messages(FakeRequest()))
 
   ".apply" - {
 
@@ -43,12 +42,12 @@ class ItemSelectPackagingFormProviderSpec extends SpecBase with StringFieldBehav
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(Wine.toSingularOutput()(messages(FakeRequest()))))
+      requiredError = FormError(fieldName, requiredKey, Seq(testIndex1.displayIndex))
     )
 
     "not bind when the value provided is not in the item packaging list" in {
       val result = form.bind(Map(fieldName -> "ZZ")).apply(fieldName)
-      result.errors mustEqual Seq(FormError(fieldName, requiredKey, Seq(Wine.toSingularOutput()(messages(FakeRequest())))))
+      result.errors mustEqual Seq(FormError(fieldName, requiredKey, Seq(testIndex1.displayIndex)))
     }
   }
 }

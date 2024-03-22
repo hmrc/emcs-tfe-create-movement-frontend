@@ -1174,11 +1174,11 @@ itemBulkPackagingSelect.checkYourAnswersLabel = Bulk package type
 itemBulkPackagingSelect.error.required = Select the bulk packaging type for the {0}
 itemBulkPackagingSelect.change.hidden = bulk package type
 
-itemSelectPackaging.title = Add a packaging type you are using for the {0}
-itemSelectPackaging.heading = Add a packaging type you are using for the {0}
-itemSelectPackaging.hint = Search by packaging type or code. You can add more types later.
+itemSelectPackaging.title = Add countable packaging you are using for item {0}
+itemSelectPackaging.heading = Add countable packaging you are using for item {0}
+itemSelectPackaging.hint = Add at least one type of packaging for item {0} that can be checked or counted easily. You can add more packaging to this item later.
 itemSelectPackaging.checkYourAnswersLabel = Packaging type
-itemSelectPackaging.error.required = Select a packaging type you are using for the {0}
+itemSelectPackaging.error.required = Select packaging you are using for item {0}
 itemSelectPackaging.change.hidden = packaging type
 itemSelectPackaging.select.defaultValue = Choose packaging type
 

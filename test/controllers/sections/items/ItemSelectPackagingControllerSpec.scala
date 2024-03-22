@@ -21,7 +21,6 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemSelectPackagingFormProvider
 import mocks.services.{MockGetPackagingTypesService, MockUserAnswersService}
-import models.GoodsType.Wine
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -55,7 +54,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       MockGetPackagingTypesService.getItemPackagingTypes().returns(Future.successful(testItemPackagingTypes))
     }
 
-    lazy val form: Form[ItemPackaging] = formProvider.apply(Wine, Seq.empty)(messages(request))
+    lazy val form: Form[ItemPackaging] = formProvider.apply(testIndex1, Seq.empty)(messages(request))
 
     lazy val controller = new ItemSelectPackagingController(
       messagesApi,
@@ -118,7 +117,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form, action, sampleEPCsSelectOptions, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -134,7 +133,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(ItemPackaging("AE", "Aerosol")), action, sampleEPCsSelectOptionsWithAerosolSelected,
-        Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
+        testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers), callsService = true) {
@@ -157,7 +156,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging", "")))
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, action, sampleEPCsSelectOptions,
-        Wine)(dataRequest(request, userAnswers.get), messages(request)).toString
+        testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

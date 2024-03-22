@@ -17,7 +17,7 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import models.GoodsType
+import models.Index
 import models.response.referenceData.ItemPackaging
 import play.api.data.Form
 import play.api.i18n.Messages
@@ -26,10 +26,10 @@ import javax.inject.Inject
 
 class ItemSelectPackagingFormProvider @Inject() extends Mappings {
 
-  def apply(goodsType: GoodsType, acceptablePackagingTypes: Seq[ItemPackaging])(implicit messages: Messages): Form[ItemPackaging] =
+  def apply(itemsIndex: Index, acceptablePackagingTypes: Seq[ItemPackaging])(implicit messages: Messages): Form[ItemPackaging] =
     Form(
-      "packaging" -> text("itemSelectPackaging.error.required", args = Seq(goodsType.toSingularOutput()))
-        .verifying(valueInList(acceptablePackagingTypes.map(_.packagingType), "itemSelectPackaging.error.required", goodsType.toSingularOutput()))
+      "packaging" -> text("itemSelectPackaging.error.required", args = Seq(itemsIndex.displayIndex))
+        .verifying(valueInList(acceptablePackagingTypes.map(_.packagingType), "itemSelectPackaging.error.required", itemsIndex.displayIndex))
         .transform[ItemPackaging](findPackagingTypeFromCode(_)(acceptablePackagingTypes).get, _.packagingType)
 
     )

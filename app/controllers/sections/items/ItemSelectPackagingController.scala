@@ -18,10 +18,9 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemSelectPackagingFormProvider
-import models.GoodsType
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging._
-import models.{Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemSelectPackagingPage, ItemsPackagingSection}
 import play.api.data.Form
@@ -60,7 +59,7 @@ class ItemSelectPackagingController @Inject()(
               defaultTextMessageKey = "itemSelectPackaging.select.defaultValue",
               existingAnswer = request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIdx)).map(_.code)
             )
-            renderView(Ok, fillForm(ItemSelectPackagingPage(itemsIndex, packagingIdx), formProvider(goodsType, nonCountablePackagingTypes)),
+            renderView(Ok, fillForm(ItemSelectPackagingPage(itemsIndex, packagingIdx), formProvider(itemsIndex, nonCountablePackagingTypes)),
               itemsIndex, packagingIdx, goodsType, selectItems, mode)
           }
         }
@@ -76,7 +75,7 @@ class ItemSelectPackagingController @Inject()(
               nonCountablePackagingTypes,
               defaultTextMessageKey = "itemSelectPackaging.select.defaultValue"
             )
-            formProvider(goodsType, nonCountablePackagingTypes).bindFromRequest().fold(
+            formProvider(itemsIndex, nonCountablePackagingTypes).bindFromRequest().fold(
               renderView(BadRequest, _, itemsIndex, packagingIdx, goodsType, selectItems, mode),
               saveAndRedirect(ItemSelectPackagingPage(itemsIndex, packagingIdx), _, mode)
             )
@@ -101,6 +100,6 @@ class ItemSelectPackagingController @Inject()(
       form = form,
       action = routes.ItemSelectPackagingController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
       selectOptions = selectItems,
-      goodsType = goodsType
+      itemsIndex = itemsIndex
     )))
 }

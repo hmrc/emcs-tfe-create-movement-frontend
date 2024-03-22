@@ -21,10 +21,10 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object ItemSelectPackagingMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(goodsType: String): String = s"Add a packaging type you are using for the $goodsType"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
-
-    val hint = "Search by packaging type or code. You can add more types later."
+    def heading(itemIndex: String): String = s"Add countable packaging you are using for item $itemIndex"
+    def title(itemIndex: String): String = titleHelper(heading(itemIndex))
+    def hint(itemIndex: String) =
+      s"Add at least one type of packaging for item $itemIndex that can be checked or counted easily. You can add more packaging to this item later."
 
     val cyaLabel = "Packaging type"
     val cyaChangeHidden = "packaging type"

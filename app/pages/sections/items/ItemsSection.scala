@@ -20,7 +20,7 @@ import models.requests.DataRequest
 import models.sections.items.ItemsAddToList
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import queries.ItemsCount
+import queries.{ItemsCount, ItemsPackagingCount}
 import viewmodels.taskList._
 
 case object ItemsSection extends Section[JsObject] {
@@ -38,4 +38,23 @@ case object ItemsSection extends Section[JsObject] {
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+
+  /**
+   * @param request user's DataRequest containing current UserAnswers
+   * @return for every item, for every packaging within that item,
+   *         return the ItemPackagingShippingMarksPage(itemIdx, packagingIdx) result if it exists
+   */
+  def retrieveAllShippingMarks()(implicit request: DataRequest[_]): Seq[String] =
+    request.userAnswers.get(ItemsCount)
+      .map {
+        itemsCount =>
+          (0 until itemsCount)
+            .flatMap(itemIdx => request.userAnswers.get(ItemsPackagingCount(itemIdx)).map {
+              packagingCount =>
+                (0 until packagingCount)
+                  .flatMap(packagingIdx => request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)))
+            })
+      }
+      .map(_.flatten)
+      .getOrElse(Seq())
 }

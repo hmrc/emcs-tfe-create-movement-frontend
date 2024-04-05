@@ -1221,6 +1221,11 @@ itemBulkPackagingChoice.checkYourAnswersLabel = Bulk package
 itemBulkPackagingChoice.error.required = Select yes if the {0} is being moved in bulk
 itemBulkPackagingChoice.change.hidden = if the {0} is being moved in bulk
 
+itemPackagingSelectShippingMark.title = Select a shipping mark for packaging {0}
+itemPackagingSelectShippingMark.heading = Select a shipping mark for packaging {0}
+itemPackagingSelectShippingMark.hint = Select a description of a mark or number that can be seen on the outside of the packaging. By selecting this shipping mark you are confirming that item {0} is packed together in the same package as any items with this shipping mark.
+itemPackagingSelectShippingMark.error.required = Select a shipping mark
+
 itemPackagingShippingMarks.title = What shipping marks are on this packaging?
 itemPackagingShippingMarks.heading = What shipping marks are on this packaging?
 itemPackagingShippingMarks.p = Enter any marks or numbers on the packaging that will help to identify it. Use the same shipping marks for any other product types contained within this package that are entered as a separate item.

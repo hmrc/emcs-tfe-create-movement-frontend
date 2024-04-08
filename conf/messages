@@ -1225,6 +1225,7 @@ itemPackagingSelectShippingMark.title = Select a shipping mark for packaging {0}
 itemPackagingSelectShippingMark.heading = Select a shipping mark for packaging {0}
 itemPackagingSelectShippingMark.hint = Select a description of a mark or number that can be seen on the outside of the packaging. By selecting this shipping mark you are confirming that item {0} is packed together in the same package as any items with this shipping mark.
 itemPackagingSelectShippingMark.error.required = Select a shipping mark
+itemPackagingSelectShippingMark.select.defaultValue = Select a shipping mark
 
 itemPackagingShippingMarks.title = What shipping marks are on this packaging?
 itemPackagingShippingMarks.heading = What shipping marks are on this packaging?

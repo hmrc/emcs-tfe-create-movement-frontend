@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,17 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, XSS_REGEX}
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class ItemPackagingSelectShippingMarkFormProvider @Inject() extends BaseTextareaFormProvider[String] with Mappings {
+class ItemPackagingSelectShippingMarkFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(seqOfValidShippingMarks: Seq[String]): Form[String] = {
+    val errorKey = "itemPackagingSelectShippingMark.error.required"
     Form(
-      "value" -> text("itemPackagingSelectShippingMark.error.required")
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "value" -> text(errorKey)
+        .verifying(valueInList(seqOfValidShippingMarks, errorKey))
     )
+  }
 }

@@ -55,6 +55,6 @@ case object ItemsSection extends Section[JsObject] {
                   .flatMap(packagingIdx => request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)))
             })
       }
-      .map(_.flatten)
+      .map(_.flatten.distinct)
       .getOrElse(Seq())
 }

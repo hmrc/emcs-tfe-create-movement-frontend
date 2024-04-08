@@ -25,7 +25,6 @@ import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Value}
-import utils._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import views.html.components.tag

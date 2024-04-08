@@ -28,7 +28,7 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
   val requiredKey = "dispatchWarehouseExcise.error.required"
   val xssKey = "dispatchWarehouseExcise.error.xss"
   val lengthKey = "dispatchWarehouseExcise.error.length"
-  val formatKey = "dispatchWarehouseExcise.error.format"
+  val formatKey = "dispatchWarehouseExcise.error.mustStartWithGBOrXI00"
   val fixedLength = 13
 
 
@@ -36,7 +36,7 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
     val form = new DispatchWarehouseExciseFormProvider()()(dataRequest(FakeRequest()))
 
     val fieldName = "value"
-    val formatError = FormError(fieldName, formatKey, Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
+    val formatError = FormError(fieldName, formatKey, Seq("(GB00|XI00)[a-zA-Z0-9]{9}"))
 
     behave like fieldThatBindsValidData(
       form,
@@ -48,7 +48,8 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
       form,
       fieldName,
       lengthError = FormError(fieldName, lengthKey, Seq(fixedLength)),
-      fixedLength
+      fixedLength,
+      optPrefix = Some("GB00")
     )
 
     behave like fieldWithXSSCharacters(
@@ -69,9 +70,69 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
       fieldName,
       formatError = formatError
     )
+
+    "when the consignor is a GB trader" - {
+
+      val form = new DispatchWarehouseExciseFormProvider()()(dataRequest(FakeRequest(), ern = testGreatBritainErn))
+
+      "and enters a non-GB00 ERN" - {
+
+        "then the form is marked with an error" in {
+
+          val boundForm = form.bind(Map(fieldName -> "XI00123456789"))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "dispatchWarehouseExcise.error.mustStartWithGB00", Seq("(GB00)[a-zA-Z0-9]{9}")))
+        }
+
+      }
+
+      "enters a GB00 ERN" - {
+
+        "then the form is bound successfully" in {
+
+          val boundForm = form.bind(Map(fieldName -> "GB00123456789"))
+          boundForm.value.value mustBe "GB00123456789"
+          boundForm.errors mustBe empty
+        }
+      }
+    }
+
+    "when the consignor is a XI trader" - {
+
+      "and enters a non GB00 or XI00 ERN" - {
+
+        "then the form is marked with an error" in {
+
+          val boundForm = form.bind(Map(fieldName -> "FR00123456789"))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "dispatchWarehouseExcise.error.mustStartWithGBOrXI00", Seq("(GB00|XI00)[a-zA-Z0-9]{9}")))
+        }
+
+      }
+
+      "enters a GB00 ERN" - {
+
+        "then the form is bound successfully" in {
+
+          val boundForm = form.bind(Map(fieldName -> "GB00123456789"))
+          boundForm.value.value mustBe "GB00123456789"
+          boundForm.errors mustBe empty
+        }
+      }
+
+      "enters a XI00 ERN" - {
+
+        "then the form is bound successfully" in {
+
+          val boundForm = form.bind(Map(fieldName -> "XI00123456789"))
+          boundForm.value.value mustBe "XI00123456789"
+          boundForm.errors mustBe empty
+        }
+      }
+    }
   }
 
   "when a submission failure exists and the input is the same as the previous one" - {
+
+    val testErn = "XI00123456789"
 
     val fieldName = "value"
     val form = new DispatchWarehouseExciseFormProvider().apply()(dataRequest(FakeRequest(),

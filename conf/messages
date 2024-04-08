@@ -302,6 +302,14 @@ address.postcode.error.length = Enter a postcode up to 10 characters
 address.postcode.error.character = Postcode must contain letters or numbers
 address.postcode.error.invalid = Postcode must not contain < and > and : and ;
 
+consignorPaidTemporaryAuthorisationCode.title = Enter the consignor’s Paid Temporary Authorisation (PTA) code
+consignorPaidTemporaryAuthorisationCode.heading = Enter the consignor’s Paid Temporary Authorisation (PTA) code
+consignorPaidTemporaryAuthorisationCode.hint = The PTA contains 13 characters starting with XIPTA. It will be different to the Excise Registration Number you signed in to EMCS with.
+consignorPaidTemporaryAuthorisationCode.error.required = Enter the Paid Temporary Authorisation (PTA) code
+consignorPaidTemporaryAuthorisationCode.error.length = Paid Temporary Authorisation (PTA) must be 13 characters or less
+consignorPaidTemporaryAuthorisationCode.error.incorrectFormat = Paid Temporary Authorisation (PTA) must start with XIPTA followed by 8 numbers or mixed letters and numbers
+consignorPaidTemporaryAuthorisationCode.change.hidden = paid temporary authorisation code
+
 checkYourAnswersConsignor.caption = Consignor information
 checkYourAnswersConsignor.title = Check your answers
 checkYourAnswersConsignor.heading = Check your answers
@@ -312,6 +320,7 @@ checkYourAnswersConsignor.address = Address
 
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
+consignor.subHeading = Consignor information
 transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
@@ -1528,3 +1537,5 @@ errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSe
 errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
+
+

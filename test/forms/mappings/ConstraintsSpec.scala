@@ -329,6 +329,12 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
         val result = startsWith("he", "errorKey")("HO HO")
         result mustEqual Invalid("errorKey")
       }
+
+      "if the form value starts with the prefix but there is spaces before the input" in {
+
+        val result = startsWith("he", "errorKey")("       HO HO")
+        result mustEqual Invalid("errorKey")
+      }
     }
   }
 
@@ -339,6 +345,12 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
       "if the form value does NOT start with the prefix" in {
 
         val result = doesNotStartWith("he", "errorKey")("HO HO")
+        result mustEqual Valid
+      }
+
+      "if the form value starts with the prefix but there is spaces before the input" in {
+
+        val result = doesNotStartWith("he", "errorKey")("       HO HO")
         result mustEqual Valid
       }
     }

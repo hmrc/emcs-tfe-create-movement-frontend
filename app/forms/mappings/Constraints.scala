@@ -206,7 +206,7 @@ trait Constraints {
 
   protected def startsWith(prefix: String, errorKey: String): Constraint[String] =
     Constraint {
-      case str if str.toLowerCase.startsWith(prefix.toLowerCase) =>
+      case str if str.toLowerCase.replace(" ", "").startsWith(prefix.toLowerCase) =>
         Valid
       case _ =>
         Invalid(errorKey)
@@ -214,7 +214,7 @@ trait Constraints {
 
   protected def doesNotStartWith(prefix: String, errorKey: String): Constraint[String] =
     Constraint {
-      case str if !str.toLowerCase.startsWith(prefix.toLowerCase) =>
+      case str if !str.toLowerCase.replace(" ", "").startsWith(prefix.toLowerCase) =>
         Valid
       case _ =>
         Invalid(errorKey)

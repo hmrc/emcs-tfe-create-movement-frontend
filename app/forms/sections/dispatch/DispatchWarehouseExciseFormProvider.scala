@@ -16,27 +16,37 @@
 
 package forms.sections.dispatch
 
-import forms.{EXCISE_NUMBER_REGEX, XSS_REGEX}
 import forms.mappings.Mappings
+import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
 import models.requests.DataRequest
 import pages.sections.dispatch.DispatchWarehouseExcisePage
 import play.api.data.Form
+import play.api.data.validation.Constraint
 
 import javax.inject.Inject
 
 class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def apply()(implicit request: DataRequest[_]): Form[String] =
+  def apply()(implicit request: DataRequest[_]): Form[String] = {
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
         .verifying(firstError(
           fixedLength(13, "dispatchWarehouseExcise.error.length"),
           regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
-          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.format")
+          validationForERNBasedOnConsignor
         ))
         .verifying(isNotEqualToOptExistingAnswer(
           existingAnswer = DispatchWarehouseExcisePage.getOriginalAttributeValue,
           errorKey = "dispatchWarehouseExcise.error.submissionError"
         ))
     )
+  }
+
+  private def validationForERNBasedOnConsignor()(implicit request: DataRequest[_]): Constraint[String] = {
+    if(request.isNorthernIrelandErn) {
+      regexpUnlessEmpty(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGBOrXI00")
+    } else {
+      regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
+    }
+  }
 }

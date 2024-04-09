@@ -52,7 +52,8 @@ trait FieldBehaviours extends FormSpec {
   def fieldWithFixedLength(form: Form[_],
                            fieldName: String,
                            lengthError: FormError,
-                           requiredLength: Int): Unit = {
+                           requiredLength: Int,
+                           optPrefix: Option[String] = None): Unit = {
 
     "not bind when the value is less than the fixed length" in {
       val input = "A" * (requiredLength - 1)
@@ -67,7 +68,7 @@ trait FieldBehaviours extends FormSpec {
     }
 
     "bind when the value is equal to the fixed length" in {
-      val input = "A" * requiredLength
+      val input = optPrefix.fold("A" * requiredLength)(prefix => prefix + ("A" * (requiredLength - prefix.length)))
       val result = form.bind(Map(fieldName -> input)).apply(fieldName)
       result.errors mustBe empty
     }

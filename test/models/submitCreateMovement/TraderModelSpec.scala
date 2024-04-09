@@ -65,6 +65,7 @@ class TraderModelSpec extends SpecBase {
     vatNumber = None,
     eoriNumber = None
   )
+  val consignorTraderWithPtaCode = consignorTrader.copy(traderExciseNumber = Some(testPaidTemporaryAuthorisationCode))
   val placeOfDispatchTrader: TraderModel = TraderModel(
     traderExciseNumber = Some("dispatch ern"),
     traderName = Some("dispatch name"),
@@ -180,10 +181,30 @@ class TraderModelSpec extends SpecBase {
   }
 
   "applyConsignor" - {
-    "must return a TraderModel" in {
-      implicit val dr: DataRequest[_] = dataRequest(fakeRequest, emptyUserAnswers.set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street")))
 
-      TraderModel.applyConsignor mustBe consignorTrader
+    "when logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
+
+      "must return a TraderModel using the PTA code as the ERN" in {
+        val userAnswers = emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn)
+          .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
+          .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+
+        implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testNITemporaryCertifiedConsignorErn)
+
+        TraderModel.applyConsignor mustBe consignorTraderWithPtaCode
+      }
+    }
+
+    "when NOT logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
+
+      "must return a TraderModel using the logged in user's ERN" in {
+        val userAnswers = emptyUserAnswers.copy(ern = testErn)
+          .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+
+        implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testErn)
+
+        TraderModel.applyConsignor mustBe consignorTrader
+      }
     }
   }
 

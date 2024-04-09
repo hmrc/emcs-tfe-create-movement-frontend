@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider()
+  lazy val form: Form[UserAddress] = formProvider(TransportArrangerAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val transportArrangerAddressOnSubmit: Call =

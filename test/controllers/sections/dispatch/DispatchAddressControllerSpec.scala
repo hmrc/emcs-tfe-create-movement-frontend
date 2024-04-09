@@ -24,6 +24,7 @@ import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
+import pages.sections.destination.DestinationAddressPage
 import pages.sections.dispatch.DispatchAddressPage
 import play.api.data.Form
 import play.api.mvc.Call
@@ -36,7 +37,7 @@ import scala.concurrent.Future
 class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider()
+  lazy val form: Form[UserAddress] = formProvider(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val dispatchAddressRoute: String =

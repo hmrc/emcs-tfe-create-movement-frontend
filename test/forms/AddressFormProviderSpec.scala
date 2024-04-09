@@ -16,16 +16,23 @@
 
 package forms
 
+import base.SpecBase
 import fixtures.UserAddressFixtures
 import forms.behaviours.FieldBehaviours
 import models.UserAddress
+import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
 import play.api.data.FormError
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 
-class AddressFormProviderSpec extends FieldBehaviours with UserAddressFixtures {
+class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAddressFixtures {
 
   case class TestParameters(fieldName: String, fieldLength: Int, isMandatory: Boolean)
 
-  val form = new AddressFormProvider()()
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn)
+
+  val form = new AddressFormProvider()(ConsignorAddressPage)
 
   val testPropertyParameters = TestParameters(fieldName = "property", fieldLength = 11, isMandatory = false)
   val testStreetParameters = TestParameters(fieldName = "street", fieldLength = 65, isMandatory = true)
@@ -196,6 +203,41 @@ class AddressFormProviderSpec extends FieldBehaviours with UserAddressFixtures {
 
         actualResult.errors mustBe expectedResult
       }
+    }
+  }
+
+  "for the ConsignorAddress Page" - {
+
+    lazy val gbForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
+    lazy val xiForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+
+    val fieldName = testPostcodeParameters.fieldName
+
+    val notBTPostcodeKey = "address.consignorAddress.error.mustNotStartWithBT"
+    val mustBeBTPostcodeKey = "address.consignorAddress.error.mustStartWithBT"
+
+    "must not bind for 'BT' postcodes when the user is a GB trader" in {
+
+      val expectedResult = Seq(FormError(fieldName, notBTPostcodeKey, Seq()))
+
+      gbForm.bind(formAnswersMap(Some(fieldName), Some("BT1 1AA"))).errors mustBe expectedResult
+    }
+
+    "must bind for postcodes not beginning with 'BT' for a GB trader" in {
+
+      gbForm.bind(formAnswersMap(Some(fieldName), Some("B1 1AA"))).errors mustBe empty
+    }
+
+    "must not bind for non-BT postcodes when the user is a XI trader" in {
+
+      val expectedResult = Seq(FormError(fieldName, mustBeBTPostcodeKey, Seq()))
+
+      xiForm.bind(formAnswersMap(Some(fieldName), Some("B1 1AA"))).errors mustBe expectedResult
+    }
+
+    "must bind for postcodes beginning with 'BT' for a XI trader" in {
+
+      xiForm.bind(formAnswersMap(Some(fieldName), Some("BT1 1AA"))).errors mustBe empty
     }
   }
 

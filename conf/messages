@@ -238,6 +238,8 @@ localReferenceNumber.new.change.hidden = Unique reference (LRN)
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address
 address.consignorAddress.subheading = Consignor information
+address.consignorAddress.error.mustStartWithBT = Postcode must begin with BT
+address.consignorAddress.error.mustNotStartWithBT = Postcode must not begin with BT
 
 address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address

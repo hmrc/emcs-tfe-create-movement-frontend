@@ -19,4 +19,5 @@ package config
 object Constants {
   val NONGBVAT = "NONGBVAT"
   val BODYEADESAD = "BodyEadEsad"
+  val XI_POSTCODE = "BT"
 }

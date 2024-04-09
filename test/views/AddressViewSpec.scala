@@ -19,11 +19,12 @@ package views
 import base.SpecBase
 import fixtures.messages.AddressMessages
 import forms.AddressFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAddress}
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.QuestionPage
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.destination.DestinationAddressPage
@@ -37,47 +38,49 @@ import views.html.AddressView
 
 class AddressViewSpec extends SpecBase with ViewBehaviours {
 
-  class Fixture(lang: Lang) {
+  class Fixture(lang: Lang, page: QuestionPage[UserAddress]) {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-   lazy val view = app.injector.instanceOf[AddressView]
-    val form = app.injector.instanceOf[AddressFormProvider].apply()
+    lazy val view = app.injector.instanceOf[AddressView]
+    val form = app.injector.instanceOf[AddressFormProvider].apply(page)
   }
 
   object Selectors extends BaseSelectors
 
   Seq(AddressMessages.English).foreach { messagesForLanguage =>
 
-    s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - new Fixture(messagesForLanguage.lang) {
+    s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
       Seq(ConsignorAddressPage, ConsigneeAddressPage) foreach { addressPage =>
 
-        s"$addressPage View" - {
+        s"$addressPage View" - new Fixture(messagesForLanguage.lang, addressPage) {
+          {
 
-          implicit val doc: Document = Jsoup.parse(view(
-            form = form,
-            addressPage = addressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
-          )
+            implicit val doc: Document = Jsoup.parse(view(
+              form = form,
+              addressPage = addressPage,
+              call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
+            )
 
-          behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(addressPage),
-            Selectors.h1 -> messagesForLanguage.heading(addressPage),
-            Selectors.h2(1) -> messagesForLanguage.subheading(addressPage),
-            Selectors.label("property") -> messagesForLanguage.property,
-            Selectors.label("street") -> messagesForLanguage.street,
-            Selectors.label("town") -> messagesForLanguage.town,
-            Selectors.label("postcode") -> messagesForLanguage.postcode,
-            Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
-          ))
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> messagesForLanguage.title(addressPage),
+              Selectors.h1 -> messagesForLanguage.heading(addressPage),
+              Selectors.h2(1) -> messagesForLanguage.subheading(addressPage),
+              Selectors.label("property") -> messagesForLanguage.property,
+              Selectors.label("street") -> messagesForLanguage.street,
+              Selectors.label("town") -> messagesForLanguage.town,
+              Selectors.label("postcode") -> messagesForLanguage.postcode,
+              Selectors.button -> messagesForLanguage.saveAndContinue,
+              Selectors.link(1) -> messagesForLanguage.returnToDraft
+            ))
+          }
         }
       }
 
       "when rendered for TransportArranger page" - {
 
-        "when the Arranger is the GoodsOwner" - new Fixture(messagesForLanguage.lang) {
+        "when the Arranger is the GoodsOwner" - new Fixture(messagesForLanguage.lang, TransportArrangerAddressPage) {
 
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
@@ -99,7 +102,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           ))
         }
 
-        "when the Arranger is Other" - new Fixture(messagesForLanguage.lang) {
+        "when the Arranger is Other" - new Fixture(messagesForLanguage.lang, TransportArrangerAddressPage) {
 
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
@@ -116,7 +119,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         }
       }
 
-      "when rendered for FirstTransporterAddress page" - new Fixture(messagesForLanguage.lang) {
+      "when rendered for FirstTransporterAddress page" - new Fixture(messagesForLanguage.lang, FirstTransporterAddressPage) {
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -138,7 +141,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         ))
       }
 
-      "when rendered for DispatchAddress page" - new Fixture(messagesForLanguage.lang) {
+      "when rendered for DispatchAddress page" - new Fixture(messagesForLanguage.lang, DispatchAddressPage) {
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -160,7 +163,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         ))
       }
 
-      "when rendered for DestinationAddress page" - new Fixture(messagesForLanguage.lang) {
+      "when rendered for DestinationAddress page" - new Fixture(messagesForLanguage.lang, DestinationAddressPage) {
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -189,7 +192,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
       ).foreach(
         guarantorArranger =>
           s"when rendered for GuarantorAddress page with a guarantor arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" -
-            new Fixture(messagesForLanguage.lang) {
+            new Fixture(messagesForLanguage.lang, GuarantorAddressPage) {
 
               implicit val doc: Document = Jsoup.parse(view(
                 form = form,

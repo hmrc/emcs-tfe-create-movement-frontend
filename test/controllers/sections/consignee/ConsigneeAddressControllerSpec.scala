@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider()
+  lazy val form: Form[UserAddress] = formProvider(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val consigneeAddressRoute: String =

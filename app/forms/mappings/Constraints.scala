@@ -204,6 +204,22 @@ trait Constraints {
         Invalid(errorKey)
     }
 
+  protected def startsWith(prefix: String, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.toLowerCase.startsWith(prefix.toLowerCase) =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  protected def doesNotStartWith(prefix: String, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if !str.toLowerCase.startsWith(prefix.toLowerCase) =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
   def fourDigitYear(errorKey: String): Constraint[LocalDate] = Constraint { date =>
     if (date.getYear < 1000 | date.getYear > 9999) Invalid(errorKey) else Valid
   }

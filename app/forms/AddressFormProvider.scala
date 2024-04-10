@@ -16,10 +16,15 @@
 
 package forms
 
+import config.Constants.XI_POSTCODE
 import forms.mappings.Mappings
 import models.UserAddress
+import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
+import pages.{Page, QuestionPage}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
+import play.api.data.validation.Constraint
 
 import javax.inject.Inject
 
@@ -30,27 +35,39 @@ class AddressFormProvider @Inject() extends Mappings {
   val townMax = 50
   val postcodeMax = 10
 
-  def apply(): Form[UserAddress] =
+  def apply(page: QuestionPage[UserAddress])(implicit request: DataRequest[_]): Form[UserAddress] =
     Form(mapping(
       "property" -> optional(text()
-        .verifying(maxLength(propertyMax, s"address.property.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.property.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.property.error.invalid"))),
+        .verifying(maxLength(propertyMax, "address.property.error.length"))
+        .verifying(regexp(ALPHANUMERIC_REGEX, "address.property.error.characters"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.property.error.invalid"))),
 
-      "street" -> text(s"address.street.error.required")
-        .verifying(maxLength(streetMax, s"address.street.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.street.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.street.error.invalid")),
+      "street" -> text("address.street.error.required")
+        .verifying(maxLength(streetMax, "address.street.error.length"))
+        .verifying(regexp(ALPHANUMERIC_REGEX, "address.street.error.characters"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.street.error.invalid")),
 
-      "town" -> text(s"address.town.error.required")
-        .verifying(maxLength(townMax, s"address.town.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.town.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.town.error.invalid")),
+      "town" -> text("address.town.error.required")
+        .verifying(maxLength(townMax, "address.town.error.length"))
+        .verifying(regexp(ALPHANUMERIC_REGEX, "address.town.error.characters"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.town.error.invalid")),
 
-      "postcode" -> text(s"address.postcode.error.required")
-        .verifying(maxLength(postcodeMax, s"address.postcode.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.postcode.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.postcode.error.invalid"))
+      "postcode" -> text("address.postcode.error.required")
+        .verifying(maxLength(postcodeMax, "address.postcode.error.length"))
+        .verifying(regexp(ALPHANUMERIC_REGEX, "address.postcode.error.characters"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.postcode.error.invalid"))
+        .verifying(getExtraPostcodeValidationForPage(page): _*)
     )(UserAddress.apply)(UserAddress.unapply)
   )
+
+  private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
+    page match {
+      case ConsignorAddressPage => if(request.isNorthernIrelandErn) {
+        Seq(startsWith(XI_POSTCODE, "address.consignorAddress.error.mustStartWithBT"))
+      } else {
+        Seq(doesNotStartWith(XI_POSTCODE, "address.consignorAddress.error.mustNotStartWithBT"))
+      }
+      case _ => Seq.empty
+    }
+  }
 }

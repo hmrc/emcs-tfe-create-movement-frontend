@@ -24,7 +24,6 @@ import java.time.LocalDate
 
 class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
 
-
   "firstError" - {
 
     "must return Valid when all constraints pass" in {
@@ -297,6 +296,84 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
 
       val result = isNotEqualToOptExistingAnswer(Some("existing"), "errorKey")("existing")
       result mustEqual Invalid("errorKey")
+    }
+  }
+
+  "startsWith" - {
+
+    "must return Valid" - {
+
+      "if the form value starts with the prefix (value is uppercase)" in {
+
+        val result = startsWith("HE", "errorKey")("HE HE")
+        result mustEqual Valid
+      }
+
+      "if the form value starts with the prefix (value is lowercase)" in {
+
+        val result = startsWith("HE", "errorKey")("he he")
+        result mustEqual Valid
+      }
+
+      "if the form value starts with the prefix (prefix is lowercase)" in {
+
+        val result = startsWith("he", "errorKey")("HE HE")
+        result mustEqual Valid
+      }
+    }
+
+    "must return Invalid" - {
+
+      "if the form value does NOT start with the prefix" in {
+
+        val result = startsWith("he", "errorKey")("HO HO")
+        result mustEqual Invalid("errorKey")
+      }
+
+      "if the form value starts with the prefix but there is spaces before the input" in {
+
+        val result = startsWith("he", "errorKey")("       HO HO")
+        result mustEqual Invalid("errorKey")
+      }
+    }
+  }
+
+  "doesNotStartWith" - {
+
+    "must return Valid" - {
+
+      "if the form value does NOT start with the prefix" in {
+
+        val result = doesNotStartWith("he", "errorKey")("HO HO")
+        result mustEqual Valid
+      }
+
+      "if the form value starts with the prefix but there is spaces before the input" in {
+
+        val result = doesNotStartWith("he", "errorKey")("       HO HO")
+        result mustEqual Valid
+      }
+    }
+
+    "must return Invalid" - {
+
+      "if the form value starts with the prefix (value is uppercase)" in {
+
+        val result = doesNotStartWith("HE", "errorKey")("HE HE")
+        result mustEqual Invalid("errorKey")
+      }
+
+      "if the form value starts with the prefix (value is lowercase)" in {
+
+        val result = doesNotStartWith("HE", "errorKey")("he he")
+        result mustEqual Invalid("errorKey")
+      }
+
+      "if the form value starts with the prefix (prefix is lowercase)" in {
+
+        val result = doesNotStartWith("he", "errorKey")("HE HE")
+        result mustEqual Invalid("errorKey")
+      }
     }
   }
 }

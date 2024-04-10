@@ -16,20 +16,34 @@
 
 package pages.sections.consignor
 
+import models.NorthernIrelandTemporaryCertifiedConsignor
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
+import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object ConsignorSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "consignor"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
-      Completed
-    } else {
-      NotStarted
+
+    (
+      request.userTypeFromErn,
+      request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage),
+      request.userAnswers.get(ConsignorAddressPage)
+    ) match {
+      case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
+        Completed
+      case (NorthernIrelandTemporaryCertifiedConsignor, _, None) =>
+        InProgress
+      case (NorthernIrelandTemporaryCertifiedConsignor, None, _) =>
+        InProgress
+      case (_, _, None) =>
+        NotStarted
+      case _ =>
+        Completed
     }
+
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

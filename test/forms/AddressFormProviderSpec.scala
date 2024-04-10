@@ -209,7 +209,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
   "for the ConsignorAddress Page" - {
 
     lazy val gbForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
-    lazy val xiForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+    lazy val xiForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testNorthernIrelandErn))
 
     val fieldName = testPostcodeParameters.fieldName
 

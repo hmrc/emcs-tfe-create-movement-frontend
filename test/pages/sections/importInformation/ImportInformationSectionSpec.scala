@@ -55,7 +55,7 @@ class ImportInformationSectionSpec extends SpecBase with MovementSubmissionFailu
           implicit val dr: DataRequest[_] = dataRequest(
             FakeRequest(),
             emptyUserAnswers
-              .set(ImportCustomsOfficeCodePage, testImportCustomsOffice)
+              .set(ImportCustomsOfficeCodePage, testGBImportCustomsOffice)
               .copy(submissionFailures = Seq(importCustomsOfficeCodeFailure.copy(hasBeenFixed = true))
           ))
           ImportInformationSection.status mustBe Completed

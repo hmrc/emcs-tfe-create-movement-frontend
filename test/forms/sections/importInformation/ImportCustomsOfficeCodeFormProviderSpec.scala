@@ -29,10 +29,12 @@ class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldB
   val lengthKey = "importCustomsOfficeCode.error.length"
   val xssKey = "importCustomsOfficeCode.error.invalidCharacter"
   val regexKey = "importCustomsOfficeCode.error.customsOfficeCodeRegex"
+  val mustStartWithGBKey = "importCustomsOfficeCode.error.mustBeginWithGB"
+  val mustStartWithXIKey = "importCustomsOfficeCode.error.mustBeginWithXI"
   val errorMsg704Key = "errors.704.importCustomsOfficeCode.input"
   val requiredLength = 8
 
-  val form = new ImportCustomsOfficeCodeFormProvider().apply()(dataRequest(FakeRequest()))
+  val form = new ImportCustomsOfficeCodeFormProvider().apply()(dataRequest(FakeRequest(), ern = testGreatBritainErn))
 
   ".value" - {
 
@@ -48,7 +50,8 @@ class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldB
       form,
       fieldName,
       lengthError = FormError(fieldName, lengthKey, Seq(requiredLength)),
-      requiredLength = requiredLength
+      requiredLength = requiredLength,
+      optPrefix = Some("GB")
     )
 
     s"not bind a value that contains XSS chars" in {
@@ -73,11 +76,46 @@ class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldB
     "not bind a value that matches the existing answer when a 704 has been returned for that field" in {
 
       val form = new ImportCustomsOfficeCodeFormProvider().apply()(
-        dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(importCustomsOfficeCodeFailure)))
+        dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(importCustomsOfficeCodeFailure), ern = testGreatBritainErn),
+          ern = testGreatBritainErn)
       )
 
-      val boundForm = form.bind(Map(fieldName -> testImportCustomsOffice))
+      val boundForm = form.bind(Map(fieldName -> testGBImportCustomsOffice))
       boundForm.errors mustBe Seq(FormError(fieldName, errorMsg704Key, Seq()))
+    }
+
+    "for a GB trader" - {
+
+      val form = new ImportCustomsOfficeCodeFormProvider().apply()(dataRequest(FakeRequest(), ern = testGreatBritainErn))
+
+      "must not bind when the customs office code starts with 'XI'" in {
+
+        val boundForm = form.bind(Map(fieldName -> testXIImportCustomsOffice))
+        boundForm.errors mustBe Seq(FormError(fieldName, mustStartWithGBKey, Seq()))
+      }
+
+      "must bind when the customs office code starts with 'GB'" in {
+
+        val boundForm = form.bind(Map(fieldName -> testGBImportCustomsOffice))
+        boundForm.errors mustBe empty
+      }
+    }
+
+    "for an XI trader" - {
+
+      val form = new ImportCustomsOfficeCodeFormProvider().apply()(dataRequest(FakeRequest(), ern = testNorthernIrelandErn))
+
+      "must not bind when the customs office code starts with 'GB'" in {
+
+        val boundForm = form.bind(Map(fieldName -> testGBImportCustomsOffice))
+        boundForm.errors mustBe Seq(FormError(fieldName, mustStartWithXIKey, Seq()))
+      }
+
+      "must bind when the customs office code starts with 'XI'" in {
+
+        val boundForm = form.bind(Map(fieldName -> testXIImportCustomsOffice))
+        boundForm.errors mustBe empty
+      }
     }
   }
 }

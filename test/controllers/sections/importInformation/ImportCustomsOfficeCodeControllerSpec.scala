@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.importInformation.ImportCustomsOfficeCodeFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, NorthernIrelandRegisteredConsignor, UserAnswers}
+import models.{GreatBritainRegisteredConsignor, NormalMode, NorthernIrelandRegisteredConsignor, UserAnswers}
 import navigation.FakeNavigators.FakeImportInformationNavigator
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.data.Form
@@ -37,8 +37,8 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
   lazy val form: Form[String] = formProvider()(dataRequest(FakeRequest()))
   lazy val view: ImportCustomsOfficeCodeView = app.injector.instanceOf[ImportCustomsOfficeCodeView]
 
-  lazy val importCustomsOfficeSubmitAction: Call =
-    controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onSubmit(testErn, testDraftId, NormalMode)
+  def importCustomsOfficeSubmitAction(ern: String = testErn): Call =
+    controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onSubmit(ern, testDraftId, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -63,7 +63,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
+        view(form, importCustomsOfficeSubmitAction(), NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -72,12 +72,12 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill("answer"), importCustomsOfficeSubmitAction(), NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "AB123456")))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testXIImportCustomsOffice)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -88,7 +88,29 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction, NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction(), NorthernIrelandRegisteredConsignor)(dataRequest(request), messages(request)).toString
+    }
+
+    "must return a Bad Request and errors when a GB import office code is entered for an XI trader" in new Fixture() {
+      val testXIRCERN: String = testErn
+
+      lazy val form: Form[String] = formProvider()(dataRequest(FakeRequest(), ern = testXIRCERN))
+
+      val boundForm = form.bind(Map("value" -> testGBImportCustomsOffice))
+      val result = controller.onSubmit(testXIRCERN, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testGBImportCustomsOffice)))
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction(testXIRCERN), NorthernIrelandRegisteredConsignor)(dataRequest(request, ern = testXIRCERN), messages(request)).toString
+    }
+
+    "must return a Bad Request and errors when an XI import office code is entered for a GB trader" in new Fixture() {
+      lazy val form: Form[String] = formProvider()(dataRequest(FakeRequest(), ern = testGreatBritainErn))
+
+      val boundForm = form.bind(Map("value" -> testXIImportCustomsOffice))
+      val result = controller.onSubmit(testGreatBritainErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testXIImportCustomsOffice)))
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(boundForm, importCustomsOfficeSubmitAction(testGreatBritainErn), GreatBritainRegisteredConsignor)(dataRequest(request, ern = testGreatBritainErn), messages(request)).toString
     }
 
     "must redirect to tasklist for GET if ERN is not XIRC or GBRC" in new Fixture() {

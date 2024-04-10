@@ -88,7 +88,16 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(userAnswers)) {
+      "must return a Bad Request and errors when an incorrect formatted PTA code is submitted" in new Test(Some(userAnswers)) {
+        val boundForm = form.bind(Map("value" -> testGreatBritainErn))
+
+        val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testGreatBritainErn)))
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, onSubmit)(dr, messages(request)).toString
+      }
+
+      "must return a Bad Request and errors when a blank value is submitted" in new Test(Some(userAnswers)) {
         val boundForm = form.bind(Map("value" -> ""))
 
         val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
@@ -96,6 +105,7 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, onSubmit)(dr, messages(request)).toString
       }
+
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
         val result = controller.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request)

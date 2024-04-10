@@ -13,7 +13,9 @@ import views.html.sections.consignor.ConsignorPaidTemporaryAuthorisationCodeView
 import views.{BaseSelectors, ViewBehaviours}
 
 class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with ViewBehaviours {
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+    val errorSummary: Int => String = index => s".govuk-error-summary__list > li:nth-child(${index})"
+  }
 
   "ConsignorPaidTemporaryAuthorisationCodeView" - {
 
@@ -34,7 +36,68 @@ class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with View
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      s"when being rendered with required error in lang code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        lazy val view = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeView]
+        val form = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form.bind(Map("value" -> "")), testOnwardRoute).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
+          Selectors.errorSummary(1) -> messagesForLanguage.errorRequired,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      s"when being rendered with length error in lang code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        lazy val view = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeView]
+        val form = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form.bind(Map("value" -> "12345678901234567890")), testOnwardRoute).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
+          Selectors.errorSummary(1) -> messagesForLanguage.errorLength,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+
+      s"when being rendered with invalid format error in lang code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        lazy val view = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeView]
+        val form = app.injector.instanceOf[ConsignorPaidTemporaryAuthorisationCodeFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(form.bind(Map("value" -> testGreatBritainErn)), testOnwardRoute).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
+          Selectors.errorSummary(1) -> messagesForLanguage.errorInvalid,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -39,31 +39,13 @@ class FirstTransporterNameSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when the show action link boolean is true" - {
+        "when there is no answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterNameSummary.row(showActionLinks = true) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                    id = "changeFirstTransporterName"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterNamePage, testBusinessName))
-
-            FirstTransporterNameSummary.row(showActionLinks = true) mustBe SummaryListRowViewModel(
+          FirstTransporterNameSummary.row() mustBe
+            SummaryListRowViewModel(
               key = messagesForLanguage.cyaLabel,
-              value = Value(Text(testBusinessName)),
+              value = Value(Text(messagesForLanguage.notProvided)),
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
@@ -72,33 +54,23 @@ class FirstTransporterNameSummarySpec extends SpecBase with Matchers {
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
             )
-          }
         }
 
-        "when the show action link boolean is false" - {
+        "when there is an answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterNamePage, testBusinessName))
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterNameSummary.row(showActionLinks = false) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq()
-              )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterNamePage, testBusinessName))
-
-            FirstTransporterNameSummary.row(showActionLinks = false) mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text(testBusinessName)),
-              actions = Seq()
+          FirstTransporterNameSummary.row() mustBe SummaryListRowViewModel(
+            key = messagesForLanguage.cyaLabel,
+            value = Value(Text(testBusinessName)),
+            actions = Seq(
+              ActionItemViewModel(
+                content = messagesForLanguage.change,
+                href = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                id = "changeFirstTransporterName"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
             )
-          }
+          )
         }
-
       }
     }
   }

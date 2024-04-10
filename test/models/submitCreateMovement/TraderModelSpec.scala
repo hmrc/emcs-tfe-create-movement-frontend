@@ -466,7 +466,7 @@ class TraderModelSpec extends SpecBase {
         emptyUserAnswers
           .set(FirstTransporterNamePage, "first name")
           .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-          .set(FirstTransporterVatPage, "first vat")
+          .set(FirstTransporterVatPage, VatNumberModel(true, Some("first vat")))
       )
 
       TraderModel.applyFirstTransporter mustBe Some(firstTransporterTrader)

@@ -38,78 +38,44 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
-        "when the show action link boolean is true" - {
+        "when there is no answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                    id = "changeFirstTransporterAddress"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
+          FirstTransporterAddressSummary.row() mustBe
+            SummaryListRowViewModel(
+              key = messagesForLanguage.cyaLabel,
+              value = Value(Text(messagesForLanguage.notProvided)),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  id = "changeFirstTransporterAddress"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterAddressPage, testUserAddress))
-
-            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(
-                  HtmlFormat.fill(Seq(
-                    Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                    Html(testUserAddress.town + "<br>"),
-                    Html(testUserAddress.postcode),
-                  ))
-                )),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                    id = "changeFirstTransporterAddress"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-          }
+            )
         }
 
-        "when the show action link boolean is false" - {
+        "when there is an answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterAddressPage, testUserAddress))
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq()
+          FirstTransporterAddressSummary.row() mustBe
+            SummaryListRowViewModel(
+              key = messagesForLanguage.cyaLabel,
+              value = Value(HtmlContent(
+                HtmlFormat.fill(Seq(
+                  Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                  Html(testUserAddress.town + "<br>"),
+                  Html(testUserAddress.postcode),
+                ))
+              )),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  id = "changeFirstTransporterAddress"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterAddressPage, testUserAddress))
-
-            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(
-                  HtmlFormat.fill(Seq(
-                    Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                    Html(testUserAddress.town + "<br>"),
-                    Html(testUserAddress.postcode),
-                  ))
-                )),
-                actions = Seq()
-              )
-          }
+            )
         }
       }
     }

@@ -176,7 +176,7 @@ object TraderModel extends ModelConstructorHelpers {
       traderExciseNumber = None,
       traderName = Some(mandatoryPage(FirstTransporterNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
-      vatNumber = Some(mandatoryPage(FirstTransporterVatPage)),
+      vatNumber = Some(mandatoryPage(FirstTransporterVatPage).vatNumber.getOrElse(NONGBVAT)),
       eoriNumber = None
     ))
   }

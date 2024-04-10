@@ -18,8 +18,8 @@ package views.sections.firstTransporter
 
 import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterCheckAnswerMessages
-import models.CheckMode
 import models.requests.DataRequest
+import models.{CheckMode, VatNumberModel}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
@@ -39,7 +39,7 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
       emptyUserAnswers
         .set(FirstTransporterNamePage, "Transporter name")
-        .set(FirstTransporterVatPage, "GB123456789")
+        .set(FirstTransporterVatPage, VatNumberModel(true, Some("GB123456789")))
         .set(FirstTransporterAddressPage, testUserAddress)
     )
 
@@ -47,10 +47,11 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
 
     implicit val doc: Document = Jsoup.parse(view(
       SummaryList(Seq(
-        FirstTransporterNameSummary.row(true),
-        FirstTransporterVatSummary.row(true),
-        FirstTransporterAddressSummary.row(true)
-      )),
+        Some(FirstTransporterNameSummary.row()),
+        FirstTransporterVatChoiceSummary.row(),
+        FirstTransporterVatSummary.row(),
+        Some(FirstTransporterAddressSummary.row())
+      ).flatten),
       testOnwardRoute
     ).toString())
   }
@@ -70,8 +71,9 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.firstTransporterSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.firstTransporterName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.firstTransporterVatNumber,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.firstTransporterAddress,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.firstTransporterHasVat,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.firstTransporterVatNumber,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.firstTransporterAddress,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
 
@@ -80,8 +82,12 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
             controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 
-        "have a link to change first transporter VAT number" in {
-          doc.getElementById("changeFirstTransporterVat").attr("href") mustBe
+        "have a link to change first transporter VAT Choice" in {
+          doc.getElementById("changeFirstTransporterVatChoice").attr("href") mustBe
+            controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url
+        }
+        "have a link to change first transporter VAT Number" in {
+          doc.getElementById("changeFirstTransporterVatNumber").attr("href") mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url
         }
 

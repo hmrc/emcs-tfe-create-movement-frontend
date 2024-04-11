@@ -33,10 +33,10 @@ case object ConsignorSection extends Section[JsObject] {
     ) match {
       case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
         Completed
-      case (NorthernIrelandTemporaryCertifiedConsignor, None, _) =>
+      case (NorthernIrelandTemporaryCertifiedConsignor, ptaCodePage, addressPage) if ptaCodePage.nonEmpty || addressPage.nonEmpty =>
         InProgress
-      case (NorthernIrelandTemporaryCertifiedConsignor, _, None) =>
-        InProgress
+      case (NorthernIrelandTemporaryCertifiedConsignor, None, None) =>
+        NotStarted
       case (_, _, None) =>
         NotStarted
       case _ =>

@@ -26,6 +26,7 @@ object TransportArrangerVatMessages {
     val otherHeading = "Is the transport arranger VAT registered in the UK?"
     val otherTitle = titleHelper(otherHeading)
     val hint = "A UK VAT registration number is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
+    val vatNumberLabel = "UK VAT registration number"
 
     val errorRequired = "Enter a VAT registration number"
     val errorAlphanumeric = "VAT registration number must only contain letters and numbers"

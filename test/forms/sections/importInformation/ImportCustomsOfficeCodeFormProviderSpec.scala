@@ -54,19 +54,25 @@ class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldB
       optPrefix = Some("GB")
     )
 
-    s"not bind a value that contains XSS chars" in {
+    "not bind a value that contains XSS chars" in {
 
       val boundForm = form.bind(Map(fieldName -> "<1234567"))
       boundForm.errors mustBe Seq(FormError(fieldName, xssKey, Seq(XSS_REGEX)))
     }
 
-    s"not bind a value that doesn't start with two alpha chars" in {
+    "not bind a value that doesn't start with two alpha chars" in {
 
       val boundForm = form.bind(Map(fieldName -> "12345678"))
       boundForm.errors mustBe Seq(FormError(fieldName, regexKey, Seq(CUSTOMS_OFFICE_CODE_REGEX)))
     }
 
-    s"bind a value that meets the expected regex" in {
+    "not bind a value that doesn't start with two capital letters" in {
+
+      val boundForm = form.bind(Map(fieldName -> "gb345678"))
+      boundForm.errors mustBe Seq(FormError(fieldName, regexKey, Seq(CUSTOMS_OFFICE_CODE_REGEX)))
+    }
+
+    "bind a value that meets the expected regex" in {
 
       val boundForm = form.bind(Map(fieldName -> "GB345678"))
       boundForm.errors mustBe Seq()

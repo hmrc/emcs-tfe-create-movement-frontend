@@ -33,7 +33,7 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     errorType = ImportCustomsOfficeCodeError.code,
     errorReason = "The customs office reference number you have entered is not valid. Please amend your entry and resubmit",
     errorLocation = None,
-    originalAttributeValue = Some(testImportCustomsOffice),
+    originalAttributeValue = Some(testGBImportCustomsOffice),
     hasBeenFixed = false
   )
 

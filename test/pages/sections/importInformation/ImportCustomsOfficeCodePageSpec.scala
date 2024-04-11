@@ -64,7 +64,7 @@ class ImportCustomsOfficeCodePageSpec extends SpecBase with MovementSubmissionFa
 
         page.getOriginalAttributeValue(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(importCustomsOfficeCodeFailure)
-        ))) mustBe Some(testImportCustomsOffice)
+        ))) mustBe Some(testGBImportCustomsOffice)
       }
     }
 

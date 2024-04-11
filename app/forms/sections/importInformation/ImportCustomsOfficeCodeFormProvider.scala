@@ -21,6 +21,7 @@ import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import models.requests.DataRequest
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import play.api.data.Form
+import play.api.data.validation.Constraint
 
 import javax.inject.Inject
 
@@ -34,8 +35,16 @@ class ImportCustomsOfficeCodeFormProvider @Inject() extends Mappings {
         .verifying(firstError(
           fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
           regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex")
+          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex"),
+          validationForImportCustomsOfficeCodeBasedOnConsignor
         ))
         .verifying(isNotEqualToOptExistingAnswer(ImportCustomsOfficeCodePage.getOriginalAttributeValue, "errors.704.importCustomsOfficeCode.input"))
     )
+
+  private def validationForImportCustomsOfficeCodeBasedOnConsignor()(implicit request: DataRequest[_]): Constraint[String] =
+    if(request.isNorthernIrelandErn) {
+      startsWith("XI", "importCustomsOfficeCode.error.mustBeginWithXI")
+    } else {
+      startsWith("GB", "importCustomsOfficeCode.error.mustBeginWithGB")
+    }
 }

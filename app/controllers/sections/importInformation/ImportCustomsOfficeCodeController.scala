@@ -48,10 +48,8 @@ class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: Mess
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         getValidUserType match {
-          case Some(user) =>
-            renderView(Ok, fillForm(ImportCustomsOfficeCodePage, formProvider()), mode, user)
-          case _ =>
-            redirectToTaskList()
+          case Some(user) => renderView(Ok, fillForm(ImportCustomsOfficeCodePage, formProvider()), mode, user)
+          case _ => redirectToTaskList()
         }
     }
 
@@ -61,14 +59,10 @@ class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: Mess
         getValidUserType match {
           case Some(user) =>
             formProvider().bindFromRequest().fold(
-              formWithErrors =>
-                renderView(BadRequest, formWithErrors, mode, user)
-              ,
-              customsOfficeCode =>
-                saveAndRedirect(ImportCustomsOfficeCodePage, customsOfficeCode, mode)
+              renderView(BadRequest, _, mode, user),
+              saveAndRedirect(ImportCustomsOfficeCodePage, _, mode)
             )
-          case _ =>
-            redirectToTaskList()
+          case _ => redirectToTaskList()
         }
     }
 

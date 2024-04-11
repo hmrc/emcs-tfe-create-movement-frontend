@@ -26,7 +26,6 @@ case object ConsignorSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "consignor"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-
     (
       request.userTypeFromErn,
       request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage),
@@ -34,9 +33,9 @@ case object ConsignorSection extends Section[JsObject] {
     ) match {
       case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
         Completed
-      case (NorthernIrelandTemporaryCertifiedConsignor, _, None) =>
-        InProgress
       case (NorthernIrelandTemporaryCertifiedConsignor, None, _) =>
+        InProgress
+      case (NorthernIrelandTemporaryCertifiedConsignor, _, None) =>
         InProgress
       case (_, _, None) =>
         NotStarted

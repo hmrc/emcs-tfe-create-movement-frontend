@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
-import models.sections.transportArranger.TransportArranger
+import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -449,7 +449,7 @@ class TraderModelSpec extends SpecBase {
                 .set(TransportArrangerPage, transportArranger)
                 .set(TransportArrangerNamePage, "arranger name")
                 .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-                .set(TransportArrangerVatPage, "arranger vat")
+                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("arranger vat")))
             )
 
             TraderModel.applyTransportArranger mustBe Some(transportArrangerTrader)

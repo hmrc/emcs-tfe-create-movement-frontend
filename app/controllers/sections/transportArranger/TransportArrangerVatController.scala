@@ -16,16 +16,17 @@
 
 package controllers.sections.transportArranger
 
-import config.Constants.NONGBVAT
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{transportArrangerVatNumberField, transportArrangerVatNumberRequired}
+import models.Mode
 import models.requests.DataRequest
-import models.{Mode, NormalMode}
+import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.transportArranger.TransportArrangerVatView
@@ -47,32 +48,50 @@ class TransportArrangerVatController @Inject()(
                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(TransportArrangerVatPage, formProvider()), mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withAnswerAsync(
+        page = TransportArrangerPage,
+        redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
+      ) { arranger =>
+        renderView(Ok, fillForm(TransportArrangerVatPage, formProvider(arranger)), arranger, mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
-        saveAndRedirect(TransportArrangerVatPage, _, mode)
-      )
+      withAnswerAsync(
+        page = TransportArrangerPage,
+        redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
+      ) { arranger =>
+        formProvider(arranger).bindFromRequest().fold(
+          renderView(BadRequest, _, arranger, mode),
+          handleSubmittedForm(_, arranger, mode)
+        )
+      }
     }
 
-  def onNonGbVAT(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      saveAndRedirect(TransportArrangerVatPage, NONGBVAT, NormalMode)
-    }
-
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
-    withAnswer(
-      page = TransportArrangerPage,
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.draftId)
-    ) { arranger =>
-      status(view(
+  private def renderView(status: Status, form: Form[_], arranger: TransportArranger, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+      Future.successful(status(view(
         form,
         routes.TransportArrangerVatController.onSubmit(request.ern, request.draftId, mode),
         arranger
-      ))
+      )))
+
+  private def handleSubmittedForm(transportArrangerVatModel: TransportArrangerVatModel, arranger: TransportArranger, mode: Mode)
+                                 (implicit request: DataRequest[_], messages: Messages): Future[Result] = {
+
+    if (transportArrangerVatModel.hasTransportArrangerVatNumber && transportArrangerVatModel.transportArrangerVatNumber.isEmpty) {
+      renderView(
+        status = BadRequest,
+        form =
+          formProvider(arranger)
+            .fill(transportArrangerVatModel)
+            .withError(transportArrangerVatNumberField, messages(transportArrangerVatNumberRequired)),
+        arranger = arranger,
+        mode = mode
+      )
+    } else {
+      saveAndRedirect(TransportArrangerVatPage, transportArrangerVatModel, mode)
     }
+  }
 }

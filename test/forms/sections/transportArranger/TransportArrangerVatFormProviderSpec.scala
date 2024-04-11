@@ -16,50 +16,125 @@
 
 package forms.sections.transportArranger
 
+import fixtures.BaseFixtures
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
+import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
 import play.api.data.FormError
 
-class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours {
+class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with BaseFixtures {
 
-  val requiredKey = "transportArrangerVat.error.required"
+  val inputRequiredKey = "transportArrangerVat.error.input.required"
   val lengthKey = "transportArrangerVat.error.length"
   val alphanumericKey = "transportArrangerVat.error.alphanumeric"
   val maxLength = 14
 
-  val form = new TransportArrangerVatFormProvider()()
+  val form = new TransportArrangerVatFormProvider()(GoodsOwner)
 
-  ".value" - {
+  "when binding 'Yes'" - {
 
-    val fieldName = "value"
+    "when VAT number contains invalid characters" - {
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      "0" * maxLength
-    )
+      "must error when binding the form" in {
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
+        val boundForm = form.bind(Map(
+          TransportArrangerVatFormProvider.hasVatNumberField -> "true",
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "<"
+        ))
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-
-    "only allow alphanumerics" in {
-      val boundForm = form.bind(Map("value" -> "ABCD@/"))
-      boundForm.errors mustBe Seq(FormError(fieldName, alphanumericKey, Seq(ONLY_ALPHANUMERIC_REGEX)))
+        boundForm.errors mustBe Seq(FormError(
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField,
+          alphanumericKey,
+          Seq(ONLY_ALPHANUMERIC_REGEX)
+        ))
+      }
     }
 
-    "must allow - and spaces but trim them out" in {
-      val boundForm = form.bind(Map("value" -> "GB123 456-178"))
-      boundForm.value mustBe Some("GB123456178")
+    "when VAT number is too long" - {
+
+      "must error when binding the form" in {
+
+        val boundForm = form.bind(Map(
+          TransportArrangerVatFormProvider.hasVatNumberField -> "true",
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "a" * (maxLength + 1)
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField,
+          lengthKey,
+          Seq(maxLength)
+        ))
+      }
+    }
+
+    "when VAT number is valid" - {
+
+      "must bind the form successfully when true with value (spaces exist but trim them out)" in {
+
+        val boundForm = form.bind(Map(
+          TransportArrangerVatFormProvider.hasVatNumberField -> "true",
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "GB123 456-178"
+        ))
+
+        boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("GB123456178")))
+      }
+
+      "must bind the form successfully when true with value" in {
+
+        val boundForm = form.bind(Map(
+          TransportArrangerVatFormProvider.hasVatNumberField -> "true",
+          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> testVatNumber
+        ))
+
+        boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
+      }
+    }
+  }
+
+  "when binding 'No'" - {
+
+    "must bind the form successfully when false with value (should be transformed to None on bind)" in {
+
+      val boundForm = form.bind(Map(
+        TransportArrangerVatFormProvider.hasVatNumberField -> "false",
+        TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "brand"
+      ))
+
+      boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+    }
+
+    "must bind the form successfully when false with NO value" in {
+
+      val boundForm = form.bind(Map(
+        TransportArrangerVatFormProvider.hasVatNumberField -> "false"
+      ))
+
+      boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+    }
+  }
+
+
+  Seq(GoodsOwner, Other).foreach { arrangerType =>
+
+    def choiceRequiredKey(arrangerType: TransportArranger) = s"transportArrangerVat.error.radio.$arrangerType.required"
+
+    s"when an option hasn't been selected for arranger type: $arrangerType" - {
+
+      "must error when binding the form" in {
+
+        val form = new TransportArrangerVatFormProvider()(arrangerType)
+
+        val boundForm = form.bind(Map(
+          TransportArrangerVatFormProvider.hasVatNumberField -> ""
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          TransportArrangerVatFormProvider.hasVatNumberField,
+          choiceRequiredKey(arrangerType),
+          Seq()
+        ))
+      }
     }
   }
 }

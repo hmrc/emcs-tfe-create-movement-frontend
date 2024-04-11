@@ -14,7 +14,6 @@ GET         /trader/:ern/draft/:draftId/transport-arranger/vat                  
 POST        /trader/:ern/draft/:draftId/transport-arranger/vat                    controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-GET         /trader/:ern/draft/:draftId/transport-arranger/vat/non-gb-vat         controllers.sections.transportArranger.TransportArrangerVatController.onNonGbVAT(ern: String, draftId: String)
 
 GET         /trader/:ern/draft/:draftId/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)

@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
+import models.sections.transportArranger.TransportArrangerVatModel
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportArranger._
@@ -126,7 +127,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, GoodsOwner)
-                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
                 controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
@@ -140,7 +141,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, Other)
                 .set(TransportArrangerNamePage, "Jeff")
-                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
                 .set(TransportArrangerAddressPage, testUserAddress)
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe

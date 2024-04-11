@@ -37,8 +37,8 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-   lazy val view = app.injector.instanceOf[TransportArrangerVatView]
-    val form = app.injector.instanceOf[TransportArrangerVatFormProvider].apply()
+    lazy val view = app.injector.instanceOf[TransportArrangerVatView]
+    val form = app.injector.instanceOf[TransportArrangerVatFormProvider].apply(arranger)
 
     implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, arranger).toString())
   }
@@ -57,7 +57,6 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.goodsOwnerTitle,
             Selectors.h1 -> messagesForLanguage.goodsOwnerHeading,
             Selectors.hint -> messagesForLanguage.hint,
-            Selectors.link(1) -> messagesForLanguage.goodsOwnerNonGbVatLink,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
@@ -69,7 +68,6 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.otherTitle,
             Selectors.h1 -> messagesForLanguage.otherHeading,
             Selectors.hint -> messagesForLanguage.hint,
-            Selectors.link(1) -> messagesForLanguage.otherNonGbVatLink,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))

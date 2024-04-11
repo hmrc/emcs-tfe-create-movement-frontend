@@ -16,11 +16,11 @@
 
 package models.submitCreateMovement
 
-import models.UserAddress
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.transportArranger.TransportArranger
+import models.{NorthernIrelandTemporaryCertifiedConsignor, UserAddress}
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -63,8 +63,15 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
     val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
+
+    val ern = if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
+      mandatoryPage(ConsignorPaidTemporaryAuthorisationCodePage)
+    } else {
+      request.ern
+    }
+
     TraderModel(
-      traderExciseNumber = Some(request.ern),
+      traderExciseNumber = Some(ern),
       traderName = Some(request.traderKnownFacts.traderName),
       address = Some(AddressModel.fromUserAddress(consignorAddress)),
       vatNumber = None,

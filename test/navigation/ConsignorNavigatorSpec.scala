@@ -37,6 +37,19 @@ class ConsignorNavigatorSpec extends SpecBase {
           controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId)
       }
 
+      "when a NorthernIrelandTemporaryCertifiedConsignor user" - {
+
+        "for the ConsignorPaidTemporaryAuthorisationCodePage" - {
+
+          "must then go to the ConsignorAddressPage" in {
+            navigator.nextPage(ConsignorPaidTemporaryAuthorisationCodePage, NormalMode, emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn))mustBe
+              controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)
+          }
+
+        }
+
+      }
+
       "for the ConsignorAddress page" - {
 
         "must go to the CheckYourAnswersConsignor page" in {

@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.consignor.{CheckAnswersConsignorPage, ConsignorAddressPage}
+import pages.sections.consignor.{CheckAnswersConsignorPage, ConsignorAddressPage, ConsignorPaidTemporaryAuthorisationCodePage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,6 +27,9 @@ import javax.inject.Inject
 class ConsignorNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case ConsignorPaidTemporaryAuthorisationCodePage =>
+      (userAnswers: UserAnswers) =>
+        controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case ConsignorAddressPage =>
       (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case CheckAnswersConsignorPage =>

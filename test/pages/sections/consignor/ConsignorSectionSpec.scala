@@ -17,26 +17,87 @@
 package pages.sections.consignor
 
 import base.SpecBase
-import models.UserAddress
 import models.requests.DataRequest
 import play.api.test.FakeRequest
 
 class ConsignorSectionSpec extends SpecBase {
+
   "isCompleted" - {
-    "must return true" - {
-      "when user starts on ConsigneeExportUkEu and selects yes" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
-        )
-        ConsignorSection.isCompleted mustBe true
+
+    "for a NorthernIrelandTemporaryCertifiedConsignor logged in trader" - {
+
+      "must return true" - {
+        "when both the PTA code and address have been provided" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
+              .set(ConsignorAddressPage, testUserAddress),
+            ern = testNITemporaryCertifiedConsignorErn
+          )
+
+          ConsignorSection.isCompleted mustBe true
+        }
       }
+
+      "must return false" - {
+        "when only the PTA code has been entered and no address" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode),
+            ern = testNITemporaryCertifiedConsignorErn
+          )
+
+          ConsignorSection.isCompleted mustBe false
+        }
+        "when only the address has been entered and no PTA code" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(ConsignorAddressPage, testUserAddress),
+            ern = testNITemporaryCertifiedConsignorErn
+          )
+
+          ConsignorSection.isCompleted mustBe false
+        }
+        "when neither the PTA code or address has been entered" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers,
+            ern = testNITemporaryCertifiedConsignorErn)
+
+          ConsignorSection.isCompleted mustBe false
+        }
+
+      }
+
+
     }
 
-    "must return false" - {
-      "when user answers doesn't contain ConsigneeExportUkEu, ConsigneeExcise or ConsigneeExemptOrganisation" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        ConsignorSection.isCompleted mustBe false
+    "NOT for a NorthernIrelandTemporaryCertifiedConsignor logged in trader" - {
+
+      "must return true" - {
+        "when the address has been provided" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers.set(ConsignorAddressPage, testUserAddress),
+            ern = testNorthernIrelandErn
+          )
+
+          ConsignorSection.isCompleted mustBe true
+        }
+      }
+      "must return false" - {
+        "when the address has NOT been provided" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers,
+            ern = testNorthernIrelandErn
+          )
+
+          ConsignorSection.isCompleted mustBe false
+        }
       }
     }
   }

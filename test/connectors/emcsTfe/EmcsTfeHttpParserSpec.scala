@@ -18,13 +18,23 @@ package connectors.emcsTfe
 
 import base.SpecBase
 import mocks.connectors.MockHttpClient
-import models.response.{JsonValidationError, SubmitCreateMovementResponse, UnexpectedDownstreamResponseError}
+import models.response.{JsonValidationError, SubmitCreateMovementResponse, UnexpectedDownstreamDraftSubmissionResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmcsTfeHttpParserSpec extends SpecBase
-  with Status with MimeTypes with HeaderNames with MockHttpClient {
+  with Status
+  with MimeTypes
+  with HeaderNames
+  with MockHttpClient
+  with LogCapturing {
+
+  implicit val ec: ExecutionContext = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val httpParser = new EmcsTfeHttpParser[SubmitCreateMovementResponse] {
     override implicit val reads: Reads[SubmitCreateMovementResponse] = SubmitCreateMovementResponse.reads
@@ -43,13 +53,13 @@ class EmcsTfeHttpParserSpec extends SpecBase
       }
     }
 
-    "should return UnexpectedDownstreamError" - {
+    "should return UnexpectedDownstreamDraftSubmissionResponseError" - {
 
       s"when status is not OK (${Status.OK})" in {
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.obj(), Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/create-movement/ern/draftId", httpResponse) mustBe Left(UnexpectedDownstreamResponseError)
+        httpParser.EmcsTfeReads.read("POST", "/create-movement/ern/draftId", httpResponse) mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(Status.INTERNAL_SERVER_ERROR))
       }
     }
 
@@ -67,6 +77,43 @@ class EmcsTfeHttpParserSpec extends SpecBase
         val httpResponse = HttpResponse(Status.OK, Json.obj(), Map())
 
         httpParser.EmcsTfeReads.read("POST", "/create-movement/ern/draftId", httpResponse) mustBe Left(JsonValidationError)
+      }
+    }
+  }
+
+  "post" - {
+
+    "should return the result of the call (if no exception thrown)" in {
+
+      val response = HttpResponse(Status.OK, successResponseEISJson, Map())
+
+      MockHttpClient.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS)
+        .returns(Future.successful(Right(response)))
+
+      httpParser.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS).futureValue mustBe Right(response)
+    }
+
+    "should return UnexpectedDownstreamDraftSubmissionResponseError(ISE) when an exception is thrown" in {
+
+      MockHttpClient.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS)
+        .returns(Future.failed(new Exception("Canned")))
+
+      httpParser.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+    }
+  }
+
+  "withExceptionRecovery" - {
+
+    "should return UnexpectedDownstreamDraftSubmissionResponseError" - {
+
+      "when the provided function throws an exception" in {
+
+        withCaptureOfLoggingFrom(httpParser.logger) { logs =>
+
+          httpParser.withExceptionRecovery("test")(Future.failed(new Exception("Canned"))).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+
+          logs.exists(_.getMessage.contains("[test] Unexpected exception of type Exception was thrown")) mustBe true
+        }
       }
     }
   }

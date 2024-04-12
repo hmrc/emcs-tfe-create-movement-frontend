@@ -17,30 +17,48 @@
 package services
 
 import connectors.emcsTfe.SubmitCreateMovementConnector
+import models.audit.SubmitCreateMovementAudit
 import models.requests.DataRequest
-import models.response.{SubmitCreateMovementException, SubmitCreateMovementResponse}
+import models.response.{ErrorResponse, SubmitCreateMovementException, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import utils.{Logging, TimeMachine}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitCreateMovementService @Inject()(connector: SubmitCreateMovementConnector)(implicit ec: ExecutionContext) extends Logging {
+class SubmitCreateMovementService @Inject()(
+                                             connector: SubmitCreateMovementConnector,
+                                             auditingService: AuditingService,
+                                             timeMachine: TimeMachine
+                                           )(implicit ec: ExecutionContext) extends Logging {
+
   def submit(submitCreateMovementModel: SubmitCreateMovementModel)
             (implicit request: DataRequest[_], hc: HeaderCarrier): Future[SubmitCreateMovementResponse] = {
 
-    // audit request
-
-    connector.submit(submitCreateMovementModel).map {
-      case Right(success) =>
-        // audit response
-
-        success
-      case Left(value) =>
-        logger.warn(s"Received Left from SubmitCreateMovementConnector: $value")
-        throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
+    connector.submit(submitCreateMovementModel).map { response =>
+      writeAudit(submitCreateMovementModel, response)
+      response match {
+        case Right(success) => success
+        case Left(value) =>
+          logger.warn(s"Received Left from SubmitCreateMovementConnector: $value")
+          throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
+      }
     }
+  }
 
+  private def writeAudit(
+                          submissionRequest: SubmitCreateMovementModel,
+                          submissionResponse: Either[ErrorResponse, SubmitCreateMovementResponse]
+                        )(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Unit = {
+    println("writing audit")
+    auditingService.audit(
+      SubmitCreateMovementAudit(
+        ern = dataRequest.ern,
+        submissionRequest = submissionRequest,
+        submissionResponse = submissionResponse,
+        receiptDate = timeMachine.now().toString
+      )
+    )
   }
 }

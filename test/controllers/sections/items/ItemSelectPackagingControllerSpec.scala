@@ -54,7 +54,7 @@ class ItemSelectPackagingControllerSpec extends SpecBase
       MockGetPackagingTypesService.getItemPackagingTypes().returns(Future.successful(testItemPackagingTypes))
     }
 
-    lazy val form: Form[ItemPackaging] = formProvider.apply(testIndex1, Seq.empty)(messages(request))
+    lazy val form: Form[ItemPackaging] = formProvider.apply(testIndex1, Seq.empty)
 
     lazy val controller = new ItemSelectPackagingController(
       messagesApi,

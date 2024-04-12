@@ -20,10 +20,18 @@ import scala.util.control.NoStackTrace
 
 sealed trait ErrorResponse {
   val message: String
+
+  val statusCode: Option[Int] = None
 }
 
 case object UnexpectedDownstreamResponseError extends ErrorResponse {
   val message = "Unexpected downstream response status"
+}
+
+case class UnexpectedDownstreamDraftSubmissionResponseError(status: Int) extends ErrorResponse {
+  val message = "Unexpected downstream response status"
+
+  override val statusCode: Option[Int] = Some(status)
 }
 
 case object JsonValidationError extends ErrorResponse {

@@ -17,8 +17,8 @@
 package connectors.emcsTfe
 
 import connectors.BaseConnectorUtils
-import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
-import play.api.http.Status.OK
+import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamDraftSubmissionResponseError}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
@@ -38,11 +38,21 @@ trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] {
         }
         case status =>
           logger.warn(s"[read] Unexpected status from emcs-tfe: $status")
-          Left(UnexpectedDownstreamResponseError)
+          Left(UnexpectedDownstreamDraftSubmissionResponseError(status))
       }
     }
   }
 
   def post[I](url: String, body: I)(implicit hc: HeaderCarrier, ec: ExecutionContext, writes: Writes[I]): Future[Either[ErrorResponse, A]] =
-    http.POST[I, Either[ErrorResponse, A]](url, body)(writes, EmcsTfeReads, hc, ec)
+    withExceptionRecovery("post") {
+      http.POST[I, Either[ErrorResponse, A]](url, body)(writes, EmcsTfeReads, hc, ec)
+    }
+
+  private[emcsTfe] def withExceptionRecovery(method: String)(f: => Future[Either[ErrorResponse, A]])
+                                   (implicit ec: ExecutionContext): Future[Either[ErrorResponse, A]] =
+    f recover {
+      case e: Throwable =>
+        logger.warn(s"[$method] Unexpected exception of type ${e.getClass.getSimpleName} was thrown")
+        Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+    }
 }

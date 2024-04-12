@@ -69,6 +69,8 @@ trait BaseFixtures {
   val testEori = "1234"
   val testVat = "1234"
 
+  val testReceiptDateTime = "2023-06-07T12:00:01"
+
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
     draftId = testDraftId,

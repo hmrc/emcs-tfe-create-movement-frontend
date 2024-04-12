@@ -50,8 +50,7 @@ class SubmitCreateMovementService @Inject()(
   private def writeAudit(
                           submissionRequest: SubmitCreateMovementModel,
                           submissionResponse: Either[ErrorResponse, SubmitCreateMovementResponse]
-                        )(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Unit = {
-    println("writing audit")
+                        )(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Unit =
     auditingService.audit(
       SubmitCreateMovementAudit(
         ern = dataRequest.ern,
@@ -60,5 +59,4 @@ class SubmitCreateMovementService @Inject()(
         receiptDate = timeMachine.now().toString
       )
     )
-  }
 }

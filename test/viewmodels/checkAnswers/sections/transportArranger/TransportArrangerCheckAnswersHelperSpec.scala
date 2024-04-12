@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.transportArranger
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerMessages
 import models.requests.DataRequest
-import models.sections.transportArranger.TransportArranger
+import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.scalamock.scalatest.MockFactory
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
@@ -33,19 +33,21 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
     val helper = new TransportArrangerCheckAnswersHelper()
   }
 
+  val vatNumberInputModel: TransportArrangerVatModel = TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber))
+
   "summaryList" - {
     TransportArranger.values.foreach {
       case value@(GoodsOwner | Other) =>
         // Only GoodsOwner or Other contain the VAT reg row
-        "must render four rows" - {
+        "must render five rows" - {
           s"when TransportArranger value is $value" in new Test {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(TransportArrangerPage, value)
-                .set(TransportArrangerVatPage, "beans")
+                .set(TransportArrangerVatPage, vatNumberInputModel)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
+            helper.summaryList()(request, msgs).rows.length mustBe 5
           }
         }
       case value =>
@@ -55,7 +57,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
               FakeRequest(),
               emptyUserAnswers
                 .set(TransportArrangerPage, value)
-                .set(TransportArrangerVatPage, "beans")
+                .set(TransportArrangerVatPage, vatNumberInputModel)
             )
             helper.summaryList()(request, msgs).rows.length mustBe 3
           }

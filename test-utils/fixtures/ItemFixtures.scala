@@ -399,7 +399,7 @@ trait ItemFixtures {
     .set(TransportArrangerPage, TransportArranger.GoodsOwner)
     .set(TransportArrangerNamePage, "arranger name")
     .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-    .set(TransportArrangerVatPage, "arranger vat")
+    .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("arranger vat")))
     // firstTransporterTrader
     .set(FirstTransporterNamePage, "first name")
     .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))

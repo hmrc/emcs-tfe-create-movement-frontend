@@ -18,17 +18,36 @@ package forms.sections.transportArranger
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, transportArrangerVatNumberField}
+import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
 import play.api.data.Form
+import play.api.data.Forms.{mapping, optional, text => playText}
 
 import javax.inject.Inject
 
 class TransportArrangerVatFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(transportArranger: TransportArranger): Form[TransportArrangerVatModel] =
     Form(
-      "value" -> text("transportArrangerVat.error.required")
-        .verifying(maxLength(14, "transportArrangerVat.error.length"))
-        .transform[String](_.replace("-", "").replace(" ", ""), identity)
-        .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
+      mapping(
+        hasVatNumberField -> boolean(s"transportArrangerVat.error.radio.$transportArranger.required"),
+        transportArrangerVatNumberField -> optional(
+          playText()
+            .verifying(maxLength(14, "transportArrangerVat.error.length"))
+            .transform[String](_.replace("-", "").replace(" ", ""), identity)
+            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
+        )
+      )(TransportArrangerVatModel.apply)(TransportArrangerVatModel.unapply)
+        .transform[TransportArrangerVatModel](
+          model => if(!model.hasTransportArrangerVatNumber) model.copy(transportArrangerVatNumber = None) else model, identity
+        )
     )
+}
+
+object TransportArrangerVatFormProvider {
+
+  val hasVatNumberField = "hasTransportArrangerVatNumber"
+  val transportArrangerVatNumberField = "transportArrangerVatNumber"
+
+  val transportArrangerVatNumberRequired = "transportArrangerVat.error.input.required"
 }

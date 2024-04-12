@@ -16,11 +16,12 @@
 
 package models.submitCreateMovement
 
+import config.Constants.NONGBVAT
+import models.{NorthernIrelandTemporaryCertifiedConsignor, UserAddress}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.transportArranger.TransportArranger
-import models.{NorthernIrelandTemporaryCertifiedConsignor, UserAddress}
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -160,7 +161,11 @@ object TraderModel extends ModelConstructorHelpers {
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(TransportArrangerNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(TransportArrangerAddressPage))),
-        vatNumber = Some(mandatoryPage(TransportArrangerVatPage)),
+        /*
+          On the TransportArrangerVatPage when the user clicks No we set the `transportArrangerVatNumber` to None
+          We need to default this to NONGBVAT hence the getOrElse.
+         */
+        vatNumber = Some(mandatoryPage(TransportArrangerVatPage).transportArrangerVatNumber.getOrElse(NONGBVAT)),
         eoriNumber = None
       ))
     }

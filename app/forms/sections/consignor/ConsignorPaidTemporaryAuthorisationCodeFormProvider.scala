@@ -16,8 +16,8 @@
 
 package forms.sections.consignor
 
+import forms.PAID_TEMPORARY_AUTHORISATION_CODE
 import forms.mappings.Mappings
-import forms.{PAID_TEMPORARY_AUTHORISATION_CODE, XSS_REGEX}
 import play.api.data.Form
 
 import javax.inject.Inject

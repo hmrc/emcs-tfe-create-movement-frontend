@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
-  "TransportArrangerVatSummary" - {
+class TransportArrangerVatChoiceSummarySpec extends SpecBase with Matchers {
+  "TransportArrangerVatChoiceSummary" - {
 
     Seq(TransportArrangerVatMessages.English).foreach { messagesForLanguage =>
 
@@ -45,7 +45,7 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
-            TransportArrangerVatSummary.row() mustBe None
+            TransportArrangerVatChoiceSummary.row() mustBe None
           }
         }
 
@@ -57,44 +57,53 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerVatSummary.row() mustBe None
-            }
-          }
-
-          //NONGBVAT is added when the movement is submitted
-          "when the user selected 'No' to VAT number" - {
-
-            "must output the expected data" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(TransportArrangerPage, GoodsOwner)
-                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
-              )
-
-              TransportArrangerVatSummary.row() mustBe None
+              TransportArrangerVatChoiceSummary.row() mustBe None
             }
           }
 
           "when there's an answer" - {
 
-            "must output the expected row (when the user selected 'Yes' to VAT number)" in {
+            "must output the expected row (answer is 'Yes')" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(TransportArrangerPage, Other)
                 .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
               )
 
-              TransportArrangerVatSummary.row() mustBe
+              TransportArrangerVatChoiceSummary.row() mustBe
                 Some(
                   SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaInputLabel,
-                    value = Value(Text(testVatNumber)),
+                    key = messagesForLanguage.cyaChoiceLabel,
+                    value = Value(Text(messagesForLanguage.yes)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
                         href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                        id = "changeTransportArrangerVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaInputChangeHidden)
+                        id = "changeTransportArrangerVatChoice"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChoiceChangeHidden)
+                    )
+                  )
+                )
+            }
+
+            "must output the expected row (answer is 'No')" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(TransportArrangerPage, Other)
+                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+              )
+
+              TransportArrangerVatChoiceSummary.row() mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaChoiceLabel,
+                    value = Value(Text(messagesForLanguage.no)),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                        id = "changeTransportArrangerVatChoice"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChoiceChangeHidden)
                     )
                   )
                 )

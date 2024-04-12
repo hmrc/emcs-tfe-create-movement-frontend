@@ -31,7 +31,7 @@ import models.sections.journeyType.HowMovementTransported
 import models.sections.transportArranger._
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.submitCreateMovement._
-import models.{ExciseProductCode, ExemptOrganisationDetailsModel, GoodsType, UserAnswers}
+import models.{ExciseProductCode, ExemptOrganisationDetailsModel, GoodsType, UserAnswers, VatNumberModel}
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -399,7 +399,7 @@ trait ItemFixtures {
     .set(TransportArrangerPage, TransportArranger.GoodsOwner)
     .set(TransportArrangerNamePage, "arranger name")
     .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-    .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("arranger vat")))
+    .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
     // firstTransporterTrader
     .set(FirstTransporterNamePage, "first name")
     .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
@@ -418,11 +418,8 @@ trait ItemFixtures {
     .set(GuarantorRequiredPage, true)
     .set(GuarantorNamePage, "guarantor name")
     .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
-    .set(GuarantorVatPage, "guarantor vat")
+    .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("guarantor vat")))
     .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-    .set(GuarantorNamePage, "guarantor name")
-    .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
-    .set(GuarantorVatPage, "guarantor vat")
     // bodyEadEsad
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)

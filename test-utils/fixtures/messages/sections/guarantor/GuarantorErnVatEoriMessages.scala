@@ -25,9 +25,8 @@ object GuarantorErnVatEoriMessages {
     _: i18n =>
 
     val cyaErnLabel = "Excise registration number (ERN)"
-    val cyaVatLabel = "VAT registration number"
-    val cyaEoriLabel = "EORI number"
-    val cyaNoVatOrEoriLabel = "VAT or EORI number"
+    val cyaVatChoiceLabel = "VAT registered in the UK"
+    val cyaVatInputLabel = "VAT registration number"
 
     val consigneeErnNotProvided = "Consignee section not complete"
   }

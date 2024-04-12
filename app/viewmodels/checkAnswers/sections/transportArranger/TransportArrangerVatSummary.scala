@@ -33,10 +33,10 @@ object TransportArrangerVatSummary {
     request.userAnswers.get(TransportArrangerPage) match {
       case Some(GoodsOwner | Other) =>
         request.userAnswers.get(TransportArrangerVatPage).flatMap { answer =>
-          Option.when(answer.transportArrangerVatNumber.isDefined) {
+          Option.when(answer.vatNumber.isDefined) {
             SummaryListRowViewModel(
               key = "transportArrangerVat.checkYourAnswers.input.label",
-              value = ValueViewModel(HtmlFormat.escape(answer.transportArrangerVatNumber.get).toString()),
+              value = ValueViewModel(HtmlFormat.escape(answer.vatNumber.get).toString()),
               actions = Seq(
                 ActionItemViewModel(
                   content = "site.change",

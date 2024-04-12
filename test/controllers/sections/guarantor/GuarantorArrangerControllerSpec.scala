@@ -22,7 +22,7 @@ import forms.sections.guarantor.GuarantorArrangerFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.{CheckMode, NormalMode, UserAddress, UserAnswers}
+import models.{CheckMode, NormalMode, UserAddress, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor._
 import play.api.data.Form
@@ -130,7 +130,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Transporter)
             .set(GuarantorNamePage, "Some name")
-            .set(GuarantorVatPage, "GB12345678")
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("GB12345678")))
             .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA")))) {
 
           val expectedAnswers = emptyUserAnswers

@@ -58,7 +58,7 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h1 -> messagesForLanguage.goodsOwnerHeading,
             Selectors.hint -> messagesForLanguage.hint,
             Selectors.radioButton(1) -> messagesForLanguage.yes,
-            Selectors.label(TransportArrangerVatFormProvider.transportArrangerVatNumberField) -> messagesForLanguage.vatNumberLabel,
+            Selectors.label(TransportArrangerVatFormProvider.vatNumberField) -> messagesForLanguage.vatNumberLabel,
             //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
             Selectors.radioButton(3) -> messagesForLanguage.no,
             Selectors.button -> messagesForLanguage.saveAndContinue,
@@ -73,7 +73,7 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h1 -> messagesForLanguage.otherHeading,
             Selectors.hint -> messagesForLanguage.hint,
             Selectors.radioButton(1) -> messagesForLanguage.yes,
-            Selectors.label(TransportArrangerVatFormProvider.transportArrangerVatNumberField) -> messagesForLanguage.vatNumberLabel,
+            Selectors.label(TransportArrangerVatFormProvider.vatNumberField) -> messagesForLanguage.vatNumberLabel,
             //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
             Selectors.radioButton(3) -> messagesForLanguage.no,
             Selectors.button -> messagesForLanguage.saveAndContinue,

@@ -16,11 +16,11 @@
 
 package pages.sections.transportArranger
 
-import models.sections.transportArranger.TransportArrangerVatModel
+import models.VatNumberModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object TransportArrangerVatPage extends QuestionPage[TransportArrangerVatModel] {
+case object TransportArrangerVatPage extends QuestionPage[VatNumberModel] {
   override val toString: String = "vat"
   override val path: JsPath = TransportArrangerSection.path \ toString
 }

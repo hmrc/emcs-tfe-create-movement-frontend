@@ -683,21 +683,23 @@ guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
 
-guarantorErn.checkYourAnswersLabel = Excise registration number (ERN)
+guarantorErn.checkYourAnswers.label = Excise registration number (ERN)
 guarantorErn.checkYourAnswers.notProvided = {0} section not complete
 
-guarantorVat.3.title = What is the goods owner’s VAT registration number?
-guarantorVat.3.heading = What is the goods owner’s VAT registration number?
-guarantorVat.2.title = What is the transporter’s VAT registration number?
-guarantorVat.2.heading = What is the transporter’s VAT registration number?
-guarantorVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
-guarantorVat.3.notUkVatLink = The goods owner is not VAT registered
-guarantorVat.2.notUkVatLink = The transporter is not VAT registered
-guarantorVat.checkYourAnswersLabel = VAT registration number
-guarantorVat.error.required = Enter a VAT registration number
-guarantorVat.error.length = VAT registration number must be 14 characters or less
-guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
-guarantorVat.change.hidden = VAT registration number
+guarantorVat.3.title = Is the goods owner VAT registered in the UK?
+guarantorVat.3.heading = Is the goods owner VAT registered in the UK?
+guarantorVat.2.title = Is the transporter VAT registered in the UK?
+guarantorVat.2.heading = Is the transporter VAT registered in the UK?
+guarantorVat.hint = A UK VAT registration number is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+guarantorVat.input.label = UK VAT registration number
+guarantorVat.3.error.radio.required = Select yes if the goods owner is VAT registered in the UK
+guarantorVat.2.error.radio.required = Select yes if the transporter is VAT registered in the UK
+guarantorVat.error.input.required = Enter a VAT registration number
+guarantorVat.error.input.length = VAT registration number must be 14 characters or less
+guarantorVat.error.input.alphanumeric = VAT registration number must only contain letters and numbers
+guarantorVat.checkYourAnswers.choice.label = VAT registered in the UK
+guarantorVat.checkYourAnswers.label = VAT registration number
+guarantorVat.checkYourAnswers.change.hidden = VAT registration number
 
 guarantorCheckAnswers.title = Check your answers
 guarantorCheckAnswers.heading = Check your answers

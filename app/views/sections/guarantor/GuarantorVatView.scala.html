@@ -18,19 +18,22 @@
 @import models.sections.guarantor.GuarantorArranger
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import forms.sections.guarantor.GuarantorVatFormProvider
+@import viewmodels.LegendSize
+@import viewmodels.InputWidth
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
+    govukRadios: GovukRadios,
     govukButton: GovukButton,
     h2: components.h2,
     continueOrExit: components.continueOrExit,
     link: components.link,
     p: components.p
 )
-
 
 @(form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
@@ -43,24 +46,35 @@
         }
 
         @h2(messages("guarantor.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(Text(messages(s"guarantorVat.$guarantorArranger.heading"))).asPageHeading(LabelSize.Large)
-            )
-            .withWidth(Full)
-            .withHint(HintViewModel(Text(messages("guarantorVat.hint"))))
+        @govukRadios(
+            RadiosViewModel.apply(
+                field = form(GuarantorVatFormProvider.hasVatNumberField),
+                items = Seq(
+                    RadioItem(
+                        id      = Some(form(GuarantorVatFormProvider.hasVatNumberField).id),
+                        value   = Some("true"),
+                        content = Text(messages("site.yes")),
+                        conditionalHtml = Some(vatRegistrationNumber)
+                    ),
+                    RadioItem(
+                        id      = Some(s"${form(GuarantorVatFormProvider.hasVatNumberField).id}-no"),
+                        value   = Some("false"),
+                        content = Text(messages("site.no"))
+                    )
+                ),
+                legend = LegendViewModel(Text(messages(s"guarantorVat.$guarantorArranger.heading"))).asPageHeading(LegendSize.Large)
+            ).withHint(HintViewModel(content = Text(messages("guarantorVat.hint"))))
         )
-
-        @p() {
-            @link(
-                controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(request.ern, request.draftId, mode).url,
-                s"guarantorVat.$guarantorArranger.notUkVatLink"
-            )
-        }
 
         @continueOrExit()
     }
+}
+
+@vatRegistrationNumber = {
+    @govukInput(InputViewModel.apply(
+        form(GuarantorVatFormProvider.vatNumberField),
+        LabelViewModel(Text(messages("guarantorVat.input.label")))
+    ).withWidth(InputWidth.TwoThirds))
 }
 
 @{

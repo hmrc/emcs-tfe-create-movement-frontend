@@ -32,7 +32,7 @@ object TransportArrangerVatChoiceSummary {
     request.userAnswers.get(TransportArrangerPage) match {
       case Some(GoodsOwner | Other) =>
         request.userAnswers.get(TransportArrangerVatPage).map { answer =>
-          val value = if(answer.hasTransportArrangerVatNumber) "site.yes" else "site.no"
+          val value = if(answer.hasVatNumber) "site.yes" else "site.no"
           SummaryListRowViewModel(
             key = "transportArrangerVat.checkYourAnswers.choice.label",
             value = ValueViewModel(value),

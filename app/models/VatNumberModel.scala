@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package models.sections.transportArranger
+package models
 
 import play.api.libs.json.{Format, Json}
 
-case class TransportArrangerVatModel(
-                                      hasTransportArrangerVatNumber: Boolean,
-                                      transportArrangerVatNumber: Option[String]
-                                    )
+case class VatNumberModel(hasVatNumber: Boolean,
+                          vatNumber: Option[String])
 
-object TransportArrangerVatModel {
+object VatNumberModel {
 
-  implicit val format: Format[TransportArrangerVatModel] = Json.format[TransportArrangerVatModel]
+  implicit val format: Format[VatNumberModel] = Json.format[VatNumberModel]
 }

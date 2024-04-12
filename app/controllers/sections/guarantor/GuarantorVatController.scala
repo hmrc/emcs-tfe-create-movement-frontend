@@ -16,7 +16,6 @@
 
 package controllers.sections.guarantor
 
-import config.Constants.NONGBVAT
 import controllers.actions._
 import forms.sections.guarantor.GuarantorVatFormProvider
 import models.Mode
@@ -47,35 +46,22 @@ class GuarantorVatController @Inject()(
                                       ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
-        renderView(Ok, fillForm(GuarantorVatPage, formProvider()), guarantorArranger, mode)
+        renderView(Ok, fillForm(GuarantorVatPage, formProvider(guarantorArranger)), guarantorArranger, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
-        formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(renderView(BadRequest, formWithErrors, guarantorArranger, mode)),
-          value =>
-            saveAndRedirect(GuarantorVatPage, value, mode)
+        formProvider(guarantorArranger).bindFromRequest().fold(
+          renderView(BadRequest, _, guarantorArranger, mode),
+          saveAndRedirect(GuarantorVatPage, _, mode)
         )
       }
     }
 
-  def onNonGbVAT(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      saveAndRedirect(GuarantorVatPage, NONGBVAT, mode)
-    }
-
-  private def renderView(status: Status, form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_]): Result = {
-    status(view(
-      form = form,
-      guarantorArranger = guarantorArranger,
-      mode = mode
-    ))
-  }
-
+  private def renderView(status: Status, form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(form, guarantorArranger, mode)))
 }

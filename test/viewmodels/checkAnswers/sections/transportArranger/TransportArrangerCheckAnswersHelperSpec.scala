@@ -18,8 +18,9 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerMessages
+import models.VatNumberModel
 import models.requests.DataRequest
-import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
+import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import org.scalamock.scalatest.MockFactory
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
@@ -33,7 +34,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
     val helper = new TransportArrangerCheckAnswersHelper()
   }
 
-  val vatNumberInputModel: TransportArrangerVatModel = TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber))
+  val vatNumberInputModel: VatNumberModel = VatNumberModel(hasVatNumber = true, Some(testVatNumber))
 
   "summaryList" - {
     TransportArranger.values.foreach {

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.CheckMode
+import models.{CheckMode, VatNumberModel}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportVatPage}
@@ -29,43 +29,38 @@ import viewmodels.implicits._
 
 object GuarantorErnVatEoriSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-
+  def rows()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
       request.userAnswers.get(GuarantorArrangerPage)
         .map { arranger =>
 
-        val (summaryListKey, summaryListValue) = arranger match {
-          case Consignor => getConsignorSummary()
-          case Consignee => getConsigneeSummary()
-          case GoodsOwner => getGuarantorVatSummary()
-          case Transporter => getGuarantorVatSummary()
-        }
+          val rows = arranger match {
+            case Consignor => Seq(getConsignorSummary())
+            case Consignee => Seq(getConsigneeSummary())
+            case _ => getGuarantorVatSummary()
+          }
 
-        val changeAction = arranger match {
-          case GoodsOwner | Transporter =>
-            Seq(
-              ActionItemViewModel(
-                "site.change",
-                controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-                "changeGuarantorVat"
-              ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
-            )
-          case _ =>
-            Seq().empty
-        }
+          val changeAction = arranger match {
+            case GoodsOwner | Transporter =>
+              Seq(
+                ActionItemViewModel(
+                  "site.change",
+                  controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+                  "changeGuarantorVat"
+                ).withVisuallyHiddenText(messages("guarantorVat.checkYourAnswers.change.hidden"))
+              )
+            case _ =>
+              Seq().empty
+          }
 
-        SummaryListRowViewModel(
-          key = summaryListKey,
-          value = ValueViewModel(summaryListValue),
-          actions = changeAction
-        )
-      }
-    }
-  }
+          rows.map { case (key, value) =>
+            SummaryListRowViewModel(key, ValueViewModel(value), changeAction)
+          }
+        }
+    }.getOrElse(Seq())
 
   private def getConsignorSummary()(implicit request: DataRequest[_]): (String, String) =
-    "guarantorErn.checkYourAnswersLabel" -> request.ern
+    "guarantorErn.checkYourAnswers.label" -> request.ern
 
   private def getConsigneeSummary()(implicit request: DataRequest[_], messages: Messages): (String, String) =
     (
@@ -73,17 +68,24 @@ object GuarantorErnVatEoriSummary {
       request.userAnswers.get(ConsigneeExportVatPage)
     ) match {
       case (Some(ern), _) =>
-        "guarantorErn.checkYourAnswersLabel" -> HtmlFormat.escape(ern).toString()
+        "guarantorErn.checkYourAnswers.label" -> HtmlFormat.escape(ern).toString()
       case (_, Some(vatNumber)) =>
-        "guarantorVat.checkYourAnswersLabel" -> HtmlFormat.escape(vatNumber).toString()
+        "guarantorVat.checkYourAnswers.label" -> HtmlFormat.escape(vatNumber).toString()
       case _ =>
-        "guarantorErn.checkYourAnswersLabel" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
+        "guarantorErn.checkYourAnswers.label" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
     }
 
-  private def getGuarantorVatSummary()(implicit request: DataRequest[_]): (String, String) =
+  private def getGuarantorVatSummary()(implicit request: DataRequest[_], messages: Messages): Seq[(String, String)] =
     request.userAnswers.get(GuarantorVatPage) match {
-      case Some(vatNumber) => "guarantorVat.checkYourAnswersLabel" -> HtmlFormat.escape(vatNumber).toString()
-      case None => "guarantorVat.checkYourAnswersLabel" -> "site.notProvided"
+      case Some(VatNumberModel(true, Some(vatNumber))) =>
+        Seq(
+          "guarantorVat.checkYourAnswers.choice.label" -> messages("site.yes"),
+          "guarantorVat.checkYourAnswers.label" -> HtmlFormat.escape(vatNumber).toString()
+        )
+      case Some(_) =>
+        Seq("guarantorVat.checkYourAnswers.choice.label" -> messages("site.no"))
+      case None =>
+        Seq("guarantorVat.checkYourAnswers.label" -> "site.notProvided")
     }
 
 }

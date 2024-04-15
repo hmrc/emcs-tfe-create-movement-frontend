@@ -16,10 +16,11 @@
 
 package pages.sections.guarantor
 
+import models.VatNumberModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object GuarantorVatPage extends QuestionPage[String] {
+case object GuarantorVatPage extends QuestionPage[VatNumberModel] {
   override val toString: String = "guarantorVat"
   override val path: JsPath = GuarantorSection.path \ toString
 }

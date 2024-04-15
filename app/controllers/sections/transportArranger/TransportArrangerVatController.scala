@@ -19,10 +19,10 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
-import forms.sections.transportArranger.TransportArrangerVatFormProvider.{transportArrangerVatNumberField, transportArrangerVatNumberRequired}
-import models.Mode
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{vatNumberField, vatNumberRequired}
+import models.{Mode, VatNumberModel}
 import models.requests.DataRequest
-import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
+import models.sections.transportArranger.TransportArranger
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
@@ -77,16 +77,16 @@ class TransportArrangerVatController @Inject()(
         arranger
       )))
 
-  private def handleSubmittedForm(transportArrangerVatModel: TransportArrangerVatModel, arranger: TransportArranger, mode: Mode)
+  private def handleSubmittedForm(transportArrangerVatModel: VatNumberModel, arranger: TransportArranger, mode: Mode)
                                  (implicit request: DataRequest[_], messages: Messages): Future[Result] = {
 
-    if (transportArrangerVatModel.hasTransportArrangerVatNumber && transportArrangerVatModel.transportArrangerVatNumber.isEmpty) {
+    if (transportArrangerVatModel.hasVatNumber && transportArrangerVatModel.vatNumber.isEmpty) {
       renderView(
         status = BadRequest,
         form =
           formProvider(arranger)
             .fill(transportArrangerVatModel)
-            .withError(transportArrangerVatNumberField, messages(transportArrangerVatNumberRequired)),
+            .withError(vatNumberField, messages(vatNumberRequired)),
         arranger = arranger,
         mode = mode
       )

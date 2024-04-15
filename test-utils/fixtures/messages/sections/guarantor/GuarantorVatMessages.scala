@@ -31,15 +31,12 @@ object GuarantorVatMessages {
     }
 
     def heading()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => "What is the goods owner’s VAT registration number?"
-      case _ => "What is the transporter’s VAT registration number?"
+      case GoodsOwner => "Is the goods owner VAT registered in the UK?"
+      case _ => "Is the transporter VAT registered in the UK?"
     }
 
-    def notVatRegisteredLink()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => "The goods owner is not VAT registered"
-      case _ => "The transporter is not VAT registered"
-
-    }
+    val hint = "A UK VAT registration number is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
+    val label = "UK VAT registration number"
 
     val cyaLabel = "VAT registration number"
     val cyaChangeHidden = "VAT registration number"

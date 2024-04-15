@@ -46,7 +46,7 @@ class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
            lazy val view = app.injector.instanceOf[GuarantorVatView]
-            val form = app.injector.instanceOf[GuarantorVatFormProvider].apply()
+            val form = app.injector.instanceOf[GuarantorVatFormProvider].apply(validGuarantorArranger)
 
             implicit val doc: Document = Jsoup.parse(
               view(
@@ -58,7 +58,11 @@ class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
             behave like pageWithExpectedElementsAndMessages(Seq(
               Selectors.title -> messagesForLanguage.title,
               Selectors.h1 -> messagesForLanguage.heading,
-              Selectors.link(1) -> messagesForLanguage.notVatRegisteredLink,
+              Selectors.hint -> messagesForLanguage.hint,
+              Selectors.radioButton(1) -> messagesForLanguage.yes,
+              Selectors.label(GuarantorVatFormProvider.vatNumberField) -> messagesForLanguage.label,
+              //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
+              Selectors.radioButton(3) -> messagesForLanguage.no,
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))

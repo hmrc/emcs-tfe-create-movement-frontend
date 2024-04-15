@@ -18,9 +18,8 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
-import models.CheckMode
+import models.{CheckMode, VatNumberModel}
 import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner, Other}
-import models.sections.transportArranger.TransportArrangerVatModel
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.{Messages, MessagesApi}
@@ -67,7 +66,7 @@ class TransportArrangerVatChoiceSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(TransportArrangerPage, Other)
-                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
               )
 
               TransportArrangerVatChoiceSummary.row() mustBe
@@ -90,7 +89,7 @@ class TransportArrangerVatChoiceSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(TransportArrangerPage, Other)
-                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = false, None))
               )
 
               TransportArrangerVatChoiceSummary.row() mustBe

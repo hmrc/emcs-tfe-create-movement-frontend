@@ -19,8 +19,9 @@ package forms.sections.transportArranger
 import fixtures.BaseFixtures
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.VatNumberModel
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
-import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
+import models.sections.transportArranger.TransportArranger
 import play.api.data.FormError
 
 class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with BaseFixtures {
@@ -40,11 +41,11 @@ class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with Ba
 
         val boundForm = form.bind(Map(
           TransportArrangerVatFormProvider.hasVatNumberField -> "true",
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "<"
+          TransportArrangerVatFormProvider.vatNumberField -> "<"
         ))
 
         boundForm.errors mustBe Seq(FormError(
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField,
+          TransportArrangerVatFormProvider.vatNumberField,
           alphanumericKey,
           Seq(ONLY_ALPHANUMERIC_REGEX)
         ))
@@ -57,11 +58,11 @@ class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with Ba
 
         val boundForm = form.bind(Map(
           TransportArrangerVatFormProvider.hasVatNumberField -> "true",
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "a" * (maxLength + 1)
+          TransportArrangerVatFormProvider.vatNumberField -> "a" * (maxLength + 1)
         ))
 
         boundForm.errors mustBe Seq(FormError(
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField,
+          TransportArrangerVatFormProvider.vatNumberField,
           lengthKey,
           Seq(maxLength)
         ))
@@ -74,20 +75,20 @@ class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with Ba
 
         val boundForm = form.bind(Map(
           TransportArrangerVatFormProvider.hasVatNumberField -> "true",
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "GB123 456-178"
+          TransportArrangerVatFormProvider.vatNumberField -> "GB123 456-178"
         ))
 
-        boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("GB123456178")))
+        boundForm.value mustBe Some(VatNumberModel(hasVatNumber = true, Some("GB123456178")))
       }
 
       "must bind the form successfully when true with value" in {
 
         val boundForm = form.bind(Map(
           TransportArrangerVatFormProvider.hasVatNumberField -> "true",
-          TransportArrangerVatFormProvider.transportArrangerVatNumberField -> testVatNumber
+          TransportArrangerVatFormProvider.vatNumberField -> testVatNumber
         ))
 
-        boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some(testVatNumber)))
+        boundForm.value mustBe Some(VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
       }
     }
   }
@@ -98,10 +99,10 @@ class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with Ba
 
       val boundForm = form.bind(Map(
         TransportArrangerVatFormProvider.hasVatNumberField -> "false",
-        TransportArrangerVatFormProvider.transportArrangerVatNumberField -> "brand"
+        TransportArrangerVatFormProvider.vatNumberField -> "brand"
       ))
 
-      boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+      boundForm.value mustBe Some(VatNumberModel(hasVatNumber = false, None))
     }
 
     "must bind the form successfully when false with NO value" in {
@@ -110,7 +111,7 @@ class TransportArrangerVatFormProviderSpec extends StringFieldBehaviours with Ba
         TransportArrangerVatFormProvider.hasVatNumberField -> "false"
       ))
 
-      boundForm.value mustBe Some(TransportArrangerVatModel(hasTransportArrangerVatNumber = false, None))
+      boundForm.value mustBe Some(VatNumberModel(hasVatNumber = false, None))
     }
   }
 

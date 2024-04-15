@@ -18,8 +18,9 @@ package forms.sections.transportArranger
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
-import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, transportArrangerVatNumberField}
-import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, vatNumberField}
+import models.VatNumberModel
+import models.sections.transportArranger.TransportArranger
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text => playText}
 
@@ -27,27 +28,27 @@ import javax.inject.Inject
 
 class TransportArrangerVatFormProvider @Inject() extends Mappings {
 
-  def apply(transportArranger: TransportArranger): Form[TransportArrangerVatModel] =
+  def apply(transportArranger: TransportArranger): Form[VatNumberModel] =
     Form(
       mapping(
         hasVatNumberField -> boolean(s"transportArrangerVat.error.radio.$transportArranger.required"),
-        transportArrangerVatNumberField -> optional(
+        vatNumberField -> optional(
           playText()
             .verifying(maxLength(14, "transportArrangerVat.error.length"))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
             .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
         )
-      )(TransportArrangerVatModel.apply)(TransportArrangerVatModel.unapply)
-        .transform[TransportArrangerVatModel](
-          model => if(!model.hasTransportArrangerVatNumber) model.copy(transportArrangerVatNumber = None) else model, identity
+      )(VatNumberModel.apply)(VatNumberModel.unapply)
+        .transform[VatNumberModel](
+          model => if(!model.hasVatNumber) model.copy(vatNumber = None) else model, identity
         )
     )
 }
 
 object TransportArrangerVatFormProvider {
 
-  val hasVatNumberField = "hasTransportArrangerVatNumber"
-  val transportArrangerVatNumberField = "transportArrangerVatNumber"
+  val hasVatNumberField = "hasVatNumber"
+  val vatNumberField = "vatNumber"
 
-  val transportArrangerVatNumberRequired = "transportArrangerVat.error.input.required"
+  val vatNumberRequired = "transportArrangerVat.error.input.required"
 }

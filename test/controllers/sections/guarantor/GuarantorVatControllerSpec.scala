@@ -19,9 +19,11 @@ package controllers.sections.guarantor
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import forms.sections.guarantor.GuarantorVatFormProvider
+import forms.sections.guarantor.GuarantorVatFormProvider.hasVatNumberField
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.vatNumberField
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger.Transporter
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.data.Form
@@ -34,7 +36,7 @@ import scala.concurrent.Future
 class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: GuarantorVatFormProvider = new GuarantorVatFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[VatNumberModel] = formProvider(Transporter)
   lazy val view: GuarantorVatView = app.injector.instanceOf[GuarantorVatView]
 
   lazy val guarantorVatRoute: String = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode).url
@@ -72,15 +74,16 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       Some(emptyUserAnswers
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)
-        .set(GuarantorVatPage, "answer"))) {
+        .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber))))) {
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), Transporter, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual
+        view(form.fill(VatNumberModel(hasVatNumber = true, Some(testVatNumber))), Transporter, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(
+    "must redirect to the next page when valid data is submitted (Yes, with value)" in new Fixture(
       Some(emptyUserAnswers
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter))) {
@@ -89,7 +92,10 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)))
 
-      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(
+        hasVatNumberField -> "true",
+        vatNumberField -> testVatNumber
+      )
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
@@ -97,7 +103,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must redirect to the next page when the NONGBVAT link is clicked" in new Fixture(
+    "must redirect to the next page when valid data is submitted (No)" in new Fixture(
       Some(emptyUserAnswers
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter))) {
@@ -106,9 +112,9 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)))
 
-      val req = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testDraftId, NormalMode).url)
+      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(hasVatNumberField -> "false")
 
-      val result = testController.onNonGbVAT(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -142,8 +148,8 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter))) {
 
-      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", ""))
-      val boundForm = form.bind(Map("value" -> ""))
+      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(hasVatNumberField -> "")
+      val boundForm = form.bind(Map(hasVatNumberField -> ""))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 

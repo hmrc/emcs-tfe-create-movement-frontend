@@ -17,7 +17,7 @@
 package pages.sections.guarantor
 
 import base.SpecBase
-import models.UserAddress
+import models.{UserAddress, VatNumberModel}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import play.api.test.FakeRequest
@@ -56,7 +56,7 @@ class GuarantorSectionSpec extends SpecBase {
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, arranger)
                 .set(GuarantorNamePage, "")
-                .set(GuarantorVatPage, "")
+                .set(GuarantorVatPage, VatNumberModel(hasVatNumber = false, None))
                 .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
             )
             GuarantorSection.isCompleted mustBe true
@@ -86,7 +86,7 @@ class GuarantorSectionSpec extends SpecBase {
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, arranger)
                 .set(GuarantorNamePage, "")
-                .set(GuarantorVatPage, "")
+                .set(GuarantorVatPage, VatNumberModel(hasVatNumber = false, None))
             )
             GuarantorSection.isCompleted mustBe false
           }

@@ -162,10 +162,10 @@ object TraderModel extends ModelConstructorHelpers {
         traderName = Some(mandatoryPage(TransportArrangerNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(TransportArrangerAddressPage))),
         /*
-          On the TransportArrangerVatPage when the user clicks No we set the `transportArrangerVatNumber` to None
+          On the TransportArrangerVatPage when the user clicks No we set the `vatNumber` to None
           We need to default this to NONGBVAT hence the getOrElse.
          */
-        vatNumber = Some(mandatoryPage(TransportArrangerVatPage).transportArrangerVatNumber.getOrElse(NONGBVAT)),
+        vatNumber = Some(mandatoryPage(TransportArrangerVatPage).vatNumber.getOrElse(NONGBVAT)),
         eoriNumber = None
       ))
     }
@@ -191,7 +191,7 @@ object TraderModel extends ModelConstructorHelpers {
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(GuarantorNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(GuarantorAddressPage))),
-        vatNumber = Some(mandatoryPage(GuarantorVatPage)),
+        vatNumber = Some(mandatoryPage(GuarantorVatPage).vatNumber.getOrElse(NONGBVAT)),
         eoriNumber = None
       ))
     }

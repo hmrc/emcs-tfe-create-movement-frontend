@@ -17,11 +17,12 @@
 package models.submitCreateMovement
 
 import base.SpecBase
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
-import models.sections.transportArranger.{TransportArranger, TransportArrangerVatModel}
+import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -449,7 +450,7 @@ class TraderModelSpec extends SpecBase {
                 .set(TransportArrangerPage, transportArranger)
                 .set(TransportArrangerNamePage, "arranger name")
                 .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-                .set(TransportArrangerVatPage, TransportArrangerVatModel(hasTransportArrangerVatNumber = true, Some("arranger vat")))
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
             )
 
             TraderModel.applyTransportArranger mustBe Some(transportArrangerTrader)
@@ -501,7 +502,7 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(GuarantorNamePage, "guarantor name")
                 .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
-                .set(GuarantorVatPage, "guarantor vat")
+                .set(GuarantorVatPage, VatNumberModel(true, Some("guarantor vat")))
             )
 
             TraderModel.applyGuarantor(guarantorArranger) mustBe Some(guarantorTrader)

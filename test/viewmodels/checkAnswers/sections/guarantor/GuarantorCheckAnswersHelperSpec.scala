@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
@@ -44,7 +45,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
       GuarantorArranger.displayValues.foreach {
         case value@(GoodsOwner | Transporter) =>
 
-          "must render five rows (GuarantorRequired is included)" - {
+          "must render six rows (GuarantorRequired is included)" - {
             s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
               implicit val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
@@ -54,11 +55,11 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
-                  .set(GuarantorVatPage, "gurantor123")
+                  .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 5
+              helper.summaryList()(request, msgs).rows.length mustBe 6
             }
           }
         case value =>
@@ -85,7 +86,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
       GuarantorArranger.displayValues.foreach {
         case value@(GoodsOwner | Transporter) =>
 
-          "must render four rows (GuarantorRequired is excluded as it must be true and can't be changed)" - {
+          "must render five rows (GuarantorRequired is excluded as it must be true and can't be changed)" - {
             s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
               implicit val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
@@ -95,11 +96,11 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
-                  .set(GuarantorVatPage, "gurantor123")
+                  .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 4
+              helper.summaryList()(request, msgs).rows.length mustBe 5
             }
           }
         case value =>
@@ -127,7 +128,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
       GuarantorArranger.displayValues.foreach {
         case value@(GoodsOwner | Transporter) =>
 
-          "must render five rows" - {
+          "must render six rows" - {
             s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
               implicit val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
@@ -136,10 +137,10 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
-                  .set(GuarantorVatPage, "gurantor123")
+                  .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress)
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 5
+              helper.summaryList()(request, msgs).rows.length mustBe 6
             }
           }
         case value =>

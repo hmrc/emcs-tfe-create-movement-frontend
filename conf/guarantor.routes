@@ -19,8 +19,6 @@ GET         /trader/:ern/draft/:draftId/guarantor/vat                          c
 POST        /trader/:ern/draft/:draftId/guarantor/vat                          controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/guarantor/vat/change                   controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/guarantor/vat/change                   controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-GET         /trader/:ern/draft/:draftId/guarantor/vat/non-gb-vat               controllers.sections.guarantor.GuarantorVatController.onNonGbVAT(ern: String, draftId: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/guarantor/vat/non-gb-vat/change        controllers.sections.guarantor.GuarantorVatController.onNonGbVAT(ern: String, draftId: String, mode: Mode = CheckMode)
 
 GET         /trader/:ern/draft/:draftId/guarantor/address                      controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/guarantor/address                      controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)

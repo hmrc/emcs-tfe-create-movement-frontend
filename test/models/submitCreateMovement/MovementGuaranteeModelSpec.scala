@@ -17,6 +17,7 @@
 package models.submitCreateMovement
 
 import base.SpecBase
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import pages.sections.guarantor._
@@ -36,7 +37,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat")
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
             .set(DestinationTypePage, MovementScenario.EuTaxWarehouse),
           testNorthernIrelandErn
         )
@@ -52,7 +53,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat")
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
             .set(DestinationTypePage, MovementScenario.GbTaxWarehouse),
           testNorthernIrelandErn
         )
@@ -68,7 +69,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat")
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
         )
 
         MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
@@ -90,7 +91,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat"),
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat"))),
           testNorthernIrelandErn
         )
 

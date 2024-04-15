@@ -18,7 +18,7 @@ package forms.sections.guarantor
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
-import forms.sections.guarantor.GuarantorVatFormProvider.{hasVatNumberField, vatNumberField, vatNumberRequired}
+import forms.sections.guarantor.GuarantorVatFormProvider._
 import models.VatNumberModel
 import models.sections.guarantor.GuarantorArranger
 import play.api.data.Form
@@ -32,17 +32,14 @@ class GuarantorVatFormProvider @Inject() extends Mappings {
   def apply(guarantorArranger: GuarantorArranger): Form[VatNumberModel] =
     Form(
       mapping(
-        hasVatNumberField -> boolean(s"guarantorVat.$guarantorArranger.error.radio.required"),
+        hasVatNumberField -> boolean(vatRadioRequired(guarantorArranger)),
         vatNumberField -> ConditionalMappings.mandatoryIfTrue(hasVatNumberField,
           text(vatNumberRequired)
-            .verifying(maxLength(14, "guarantorVat.error.input.length"))
+            .verifying(maxLength(14, vatNumberLength))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
-            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "guarantorVat.error.input.alphanumeric"))
+            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberAlphanumeric))
         )
       )(VatNumberModel.apply)(VatNumberModel.unapply)
-        .transform[VatNumberModel](
-          model => if (!model.hasVatNumber) model.copy(vatNumber = None) else model, identity
-        )
     )
 }
 
@@ -50,5 +47,8 @@ object GuarantorVatFormProvider {
   val hasVatNumberField = "hasVatNumber"
   val vatNumberField = "vatNumber"
 
+  val vatRadioRequired: GuarantorArranger => String = arranger =>  s"guarantorVat.$arranger.error.radio.required"
   val vatNumberRequired = "guarantorVat.error.input.required"
+  val vatNumberLength = "guarantorVat.error.input.length"
+  val vatNumberAlphanumeric = "guarantorVat.error.input.alphanumeric"
 }

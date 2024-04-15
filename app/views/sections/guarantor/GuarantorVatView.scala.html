@@ -14,13 +14,10 @@
  * limitations under the License.
  *@
 
+@import forms.sections.guarantor.GuarantorVatFormProvider
 @import models.requests.DataRequest
 @import models.sections.guarantor.GuarantorArranger
-@import viewmodels.InputWidth._
-@import viewmodels.LabelSize
-@import forms.sections.guarantor.GuarantorVatFormProvider
-@import viewmodels.LegendSize
-@import viewmodels.InputWidth
+@import viewmodels.{InputWidth, LegendSize}
 
 @this(
     layout: templates.Layout,
@@ -30,9 +27,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     h2: components.h2,
-    continueOrExit: components.continueOrExit,
-    link: components.link,
-    p: components.p
+    continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)

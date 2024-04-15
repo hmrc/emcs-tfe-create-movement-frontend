@@ -148,7 +148,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter))) {
 
-      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody((hasVatNumberField, ""))
+      val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(hasVatNumberField -> "")
       val boundForm = form.bind(Map(hasVatNumberField -> ""))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)

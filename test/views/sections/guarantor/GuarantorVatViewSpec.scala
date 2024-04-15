@@ -60,7 +60,7 @@ class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
               Selectors.h1 -> messagesForLanguage.heading,
               Selectors.hint -> messagesForLanguage.hint,
               Selectors.radioButton(1) -> messagesForLanguage.yes,
-              Selectors.label("vatNumber") -> messagesForLanguage.label,
+              Selectors.label(GuarantorVatFormProvider.vatNumberField) -> messagesForLanguage.label,
               //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
               Selectors.radioButton(3) -> messagesForLanguage.no,
               Selectors.button -> messagesForLanguage.saveAndContinue,

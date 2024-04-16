@@ -200,5 +200,9 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
+
+    "updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers" - {
+      "must "
+    }
   }
 }

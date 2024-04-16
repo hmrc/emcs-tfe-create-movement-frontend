@@ -16,6 +16,7 @@
 
 package pages.sections.items
 
+import models.Index
 import models.requests.DataRequest
 import models.sections.items.ItemsAddToList
 import pages.sections.Section
@@ -41,10 +42,38 @@ case object ItemsSection extends Section[JsObject] {
 
   /**
    * @param request user's DataRequest containing current UserAnswers
-   * @return for every item, for every packaging within that item,
-   *         return the ItemPackagingShippingMarksPage(itemIdx, packagingIdx) result if it exists
+   * @return        for every item, for every packaging within that item,
+   *                return the ItemPackagingShippingMarksPage(itemIdx, packagingIdx) result if it exists
    */
   def retrieveAllShippingMarks()(implicit request: DataRequest[_]): Seq[String] =
+    forEveryPackagingInsideEveryItem { (itemIdx, packagingIdx) =>
+      request.userAnswers.get(page = ItemPackagingShippingMarksPage(itemIdx, packagingIdx))
+    }
+
+  /**
+   * @param valueToMatch value to compare against in user answers
+   * @param request      user's DataRequest containing current UserAnswers
+   * @return             for every item, for every packaging within that item,
+   *                     return (Index(itemIdx), Index(packagingIdx)) if that combination's
+   *                     ItemPackagingShippingMarksPage matches the valueToMatch parameter
+   */
+  def retrieveShippingMarkLocationsMatching(valueToMatch: String)(implicit request: DataRequest[_]): Seq[(Index, Index)] =
+    forEveryPackagingInsideEveryItem { (itemIdx, packagingIdx) =>
+      val optionalValue = request.userAnswers.get(page = ItemPackagingShippingMarksPage(itemIdx, packagingIdx))
+      if (optionalValue.contains(valueToMatch)) {
+        Seq((Index(itemIdx), Index(packagingIdx)))
+      } else {
+        Seq()
+      }
+    }
+
+  /**
+   * @param f       takes two indexes and returns an Iterable[A]. Iterable can be Seq, Option, etc
+   * @param request user's DataRequest containing current UserAnswers
+   * @tparam A      type for the function to return. Can be String, (Index, Index), etc
+   * @return        for every item, for every packaging within that item, perform function f
+   */
+  private def forEveryPackagingInsideEveryItem[A](f: (Int, Int) => IterableOnce[A])(implicit request: DataRequest[_]): Seq[A] =
     request.userAnswers.get(ItemsCount)
       .map {
         itemsCount =>
@@ -52,7 +81,10 @@ case object ItemsSection extends Section[JsObject] {
             .flatMap(itemIdx => request.userAnswers.get(ItemsPackagingCount(itemIdx)).map {
               packagingCount =>
                 (0 until packagingCount)
-                  .flatMap(packagingIdx => request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)))
+                  .flatMap {
+                    packagingIdx =>
+                      f(itemIdx, packagingIdx)
+                  }
             })
       }
       .map(_.flatten.distinct)

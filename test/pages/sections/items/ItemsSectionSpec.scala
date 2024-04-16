@@ -162,4 +162,82 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
       }
     }
   }
+
+  "retrieveShippingMarkLocationsMatching" - {
+    "must return a non-empty Seq" - {
+      "when all shipping marks are in one item" in {
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 2")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "mark 3")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq((testIndex1, testPackagingIndex1))
+      }
+      "when shipping marks are split across multiple items" in {
+
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 3")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 2")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 2")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq((testIndex2, testPackagingIndex1))
+      }
+      "when there are multiple items, but not all items have ItemsPackagingCount" in {
+        val userAnswers1 =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 3")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "quantity")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers1)) mustBe Seq((testIndex1, testPackagingIndex1))
+
+        val userAnswers2 =
+          emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "quantity")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex2), "mark 3")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers2)) mustBe Seq((testIndex2, testPackagingIndex1))
+      }
+      "and handle duplicate shipping marks" in {
+
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "mark 3")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq((testIndex1, testPackagingIndex1), (testIndex1, testPackagingIndex2))
+      }
+    }
+
+    "must return an empty Seq" - {
+      "when ItemsCount is 0" in {
+        val userAnswers =
+          emptyUserAnswers
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq()
+      }
+      "when ItemsPackagingCount is 0 for every item" in {
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "quantity")
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "quantity 2")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "quantity 3")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 1")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq()
+      }
+      "when no packaging matches the value entered" in {
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 3")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 2")
+
+        ItemsSection.retrieveShippingMarkLocationsMatching("mark 4")(dataRequest(FakeRequest(), userAnswers)) mustBe Seq()
+      }
+    }
+  }
 }

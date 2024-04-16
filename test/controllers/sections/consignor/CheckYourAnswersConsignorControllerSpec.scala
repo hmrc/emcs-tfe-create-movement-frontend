@@ -19,17 +19,22 @@ package controllers.sections.consignor
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
+import mocks.viewmodels.MockConsignorCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.govuk.SummaryListFluency
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 
-class CheckYourAnswersConsignorControllerSpec extends SpecBase {
+class CheckYourAnswersConsignorControllerSpec extends SpecBase with MockConsignorCheckAnswersHelper with SummaryListFluency {
 
   lazy val view: CheckYourAnswersConsignorView = app.injector.instanceOf[CheckYourAnswersConsignorView]
+
+  val summaryList: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
   lazy val route: String =
     controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(testErn, testDraftId).url
@@ -46,26 +51,26 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
       dataRequiredAction,
       messagesControllerComponents,
       new FakeConsignorNavigator(testOnwardRoute),
+      mockConsignorCheckAnswersHelper,
       view
     )
 
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, route)
   }
 
-  "Check Your Answers Consignor Controller" - {
+  "CheckYourAnswersConsignor Controller" - {
     ".onPageLoad" - {
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
+
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-        lazy val viewAsString = view(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
-          testErn,
-          testDraftId,
-          testUserAddress,
-          testMinTraderKnownFacts
-        )(dataRequest(request), messages(request)).toString
+        MockConsignorCheckAnswersHelper.summaryList().returns(summaryList)
 
         status(result) mustBe OK
-        contentAsString(result) mustBe viewAsString
+        contentAsString(result) mustBe view(
+          summaryList,
+          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId)
+        )(dataRequest(request), messages(request)).toString
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
@@ -73,13 +78,6 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase {
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
-      }
-
-      "must redirect to /consignor if user answers doesn't contain the correct page" in new Fixture(Some(emptyUserAnswers)) {
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
-
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url
       }
     }
   }

@@ -24,7 +24,6 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
@@ -43,8 +42,7 @@ class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.routes.CheckYourAnswersController.onSubmit(testErn, testDraftId),
-          SummaryList(Seq())
+          controllers.routes.CheckYourAnswersController.onSubmit(testErn, testDraftId)
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(

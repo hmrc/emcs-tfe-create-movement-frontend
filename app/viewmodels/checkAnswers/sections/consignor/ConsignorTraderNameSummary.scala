@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers
+package viewmodels.checkAnswers.sections.consignor
 
-import base.SpecBase
+import models.requests.DataRequest
 import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
-class CheckAnswersHelperSpec extends SpecBase {
+import viewmodels.implicits._
 
-  lazy val checkAnswersHelper = new CheckAnswersHelper()
+object ConsignorTraderNameSummary {
 
-  implicit val msgs: Messages = messages(FakeRequest())
-
-  "CheckAnswersHelper" - {
-
-    s"must return the expected SummaryList" in {
-
-      checkAnswersHelper.summaryList(Seq()) mustBe
-        SummaryList(Seq()).withCssClass("govuk-!-margin-bottom-9")
-    }
-  }
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswersConsignor.traderName",
+      value = ValueViewModel(request.traderKnownFacts.traderName),
+      actions = Seq.empty
+    )
 }

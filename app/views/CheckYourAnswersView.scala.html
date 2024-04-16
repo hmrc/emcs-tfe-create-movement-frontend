@@ -24,7 +24,7 @@
         saveAndContinue: components.saveAndContinue
 )
 
-@(submitAction: Call, list: SummaryList)(implicit request: DataRequest[_], messages: Messages)
+@(submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -32,7 +32,8 @@
 
      @h1("checkYourAnswers.heading", Some(messages("lrn.subHeading", request.draftId)), "govuk-heading-l")
 
-     @govukSummaryList(list)
+     @* TODO: implement this in future story *@
+     @govukSummaryList(SummaryList(Seq.empty))
 
      @saveAndContinue("checkYourAnswers.submit.button")
 

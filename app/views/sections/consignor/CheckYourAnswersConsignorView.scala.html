@@ -15,41 +15,23 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.helpers.CheckAnswersHelper
 
-@this(layout: templates.Layout,
+@this(
+        layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
         h1: components.h1,
         h2: components.h2,
-        saveAndContinue: components.saveAndContinue,
-        checkAnswersHelper: CheckAnswersHelper)
+        saveAndContinue: components.saveAndContinue
+)
 
-@(submitAction: Call, ern: String, lrn: String, consignorAddress: UserAddress, traderKnownFacts: TraderKnownFacts)(implicit request: DataRequest[_], messages: Messages)
-
-
-@summaryList = @{
-    val traderNameRow = checkAnswersHelper.buildSummaryRow(
-        key = "checkYourAnswersConsignor.traderName",
-        value = Text(traderKnownFacts.traderName))
-    val ernRow = checkAnswersHelper.buildSummaryRow(
-        key = "checkYourAnswersConsignor.ern",
-        value = Text(ern))
-    val consignorAddressRow = checkAnswersHelper.buildSummaryRow(
-        key = "checkYourAnswersConsignor.address",
-        value = consignorAddress.toCheckYourAnswersFormat,
-        optChangeLink = Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, CheckMode)),
-        id = "change-address")
-
-    checkAnswersHelper.summaryList(Seq(traderNameRow, ernRow, consignorAddressRow))
-}
-
+@(summaryList: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignor.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(submitAction) {
 
-        @h1("checkYourAnswersConsignor.heading", Some(messages("checkYourAnswersConsignor.caption")), "govuk-heading-l")
+        @h1("checkYourAnswersConsignor.heading", Some(messages("checkYourAnswersConsignor.caption")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
         @govukSummaryList(summaryList)
 

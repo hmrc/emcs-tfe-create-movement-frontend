@@ -316,7 +316,10 @@ checkYourAnswersConsignor.heading = Check your answers
 checkYourAnswersConsignor.subHeading = Consignor
 checkYourAnswersConsignor.traderName = Trader name
 checkYourAnswersConsignor.ern = Excise registration number (ERN)
+checkYourAnswersConsignor.paidTemporaryAuthorisationCode = Paid Temporary Authorisation (PTA) code
 checkYourAnswersConsignor.address = Address
+checkYourAnswersConsignor.address.change.hidden = Address
+checkYourAnswersConsignor.paidTemporaryAuthorisationCode.change.hidden = Paid Temporary Authorisation (PTA) code
 
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information

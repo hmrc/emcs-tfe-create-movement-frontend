@@ -22,9 +22,11 @@ import models.CheckMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.consignor.{ConsignorAddressPage, ConsignorPaidTemporaryAuthorisationCodePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import viewmodels.checkAnswers.sections.consignor.ConsignorCheckAnswersHelper
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 import views.{BaseSelectors, ViewBehaviours}
 
@@ -32,7 +34,10 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
-    val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
+
+    val changeConsignorAddressLink = "#changeConsignorAddress"
+
+    val changeConsignorPaidTemporaryAuthorisationCodeLink = "#changeConsignorPaidTemporaryAuthorisationCode"
   }
 
   "CheckYourAnswersConsignor view" - {
@@ -42,32 +47,70 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-       lazy val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
-
-        implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId),
-          testErn,
-          testDraftId,
-          testUserAddress,
-          testMinTraderKnownFacts
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.ern,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
-          Selectors.button -> messagesForLanguage.confirmAnswers
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(
+          ConsignorAddressPage, testUserAddress
         ))
 
-        "have a link to change details" in {
+        lazy val view = app.injector.instanceOf[CheckYourAnswersConsignorView]
 
-          doc.select(Selectors.govukSummaryListChangeLink).attr("href") mustBe
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+        val summaryListHelper = app.injector.instanceOf[ConsignorCheckAnswersHelper]
+
+        "for a non-XIPC trader" - {
+          implicit val doc: Document = Jsoup.parse(view(
+            summaryListHelper.summaryList(),
+            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId)
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
+            Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
+            Selectors.govukSummaryListKey(2) -> messagesForLanguage.ern,
+            Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+            Selectors.button -> messagesForLanguage.confirmAnswers
+          ))
+
+          "have a link to change Address details" in {
+
+            doc.select(Selectors.changeConsignorAddressLink).attr("href") mustBe
+              controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+          }
+        }
+
+        "for an XIPC trader" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
+            .set(ConsignorAddressPage, testUserAddress),
+            ern = testNITemporaryCertifiedConsignorErn)
+
+          implicit val doc: Document = Jsoup.parse(view(
+            summaryListHelper.summaryList(),
+            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId)
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
+            Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
+            Selectors.govukSummaryListKey(2) -> messagesForLanguage.paidTemporaryAuthorisationCode,
+            Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+            Selectors.button -> messagesForLanguage.confirmAnswers
+          ))
+
+          "have a link to change Paid Temporary Authorisation Code" in {
+
+            doc.select(Selectors.changeConsignorPaidTemporaryAuthorisationCodeLink).attr("href") mustBe
+              controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, CheckMode).url
+          }
+
+          "have a link to change Address details" in {
+
+            doc.select(Selectors.changeConsignorAddressLink).attr("href") mustBe
+              controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, CheckMode).url
+          }
         }
       }
     }

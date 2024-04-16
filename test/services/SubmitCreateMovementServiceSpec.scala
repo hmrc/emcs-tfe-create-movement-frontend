@@ -18,19 +18,26 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockSubmitCreateMovementConnector
-import models.response.{SubmitCreateMovementException, UnexpectedDownstreamResponseError}
+import mocks.services.MockAuditingService
+import models.audit.SubmitCreateMovementAudit
+import models.response.{SubmitCreateMovementException, UnexpectedDownstreamDraftSubmissionResponseError}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.TimeMachine
 
+import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMovementConnector {
+class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMovementConnector with MockAuditingService {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.global
 
-  lazy val testService = new SubmitCreateMovementService(mockSubmitCreateMovementConnector)
+  val timeMachine: TimeMachine = () => LocalDateTime.parse(testReceiptDateTime)
+
+  lazy val testService = new SubmitCreateMovementService(mockSubmitCreateMovementConnector, mockAuditingService, timeMachine)
 
   ".submit(ern: String, submission: SubmitCreateMovementModel)" - {
 
@@ -42,6 +49,10 @@ class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMove
 
         MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
+        MockAuditingService
+          .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Right(submitCreateMovementResponseEIS)))
+          .once()
+
         testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe submitCreateMovementResponseEIS
       }
     }
@@ -52,7 +63,12 @@ class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMove
 
         val request = dataRequest(FakeRequest())
 
-        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+
+        MockAuditingService
+          .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+          .once()
+
         intercept[SubmitCreateMovementException](await(testService.submit(minimumSubmitCreateMovementModel)(request, hc))).getMessage mustBe
           s"Failed to submit Create Movement to emcs-tfe for ern: '$testErn' & draftId: '$testDraftId'"
       }

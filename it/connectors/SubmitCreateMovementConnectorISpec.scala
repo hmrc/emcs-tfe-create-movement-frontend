@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.SubmitCreateMovementConnector
 import fixtures.BaseFixtures
 import models.requests.{DataRequest, UserRequest}
-import models.response.UnexpectedDownstreamResponseError
+import models.response.UnexpectedDownstreamDraftSubmissionResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -15,8 +15,8 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers.AUTHORIZATION
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -27,7 +27,8 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
   with IntegrationPatience
   with EitherValues
   with OptionValues
-  with BaseFixtures {
+  with BaseFixtures
+  with LogCapturing {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -65,36 +66,39 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withStatus(NOT_FOUND))
       )
 
-      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(NOT_FOUND))
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
     }
 
     "must fail when the connection fails" in {
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      withCaptureOfLoggingFrom(connector.logger) { logs =>
+
+        connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+
+        logs.exists(_.getMessage == "[SubmitCreateMovementConnector][post] Unexpected exception of type RemotelyClosedException was thrown") mustBe true
+      }
+
     }
   }
 

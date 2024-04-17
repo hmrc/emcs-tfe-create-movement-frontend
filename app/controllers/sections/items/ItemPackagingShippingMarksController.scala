@@ -94,7 +94,13 @@ class ItemPackagingShippingMarksController @Inject()(
       case Some(currentAnswer) => {
         ItemsSection.retrieveShippingMarkLocationsMatching(currentAnswer).foldLeft(request.userAnswers) {
           case (currentUserAnswers, (ii, pi)) =>
-            currentUserAnswers.set(ItemPackagingShippingMarksPage(ii, pi), newValue)
+            if((ii == itemsIdx) && (pi == packagingIdx)) {
+              // if indexes match the page we're on, don't update
+              // otherwise saveAndRedirect won't call userAnswersService.set since currentAnswers.get[A](page).contains(answer) == true
+              currentUserAnswers
+            } else {
+              currentUserAnswers.set(ItemPackagingShippingMarksPage(itemsIndex = ii, itemsPackagingIndex = pi), newValue)
+            }
         }
       }
       case None => request.userAnswers

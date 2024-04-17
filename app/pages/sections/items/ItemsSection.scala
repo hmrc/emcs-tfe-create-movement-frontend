@@ -68,7 +68,7 @@ case object ItemsSection extends Section[JsObject] {
     }
 
   /**
-   * @param f       takes two indexes and returns an Iterable[A]. Iterable can be Seq, Option, etc
+   * @param f       takes two indexes and returns an IterableOnce[A]. IterableOnce can be Seq, Option, etc
    * @param request user's DataRequest containing current UserAnswers
    * @tparam A      type for the function to return. Can be String, (Index, Index), etc
    * @return        for every item, for every packaging within that item, perform function f

@@ -190,8 +190,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
       "the user has selected yes VAT number" in new Setup(testGbWarehouseErn, vatNumberUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeExportInformationSummary(list).row()(fakeDataRequest, msgs),
+          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeExportVatSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
@@ -202,8 +202,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
       "the user has selected Yes Eori number" in new Setup(testGbWarehouseErn, eoriUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeExportInformationSummary(list).row()(fakeDataRequest, msgs),
+          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeExportEoriSummary.row(showActionLinks = true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten

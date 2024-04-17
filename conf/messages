@@ -563,8 +563,12 @@ consigneeExcise.error.length = The consignee’s ERN must be 13 characters
 consigneeExcise.error.invalidCharacters = The consignee’s ERN must only contain letters and numbers
 consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 consigneeExcise.error.submissionError = You must update the consignee ID so that it is different to the original submission
-consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
-consigneeExcise.change.hidden = consignee excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
+consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee
+consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee = consignee identification number for Temporary Registered Consignee
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee = Identification number for Temporary Certified Consignee
+consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee = consignee identification number for Temporary Certified Consignee
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?

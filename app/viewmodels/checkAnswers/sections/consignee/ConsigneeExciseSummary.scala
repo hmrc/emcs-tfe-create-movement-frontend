@@ -18,7 +18,9 @@ package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -34,9 +36,22 @@ class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val hasUnfixedConsigneeExciseError = ConsigneeExcisePage.isMovementSubmissionError
-    request.userAnswers.get(ConsigneeExcisePage).map { answer =>
+
+    request.userAnswers.get(DestinationTypePage).flatMap { destinationType =>
+
+      val key -> changeHiddenKey = destinationType match {
+        case TemporaryRegisteredConsignee =>
+          "consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee" -> "consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee"
+        case TemporaryCertifiedConsignee =>
+          "consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee" -> "consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee"
+        case _ =>
+          "consigneeExcise.checkYourAnswersLabel.ern" -> "consigneeExcise.change.hidden.ern"
+      }
+
+      request.userAnswers.get(ConsigneeExcisePage).map { answer =>
+
         SummaryListRowViewModel(
-          key = "consigneeExcise.checkYourAnswersLabel",
+          key = key,
           value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
             Some(HtmlFormat.escape(answer)),
             if (hasUnfixedConsigneeExciseError) Some(tagHelper.updateNeededTag()) else None
@@ -46,9 +61,10 @@ class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeConsigneeExcise"
-            ).withVisuallyHiddenText(messages("consigneeExcise.change.hidden"))
+            ).withVisuallyHiddenText(messages(changeHiddenKey))
           )
         )
+      }
     }
   }
 }

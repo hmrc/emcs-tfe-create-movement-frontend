@@ -20,8 +20,11 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.consignee.ConsigneeExciseMessages.English
 import models.CheckMode
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario._
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -43,68 +46,81 @@ class ConsigneeExciseSummarySpec extends SpecBase with Matchers with MovementSub
 
       implicit val msgs: Messages = messages(Seq(English.lang))
 
-      def expectedRow(hasUpdateNeededTag: Boolean = false): Option[SummaryListRow] = {
+      def expectedRow(hasUpdateNeededTag: Boolean = false, movementScenario: MovementScenario): Option[SummaryListRow] = {
         Some(SummaryListRowViewModel(
-          key = Key(Text(English.cyaLabel)),
+          key = Key(Text(English.cyaLabel(movementScenario.destinationType))),
           value = Value(HtmlContent(HtmlFormat.fill(Seq(
             Some(Html(testErn)),
-            if(hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
+            if (hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
           ).flatten))),
           actions = Seq(
             ActionItemViewModel(
               content = Text(English.change),
               href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
               id = "changeConsigneeExcise"
-            ).withVisuallyHiddenText(English.cyaChangeHidden)
+            ).withVisuallyHiddenText(English.cyaChangeHidden(movementScenario.destinationType))
           )
         ))
       }
 
-      "when there's no answer" - {
 
-        "must output the Not Provided" in {
+      Seq(GbTaxWarehouse, EuTaxWarehouse, DirectDelivery, RegisteredConsignee, TemporaryRegisteredConsignee, TemporaryCertifiedConsignee).foreach {
+        movementScenario =>
+          s"with a $movementScenario movement scenario" - {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            "when there's no answer" - {
 
-          summary.row(showActionLinks = true) mustBe None
-        }
-      }
+              "must output the Not Provided" in {
 
-      "when there's an answer" - {
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        "when the show action link boolean is true" - {
+                summary.row(showActionLinks = true) mustBe None
+              }
+            }
 
-          "must output the expected row" in {
+            "when there's an answer" - {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ConsigneeExcisePage, testErn))
+              "when the show action link boolean is true" - {
 
-            summary.row(showActionLinks = true) mustBe expectedRow()
+                "must output the expected row" in {
+
+                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                    .set(ConsigneeExcisePage, testErn)
+                    .set(DestinationTypePage, movementScenario)
+                  )
+
+                  summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = false, movementScenario)
+                }
+              }
+            }
+
+            "when there is a 704 error" - {
+
+              "must render an 'Update Needed' tag against the ERN - when the error has not been fixed" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(),
+                  emptyUserAnswers
+                    .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = InvalidOrMissingConsigneeError.code, hasBeenFixed = false)))
+                    .set(ConsigneeExcisePage, testErn)
+                    .set(DestinationTypePage, movementScenario)
+                )
+
+                summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = true, movementScenario)
+              }
+
+              "must not render an 'Update Needed' tag against the ERN - when the error has been fixed" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(),
+                  emptyUserAnswers
+                    .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = InvalidOrMissingConsigneeError.code, hasBeenFixed = true)))
+                    .set(ConsigneeExcisePage, testErn)
+                    .set(DestinationTypePage, movementScenario)
+                )
+
+                summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = false, movementScenario)
+              }
+            }
           }
-        }
-      }
-
-      "when there is a 704 error" - {
-
-        "must render an 'Update Needed' tag against the ERN - when the error has not been fixed" in {
-
-          implicit lazy val request = dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = InvalidOrMissingConsigneeError.code, hasBeenFixed = false)))
-              .set(ConsigneeExcisePage, testErn))
-
-          summary.row(showActionLinks = true) mustBe expectedRow(hasUpdateNeededTag = true)
-        }
-
-        "must not render an 'Update Needed' tag against the ERN - when the error has been fixed" in {
-
-          implicit lazy val request = dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = InvalidOrMissingConsigneeError.code, hasBeenFixed = true)))
-              .set(ConsigneeExcisePage, testErn))
-
-          summary.row(showActionLinks = true) mustBe expectedRow()
-        }
       }
     }
   }

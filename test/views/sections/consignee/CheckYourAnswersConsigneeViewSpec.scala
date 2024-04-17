@@ -50,7 +50,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
   "CheckYourAnswersConsignee view" - {
 
-
     s"when being rendered in lang code of '${English.lang.code}' for ERN'" - {
 
       implicit val msgs: Messages = messages(Seq(English.lang))
@@ -101,7 +100,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       }
     }
 
-    s"when being rendered in with a Consignee Excise Submission Error'" - {
+    s"when being rendered in lang code of '${English.lang.code}' for ERN with an ERN Error'" - {
       implicit val msgs: Messages = messages(Seq(English.lang))
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
@@ -109,6 +108,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
         )
         .set(ConsigneeExcisePage, testErn)
+        .set(DestinationTypePage, GbTaxWarehouse)
       )
 
       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
@@ -148,6 +148,106 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         ConsigneeExcisePage.possibleErrors.foreach(
           error => doc.select(Selectors.submissionError(error)).attr("href") mustBe route
         )
+      }
+    }
+
+    s"when being rendered in lang code of '${English.lang.code}' for Identification number for Temporary Registered Consignee'" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] =
+        dataRequest(FakeRequest(), emptyUserAnswers
+          .set(ConsigneeAddressPage, testUserAddress)
+          .set(ConsigneeBusinessNamePage, testBusinessName)
+          .set(ConsigneeExcisePage, testErn)
+          .set(DestinationTypePage, TemporaryRegisteredConsignee)
+        )
+      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+
+      implicit val doc: Document = Jsoup.parse(view(
+        controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+        testErn,
+        testDraftId,
+        SummaryList(Seq(
+          ConsigneeBusinessNameSummary.row(true),
+          consigneeExciseSummary.row(true),
+          ConsigneeAddressSummary.row(true)
+        ).flatten)
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.h2(1) -> English.caption,
+        Selectors.govukSummaryListKey(1) -> English.traderName,
+        Selectors.govukSummaryListKey(2) -> English.ernNumberForTemporaryRegisteredConsignee,
+        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.button -> English.confirmAnswers,
+      ))
+
+      "have a link to change business name" in {
+        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change ERN" in {
+        doc.getElementById("changeConsigneeExcise").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change Address" in {
+        doc.getElementById("changeConsigneeAddress").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+    }
+
+    s"when being rendered in lang code of '${English.lang.code}' for Identification number for Temporary Certified Consignee'" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+
+      implicit val request: DataRequest[AnyContentAsEmpty.type] =
+        dataRequest(FakeRequest(), emptyUserAnswers
+          .set(ConsigneeAddressPage, testUserAddress)
+          .set(ConsigneeBusinessNamePage, testBusinessName)
+          .set(ConsigneeExcisePage, testErn)
+          .set(DestinationTypePage, TemporaryCertifiedConsignee)
+        )
+      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+
+      implicit val doc: Document = Jsoup.parse(view(
+        controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+        testErn,
+        testDraftId,
+        SummaryList(Seq(
+          ConsigneeBusinessNameSummary.row(true),
+          consigneeExciseSummary.row(true),
+          ConsigneeAddressSummary.row(true)
+        ).flatten)
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.h2(1) -> English.caption,
+        Selectors.govukSummaryListKey(1) -> English.traderName,
+        Selectors.govukSummaryListKey(2) -> English.ernNumberForTemporaryCertifiedConsignee,
+        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.button -> English.confirmAnswers,
+      ))
+
+      "have a link to change business name" in {
+        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change ERN" in {
+        doc.getElementById("changeConsigneeExcise").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change Address" in {
+        doc.getElementById("changeConsigneeAddress").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
       }
     }
 

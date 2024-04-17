@@ -425,11 +425,11 @@ consigneeExportVat.change.hidden = VAT registration number of the person represe
 
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?
-consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.checkYourAnswersLabel = Business name
 consigneeBusinessName.error.required = Enter the consignee business name
 consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
 consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
-consigneeBusinessName.change.hidden = consignee trader name
+consigneeBusinessName.change.hidden = consignee business name
 
 consigneeExport.title = Are the goods being exported outside of the UK and EU?
 consigneeExport.heading = Are the goods being exported outside of the UK and EU?

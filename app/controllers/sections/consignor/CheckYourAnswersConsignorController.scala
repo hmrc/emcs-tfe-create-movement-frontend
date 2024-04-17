@@ -20,9 +20,10 @@ import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
 import navigation.ConsignorNavigator
-import pages.sections.consignor.{CheckAnswersConsignorPage, ConsignorAddressPage}
+import pages.sections.consignor.CheckAnswersConsignorPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import viewmodels.checkAnswers.sections.consignor.ConsignorCheckAnswersHelper
 import views.html.sections.consignor.CheckYourAnswersConsignorView
 
 import javax.inject.Inject
@@ -34,25 +35,16 @@ class CheckYourAnswersConsignorController @Inject()(override val messagesApi: Me
                                                     override val requireData: DataRequiredAction,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     val navigator: ConsignorNavigator,
+                                                    cyaHelper: ConsignorCheckAnswersHelper,
                                                     view: CheckYourAnswersConsignorView
                                                    ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) {
-      implicit request =>
-        withAnswer(
-          page = ConsignorAddressPage,
-          redirectRoute = controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(ern, draftId)
-        ) {
-          consignorAddress =>
-            Ok(view(
-              controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, draftId),
-              ern,
-              draftId,
-              consignorAddress,
-              request.traderKnownFacts
-            ))
-        }
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      Ok(view(
+        cyaHelper.summaryList(),
+        controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(ern, draftId)
+      ))
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =

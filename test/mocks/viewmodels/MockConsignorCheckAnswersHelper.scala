@@ -16,18 +16,21 @@
 
 package mocks.viewmodels
 
-import org.scalamock.handlers.CallHandler1
+import models.requests.DataRequest
+import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.helpers.CheckAnswersHelper
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.consignor.ConsignorCheckAnswersHelper
 
-trait MockCheckAnswersHelper extends MockFactory {
+trait MockConsignorCheckAnswersHelper extends MockFactory {
 
-  lazy val mockCheckAnswersHelper: CheckAnswersHelper = mock[CheckAnswersHelper]
+  lazy val mockConsignorCheckAnswersHelper: ConsignorCheckAnswersHelper = mock[ConsignorCheckAnswersHelper]
 
-  object MockCheckAnswersHelper {
+  object MockConsignorCheckAnswersHelper {
 
-    def summaryList(summaryRows: Seq[SummaryListRow]): CallHandler1[Seq[SummaryListRow], SummaryList] =
-      (mockCheckAnswersHelper.summaryList(_: Seq[SummaryListRow])).expects(summaryRows)
+    def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
+      (mockConsignorCheckAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
   }
+
 }

@@ -23,10 +23,13 @@ object CheckYourAnswersConsignorMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
     val title: String = titleHelper(heading)
-    val caption: String = "Consignor information"
     val ern: String = "Excise registration number (ERN)"
+    val paidTemporaryAuthorisationCode: String = "Paid Temporary Authorisation (PTA) code"
     val traderName: String = "Trader name"
     val address: String = "Address"
+
+    val addressChangeHidden: String = "Address"
+    val paidTemporaryAuthorisationCodeChangeHidden: String = "Paid Temporary Authorisation (PTA) code"
   }
 
   object English extends ViewMessages with BaseEnglish

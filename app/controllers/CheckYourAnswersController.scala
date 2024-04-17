@@ -23,7 +23,6 @@ import navigation.Navigator
 import pages.CheckAnswersPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import viewmodels.helpers.CheckAnswersHelper
 import views.html.CheckYourAnswersView
 
 import javax.inject.Inject
@@ -36,15 +35,13 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            override val requireData: DataRequiredAction,
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
-                                           view: CheckYourAnswersView,
-                                           checkAnswersHelper: CheckAnswersHelper
+                                           view: CheckYourAnswersView
                                           ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       Future.successful(Ok(view(
-        routes.CheckYourAnswersController.onSubmit(ern, draftId),
-        checkAnswersHelper.summaryList(Seq.empty)
+        routes.CheckYourAnswersController.onSubmit(ern, draftId)
       )))
     }
 

@@ -17,8 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeBetaAllowListAction}
-import mocks.viewmodels.MockCheckAnswersHelper
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeBetaAllowListAction, FakeDataRetrievalAction}
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
 import play.api.i18n.{Messages, MessagesApi}
@@ -28,7 +27,7 @@ import play.api.test.{FakeRequest, Helpers}
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with MockCheckAnswersHelper {
+class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
   class Fixture(userAnswers: Option[UserAnswers]) {
     implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -47,8 +46,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),
       new FakeNavigator(testOnwardRoute),
-      view,
-      mockCheckAnswersHelper
+      view
     )
   }
 
@@ -58,15 +56,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
       "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
-        val list = SummaryListViewModel(Seq.empty)
-
-        MockCheckAnswersHelper.summaryList(Seq()).returns(list)
-
         val result = controller.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe OK
         contentAsString(result) mustBe
-          view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages).toString
+          view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId))(dataRequest(request), messages).toString
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

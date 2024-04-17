@@ -40,7 +40,7 @@ class DocumentsCheckAnswersViewSpec extends SpecBase with ViewBehaviours {
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DocumentsCertificatesPage, false))
     val summaryListHelper = app.injector.instanceOf[CheckYourAnswersDocumentsHelper].summaryList()
 
-   lazy val view = app.injector.instanceOf[DocumentsCheckAnswersView]
+    lazy val view = app.injector.instanceOf[DocumentsCheckAnswersView]
 
     implicit val doc: Document = Jsoup.parse(view(summaryListHelper).toString())
   }

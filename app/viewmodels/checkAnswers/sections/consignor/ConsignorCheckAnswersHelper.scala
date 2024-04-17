@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package mocks.viewmodels
+package viewmodels.checkAnswers.sections.consignor
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler2
-import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
+import viewmodels.govuk.summarylist._
 
-trait MockCheckYourAnswersJourneyTypeHelper extends MockFactory {
+import javax.inject.Inject
 
-  lazy val mockCheckYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper = mock[CheckYourAnswersJourneyTypeHelper]
+class ConsignorCheckAnswersHelper @Inject()() {
 
-  object MockCheckAnswersJourneyTypeHelper {
-
-    def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (mockCheckYourAnswersJourneyTypeHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    SummaryListViewModel(
+      rows = Seq(
+        Some(ConsignorTraderNameSummary.row),
+        ConsignorERNSummary.row,
+        ConsignorPaidTemporaryAuthorisationCodeSummary.row,
+        ConsignorAddressSummary.row
+      ).flatten
+    ).withCssClass("govuk-!-margin-bottom-9")
   }
+
 }

@@ -49,6 +49,7 @@ class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with View
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
@@ -69,6 +70,7 @@ class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with View
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
           Selectors.errorSummary(1) -> messagesForLanguage.errorRequired,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
@@ -89,6 +91,7 @@ class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with View
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
           Selectors.errorSummary(1) -> messagesForLanguage.errorLength,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
@@ -110,6 +113,7 @@ class ConsignorPaidTemporaryAuthorisationCodeViewSpec extends SpecBase with View
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.errorMessageHelper(messagesForLanguage.title),
           Selectors.errorSummary(1) -> messagesForLanguage.errorInvalid,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,

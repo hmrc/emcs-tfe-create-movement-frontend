@@ -48,7 +48,7 @@ class ItemPackagingSelectShippingMarkController @Inject()(
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        withShippingMarks {
+        withShippingMarks(itemsIdx) {
           seqOfValidShippingMarks =>
             renderView(
               status = Ok,
@@ -65,7 +65,7 @@ class ItemPackagingSelectShippingMarkController @Inject()(
   def onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        withShippingMarks {
+        withShippingMarks(itemsIdx) {
           seqOfValidShippingMarks =>
             formProvider(seqOfValidShippingMarks).bindFromRequest().fold(
               renderView(BadRequest, _, itemsIdx, packagingIdx, seqOfValidShippingMarks, mode),
@@ -92,8 +92,10 @@ class ItemPackagingSelectShippingMarkController @Inject()(
     )))
   }
 
-  private def withShippingMarks(f: Seq[String] => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    // TODO: handle what happens when Seq is empty. Currently the empty Seq is returned. Do we need to redirect somewhere?
-    f(ItemsSection.retrieveAllShippingMarks())
+  private def withShippingMarks(itemsIdx: Index)(f: Seq[String] => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    ItemsSection.retrieveAllShippingMarks() match {
+      case Nil => Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIdx)))
+      case nonEmptySeqOfShippingMarks => f(nonEmptySeqOfShippingMarks)
+    }
   }
 }

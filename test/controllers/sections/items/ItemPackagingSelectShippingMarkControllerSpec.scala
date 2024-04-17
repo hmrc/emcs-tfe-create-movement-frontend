@@ -102,6 +102,20 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex2).url
     }
 
+    "must redirect to Index of section when retrieveAllShippingMarks returns an empty Seq for a GET" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when retrieveAllShippingMarks returns an empty Seq for a POST" in new Test(Some(baseUserAnswers)) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
     "must return OK and the correct view for a GET" in new Test(Some(
       baseUserAnswers
         .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)

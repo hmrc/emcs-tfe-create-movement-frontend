@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package pages.sections.firstTransporter
+package models.sections.firstTransporter
 
-import models.VatNumberModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Json, OFormat}
 
-case object FirstTransporterVatPage extends QuestionPage[VatNumberModel] {
-  override val toString: String = "firstTransporterVat"
-  override val path: JsPath = FirstTransporterSection.path \ toString
+case class FirstTransporterVatModel(hasVat: Boolean,
+                                    vatNumber: Option[String])
+
+object FirstTransporterVatModel {
+  implicit val format: OFormat[FirstTransporterVatModel] = Json.format[FirstTransporterVatModel]
 }

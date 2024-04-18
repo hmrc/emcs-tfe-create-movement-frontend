@@ -17,8 +17,8 @@
 package pages.sections.firstTransporter
 
 import base.SpecBase
-import models.UserAddress
 import models.requests.DataRequest
+import models.{UserAddress, VatNumberModel}
 import play.api.test.FakeRequest
 
 class FirstTransporterSectionSpec extends SpecBase {
@@ -28,7 +28,7 @@ class FirstTransporterSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterVatPage, "")
+            .set(FirstTransporterVatPage, VatNumberModel(false, None))
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
         )
         FirstTransporterSection.isCompleted mustBe true

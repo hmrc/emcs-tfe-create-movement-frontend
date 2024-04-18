@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,31 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object FirstTransporterVatSummary {
+object FirstTransporterVatChoiceSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-
-    request.userAnswers.get(FirstTransporterVatPage).flatMap {
-      _.vatNumber.map {
-      vatNumber =>
-        SummaryListRowViewModel(
-          key = "firstTransporterVat.vatNumber.checkYourAnswers.label",
-          value = ValueViewModel(Text(vatNumber)),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(
-                ern = request.userAnswers.ern,
-                draftId = request.userAnswers.draftId,
-                mode = CheckMode
-              ).url,
-              id = "changeFirstTransporterVatNumber"
-            )
-              .withVisuallyHiddenText(messages("firstTransporterVat.change.hidden"))
+    request.userAnswers.get(FirstTransporterVatPage).map { vatModel =>
+      val value = if (vatModel.hasVatNumber) "site.yes" else "site.no"
+      SummaryListRowViewModel(
+        key = "firstTransporterVat.hasVat.checkYourAnswers.label",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(
+              ern = request.userAnswers.ern,
+              draftId = request.userAnswers.draftId,
+              mode = CheckMode
+            ).url,
+            id = "changeFirstTransporterVatChoice"
           )
+            .withVisuallyHiddenText(messages("firstTransporterVat.choice.change.hidden"))
         )
-      }
+      )
     }
   }
 }

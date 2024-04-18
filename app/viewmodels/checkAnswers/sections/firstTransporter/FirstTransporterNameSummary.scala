@@ -29,14 +29,14 @@ import viewmodels.implicits._
 
 object FirstTransporterNameSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val namePage: QuestionPage[String] = FirstTransporterNamePage
 
     SummaryListRowViewModel(
       key = "firstTransporterName.checkYourAnswers.label",
       value = ValueViewModel(Text(request.userAnswers.get(namePage).map(HtmlFormat.escape(_).toString).getOrElse(messages("site.notProvided")))),
-      actions = if (!showActionLinks) Seq() else Seq(
+      actions = Seq(
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,35 +29,50 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 
-class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
-  "FirstTransporterVatSummary" - {
+class FirstTransporterVatChoiceSummarySpec extends SpecBase with Matchers {
+  "FirstTransporterVatChoiceSummary" - {
     Seq(FirstTransporterVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
-        "when there is no answer" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+        "when the answer is 'No'" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, VatNumberModel(false, None)))
 
-          FirstTransporterVatSummary.row() mustBe
-            None
-        }
-
-        "when there is an answer" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, VatNumberModel(true, Some(testVatNumber))))
-
-          FirstTransporterVatSummary.row() mustBe Some(SummaryListRowViewModel(
-            key = messagesForLanguage.cyaLabel,
-            value = Value(Text(testVatNumber)),
+          FirstTransporterVatChoiceSummary.row() mustBe Some(SummaryListRowViewModel(
+            key = messagesForLanguage.vatChoiceCyaLabel,
+            value = Value(Text("No")),
             actions = Seq(
               ActionItemViewModel(
                 content = messagesForLanguage.change,
                 href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                id = "changeFirstTransporterVatNumber"
-              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                id = "changeFirstTransporterVatChoice"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeChoiceHidden)
             )
           ))
+        }
+
+        "when the answer is 'Yes'" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, VatNumberModel(true, Some(testVatNumber))))
+
+          FirstTransporterVatChoiceSummary.row() mustBe Some(SummaryListRowViewModel(
+            key = messagesForLanguage.vatChoiceCyaLabel,
+            value = Value(Text("Yes")),
+            actions = Seq(
+              ActionItemViewModel(
+                content = messagesForLanguage.change,
+                href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                id = "changeFirstTransporterVatChoice"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeChoiceHidden)
+            )
+          ))
+        }
+
+        "when there is no answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          FirstTransporterVatChoiceSummary.row() mustBe None
         }
       }
     }

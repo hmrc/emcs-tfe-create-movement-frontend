@@ -55,8 +55,10 @@ class FirstTransporterVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.firstTransporterSection,
             Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(3) -> messagesForLanguage.no,
+            Selectors.label(FirstTransporterVatFormProvider.vatNumberField) -> messagesForLanguage.input,
             Selectors.hint -> messagesForLanguage.hint,
-            Selectors.link(1) -> messagesForLanguage.nonGbVatLink,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))

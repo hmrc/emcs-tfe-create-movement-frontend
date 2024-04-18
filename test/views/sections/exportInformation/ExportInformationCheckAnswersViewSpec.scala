@@ -19,8 +19,8 @@ package views.sections.exportInformation
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.exportInformation.ExportInformationCheckAnswersViewMessages
-import models.CheckMode
 import models.requests.DataRequest
+import models.{CheckMode, VatNumberModel}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
@@ -44,7 +44,7 @@ class ExportInformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours
       emptyUserAnswers
         .copy(submissionFailures = if(withErrorMessage) Seq(movementSubmissionFailure.copy(errorType = ExportCustomsOfficeNumberError.code, hasBeenFixed = false)) else Seq.empty)
         .set(FirstTransporterNamePage, "Transporter name")
-        .set(FirstTransporterVatPage, "GB123456789")
+        .set(FirstTransporterVatPage, VatNumberModel(true, Some("GB123456789")))
         .set(FirstTransporterAddressPage, testUserAddress)
     )
 

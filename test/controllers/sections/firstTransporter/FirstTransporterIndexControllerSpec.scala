@@ -19,7 +19,7 @@ package controllers.sections.firstTransporter
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
 import play.api.http.Status.SEE_OTHER
@@ -49,7 +49,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       "must redirect to the CYA controller" in new Fixture(Some(
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
-          .set(FirstTransporterVatPage, "")
+          .set(FirstTransporterVatPage, VatNumberModel(false, None))
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)

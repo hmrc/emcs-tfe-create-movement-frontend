@@ -403,7 +403,7 @@ trait ItemFixtures {
     // firstTransporterTrader
     .set(FirstTransporterNamePage, "first name")
     .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-    .set(FirstTransporterVatPage, "first vat")
+    .set(FirstTransporterVatPage, VatNumberModel(true, Some("first vat")))
     // documentCertificate
     .set(DocumentsCertificatesPage, true)
     .set(DocumentTypePage(testIndex1), DocumentType("0", "0 type desc"))

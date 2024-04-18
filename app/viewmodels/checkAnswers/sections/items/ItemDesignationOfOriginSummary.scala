@@ -20,7 +20,6 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemDesignationOfOriginPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -29,18 +28,22 @@ import viewmodels.implicits._
 object ItemDesignationOfOriginSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemDesignationOfOriginPage).map {
+    request.userAnswers.get(ItemDesignationOfOriginPage(idx)).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"itemDesignationOfOrigin.$answer"))
-          )
+        val marketingAndLabellingAnswer = answer.isSpiritMarketedAndLabelled.map(isSpiritMarketedAndLabelled =>
+          if(isSpiritMarketedAndLabelled) messages("itemDesignationOfOrigin.s200.radio.yes") else messages("itemDesignationOfOrigin.s200.radio.unprovided")
         )
 
+        val content = Seq(
+          Some(messages(s"itemDesignationOfOrigin.${answer.geographicalIndication}")),
+          answer.geographicalIndicationIdentification,
+          marketingAndLabellingAnswer
+        ).flatten.mkString("<br>")
+
         SummaryListRowViewModel(
-          key     = "itemDesignationOfOrigin.checkYourAnswersLabel",
-          value   = value,
+          key     = if(answer.isSpiritMarketedAndLabelled.isDefined) "itemDesignationOfOrigin.checkYourAnswersLabel.s200" else "itemDesignationOfOrigin.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlContent(content)),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

@@ -61,9 +61,7 @@ class ItemCheckAnswersHelper @Inject()(
         ItemDensitySummary.row(idx),
         ItemFiscalMarksChoiceSummary.row(idx),
         ItemFiscalMarksSummary.row(idx),
-        //TODO: ETFE-3703
-//        ItemGeographicalIndicationChoiceSummary.row(idx),
-//        ItemGeographicalIndicationSummary.row(idx),
+        ItemDesignationOfOriginSummary.row(idx),
         ItemSmallIndependentProducerSummary.row(idx),
         ItemProducerSizeSummary.row(idx)
       ).flatten

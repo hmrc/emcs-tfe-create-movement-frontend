@@ -69,7 +69,7 @@ class ItemDesignationOfOriginHelper @Inject()(govukCharacterCount: GovukCharacte
       RadioItem(
         id      = Some(s"${form(ItemDesignationOfOriginFormProvider.geographicalIndicationField).id}-unprovided"),
         value   = Some(NoGeographicalIndication.toString),
-        content = Text(messages("itemDesignationOfOrigin.unprovided"))
+        content = Text(messages(s"itemDesignationOfOrigin.$NoGeographicalIndication"))
       )
     )
   }

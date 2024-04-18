@@ -1073,7 +1073,7 @@ itemDesignationOfOrigin.PDO = The product has a Protected Designation of Origin 
 itemDesignationOfOrigin.PDO.input = Enter the name and register number of the PDO (optional)
 itemDesignationOfOrigin.PGI = The product has a Protected Geographical Indication (PGI)
 itemDesignationOfOrigin.PGI.input = Enter the name and register number of the PGI (optional)
-itemDesignationOfOrigin.unprovided = I don’t want to provide a statement about the designation of origin
+itemDesignationOfOrigin.None = I don’t want to provide a statement about the designation of origin
 
 itemDesignationOfOrigin.s200.title = Select statements about the designation of origin and labelling of item {0}
 itemDesignationOfOrigin.s200.heading = Select statements about the designation of origin and labelling of item {0}
@@ -1083,7 +1083,8 @@ itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to 
 itemDesignationOfOrigin.s200.radio.yes = It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787
 itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a statement about the marketing and labelling of the spirit
 
-itemDesignationOfOrigin.checkYourAnswersLabel = Select a statement about the designation of origin of item {0}
+itemDesignationOfOrigin.checkYourAnswersLabel = Statement of designation of origin
+itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about the designation of origin or labelling of the product
 itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘I don’t want to provide a statement about the designation of origin’
 itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
 itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less

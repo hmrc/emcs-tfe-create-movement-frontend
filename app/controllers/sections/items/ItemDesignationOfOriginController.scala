@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.sections.items.ItemDesignationOfOriginFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
-import navigation.Navigator
+import navigation.{ItemsNavigator, Navigator}
 import pages.sections.items.ItemDesignationOfOriginPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -35,7 +35,7 @@ class ItemDesignationOfOriginController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        override val userAnswersService: UserAnswersService,
                                        override val betaAllowList: BetaAllowListAction,
-                                       override val navigator: Navigator,
+                                       override val navigator: ItemsNavigator,
                                        override val auth: AuthAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,
@@ -47,7 +47,7 @@ class ItemDesignationOfOriginController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withExciseProductCodeAsync(idx) { exciseProductCode =>
-        renderView(Ok, fillForm(ItemDesignationOfOriginPage, formProvider(exciseProductCode)), exciseProductCode, idx, mode)
+        renderView(Ok, fillForm(ItemDesignationOfOriginPage(idx), formProvider(exciseProductCode)), exciseProductCode, idx, mode)
       }
     }
 
@@ -56,7 +56,7 @@ class ItemDesignationOfOriginController @Inject()(
       withExciseProductCodeAsync(idx) { exciseProductCode =>
         formProvider(exciseProductCode).bindFromRequest().fold(
           renderView(BadRequest, _, exciseProductCode, idx, mode),
-          saveAndRedirect(ItemDesignationOfOriginPage, _, mode)
+          saveAndRedirect(ItemDesignationOfOriginPage(idx), _, mode)
         )
       }
     }

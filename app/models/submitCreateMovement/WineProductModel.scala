@@ -41,11 +41,8 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
       ItemWineCategory.ImportedWine
     } else {
       // imported from inside EU
-      //TODO: ETFE-3703
-//      val geographicalIndicationChoice: ItemGeographicalIndicationType = mandatoryPage(ItemGeographicalIndicationChoicePage(idx))
-        //!!!!!!!WRONG UPDATE!!!!!!
-      ItemWineCategory.ImportedWine
-      /*
+      val geographicalIndicationChoice: ItemGeographicalIndicationType = mandatoryPage(ItemDesignationOfOriginPage(idx)).geographicalIndication
+
       geographicalIndicationChoice match {
         case ItemGeographicalIndicationType.NoGeographicalIndication =>
           // if no GI
@@ -59,7 +56,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
         case _ =>
           // if has PDO, PGI, or GI (umbrella term for PDO/PGI)
           ItemWineCategory.EuWineWithPdoOrPgiOrGi
-      }*/
+      }
     }
   }
 

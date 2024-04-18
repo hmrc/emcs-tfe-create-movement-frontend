@@ -16,11 +16,12 @@
 
 package pages.sections.items
 
+import models.Index
 import models.sections.items.ItemDesignationOfOriginModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object ItemDesignationOfOriginPage extends QuestionPage[ItemDesignationOfOriginModel] {
+case class ItemDesignationOfOriginPage(idx: Index) extends QuestionPage[ItemDesignationOfOriginModel] {
   override val toString: String = "itemDesignationOfOrigin"
-  override val path: JsPath = JsPath \ toString
+  override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

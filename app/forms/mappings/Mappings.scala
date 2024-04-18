@@ -82,14 +82,17 @@ trait Mappings extends Formatters with Constraints {
     of(new LocalTimeFormatter(invalidKey, requiredKey, args))
 
   /**
-   * Document
+   * Useful for pages where the user has a series of options and within each option is an
+   * optional field. This method first makes sure that the relevant option has been selected
+   * (based on the `optionValue` parameter) and if the user has entered a value in the input field
+   * then apply the supplied validation (or `mapping`)
    *
-   * @param optionField
-   * @param inputField
-   * @param optionValue
-   * @param mapping
-   * @tparam T
-   * @return
+   * @param optionField The name of the option field
+   * @param inputField The name of the input field
+   * @param optionValue If the option field has a value, what that value should be in order to apply validation
+   * @param mapping The validation to apply if this predicate holds true
+   * @tparam T the data type that this field is
+   * @return The mapping that should be applied based on the arguments and their values within the form
    */
   def mandatoryIfOptionSelectedAndInputNonEmpty[T](optionField: String,
                                                    inputField: String,

@@ -19,7 +19,7 @@ package controllers.sections.items
 import config.Constants.BODYEADESAD
 import controllers.BaseNavigationController
 import models.requests.DataRequest
-import models.{GoodsType, Index, UserAnswers}
+import models.{ExciseProductCode, GoodsType, Index, UserAnswers}
 import pages.sections.items._
 import play.api.mvc.Result
 import queries.{ItemsCount, ItemsPackagingCount}
@@ -64,6 +64,12 @@ trait BaseItemsNavigationController extends BaseNavigationController {
         f(GoodsType.apply(epc))
       case None =>
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+
+  def withExciseProductCodeAsync(idx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) => f(epc)
+      case None => Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
 
   def withItemBulkPackaging(itemIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =

@@ -43,15 +43,15 @@ POST        /trader/:ern/draft/:draftId/items/:idx/degree-plato                 
 GET         /trader/:ern/draft/:draftId/items/:idx/degree-plato/change                                             controllers.sections.items.ItemDegreesPlatoController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/degree-plato/change                                             controllers.sections.items.ItemDegreesPlatoController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET         /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice                                  controllers.sections.items.ItemGeographicalIndicationChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice                                  controllers.sections.items.ItemGeographicalIndicationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice/change                           controllers.sections.items.ItemGeographicalIndicationChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:draftId/items/:idx/geographical-indication-choice/change                           controllers.sections.items.ItemGeographicalIndicationChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-
 GET         /trader/:ern/draft/:draftId/items/:idx/small-independent-producer                                      controllers.sections.items.ItemSmallIndependentProducerController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer                                      controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change                               controllers.sections.items.ItemSmallIndependentProducerController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/small-independent-producer/change                               controllers.sections.items.ItemSmallIndependentProducerController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+
+GET         /trader/:ern/draft/:draftId/items/:idx/designation-of-origin									       controllers.sections.items.ItemDesignationOfOriginController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/draft/:draftId/items/:idx/designation-of-origin									       controllers.sections.items.ItemDesignationOfOriginController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/draft/:draftId/items/:idx/designation-of-origin/change                                    controllers.sections.items.ItemDesignationOfOriginController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:draftId/items/:idx/designation-of-origin/change                                    controllers.sections.items.ItemDesignationOfOriginController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
 GET         /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice                                             controllers.sections.items.ItemFiscalMarksChoiceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks-choice                                             controllers.sections.items.ItemFiscalMarksChoiceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
@@ -62,11 +62,6 @@ GET         /trader/:ern/draft/:draftId/items/:idx/fiscal-marks                 
 POST        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks                                                    controllers.sections.items.ItemFiscalMarksController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/items/:idx/fiscal-marks/change                                             controllers.sections.items.ItemFiscalMarksController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/fiscal-marks/change                                             controllers.sections.items.ItemFiscalMarksController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-
-GET         /trader/:ern/draft/:draftId/items/:idx/geographical-indication                                         controllers.sections.items.ItemGeographicalIndicationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:draftId/items/:idx/geographical-indication                                         controllers.sections.items.ItemGeographicalIndicationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/items/:idx/geographical-indication/change                                  controllers.sections.items.ItemGeographicalIndicationController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:draftId/items/:idx/geographical-indication/change                                  controllers.sections.items.ItemGeographicalIndicationController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
 GET         /trader/:ern/draft/:draftId/items/:idx/net-gross-mass                                                  controllers.sections.items.ItemNetGrossMassController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/net-gross-mass                                                  controllers.sections.items.ItemNetGrossMassController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)

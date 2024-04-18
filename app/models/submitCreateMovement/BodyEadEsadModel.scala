@@ -69,12 +69,14 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
   private[submitCreateMovement] def designationOfOrigin(idx: Index, exciseProductCode: String, commodityCode: String)
                                                        (implicit request: DataRequest[_], messages: Messages): Option[String] = {
-    (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
-      case (Some(value), Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))) + " " + value)
-      case (Some(value), _) => Some(value)
-      case (_, Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
-      case _ => None
-    }
+    None
+    //TODO: ETFE-3703
+//    (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
+//      case (Some(value), Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))) + " " + value)
+//      case (Some(value), _) => Some(value)
+//      case (_, Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
+//      case _ => None
+//    }
   }
 
   def apply(implicit request: DataRequest[_], messages: Messages): Seq[BodyEadEsadModel] = {

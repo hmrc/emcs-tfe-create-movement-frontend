@@ -121,10 +121,12 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def geographicalIndicationsAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol && goodsType != Beer) {
-      request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx)) match {
-        case geographicalChoice@Some(NoGeographicalIndication) => Seq(geographicalChoice)
-        case geographicalChoice => Seq(geographicalChoice, request.userAnswers.get(ItemGeographicalIndicationPage(idx)))
-      }
+      //TODO: ETFE-3703
+//      request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx)) match {
+//        case geographicalChoice@Some(NoGeographicalIndication) => Seq(geographicalChoice)
+//        case geographicalChoice => Seq(geographicalChoice, request.userAnswers.get(ItemGeographicalIndicationPage(idx)))
+//      }
+      Seq.empty
     }
 
   private[items] def maturationAgeAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =

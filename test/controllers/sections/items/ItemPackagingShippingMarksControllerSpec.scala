@@ -200,5 +200,80 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
+
+    "updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers" - {
+      "must update all identical shipping marks" - {
+        "from the same item but different packaging" in new Test(Some(baseUserAnswers
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 1")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "mark 1")
+        )) {
+          MockUserAnswersService.set(
+            baseUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "updated mark")
+          ).returns(Future.successful(baseUserAnswers))
+
+          val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "updated mark")))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+
+        "from different items" in new Test(Some(baseUserAnswers
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 1")
+          .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 1")
+        )) {
+          MockUserAnswersService.set(
+            baseUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "updated mark")
+          ).returns(Future.successful(baseUserAnswers))
+
+          val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "updated mark")))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+
+      "must update no shipping marks" - {
+        "when no shipping marks match the original value" in new Test(Some(baseUserAnswers
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 2")
+          .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 3")
+        )) {
+          MockUserAnswersService.set(
+            baseUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 2")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 3")
+          ).returns(Future.successful(baseUserAnswers))
+
+          val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "updated mark")))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+
+        "when there was no previous value in userAnswers" in new Test(Some(baseUserAnswers
+          .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 3")
+        )) {
+          MockUserAnswersService.set(
+            baseUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "updated mark")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "mark 3")
+          ).returns(Future.successful(baseUserAnswers))
+
+          val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "updated mark")))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+      }
+    }
   }
 }

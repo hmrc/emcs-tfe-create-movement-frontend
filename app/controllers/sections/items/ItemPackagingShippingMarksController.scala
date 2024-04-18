@@ -19,9 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemPackagingShippingMarksFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -32,17 +32,17 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemPackagingShippingMarksController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val betaAllowList: BetaAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemPackagingShippingMarksFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemPackagingShippingMarksView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                      override val messagesApi: MessagesApi,
+                                                      override val userAnswersService: UserAnswersService,
+                                                      override val betaAllowList: BetaAllowListAction,
+                                                      override val navigator: ItemsNavigator,
+                                                      override val auth: AuthAction,
+                                                      override val getData: DataRetrievalAction,
+                                                      override val requireData: DataRequiredAction,
+                                                      formProvider: ItemPackagingShippingMarksFormProvider,
+                                                      val controllerComponents: MessagesControllerComponents,
+                                                      view: ItemPackagingShippingMarksView
+                                                    ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -56,7 +56,10 @@ class ItemPackagingShippingMarksController @Inject()(
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, itemsIdx, packagingIdx, mode),
-          saveAndRedirect(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), _, mode)
+          value => {
+            val newUserAnswers = updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx, packagingIdx, value)
+            saveAndRedirect(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), value, newUserAnswers, mode)
+          }
         )
       }
     }
@@ -75,7 +78,7 @@ class ItemPackagingShippingMarksController @Inject()(
 
 
   private def renderView(status: Status, form: Form[_], itemsIndex: Index, packagingIdx: Index, mode: Mode)
-                        (implicit request: DataRequest[_]): Future[Result] = {
+                        (implicit request: DataRequest[_]): Future[Result] =
     withItemPackaging(itemsIndex, packagingIdx) { packagingDescription =>
       Future.successful(status(view(
         form = form,
@@ -84,5 +87,22 @@ class ItemPackagingShippingMarksController @Inject()(
         skipLink = routes.ItemPackagingShippingMarksController.onNoShippingMarks(request.ern, request.draftId, itemsIndex, packagingIdx, mode)
       )))
     }
-  }
+
+  private[items] def updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx: Index, packagingIdx: Index, newValue: String)
+                                                                             (implicit request: DataRequest[_]): UserAnswers =
+    request.userAnswers.get(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx)) match {
+      case Some(currentAnswer) => {
+        ItemsSection.retrieveShippingMarkLocationsMatching(currentAnswer).foldLeft(request.userAnswers) {
+          case (currentUserAnswers, (ii, pi)) =>
+            if((ii == itemsIdx) && (pi == packagingIdx)) {
+              // if indexes match the page we're on, don't update
+              // otherwise saveAndRedirect won't call userAnswersService.set since currentAnswers.get[A](page).contains(answer) == true
+              currentUserAnswers
+            } else {
+              currentUserAnswers.set(ItemPackagingShippingMarksPage(itemsIndex = ii, itemsPackagingIndex = pi), newValue)
+            }
+        }
+      }
+      case None => request.userAnswers
+    }
 }

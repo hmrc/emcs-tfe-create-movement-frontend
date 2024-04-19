@@ -99,9 +99,32 @@ class DispatchNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
+      "for the DispatchWarehouseErn page" - {
+
+        "when a DispatchAddress exists" - {
+
+          "must go to CYA page" in {
+
+            val userAnswers = emptyUserAnswers.set(DispatchAddressPage, testUserAddress)
+
+            navigator.nextPage(DispatchWarehouseExcisePage, CheckMode, userAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
+          }
+        }
+
+        "when a DispatchAddress DOES NOT exist" - {
+
+          "must go to DispatchAddress page" in {
+
+            navigator.nextPage(DispatchWarehouseExcisePage, CheckMode, emptyUserAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, CheckMode)
+          }
+        }
+      }
+
       "for the DispatchBusinessNamePage" - {
 
-        "must go to DispatchAddress page" in {
+        "must go to CYA page" in {
 
           val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
 

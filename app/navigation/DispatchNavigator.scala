@@ -56,6 +56,12 @@ class DispatchNavigator @Inject() extends BaseNavigator {
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
+    case DispatchWarehouseExcisePage => (userAnswers: UserAnswers) =>
+      if(userAnswers.get(DispatchAddressPage).isEmpty) {
+        controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+      } else {
+        controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
     case _ =>
       (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }

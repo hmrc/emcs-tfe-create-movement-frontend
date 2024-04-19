@@ -86,15 +86,33 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
 
       Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach { destinationType =>
 
-        s"when $destinationType must redirect to the DispatchUseConsignorDetailsController" in new Fixture(Some(emptyUserAnswers
-          .set(DestinationTypePage, destinationType)
-        )) {
+        "when ConsignorAddress exists" - {
 
-          val result = testController.onPageLoad(testErn, testDraftId)(request)
+          s"when $destinationType must redirect to the DispatchUseConsignorDetailsController" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, destinationType)
+            .set(ConsignorAddressPage, testUserAddress)
+          )) {
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url)
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
+        }
+
+        "when ConsignorAddress DOES NOT exist" - {
+
+          s"when $destinationType must redirect to the DispatchBusinessNameController" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, destinationType)
+          )) {
+
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
         }
       }
 

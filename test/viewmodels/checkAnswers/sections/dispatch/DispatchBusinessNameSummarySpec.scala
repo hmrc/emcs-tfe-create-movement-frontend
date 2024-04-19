@@ -44,7 +44,7 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "must output no row" - {
-          "when there's no answer for DispatchUseConsignorDetailsPage" in new Test(emptyUserAnswers) {
+          "when there's no answer for DispatchUseConsignorDetailsPage and there's no answer for DispatchBusinessNamePage" in new Test(emptyUserAnswers) {
             DispatchBusinessNameSummary.row() mustBe None
           }
 
@@ -71,6 +71,26 @@ class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
           "when DispatchUseConsignorDetailsPage is false and there's an answer" in new Test(
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, false)
+              .set(DispatchBusinessNamePage, "business name")
+          ) {
+            DispatchBusinessNameSummary.row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.traderNameLabel,
+                  value = Value(Text("business name")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      id = "changeDispatchBusinessName"
+                    ).withVisuallyHiddenText(messagesForLanguage.traderNameChangeHidden)
+                  )
+                )
+              )
+          }
+
+          "when DispatchUseConsignorDetailsPage is None and there's an answer" in new Test(
+            emptyUserAnswers
               .set(DispatchBusinessNamePage, "business name")
           ) {
             DispatchBusinessNameSummary.row() mustBe

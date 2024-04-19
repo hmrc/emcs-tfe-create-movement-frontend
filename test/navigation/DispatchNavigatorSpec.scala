@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch._
 
 class DispatchNavigatorSpec extends SpecBase {
@@ -36,9 +37,23 @@ class DispatchNavigatorSpec extends SpecBase {
 
       "for the DispatchWarehouseExcisePage" - {
 
-        "must go to DispatchConsignorDetails page" in {
-          navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+        "when there is a ConsignorAddress available to pre-populate" - {
+
+          "must go to DispatchConsignorDetails page" in {
+
+            val userAnswers = emptyUserAnswers.set(ConsignorAddressPage, testUserAddress)
+
+            navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, userAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "when there is NO ConsignorAddress" - {
+
+          "must go to DispatchBusinessName page" in {
+            navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
+              controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
         }
       }
 

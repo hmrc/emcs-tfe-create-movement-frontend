@@ -16,9 +16,10 @@
 
 package navigation
 
-import controllers.routes
+import controllers.sections.dispatch.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch._
 import play.api.mvc.Call
 
@@ -29,41 +30,45 @@ class DispatchNavigator @Inject() extends BaseNavigator {
   private val normalRoutes: Page => UserAnswers => Call = {
 
     case DispatchWarehouseExcisePage => (userAnswers: UserAnswers) =>
-      controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      if(userAnswers.get(ConsignorAddressPage).nonEmpty) {
+        routes.DispatchUseConsignorDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      } else {
+        routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      }
 
     case DispatchUseConsignorDetailsPage => (userAnswers: UserAnswers) =>
       userAnswers.get(DispatchUseConsignorDetailsPage) match {
-        case Some(true) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case _ => controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case Some(true) => routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ => routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 
     case DispatchBusinessNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case DispatchAddressPage => (userAnswers: UserAnswers) =>
-      controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case DispatchCheckAnswersPage =>
-      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
     case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
     case DispatchWarehouseExcisePage => (userAnswers: UserAnswers) =>
       if(userAnswers.get(DispatchAddressPage).isEmpty) {
-        controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+        routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
       } else {
-        controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
     case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
 

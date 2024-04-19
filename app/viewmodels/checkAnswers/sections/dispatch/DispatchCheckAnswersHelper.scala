@@ -29,8 +29,8 @@ class DispatchCheckAnswersHelper @Inject()(dispatchWarehouseExciseSummary: Dispa
     SummaryListViewModel(
       rows = Seq(
         DispatchUseConsignorDetailsSummary.row(),
-        DispatchBusinessNameSummary.row(),
         dispatchWarehouseExciseSummary.row(),
+        DispatchBusinessNameSummary.row(),
         DispatchAddressSummary.row()
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")

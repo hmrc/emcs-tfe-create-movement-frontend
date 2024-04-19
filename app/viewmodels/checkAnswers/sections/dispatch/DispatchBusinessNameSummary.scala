@@ -28,13 +28,13 @@ import viewmodels.implicits._
 object DispatchBusinessNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(DispatchUseConsignorDetailsPage).flatMap {
-      case true => Some(SummaryListRowViewModel(
+    request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
+      case Some(true) => Some(SummaryListRowViewModel(
         key = "dispatchBusinessName.checkYourAnswersLabel",
         value = ValueViewModel(HtmlFormat.escape(request.traderKnownFacts.traderName).toString),
         actions = Seq()
       ))
-      case false =>
+      case _ =>
         request.userAnswers.get(DispatchBusinessNamePage).map {
           answer =>
             SummaryListRowViewModel(

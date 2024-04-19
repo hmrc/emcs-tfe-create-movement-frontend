@@ -46,8 +46,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -72,7 +71,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -95,7 +94,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -119,7 +118,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemCommercialDescriptionPage(testIndex1), "Cider")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
           .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(hasMaturationPeriodAge = true, Some("40 years")))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -281,7 +280,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Cider")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -302,7 +301,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -326,8 +325,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -351,8 +349,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -375,8 +372,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -399,8 +395,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -422,8 +417,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -445,8 +439,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -467,8 +460,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -489,8 +481,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
@@ -509,7 +500,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -531,7 +522,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -553,7 +544,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -575,7 +566,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -598,7 +589,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemWineProductCategoryPage(testIndex1), Other)
@@ -620,7 +611,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemWineProductCategoryPage(testIndex1), Other)
@@ -707,8 +698,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedDesignationOfOrigin)
-          .set(ItemGeographicalIndicationPage(testIndex1), "Italy - DOCG")
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(testIndex1), true)
@@ -952,33 +942,29 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
   }
 
   "geographicalIndicationsAnswers" - {
-    "must return two items" - {
-      "when alcohol, not beer, ItemGeographicalIndicationChoicePage is not NoGeographicalIndication" in {
-        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
-          goodsType =>
-            ItemGeographicalIndicationType.values.filterNot(_ == NoGeographicalIndication).foreach {
-              indication =>
-                val userAnswers: UserAnswers = emptyUserAnswers
-                  .set(ItemGeographicalIndicationChoicePage(testIndex1), indication)
-
-                val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-
-                section.geographicalIndicationsAnswers(goodsType, dr).length mustBe 2
-            }
-        }
-      }
-    }
 
     "must return one item" - {
-      "when alcohol, not beer, ItemGeographicalIndicationChoicePage is NoGeographicalIndication" in {
+      "when alcohol, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication" in {
         GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+              .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.geographicalIndicationsAnswers(goodsType, dr).length mustBe 1
+            section.designationOfOriginAnswers(goodsType, dr).length mustBe 1
+        }
+      }
+
+      "when alcohol, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication (S200)" in {
+        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+          goodsType =>
+            val userAnswers: UserAnswers = emptyUserAnswers
+              .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, isSpiritMarketedAndLabelled = Some(true)))
+
+            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+            section.designationOfOriginAnswers(goodsType, dr).length mustBe 1
         }
       }
     }
@@ -988,21 +974,21 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         GoodsType.values.filterNot(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+              .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.geographicalIndicationsAnswers(goodsType, dr) mustBe Nil
+            section.designationOfOriginAnswers(goodsType, dr) mustBe Nil
         }
       }
 
       "when beer" in {
         val userAnswers: UserAnswers = emptyUserAnswers
-          .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.geographicalIndicationsAnswers(Beer, dr) mustBe Nil
+        section.designationOfOriginAnswers(Beer, dr) mustBe Nil
       }
     }
   }

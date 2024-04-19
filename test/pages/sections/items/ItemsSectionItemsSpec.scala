@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.response.InvalidRegexException
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.Other
-import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
+import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel}
 import play.api.test.FakeRequest
 import utils.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
@@ -100,7 +100,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
             .set(ItemBrandNamePage(index), ItemBrandNameModel(hasBrandName = true, Some("brand")))
             .set(ItemCommercialDescriptionPage(index), "Wine from grapes")
             .set(ItemAlcoholStrengthPage(index), BigDecimal(12.5))
-            .set(ItemGeographicalIndicationChoicePage(index), NoGeographicalIndication)
+            .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
             .set(ItemQuantityPage(index), BigDecimal("1000"))
             .set(ItemNetGrossMassPage(index), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
             .set(ItemBulkPackagingChoicePage(index), false)
@@ -126,7 +126,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
             .set(ItemBrandNamePage(index), ItemBrandNameModel(hasBrandName = true, Some("brand")))
             .set(ItemCommercialDescriptionPage(index), "Wine from grapes")
             .set(ItemAlcoholStrengthPage(index), BigDecimal(12.5))
-            .set(ItemGeographicalIndicationChoicePage(index), NoGeographicalIndication)
+            .set(ItemDesignationOfOriginPage(index), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
             .set(ItemQuantityPage(index), BigDecimal("1000"))
             .set(ItemNetGrossMassPage(index), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
             .set(ItemBulkPackagingChoicePage(index), false)
@@ -215,7 +215,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
       .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
       .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
       .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
-      .set(ItemGeographicalIndicationChoicePage(testIndex2), NoGeographicalIndication)
+      .set(ItemDesignationOfOriginPage(testIndex2), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
       .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
       .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
       .set(ItemBulkPackagingChoicePage(testIndex2), false)

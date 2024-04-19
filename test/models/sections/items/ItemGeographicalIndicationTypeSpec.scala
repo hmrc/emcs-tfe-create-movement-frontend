@@ -18,10 +18,6 @@ package models.sections.items
 
 import base.SpecBase
 import models.sections.items.ItemGeographicalIndicationType._
-import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, RadioItem}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class ItemGeographicalIndicationTypeSpec extends SpecBase {
 
@@ -29,43 +25,7 @@ class ItemGeographicalIndicationTypeSpec extends SpecBase {
     ".values" - {
       "should return all the geographical indication options" in {
         ItemGeographicalIndicationType.values mustBe Seq(
-          ProtectedDesignationOfOrigin, ProtectedGeographicalIndication, GeographicalIndication, NoGeographicalIndication
-        )
-      }
-    }
-
-    ".options" - {
-      "return all the radio options for geographical indications" in {
-        implicit val msgs: Messages = messages(FakeRequest())
-
-        ItemGeographicalIndicationType.options mustBe Seq(
-          RadioItem(
-            content = Text(msgs(s"itemGeographicalIndicationChoice.PDO")),
-            value = Some("PDO"),
-            hint = Some(Hint(content = Text(msgs(s"itemGeographicalIndicationChoice.PDO.hint")))),
-            id = Some(s"value_PDO")
-          ),
-          RadioItem(
-            content = Text(msgs(s"itemGeographicalIndicationChoice.PGI")),
-            value = Some("PGI"),
-            hint = Some(Hint(content = Text(msgs(s"itemGeographicalIndicationChoice.PGI.hint")))),
-            id = Some(s"value_PGI")
-          ),
-          RadioItem(
-            content = Text(msgs(s"itemGeographicalIndicationChoice.GI")),
-            value = Some("GI"),
-            hint = Some(Hint(content = Text(msgs(s"itemGeographicalIndicationChoice.GI.hint")))),
-            id = Some(s"value_GI")
-          ),
-          RadioItem(
-            divider = Some(msgs(s"site.divider"))
-          ),
-          RadioItem(
-            content = Text(msgs(s"itemGeographicalIndicationChoice.None")),
-            value = Some("None"),
-            hint = None,
-            id = Some(s"value_None")
-          ),
+          ProtectedDesignationOfOrigin, ProtectedGeographicalIndication, NoGeographicalIndication
         )
       }
     }

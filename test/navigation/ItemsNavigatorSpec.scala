@@ -21,7 +21,6 @@ import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
-import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedGeographicalIndication}
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{CheckMode, GoodsType, NormalMode, ReviewMode}
@@ -227,14 +226,14 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "when GoodsType is anything else (e.g. Wine)" - {
 
-          "to the Geographical Indication Choice Page" in {
+          "to the Designation of Origin Page" in {
 
             val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
               .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW100.code)
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
             navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(testGreatBritainErn, testDraftId, testIndex1, NormalMode)
+              itemsRoutes.ItemDesignationOfOriginController.onPageLoad(testGreatBritainErn, testDraftId, testIndex1, NormalMode)
           }
         }
       }
@@ -318,72 +317,20 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the Item Maturation Period Age page" - {
 
-        "to the Geographical Indication Choice Page" in {
+        "to the Item Designation of Origin Page" in {
 
           navigator.nextPage(ItemMaturationPeriodAgePage(testIndex1), NormalMode, emptyUserAnswers) mustBe
-            itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            itemsRoutes.ItemDesignationOfOriginController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
         }
       }
 
-      "must go from the Item Geographical Indication Choice page" - {
-
-        "to the Geographical Indication Page" - {
-          "when the answer is Yes (any option)" in {
-
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), ProtectedGeographicalIndication)
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-            ) mustBe itemsRoutes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-          }
-        }
-
-        "to the Small Independent Producer Page" - {
-          "when the answer is No (and the ABV is < 8.5)" in {
-
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-            ) mustBe itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-          }
-        }
-
-        "to the Quantity Page" - {
-
-          "when the answer is No (and the ABV is >= 8.5)" in {
-
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-            ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
-          }
-        }
-
-        "to the Items index page" - {
-          "when the goods type is not spirits / wine / fermented / intermediate (e.g., Tobacco) and answered no" in {
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.501))
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeT200.code)
-            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
-          }
-
-          "when there is no answers" in {
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), NormalMode, emptyUserAnswers
-            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
-          }
-        }
-      }
-
-      "must go from the Item Geographical Indication page" - {
+      "must go from the Item Designation of Origin page" - {
 
         "to the Small Independent Producer Page" - {
 
           "when the alcoholic strength is < 8.5" in {
 
-            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemDesignationOfOriginPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.499))
             ) mustBe itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
@@ -393,7 +340,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
           "when the alcoholic strength is >= 8.5" in {
 
-            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemDesignationOfOriginPage(testIndex1), NormalMode, emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
             ) mustBe itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
           }
@@ -402,7 +349,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to the Items index page" - {
 
           "when there is no answers" in {
-            navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), NormalMode, emptyUserAnswers
+            navigator.nextPage(ItemDesignationOfOriginPage(testIndex1), NormalMode, emptyUserAnswers
             ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
@@ -1002,32 +949,9 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from ItemGeographicalIndicationChoicePage" - {
-        "when answer is true" - {
-          "to ItemGeographicalIndication page" in {
-            ItemGeographicalIndicationType.values.filterNot(_ == ItemGeographicalIndicationType.NoGeographicalIndication).map {
-              itemGeographicalIndicationChoicePageAnswer =>
-                navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), CheckMode,
-                  emptyUserAnswers
-                    .set(ItemGeographicalIndicationChoicePage(testIndex1), itemGeographicalIndicationChoicePageAnswer)
-                ) mustBe
-                  itemsRoutes.ItemGeographicalIndicationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
-            }
-          }
-        }
-        "when answer is false" - {
-          "to CYA page" in {
-            navigator.nextPage(ItemGeographicalIndicationChoicePage(testIndex1), CheckMode,
-              emptyUserAnswers.set(ItemGeographicalIndicationChoicePage(testIndex1), ItemGeographicalIndicationType.NoGeographicalIndication)
-            ) mustBe
-              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
-          }
-        }
-      }
-
       "must go from ItemGeographicalIndicationPage" - {
         "to CYA page" in {
-          navigator.nextPage(ItemGeographicalIndicationPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
+          navigator.nextPage(ItemDesignationOfOriginPage(testIndex1), CheckMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }

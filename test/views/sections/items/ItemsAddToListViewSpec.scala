@@ -24,7 +24,7 @@ import mocks.services.MockGetCnCodeInformationService
 import models.UnitOfMeasure.{Litres20, Thousands}
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
-import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel}
+import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel}
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.Other
 import org.jsoup.Jsoup
@@ -240,7 +240,7 @@ class ItemsAddToListViewSpec extends SpecBase
             .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
             .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
             .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
-            .set(ItemGeographicalIndicationChoicePage(testIndex2), NoGeographicalIndication)
+            .set(ItemDesignationOfOriginPage(testIndex2), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
             .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
             .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
             .set(ItemBulkPackagingChoicePage(testIndex2), false)

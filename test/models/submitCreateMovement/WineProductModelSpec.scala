@@ -18,10 +18,10 @@ package models.submitCreateMovement
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import models.{GoodsType, UserAnswers}
 import models.requests.DataRequest
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
-import models.sections.items.{ItemGeographicalIndicationType, ItemWineGrowingZone, ItemWineProductCategory}
+import models.sections.items.{ItemDesignationOfOriginModel, ItemGeographicalIndicationType, ItemWineGrowingZone, ItemWineProductCategory}
+import models.{GoodsType, UserAnswers}
 import pages.sections.items._
 import play.api.test.FakeRequest
 
@@ -36,7 +36,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), epc)
       .set(ItemCommodityCodePage(testIndex1), cnCode)
-      .set(ItemGeographicalIndicationChoicePage(testIndex1), geographicalIndicationChoice)
+      .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(geographicalIndicationChoice, None, None))
       .set(ItemWineProductCategoryPage(testIndex1), importedChoice)
       .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CI)
       .set(ItemWineOriginPage(testIndex1), countryModelGB)

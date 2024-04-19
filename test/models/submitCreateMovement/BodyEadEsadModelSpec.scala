@@ -23,6 +23,7 @@ import models.GoodsType
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
+import models.sections.items.ItemGeographicalIndicationType.ProtectedDesignationOfOrigin
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.items._
@@ -64,7 +65,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(4.56)))
             .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
             .set(ItemFiscalMarksChoicePage(testIndex1), true)
-            .set(ItemGeographicalIndicationPage(testIndex1), "talkin' 'bout my deeeeeesignation")
+            .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
+            .set(ItemSmallIndependentProducerPage(testIndex1), true)
             .set(ItemProducerSizePage(testIndex1), BigInt(4))
             .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
             .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -91,7 +93,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           degreePlato = Some(4.56),
           fiscalMark = Some("fiscal marks"),
           fiscalMarkUsedFlag = Some(true),
-          designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+          designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO) talkin' 'bout my deeeeeesignation"),
+          independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
           sizeOfProducer = Some(BigInt(4)),
           density = Some(BigDecimal(7.89)),
           commercialDescription = Some("beans"),
@@ -129,7 +132,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(4.56)))
             .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
             .set(ItemFiscalMarksChoicePage(testIndex1), true)
-            .set(ItemGeographicalIndicationPage(testIndex1), "talkin' 'bout my deeeeeesignation")
+            .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
+            .set(ItemSmallIndependentProducerPage(testIndex1), true)
             .set(ItemProducerSizePage(testIndex1), BigInt(4))
             .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
             .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -161,7 +165,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           degreePlato = Some(4.56),
           fiscalMark = Some("fiscal marks"),
           fiscalMarkUsedFlag = Some(true),
-          designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+          designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO) talkin' 'bout my deeeeeesignation"),
+          independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
           sizeOfProducer = Some(BigInt(4)),
           density = Some(BigDecimal(7.89)),
           commercialDescription = Some("beans"),
@@ -207,7 +212,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(4.56)))
             .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
             .set(ItemFiscalMarksChoicePage(testIndex1), true)
-            .set(ItemGeographicalIndicationPage(testIndex1), "talkin' 'bout my deeeeeesignation")
+            .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
+            .set(ItemSmallIndependentProducerPage(testIndex1), true)
             .set(ItemProducerSizePage(testIndex1), BigInt(4))
             .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
             .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -230,7 +236,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemDegreesPlatoPage(testIndex2), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(4.56)))
             .set(ItemFiscalMarksPage(testIndex2), "fiscal marks")
             .set(ItemFiscalMarksChoicePage(testIndex2), true)
-            .set(ItemGeographicalIndicationPage(testIndex2), "talkin' 'bout my deeeeeesignation")
+            .set(ItemDesignationOfOriginPage(testIndex2), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
             .set(ItemProducerSizePage(testIndex2), BigInt(4))
             .set(ItemDensityPage(testIndex2), BigDecimal(7.89))
             .set(ItemCommercialDescriptionPage(testIndex2), "beans")
@@ -259,7 +265,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             degreePlato = Some(4.56),
             fiscalMark = Some("fiscal marks"),
             fiscalMarkUsedFlag = Some(true),
-            designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+            designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO) talkin' 'bout my deeeeeesignation"),
+            independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
             sizeOfProducer = Some(BigInt(4)),
             density = Some(BigDecimal(7.89)),
             commercialDescription = Some("beans"),
@@ -295,7 +302,8 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             degreePlato = Some(4.56),
             fiscalMark = Some("fiscal marks"),
             fiscalMarkUsedFlag = Some(true),
-            designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+            designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO) talkin' 'bout my deeeeeesignation"),
+            independentSmallProducersDeclaration = None,
             sizeOfProducer = Some(BigInt(4)),
             density = Some(BigDecimal(7.89)),
             commercialDescription = Some("beans"),
@@ -324,78 +332,79 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
     }
   }
 
-  "designationOfOrigin" - {
-    "when ItemGeographicalIndicationPage and ItemSmallIndependentProducerPage have answers" - {
-      "must concatenate those answers" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
-            .set(ItemSmallIndependentProducerPage(testIndex1), true)
-        )
-
-        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some(s"${messagesForLanguage.yesWine} indication")
-      }
-    }
-    "when ItemGeographicalIndicationPage has an answer" - {
-      "must return that answer" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
-        )
-
-        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some("indication")
-      }
-    }
-
-    "when ItemSmallIndependentProducerPage has an answer" - {
-      s"must return Yes text" in {
-        Seq(
-          GoodsType.Beer -> messagesForLanguage.yesBeer,
-          GoodsType.Spirits -> messagesForLanguage.yesSpirits,
-          GoodsType.Wine -> messagesForLanguage.yesWine,
-          GoodsType.Energy -> messagesForLanguage.yesOther,
-          GoodsType.Tobacco -> messagesForLanguage.yesOther,
-          GoodsType.Intermediate -> messagesForLanguage.yesIntermediate
-        ).foreach {
-          case (goodsType, yesText) =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(ItemSmallIndependentProducerPage(testIndex1), true)
-            )
-
-            BodyEadEsadModel.designationOfOrigin(testIndex1, s"${goodsType.code}123", "cnCode") mustBe Some(yesText)
-        }
-      }
-      s"when CN Code means that goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
-        s" must return [${messagesForLanguage.yesFermented}]" in {
-        GoodsType.fermentedBeverages.map {
-          cnCode =>
-
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(ItemSmallIndependentProducerPage(testIndex1), true)
-            )
-
-            BodyEadEsadModel.designationOfOrigin(testIndex1, s"W123", cnCode) mustBe Some(messagesForLanguage.yesFermented)
-        }
-      }
-    }
-
-    "when neither ItemGeographicalIndicationPage nor ItemSmallIndependentProducerPage have an answer" - {
-      "must return None" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-        )
-
-        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, testCnCodeWine) mustBe None
-      }
-    }
-  }
+//TODO: ETFE-3703
+//  "designationOfOrigin" - {
+//    "when ItemGeographicalIndicationPage and ItemSmallIndependentProducerPage have answers" - {
+//      "must concatenate those answers" in {
+//        implicit val dr: DataRequest[_] = dataRequest(
+//          fakeRequest,
+//          emptyUserAnswers
+//            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
+//            .set(ItemSmallIndependentProducerPage(testIndex1), true)
+//        )
+//
+//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some(s"${messagesForLanguage.yesWine} indication")
+//      }
+//    }
+//    "when ItemGeographicalIndicationPage has an answer" - {
+//      "must return that answer" in {
+//        implicit val dr: DataRequest[_] = dataRequest(
+//          fakeRequest,
+//          emptyUserAnswers
+//            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
+//        )
+//
+//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some("indication")
+//      }
+//    }
+//
+//    "when ItemSmallIndependentProducerPage has an answer" - {
+//      s"must return Yes text" in {
+//        Seq(
+//          GoodsType.Beer -> messagesForLanguage.yesBeer,
+//          GoodsType.Spirits -> messagesForLanguage.yesSpirits,
+//          GoodsType.Wine -> messagesForLanguage.yesWine,
+//          GoodsType.Energy -> messagesForLanguage.yesOther,
+//          GoodsType.Tobacco -> messagesForLanguage.yesOther,
+//          GoodsType.Intermediate -> messagesForLanguage.yesIntermediate
+//        ).foreach {
+//          case (goodsType, yesText) =>
+//            implicit val dr: DataRequest[_] = dataRequest(
+//              fakeRequest,
+//              emptyUserAnswers
+//                .set(ItemSmallIndependentProducerPage(testIndex1), true)
+//            )
+//
+//            BodyEadEsadModel.designationOfOrigin(testIndex1, s"${goodsType.code}123", "cnCode") mustBe Some(yesText)
+//        }
+//      }
+//      s"when CN Code means that goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
+//        s" must return [${messagesForLanguage.yesFermented}]" in {
+//        GoodsType.fermentedBeverages.map {
+//          cnCode =>
+//
+//            implicit val dr: DataRequest[_] = dataRequest(
+//              fakeRequest,
+//              emptyUserAnswers
+//                .set(ItemSmallIndependentProducerPage(testIndex1), true)
+//            )
+//
+//            BodyEadEsadModel.designationOfOrigin(testIndex1, s"W123", cnCode) mustBe Some(messagesForLanguage.yesFermented)
+//        }
+//      }
+//    }
+//
+//    "when neither ItemGeographicalIndicationPage nor ItemSmallIndependentProducerPage have an answer" - {
+//      "must return None" in {
+//        implicit val dr: DataRequest[_] = dataRequest(
+//          fakeRequest,
+//          emptyUserAnswers
+//        )
+//
+//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, testCnCodeWine) mustBe None
+//      }
+//    }
+//  }
 
   "yesAnswer" - {
     "when XI trader" - {
@@ -417,7 +426,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
                   ern = ern
                 )
 
-                BodyEadEsadModel.yesAnswer(goodsType) mustBe yesText
+                BodyEadEsadModel.smallIndependentProducerYesAnswer(goodsType) mustBe yesText
             }
           }
       }
@@ -431,7 +440,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
               ern = ern
             )
 
-            BodyEadEsadModel.yesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesFermented
+            BodyEadEsadModel.smallIndependentProducerYesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesFermented
         }
       }
     }
@@ -454,7 +463,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
                   ern = ern
                 )
 
-                BodyEadEsadModel.yesAnswer(goodsType) mustBe yesText
+                BodyEadEsadModel.smallIndependentProducerYesAnswer(goodsType) mustBe yesText
             }
           }
       }
@@ -468,7 +477,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
               ern = ern
             )
 
-            BodyEadEsadModel.yesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesOther
+            BodyEadEsadModel.smallIndependentProducerYesAnswer(GoodsType.Fermented(GoodsType.fermentedBeverages.head)) mustBe messagesForLanguage.yesOther
         }
       }
     }

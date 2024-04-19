@@ -68,7 +68,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
     messages(s"itemSmallIndependentProducer.yes.$key")
   }
 
-  private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages) = {
+  private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages): String = {
     val marketingAndLabellingAnswer = answer.isSpiritMarketedAndLabelled.map(isSpiritMarketedAndLabelled =>
       if(isSpiritMarketedAndLabelled) "itemDesignationOfOrigin.s200.radio.yes" else "itemDesignationOfOrigin.s200.radio.unprovided"
     )

@@ -95,8 +95,8 @@ trait Mappings extends Formatters with Constraints {
    * @return The mapping that should be applied based on the arguments and their values within the form
    */
   def mandatoryIfOptionSelectedAndInputNonEmpty[T](optionField: String,
-                                                   inputField: String,
                                                    optionValue: String,
+                                                   inputField: String,
                                                    mapping: Mapping[T]
                                                   ): Mapping[Option[T]] =
     ConditionalMapping(

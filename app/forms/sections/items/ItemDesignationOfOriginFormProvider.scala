@@ -19,14 +19,12 @@ package forms.sections.items
 import forms.XSS_REGEX
 import forms.mappings.Mappings
 import forms.sections.items.ItemDesignationOfOriginFormProvider._
-import models.{ExciseProductCode, GoodsType}
-import models.GoodsType.Spirits
 import models.sections.items.ItemGeographicalIndicationType.{ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.sections.items.{ItemDesignationOfOriginModel, ItemGeographicalIndicationType}
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text => playText}
+import play.api.data.Forms.{mapping, text => playText}
 import uk.gov.voa.play.form.Condition
-import uk.gov.voa.play.form.ConditionalMappings.{mandatoryIf, mandatoryIfEqual}
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 
 import javax.inject.Inject
 
@@ -36,33 +34,48 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
   def apply(epc: String): Form[ItemDesignationOfOriginModel] =
     Form(
       mapping(
-        geographicalIndicationField -> enumerable[ItemGeographicalIndicationType]("itemDesignationOfOrigin.error.geographicalIndication.choice.required"),
+        geographicalIndicationField -> enumerable[ItemGeographicalIndicationType](geographicalIndicationChoiceRequiredError),
 
         protectedDesignationOfOriginTextField -> mandatoryIfOptionSelectedAndInputNonEmpty(
           geographicalIndicationField,
-          protectedDesignationOfOriginTextField,
           ProtectedDesignationOfOrigin.toString,
+          protectedDesignationOfOriginTextField,
           playText()
             .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
             .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
+            .transform[String](
+              _.replace("\n", " ")
+                .replace("\r", " ")
+                .replaceAll(" +", " ")
+                .trim,
+              identity
+            )
         ),
 
         protectedGeographicalIndicationTextField -> mandatoryIfOptionSelectedAndInputNonEmpty(
           geographicalIndicationField,
-          protectedGeographicalIndicationTextField,
           ProtectedGeographicalIndication.toString,
+          protectedGeographicalIndicationTextField,
           playText()
             .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
             .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
+            .transform[String](
+              _.replace("\n", " ")
+                .replace("\r", " ")
+                .replaceAll(" +", " ")
+                .trim,
+              identity
+            )
         ),
 
-        isSpiritMarketedAndLabelledField -> mandatoryIf(isS200(epc), boolean("itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required"))
+        isSpiritMarketedAndLabelledField -> mandatoryIf(isS200(epc), boolean(isSpiritMarketedAndLabelledRequiredError))
       )(applyModel)(unapplyModel)
     )
 
-  private def isS200(epc: String): Condition = _ => epc == "S200"
+  //Doesn't matter what is in the form (map needed for compatibility with conditional mapping lib)
+  private[items] def isS200(epc: String): Condition = _ => epc == "S200"
 
-  private def applyModel(geographicalIndication: ItemGeographicalIndicationType, pdoTextField: Option[String], pgiTextField: Option[String], isSpiritMarketedAndLabelled: Option[Boolean]) = {
+  private[items] def applyModel(geographicalIndication: ItemGeographicalIndicationType, pdoTextField: Option[String], pgiTextField: Option[String], isSpiritMarketedAndLabelled: Option[Boolean]) = {
     val geographicalIndicationIdentification = geographicalIndication match {
       case ProtectedDesignationOfOrigin => pdoTextField
       case ProtectedGeographicalIndication => pgiTextField
@@ -71,15 +84,15 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
     ItemDesignationOfOriginModel(geographicalIndication, geographicalIndicationIdentification, isSpiritMarketedAndLabelled)
   }
 
-  private def unapplyModel(model: ItemDesignationOfOriginModel): Option[(ItemGeographicalIndicationType, Option[String], Option[String], Option[Boolean])] = model match {
+  private[items] def unapplyModel(model: ItemDesignationOfOriginModel): Option[(ItemGeographicalIndicationType, Option[String], Option[String], Option[Boolean])] = model match {
 
     case ItemDesignationOfOriginModel(identification@ProtectedDesignationOfOrigin, geographicalIndicationIdentification, isSpiritMarketedAndLabelledField) =>
-      Some(identification, geographicalIndicationIdentification, None, isSpiritMarketedAndLabelledField)
+      Some((identification, geographicalIndicationIdentification, None, isSpiritMarketedAndLabelledField))
 
     case ItemDesignationOfOriginModel(identification@ProtectedGeographicalIndication, geographicalIndicationIdentification, isSpiritMarketedAndLabelledField) =>
-      Some(identification, None, geographicalIndicationIdentification, isSpiritMarketedAndLabelledField)
+      Some((identification, None, geographicalIndicationIdentification, isSpiritMarketedAndLabelledField))
 
-    case model => Some(model.geographicalIndication, None, None, model.isSpiritMarketedAndLabelled)
+    case model => Some((model.geographicalIndication, None, None, model.isSpiritMarketedAndLabelled))
   }
 
 }
@@ -95,5 +108,8 @@ object ItemDesignationOfOriginFormProvider {
 
   val geographicalIndicationIdentificationLengthError = "itemDesignationOfOrigin.error.geographicalIndication.input.length"
   val geographicalIndicationIdentificationInvalidError = "itemDesignationOfOrigin.error.geographicalIndication.input.invalid"
+
+  val geographicalIndicationChoiceRequiredError = "itemDesignationOfOrigin.error.geographicalIndication.choice.required"
+  val isSpiritMarketedAndLabelledRequiredError = "itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required"
 
 }

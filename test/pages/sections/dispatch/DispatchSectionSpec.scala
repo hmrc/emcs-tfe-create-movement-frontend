@@ -30,10 +30,11 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
 
     "must return true" - {
 
-      "when Consignor details question is 'yes' and Consignor section is completed" in {
+      "when Consignor details question is 'yes' and Address is provided" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchAddressPage, testUserAddress)
           .set(DispatchUseConsignorDetailsPage, true)
         )
         DispatchSection.isCompleted mustBe true
@@ -83,6 +84,16 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, false)
+          .set(DispatchBusinessNamePage, "beans")
+        )
+        DispatchSection.isCompleted mustBe false
+      }
+
+      "when Consignor details question is 'Yes' and DispatchAddress is missing" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(DispatchWarehouseExcisePage, "beans")
+          .set(DispatchUseConsignorDetailsPage, true)
           .set(DispatchBusinessNamePage, "beans")
         )
         DispatchSection.isCompleted mustBe false

@@ -24,7 +24,7 @@ import models.sections.info.movementScenario.MovementScenario.{CertifiedConsigne
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.Result
@@ -56,7 +56,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
           Some(emptyUserAnswers
             .set(DispatchWarehouseExcisePage, "beans")
             .set(DispatchUseConsignorDetailsPage, true)
-            .set(ConsignorAddressPage, testUserAddress)
+            .set(DispatchAddressPage, testUserAddress)
             .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
           )) {
 
@@ -72,7 +72,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
         .set(DispatchWarehouseExcisePage, "beans")
         .set(DispatchUseConsignorDetailsPage, true)
-        .set(ConsignorAddressPage, testUserAddress)
+        .set(DispatchAddressPage, testUserAddress)
       )) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)

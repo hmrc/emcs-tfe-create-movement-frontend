@@ -941,7 +941,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
   }
 
-  "geographicalIndicationsAnswers" - {
+  "designationOfOriginAnswers" - {
 
     "must return one item" - {
       "when alcohol, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication" in {

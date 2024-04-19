@@ -264,4 +264,27 @@ class BaseItemsNavigationControllerSpec extends SpecBase
       }
     }
   }
+
+  ".withExciseProductCode" - {
+
+    "must return the item excise product code when both the item index is valid" in new Test(
+      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+    ) {
+      val result: Future[Result] = controller.withExciseProductCode(testIndex1)(itemPackagingSuccessFunction)
+
+      status(result) mustBe OK
+    }
+
+    "must redirect to the item index" - {
+
+      "when the item index is invalid" in new Test(
+        emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+      ) {
+        val result: Future[Result] = controller.withExciseProductCode(testIndex2)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(request.ern, request.draftId).url
+      }
+    }
+  }
 }

@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.sections.items.ItemDesignationOfOriginFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
-import navigation.{ItemsNavigator, Navigator}
+import navigation.ItemsNavigator
 import pages.sections.items.ItemDesignationOfOriginPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -46,14 +46,14 @@ class ItemDesignationOfOriginController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      withExciseProductCodeAsync(idx) { exciseProductCode =>
+      withExciseProductCode(idx) { exciseProductCode =>
         renderView(Ok, fillForm(ItemDesignationOfOriginPage(idx), formProvider(exciseProductCode)), exciseProductCode, idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      withExciseProductCodeAsync(idx) { exciseProductCode =>
+      withExciseProductCode(idx) { exciseProductCode =>
         formProvider(exciseProductCode).bindFromRequest().fold(
           renderView(BadRequest, _, exciseProductCode, idx, mode),
           saveAndRedirect(ItemDesignationOfOriginPage(idx), _, mode)
@@ -68,7 +68,6 @@ class ItemDesignationOfOriginController @Inject()(
       action = routes.ItemDesignationOfOriginController.onSubmit(request.ern, request.draftId, idx, mode),
       epc = epc,
       index = idx
-
     )))
   }
 }

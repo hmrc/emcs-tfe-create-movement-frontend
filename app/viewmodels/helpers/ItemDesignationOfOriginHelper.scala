@@ -79,7 +79,7 @@ class ItemDesignationOfOriginHelper @Inject()(govukCharacterCount: GovukCharacte
       RadioItem(
         id      = Some(s"${form(ItemDesignationOfOriginFormProvider.isSpiritMarketedAndLabelledField).id}"),
         value   = Some("true"),
-        content = Text(messages("itemDesignationOfOrigin.s200.radio.yes")),
+        content = Text(messages("itemDesignationOfOrigin.s200.radio.yes"))
       ),
       RadioItem(
         divider = Some(messages(s"site.divider"))

@@ -17,9 +17,6 @@
 package models.sections.items
 
 import models.{Enumerable, WithName}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{RadioItem, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 
 sealed trait ItemGeographicalIndicationType
 

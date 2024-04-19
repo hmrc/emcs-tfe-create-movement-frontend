@@ -23,7 +23,7 @@ import models.GoodsType
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
-import models.sections.items.ItemGeographicalIndicationType.ProtectedDesignationOfOrigin
+import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.items._
@@ -332,81 +332,127 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
     }
   }
 
-//TODO: ETFE-3703
-//  "designationOfOrigin" - {
-//    "when ItemGeographicalIndicationPage and ItemSmallIndependentProducerPage have answers" - {
-//      "must concatenate those answers" in {
-//        implicit val dr: DataRequest[_] = dataRequest(
-//          fakeRequest,
-//          emptyUserAnswers
-//            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
-//            .set(ItemSmallIndependentProducerPage(testIndex1), true)
-//        )
-//
-//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some(s"${messagesForLanguage.yesWine} indication")
-//      }
-//    }
-//    "when ItemGeographicalIndicationPage has an answer" - {
-//      "must return that answer" in {
-//        implicit val dr: DataRequest[_] = dataRequest(
-//          fakeRequest,
-//          emptyUserAnswers
-//            .set(ItemGeographicalIndicationPage(testIndex1), "indication")
-//        )
-//
-//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, "cnCode") mustBe Some("indication")
-//      }
-//    }
-//
-//    "when ItemSmallIndependentProducerPage has an answer" - {
-//      s"must return Yes text" in {
-//        Seq(
-//          GoodsType.Beer -> messagesForLanguage.yesBeer,
-//          GoodsType.Spirits -> messagesForLanguage.yesSpirits,
-//          GoodsType.Wine -> messagesForLanguage.yesWine,
-//          GoodsType.Energy -> messagesForLanguage.yesOther,
-//          GoodsType.Tobacco -> messagesForLanguage.yesOther,
-//          GoodsType.Intermediate -> messagesForLanguage.yesIntermediate
-//        ).foreach {
-//          case (goodsType, yesText) =>
-//            implicit val dr: DataRequest[_] = dataRequest(
-//              fakeRequest,
-//              emptyUserAnswers
-//                .set(ItemSmallIndependentProducerPage(testIndex1), true)
-//            )
-//
-//            BodyEadEsadModel.designationOfOrigin(testIndex1, s"${goodsType.code}123", "cnCode") mustBe Some(yesText)
-//        }
-//      }
-//      s"when CN Code means that goodsType is [${GoodsType.Fermented(GoodsType.fermentedBeverages.head).getClass.getName.stripSuffix("$")}]" +
-//        s" must return [${messagesForLanguage.yesFermented}]" in {
-//        GoodsType.fermentedBeverages.map {
-//          cnCode =>
-//
-//            implicit val dr: DataRequest[_] = dataRequest(
-//              fakeRequest,
-//              emptyUserAnswers
-//                .set(ItemSmallIndependentProducerPage(testIndex1), true)
-//            )
-//
-//            BodyEadEsadModel.designationOfOrigin(testIndex1, s"W123", cnCode) mustBe Some(messagesForLanguage.yesFermented)
-//        }
-//      }
-//    }
-//
-//    "when neither ItemGeographicalIndicationPage nor ItemSmallIndependentProducerPage have an answer" - {
-//      "must return None" in {
-//        implicit val dr: DataRequest[_] = dataRequest(
-//          fakeRequest,
-//          emptyUserAnswers
-//        )
-//
-//        BodyEadEsadModel.designationOfOrigin(testIndex1, testEpcWine, testCnCodeWine) mustBe None
-//      }
-//    }
-//  }
+  "designationOfOriginAnswer" - {
 
-  "yesAnswer" - {
+    s"when the $ItemDesignationOfOriginPage is PDO, with a name/register number and the EPC is S200 (marketed and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("name/register number"), Some(true))) mustBe
+        "The product has a Protected Designation of Origin (PDO) name/register number It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PGI, with a name/register number and the EPC is S200 (marketed and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedGeographicalIndication, Some("name/register number"), Some(true))) mustBe
+        "The product has a Protected Geographical Indication (PGI) name/register number It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is None and the EPC is S200 (marketed and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, Some(true))) mustBe
+        "I don’t want to provide a statement about the designation of origin It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PDO, no name/register number and the EPC is S200 (NOT marked and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, None, Some(false))) mustBe
+        "The product has a Protected Designation of Origin (PDO) I don’t want to provide a statement about the marketing and labelling of the spirit"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PGI, no name/register number and the EPC is S200 (NOT marked and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedGeographicalIndication, None, Some(false))) mustBe
+        "The product has a Protected Geographical Indication (PGI) I don’t want to provide a statement about the marketing and labelling of the spirit"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is None and the EPC is S200 (NOT marketed and labelled)" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, Some(false))) mustBe
+        "I don’t want to provide a statement about the designation of origin I don’t want to provide a statement about the marketing and labelling of the spirit"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PDO, with a name/register number and the EPC is NOT S200" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("name/register number"), None)) mustBe
+        "The product has a Protected Designation of Origin (PDO) name/register number"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PGI, with a name/register number and the EPC is NOT S200" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedGeographicalIndication, Some("name/register number"), None)) mustBe
+        "The product has a Protected Geographical Indication (PGI) name/register number"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PDO, no name/register number and the EPC is NOT S200" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, None, None)) mustBe
+        "The product has a Protected Designation of Origin (PDO)"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is PGI, no name/register number and the EPC is NOT S200" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedGeographicalIndication, None, None)) mustBe
+        "The product has a Protected Geographical Indication (PGI)"
+    }
+
+    s"when the $ItemDesignationOfOriginPage is None and the EPC is NOT S200" in {
+
+      BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, None)) mustBe
+        "I don’t want to provide a statement about the designation of origin"
+    }
+  }
+
+  "designationOfOrigin" - {
+
+    s"when the $ItemDesignationOfOriginPage has an answer, return the generated answer" in {
+
+      BodyEadEsadModel.designationOfOrigin(testIndex1)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, None, None))
+      ), implicitly) mustBe Some("The product has a Protected Designation of Origin (PDO)")
+    }
+
+    s"when the $ItemDesignationOfOriginPage has no answer at the specified index, return None" in {
+
+      BodyEadEsadModel.designationOfOrigin(testIndex2)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, None, None))
+      ), implicitly) mustBe None
+    }
+
+    s"when the $ItemDesignationOfOriginPage has no answer, return None" in {
+
+      BodyEadEsadModel.designationOfOrigin(testIndex1)(dataRequest(FakeRequest()), implicitly) mustBe None
+    }
+  }
+
+  "smallIndependentProducer" - {
+
+    s"when the $ItemSmallIndependentProducerPage answer is yes, return the generated answer" in {
+
+      BodyEadEsadModel.smallIndependentProducer(testIndex1, testEpcBeer, testCnCodeBeer)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
+      ), implicitly) mustBe Some("It is hereby certified that the product described has been produced by an independent small brewery")
+    }
+
+    s"when the $ItemSmallIndependentProducerPage answer is no, return None" in {
+
+      BodyEadEsadModel.smallIndependentProducer(testIndex1, testEpcBeer, testCnCodeBeer)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), false)
+      ), implicitly) mustBe None
+    }
+
+    s"when the $ItemSmallIndependentProducerPage has no answer at the specified index, return None" in {
+
+      BodyEadEsadModel.smallIndependentProducer(testIndex2, testEpcBeer, testCnCodeBeer)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
+      ), implicitly) mustBe None
+    }
+
+    s"when the $ItemSmallIndependentProducerPage has no answer, return None" in {
+
+      BodyEadEsadModel.smallIndependentProducer(testIndex1, testEpcBeer, testCnCodeBeer)(dataRequest(FakeRequest()), implicitly) mustBe None
+    }
+  }
+
+  "smallIndependentProducerYesAnswer" - {
     "when XI trader" - {
       Seq(
         GoodsType.Beer -> messagesForLanguage.yesBeer,

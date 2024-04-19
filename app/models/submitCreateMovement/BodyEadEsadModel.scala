@@ -76,7 +76,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
     Seq(
       Some(messages(s"itemDesignationOfOrigin.${answer.geographicalIndication}")),
       answer.geographicalIndicationIdentification,
-      marketingAndLabellingAnswer
+      marketingAndLabellingAnswer.map(messages(_))
     ).flatten.mkString(" ")
   }
 

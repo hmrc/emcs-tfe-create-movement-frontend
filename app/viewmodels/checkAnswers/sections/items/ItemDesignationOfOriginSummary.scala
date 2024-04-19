@@ -49,7 +49,7 @@ object ItemDesignationOfOriginSummary {
               content = "site.change",
               href = controllers.sections.items.routes.ItemDesignationOfOriginController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
               id = s"changeItemDesignationOfOrigin${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("itemDesignationOfOrigin.change.hidden"))
+            ).withVisuallyHiddenText(messages(if(answer.isSpiritMarketedAndLabelled.isDefined) "itemDesignationOfOrigin.change.hidden.s200" else "itemDesignationOfOrigin.change.hidden"))
           )
         )
     }

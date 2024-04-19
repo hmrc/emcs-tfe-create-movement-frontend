@@ -1089,7 +1089,8 @@ itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a 
 itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
 itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less
 itemDesignationOfOrigin.error.geographicalIndication.input.invalid = Information must not include < and > and : and ;
-itemDesignationOfOrigin.change.hidden = ItemDesignationOfOrigin
+itemDesignationOfOrigin.change.hidden = Statement of designation of origin
+itemDesignationOfOrigin.change.hidden.s200 = Statements about the designation of origin or labelling of the product
 
 itemCommercialDescription.title = Enter a commercial description for the {0}
 itemCommercialDescription.heading = Enter a commercial description for the {0}

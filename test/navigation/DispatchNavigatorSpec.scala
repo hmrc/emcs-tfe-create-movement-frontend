@@ -46,12 +46,12 @@ class DispatchNavigatorSpec extends SpecBase {
 
         "when using consignor details" - {
 
-          "must go to DispatchCheckYourAnswers page" in {
+          "must go to DispatchAddressPage page" in {
 
             val userAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true)
 
             navigator.nextPage(DispatchUseConsignorDetailsPage, NormalMode, userAnswers) mustBe
-              controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
+              controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
           }
         }
 

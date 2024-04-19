@@ -27,7 +27,6 @@ object DispatchCheckAnswersMessages {
     val traderNameChangeHidden = "Trader name"
     val addressLabel: String = "Address"
     val ern: String = "Excise ID (ERN)"
-    val consignorSectionNotComplete: String = "Consignor section not complete"
     val addressChangeHidden: String = "Address"
     val dispatchWarehouseInvalidOrMissingOnSeedError = "The excise ID for the tax warehouse of dispatch is not valid"
     val dispatchWarehouseInvalidError = "The excise ID for the tax warehouse of dispatch is not valid"

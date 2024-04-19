@@ -39,7 +39,6 @@ object GuarantorNameMessages {
     val cyaChangeHidden = "business name"
 
     val consigneeNameNotProvided = "Consignee section not complete"
-    val consignorNameNotProvided = "Consignor section not complete"
   }
 
   object English extends ViewMessages with BaseEnglish

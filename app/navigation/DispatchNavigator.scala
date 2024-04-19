@@ -33,7 +33,7 @@ class DispatchNavigator @Inject() extends BaseNavigator {
 
     case DispatchUseConsignorDetailsPage => (userAnswers: UserAnswers) =>
       userAnswers.get(DispatchUseConsignorDetailsPage) match {
-        case Some(true) => controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        case Some(true) => controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case _ => controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 

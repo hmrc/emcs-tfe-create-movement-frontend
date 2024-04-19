@@ -256,7 +256,6 @@ address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
 address.dispatchAddress.subheading = Place of dispatch information
 address.dispatchAddress.checkYourAnswersLabel = Address
-address.dispatchAddress.checkYourAnswers.consignorNotComplete = Consignor section not complete
 address.dispatchAddress.change.hidden = Address
 
 address.transportArrangerAddress.3.title = Enter the goods owner’s business address

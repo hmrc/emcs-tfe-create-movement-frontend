@@ -22,6 +22,7 @@ import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import models.requests.DataRequest
 import models.{Mode, NormalMode}
 import navigation.DispatchNavigator
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -53,26 +54,21 @@ class DispatchUseConsignorDetailsController @Inject()(override val messagesApi: 
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
-        value => {
-          if (request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(value)) {
-            Future(Redirect(navigator.nextPage(DispatchUseConsignorDetailsPage, mode, request.userAnswers)))
-          } else {
-
-            val cleanedUserAnswers = if (!value) request.userAnswers else request.userAnswers
-              .remove(DispatchBusinessNamePage)
-              .remove(DispatchAddressPage)
-
-            saveAndRedirect(
-              page = DispatchUseConsignorDetailsPage,
-              answer = value,
-              currentAnswers = cleanedUserAnswers,
-              mode = NormalMode
-            )
-          }
-        }
+        handleAnswerAndRedirect
       )
     }
 
   private def renderView(status: Status, form: Form[Boolean], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     Future.successful(status(view(form, routes.DispatchUseConsignorDetailsController.onSubmit(request.ern, request.draftId, mode))))
+
+  private def handleAnswerAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
+    val updatedAnswers = if(request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(value)) request.userAnswers else {
+      ((value, request.userAnswers.get(ConsignorAddressPage)) match {
+        case (true, Some(address)) => request.userAnswers.set(DispatchAddressPage, address)
+        case _ => request.userAnswers
+      }).remove(DispatchBusinessNamePage)
+    }
+    saveAndRedirect(DispatchUseConsignorDetailsPage, value, updatedAnswers, NormalMode)
+  }
+
 }

@@ -22,7 +22,8 @@ import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
-import pages.sections.dispatch.DispatchUseConsignorDetailsPage
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -42,7 +43,7 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
   lazy val dispatchUseConsignorDetailsSubmitAction: Call =
     routes.DispatchUseConsignorDetailsController.onSubmit(testErn, testDraftId, NormalMode)
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(val optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, dispatchUseConsignorDetailsRoute)
 
     lazy val testController = new DispatchUseConsignorDetailsController(
@@ -80,8 +81,18 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
     }
 
     "onSubmit" - {
-      "must redirect to the next page when valid data is submitted - data is new" in new Fixture(Some(emptyUserAnswers)) {
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      "must redirect to the next page when valid data is submitted - data is new (copying consignor address)" in new Fixture(Some(
+        emptyUserAnswers
+          .set(ConsignorAddressPage, testUserAddress)
+          .set(DispatchBusinessNamePage, testBusinessName)
+      )) {
+
+        val expectedSavedAnswers = optUserAnswers.get
+          .set(DispatchUseConsignorDetailsPage, true)
+          .set(DispatchAddressPage, testUserAddress)
+          .remove(DispatchBusinessNamePage)
+
+        MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(emptyUserAnswers))
 
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
         val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)

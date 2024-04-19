@@ -74,7 +74,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
+          Selectors.h2(1) -> messagesForLanguage.itemSection,
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.title -> messagesForLanguage.title(testIndex1),
           Selectors.h1 -> messagesForLanguage.heading(testIndex1),
@@ -95,7 +95,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
         "when in CheckMode" - {
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
+            Selectors.h2(1) -> messagesForLanguage.itemSection,
             Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
             Selectors.title -> messagesForLanguage.title(testIndex1),
             Selectors.h1 -> messagesForLanguage.heading(testIndex1),
@@ -125,7 +125,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
                 Selectors.notificationBannerContent -> exciseProductCodeErrorToErrorMessage._2,
-                Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemInformationSection,
+                Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
                 Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
                 Selectors.title -> messagesForLanguage.title(testIndex1),
                 Selectors.h1 -> messagesForLanguage.heading(testIndex1),
@@ -157,7 +157,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
             Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
             Selectors.notificationBannerListElement(1) -> messagesForLanguage.itemExciseProductCodeConsignorNotApprovedToSendError,
             Selectors.notificationBannerListElement(2) -> messagesForLanguage.itemExciseProductCodeConsigneeNotApprovedToReceiveError,
-            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemInformationSection,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
             Selectors.title -> messagesForLanguage.title(testIndex1),
             Selectors.h1 -> messagesForLanguage.heading(testIndex1),

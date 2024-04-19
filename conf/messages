@@ -1079,7 +1079,7 @@ itemDesignationOfOrigin.s200.title = Select statements about the designation of 
 itemDesignationOfOrigin.s200.heading = Select statements about the designation of origin and labelling of item {0}
 itemDesignationOfOrigin.s200.geographicalIndication.legend = Statement of designation of origin
 itemDesignationOfOrigin.s200.legend = Statement of spirit marketing and labelling
-itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to be marketed in relation to their maturation age, protected geographical names or spirit category, such as 'Irish Whiskey' or 'dry gin'.
+itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to be marketed in relation to their maturation age, protected geographical names or spirit category, such as ‘Irish Whiskey’ or ‘dry gin’.
 itemDesignationOfOrigin.s200.radio.yes = It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787
 itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a statement about the marketing and labelling of the spirit
 

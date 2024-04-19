@@ -65,7 +65,7 @@ class ItemPackagingSelectShippingMarkViewSpec extends SpecBase
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.h2(1) -> messagesForLanguage.itemInformationSection,
+          Selectors.h2(1) -> messagesForLanguage.itemSection,
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.title -> messagesForLanguage.title(testIndex1),
           Selectors.h1 -> messagesForLanguage.heading(testIndex1),

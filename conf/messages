@@ -417,7 +417,7 @@ journeyTimeHours.change.hidden = how many hours the journey will take
 consigneeExportVat.title = Enter the VAT registration number of the person representing the consignor at the office of export
 consigneeExportVat.heading = Enter the VAT registration number of the person representing the consignor at the office of export
 consigneeExportVat.hint = This is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789.
-consigneeExportVat.checkYourAnswersLabel = VAT registration number
+consigneeExportVat.checkYourAnswersLabel = Identification number
 consigneeExportVat.error.required = Enter the VAT registration number
 consigneeExportVat.error.length = VAT registration number must be 16 characters or less
 consigneeExportVat.error.invalid = VAT registration number must only contain letters and numbers
@@ -425,11 +425,11 @@ consigneeExportVat.change.hidden = VAT registration number of the person represe
 
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?
-consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.checkYourAnswersLabel = Business name
 consigneeBusinessName.error.required = Enter the consignee business name
 consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
 consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
-consigneeBusinessName.change.hidden = consignee trader name
+consigneeBusinessName.change.hidden = consignee business name
 
 consigneeExport.title = Are the goods being exported outside of the UK and EU?
 consigneeExport.heading = Are the goods being exported outside of the UK and EU?
@@ -563,8 +563,12 @@ consigneeExcise.error.length = The consignee’s ERN must be 13 characters
 consigneeExcise.error.invalidCharacters = The consignee’s ERN must only contain letters and numbers
 consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 consigneeExcise.error.submissionError = You must update the consignee ID so that it is different to the original submission
-consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
-consigneeExcise.change.hidden = consignee excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
+consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee
+consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee = consignee identification number for Temporary Registered Consignee
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee = Identification number for Temporary Certified Consignee
+consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee = consignee identification number for Temporary Certified Consignee
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?

@@ -17,6 +17,9 @@
 package fixtures.messages.sections.consignee
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.sections.info.movementScenario.DestinationType
+import models.sections.info.movementScenario.DestinationType.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+
 
 object ConsigneeExciseMessages {
   sealed trait ViewMessages extends BaseMessages {
@@ -27,8 +30,28 @@ object ConsigneeExciseMessages {
     val temporaryConsigneeTitle = titleHelper(temporaryConsigneeHeading)
     val temporaryConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, FR12345678900. This is sometimes referred to as a Temporary Registration Code."
     val hint = "An ERN contains 13 characters, starting with GB. It can be found on your approval letter."
-    val cyaLabel = "Excise registration number (ERN)"
-    val cyaChangeHidden = "consignee excise registration number (ERN)"
+
+    def cyaLabel(destinationType: DestinationType): String = {
+      destinationType match {
+        case TemporaryRegisteredConsignee =>
+          "Identification number for Temporary Registered Consignee"
+        case TemporaryCertifiedConsignee =>
+          "Identification number for Temporary Certified Consignee"
+        case _ =>
+          "Excise registration number (ERN)"
+      }
+    }
+
+    def cyaChangeHidden(destinationType: DestinationType): String = {
+      destinationType match {
+        case TemporaryRegisteredConsignee =>
+          "consignee identification number for Temporary Registered Consignee"
+        case TemporaryCertifiedConsignee =>
+          "consignee identification number for Temporary Certified Consignee"
+        case _ =>
+          "consignee excise registration number (ERN)"
+      }
+    }
 
     val invalidOrMissingConsignee = "The consignee Excise Registration Number is not valid for the destination type of this movement"
     val linkIsPending = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending"

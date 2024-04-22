@@ -29,7 +29,7 @@ object ConsigneeExportVatMessages {
     val errorInvalid = "VAT registration number must only contain letters and numbers"
     val errorLength = "VAT registration number must be 16 characters or less"
 
-    val cyaLabel: String = "VAT registration number"
+    val cyaLabel: String = "Identification number"
     val cyaChangeHidden: String = "VAT registration number of the person representing the consignor at the office of export"
   }
 

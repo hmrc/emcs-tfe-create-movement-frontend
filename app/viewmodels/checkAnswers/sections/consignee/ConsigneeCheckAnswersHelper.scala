@@ -30,9 +30,9 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
     SummaryListViewModel(
       rows = Seq(
         ConsigneeExportSummary.row(showActionLinks = true),
+        ConsigneeExportInformationSummary(list).row(),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         consigneeExciseSummary.row(showActionLinks = true),
-        ConsigneeExportInformationSummary(list).row(),
         ConsigneeExportVatSummary.row(showActionLinks = true),
         ConsigneeExportEoriSummary.row(showActionLinks = true),
         ConsigneeExemptOrganisationSummary.row(showActionLinks = true),

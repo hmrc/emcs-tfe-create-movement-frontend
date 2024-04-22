@@ -27,8 +27,8 @@ object ConsigneeBusinessNameMessages {
     val errorLength = "Consignee business name must be 182 characters or less"
     val errorInvalid = "Consignee business name must not contain < and > and : and ;"
 
-    val cyaLabel: String = "Trader name"
-    val cyaChangeHidden: String = "consignee trader name"
+    val cyaLabel: String = "Business name"
+    val cyaChangeHidden: String = "consignee business name"
   }
 
   object English extends ViewMessages with BaseEnglish

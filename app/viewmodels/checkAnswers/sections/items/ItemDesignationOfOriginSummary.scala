@@ -20,12 +20,16 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemDesignationOfOriginPage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
-object ItemDesignationOfOriginSummary {
+import javax.inject.Inject
+
+class ItemDesignationOfOriginSummary @Inject()(p: p) {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ItemDesignationOfOriginPage(idx)).map {
@@ -36,10 +40,10 @@ object ItemDesignationOfOriginSummary {
         )
 
         val content = Seq(
-          Some(messages(s"itemDesignationOfOrigin.${answer.geographicalIndication}")),
-          answer.geographicalIndicationIdentification,
-          marketingAndLabellingAnswer
-        ).flatten.mkString("<br>")
+          Some(p()(Text(messages(s"itemDesignationOfOrigin.${answer.geographicalIndication}")).asHtml)),
+          answer.geographicalIndicationIdentification.map(identification => p()(Text(identification).asHtml)),
+          marketingAndLabellingAnswer.map(marketingAndLabelling => p()(Text(marketingAndLabelling).asHtml))
+        ).flatten.mkString
 
         SummaryListRowViewModel(
           key     = if(answer.isSpiritMarketedAndLabelled.isDefined) "itemDesignationOfOrigin.checkYourAnswersLabel.s200" else "itemDesignationOfOrigin.checkYourAnswersLabel",

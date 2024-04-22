@@ -46,7 +46,7 @@ class ConsigneeExciseSummarySpec extends SpecBase with Matchers with MovementSub
 
       implicit val msgs: Messages = messages(Seq(English.lang))
 
-      def expectedRow(hasUpdateNeededTag: Boolean = false, movementScenario: MovementScenario): Option[SummaryListRow] = {
+      def expectedRow(hasUpdateNeededTag: Boolean, movementScenario: MovementScenario): Option[SummaryListRow] = {
         Some(SummaryListRowViewModel(
           key = Key(Text(English.cyaLabel(movementScenario.destinationType))),
           value = Value(HtmlContent(HtmlFormat.fill(Seq(

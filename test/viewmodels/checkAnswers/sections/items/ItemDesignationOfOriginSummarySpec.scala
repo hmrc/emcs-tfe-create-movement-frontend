@@ -25,11 +25,15 @@ import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndic
 import pages.sections.items.ItemDesignationOfOriginPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.p
 
 class ItemDesignationOfOriginSummarySpec extends SpecBase {
+
+  lazy val summary: ItemDesignationOfOriginSummary = app.injector.instanceOf[ItemDesignationOfOriginSummary]
+  lazy val p: p = app.injector.instanceOf[p]
 
   "ItemDesignationOfOriginSummary" - {
 
@@ -44,7 +48,7 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
           "must output the expected data" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemDesignationOfOriginSummary.row(testIndex1) mustBe None
+            summary.row(testIndex1) mustBe None
           }
         }
 
@@ -53,9 +57,9 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
           "must output the expected row (has name/register number but not S200)" - {
 
             Seq(
-              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)<br>Name/Register number",
-              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)<br>Name/Register number",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin<br>Name/Register number"
+              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
+              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
+              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {
@@ -63,10 +67,13 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
                   .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(geographicalIndicationAndExpectedMessage._1, Some("Name/Register number"), None))
                 )
 
-                ItemDesignationOfOriginSummary.row(testIndex1) mustBe Some(
+                summary.row(testIndex1) mustBe Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(HtmlContent(geographicalIndicationAndExpectedMessage._2)),
+                    value = Value(HtmlContent(Seq(
+                      p()(Text(geographicalIndicationAndExpectedMessage._2).asHtml).toString(),
+                      p()(Text("Name/Register number").asHtml).toString()
+                    ).mkString)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
@@ -83,9 +90,9 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
           "must output the expected row (has name/register number and has marketing and labelling)" - {
 
             Seq(
-              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)<br>Name/Register number<br>It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787",
-              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)<br>Name/Register number<br>It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin<br>Name/Register number<br>It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
+              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
+              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
+              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {
@@ -93,10 +100,14 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
                   .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(geographicalIndicationAndExpectedMessage._1, Some("Name/Register number"), Some(true)))
                 )
 
-                ItemDesignationOfOriginSummary.row(testIndex1) mustBe Some(
+                summary.row(testIndex1) mustBe Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabelS200,
-                    value = Value(HtmlContent(geographicalIndicationAndExpectedMessage._2)),
+                    value = Value(HtmlContent(Seq(
+                      p()(Text(geographicalIndicationAndExpectedMessage._2).asHtml).toString(),
+                      p()(Text("Name/Register number").asHtml).toString(),
+                      p()(Text("It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787").asHtml).toString()
+                    ).mkString)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
@@ -113,9 +124,9 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
           "must output the expected row (no name/register number but hasn't got marketing and labelling)" - {
 
             Seq(
-              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)<br>I don’t want to provide a statement about the marketing and labelling of the spirit",
-              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)<br>I don’t want to provide a statement about the marketing and labelling of the spirit",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin<br>I don’t want to provide a statement about the marketing and labelling of the spirit"
+              ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
+              ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
+              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {
@@ -123,10 +134,13 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
                   .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(geographicalIndicationAndExpectedMessage._1, None, Some(false)))
                 )
 
-                ItemDesignationOfOriginSummary.row(testIndex1) mustBe Some(
+                summary.row(testIndex1) mustBe Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabelS200,
-                    value = Value(HtmlContent(geographicalIndicationAndExpectedMessage._2)),
+                    value = Value(HtmlContent(Seq(
+                      p()(Text(geographicalIndicationAndExpectedMessage._2).asHtml).toString(),
+                      p()(Text("I don’t want to provide a statement about the marketing and labelling of the spirit").asHtml).toString()
+                    ).mkString)),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,

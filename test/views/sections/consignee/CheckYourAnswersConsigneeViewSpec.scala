@@ -42,6 +42,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
   lazy val consigneeExciseSummary: ConsigneeExciseSummary = app.injector.instanceOf[ConsigneeExciseSummary]
 
+  lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
     val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
@@ -61,7 +63,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, GbTaxWarehouse)
         )
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
       implicit val doc: Document = Jsoup.parse(view(
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -110,8 +111,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         .set(ConsigneeExcisePage, testErn)
         .set(DestinationTypePage, GbTaxWarehouse)
       )
-
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
       implicit val doc: Document = Jsoup.parse(view(
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -162,7 +161,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, TemporaryRegisteredConsignee)
         )
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
       implicit val doc: Document = Jsoup.parse(view(
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -212,7 +210,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, TemporaryCertifiedConsignee)
         )
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
       implicit val doc: Document = Jsoup.parse(view(
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -262,8 +259,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
           .set(DestinationTypePage, ExemptedOrganisation)
         )
-
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
       implicit val doc: Document = Jsoup.parse(view(
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
@@ -315,7 +310,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(DestinationTypePage, GbTaxWarehouse)
         )
 
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
       lazy val list: list = app.injector.instanceOf[list]
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -375,7 +369,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(DestinationTypePage, GbTaxWarehouse)
         )
 
-      lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
       lazy val list: list = app.injector.instanceOf[list]
 
       implicit val doc: Document = Jsoup.parse(view(

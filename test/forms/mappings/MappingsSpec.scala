@@ -335,4 +335,23 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       }
     }
   }
+
+  "normaliseSpacesAndControlCharacters" - {
+
+    "must replace a string with multiple spaces" in {
+      normaliseSpacesAndControlCharacters("foo      bar") mustBe "foo bar"
+    }
+
+    "must replace a string with \\n" in {
+      normaliseSpacesAndControlCharacters("foo\n\n\nbar") mustBe "foo bar"
+    }
+
+    "must replace a string with \\r" in {
+      normaliseSpacesAndControlCharacters("foo\r\r\rbar") mustBe "foo bar"
+    }
+
+    "must replace string with multiple spaces, \\n and \\r" in {
+      normaliseSpacesAndControlCharacters("foo   \n   \r   bar") mustBe "foo bar"
+    }
+  }
 }

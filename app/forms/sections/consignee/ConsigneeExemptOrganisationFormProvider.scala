@@ -31,14 +31,7 @@ class ConsigneeExemptOrganisationFormProvider @Inject() extends BaseTextareaForm
   def apply(): Form[ExemptOrganisationDetailsModel] =
     Form(mapping(
       "memberState" -> text("consigneeExemptOrganisation.memberState.error.required"),
-      "certificateSerialNumber" -> text("consigneeExemptOrganisation.certificateSerialNumber.error.required")
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "certificateSerialNumber" -> normalisedSpaceText("consigneeExemptOrganisation.certificateSerialNumber.error.required")
         .verifying(maxLength(maxLength, s"consigneeExemptOrganisation.certificateSerialNumber.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.xss"))

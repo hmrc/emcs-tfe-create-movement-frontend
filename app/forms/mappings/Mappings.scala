@@ -28,16 +28,15 @@ trait Mappings extends Formatters with Constraints {
   protected def text(errorKey: String = "error.required", args: Seq[String] = Seq.empty): FieldMapping[String] =
     of(stringFormatter(errorKey, args))
 
-  protected def normalisedSpaceText(errorKey: String = "error.required", args: Seq[String] = Seq.empty) =
-    text(errorKey, args)
-      .transform[String](
-        _.replace("\n", " ")
-          .replace("\r", " ")
-          .replaceAll(" +", " ")
-          .trim,
-        identity
-      )
+  protected def normalisedSpaceText(errorKey: String = "error.required", args: Seq[String] = Seq.empty): Mapping[String] =
+    text(errorKey, args).transform[String](normaliseSpacesAndControlCharacters, identity)
 
+  protected def normaliseSpacesAndControlCharacters(raw: String): String = {
+    raw.replace("\n", " ")
+      .replace("\r", " ")
+      .replaceAll(" +", " ")
+      .trim
+  }
   protected def int(requiredKey: String = "error.required",
                     wholeNumberKey: String = "error.wholeNumber",
                     nonNumericKey: String = "error.nonNumeric",

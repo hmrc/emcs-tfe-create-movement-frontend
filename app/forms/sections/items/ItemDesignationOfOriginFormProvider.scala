@@ -44,10 +44,7 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
             .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
             .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
             .transform[String](
-              _.replace("\n", " ")
-                .replace("\r", " ")
-                .replaceAll(" +", " ")
-                .trim,
+              normaliseSpacesAndControlCharacters,
               identity
             )
         ),
@@ -60,10 +57,7 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
             .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
             .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
             .transform[String](
-              _.replace("\n", " ")
-                .replace("\r", " ")
-                .replaceAll(" +", " ")
-                .trim,
+              normaliseSpacesAndControlCharacters,
               identity
             )
         ),

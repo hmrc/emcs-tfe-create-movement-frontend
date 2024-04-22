@@ -84,7 +84,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
       Some(messages(designationOfOriginSelection)),
       answer.geographicalIndicationIdentification,
       marketingAndLabellingAnswer.map(messages(_))
-    ).flatten.mkString(" ")
+    ).flatten.mkString(". ")
   }
 
   private[submitCreateMovement] def designationOfOrigin(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[String] =

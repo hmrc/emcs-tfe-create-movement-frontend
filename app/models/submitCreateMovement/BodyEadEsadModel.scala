@@ -18,6 +18,7 @@ package models.submitCreateMovement
 
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel}
 import models.{GoodsType, Index}
 import pages.sections.items._
@@ -70,11 +71,17 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
   private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages): String = {
     val marketingAndLabellingAnswer = answer.isSpiritMarketedAndLabelled.map(isSpiritMarketedAndLabelled =>
-      if(isSpiritMarketedAndLabelled) "itemDesignationOfOrigin.s200.radio.yes" else "itemDesignationOfOrigin.s200.radio.unprovided"
+      if(isSpiritMarketedAndLabelled) "itemDesignationOfOrigin.s200.radio.yes" else "itemDesignationOfOrigin.s200.radio.unprovided.downstream"
     )
 
+    val designationOfOriginSelection = if(answer.geographicalIndication == NoGeographicalIndication) {
+      "itemDesignationOfOrigin.None.downstream"
+    } else {
+      s"itemDesignationOfOrigin.${answer.geographicalIndication}"
+    }
+
     Seq(
-      Some(messages(s"itemDesignationOfOrigin.${answer.geographicalIndication}")),
+      Some(messages(designationOfOriginSelection)),
       answer.geographicalIndicationIdentification,
       marketingAndLabellingAnswer.map(messages(_))
     ).flatten.mkString(" ")

@@ -349,25 +349,25 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
     s"when the $ItemDesignationOfOriginPage is None and the EPC is S200 (marketed and labelled)" in {
 
       BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, Some(true))) mustBe
-        "I don’t want to provide a statement about the designation of origin It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
+        "I don't want to provide a statement about the designation of origin It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
     }
 
     s"when the $ItemDesignationOfOriginPage is PDO, no name/register number and the EPC is S200 (NOT marked and labelled)" in {
 
       BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, None, Some(false))) mustBe
-        "The product has a Protected Designation of Origin (PDO) I don’t want to provide a statement about the marketing and labelling of the spirit"
+        "The product has a Protected Designation of Origin (PDO) I don't want to provide a statement about the marketing and labelling of the spirit"
     }
 
     s"when the $ItemDesignationOfOriginPage is PGI, no name/register number and the EPC is S200 (NOT marked and labelled)" in {
 
       BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(ProtectedGeographicalIndication, None, Some(false))) mustBe
-        "The product has a Protected Geographical Indication (PGI) I don’t want to provide a statement about the marketing and labelling of the spirit"
+        "The product has a Protected Geographical Indication (PGI) I don't want to provide a statement about the marketing and labelling of the spirit"
     }
 
     s"when the $ItemDesignationOfOriginPage is None and the EPC is S200 (NOT marketed and labelled)" in {
 
       BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, Some(false))) mustBe
-        "I don’t want to provide a statement about the designation of origin I don’t want to provide a statement about the marketing and labelling of the spirit"
+        "I don't want to provide a statement about the designation of origin I don't want to provide a statement about the marketing and labelling of the spirit"
     }
 
     s"when the $ItemDesignationOfOriginPage is PDO, with a name/register number and the EPC is NOT S200" in {
@@ -397,7 +397,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
     s"when the $ItemDesignationOfOriginPage is None and the EPC is NOT S200" in {
 
       BodyEadEsadModel.designationOfOriginAnswer(ItemDesignationOfOriginModel(NoGeographicalIndication, None, None)) mustBe
-        "I don’t want to provide a statement about the designation of origin"
+        "I don't want to provide a statement about the designation of origin"
     }
   }
 

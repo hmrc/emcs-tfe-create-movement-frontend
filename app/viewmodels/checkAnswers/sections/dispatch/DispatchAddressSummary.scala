@@ -20,6 +20,8 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.dispatch.DispatchAddressPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -27,20 +29,22 @@ import viewmodels.implicits._
 
 object DispatchAddressSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(DispatchAddressPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "address.dispatchAddress.checkYourAnswersLabel",
-          value = ValueViewModel(answer.toCheckYourAnswersFormat),
-          actions = Seq(
-            ActionItemViewModel(
-              content = "site.change",
-              href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-              id = "changeDispatchAddress"
-            ).withVisuallyHiddenText(messages("address.dispatchAddress.change.hidden"))
-          )
-        )
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    request.userAnswers.get(DispatchAddressPage) match {
+      case Some(address) => renderRow(ValueViewModel(address.toCheckYourAnswersFormat))
+      case _ => renderRow(ValueViewModel(Text(messages("site.notProvided"))))
     }
-  }
+
+  private def renderRow(value: Value)(implicit request: DataRequest[_], messages: Messages) =
+    SummaryListRowViewModel(
+      key = "address.dispatchAddress.checkYourAnswersLabel",
+      value = value,
+      actions = Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          id = "changeDispatchAddress"
+        ).withVisuallyHiddenText(messages("address.dispatchAddress.change.hidden"))
+      )
+    )
 }

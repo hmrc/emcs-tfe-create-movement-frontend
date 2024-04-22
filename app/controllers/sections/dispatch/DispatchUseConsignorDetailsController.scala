@@ -54,21 +54,20 @@ class DispatchUseConsignorDetailsController @Inject()(override val messagesApi: 
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
-        handleAnswerAndRedirect
+        cleanseSaveAndRedirect
       )
     }
 
   private def renderView(status: Status, form: Form[Boolean], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     Future.successful(status(view(form, routes.DispatchUseConsignorDetailsController.onSubmit(request.ern, request.draftId, mode))))
 
-  private def handleAnswerAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
-    val updatedAnswers = if(request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(value)) request.userAnswers else {
-      ((value, request.userAnswers.get(ConsignorAddressPage)) match {
-        case (true, Some(address)) => request.userAnswers.set(DispatchAddressPage, address)
-        case _ => request.userAnswers
-      }).remove(DispatchBusinessNamePage)
-    }
-    saveAndRedirect(DispatchUseConsignorDetailsPage, value, updatedAnswers, NormalMode)
+  private def cleanseSaveAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(DispatchUseConsignorDetailsPage, value, {
+      request.userAnswers
+        .remove(DispatchBusinessNamePage)
+        .remove(DispatchAddressPage)
+    })
+    saveAndRedirect(DispatchUseConsignorDetailsPage, value, cleansedAnswers, NormalMode)
   }
 
 }

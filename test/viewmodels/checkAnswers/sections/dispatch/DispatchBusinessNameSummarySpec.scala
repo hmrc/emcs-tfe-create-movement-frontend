@@ -26,87 +26,62 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class DispatchBusinessNameSummarySpec extends SpecBase with Matchers {
 
   class Test(userAnswers: UserAnswers) {
     implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+    def expectedRow(value: String, withChangeLinks: Boolean = true)
+                   (implicit messagesForLanguage: DispatchCheckAnswersMessages.ViewMessages): SummaryListRow =
+      SummaryListRowViewModel(
+        key = Key(Text(messagesForLanguage.traderNameLabel)),
+        value = Value(Text(value)),
+        actions = if(!withChangeLinks) Seq() else Seq(
+          ActionItemViewModel(
+            content = Text(messagesForLanguage.change),
+            href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+            id = "changeDispatchBusinessName"
+          ).withVisuallyHiddenText(messagesForLanguage.traderNameChangeHidden)
+        )
+      )
   }
 
   "DispatchBusinessAddressSummary" - {
 
-    Seq(DispatchCheckAnswersMessages.English).foreach { messagesForLanguage =>
+    Seq(DispatchCheckAnswersMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "must output no row" - {
-          "when there's no answer for DispatchUseConsignorDetailsPage and there's no answer for DispatchBusinessNamePage" in new Test(emptyUserAnswers) {
-            DispatchBusinessNameSummary.row() mustBe None
-          }
-
-          "when DispatchUseConsignorDetailsPage is false and there's no answer for DispatchBusinessNamePage" in new Test(
-            emptyUserAnswers.set(DispatchUseConsignorDetailsPage, false)
-          ) {
-            DispatchBusinessNameSummary.row() mustBe None
+        "must output 'Not Provided' row" - {
+          "when there's no answer for DispatchBusinessNamePage" in new Test(emptyUserAnswers) {
+            DispatchBusinessNameSummary.row() mustBe expectedRow(messagesForLanguage.notProvided)
           }
         }
 
         s"must output the expected row for DispatchBusinessName" - {
 
           "when DispatchUseConsignorDetailsPage is true" in new Test(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true)) {
-            DispatchBusinessNameSummary.row() mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.traderNameLabel,
-                  value = Value(Text(testMinTraderKnownFacts.traderName)),
-                  actions = Seq()
-                )
-              )
+            DispatchBusinessNameSummary.row() mustBe expectedRow(testMinTraderKnownFacts.traderName, withChangeLinks = false)
           }
 
           "when DispatchUseConsignorDetailsPage is false and there's an answer" in new Test(
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, false)
-              .set(DispatchBusinessNamePage, "business name")
+              .set(DispatchBusinessNamePage, testBusinessName)
           ) {
-            DispatchBusinessNameSummary.row() mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.traderNameLabel,
-                  value = Value(Text("business name")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDispatchBusinessName"
-                    ).withVisuallyHiddenText(messagesForLanguage.traderNameChangeHidden)
-                  )
-                )
-              )
+            DispatchBusinessNameSummary.row() mustBe expectedRow(testBusinessName)
           }
 
           "when DispatchUseConsignorDetailsPage is None and there's an answer" in new Test(
             emptyUserAnswers
-              .set(DispatchBusinessNamePage, "business name")
+              .set(DispatchBusinessNamePage, testBusinessName)
           ) {
-            DispatchBusinessNameSummary.row() mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.traderNameLabel,
-                  value = Value(Text("business name")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDispatchBusinessName"
-                    ).withVisuallyHiddenText(messagesForLanguage.traderNameChangeHidden)
-                  )
-                )
-              )
+            DispatchBusinessNameSummary.row() mustBe expectedRow(testBusinessName)
           }
         }
       }

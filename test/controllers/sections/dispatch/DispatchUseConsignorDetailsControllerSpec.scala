@@ -81,18 +81,11 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
     }
 
     "onSubmit" - {
-      "must redirect to the next page when valid data is submitted - data is new (copying consignor address)" in new Fixture(Some(
-        emptyUserAnswers
-          .set(ConsignorAddressPage, testUserAddress)
-          .set(DispatchBusinessNamePage, testBusinessName)
-      )) {
+      "must redirect to the next page when valid data is submitted - data is new" in new Fixture(Some(emptyUserAnswers)) {
 
-        val expectedSavedAnswers = optUserAnswers.get
-          .set(DispatchUseConsignorDetailsPage, true)
-          .set(DispatchAddressPage, testUserAddress)
-          .remove(DispatchBusinessNamePage)
+        val expectedSavedAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true)
 
-        MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(emptyUserAnswers))
+        MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
 
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "true"))
         val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -101,10 +94,17 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "must redirect to the next page when valid data is submitted - data has changed" in new Fixture(
-        Some(emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
+      "must redirect to the next page when valid data is submitted - data has changed (removing BusinessName and DispatchAddress)" in new Fixture(
+        Some(emptyUserAnswers
+          .set(DispatchUseConsignorDetailsPage, true)
+          .set(DispatchAddressPage, testUserAddress)
+          .set(DispatchBusinessNamePage, testBusinessName)
+        )
       ) {
-        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+        val expectedAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, false)
+
+        MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
         val req = FakeRequest(POST, dispatchUseConsignorDetailsRoute).withFormUrlEncodedBody(("value", "false"))
         val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)

@@ -39,7 +39,7 @@ class DispatchNavigatorSpec extends SpecBase {
 
         "when there is a ConsignorAddress available to pre-populate" - {
 
-          "must go to DispatchConsignorDetails page" in {
+          "must go to DispatchUseConsignorDetails page" in {
 
             val userAnswers = emptyUserAnswers.set(ConsignorAddressPage, testUserAddress)
 

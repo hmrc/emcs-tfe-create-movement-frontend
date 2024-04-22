@@ -24,8 +24,9 @@ import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.destination.DestinationAddressPage
-import pages.sections.dispatch.DispatchAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -69,6 +70,39 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         form = form,
+        addressPage = DispatchAddressPage,
+        call = dispatchAddressOnSubmit,
+        headingKey = Some("dispatchAddress")
+      )(dataRequest(request), messages(request)).toString
+    }
+
+    "must fill the form with data from ConisgnorAddress when UseConsignor is true and no Dispatch address exists" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DispatchUseConsignorDetailsPage, true)
+        .set(ConsignorAddressPage, testUserAddress.copy(street = "Consignor"))
+    )) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form.fill(testUserAddress.copy(street = "Consignor")),
+        addressPage = DispatchAddressPage,
+        call = dispatchAddressOnSubmit,
+        headingKey = Some("dispatchAddress")
+      )(dataRequest(request), messages(request)).toString
+    }
+
+    "must fill the form with data from DispatchAddress when UseConsignor is true and Dispatch address exists" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DispatchUseConsignorDetailsPage, true)
+        .set(ConsignorAddressPage, testUserAddress.copy(street = "Consignor"))
+        .set(DispatchAddressPage, testUserAddress.copy(street = "Dispatch"))
+    )) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form.fill(testUserAddress.copy(street = "Dispatch")),
         addressPage = DispatchAddressPage,
         call = dispatchAddressOnSubmit,
         headingKey = Some("dispatchAddress")

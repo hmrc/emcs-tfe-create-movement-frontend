@@ -42,8 +42,8 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
   val postcodeField = testPostcodeParameters.fieldName
 
-  val notBTPostcodeKey = "address.consignorAddress.error.mustNotStartWithBT"
-  val mustBeBTPostcodeKey = "address.consignorAddress.error.mustStartWithBT"
+  val notBTPostcodeKey = "address.postcode.error.mustNotStartWithBT"
+  val mustBeBTPostcodeKey = "address.postcode.error.mustStartWithBT"
 
   def formAnswersMap(updateField: Option[String] = None,
                      updateAnswer: Option[String] = None): Map[String, String] = {

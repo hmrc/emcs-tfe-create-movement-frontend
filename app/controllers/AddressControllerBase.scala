@@ -38,9 +38,7 @@ trait AddressControllerBase extends BaseNavigationController with AuthActionHelp
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      // Ensure the page doesn't load with errors by setting errors to an empty Seq() after filling.
-      // This is to cater for pre-popped addresses, which should only error once the user submits
-      renderView(Ok, fillForm(addressPage, formProvider(addressPage)).copy(errors = Seq()), mode)
+      renderView(Ok, fillForm(addressPage, formProvider(addressPage)), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =

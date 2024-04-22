@@ -238,8 +238,6 @@ localReferenceNumber.new.change.hidden = Unique reference (LRN)
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address
 address.consignorAddress.subheading = Consignor information
-address.consignorAddress.error.mustStartWithBT = Postcode must begin with BT
-address.consignorAddress.error.mustNotStartWithBT = Postcode must not begin with BT
 
 address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address
@@ -300,6 +298,8 @@ address.postcode.error.required = Enter a postcode
 address.postcode.error.length = Enter a postcode up to 10 characters
 address.postcode.error.character = Postcode must contain letters or numbers
 address.postcode.error.invalid = Postcode must not contain < and > and : and ;
+address.postcode.error.mustStartWithBT = Postcode must begin with BT
+address.postcode.error.mustNotStartWithBT = Postcode must not begin with BT
 
 consignorPaidTemporaryAuthorisationCode.title = Enter the consignor’s Paid Temporary Authorisation (PTA) code
 consignorPaidTemporaryAuthorisationCode.heading = Enter the consignor’s Paid Temporary Authorisation (PTA) code

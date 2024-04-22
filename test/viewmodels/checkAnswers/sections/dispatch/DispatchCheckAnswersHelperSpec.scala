@@ -50,8 +50,8 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
         val expectedResult: SummaryList = SummaryList(Seq(
           DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
           dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
-          DispatchBusinessNameSummary.row()(fakeDataRequest, msgs),
-          DispatchAddressSummary.row()(fakeDataRequest, msgs)
+          Some(DispatchBusinessNameSummary.row()(fakeDataRequest, msgs)),
+          Some(DispatchAddressSummary.row()(fakeDataRequest, msgs))
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
 

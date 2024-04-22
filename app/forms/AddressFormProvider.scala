@@ -65,8 +65,8 @@ class AddressFormProvider @Inject() extends Mappings {
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
 
     def niPostcode(isNi: Boolean): Seq[Constraint[String]] =
-      if(isNi) Seq(startsWith(XI_POSTCODE, "address.consignorAddress.error.mustStartWithBT")) else {
-        Seq(doesNotStartWith(XI_POSTCODE, "address.consignorAddress.error.mustNotStartWithBT"))
+      if(isNi) Seq(startsWith(XI_POSTCODE, "address.postcode.error.mustStartWithBT")) else {
+        Seq(doesNotStartWith(XI_POSTCODE, "address.postcode.error.mustNotStartWithBT"))
       }
 
     page match {

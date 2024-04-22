@@ -46,10 +46,10 @@ object ItemDesignationOfOriginMessages {
     val spiritMarketingAndLabellingLegend = "Statement of spirit marketing and labelling"
 
     val cyaLabel: String = "Statement of designation of origin"
-    val cyaLabelS200: String = "Statements about the designation of origin or labelling of the product"
+    val cyaLabelS200: String = "Statements about the designation of origin and labelling of the product"
 
     val cyaChangeHidden: String = "Statement of designation of origin"
-    val cyaChangeHiddenS200: String = "Statements about the designation of origin or labelling of the product"
+    val cyaChangeHiddenS200: String = "Statements about the designation of origin and labelling of the product"
 
   }
 

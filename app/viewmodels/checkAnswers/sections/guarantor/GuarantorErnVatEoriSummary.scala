@@ -16,11 +16,13 @@
 
 package viewmodels.checkAnswers.sections.guarantor
 
-import models.{CheckMode, VatNumberModel}
 import models.requests.DataRequest
-import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.guarantor.GuarantorArranger._
+import models.sections.info.movementScenario.MovementScenario._
+import models.{CheckMode, VatNumberModel}
 import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -64,13 +66,29 @@ object GuarantorErnVatEoriSummary {
 
   private def getConsigneeSummary()(implicit request: DataRequest[_], messages: Messages): (String, String) =
     (
+      request.userAnswers.get(DestinationTypePage),
       request.userAnswers.get(ConsigneeExcisePage),
       request.userAnswers.get(ConsigneeExportVatPage)
     ) match {
-      case (Some(ern), _) =>
+
+      case (Some(TemporaryRegisteredConsignee), maybeErn, _) =>
+        "consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee" ->
+          maybeErn.map(HtmlFormat.escape(_).toString()).getOrElse(messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
+
+      case (Some(TemporaryCertifiedConsignee), maybeErn, _) =>
+        "consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee" ->
+          maybeErn.map(HtmlFormat.escape(_).toString()).getOrElse(messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
+
+      case (Some(ExportWithCustomsDeclarationLodgedInTheUk) | Some(ExportWithCustomsDeclarationLodgedInTheEu), _, maybeVat) =>
+        "consigneeExportVat.checkYourAnswersLabel" ->
+          maybeVat.map(HtmlFormat.escape(_).toString()).getOrElse(messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
+
+      case (_, Some(ern), _) =>
         "guarantorErn.checkYourAnswers.label" -> HtmlFormat.escape(ern).toString()
-      case (_, Some(vatNumber)) =>
+
+      case (_, _, Some(vatNumber)) =>
         "guarantorVat.checkYourAnswers.label" -> HtmlFormat.escape(vatNumber).toString()
+
       case _ =>
         "guarantorErn.checkYourAnswers.label" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
     }

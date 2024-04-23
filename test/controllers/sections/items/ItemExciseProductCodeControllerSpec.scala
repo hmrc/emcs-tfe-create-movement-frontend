@@ -161,7 +161,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
             .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-            .copy(submissionFailures = Seq(itemQuantityFailure(1), itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
+            .copy(submissionFailures =
+              Seq(
+                itemQuantityFailure(1),
+                itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure
+              )
+            )
         )) {
           MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 

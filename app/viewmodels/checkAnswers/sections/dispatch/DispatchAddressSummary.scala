@@ -20,7 +20,6 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.dispatch.DispatchAddressPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

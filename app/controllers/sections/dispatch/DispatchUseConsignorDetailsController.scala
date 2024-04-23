@@ -22,7 +22,6 @@ import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import models.requests.DataRequest
 import models.{Mode, NormalMode}
 import navigation.DispatchNavigator
-import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi

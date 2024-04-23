@@ -20,6 +20,7 @@ import models.Enumerable
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.data.Forms.single
 import play.api.data.{Form, FormError}
 
 object MappingsSpec {
@@ -287,6 +288,70 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
       result.errors must contain(FormError("value", "error.required"))
+    }
+  }
+
+  "mandatoryIfOptionSelectedAndInputNonEmpty" - {
+
+    "must run the provided validation" - {
+
+      "when the option field has been selected and the specified input field has a value" in {
+
+        mandatoryIfOptionSelectedAndInputNonEmpty(
+          optionField = "option1",
+          optionValue = Bar.toString,
+          inputField = "input1",
+          mapping = single("input1" -> text().verifying(maxLength(1, "error.length")))
+        ).bind(
+          Map("option1" -> Bar.toString, "input1" -> "non empty")
+        ).swap.toOption.get mustBe Seq(FormError("input1", List("error.length"), Seq(1)))
+      }
+    }
+
+    "must not run the provided validation" - {
+
+      "when the option field is not selected" in {
+
+        mandatoryIfOptionSelectedAndInputNonEmpty(
+          optionField = "option1",
+          optionValue = Bar.toString,
+          inputField = "input1",
+          mapping = single("input1" -> text().verifying(maxLength(1, "error.length")))
+        ).bind(
+          Map("option2" -> Bar.toString, "input1" -> "non empty")
+        ).isRight mustBe true
+      }
+
+      "when the input field is empty" in {
+
+        mandatoryIfOptionSelectedAndInputNonEmpty(
+          optionField = "option1",
+          optionValue = Bar.toString,
+          inputField = "input1",
+          mapping = single("input1" -> text().verifying(maxLength(1, "error.length")))
+        ).bind(
+          Map("option1" -> Bar.toString, "input1" -> "")
+        ).isRight mustBe true
+      }
+    }
+  }
+
+  "normaliseSpacesAndControlCharacters" - {
+
+    "must replace a string with multiple spaces" in {
+      normaliseSpacesAndControlCharacters("foo      bar") mustBe "foo bar"
+    }
+
+    "must replace a string with \\n" in {
+      normaliseSpacesAndControlCharacters("foo\n\n\nbar") mustBe "foo bar"
+    }
+
+    "must replace a string with \\r" in {
+      normaliseSpacesAndControlCharacters("foo\r\r\rbar") mustBe "foo bar"
+    }
+
+    "must replace string with multiple spaces, \\n and \\r" in {
+      normaliseSpacesAndControlCharacters("foo   \n   \r   bar") mustBe "foo bar"
     }
   }
 }

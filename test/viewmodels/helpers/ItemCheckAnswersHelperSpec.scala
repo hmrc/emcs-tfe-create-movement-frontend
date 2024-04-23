@@ -32,7 +32,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryL
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.html.components.{link, list, p}
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -50,9 +49,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
     lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
     lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
     lazy val itemDegreesPlatoSummary: ItemDegreesPlatoSummary = app.injector.instanceOf[ItemDegreesPlatoSummary]
-    lazy val p: p = app.injector.instanceOf[p]
-    lazy val list: list = app.injector.instanceOf[list]
-    lazy val link: link = app.injector.instanceOf[link]
+    lazy val itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary = app.injector.instanceOf[ItemDesignationOfOriginSummary]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
@@ -62,9 +59,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary,
       itemQuantitySummary = itemQuantitySummary,
       itemDegreesPlatoSummary = itemDegreesPlatoSummary,
-      p = p,
-      list = list,
-      link = link
+      itemDesignationOfOriginSummary = itemDesignationOfOriginSummary
     )
   }
 

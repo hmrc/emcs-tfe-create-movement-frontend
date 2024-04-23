@@ -25,7 +25,7 @@ import mocks.viewmodels.MockItemsAddToListHelper
 import models.UserAnswers
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.Other
-import models.sections.items.{ItemBrandNameModel, ItemNetGrossMassModel, ItemsAddToList}
+import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemsAddToList}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items._
 import play.api.data.Form
@@ -54,7 +54,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ItemBrandNamePage(idx), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(idx), "Wine from grapes")
           .set(ItemAlcoholStrengthPage(idx), BigDecimal(12.5))
-          .set(ItemGeographicalIndicationChoicePage(idx), NoGeographicalIndication)
+          .set(ItemDesignationOfOriginPage(idx), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(idx), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(idx), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
           .set(ItemBulkPackagingChoicePage(idx), false)

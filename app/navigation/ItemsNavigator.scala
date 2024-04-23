@@ -19,9 +19,8 @@ package navigation
 import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsType._
 import models._
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.ImportedWine
-import models.sections.items.{ItemGeographicalIndicationType, ItemsAddToList, ItemsPackagingAddToList}
+import models.sections.items.{ItemsAddToList, ItemsPackagingAddToList}
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
@@ -56,12 +55,9 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
     case ItemMaturationPeriodAgePage(idx) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+      itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
-    case ItemGeographicalIndicationChoicePage(idx) => (userAnswers: UserAnswers) =>
-      geographicalIndicationChoiceRouting(idx, userAnswers)
-
-    case ItemGeographicalIndicationPage(idx) => (userAnswers: UserAnswers) =>
+    case ItemDesignationOfOriginPage(idx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemAlcoholStrengthPage(idx)) match {
         case Some(abv) if abv < 8.5 =>
           itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -246,16 +242,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemFiscalMarksPage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
-    case page@ItemGeographicalIndicationChoicePage(idx) => (answers: UserAnswers) =>
-      if (answers.get(page).contains(ItemGeographicalIndicationType.NoGeographicalIndication)) {
-        // User has answered "no"
-        itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
-      } else {
-        // User has answered "yes"
-        itemsRoutes.ItemGeographicalIndicationController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
-      }
-
-    case ItemGeographicalIndicationPage(idx) => (answers: UserAnswers) =>
+    case ItemDesignationOfOriginPage(idx) => (answers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
     case page@ItemSmallIndependentProducerPage(idx) => (answers: UserAnswers) =>
@@ -399,10 +386,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             } else {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
+          //TODO: S200 handling should be done in ETFE-3689
           case Spirits =>
             itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
-            itemsRoutes.ItemGeographicalIndicationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -435,29 +423,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
 
-  private def geographicalIndicationChoiceRouting(idx: Index, userAnswers: UserAnswers): Call =
-    (userAnswers.get(ItemGeographicalIndicationChoicePage(idx)),
-      userAnswers.get(ItemAlcoholStrengthPage(idx)),
-      userAnswers.get(ItemExciseProductCodePage(idx))) match {
-      case (Some(geographicalIndicationType), Some(alcoholStrength), Some(epc)) =>
-        geographicalIndicationType match {
-          case NoGeographicalIndication =>
-            val goodsType = GoodsType(epc)
-            val acceptableGoodsTypes = Seq(Spirits, Wine, Intermediate)
-            if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength < 8.5) {
-              itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            } else if (acceptableGoodsTypes.contains(goodsType) && alcoholStrength >= 8.5) {
-              itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            } else {
-              itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-            }
-          case _ =>
-            itemsRoutes.ItemGeographicalIndicationController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-        }
-      case _ =>
-        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-    }
-
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
     userAnswers.get(ItemCommodityCodePage(idx)) match {
       case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
@@ -471,7 +436,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
         }
       case Some(_) =>
-          itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+        itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }

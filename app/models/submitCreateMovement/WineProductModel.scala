@@ -41,7 +41,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
       ItemWineCategory.ImportedWine
     } else {
       // imported from inside EU
-      val geographicalIndicationChoice: ItemGeographicalIndicationType = mandatoryPage(ItemGeographicalIndicationChoicePage(idx))
+      val geographicalIndicationChoice: ItemGeographicalIndicationType = mandatoryPage(ItemDesignationOfOriginPage(idx)).geographicalIndication
 
       geographicalIndicationChoice match {
         case ItemGeographicalIndicationType.NoGeographicalIndication =>

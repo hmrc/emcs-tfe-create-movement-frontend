@@ -18,7 +18,6 @@ package pages.sections.items
 
 import models.GoodsType._
 import models.requests.DataRequest
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section
@@ -52,7 +51,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       maturationAgeAnswer ++
       wineCountryOfOriginAnswers ++
       wineMoreInformationAnswers ++
-      geographicalIndicationsAnswers ++
+      designationOfOriginAnswers ++
       alcoholStrengthAnswer ++
       itemDensityAnswer(epc) ++
       fiscalMarksAnswers
@@ -119,12 +118,11 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       }
     }
 
-  private[items] def geographicalIndicationsAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+  private[items] def designationOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol && goodsType != Beer) {
-      request.userAnswers.get(ItemGeographicalIndicationChoicePage(idx)) match {
-        case geographicalChoice@Some(NoGeographicalIndication) => Seq(geographicalChoice)
-        case geographicalChoice => Seq(geographicalChoice, request.userAnswers.get(ItemGeographicalIndicationPage(idx)))
-      }
+      //Whilst Statement of spirit marketing and labelling is required for S200 EPC's, the page (or specifically, the form) should
+      //prevent the user from continuing if they hadn't selected an option
+      Seq(request.userAnswers.get(ItemDesignationOfOriginPage(idx)))
     }
 
   private[items] def maturationAgeAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 package pages.sections.items
 
 import models.Index
+import models.sections.items.ItemDesignationOfOriginModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class ItemGeographicalIndicationPage(idx: Index) extends QuestionPage[String] {
-  override val toString: String = "itemGeographicalIndication"
+case class ItemDesignationOfOriginPage(idx: Index) extends QuestionPage[ItemDesignationOfOriginModel] {
+  override val toString: String = "itemDesignationOfOrigin"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
 }

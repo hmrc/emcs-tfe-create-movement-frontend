@@ -18,7 +18,8 @@ package models.submitCreateMovement
 
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
-import models.sections.items.ItemNetGrossMassModel
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel}
 import models.{GoodsType, Index}
 import pages.sections.items._
 import play.api.i18n.Messages
@@ -43,13 +44,14 @@ case class BodyEadEsadModel(
                              commercialDescription: Option[String],
                              brandNameOfProducts: Option[String],
                              maturationPeriodOrAgeOfProducts: Option[String],
+                             independentSmallProducersDeclaration: Option[String],
                              packages: Seq[PackageModel],
                              wineProduct: Option[WineProductModel]
                            )
 
 object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
-  private[submitCreateMovement] def yesAnswer(goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): String = {
+  private[submitCreateMovement] def smallIndependentProducerYesAnswer(goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): String = {
     val key = {
       if (request.isNorthernIrelandErn) {
         goodsType match {
@@ -67,15 +69,36 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
     messages(s"itemSmallIndependentProducer.yes.$key")
   }
 
-  private[submitCreateMovement] def designationOfOrigin(idx: Index, exciseProductCode: String, commodityCode: String)
-                                                       (implicit request: DataRequest[_], messages: Messages): Option[String] = {
-    (request.userAnswers.get(ItemGeographicalIndicationPage(idx)), request.userAnswers.get(ItemSmallIndependentProducerPage(idx))) match {
-      case (Some(value), Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))) + " " + value)
-      case (Some(value), _) => Some(value)
-      case (_, Some(true)) => Some(yesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
+  private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages): String = {
+    val marketingAndLabellingAnswer = answer.isSpiritMarketedAndLabelled.map(isSpiritMarketedAndLabelled =>
+      if(isSpiritMarketedAndLabelled) "itemDesignationOfOrigin.s200.radio.yes" else "itemDesignationOfOrigin.s200.radio.unprovided.downstream"
+    )
+
+    val designationOfOriginSelection = if(answer.geographicalIndication == NoGeographicalIndication) {
+      "itemDesignationOfOrigin.None.downstream"
+    } else {
+      s"itemDesignationOfOrigin.${answer.geographicalIndication}"
+    }
+
+    Seq(
+      Some(messages(designationOfOriginSelection)),
+      answer.geographicalIndicationIdentification,
+      marketingAndLabellingAnswer.map(messages(_))
+    ).flatten.mkString(". ")
+  }
+
+  private[submitCreateMovement] def designationOfOrigin(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[String] =
+    request.userAnswers.get(ItemDesignationOfOriginPage(idx)) match {
+      case Some(designationOfOrigin) => Some(designationOfOriginAnswer(answer = designationOfOrigin))
       case _ => None
     }
-  }
+
+  private[submitCreateMovement] def smallIndependentProducer(idx: Index, exciseProductCode: String, commodityCode: String)
+                                                       (implicit request: DataRequest[_], messages: Messages): Option[String] =
+    request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
+      case Some(true) => Some(smallIndependentProducerYesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
+      case _ => None
+    }
 
   def apply(implicit request: DataRequest[_], messages: Messages): Seq[BodyEadEsadModel] = {
     request.userAnswers.get(ItemsCount) match {
@@ -104,7 +127,8 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 degreePlato = request.userAnswers.get(ItemDegreesPlatoPage(idx)).flatMap(_.degreesPlato),
                 fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
                 fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
-                designationOfOrigin = designationOfOrigin(idx, exciseProductCode, commodityCode),
+                designationOfOrigin = designationOfOrigin(idx),
+                independentSmallProducersDeclaration = smallIndependentProducer(idx, exciseProductCode, commodityCode),
                 sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
                 density = request.userAnswers.get(ItemDensityPage(idx)),
                 commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),

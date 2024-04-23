@@ -29,7 +29,6 @@ trait BaseMessages { _: i18n =>
   val dispatchSection: String = s"$hiddenSectionContent Place of dispatch information"
   val exportInformationSection: String = s"$hiddenSectionContent Export information"
   val importInformationSection: String = s"$hiddenSectionContent Import information"
-  val itemInformationSection: String = s"$hiddenSectionContent Item information"
   val destinationSection: String = s"$hiddenSectionContent Place of destination information"
   val sadSection: String = s"$hiddenSectionContent Single Administrative Document"
   val firstTransporterSection: String = s"$hiddenSectionContent First transporter"

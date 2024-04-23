@@ -26,14 +26,7 @@ class ItemPackagingShippingMarksFormProvider @Inject() extends BaseTextareaFormP
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("itemPackagingShippingMarks.error.required")
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "value" -> normalisedSpaceText("itemPackagingShippingMarks.error.required")
         .verifying(maxLength(999, "itemPackagingShippingMarks.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingShippingMarks.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingShippingMarks.error.invalid"))

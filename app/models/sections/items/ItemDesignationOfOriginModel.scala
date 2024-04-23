@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,15 @@
 
 package models.sections.items
 
-import base.SpecBase
-import models.sections.items.ItemGeographicalIndicationType._
+import play.api.libs.json.{Json, OFormat}
 
-class ItemGeographicalIndicationTypeSpec extends SpecBase {
+case class ItemDesignationOfOriginModel(
+                                    geographicalIndication: ItemGeographicalIndicationType,
+                                    geographicalIndicationIdentification: Option[String],
+                                    isSpiritMarketedAndLabelled: Option[Boolean]
+                                  )
 
-  "ItemGeographicalIndicationTypeSpec" - {
-    ".values" - {
-      "should return all the geographical indication options" in {
-        ItemGeographicalIndicationType.values mustBe Seq(
-          ProtectedDesignationOfOrigin, ProtectedGeographicalIndication, NoGeographicalIndication
-        )
-      }
-    }
-  }
+object ItemDesignationOfOriginModel {
 
+  implicit val format: OFormat[ItemDesignationOfOriginModel] = Json.format[ItemDesignationOfOriginModel]
 }

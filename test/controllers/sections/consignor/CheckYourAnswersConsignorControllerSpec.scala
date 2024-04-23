@@ -62,9 +62,9 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase with MockConsigno
     ".onPageLoad" - {
       "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
-
         MockConsignorCheckAnswersHelper.summaryList().returns(summaryList)
+
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
         status(result) mustBe OK
         contentAsString(result) mustBe view(

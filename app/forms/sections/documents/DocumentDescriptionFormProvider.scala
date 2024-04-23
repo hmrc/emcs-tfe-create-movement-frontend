@@ -26,14 +26,7 @@ class DocumentDescriptionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("documentDescription.error.required")
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "value" -> normalisedSpaceText("documentDescription.error.required")
         .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"documentDescription.error.length"))
         .verifying(regexp(XSS_REGEX, s"documentDescription.error.xss"))
     )

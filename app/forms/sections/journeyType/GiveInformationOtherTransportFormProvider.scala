@@ -27,15 +27,7 @@ class GiveInformationOtherTransportFormProvider @Inject() extends BaseTextareaFo
   def apply(): Form[String] =
     Form(
       "value" ->
-
-        text("giveInformationOtherTransport.error.required")
-          .transform[String](
-            _.replace("\n", " ")
-              .replace("\r", " ")
-              .replaceAll(" +", " ")
-              .trim,
-            identity
-          )
+        normalisedSpaceText("giveInformationOtherTransport.error.required")
           .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"giveInformationOtherTransport.error.length"))
           .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"giveInformationOtherTransport.error.character"))
           .verifying(regexpUnlessEmpty(XSS_REGEX, s"giveInformationOtherTransport.error.xss"))

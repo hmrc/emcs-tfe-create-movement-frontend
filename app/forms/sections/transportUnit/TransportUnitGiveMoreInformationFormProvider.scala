@@ -27,14 +27,7 @@ class TransportUnitGiveMoreInformationFormProvider @Inject() extends BaseTextare
 
   def apply(): Form[Option[String]] =
     Form(
-      "value" -> optional(text()
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+      "value" -> optional(normalisedSpaceText()
         .verifying(maxLength(350, "transportUnitGiveMoreInformation.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"transportUnitGiveMoreInformation.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss"))

@@ -66,6 +66,12 @@ trait BaseItemsNavigationController extends BaseNavigationController {
         Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
 
+  def withExciseProductCode(idx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+      case Some(epc) => f(epc)
+      case None => Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
+    }
+
   def withItemBulkPackaging(itemIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx)) match {
       case Some(itemPackaging) =>

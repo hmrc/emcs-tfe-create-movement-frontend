@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import views.html.sections.items.ItemCommercialDescriptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemItemCommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
+class ItemCommercialDescriptionViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 

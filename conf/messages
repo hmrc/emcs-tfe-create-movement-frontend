@@ -1066,23 +1066,35 @@ itemQuantity.checkYourAnswersLabel = Quantity
 itemQuantity.checkYourAnswersValue = {0} {1}
 itemQuantity.change.hidden = item quantity
 
-itemGeographicalIndicationChoice.title = Can you confirm if the {0} has a geographical indication (GI)?
-itemGeographicalIndicationChoice.legend = Can you confirm if the {0} has a geographical indication (GI)?
-itemGeographicalIndicationChoice.hint = A geographical indication (GI) relates to where goods are made.
-itemGeographicalIndicationChoice.checkYourAnswersLabel = Geographical indication
-itemGeographicalIndicationChoice.checkYourAnswers.value.PDO = Protected Designation of Origin (PDO)
-itemGeographicalIndicationChoice.checkYourAnswers.value.PGI = Protected Geographical Indication (PGI)
-itemGeographicalIndicationChoice.checkYourAnswers.value.GI = Geographical Indication (GI)
-itemGeographicalIndicationChoice.checkYourAnswers.value.None = None
-itemGeographicalIndicationChoice.error.required = Select a GI type for the product, or ‘No’ if you cannot confirm that the product has a GI
-itemGeographicalIndicationChoice.change.hidden = designation of origin
-itemGeographicalIndicationChoice.PDO = Yes - the product has a Protected Designation of Origin (PDO)
-itemGeographicalIndicationChoice.PDO.hint = For example, Champagne has a Protected Designation of Origin (PDO).
-itemGeographicalIndicationChoice.PGI = Yes - the product has a Protected Geographical Indication (PGI)
-itemGeographicalIndicationChoice.PGI.hint = For example, Mallorca has a protected wine name with Protected Geographical Indication (PGI).
-itemGeographicalIndicationChoice.GI = Yes - the product has a Geographical Indication (GI)
-itemGeographicalIndicationChoice.GI.hint = For example Irish Whiskey has a Geographical Indication (GI) protected spirit drink name.
-itemGeographicalIndicationChoice.None = No - I cannot confirm that the product has a geographical indication (GI)
+itemDesignationOfOrigin.title = Select a statement about the designation of origin of item {0}
+itemDesignationOfOrigin.heading = Select a statement about the designation of origin of item {0}
+itemDesignationOfOrigin.geographicalIndication.hint = For example, Champagne has a Protected Designation of Origin (PDO) status and Calvados wine has a Protected Geographical Indication (PGI) protected wine name.
+itemDesignationOfOrigin.PDO = The product has a Protected Designation of Origin (PDO)
+itemDesignationOfOrigin.PDO.input = Enter the name and register number of the PDO (optional)
+itemDesignationOfOrigin.PGI = The product has a Protected Geographical Indication (PGI)
+itemDesignationOfOrigin.PGI.input = Enter the name and register number of the PGI (optional)
+itemDesignationOfOrigin.None = I don’t want to provide a statement about the designation of origin
+# Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
+itemDesignationOfOrigin.None.downstream = I don''t want to provide a statement about the designation of origin
+
+itemDesignationOfOrigin.s200.title = Select statements about the designation of origin and labelling of item {0}
+itemDesignationOfOrigin.s200.heading = Select statements about the designation of origin and labelling of item {0}
+itemDesignationOfOrigin.s200.geographicalIndication.legend = Statement of designation of origin
+itemDesignationOfOrigin.s200.legend = Statement of spirit marketing and labelling
+itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to be marketed in relation to their maturation age, protected geographical names or spirit category, such as ‘Irish Whiskey’ or ‘dry gin’.
+itemDesignationOfOrigin.s200.radio.yes = It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787
+itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a statement about the marketing and labelling of the spirit
+# Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
+itemDesignationOfOrigin.s200.radio.unprovided.downstream = I don''t want to provide a statement about the marketing and labelling of the spirit
+
+itemDesignationOfOrigin.checkYourAnswersLabel = Statement of designation of origin
+itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about the designation of origin and labelling of the product
+itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘I don’t want to provide a statement about the designation of origin’
+itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
+itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less
+itemDesignationOfOrigin.error.geographicalIndication.input.invalid = Information must not include < and > and : and ;
+itemDesignationOfOrigin.change.hidden = Statement of designation of origin
+itemDesignationOfOrigin.change.hidden.s200 = Statements about the designation of origin and labelling of the product
 
 itemCommercialDescription.title = Enter a commercial description for the {0}
 itemCommercialDescription.heading = Enter a commercial description for the {0}
@@ -1251,7 +1263,7 @@ itemMaturationPeriodAge.title = Do you know the maturation age of the {0}?
 itemMaturationPeriodAge.heading = Do you know the maturation age of the {0}?
 itemMaturationPeriodAge.hint = The maturation age refers to a production process that happens before bottling. It can usually be found in the description, presentation and labelling of the goods.
 itemMaturationPeriodAge.label = Enter the maturation age
-itemMaturationPeriodAge.error.radio.required = Select 'yes' if you know the maturation age of the {0}
+itemMaturationPeriodAge.error.radio.required = Select ‘yes’ if you know the maturation age of the {0}
 itemMaturationPeriodAge.error.maturationPeriodAge.required = Field cannot be blank
 itemMaturationPeriodAge.error.maturationPeriodAge.length = Enter the maturation age in {0} characters or less
 itemMaturationPeriodAge.error.maturationPeriodAge.invalid = Maturation age must not contain < and > and : and ;
@@ -1389,9 +1401,9 @@ itemWineOperationsChoice.heading = Has the wine undergone any operations?
 itemWineOperationsChoice.hint = Select all that apply.
 itemWineOperationsChoice.checkYourAnswersLabel = Wine operations
 itemWineOperationsChoice.checkYourAnswersValue.none = None
-itemWineOperationsChoice.error.required = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
-itemWineOperationsChoice.error.invalid = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
-itemWineOperationsChoice.error.exclusive = Select a wine operation, or select 'No, I am not aware that the wine has undergone any operations'
+itemWineOperationsChoice.error.required = Select a wine operation, or select ’No, I am not aware that the wine has undergone any operations’
+itemWineOperationsChoice.error.invalid = Select a wine operation, or select ’No, I am not aware that the wine has undergone any operations’
+itemWineOperationsChoice.error.exclusive = Select a wine operation, or select ’No, I am not aware that the wine has undergone any operations’
 itemWineOperationsChoice.change.hidden = wine operations
 itemWineOperationsChoice.0 = No, I am not aware that the wine has undergone any operations
 
@@ -1560,5 +1572,4 @@ errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSe
 errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
-
 

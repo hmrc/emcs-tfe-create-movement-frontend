@@ -24,7 +24,7 @@ import models.sections.guarantor.GuarantorArranger
 import models.sections.info._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario, MovementType, OriginType}
 import models.sections.items.ItemBulkPackagingCode._
-import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.sections.journeyType.HowMovementTransported
@@ -357,7 +357,7 @@ trait ItemFixtures {
     .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
     .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
     .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-    .set(ItemGeographicalIndicationChoicePage(testIndex1), NoGeographicalIndication)
+    .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
     .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
     .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
     .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -429,7 +429,8 @@ trait ItemFixtures {
     .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, Some(4.56)))
     .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
     .set(ItemFiscalMarksChoicePage(testIndex1), true)
-    .set(ItemGeographicalIndicationPage(testIndex1), "talkin' 'bout my deeeeeesignation")
+    .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
+    .set(ItemSmallIndependentProducerPage(testIndex1), true)
     .set(ItemProducerSizePage(testIndex1), BigInt(4))
     .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
     .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -537,7 +538,8 @@ trait ItemFixtures {
       degreePlato = Some(4.56),
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
-      designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+      designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -669,7 +671,8 @@ trait ItemFixtures {
       degreePlato = Some(4.56),
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
-      designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+      designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -795,7 +798,8 @@ trait ItemFixtures {
       degreePlato = Some(4.56),
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
-      designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+      designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -927,7 +931,8 @@ trait ItemFixtures {
       degreePlato = Some(4.56),
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
-      designationOfOrigin = Some("talkin' 'bout my deeeeeesignation"),
+      designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),

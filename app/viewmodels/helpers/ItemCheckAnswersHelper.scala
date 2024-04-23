@@ -27,10 +27,10 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.html.components.{link, list, p}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class ItemCheckAnswersHelper @Inject()(
                                         itemExciseProductCodeSummary: ItemExciseProductCodeSummary,
                                         itemCommodityCodeSummary: ItemCommodityCodeSummary,
@@ -39,9 +39,7 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary,
                                         itemQuantitySummary: ItemQuantitySummary,
                                         itemDegreesPlatoSummary: ItemDegreesPlatoSummary,
-                                        p: p,
-                                        list: list,
-                                        link: link
+                                        itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary
                                       ) {
 
   private val headingLevel = 3
@@ -61,8 +59,7 @@ class ItemCheckAnswersHelper @Inject()(
         ItemDensitySummary.row(idx),
         ItemFiscalMarksChoiceSummary.row(idx),
         ItemFiscalMarksSummary.row(idx),
-        ItemGeographicalIndicationChoiceSummary.row(idx),
-        ItemGeographicalIndicationSummary.row(idx),
+        itemDesignationOfOriginSummary.row(idx),
         ItemSmallIndependentProducerSummary.row(idx),
         ItemProducerSizeSummary.row(idx)
       ).flatten

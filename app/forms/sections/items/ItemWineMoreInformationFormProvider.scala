@@ -28,13 +28,7 @@ class ItemWineMoreInformationFormProvider @Inject() extends BaseTextareaFormProv
   def apply(): Form[Option[String]] =
     Form(
       "value" -> optional(playText
-        .transform[String](
-          _.replace("\n", " ")
-            .replace("\r", " ")
-            .replaceAll(" +", " ")
-            .trim,
-          identity
-        )
+        .transform[String](normaliseSpacesAndControlCharacters, identity)
         .verifying(maxLength(TEXTAREA_MAX_LENGTH, "itemWineMoreInformation.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemWineMoreInformation.error.alphanumeric"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "itemWineMoreInformation.error.invalidCharacter"))

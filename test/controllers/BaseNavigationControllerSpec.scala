@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
-import models.requests.{DataRequest, UserRequest}
+import models.requests.DataRequest
 import models.{Index, NormalMode, UserAnswers}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
@@ -42,10 +42,11 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
   trait Test {
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    implicit val request: UserRequest[AnyContentAsEmpty.type] = userRequest(FakeRequest(GET, "/foo/bar"))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, "/foo/bar"))
 
     val page = new QuestionPage[String] {
       override val path: JsPath = __ \ "page1"
+      override val possibleErrors = Seq(LocalReferenceNumberError)
     }
     val page2 = new QuestionPage[String] {
       override val path: JsPath = __ \ "page2"
@@ -75,13 +76,21 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
   "saveAndRedirect" - {
     "with currentAnswers" - {
       "must save the answer and redirect" - {
-        "when current UserAnswers doesn't contain the input answer" in new Test {
-          val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value)
+        "when current UserAnswers doesn't contain the input answer (and remove any 704 validation error)" in new Test {
 
-          MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
+          override implicit val request: DataRequest[AnyContentAsEmpty.type] =
+            dataRequest(FakeRequest(), emptyUserAnswers.set(page, "bar").copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code))
+            ))
+
+          val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value).copy(
+            submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true))
+          )
+
+          MockUserAnswersService.set(newUserAnswers).returns(Future.successful(newUserAnswers))
 
           val answer: Future[Result] =
-            testController.saveAndRedirect(page, value, emptyUserAnswers, NormalMode)
+            testController.saveAndRedirect(page, value, request.userAnswers, NormalMode)
 
           redirectLocation(answer) mustBe Some(testOnwardRoute.url)
         }
@@ -102,15 +111,42 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     }
 
     "without currentAnswers" - {
-      "must save the answer and redirect" in new Test {
-        val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value)
+      "must save the answer and redirect" - {
+        "when UserAnswers doesn't contain the input answer (and remove any 704 validation error)" in new Test {
 
-        MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
+          override implicit val request: DataRequest[AnyContentAsEmpty.type] =
+            dataRequest(FakeRequest(), emptyUserAnswers.set(page, "bar").copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code))
+            ))
 
-        val answer: Future[Result] =
-          testController.saveAndRedirect(page, value, NormalMode)(dataRequest(FakeRequest()), implicitly)
+          val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value).copy(
+            submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true))
+          )
 
-        redirectLocation(answer) mustBe Some(testOnwardRoute.url)
+          MockUserAnswersService.set(newUserAnswers).returns(Future.successful(newUserAnswers))
+
+          val answer: Future[Result] =
+            testController.saveAndRedirect(page, value, NormalMode)
+
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
+        }
+      }
+
+      "must only redirect" - {
+        "when UserAnswers contains the same input answer" in new Test {
+
+          override implicit val request: DataRequest[AnyContentAsEmpty.type] =
+            dataRequest(FakeRequest(), emptyUserAnswers.set(page, value).copy(
+              submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code))
+            ))
+
+          MockUserAnswersService.set().never()
+
+          val answer: Future[Result] =
+            testController.saveAndRedirect(page, value, NormalMode)
+
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
+        }
       }
     }
   }

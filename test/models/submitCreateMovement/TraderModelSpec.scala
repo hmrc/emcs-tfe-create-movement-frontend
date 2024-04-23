@@ -218,12 +218,14 @@ class TraderModelSpec extends SpecBase {
               fakeRequest,
               emptyUserAnswers
                 .set(DispatchUseConsignorDetailsPage, true)
-                .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+                .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
                 .set(DispatchWarehouseExcisePage, "dispatch ern"),
               ern
             )
 
-            TraderModel.applyPlaceOfDispatch mustBe Some(consignorTrader.copy(traderExciseNumber = Some("dispatch ern")))
+            TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(
+              traderName = consignorTrader.traderName
+            ))
         }
       }
       "when __WK and use consignor details = false" in {

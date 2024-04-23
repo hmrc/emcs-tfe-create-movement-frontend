@@ -22,7 +22,7 @@ import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.DispatchNavigator
-import pages.sections.dispatch.DispatchWarehouseExcisePage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -54,13 +54,21 @@ class DispatchWarehouseExciseController @Inject()(
     authorisedDataRequestAsync(ern, lrn) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
-        saveAndRedirect(DispatchWarehouseExcisePage, _, mode)
+        cleanseSaveAndRedirect(_, mode)
       )
     }
 
   def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    Future.successful(status(view(
-      form = form,
-      mode = mode
-    )))
+    Future.successful(status(view(form, mode)))
+
+  def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = {
+      //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
+      if(request.userAnswers.get(DispatchWarehouseExcisePage).exists(_.startsWith(value.take(2)))) request.userAnswers else {
+        request.userAnswers.remove(DispatchAddressPage)
+      }
+    }
+    saveAndRedirect(DispatchWarehouseExcisePage, value, cleansedAnswers, mode)
+  }
+
 }

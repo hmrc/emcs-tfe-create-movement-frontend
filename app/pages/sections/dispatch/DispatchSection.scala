@@ -37,21 +37,26 @@ case object DispatchSection extends Section[JsObject] {
     val hasDispatchWarehouseExciseOrCertifiedConsignee =
       request.userAnswers.get(DispatchWarehouseExcisePage).isDefined || isCertifiedConsigneeType
 
+    def checkRemainingPages: TaskListStatus = {
+      val remainingPages: Seq[Option[_]] = Seq(request.userAnswers.get(DispatchBusinessNamePage), request.userAnswers.get(DispatchAddressPage))
+      if (remainingPages.forall(_.isEmpty) && isCertifiedConsigneeType) {
+        NotStarted
+      } else if (remainingPages.forall(_.nonEmpty)) {
+        Completed
+      } else {
+        InProgress
+      }
+    }
+
     if (DispatchWarehouseExcisePage.isMovementSubmissionError) UpdateNeeded else {
-      hasDispatchWarehouseExciseOrCertifiedConsignee match {
-        case true => request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
-          case Some(true) => Completed
-          case Some(false) =>
-            val remainingPages: Seq[Option[_]] = Seq(request.userAnswers.get(DispatchBusinessNamePage), request.userAnswers.get(DispatchAddressPage))
-            if (remainingPages.forall(_.nonEmpty)) {
-              Completed
-            } else {
-              InProgress
-            }
-          case None if isCertifiedConsigneeType => NotStarted
-          case None => InProgress
+      if(hasDispatchWarehouseExciseOrCertifiedConsignee) {
+        request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
+          case Some(true) if request.userAnswers.get(DispatchAddressPage).nonEmpty => Completed
+          case Some(true) => InProgress
+          case _ => checkRemainingPages
         }
-        case false => NotStarted
+      } else {
+        NotStarted
       }
     }
   }

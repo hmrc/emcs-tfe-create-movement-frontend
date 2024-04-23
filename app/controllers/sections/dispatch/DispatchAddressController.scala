@@ -24,10 +24,11 @@ import models.requests.DataRequest
 import models.{Mode, UserAddress}
 import navigation.DispatchNavigator
 import pages.QuestionPage
-import pages.sections.dispatch.DispatchAddressPage
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Call, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.AddressView
 
@@ -49,6 +50,16 @@ class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
+
+  override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] = {
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      val prePopPage = (request.userAnswers.get(DispatchAddressPage), request.userAnswers.get(DispatchUseConsignorDetailsPage)) match {
+        case (None, Some(true)) => ConsignorAddressPage
+        case _ => DispatchAddressPage
+      }
+      renderView(Ok, fillForm(prePopPage, formProvider(addressPage)), mode)
+    }
+  }
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
     status(view(

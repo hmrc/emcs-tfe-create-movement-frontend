@@ -24,7 +24,7 @@ import models.sections.info.movementScenario.MovementScenario.{CertifiedConsigne
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.dispatch.{DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.Result
@@ -56,7 +56,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
           Some(emptyUserAnswers
             .set(DispatchWarehouseExcisePage, "beans")
             .set(DispatchUseConsignorDetailsPage, true)
-            .set(ConsignorAddressPage, testUserAddress)
+            .set(DispatchAddressPage, testUserAddress)
             .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
           )) {
 
@@ -72,7 +72,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
         .set(DispatchWarehouseExcisePage, "beans")
         .set(DispatchUseConsignorDetailsPage, true)
-        .set(ConsignorAddressPage, testUserAddress)
+        .set(DispatchAddressPage, testUserAddress)
       )) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)
@@ -86,15 +86,33 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
 
       Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach { destinationType =>
 
-        s"when $destinationType must redirect to the DispatchUseConsignorDetailsController" in new Fixture(Some(emptyUserAnswers
-          .set(DestinationTypePage, destinationType)
-        )) {
+        "when ConsignorAddress exists" - {
 
-          val result = testController.onPageLoad(testErn, testDraftId)(request)
+          s"when $destinationType must redirect to the DispatchUseConsignorDetailsController" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, destinationType)
+            .set(ConsignorAddressPage, testUserAddress)
+          )) {
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url)
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
+        }
+
+        "when ConsignorAddress DOES NOT exist" - {
+
+          s"when $destinationType must redirect to the DispatchBusinessNameController" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, destinationType)
+          )) {
+
+            val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
         }
       }
 

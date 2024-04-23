@@ -21,6 +21,7 @@ import controllers.actions._
 import models.NormalMode
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import navigation.DispatchNavigator
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.DispatchSection
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -42,13 +43,17 @@ class DispatchIndexController @Inject()(
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       if (DispatchSection.isCompleted || DispatchSection.status  == UpdateNeeded) {
-        Redirect(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
+        Redirect(routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
         withAnswer(DestinationTypePage) {
           case CertifiedConsignee | TemporaryCertifiedConsignee =>
-            Redirect(controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
+            if(request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
+              Redirect(routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
+            } else {
+              Redirect(routes.DispatchBusinessNameController.onPageLoad(ern, draftId, NormalMode))
+            }
           case _ =>
-            Redirect(controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
+            Redirect(routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))
         }
       }
     }

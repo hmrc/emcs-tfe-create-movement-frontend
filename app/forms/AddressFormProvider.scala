@@ -16,11 +16,13 @@
 
 package forms
 
+import config.Constants
 import config.Constants.XI_POSTCODE
 import forms.mappings.Mappings
 import models.UserAddress
 import models.requests.DataRequest
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import pages.{Page, QuestionPage}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
@@ -58,15 +60,19 @@ class AddressFormProvider @Inject() extends Mappings {
         .verifying(regexpUnlessEmpty(XSS_REGEX, "address.postcode.error.invalid"))
         .verifying(getExtraPostcodeValidationForPage(page): _*)
     )(UserAddress.apply)(UserAddress.unapply)
-  )
+    )
 
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
-    page match {
-      case ConsignorAddressPage => if(request.isNorthernIrelandErn) {
-        Seq(startsWith(XI_POSTCODE, "address.consignorAddress.error.mustStartWithBT"))
-      } else {
-        Seq(doesNotStartWith(XI_POSTCODE, "address.consignorAddress.error.mustNotStartWithBT"))
+
+    def niPostcode(isNi: Boolean): Seq[Constraint[String]] =
+      if(isNi) Seq(startsWith(XI_POSTCODE, "address.postcode.error.mustStartWithBT")) else {
+        Seq(doesNotStartWith(XI_POSTCODE, "address.postcode.error.mustNotStartWithBT"))
       }
+
+    page match {
+      case ConsignorAddressPage => niPostcode(request.isNorthernIrelandErn)
+      case DispatchAddressPage if request.userAnswers.get(DispatchWarehouseExcisePage).nonEmpty =>
+        niPostcode(request.userAnswers.get(DispatchWarehouseExcisePage).exists(_.startsWith(Constants.NI_PREFIX)))
       case _ => Seq.empty
     }
   }

@@ -82,20 +82,18 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyPlaceOfDispatch(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-      val useConsignorDetails: Boolean = mandatoryPage(DispatchUseConsignorDetailsPage)
-
-      if (useConsignorDetails) {
-        Some(applyConsignor.copy(traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage)))
+      val name = if(request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(true)) {
+        Some(request.traderKnownFacts.traderName)
       } else {
-        val placeOfDispatchAddress: UserAddress = mandatoryPage(DispatchAddressPage)
-        Some(TraderModel(
-          traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage),
-          traderName = request.userAnswers.get(DispatchBusinessNamePage),
-          address = Some(AddressModel.fromUserAddress(placeOfDispatchAddress)),
-          vatNumber = None,
-          eoriNumber = None
-        ))
+        request.userAnswers.get(DispatchBusinessNamePage)
       }
+      Some(TraderModel(
+        traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage),
+        traderName = name,
+        address = Some(AddressModel.fromUserAddress(mandatoryPage(DispatchAddressPage))),
+        vatNumber = None,
+        eoriNumber = None
+      ))
     } else {
       None
     }

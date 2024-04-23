@@ -27,28 +27,26 @@ import viewmodels.implicits._
 
 object DispatchBusinessNameSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(DispatchUseConsignorDetailsPage).flatMap {
-      case true => Some(SummaryListRowViewModel(
-        key = "dispatchBusinessName.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(request.traderKnownFacts.traderName).toString),
-        actions = Seq()
-      ))
-      case false =>
-        request.userAnswers.get(DispatchBusinessNamePage).map {
-          answer =>
-            SummaryListRowViewModel(
-              key = "dispatchBusinessName.checkYourAnswersLabel",
-              value = ValueViewModel(HtmlFormat.escape(answer).toString),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = "site.change",
-                  href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-                  id = "changeDispatchBusinessName"
-                ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
-              )
-            )
+  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
+      case Some(true) => renderRow(request.traderKnownFacts.traderName, withChangeLink = false)
+      case _ =>
+        request.userAnswers.get(DispatchBusinessNamePage) match {
+          case Some(name) => renderRow(name)
+          case _ => renderRow(messages("site.notProvided"))
         }
     }
-  }
+
+  private def renderRow(value: String, withChangeLink: Boolean = true)(implicit request: DataRequest[_], messages: Messages) =
+    SummaryListRowViewModel(
+      key = "dispatchBusinessName.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(value).toString),
+      actions = if (!withChangeLink) Seq() else Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          id = "changeDispatchBusinessName"
+        ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
+      )
+    )
 }

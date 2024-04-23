@@ -18,19 +18,14 @@ package viewmodels.checkAnswers.sections.dispatch
 
 import base.SpecBase
 import fixtures.UserAddressFixtures
-import fixtures.messages.sections.dispatch.DispatchCheckAnswersMessages
 import models.UserAnswers
 import models.requests.DataRequest
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.all.FluentSummaryList
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
@@ -43,9 +38,10 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
   "CheckAnswersDispatchHelper" - {
 
-    ".buildSummaryRows should return the correct rows" - {
+    ".buildSummaryRows" - {
 
-      "when DispatchUseConsignorDetailsPage is false" in new Setup(emptyUserAnswers
+      "should return the correct rows" in new Setup(emptyUserAnswers
+        .set(DispatchWarehouseExcisePage, testErn)
         .set(DispatchBusinessNamePage, "Some Business Name")
         .set(DispatchUseConsignorDetailsPage, false)
         .set(DispatchAddressPage, userAddressModelMax)
@@ -53,36 +49,9 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
         val expectedResult: SummaryList = SummaryList(Seq(
           DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
-          DispatchBusinessNameSummary.row()(fakeDataRequest, msgs),
           dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
-          DispatchAddressSummary.row()(fakeDataRequest, msgs)
-        ).flatten).withCssClass("govuk-!-margin-bottom-9")
-
-
-        dispatchCheckAnswersSummary.summaryList() mustBe expectedResult
-      }
-
-      "when DispatchUseConsignorDetailsPage is true" in new Setup(emptyUserAnswers
-        .set(DispatchBusinessNamePage, "Some Business Name")
-        .set(DispatchUseConsignorDetailsPage, true)
-        .set(DispatchAddressPage, userAddressModelMax)
-      ) {
-
-        val expectedResult: SummaryList = SummaryList(Seq(
-          DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
-          Some(
-            SummaryListRowViewModel(
-              key = DispatchCheckAnswersMessages.English.traderNameLabel,
-              value = ValueViewModel(HtmlFormat.escape(testMinTraderKnownFacts.traderName).toString),
-              actions = Seq()
-            )
-          ),
-          dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
-          Some(SummaryListRowViewModel(
-            key = DispatchCheckAnswersMessages.English.addressLabel,
-            value = ValueViewModel(Text(DispatchCheckAnswersMessages.English.consignorSectionNotComplete)),
-            actions = Seq()
-          ))
+          Some(DispatchBusinessNameSummary.row()(fakeDataRequest, msgs)),
+          Some(DispatchAddressSummary.row()(fakeDataRequest, msgs))
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
 

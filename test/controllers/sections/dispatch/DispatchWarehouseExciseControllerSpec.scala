@@ -23,7 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
-import pages.sections.dispatch.DispatchWarehouseExcisePage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -41,7 +41,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
   lazy val dispatchWarehouseExciseRoute: String =
     controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(testErn, testDraftId, NormalMode).url
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(val optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, dispatchWarehouseExciseRoute)
     implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
     lazy val form: Form[String] = formProvider()
@@ -82,6 +82,27 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
       val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "GB00123456789"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted (page already answered, and should remove Dispatch Address as GB -> XI" in new Fixture(
+      Some(emptyUserAnswers
+        .set(DispatchWarehouseExcisePage, testGreatBritainErn)
+        .set(DispatchAddressPage, testUserAddress)
+      )
+    ) {
+
+      val savedAnswers = optUserAnswers.get
+        .remove(DispatchAddressPage)
+        .set(DispatchWarehouseExcisePage, "XI00123456789")
+
+      MockUserAnswersService.set(savedAnswers).returns(Future.successful(savedAnswers))
+
+      val req = FakeRequest(POST, dispatchWarehouseExciseRoute).withFormUrlEncodedBody(("value", "XI00123456789"))
+
+      val result = testController.onSubmit(testNorthernIrelandErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

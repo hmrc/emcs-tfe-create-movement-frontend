@@ -38,17 +38,15 @@ import scala.concurrent.Future
 
 class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
 
-  val testLocalDate: LocalDate = LocalDate.of(2023, 2, 9)
-
   lazy val dispatchDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(testErn, NormalMode)
   lazy val dispatchDetailsSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onSubmit(testErn, testDraftId)
 
   lazy val formProvider: DispatchDetailsFormProvider = app.injector.instanceOf[DispatchDetailsFormProvider]
-  lazy val form: Form[DispatchDetailsModel] = formProvider()
   lazy val view: DispatchDetailsView = app.injector.instanceOf[DispatchDetailsView]
 
-  class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), isDeferred: Boolean = false) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    lazy val form: Form[DispatchDetailsModel] = formProvider(isDeferred)
 
     lazy val controller = new DispatchDetailsController(
       messagesApi,
@@ -86,7 +84,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
           s"when this $action" - {
 
-            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement))) {
+            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)), deferredMovement) {
               val result = controller.onPreDraftPageLoad(testErn, NormalMode)(request)
 
               status(result) mustEqual OK
@@ -120,18 +118,18 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
             val userAnswersSoFar = emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)
 
-            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val dispatchDetailsModel = DispatchDetailsModel(
-                date = LocalDate.of(2022, 12, 31),
-                time = LocalTime.of(6, 0)
-              )
+            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar), deferredMovement) {
+
+              val now = LocalDate.now()
+
+              val dispatchDetailsModel = DispatchDetailsModel(date = now, time = LocalTime.of(6, 0))
 
               MockPreDraftService.set(userAnswersSoFar.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(true))
 
               val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(
-                ("value.day", "31"),
-                ("value.month", "12"),
-                ("value.year", "2022"),
+                ("value.day", now.getDayOfMonth.toString),
+                ("value.month", now.getMonthValue.toString),
+                ("value.year", now.getYear.toString),
                 ("time", "6am")
               ))
 
@@ -139,7 +137,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
               redirectLocation(result).value mustEqual testOnwardRoute.url
             }
 
-            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
+            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar), deferredMovement) {
               val boundForm = form.bind(Map("time" -> "ten past twelve"))
 
               val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
@@ -173,7 +171,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
           s"when this $action" - {
 
-            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement))) {
+            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)), deferredMovement) {
               val result = controller.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustEqual OK
@@ -207,18 +205,18 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
             val userAnswersSoFar = emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)
 
-            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val dispatchDetailsModel = DispatchDetailsModel(
-                date = LocalDate.of(2022, 12, 31),
-                time = LocalTime.of(6, 0)
-              )
+            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar), deferredMovement) {
+
+              val now = LocalDate.now()
+
+              val dispatchDetailsModel = DispatchDetailsModel(date = now, time = LocalTime.of(6, 0))
 
               MockUserAnswersService.set(userAnswersSoFar.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(emptyUserAnswers))
 
               val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(
-                ("value.day", "31"),
-                ("value.month", "12"),
-                ("value.year", "2022"),
+                ("value.day", now.getDayOfMonth.toString),
+                ("value.month", now.getMonthValue.toString),
+                ("value.year", now.getYear.toString),
                 ("time", "6am")
               ))
 
@@ -226,7 +224,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
               redirectLocation(result).value mustEqual testOnwardRoute.url
             }
 
-            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
+            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar), deferredMovement) {
               val boundForm = form.bind(Map("time" -> "ten past twelve"))
 
               val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("time", "ten past twelve")))

@@ -21,16 +21,16 @@ import forms.mappings.Mappings
 import models.sections.info.DispatchDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
+import play.api.data.validation.Constraint
+import utils.TimeMachine
 
+import java.time.LocalDate
 import javax.inject.Inject
 
-class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappings {
+class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig,
+                                            timeMachine: TimeMachine) extends Mappings {
 
-  // scalastyle:off magic.number
-  private val earliestDispatchDate = appConfig.earliestDispatchDate
-  // scalastyle:on magic.number
-
-  def apply(): Form[DispatchDetailsModel] =
+  def apply(isDeferredMovement: Boolean): Form[DispatchDetailsModel] =
     Form(
       mapping(
         "value" -> localDate(
@@ -42,7 +42,8 @@ class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappin
           .verifying(
             firstError(
               fourDigitYear("dispatchDetails.value.error.yearNotFourDigits"),
-              minDate(earliestDispatchDate, "dispatchDetails.value.error.earliestDate")
+              minDateCheck(isDeferredMovement),
+              maxDateCheck(isDeferredMovement)
             )
           ),
         "time" -> localTime(
@@ -50,5 +51,19 @@ class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappin
           requiredKey = "dispatchDetails.time.error.required"
         )
       )(DispatchDetailsModel.apply)(DispatchDetailsModel.unapply))
+
+  private def maxDateCheck(isDeferredMovement: Boolean): Constraint[LocalDate] = {
+    val maxDateValue = if(isDeferredMovement) timeMachine.now() else timeMachine.now().plusDays(appConfig.maxDispatchDateFutureDays)
+    maxDate(maxDateValue.toLocalDate, deferredSuffix(isDeferredMovement, s"dispatchDetails.value.error.latestDate"), appConfig.maxDispatchDateFutureDays)
+  }
+
+  private def minDateCheck(isDeferredMovement: Boolean): Constraint[LocalDate] = {
+    val minDateValue = if (isDeferredMovement) appConfig.earliestDispatchDate else timeMachine.now().toLocalDate
+    minDate(minDateValue, deferredSuffix(isDeferredMovement, s"dispatchDetails.value.error.earliestDate"))
+  }
+
+  private def deferredSuffix(isDeferredMovement: Boolean, msgKey: String) =
+    msgKey + (if(isDeferredMovement) ".deferred" else "")
+
 
 }

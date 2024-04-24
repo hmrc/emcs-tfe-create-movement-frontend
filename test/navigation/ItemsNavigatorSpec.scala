@@ -213,15 +213,32 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "when GoodsType is Spirits" - {
 
-          "to the Item Maturation Period Age Page" in {
+          "to the Item Maturation Period Age Page" - {
 
-            val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS100.code)
-              .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+            "when the EPC is Spirituous Beverages" in {
+              val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+                .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS200.code)
+                .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
 
-            navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
-              itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+              navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+                itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+            }
+
           }
+
+          "to the Designation of Origin page" - {
+
+            "when the EPC is anything else but Spirituous Beverages" in {
+              val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+                .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS100.code)
+                .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+              navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+                itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+            }
+          }
+
+
         }
 
         "when GoodsType is anything else (e.g. Wine)" - {

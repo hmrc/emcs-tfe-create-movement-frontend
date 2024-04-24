@@ -25,7 +25,7 @@ import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
 import queries.{ItemsCount, ItemsPackagingCount}
-import utils.CommodityCodeHelper
+import utils.{CommodityCodeHelper, ExciseProductCodeHelper}
 
 import javax.inject.Inject
 
@@ -386,16 +386,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             } else {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
-          //TODO: S200 handling should be done in ETFE-3689
           case Spirits =>
-            itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            if (ExciseProductCodeHelper.isSpirituousBeverages(epc)) {
+              itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            } else {
+              itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+            }
           case _ =>
             itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
-
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(_) =>

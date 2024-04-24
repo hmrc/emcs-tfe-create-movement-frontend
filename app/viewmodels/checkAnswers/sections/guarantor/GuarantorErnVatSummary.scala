@@ -29,7 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GuarantorErnVatEoriSummary {
+object GuarantorErnVatSummary {
 
   def rows()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
     request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>

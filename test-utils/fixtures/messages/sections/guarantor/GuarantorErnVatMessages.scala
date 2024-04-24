@@ -19,7 +19,7 @@ package fixtures.messages.sections.guarantor
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 
-object GuarantorErnVatEoriMessages {
+object GuarantorErnVatMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>

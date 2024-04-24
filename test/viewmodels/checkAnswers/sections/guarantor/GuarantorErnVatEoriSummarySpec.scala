@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.{NoInformation, VatNumber}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportInformationPage, ConsigneeExportPage, ConsigneeExportVatPage}
+import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportInformationPage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -80,7 +80,6 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
-                    .set(ConsigneeExportPage, true)
                     .set(ConsigneeExportInformationPage, Set(VatNumber))
                     .set(ConsigneeExportVatPage, "VAT123")
                     .set(GuarantorRequiredPage, true)
@@ -96,7 +95,6 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
-                    .set(ConsigneeExportPage, true)
                     .set(ConsigneeExportInformationPage, Set(NoInformation))
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
@@ -115,7 +113,6 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
-                    .set(ConsigneeExportPage, false)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
                 )
@@ -127,7 +124,6 @@ class GuarantorErnVatEoriSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
-                    .set(ConsigneeExportPage, false)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Consignee)
                     .set(ConsigneeExcisePage, "GB12345678901")

@@ -96,187 +96,43 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       }
     }
     "must redirect to ConsigneeExciseController" - {
-      "when UserType is GBRC" - {
-        val ern: String = "GBRC123"
+      Seq(
+        GbTaxWarehouse,
+        EuTaxWarehouse,
+        RegisteredConsignee,
+        DirectDelivery,
+        TemporaryRegisteredConsignee,
+        CertifiedConsignee,
+        TemporaryCertifiedConsignee
+      ).foreach(
+        movementScenario =>
+          s"when destination is $movementScenario" in new Fixture(
+            Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-        Seq(
-          GbTaxWarehouse,
-          EuTaxWarehouse,
-          DirectDelivery
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+            val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-
-        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-      }
-      "when UserType is XIRC" - {
-        val ern: String = "XIRC123"
-
-        Seq(
-          GbTaxWarehouse,
-          EuTaxWarehouse,
-          DirectDelivery
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-
-        Seq(
-          RegisteredConsignee,
-          TemporaryRegisteredConsignee,
-          ExportWithCustomsDeclarationLodgedInTheUk,
-          ExportWithCustomsDeclarationLodgedInTheEu
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-      }
-
-      "when UserType is XIPA" - {
-        val ern: String = "XIPA123"
-
-        Seq(
-          CertifiedConsignee,
-          TemporaryCertifiedConsignee
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-      }
-
-      "when UserType is XIPC" - {
-        val ern: String = "XIPC123"
-
-        Seq(
-          CertifiedConsignee,
-          TemporaryCertifiedConsignee
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-      }
-
-      "when UserType is XIWK" - {
-        val ern: String = "XIWK123"
-
-        Seq(
-          GbTaxWarehouse,
-          EuTaxWarehouse,
-          DirectDelivery
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-
-        s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
-          Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
-
-          val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
-        }
-      }
+            status(result) mustBe SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
+      )
     }
 
-    "must redirect to ConsigneeExportController" - {
-      "when UserType is GBWK" - {
-        val ern = "GBWK123"
-
-        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
-            }
-        )
-      }
-
-      "when UserType is XIWK" - {
-        val ern = "XIWK123"
-
+    "must redirect to ConsigneeExportInformationController" - {
         Seq(
-          RegisteredConsignee,
           ExportWithCustomsDeclarationLodgedInTheUk,
           ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+            s"when destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url)
             }
         )
-      }
     }
 
     "must redirect to the tasklist" - {

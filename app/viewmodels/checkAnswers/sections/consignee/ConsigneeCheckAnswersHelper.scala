@@ -29,7 +29,6 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        ConsigneeExportSummary.row(showActionLinks = true),
         ConsigneeExportInformationSummary(list).row(),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         consigneeExciseSummary.row(showActionLinks = true),

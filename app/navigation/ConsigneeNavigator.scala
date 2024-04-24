@@ -34,17 +34,6 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
     case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
-    // else
-    case ConsigneeExportPage => (userAnswers: UserAnswers) =>
-      userAnswers.get(ConsigneeExportPage) match {
-        case Some(true) =>
-          controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case Some(false) =>
-          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case _ =>
-          controllers.routes.JourneyRecoveryController.onPageLoad()
-      }
-
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportInformationPage) match {
         case Some(answers) if answers.contains(VatNumber) =>

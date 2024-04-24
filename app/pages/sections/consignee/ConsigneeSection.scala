@@ -33,15 +33,11 @@ case object ConsigneeSection extends Section[JsObject] {
       UpdateNeeded
     } else {
       (
-        request.userAnswers.get(ConsigneeExportPage),
+        request.userAnswers.get(ConsigneeExportInformationPage),
         request.userAnswers.get(ConsigneeExcisePage),
         request.userAnswers.get(ConsigneeExemptOrganisationPage)
       ) match {
-        case (Some(value), _, _) =>
-          value match {
-            case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportInformationPage))
-            case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
-          }
+        case (Some(value), _, _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
         case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
         case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
         case _ => NotStarted

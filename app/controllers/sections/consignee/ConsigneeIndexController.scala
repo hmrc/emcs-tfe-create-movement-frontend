@@ -53,9 +53,9 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
                 Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, draftId, NormalMode))
-              } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
-                Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, draftId, NormalMode))
-              } else if (shouldStartFlowFromConsigneeExcise(ur.userTypeFromErn, destinationTypePageAnswer)) {
+              } else if (shouldStartFlowFromConsigneeInformation(destinationTypePageAnswer)) {
+                Redirect(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(ern, draftId, NormalMode))
+              } else if (shouldStartFlowFromConsigneeExcise(destinationTypePageAnswer)) {
                 Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, draftId, NormalMode))
               } else {
                 logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
@@ -68,60 +68,23 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
     }
   }
 
-  private def shouldStartFlowFromConsigneeExportUkEu(
-                                                      userTypeFromErn: UserType,
-                                                      destinationTypePageAnswer: MovementScenario
-                                                    ): Boolean = {
-    val gbwkAndSpecificDestinationTypes: Boolean =
-      userTypeFromErn == GreatBritainWarehouseKeeper && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk
-
-    val xiwkAndSpecificDestinationTypes: Boolean = {
-      val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee,
-        ExportWithCustomsDeclarationLodgedInTheUk,
-        ExportWithCustomsDeclarationLodgedInTheEu
-      )
-      userTypeFromErn == NorthernIrelandWarehouseKeeper && validDestinationTypes.contains(destinationTypePageAnswer)
-    }
-
-    gbwkAndSpecificDestinationTypes || xiwkAndSpecificDestinationTypes
+  private def shouldStartFlowFromConsigneeInformation(destinationTypePageAnswer: MovementScenario): Boolean = {
+    Seq(
+      ExportWithCustomsDeclarationLodgedInTheUk,
+      ExportWithCustomsDeclarationLodgedInTheEu
+    ).contains(destinationTypePageAnswer)
   }
 
-  private def shouldStartFlowFromConsigneeExcise(
-                                                  userTypeFromErn: UserType,
-                                                  destinationTypePageAnswer: MovementScenario
-                                                ): Boolean = {
-    val validDestinationTypesRegardlessOfUserTypes: Boolean =
-      Seq(
-        GbTaxWarehouse,
-        EuTaxWarehouse,
-        DirectDelivery
-      ).contains(destinationTypePageAnswer)
-
-    val gbrcAndValidDestinationType: Boolean =
-      userTypeFromErn == GreatBritainRegisteredConsignor && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk
-
-    val xircAndValidDestinationType: Boolean = {
-      val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee,
-        TemporaryRegisteredConsignee,
-        ExportWithCustomsDeclarationLodgedInTheUk,
-        ExportWithCustomsDeclarationLodgedInTheEu
-      )
-
-      userTypeFromErn == NorthernIrelandRegisteredConsignor && validDestinationTypes.contains(destinationTypePageAnswer)
-    }
-
-    val xiwkAndRegisteredConsignee: Boolean =
-      (userTypeFromErn == NorthernIrelandWarehouseKeeper) && (destinationTypePageAnswer == TemporaryRegisteredConsignee)
-
-    val xipaOrXipcAndTempCertifiedDestinationType: Boolean = {
-      val xipaOrXipc = Seq(NorthernIrelandCertifiedConsignor, NorthernIrelandTemporaryCertifiedConsignor).contains(userTypeFromErn)
-      val certifiedDestinationType = Seq(CertifiedConsignee, TemporaryCertifiedConsignee).contains(destinationTypePageAnswer)
-      xipaOrXipc && certifiedDestinationType
-    }
-
-    validDestinationTypesRegardlessOfUserTypes || gbrcAndValidDestinationType || xircAndValidDestinationType || xiwkAndRegisteredConsignee || xipaOrXipcAndTempCertifiedDestinationType
+  private def shouldStartFlowFromConsigneeExcise(destinationTypePageAnswer: MovementScenario): Boolean = {
+    Seq(
+      GbTaxWarehouse,
+      EuTaxWarehouse,
+      RegisteredConsignee,
+      DirectDelivery,
+      TemporaryRegisteredConsignee,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
+    ).contains(destinationTypePageAnswer)
   }
 
   private def shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer: MovementScenario): Boolean =

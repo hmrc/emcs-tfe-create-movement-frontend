@@ -1296,7 +1296,13 @@ confirmation.feedbackText = (takes 30 seconds)
 
 itemPackagingQuantity.title = How many of this type of package are you using to move the {0}?
 itemPackagingQuantity.heading = How many of this type of package are you using to move the {0}?
-itemPackagingQuantity.hint = The packaging type is: {0}
+itemPackagingQuantity.hint = Packaging {0} for item {1} is: {2}
+itemPackagingQuantity.details = Help with packaging quantity if it contains other items
+itemPackagingQuantity.details.p.1 = EMCS allows you to show items packed together inside the same packaging. For example, if you pack both wine and beer on a single pallet, you can choose to specify that pallet for both items. To make sure the total quantity of packages in your movement is correct:
+itemPackagingQuantity.details.bullet.1 = enter the packaging details, packaging quantity and a shipping mark for the first item packed inside this packaging
+itemPackagingQuantity.details.bullet.2 = enter the same packaging details but with a packaging quantity of 0 for any additional items packed together inside this packaging
+itemPackagingQuantity.details.bullet.3 = select the same shipping mark for all items packed together inside
+itemPackagingQuantity.details.p.2 = However, you don’t need to record the shared packaging in EMCS if each item already has countable packaging entered, such as bottles, cans or cases.
 itemPackagingQuantity.error.required = Enter the amount of this type of package that you are using to move the {0}
 itemPackagingQuantity.error.invalidCharacters = The amount must only contain numbers
 itemPackagingQuantity.error.decimalPlaces = The amount must not contain decimal places

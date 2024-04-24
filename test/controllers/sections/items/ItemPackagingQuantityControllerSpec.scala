@@ -100,7 +100,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, itemPackagingQuantitySubmitAction, Wine, ItemPackaging("VA", "Vat"))(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, itemPackagingQuantitySubmitAction, Wine, ItemPackaging("VA", "Vat"), testPackagingIndex1, testIndex1)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -113,7 +113,9 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
         form.fill("1"),
         itemPackagingQuantitySubmitAction,
         Wine,
-        ItemPackaging("VA", "Vat")
+        ItemPackaging("VA", "Vat"),
+        testPackagingIndex1,
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -135,7 +137,9 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
         boundForm,
         itemPackagingQuantitySubmitAction,
         Wine,
-        ItemPackaging("VA", "Vat")
+        ItemPackaging("VA", "Vat"),
+        testPackagingIndex1,
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

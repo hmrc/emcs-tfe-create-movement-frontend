@@ -30,10 +30,12 @@
         h2: components.h2,
         p: components.p,
         strong: components.strong,
+        details: components.details,
+        bullets: components.bullets,
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, packagingType: ItemPackaging)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, packagingType: ItemPackaging, packagingIndex: Index, itemIndex: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingQuantity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -54,12 +56,27 @@
             .withHint(Hint(content = HtmlContent(hint)))
         )
 
+        @details(messages("itemPackagingQuantity.details")) {
+
+          @p() { @messages("itemPackagingQuantity.details.p.1") }
+
+          @bullets(Seq(
+            Html(messages("itemPackagingQuantity.details.bullet.1")),
+            Html(messages("itemPackagingQuantity.details.bullet.2")),
+            Html(messages("itemPackagingQuantity.details.bullet.3"))
+          ))
+
+          @p() { @messages("itemPackagingQuantity.details.p.2") }
+        }
+
         @continueOrExit()
     }
 }
 
 @hint = {
-    @p() {@Html(messages("itemPackagingQuantity.hint", strong(Html(packagingType.description.trim), withFullStop = true)))}
+    @p() {
+      @Html(messages("itemPackagingQuantity.hint", packagingIndex.displayIndex, itemIndex.displayIndex, strong(Html(packagingType.description.trim), withFullStop = true)))
+    }
 }
 
 @{

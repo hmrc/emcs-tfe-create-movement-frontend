@@ -21,4 +21,5 @@ object Constants {
   val BODYEADESAD = "BodyEadEsad"
   val XI_POSTCODE = "BT"
   val NI_PREFIX = "XI"
+  val GB_PREFIX = "GB"
 }

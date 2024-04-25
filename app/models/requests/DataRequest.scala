@@ -33,6 +33,7 @@ case class DataRequest[A](request: UserRequest[A],
   lazy val ern: String = request.ern
 
   lazy val isNorthernIrelandErn: Boolean = request.isNorthernIrelandErn
+  lazy val isGreatBritainErn: Boolean = request.isGreatBritainErn
 
   lazy val userTypeFromErn: UserType = request.userTypeFromErn
 

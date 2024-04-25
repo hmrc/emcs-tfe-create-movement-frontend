@@ -36,6 +36,9 @@ object ExportCustomsOfficeMessages {
     val errorLength = (int: Int) => s"Customs office code must be $int characters"
     val errorInvalidCharacter = "Customs office code must not contain < and > and : and ;"
     val errorCustomOfficeRegex = "Customs office code must start with 2 capital letters followed by 6 mixed numbers and letters."
+    val errorMustStartWithGB = "Customs office code must start with GB, followed by 6 mixed numbers and letters"
+    val errorMustNotStartWithGBAsDispatchedFromNorthernIreland = "Customs office code must not start with GB, because this movement is being dispatched from Northern Ireland"
+    val errorMustNotStartWithGBAsNorthernIrelandRegisteredConsignor = "Customs office code must not start with GB"
 
     val cyaLabel = "Customs office code"
     val cyaChangeHidden = "customs office code"

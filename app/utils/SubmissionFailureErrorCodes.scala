@@ -17,7 +17,10 @@
 package utils
 
 import models.requests.DataRequest
+import models.sections.info.DispatchDetailsModel
 import models.{CheckMode, Index}
+import pages.QuestionPage
+import pages.sections.info.DispatchDetailsPage
 import play.api.mvc.Call
 
 sealed trait SubmissionError {
@@ -30,13 +33,17 @@ sealed trait SubmissionError {
   val index: Option[Index] = None
 }
 
+sealed trait UIError[A] extends SubmissionError {
+  val page: QuestionPage[A]
+}
+
 case object LocalReferenceNumberError extends SubmissionError {
   override val code = "4402"
   override val messageKey = "errors.704.lrn"
   override val id = "local-reference-number-error"
 
   override def route()(implicit request: DataRequest[_]): Call =
-    controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId)
+    controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
 
 case object ImportCustomsOfficeCodeError extends SubmissionError {
@@ -308,6 +315,26 @@ case object PlaceOfDestinationExciseIdForTaxWarehouseInvalidError extends Submis
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
 }
 
+case object DispatchDateInPastValidationError extends UIError[DispatchDetailsModel] {
+  override val code = "8084"
+  override val messageKey = "errors.ui.dispatchDate.inPast"
+  override val id = "dispatch-date-validation-error"
+  override val page = DispatchDetailsPage(isOnPreDraftFlow = false)
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+}
+
+case object DispatchDateInFutureValidationError extends UIError[DispatchDetailsModel] {
+  override val code = "8085"
+  override val messageKey = "errors.ui.dispatchDate.inFuture"
+  override val id = "dispatch-date-validation-error"
+  override val page = DispatchDetailsPage(isOnPreDraftFlow = false)
+
+  override def route()(implicit request: DataRequest[_]): Call =
+    controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+}
+
 object SubmissionError {
 
   //scalastyle:off cyclomatic.complexity
@@ -332,6 +359,8 @@ object SubmissionError {
     case DispatchWarehouseInvalidOrMissingOnSeedError.code => DispatchWarehouseInvalidOrMissingOnSeedError
     case DispatchWarehouseInvalidError.code => DispatchWarehouseInvalidError
     case DispatchWarehouseConsignorDoesNotManageWarehouseError.code => DispatchWarehouseConsignorDoesNotManageWarehouseError
+    case DispatchDateInPastValidationError.code => DispatchDateInPastValidationError
+    case DispatchDateInFutureValidationError.code => DispatchDateInFutureValidationError
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 

@@ -20,11 +20,15 @@ import config.AppConfig
 import org.scalamock.handlers.CallHandler0
 import org.scalamock.scalatest.MockFactory
 
+import java.time.LocalDate
+
 trait MockAppConfig extends MockFactory {
   lazy val mockAppConfig: AppConfig = mock[AppConfig]
 
   object MockAppConfig {
     def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
     def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
+    def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()
+    def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
   }
 }

@@ -48,7 +48,7 @@ object InformationInvoiceReferenceSummary {
             if (isOnPreDraftFlow) {
               controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
-              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url
+              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
             },
             id = "changeInvoiceReference")
             .withVisuallyHiddenText(messages("invoiceDetails.invoice-reference.change.hidden"))

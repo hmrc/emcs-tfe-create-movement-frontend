@@ -22,7 +22,7 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.InvoiceDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.InvoiceDetailsModel
-import models.{NormalMode, UserAnswers}
+import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.InvoiceDetailsPage
 import play.api.data.Form
@@ -42,7 +42,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
   val timeMachine: TimeMachine = () => testLocalDate.atStartOfDay()
 
   lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
-  lazy val invoiceDetailsSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId)
+  lazy val invoiceDetailsSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId, CheckMode)
 
   lazy val formProvider = app.injector.instanceOf[InvoiceDetailsFormProvider]
   lazy val form: Form[InvoiceDetailsModel] = formProvider()
@@ -124,7 +124,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
       "must return OK and the correct view for a GET" in new Fixture() {
 
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testDraftId, CheckMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -142,7 +142,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
         MockUserAnswersService.set(expectedToSaveAnswers).returns(Future.successful(emptyUserAnswers))
 
-        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(
+        val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(
           ("invoice-reference", "answer"),
           ("value.day", "1"),
           ("value.month", "1"),
@@ -157,7 +157,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "")))
+        val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(("value", "")))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(

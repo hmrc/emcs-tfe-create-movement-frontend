@@ -68,8 +68,16 @@ class InformationNavigator @Inject()() extends BaseNavigator {
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case DeferredMovementPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
+    case LocalReferenceNumberPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
+    case InvoiceDetailsPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
+    case DispatchDetailsPage(false) =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

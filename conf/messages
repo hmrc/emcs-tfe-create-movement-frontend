@@ -1500,7 +1500,7 @@ transportUnitCheckAnswers.heading.transportUnits = Transport units
 # Submission failures (704) messages
 # ==================================
 errors.704.notificationBanner.title = Update needed
-errors.704.notificationBanner.content = Some sections need updating before you can resubmit this movement
+errors.704.notificationBanner.content = Some sections need updating before you can submit this movement
 errors.704.notificationBanner.p = Some information needs updating
 
 
@@ -1585,4 +1585,7 @@ errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSe
 errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
+
+errors.ui.dispatchDate.inPast = The date of dispatch must be today’s date or up to 7 days in the future because this is not a deferred movement using fallback procedures
+errors.ui.dispatchDate.inFuture = The date of dispatch must be before or equal to today’s date because this a deferred movement using fallback procedures
 

@@ -23,7 +23,7 @@ import controllers.routes
 import forms.sections.info.DispatchDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchDetailsModel
-import models.{NormalMode, UserAnswers}
+import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
 import play.api.data.Form
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
 
   lazy val dispatchDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(testErn, NormalMode)
-  lazy val dispatchDetailsSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onSubmit(testErn, testDraftId)
+  lazy val dispatchDetailsSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onSubmit(testErn, testDraftId, CheckMode)
 
   lazy val formProvider: DispatchDetailsFormProvider = app.injector.instanceOf[DispatchDetailsFormProvider]
   lazy val view: DispatchDetailsView = app.injector.instanceOf[DispatchDetailsView]
@@ -157,7 +157,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
     "onPageLoad" - {
 
       "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testDraftId, CheckMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -172,7 +172,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
           s"when this $action" - {
 
             "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)), deferredMovement) {
-              val result = controller.onPageLoad(testErn, testDraftId)(request)
+              val result = controller.onPageLoad(testErn, testDraftId, CheckMode)(request)
 
               status(result) mustEqual OK
               contentAsString(result) mustEqual view(
@@ -189,7 +189,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
     "onSubmit" - {
 
       "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onSubmit(testErn, testDraftId)(request)
+        val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -213,7 +213,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
               MockUserAnswersService.set(userAnswersSoFar.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(emptyUserAnswers))
 
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(
+              val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(
                 ("value.day", now.getDayOfMonth.toString),
                 ("value.month", now.getMonthValue.toString),
                 ("value.year", now.getYear.toString),
@@ -227,7 +227,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
             "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar), deferredMovement) {
               val boundForm = form.bind(Map("time" -> "ten past twelve"))
 
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
+              val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
 
               status(result) mustEqual BAD_REQUEST
               contentAsString(result) mustEqual view(

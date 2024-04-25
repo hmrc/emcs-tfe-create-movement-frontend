@@ -23,7 +23,9 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSummary: InformationLocalReferenceNumberSummary) {
+class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSummary: InformationLocalReferenceNumberSummary,
+                                              informationDateOfDispatchSummary: InformationDateOfDispatchSummary
+                                             ) {
 
   def summaryList(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
 
@@ -35,7 +37,7 @@ class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSum
         informationLocalReferenceNumberSummary.row(deferredMovement),
         InformationInvoiceReferenceSummary.row,
         InformationInvoiceDateSummary.row,
-        InformationDateOfDispatchSummary.row,
+        informationDateOfDispatchSummary.row,
         InformationTimeOfDispatchSummary.row
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")

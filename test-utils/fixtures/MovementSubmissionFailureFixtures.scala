@@ -17,7 +17,10 @@
 package fixtures
 
 import models.MovementSubmissionFailure
+import models.validation.UIErrorModel
 import utils._
+
+import java.time.LocalDate
 
 trait MovementSubmissionFailureFixtures extends BaseFixtures {
 
@@ -85,5 +88,13 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     originalAttributeValue = Some(testErn),
     hasBeenFixed = false
   )
+
+  def dispatchDateInPastValidationError(msg: String = "Error",
+                                        value: LocalDate = LocalDate.of(2022,1,1)): MovementSubmissionFailure =
+    UIErrorModel(DispatchDateInPastValidationError, msg, value).asSubmissionFailure
+
+  def dispatchDateInFutureValidationError(msg: String = "Error",
+                                        value: LocalDate = LocalDate.of(2026, 1, 1)): MovementSubmissionFailure =
+    UIErrorModel(DispatchDateInFutureValidationError, msg, value).asSubmissionFailure
 
 }

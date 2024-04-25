@@ -46,7 +46,7 @@ object InformationTimeOfDispatchSummary extends DateTimeUtils {
             if (isOnPreDraftFlow) {
               controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
-              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId).url
+              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
             },
             id = "changeTimeOfDispatch")
             .withVisuallyHiddenText(messages("dispatchDetails.time.change.hidden"))

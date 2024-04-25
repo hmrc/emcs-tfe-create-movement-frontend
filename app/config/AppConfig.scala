@@ -114,9 +114,9 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def destinationOfficeSuffix: String = configuration.get[String]("constants.destinationOfficeSuffix")
 
-  lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
+  def earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
-  lazy val maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
+  def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
 
   def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
 

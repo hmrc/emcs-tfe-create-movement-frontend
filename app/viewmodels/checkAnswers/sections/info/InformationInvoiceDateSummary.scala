@@ -47,7 +47,7 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
             if (isOnPreDraftFlow) {
               controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
-              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId).url
+              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
             },
             id = "changeInvoiceDate")
             .withVisuallyHiddenText(messages("invoiceDetails.invoice-date.change.hidden"))

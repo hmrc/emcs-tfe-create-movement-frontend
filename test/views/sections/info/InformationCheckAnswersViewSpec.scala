@@ -19,6 +19,7 @@ package views.sections.info
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.InformationCheckAnswersMessages
+import models.CheckMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -74,7 +75,8 @@ class InformationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
           ))
 
           "link to the LRN page" in {
-            doc.select(Selectors.fixLRNLink).attr("href") mustBe controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn, testDraftId).url
+            doc.select(Selectors.fixLRNLink).attr("href") mustBe
+              controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(testErn, testDraftId, CheckMode).url
           }
         }
       }

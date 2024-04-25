@@ -19,16 +19,23 @@ package viewmodels.checkAnswers.sections.info
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
-import pages.sections.info.DispatchDetailsPage
+import pages.sections.info.{DispatchDetailsPage, LocalReferenceNumberPage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.DateTimeUtils
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-object InformationDateOfDispatchSummary extends DateTimeUtils {
+import javax.inject.Inject
+
+class InformationDateOfDispatchSummary @Inject()(tagHelper: TagHelper) extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+
+    val hasUnfixedError = DispatchDetailsPage(isOnPreDraftFlow = false).isMovementSubmissionError
 
     val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage())
 
@@ -40,14 +47,17 @@ object InformationDateOfDispatchSummary extends DateTimeUtils {
     Some(
       SummaryListRowViewModel(
         key = "dispatchDetails.value.checkYourAnswersLabel",
-        value = ValueViewModel(value),
+        value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
+          Some(HtmlFormat.escape(value)),
+          if (hasUnfixedError) Some(tagHelper.updateNeededTag(withNoFloat = false)) else None
+        ).flatten))),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
             if (isOnPreDraftFlow) {
               controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
             } else {
-              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId).url
+              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
             },
             id = "changeDateOfDispatch")
             .withVisuallyHiddenText(messages("dispatchDetails.value.change.hidden"))

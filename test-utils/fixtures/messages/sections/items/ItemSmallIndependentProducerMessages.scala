@@ -21,19 +21,30 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object ItemSmallIndependentProducerMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(goodsType: String) = s"Can you confirm that the producer of the $goodsType is certified as an independent small producer?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    val heading = "Independent small producer declaration"
+    val title: String = titleHelper(heading)
 
-    def yesCertified(value: String) = s"Yes - $value"
-    val yesBeer = "It is hereby certified that the product described has been produced by an independent small brewery"
-    val yesWine = "It is hereby certified that the product described has been produced by an independent small wine producer"
-    val yesFermented = "It is hereby certified that the product described has been produced by an independent small producer of fermented beverages other than wine and beer"
-    val yesIntermediate = "It is hereby certified that the product described has been produced by an independent small intermediate products producer"
-    val yesSpirits = "It is hereby certified that the product described has been produced by an independent small distillery"
-    val yesOther = "It is hereby certified that the alcoholic product described has been produced by an independent small producer"
+    val producedByIndependentSmallProducer = "It is hereby certified that the alcoholic product described has been produced by an independent small producer."
+    val producedByIndependentSmallBrewery = "It is hereby certified that the alcoholic product described has been produced by an independent small brewery."
+    val producedByIndependentSmallDistillery = "It is hereby certified that the alcoholic product described has been produced by an independent small distillery."
+    val producedByIndependentWineProducer = "It is hereby certified that the alcoholic product described has been produced by an independent wine producer."
+    val producedByIndependentFermentedBeveragesProducer = "It is hereby certified that the alcoholic product described has been produced by an independent producer of fermented beverages other than wine and beer."
+    val producedByIndependentIntermediateProductsProducer = "It is hereby certified that the alcoholic product described has been produced by an independent intermediate products producer."
 
-    val cyaLabel = "Independent small producer"
-    val cyaChangeHidden = "if the producer is an independent small producer"
+    val legend = "Who is the independent small producer?"
+
+    val certifiedIndependentSmallProducer = "The producer is a certified independent small producer"
+    val certifiedIndependentSmallProducerHint = "The certificate should be recorded in the Documents section of the eAD."
+    val selfCertifiedIndependentSmallProducerAndConsignor = "The producer is a self-certified independent small producer and the consignor"
+    val selfCertifiedIndependentSmallProducerNotConsignor = "The producer is a self-certified independent small producer and not the consignor"
+    val selfCertifiedIndependentSmallProducerNotConsignorInput = "Enter the self-certified producer’s excise ID or, if not available, the VAT registration number"
+    val notAIndependentSmallProducer = "The producer is not an independent small producer"
+    val smallProducerNotProvided = "I don’t want to provide information about the producer"
+
+    def seedNumber(value: String) = s"Seed number: $value"
+
+    val cyaLabel = "Independent small producer declaration"
+    val cyaChangeHidden = "Independent small producer declaration"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -21,21 +21,38 @@ import models.requests.DataRequest
 import models.{CheckMode, Index}
 import pages.sections.items.ItemSmallIndependentProducerPage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.ItemSmallIndependentProducerHelper
 import viewmodels.implicits._
+import views.html.components.p
 
-object ItemSmallIndependentProducerSummary {
+import javax.inject.Inject
+
+class ItemSmallIndependentProducerSummary @Inject()(p: p) {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemSmallIndependentProducerPage(idx)
 
     request.userAnswers.get(page).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+      answerModel =>
+
+        val declaration = ItemSmallIndependentProducerHelper.constructDeclarationPrefix(idx).dropRight(1)
+
+        val answer = messages(s"itemSmallIndependentProducer.${answerModel.producerType}")
+
+        val optSeedNumber = answerModel.producerId.map(messages("itemSmallIndependentProducer.cya.seedNumber", _))
+
+        val content = Seq(
+          Some(p()(Text(declaration).asHtml)),
+          Some(p()(Text(answer).asHtml)),
+          optSeedNumber.map(seedNumber => p()(Text(seedNumber).asHtml))
+        ).flatten.mkString
+
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
-          value = ValueViewModel(messages(value)),
+          value = ValueViewModel(HtmlContent(content)),
           actions = Seq(ActionItemViewModel(
             href = routes.ItemSmallIndependentProducerController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "site.change",

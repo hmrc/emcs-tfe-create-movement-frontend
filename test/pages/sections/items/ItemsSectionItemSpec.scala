@@ -23,6 +23,7 @@ import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
+import models.sections.items.ItemSmallIndependentProducerType.{NotAIndependentSmallProducer, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineGrowingZone.CIII_A
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
@@ -654,7 +655,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Beer from hops")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
-          .set(ItemSmallIndependentProducerPage(testIndex1), true)
+          .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
           .set(ItemProducerSizePage(testIndex1), BigInt("300"))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -1075,7 +1076,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1090,7 +1091,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), false)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1105,7 +1106,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1117,7 +1118,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1128,7 +1129,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

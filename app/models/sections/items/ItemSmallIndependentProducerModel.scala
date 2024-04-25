@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package models.sections.items
 
-import models.Index
-import models.sections.items.ItemSmallIndependentProducerModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Format, Json}
 
-case class ItemSmallIndependentProducerPage(idx: Index) extends QuestionPage[ItemSmallIndependentProducerModel] {
-  override val toString: String = "itemSmallIndependentProducer"
-  override val path: JsPath = ItemsSectionItem(idx).path \ toString
+case class ItemSmallIndependentProducerModel(producerType: ItemSmallIndependentProducerType, producerId: Option[String])
+
+object ItemSmallIndependentProducerModel {
+
+  implicit val format: Format[ItemSmallIndependentProducerModel] = Json.format[ItemSmallIndependentProducerModel]
+
 }

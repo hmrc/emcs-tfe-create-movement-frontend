@@ -19,6 +19,8 @@ package viewmodels.checkAnswers.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemProducerSizeMessages
 import models.requests.DataRequest
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
@@ -42,39 +44,48 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
 
       implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-      "if ItemSmallIndependentProducerPage is true" - {
-        "must return a row when there is an answer" in new Test(
-          emptyUserAnswers
-            .set(ItemSmallIndependentProducerPage(testIndex1), true)
-            .set(ItemProducerSizePage(testIndex1), BigInt(3))
-        ) {
-          ItemProducerSizeSummary.row(
-            idx = testIndex1
-          ) mustBe
-            Some(summaryListRowBuilder(
-              key = messagesForLanguage.cyaLabel,
-              value = s"3 ${messagesForLanguage.inputSuffix}",
-              changeLink = Some(ActionItemViewModel(
-                href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                content = messagesForLanguage.change,
-                id = s"changeItemProducerSize${testIndex1.displayIndex}"
-              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
-            ))
+      Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor).foreach { producer =>
+
+        s"if ItemSmallIndependentProducerPage is $producer" - {
+          "must return a row when there is an answer" in new Test(
+            emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
+              .set(ItemProducerSizePage(testIndex1), BigInt(3))
+          ) {
+            ItemProducerSizeSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabel,
+                value = s"3 ${messagesForLanguage.inputSuffix}",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemProducerSize${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+              ))
+          }
         }
       }
-      "if ItemSmallIndependentProducerPage is false" - {
-        "must not return a row" in new Test(
-          emptyUserAnswers
-            .set(ItemSmallIndependentProducerPage(testIndex1), false)
-            .set(ItemProducerSizePage(testIndex1), BigInt(3))
-        ) {
-          ItemProducerSizeSummary.row(
-            idx = testIndex1
-          ) mustBe None
+
+      ItemSmallIndependentProducerType.values.diff(
+        Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor)
+      ).foreach { producer =>
+
+        s"if ItemSmallIndependentProducerPage is $producer" - {
+          "must not return a row" in new Test(
+            emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
+              .set(ItemProducerSizePage(testIndex1), BigInt(3))
+          ) {
+            ItemProducerSizeSummary.row(idx = testIndex1) mustBe None
+          }
         }
       }
+
       "if not provided" - {
-        "must not return a row" in new Test(emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)) {
+        "must not return a row" in new Test(emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1),
+          ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))) {
           ItemProducerSizeSummary.row(
             idx = testIndex1
           ) mustBe None

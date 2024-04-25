@@ -17,21 +17,37 @@
 package views.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
-import models.GoodsType.Beer
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.items.ItemSmallIndependentProducerModel
+import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemSmallIndependentProducerView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours {
+class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
 
   object Selectors extends BaseSelectors
+
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+    emptyUserAnswers
+      .set(DestinationTypePage, GbTaxWarehouse)
+      .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+      .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+      .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
+  )
+
+  lazy val view = app.injector.instanceOf[ItemSmallIndependentProducerView]
+  val form = app.injector.instanceOf[ItemSmallIndependentProducerFormProvider].apply()
 
   "ItemSmallIndependentProducer view" - {
 
@@ -40,19 +56,21 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemSmallIndependentProducerView]
-        val form = app.injector.instanceOf[ItemSmallIndependentProducerFormProvider].apply()
-
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, Beer).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testIndex1).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
-          Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
+          Selectors.title -> messagesForLanguage.title,
+          Selectors.h1 -> messagesForLanguage.heading,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.radioButton(1) -> messagesForLanguage.yesCertified(messagesForLanguage.yesBeer),
-          Selectors.radioButton(2) -> messagesForLanguage.no,
+          Selectors.radioButton(1) -> messagesForLanguage.certifiedIndependentSmallProducer,
+          Selectors.radioButtonHint(1) -> messagesForLanguage.certifiedIndependentSmallProducerHint,
+          Selectors.radioButton(2) -> messagesForLanguage.selfCertifiedIndependentSmallProducerAndConsignor,
+          Selectors.radioButton(3) -> messagesForLanguage.selfCertifiedIndependentSmallProducerNotConsignor,
+          Selectors.label(ItemSmallIndependentProducerFormProvider.producerIdField) -> messagesForLanguage.selfCertifiedIndependentSmallProducerNotConsignorInput,
+          Selectors.radioDividerButton(5) -> messagesForLanguage.or,
+          Selectors.radioButton(6) -> messagesForLanguage.notAIndependentSmallProducer,
+          Selectors.radioButton(7) -> messagesForLanguage.smallProducerNotProvided,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

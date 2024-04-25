@@ -18,6 +18,8 @@ package pages.sections.items
 
 import models.GoodsType._
 import models.requests.DataRequest
+import models.sections.items.ItemSmallIndependentProducerModel
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section
@@ -134,7 +136,9 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   private[items] def independentProducerAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol && request.userAnswers.get(ItemAlcoholStrengthPage(idx)).exists(_ < 8.5)) {
       request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
-        case smallProducer@Some(true) => Seq(smallProducer, request.userAnswers.get(ItemProducerSizePage(idx)))
+        case smallProducer@Some(ItemSmallIndependentProducerModel(producerType, _))
+          if producerType == SelfCertifiedIndependentSmallProducerAndConsignor | producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor =>
+          Seq(smallProducer, request.userAnswers.get(ItemProducerSizePage(idx)))
         case smallProducer => Seq(smallProducer)
       }
     }

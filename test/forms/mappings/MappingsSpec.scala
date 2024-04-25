@@ -354,4 +354,32 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       normaliseSpacesAndControlCharacters("foo   \n   \r   bar") mustBe "foo bar"
     }
   }
+
+  "isOptionSelected" - {
+
+    val optionField = "optionField"
+
+    val optionValue = "optionValue"
+
+    "must return true" - {
+
+      "when the option has been selected" in {
+
+        isOptionSelected(optionField, optionValue).apply(Map(optionField -> optionValue)) mustBe true
+      }
+    }
+
+    "must return false" - {
+
+      "when the option has not been selected" in {
+
+        isOptionSelected(optionField, "blah").apply(Map(optionField -> optionValue)) mustBe false
+      }
+
+      "when the option value doesn't exist in the form data" in {
+
+        isOptionSelected(optionField, optionValue).apply(Map.empty) mustBe false
+      }
+    }
+  }
 }

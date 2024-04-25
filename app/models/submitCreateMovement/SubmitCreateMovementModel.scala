@@ -18,6 +18,7 @@ package models.submitCreateMovement
 
 import config.AppConfig
 import models.requests.DataRequest
+import models.response.UnfixedSubmissionFailuresException
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
@@ -72,11 +73,10 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
     val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
 
     //Prevent user manually accessing the declaration page when unfixed submission failures exist
-    //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-    //if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
-    //  logger.warn("[SubmitCreateMovementModel][apply] - User attempted to submit movement but there are still unfixed submission failures")
-    //  throw UnfixedSubmissionFailuresException("Failed to create SubmitCreateMovementModel due to unfixed submission failures")
-    //}
+    if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+      logger.warn("[SubmitCreateMovementModel][apply] - User attempted to submit movement but there are still unfixed submission failures")
+      throw UnfixedSubmissionFailuresException("Failed to create SubmitCreateMovementModel due to unfixed submission failures")
+    }
 
     SubmitCreateMovementModel(
       movementType = movementScenario.movementType,

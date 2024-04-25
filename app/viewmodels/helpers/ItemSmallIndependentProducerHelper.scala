@@ -16,42 +16,115 @@
 
 package viewmodels.helpers
 
-import models.GoodsType
-import models.GoodsType.{Beer, Spirits}
+import forms.sections.items.ItemSmallIndependentProducerFormProvider.{producerField, producerIdField}
+import models.GoodsType._
+import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario._
+import models.sections.items.ItemSmallIndependentProducerType._
+import models.{GoodsType, Index}
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.data.Form
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ErrorMessage, HtmlContent, Input, Text}
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukInput
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.{RadioItem, Radios}
 import viewmodels.LegendSize
 import viewmodels.govuk.all._
 
-object ItemSmallIndependentProducerHelper {
+import javax.inject.Inject
 
-  def yesMessageFor(goodsType: GoodsType)(implicit messages: Messages): String = {
-    val key = goodsType match {
-      case Beer => "beer"
-      case Spirits => "spirits"
-      case _ => "other"
-    }
-    messages(s"itemSmallIndependentProducer.yes", messages(s"itemSmallIndependentProducer.yes.$key"))
-  }
+class ItemSmallIndependentProducerHelper @Inject()(govukInput: GovukInput) {
 
-  def radios(form: Form[_], goodsType: GoodsType)(implicit messages: Messages): Radios =
+  def radios(form: Form[_])(implicit messages: Messages): Radios =
     RadiosViewModel.apply(
-      form("value"),
+      form(producerField),
       items = Seq(
         RadioItem(
-          id = Some(form("value").id),
-          value = Some("true"),
-          content = Text(yesMessageFor(goodsType))
+          id = Some(s"${form(producerField).id}-${CertifiedIndependentSmallProducer.toString}"),
+          value = Some(CertifiedIndependentSmallProducer.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${CertifiedIndependentSmallProducer.toString}")),
+          hint = Some(HintViewModel(Text(messages(s"itemSmallIndependentProducer.${CertifiedIndependentSmallProducer.toString}.hint"))))
         ),
         RadioItem(
-          id = Some(s"${form("value").id}-no"),
-          value = Some("false"),
-          content = Text(messages("site.no"))
+          id = Some(s"${form(producerField).id}-${SelfCertifiedIndependentSmallProducerAndConsignor.toString}"),
+          value = Some(SelfCertifiedIndependentSmallProducerAndConsignor.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${SelfCertifiedIndependentSmallProducerAndConsignor.toString}"))
+        ),
+        RadioItem(
+          id = Some(s"${form(producerField).id}-${SelfCertifiedIndependentSmallProducerAndNotConsignor.toString}"),
+          value = Some(SelfCertifiedIndependentSmallProducerAndNotConsignor.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${SelfCertifiedIndependentSmallProducerAndNotConsignor.toString}")),
+          conditionalHtml = Some(
+            govukInput(Input(
+              id = producerIdField,
+              name = producerIdField,
+              label = LabelViewModel(Text(messages(s"itemSmallIndependentProducer.$SelfCertifiedIndependentSmallProducerAndNotConsignor.input"))),
+              value = form(producerIdField).value,
+              errorMessage = form.errors(producerIdField) match {
+                case Nil => None
+                case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+              }
+            ))
+          )
+        ),
+        RadioItem(
+          divider = Some(messages("site.divider"))
+        ),
+        RadioItem(
+          id = Some(s"${form(producerField).id}-${NotAIndependentSmallProducer.toString}"),
+          value = Some(NotAIndependentSmallProducer.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${NotAIndependentSmallProducer.toString}"))
+        ),
+        RadioItem(
+          id = Some(s"${form(producerField).id}-${NotProvided.toString}"),
+          value = Some(NotProvided.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${NotProvided.toString}"))
         )
       ),
-      LegendViewModel(Text(messages("itemSmallIndependentProducer.heading", goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
+      LegendViewModel(Text(messages("itemSmallIndependentProducer.legend"))).withCssClass(LegendSize.Small.toString)
     )
 
+}
+
+object ItemSmallIndependentProducerHelper {
+
+  def constructDeclarationPrefix(itemIndex: Index)(implicit request: DataRequest[_], messages: Messages): String =
+    (
+      request.userAnswers.get(DestinationTypePage),
+      request.userAnswers.get(ItemExciseProductCodePage(itemIndex)),
+      request.userAnswers.get(ItemCommodityCodePage(itemIndex))
+    ) match {
+      case (Some(GbTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu), _, _) =>
+        messages("itemSmallIndependentProducer.certifiedStatement.smallProducer")
+      case (Some(movementScenario), Some(epc), Some(cnCode)) if isNiToEUMovement(movementScenario) =>
+        handleNiToEuMovementDeclaration(epc, cnCode)
+      case (movementScenario, epc, cnCode) => throw new IllegalStateException(s"Invalid scenario for small independent producer. Destination type: $movementScenario & EPC: $epc & CN code: $cnCode")
+    }
+
+  private[helpers] def handleNiToEuMovementDeclaration(epc: String, cnCode: String)(implicit messages: Messages): String = {
+    val goodsType = GoodsType(epc, Some(cnCode))
+    goodsType match {
+      case Beer => messages("itemSmallIndependentProducer.certifiedStatement.smallBrewery")
+      case Spirits => messages("itemSmallIndependentProducer.certifiedStatement.smallDistillery")
+      case Wine => messages("itemSmallIndependentProducer.certifiedStatement.wineProducer")
+      case Fermented(_) => messages("itemSmallIndependentProducer.certifiedStatement.fermentedBeveragesProducer")
+      case Intermediate => messages("itemSmallIndependentProducer.certifiedStatement.intermediateBeveragesProducer")
+      case _ => throw new IllegalStateException(s"Invalid goods type for small independent producer: $goodsType")
+    }
+  }
+
+  private[helpers] def isNiToEUMovement(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Boolean =
+    Seq(
+      EuTaxWarehouse,
+      TemporaryRegisteredConsignee,
+      RegisteredConsignee,
+      DirectDelivery,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee,
+      ExemptedOrganisation,
+      ExportWithCustomsDeclarationLodgedInTheEu,
+      ExportWithCustomsDeclarationLodgedInTheUk
+    ).contains(movementScenario) && request.isNorthernIrelandErn
 }

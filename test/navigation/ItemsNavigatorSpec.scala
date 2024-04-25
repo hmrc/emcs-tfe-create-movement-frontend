@@ -21,6 +21,7 @@ import controllers.sections.items.{routes => itemsRoutes}
 import fixtures.ItemFixtures
 import models.response.referenceData.{BulkPackagingType, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.{CheckMode, GoodsType, NormalMode, ReviewMode}
@@ -213,7 +214,23 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
         "when GoodsType is Spirits" - {
 
-          "to the Item Maturation Period Age Page" - {
+          Seq(testExciseProductCodeS300, testExciseProductCodeS400, testExciseProductCodeS500, testExciseProductCodeS600).foreach { spiritEPC =>
+
+            s"and the EPC is ${spiritEPC.code} and the ABV is < 8.5" - {
+
+              "go to the Item Small Independent Producer Page" in {
+
+                val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+                  .set(ItemExciseProductCodePage(testIndex1), spiritEPC.code)
+                  .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49999))
+
+                navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+                  itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+              }
+            }
+          }
+
+          "go to the Item Maturation Period Age Page" - {
 
             "when the EPC is Spirituous Beverages" in {
               val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
@@ -226,7 +243,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
           }
 
-          "to the Designation of Origin page" - {
+          "go to the Designation of Origin page" - {
 
             "when the EPC is anything else but Spirituous Beverages" in {
               val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
@@ -257,25 +274,32 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the Item Small Independent Producer page" - {
 
-        "when the answer is 'Yes'" - {
+        Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor).foreach { producer =>
 
-          "to the Under Construction Page" in {
+          s"when the answer is $producer" - {
 
-            val userAnswers = emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
+            "to the Item Producer Size Page" in {
 
-            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
-              itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+              val userAnswers = emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
+
+              navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
+                itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, 0, NormalMode)
+            }
           }
         }
 
-        "when the answer is 'No'" - {
+        ItemSmallIndependentProducerType.values.diff(
+          Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor)
+        ).foreach { producer =>
+          s"when the answer is $producer" - {
 
-          "to the Item Quantity Page" in {
+            "to the Item Quantity Page" in {
 
-            val userAnswers = emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), false)
+              val userAnswers = emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
 
-            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
-              itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+              navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), NormalMode, userAnswers) mustBe
+                itemsRoutes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
           }
         }
       }
@@ -974,20 +998,28 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from ItemSmallIndependentProducerPage" - {
-        "when answer is true" - {
-          "to ItemProducerSize page" in {
-            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
-              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
-            ) mustBe
-              itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+
+        Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor).foreach { producer =>
+          s"when answer is $producer" - {
+            "to ItemProducerSize page" in {
+              navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
+                emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
+              ) mustBe
+                itemsRoutes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode)
+            }
           }
         }
-        "when answer is false" - {
-          "to CYA page" in {
-            navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
-              emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), false)
-            ) mustBe
-              itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+
+        ItemSmallIndependentProducerType.values.diff(
+          Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor)
+        ).foreach { producer =>
+          s"when answer is $producer" - {
+            "to CYA page" in {
+              navigator.nextPage(ItemSmallIndependentProducerPage(testIndex1), CheckMode,
+                emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
+              ) mustBe
+                itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
+            }
           }
         }
       }

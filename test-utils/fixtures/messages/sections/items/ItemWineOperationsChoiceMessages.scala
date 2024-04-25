@@ -39,7 +39,6 @@ object ItemWineOperationsChoiceMessages {
     val checkBoxItem9 = "The product has been made on the basis of experimental use of a new oenological practice"
     val checkBoxItem10 = "The product has been partially dealcoholised"
     val checkBoxItem11 = "Other operations"
-    val checkBoxItem12 = "or"
     val checkBoxItem13 = "No, I am not aware that the wine has undergone any operations"
 
     val cyaLabel = "Wine operations"

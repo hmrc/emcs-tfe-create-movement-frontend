@@ -63,7 +63,7 @@ class ItemWineOperationsChoiceViewSpec extends SpecBase with ViewBehaviours with
           Selectors.checkboxItem(10) -> messagesForLanguage.checkBoxItem9,
           Selectors.checkboxItem(11) -> messagesForLanguage.checkBoxItem10,
           Selectors.checkboxItem(12) -> messagesForLanguage.checkBoxItem11,
-          Selectors.checkboxDividerItem(13) -> messagesForLanguage.checkBoxItem12,
+          Selectors.checkboxDividerItem(13) -> messagesForLanguage.or,
           Selectors.checkboxItem(14) -> messagesForLanguage.checkBoxItem13,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft

@@ -56,7 +56,7 @@ class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.checkboxItem(1) -> messagesForLanguage.checkboxItemForVat,
           Selectors.checkboxItem(2) -> messagesForLanguage.checkboxItemForEori,
-          Selectors.checkboxDividerItem(3) -> messagesForLanguage.checkBoxItemDivider,
+          Selectors.checkboxDividerItem(3) -> messagesForLanguage.or,
           Selectors.checkboxItem(4) -> messagesForLanguage.checkboxItemForNoInfo,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft

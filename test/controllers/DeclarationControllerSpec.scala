@@ -166,32 +166,30 @@ class DeclarationControllerSpec extends SpecBase
           redirectLocation(res) must contain(testOnwardRoute.url)
         }
 
-        //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-        //        "must save the timestamp and redirect (when all submission failures have been fixed)" in new Test(
-        //          baseFullUserAnswers.copy(
-        //            submissionFailures = Seq(
-        //              itemQuantityFailure(1).copy(hasBeenFixed = true),
-        //              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-        //            )
-        //          )
-        //        ) {
-        //          val expectedUserAnswers = baseFullUserAnswers.copy(
-        //            hasBeenSubmitted = true,
-        //            submittedDraftId = Some(testDraftId),
-        //            submissionFailures = Seq(
-        //              itemQuantityFailure(1).copy(hasBeenFixed = true),
-        //              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-        //            ))
-        //          MockAppConfig.destinationOfficeSuffix.returns("004098")
-        //          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(submitCreateMovementResponseEIS))
-        //          MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
-        //
-        //          val res = controller.onSubmit(ern, testDraftId)(request)
-        //
-        //          status(res) mustBe SEE_OTHER
-        //          redirectLocation(res) must contain(testOnwardRoute.url)
-        //        }
-        //      }
+        "must save the timestamp and redirect (when all submission failures have been fixed)" in new Test(
+          baseFullUserAnswers.copy(
+            submissionFailures = Seq(
+              itemQuantityFailure(1).copy(hasBeenFixed = true),
+              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+            )
+          )
+        ) {
+          val expectedUserAnswers = baseFullUserAnswers.copy(
+            hasBeenSubmitted = true,
+            submittedDraftId = Some(testDraftId),
+            submissionFailures = Seq(
+              itemQuantityFailure(1).copy(hasBeenFixed = true),
+              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+            ))
+          MockAppConfig.destinationOfficeSuffix.returns("004098")
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(submitCreateMovementResponseEIS))
+          MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+          val res = controller.onSubmit(ern, testDraftId)(request)
+
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) must contain(testOnwardRoute.url)
+        }
       }
 
       "when downstream call is unsuccessful" - {
@@ -212,18 +210,18 @@ class DeclarationControllerSpec extends SpecBase
           status(res) mustBe SEE_OTHER
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
         }
-        //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-        //        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
-        //          baseFullUserAnswers.copy(submissionFailures = Seq(
-        //            itemQuantityFailure(1).copy(hasBeenFixed = false),
-        //            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-        //          ))
-        //        ) {
-        //          val res = controller.onSubmit(ern, testDraftId)(request)
-        //
-        //          status(res) mustBe SEE_OTHER
-        //          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-        //        }
+
+        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
+          baseFullUserAnswers.copy(submissionFailures = Seq(
+            itemQuantityFailure(1).copy(hasBeenFixed = false),
+            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+          ))
+        ) {
+          val res = controller.onSubmit(ern, testDraftId)(request)
+
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+        }
 
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))

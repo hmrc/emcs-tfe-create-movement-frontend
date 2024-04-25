@@ -22,6 +22,8 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import models.requests.DataRequest
 import models.sections.info._
+import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import pages.sections.destination.{DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.info._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -130,7 +132,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
       "when GBRC" in {
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers,
+          answers = baseFullUserAnswers
+            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationWarehouseExcisePage, testErn)
+            .set(DestinationConsigneeDetailsPage, false),
           ern = "GBRC123"
         )
 
@@ -139,7 +144,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
       "when GBWK" in {
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers,
+          answers = baseFullUserAnswers
+            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationWarehouseExcisePage, testErn)
+            .set(DestinationConsigneeDetailsPage, false),
           ern = "GBWK123"
         )
 

@@ -47,7 +47,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-    lazy val form: Form[String] = formProvider(testGoodsTypeWine)(messages(request))
+    lazy val form: Form[String] = formProvider(testIndex1)(messages(request))
 
     lazy val controller = new ItemPackagingQuantityController(
       messagesApi,
@@ -100,7 +100,13 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, itemPackagingQuantitySubmitAction, Wine, ItemPackaging("VA", "Vat"), testPackagingIndex1, testIndex1)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form,
+        itemPackagingQuantitySubmitAction,
+        ItemPackaging("VA", "Vat"),
+        testPackagingIndex1,
+        testIndex1
+      )(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
@@ -112,7 +118,6 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(
         form.fill("1"),
         itemPackagingQuantitySubmitAction,
-        Wine,
         ItemPackaging("VA", "Vat"),
         testPackagingIndex1,
         testIndex1
@@ -136,7 +141,6 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(
         boundForm,
         itemPackagingQuantitySubmitAction,
-        Wine,
         ItemPackaging("VA", "Vat"),
         testPackagingIndex1,
         testIndex1

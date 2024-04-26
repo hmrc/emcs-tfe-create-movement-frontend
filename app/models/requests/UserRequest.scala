@@ -29,6 +29,7 @@ case class UserRequest[A](request: Request[A],
                           hasMultipleErns: Boolean) extends WrappedRequest[A](request) with Logging {
 
   lazy val isNorthernIrelandErn: Boolean = ern.startsWith(Constants.NI_PREFIX)
+  lazy val isGreatBritainErn: Boolean = ern.startsWith(Constants.GB_PREFIX)
 
   lazy val userTypeFromErn: UserType = UserType(ern)
 

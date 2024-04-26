@@ -18,24 +18,49 @@ package forms.sections.exportInformation
 
 import forms.mappings.Mappings
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import models.NorthernIrelandRegisteredConsignor
 import models.requests.DataRequest
+import models.response.InvalidCustomsOfficeValidationException
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.data.Form
+import play.api.data.validation.Constraint
+import utils.Logging
 
 import javax.inject.Inject
 
-class ExportCustomsOfficeFormProvider @Inject() extends Mappings {
+class ExportCustomsOfficeFormProvider @Inject() extends Mappings with Logging {
 
   def apply()(implicit dataRequest: DataRequest[_]): Form[String] = {
     val optOriginalValueSentInPreviousSubmission = ExportCustomsOfficePage.getOriginalAttributeValue
     Form(
       "value" -> text("exportCustomsOffice.error.required")
-        .verifying(firstError(
-          fixedLength(8, "exportCustomsOffice.error.length"),
-          regexp(XSS_REGEX, s"exportCustomsOffice.error.invalidCharacter"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, s"exportCustomsOffice.error.customOfficeRegex"),
-          isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "errors.704.exportOffice.input")
-        ))
+        .verifying(
+          firstError(
+            fixedLength(8, "exportCustomsOffice.error.length"),
+            regexp(XSS_REGEX, s"exportCustomsOffice.error.invalidCharacter"),
+            regexp(CUSTOMS_OFFICE_CODE_REGEX, s"exportCustomsOffice.error.customOfficeRegex"),
+            isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "errors.704.exportOffice.input"),
+            validateOfficePrefix
+          )
+        )
     )
   }
+
+  private def validateOfficePrefix(implicit request: DataRequest[_]): Constraint[String] =
+    (request.isGreatBritainErn, request.isNorthernIrelandErn, request.dispatchPlace) match {
+      case (true, false, _) =>
+        startsWith("GB", "exportCustomsOffice.error.mustStartWithGB")
+      case (false, true, Some(GreatBritain)) =>
+        startsWith("GB", "exportCustomsOffice.error.mustStartWithGB")
+      case (false, true, Some(NorthernIreland)) =>
+        doesNotStartWith("GB", "exportCustomsOffice.error.mustNotStartWithGBAsDispatchedFromNorthernIreland")
+      case (false, true, _) if request.userTypeFromErn == NorthernIrelandRegisteredConsignor =>
+        doesNotStartWith("GB", "exportCustomsOffice.error.mustNotStartWithGBAsNorthernIrelandRegisteredConsignor")
+      case (isGB, isNI, dispatchPlace) =>
+        val msg = s"[validateOfficePrefix] unexpected scenario: isGreatBritainErn=$isGB, isNorthernIrelandErn=$isNI, dispatchPlace=$dispatchPlace"
+        logger.error(msg)
+        throw InvalidCustomsOfficeValidationException(msg)
+    }
+
 }

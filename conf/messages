@@ -665,6 +665,11 @@ exportCustomsOffice.error.required = Enter the customs office code
 exportCustomsOffice.error.length = Customs office code must be {0} characters
 exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
 exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 capital letters followed by 6 mixed numbers and letters.
+
+exportCustomsOffice.error.mustStartWithGB = Customs office code must start with GB, followed by 6 mixed numbers and letters
+exportCustomsOffice.error.mustNotStartWithGBAsDispatchedFromNorthernIreland = Customs office code must not start with GB, because this movement is being dispatched from Northern Ireland
+exportCustomsOffice.error.mustNotStartWithGBAsNorthernIrelandRegisteredConsignor = Customs office code must not start with GB
+
 exportCustomsOffice.checkYourAnswers.label = Customs office code
 exportCustomsOffice.change.hidden = customs office code
 

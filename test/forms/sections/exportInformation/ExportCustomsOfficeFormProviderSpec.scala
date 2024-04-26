@@ -21,6 +21,10 @@ import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import models.UserAnswers
+import models.response.InvalidCustomsOfficeValidationException
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
+import pages.sections.info.DispatchPlacePage
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -32,40 +36,51 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
   val lengthKey = "exportCustomsOffice.error.length"
   val xssKey = "exportCustomsOffice.error.invalidCharacter"
   val regexKey = "exportCustomsOffice.error.customOfficeRegex"
+  val mustStartWithGBKey = "exportCustomsOffice.error.mustStartWithGB"
+  val mustNotStartWithGBAsDispatchedFromNorthernIrelandKey = "exportCustomsOffice.error.mustNotStartWithGBAsDispatchedFromNorthernIreland"
+  val mustNotStartWithGBAsNorthernIrelandRegisteredConsignorKey = "exportCustomsOffice.error.mustNotStartWithGBAsNorthernIrelandRegisteredConsignor"
   val requiredLength = 8
 
-  val form = new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest()))
+  class Test(consignorErn: String = testErn, userAnswers: UserAnswers = emptyUserAnswers) {
+    lazy val form = new ExportCustomsOfficeFormProvider()()(
+      dataRequest(
+        request = FakeRequest(),
+        ern = consignorErn,
+        answers = userAnswers.copy(ern = consignorErn)
+      )
+    )
+  }
 
   ".value" - {
 
     val fieldName = "value"
 
     behave like mandatoryField(
-      form,
+      new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest())),
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
 
     behave like fieldWithFixedLength(
-      form,
+      new ExportCustomsOfficeFormProvider()()(dataRequest(FakeRequest())),
       fieldName,
       lengthError = FormError(fieldName, lengthKey, Seq(requiredLength)),
       requiredLength = requiredLength
     )
 
-    s"not bind a value that contains XSS chars" in {
+    "not bind a value that contains XSS chars" in new Test {
 
       val boundForm = form.bind(Map(fieldName -> "<1234567"))
       boundForm.errors mustBe Seq(FormError(fieldName, xssKey, Seq(XSS_REGEX)))
     }
 
-    s"not bind a value that doesn't start with two alpha chars" in {
+    "not bind a value that doesn't start with two alpha chars" in new Test {
 
       val boundForm = form.bind(Map(fieldName -> "12345678"))
       boundForm.errors mustBe Seq(FormError(fieldName, regexKey, Seq(CUSTOMS_OFFICE_CODE_REGEX)))
     }
 
-    s"bind a value that meets the expected regex" in {
+    "bind a value that meets the expected regex" in new Test(testGreatBritainErn) {
 
       val boundForm = form.bind(Map(fieldName -> "GB345678"))
       boundForm.errors mustBe Seq()
@@ -83,6 +98,74 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
 
         val boundForm = form.bind(Map(fieldName -> testExportCustomsOffice))
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "errors.704.exportOffice.input", Seq()))
+      }
+    }
+
+    "when the consignor ERN starts with GB" - {
+      "binds a valid value starting with GB" in new Test(testGreatBritainErn) {
+        val boundForm = form.bind(Map(fieldName -> "GB123456"))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some("GB123456")
+      }
+
+      "not bind a value if it does not start with GB" in new Test(testGreatBritainErn) {
+        val boundForm = form.bind(Map(fieldName -> "XI123456"))
+        boundForm.errors mustBe Seq(FormError(fieldName, mustStartWithGBKey))
+      }
+    }
+
+    "when the consignor ERN starts with XI" - {
+      "and dispatched place is Great Britain" - {
+        val userAnswers = emptyUserAnswers.set(DispatchPlacePage, GreatBritain)
+
+        "binds a valid value starting with GB" in new Test(testNorthernIrelandErn, userAnswers) {
+          val boundForm = form.bind(Map(fieldName -> "GB123456"))
+          boundForm.errors mustBe Seq()
+          boundForm.value mustBe Some("GB123456")
+        }
+
+        "not bind a value that doesn't start with GB" in new Test(testNorthernIrelandErn, userAnswers) {
+          val boundForm = form.bind(Map(fieldName -> "XI123456"))
+          boundForm.errors mustBe Seq(FormError(fieldName, mustStartWithGBKey))
+        }
+      }
+
+      "and dispatched place is Northern Ireland" - {
+        val userAnswers = emptyUserAnswers.set(DispatchPlacePage, NorthernIreland)
+
+        "binds a valid value starting with XI" in new Test(testNorthernIrelandErn, userAnswers) {
+          val boundForm = form.bind(Map(fieldName -> "XI123456"))
+          boundForm.errors mustBe Seq()
+          boundForm.value mustBe Some("XI123456")
+        }
+
+        "not bind a value if it starts with GB" in new Test(testNorthernIrelandErn, userAnswers) {
+          val boundForm = form.bind(Map(fieldName -> "GB123456"))
+          boundForm.errors mustBe Seq(FormError(fieldName, mustNotStartWithGBAsDispatchedFromNorthernIrelandKey))
+        }
+      }
+    }
+
+    "when the consignor is a Northern Ireland Registered Consignor" - {
+      "binds a valid value starting with XI" in new Test(testNIRegisteredConsignorErn) {
+        val boundForm = form.bind(Map(fieldName -> "XI123456"))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some("XI123456")
+      }
+
+      "not bind a value if it starts with GB" in new Test(testNIRegisteredConsignorErn) {
+        val boundForm = form.bind(Map(fieldName -> "GB123456"))
+        boundForm.errors mustBe Seq(FormError(fieldName, mustNotStartWithGBAsNorthernIrelandRegisteredConsignorKey))
+      }
+    }
+
+    "throw an InvalidCustomsOfficeValidationException" - {
+      "when an unexpected scenario occurs within the customs office validation" in new Test(testNorthernIrelandErn) {
+        val result = intercept[InvalidCustomsOfficeValidationException] {
+          form.bind(Map(fieldName -> "XI123456"))
+        }
+
+        result.getMessage mustEqual s"[validateOfficePrefix] unexpected scenario: isGreatBritainErn=false, isNorthernIrelandErn=true, dispatchPlace=None"
       }
     }
   }
@@ -122,6 +205,18 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
         "have the correct error message for a submission failure" in {
           msgs("errors.704.exportOffice.input") mustBe
             messagesForLanguage.submissionFailureErrorInput
+        }
+
+        "have the correct must start with GB error message" in {
+          msgs(mustStartWithGBKey) mustBe messagesForLanguage.errorMustStartWithGB
+        }
+
+        "have the correct must not start with GB as dispatched from Northern Ireland error message" in {
+          msgs(mustNotStartWithGBAsDispatchedFromNorthernIrelandKey) mustBe messagesForLanguage.errorMustNotStartWithGBAsDispatchedFromNorthernIreland
+        }
+
+        "have the correct must not start with GB error message as Northern Ireland Registsred Consignor" in {
+          msgs(mustNotStartWithGBAsNorthernIrelandRegisteredConsignorKey) mustBe messagesForLanguage.errorMustNotStartWithGBAsNorthernIrelandRegisteredConsignor
         }
       }
     }

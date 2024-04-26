@@ -75,7 +75,7 @@ class DeclarationControllerSpec extends SpecBase
 
   "DeclarationController" - {
     "for GET onPageLoad" - {
-      "must return the declaration page (no submission failures)" in new Test() {
+      "must return the declaration page (no submission failure and journey complete)" in new Test() {
 
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))

@@ -21,7 +21,7 @@ import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DeferredMovementFormProvider
 import models.requests.DataRequest
-import models.{Mode, ReviewMode}
+import models.{CheckMode, Mode, ReviewMode}
 import navigation.InformationNavigator
 import pages.sections.info.DeferredMovementPage
 import play.api.data.Form
@@ -90,7 +90,8 @@ class DeferredMovementController @Inject()(
               )
             )
           )
-          saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, cleansedAnswers, ReviewMode)
+          val mode = if(request.userAnswers.get(page).contains(value)) CheckMode else ReviewMode
+          saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, cleansedAnswers, mode)
         }
       )
     }

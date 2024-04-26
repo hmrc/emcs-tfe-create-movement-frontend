@@ -33,8 +33,8 @@ case class DocumentSection(idx: Index) extends Section[JsObject] {
       request.userAnswers.get(DocumentReferencePage(idx)),
       request.userAnswers.get(DocumentDescriptionPage(idx))
     ) match {
-      case (Some(docType), Some(true), Some(_), None) if docType.typeIsOther => Completed
-      case (Some(docType), Some(false), None, Some(_)) if docType.typeIsOther => Completed
+      case (Some(docType), Some(true), Some(_), _) if docType.typeIsOther => Completed
+      case (Some(docType), Some(false), _, Some(_)) if docType.typeIsOther => Completed
       case (Some(_), None, Some(_), None) => Completed
       case (None, None, None, None) => NotStarted
       case _ => InProgress

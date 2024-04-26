@@ -25,6 +25,7 @@ import models.response.MissingMandatoryPage
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
+import pages.sections.AllSections
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{SubmitCreateMovementService, UserAnswersService, ValidationService}
@@ -55,7 +56,7 @@ class DeclarationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { _ =>
         validationService.validate().map { validatedAnswers =>
-          if(validatedAnswers.haveAllSubmissionErrorsBeenFixed) {
+          if (AllSections.isCompleted(request.copy(userAnswers =  validatedAnswers))) {
             Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId)))
           } else {
             logger.info("[onPageLoad] Validation Error was triggered, redirect to task list for User to correct")

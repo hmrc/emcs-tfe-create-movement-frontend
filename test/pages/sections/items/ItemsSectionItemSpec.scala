@@ -109,7 +109,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         section.isCompleted mustBe true
       }
 
-      "when Spirit with maturation age and all other mandatory pages" in {
+      "when Spirituous Beverages (S200) with maturation age and all other mandatory pages" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
@@ -118,6 +118,27 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemCommercialDescriptionPage(testIndex1), "Cider")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
           .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(hasMaturationPeriodAge = true, Some("40 years")))
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex1), false)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
+          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+        )
+
+        section.isCompleted mustBe true
+      }
+
+      "when Spirit but not Spirituous Beverages (S200) and all other mandatory pages" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), "S500")
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
+          .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex1), "Cider")
+          .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
           .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
@@ -272,7 +293,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         section.isCompleted mustBe false
       }
 
-      "when Spirit with maturation age missing - all other mandatory pages exist" in {
+      "when Spirituous Beverages (S200) with maturation age missing - all other mandatory pages exist" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
@@ -995,12 +1016,12 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "maturationAgeAnswer" - {
     "must return a non-empty Seq" - {
-      "if spirits" in {
+      "if spirits and is Spirituous Beverages" in {
         GoodsType.values.filter(_ == GoodsType.Spirits).foreach {
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-            section.maturationAgeAnswer(goodsType, dr).length must not be 0
+            section.maturationAgeAnswer(testEpcSpirit)(goodsType, dr).length must not be 0
         }
       }
     }
@@ -1011,9 +1032,15 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-            section.maturationAgeAnswer(goodsType, dr) mustBe Nil
+            section.maturationAgeAnswer(testEpcBeer)(goodsType, dr) mustBe Nil
         }
       }
+      "if spirits but not Spirituous Beverages" in {
+        val dr: DataRequest[_] = dataRequest(FakeRequest())
+
+        section.maturationAgeAnswer("S500")(GoodsType.Spirits, dr) mustBe Nil
+      }
+
     }
   }
 

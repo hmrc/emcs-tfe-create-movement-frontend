@@ -22,7 +22,7 @@ import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import utils.{CommodityCodeHelper, JsonOptionFormatter, SubmissionError}
+import utils.{CommodityCodeHelper, ExciseProductCodeHelper, JsonOptionFormatter, SubmissionError}
 import viewmodels.taskList._
 
 case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
@@ -48,7 +48,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     (commonMandatoryAnswers ++
       degreesPlatoAnswer ++
       independentProducerAnswers ++
-      maturationAgeAnswer ++
+      maturationAgeAnswer(epc) ++
       wineCountryOfOriginAnswers ++
       wineMoreInformationAnswers ++
       designationOfOriginAnswers ++
@@ -125,8 +125,8 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       Seq(request.userAnswers.get(ItemDesignationOfOriginPage(idx)))
     }
 
-  private[items] def maturationAgeAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType == Spirits)(Seq(request.userAnswers.get(ItemMaturationPeriodAgePage(idx))))
+  private[items] def maturationAgeAnswer(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+    mandatoryIf(goodsType == Spirits && ExciseProductCodeHelper.isSpirituousBeverages(epc))(Seq(request.userAnswers.get(ItemMaturationPeriodAgePage(idx))))
 
   private[items] def alcoholStrengthAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType.isAlcohol)(Seq(request.userAnswers.get(ItemAlcoholStrengthPage(idx))))

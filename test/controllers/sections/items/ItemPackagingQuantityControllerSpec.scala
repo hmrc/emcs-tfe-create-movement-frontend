@@ -21,7 +21,6 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingQuantityFormProvider
 import mocks.services.MockUserAnswersService
-import models.GoodsType.Wine
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
@@ -77,14 +76,6 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
-    }
-
-    "must redirect to Index of section when Excise Product Code is missing" in new Fixture(
-      Some(emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("VA", "Vat")))) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
     "must redirect to Index of section when Select Packaging Type is missing" in new Fixture(

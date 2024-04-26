@@ -47,16 +47,13 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-          withGoodsTypeAsync(itemsIndex) {
-            _ =>
-              renderView(
-                Ok,
-                fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(itemsIndex)),
-                itemsIndex,
-                packagingIdx,
-                mode
-              )
-          }
+          renderView(
+            Ok,
+            fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(itemsIndex)),
+            itemsIndex,
+            packagingIdx,
+            mode
+          )
         }
     }
 
@@ -64,13 +61,10 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-          withGoodsTypeAsync(itemsIndex) {
-            _ =>
-              formProvider(itemsIndex).bindFromRequest().fold(
-                renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
-                saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), _, mode)
-              )
-          }
+          formProvider(itemsIndex).bindFromRequest().fold(
+            renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
+            saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), _, mode)
+          )
         }
     }
 

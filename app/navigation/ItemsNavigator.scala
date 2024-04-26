@@ -122,6 +122,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
     case ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      //TODO: this will go to CAM-ITM26: shipping-mark-choice in ETFE-3562
       itemsRoutes.ItemPackagingProductTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
     case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>

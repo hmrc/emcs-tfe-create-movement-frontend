@@ -31,7 +31,12 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+
+    def detailsP(pIndex: Int) = s"main details p:nth-of-type($pIndex)"
+
+    def detailsBullet(bulletIndex: Int) = s"main details .govuk-list--bullet li:nth-of-type($bulletIndex)"
+  }
 
   "ItemPackagingQuantity view" - {
 
@@ -42,16 +47,22 @@ class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with It
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemPackagingQuantityView]
+        lazy val view = app.injector.instanceOf[ItemPackagingQuantityView]
         val form = app.injector.instanceOf[ItemPackagingQuantityFormProvider].apply(testGoodsTypeWine)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testGoodsTypeWine, testItemPackagingTypes.head).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testGoodsTypeWine, testItemPackagingTypes.head, testPackagingIndex2, testIndex1).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(testGoodsTypeWine.toSingularOutput()),
-          Selectors.h1 -> messagesForLanguage.heading(testGoodsTypeWine.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.hint -> messagesForLanguage.hint(testItemPackagingTypes.head.description),
+          Selectors.h1 -> messagesForLanguage.heading(testGoodsTypeWine.toSingularOutput()),
+          Selectors.hint -> messagesForLanguage.hint(testPackagingIndex2.displayIndex.toInt, testIndex1.displayIndex.toInt, testItemPackagingTypes.head.description),
+          Selectors.summary(1) -> messagesForLanguage.summary,
+          Selectors.detailsP(1) -> messagesForLanguage.detailsP1,
+          Selectors.detailsBullet(1) -> messagesForLanguage.detailsBullet1,
+          Selectors.detailsBullet(2) -> messagesForLanguage.detailsBullet2,
+          Selectors.detailsBullet(3) -> messagesForLanguage.detailsBullet3,
+          Selectors.detailsP(2) -> messagesForLanguage.detailsP2,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

@@ -79,19 +79,21 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
   private def renderView(status: Status,
                          form: Form[_],
                          goodsType: GoodsType,
-                         itemsIndex: Index,
-                         packagingIdx: Index,
+                         itemIndex: Index,
+                         packagingIndex: Index,
                          mode: Mode
                         )(implicit request: DataRequest[_]): Future[Result] =
-    withAnswerAsync(ItemSelectPackagingPage(itemsIndex, packagingIdx)) {
+    withAnswerAsync(ItemSelectPackagingPage(itemIndex, packagingIndex)) {
       packagingType =>
         Future.successful(
           status(
             view(
               form,
-              routes.ItemPackagingQuantityController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
+              routes.ItemPackagingQuantityController.onSubmit(request.ern, request.draftId, itemIndex, packagingIndex, mode),
               goodsType,
-              packagingType
+              packagingType,
+              packagingIndex = packagingIndex,
+              itemIndex = itemIndex
             )
           )
         )

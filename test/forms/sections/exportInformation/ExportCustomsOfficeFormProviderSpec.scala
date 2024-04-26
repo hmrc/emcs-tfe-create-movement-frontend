@@ -42,7 +42,7 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
   val requiredLength = 8
 
   class Test(consignorErn: String = testErn, userAnswers: UserAnswers = emptyUserAnswers) {
-    val form = new ExportCustomsOfficeFormProvider()()(
+    lazy val form = new ExportCustomsOfficeFormProvider()()(
       dataRequest(
         request = FakeRequest(),
         ern = consignorErn,

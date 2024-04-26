@@ -20,10 +20,11 @@ import forms.mappings.Mappings
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import models.NorthernIrelandRegisteredConsignor
 import models.requests.DataRequest
+import models.response.InvalidCustomsOfficeValidationException
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.data.Form
-import play.api.data.validation.{Constraint, Valid}
+import play.api.data.validation.Constraint
 import utils.Logging
 
 import javax.inject.Inject
@@ -56,9 +57,10 @@ class ExportCustomsOfficeFormProvider @Inject() extends Mappings with Logging {
         doesNotStartWith("GB", "exportCustomsOffice.error.mustNotStartWithGBAsDispatchedFromNorthernIreland")
       case (false, true, _) if request.userTypeFromErn == NorthernIrelandRegisteredConsignor =>
         doesNotStartWith("GB", "exportCustomsOffice.error.mustNotStartWithGBAsNorthernIrelandRegisteredConsignor")
-      case _ =>
-        logger.warn("[validateOfficePrefix] unexpected match (should not occur), defaulting to Valid")
-        Constraint(_ => Valid)
+      case (isGB, isNI, dispatchPlace) =>
+        val msg = s"[validateOfficePrefix] unexpected scenario: isGreatBritainErn=$isGB, isNorthernIrelandErn=$isNI, dispatchPlace=$dispatchPlace"
+        logger.error(msg)
+        throw InvalidCustomsOfficeValidationException(msg)
     }
 
 }

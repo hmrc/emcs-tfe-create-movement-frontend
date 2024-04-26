@@ -22,6 +22,7 @@ import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import forms.behaviours.StringFieldBehaviours
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
 import models.UserAnswers
+import models.response.InvalidCustomsOfficeValidationException
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.DispatchPlacePage
 import play.api.data.FormError
@@ -155,6 +156,16 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
       "not bind a value if it starts with GB" in new Test(testNIRegisteredConsignorErn) {
         val boundForm = form.bind(Map(fieldName -> "GB123456"))
         boundForm.errors mustBe Seq(FormError(fieldName, mustNotStartWithGBAsNorthernIrelandRegisteredConsignorKey))
+      }
+    }
+
+    "throw an InvalidCustomsOfficeValidationException" - {
+      "when an unexpected scenario occurs within the customs office validation" in new Test(testNorthernIrelandErn) {
+        val result = intercept[InvalidCustomsOfficeValidationException] {
+          form.bind(Map(fieldName -> "XI123456"))
+        }
+
+        result.getMessage mustEqual s"[validateOfficePrefix] unexpected scenario: isGreatBritainErn=false, isNorthernIrelandErn=true, dispatchPlace=None"
       }
     }
   }

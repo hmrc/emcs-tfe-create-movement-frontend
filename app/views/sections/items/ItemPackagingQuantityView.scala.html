@@ -35,9 +35,9 @@
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, packagingType: ItemPackaging, packagingIndex: Index, itemIndex: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, packagingType: ItemPackaging, packagingIndex: Index, itemIndex: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingQuantity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingQuantity.title", itemIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 
@@ -50,7 +50,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("itemPackagingQuantity.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("itemPackagingQuantity.heading", itemIndex.displayIndex))).asPageHeading(LabelSize.Large)
             )
             .withWidth(Fixed5)
             .withHint(Hint(content = HtmlContent(hint)))

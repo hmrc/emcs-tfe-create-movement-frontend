@@ -17,7 +17,7 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import models.GoodsType
+import models.Index
 import play.api.data.Form
 import play.api.i18n.Messages
 
@@ -27,10 +27,10 @@ class ItemPackagingQuantityFormProvider @Inject() extends Mappings {
 
   import ItemPackagingQuantityFormProvider._
 
-  def apply(goodsType: GoodsType)(implicit messages: Messages): Form[String] =
+  def apply(itemIndex: Index)(implicit messages: Messages): Form[String] =
     Form(
       fieldName -> bigInt(
-        requiredKey = requiredErrorKey(goodsType),
+        requiredKey = requiredErrorKey(itemIndex),
         wholeNumberKey = decimalPlacesErrorKey,
         nonNumericKey = invalidCharactersErrorKey
       ).transform[String](_.toString(), BigInt(_))
@@ -44,8 +44,8 @@ object ItemPackagingQuantityFormProvider {
   val fieldName = "value"
   val maxDecimalPlacesValue = 0
 
-  def requiredErrorKey(goodsType: GoodsType)(implicit messages: Messages): String =
-    messages("itemPackagingQuantity.error.required", goodsType.toSingularOutput())
+  def requiredErrorKey(itemIndex: Index)(implicit messages: Messages): String =
+    messages("itemPackagingQuantity.error.required", itemIndex.displayIndex)
 
   val invalidCharactersErrorKey = "itemPackagingQuantity.error.invalidCharacters"
   val decimalPlacesErrorKey = "itemPackagingQuantity.error.decimalPlaces"

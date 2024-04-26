@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 
 class ItemPackagingQuantityFormProviderSpec extends SpecBase with FieldBehaviours with ItemFixtures{
 
-  val form = new ItemPackagingQuantityFormProvider()(testGoodsTypeWine)(messages(FakeRequest()))
+  val form = new ItemPackagingQuantityFormProvider()(testIndex1)(messages(FakeRequest()))
 
 
   "when binding valid values" - {
@@ -48,7 +48,7 @@ class ItemPackagingQuantityFormProviderSpec extends SpecBase with FieldBehaviour
     "when empty" - {
       "must error when binding the form" in {
         val boundForm = form.bind(Map(fieldName -> ""))
-        boundForm.errors mustBe Seq(FormError(fieldName, requiredErrorKey(testGoodsTypeWine)(messages(FakeRequest()))))
+        boundForm.errors mustBe Seq(FormError(fieldName, requiredErrorKey(testIndex1)(messages(FakeRequest()))))
       }
     }
 

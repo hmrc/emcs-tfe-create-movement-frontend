@@ -48,14 +48,14 @@ class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with It
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         lazy val view = app.injector.instanceOf[ItemPackagingQuantityView]
-        val form = app.injector.instanceOf[ItemPackagingQuantityFormProvider].apply(testGoodsTypeWine)
+        val form = app.injector.instanceOf[ItemPackagingQuantityFormProvider].apply(testIndex1)
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testGoodsTypeWine, testItemPackagingTypes.head, testPackagingIndex2, testIndex1).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testItemPackagingTypes.head, testPackagingIndex2, testIndex1).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title(testGoodsTypeWine.toSingularOutput()),
+          Selectors.title -> messagesForLanguage.title(testIndex1.displayIndex),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.h1 -> messagesForLanguage.heading(testGoodsTypeWine.toSingularOutput()),
+          Selectors.h1 -> messagesForLanguage.heading(testIndex1.displayIndex),
           Selectors.hint -> messagesForLanguage.hint(testPackagingIndex2.displayIndex.toInt, testIndex1.displayIndex.toInt, testItemPackagingTypes.head.description),
           Selectors.summary(1) -> messagesForLanguage.summary,
           Selectors.detailsP(1) -> messagesForLanguage.detailsP1,

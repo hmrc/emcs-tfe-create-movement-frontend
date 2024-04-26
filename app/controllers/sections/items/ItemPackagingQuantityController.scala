@@ -18,7 +18,6 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemPackagingQuantityFormProvider
-import models.GoodsType
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
@@ -48,17 +47,13 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-          withGoodsTypeAsync(itemsIndex) {
-            goodsType =>
-              renderView(
-                Ok,
-                fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(goodsType)),
-                goodsType,
-                itemsIndex,
-                packagingIdx,
-                mode
-              )
-          }
+          renderView(
+            Ok,
+            fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(itemsIndex)),
+            itemsIndex,
+            packagingIdx,
+            mode
+          )
         }
     }
 
@@ -66,19 +61,15 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-          withGoodsTypeAsync(itemsIndex) {
-            goodsType =>
-              formProvider(goodsType).bindFromRequest().fold(
-                renderView(BadRequest, _, goodsType, itemsIndex, packagingIdx, mode),
-                saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), _, mode)
-              )
-          }
+          formProvider(itemsIndex).bindFromRequest().fold(
+            renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
+            saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), _, mode)
+          )
         }
     }
 
   private def renderView(status: Status,
                          form: Form[_],
-                         goodsType: GoodsType,
                          itemIndex: Index,
                          packagingIndex: Index,
                          mode: Mode
@@ -90,7 +81,6 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
             view(
               form,
               routes.ItemPackagingQuantityController.onSubmit(request.ern, request.draftId, itemIndex, packagingIndex, mode),
-              goodsType,
               packagingType,
               packagingIndex = packagingIndex,
               itemIndex = itemIndex

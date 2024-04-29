@@ -18,7 +18,6 @@ package models.submitCreateMovement
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.info.movementScenario.DestinationType
 import pages.sections.info.DeferredMovementPage
 import play.api.test.FakeRequest
 
@@ -28,17 +27,12 @@ class AttributesModelSpec extends SpecBase {
       "when XIP ERN" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), true), "XIPC123")
 
-        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.DutyPaidB2B, Some(true))
+        AttributesModel.apply mustBe AttributesModel(SubmissionMessageType.DutyPaidB2B, Some(true))
       }
-      "when not XIP ERN, but Export" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), false))
-
-        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.Export, Some(false))
-      }
-      "when not XIP ERN and not Export" in {
+      "when not XIP ERN" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-        AttributesModel.apply(DestinationType.TaxWarehouse) mustBe AttributesModel(SubmissionMessageType.Standard, None)
+        AttributesModel.apply mustBe AttributesModel(SubmissionMessageType.Standard, None)
       }
     }
   }

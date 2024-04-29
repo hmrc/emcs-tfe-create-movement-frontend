@@ -17,7 +17,6 @@
 package models.submitCreateMovement
 
 import models.requests.DataRequest
-import models.sections.info.movementScenario.DestinationType
 import pages.sections.info.DeferredMovementPage
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
@@ -29,18 +28,11 @@ case class AttributesModel(
 object AttributesModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[AttributesModel] = Json.format
 
-  private def deriveSubmissionMessageType(ern: String, destinationType: DestinationType): SubmissionMessageType = {
-    if(ern.startsWith("XIP")) {
-      SubmissionMessageType.DutyPaidB2B
-    } else if(destinationType == DestinationType.Export) {
-      SubmissionMessageType.Export
-    } else {
-      SubmissionMessageType.Standard
-    }
-  }
+  private def deriveSubmissionMessageType(ern: String): SubmissionMessageType =
+    if(ern.startsWith("XIP")) SubmissionMessageType.DutyPaidB2B else SubmissionMessageType.Standard
 
-  def apply(destinationType: DestinationType)(implicit request: DataRequest[_]): AttributesModel = AttributesModel(
-    submissionMessageType = deriveSubmissionMessageType(request.ern, destinationType),
+  def apply(implicit request: DataRequest[_]): AttributesModel = AttributesModel(
+    submissionMessageType = deriveSubmissionMessageType(request.ern),
     deferredSubmissionFlag = request.userAnswers.get(DeferredMovementPage())
   )
 }

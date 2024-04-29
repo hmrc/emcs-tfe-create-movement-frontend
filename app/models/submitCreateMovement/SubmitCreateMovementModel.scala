@@ -80,7 +80,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
 
     SubmitCreateMovementModel(
       movementType = movementScenario.movementType,
-      attributes = AttributesModel.apply(movementScenario.destinationType),
+      attributes = AttributesModel.apply,
       consigneeTrader = TraderModel.applyConsignee,
       consignorTrader = TraderModel.applyConsignor,
       placeOfDispatchTrader = TraderModel.applyPlaceOfDispatch,

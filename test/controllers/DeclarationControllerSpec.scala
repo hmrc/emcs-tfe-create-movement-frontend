@@ -99,7 +99,7 @@ class DeclarationControllerSpec extends SpecBase
         redirectLocation(res).value mustBe routes.DraftMovementController.onPageLoad(ern, testDraftId).url
       }
 
-      "must redirect to Task List when not all IR704 errors have been fixed" in new Test(
+      "must redirect to Task List when not all IE704 errors have been fixed" in new Test(
         baseFullUserAnswers.copy(submissionFailures = Seq(
           itemQuantityFailure(1),
           itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
@@ -205,18 +205,6 @@ class DeclarationControllerSpec extends SpecBase
 
       "when creating a request model fails" - {
         "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-          val res = controller.onSubmit(ern, testDraftId)(request)
-
-          status(res) mustBe SEE_OTHER
-          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-        }
-
-        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
-          baseFullUserAnswers.copy(submissionFailures = Seq(
-            itemQuantityFailure(1).copy(hasBeenFixed = false),
-            itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-          ))
-        ) {
           val res = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER

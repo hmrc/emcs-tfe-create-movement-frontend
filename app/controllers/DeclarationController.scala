@@ -21,7 +21,7 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
 import models.requests.DataRequest
-import models.response.{MissingMandatoryPage, UnfixedSubmissionFailuresException}
+import models.response.MissingMandatoryPage
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
@@ -56,7 +56,7 @@ class DeclarationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { _ =>
         validationService.validate().map { validatedAnswers =>
-          if (AllSections.isCompleted(request.copy(userAnswers =  validatedAnswers))) {
+          if (AllSections.isCompleted(request.copy(userAnswers = validatedAnswers))) {
             Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId)))
           } else {
             logger.info("[onPageLoad] Validation Error was triggered, redirect to task list for User to correct")
@@ -86,9 +86,6 @@ class DeclarationController @Inject()(
     Try(SubmitCreateMovementModel.apply) match {
       case Failure(exception: MissingMandatoryPage) =>
         logger.warn(s"[withSubmitCreateMovementModel] MissingMandatoryPage error thrown: ${exception.message}")
-        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
-
-      case Failure(_: UnfixedSubmissionFailuresException) =>
         Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
 
       case Failure(exception) =>

@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.info
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
-import pages.sections.info.{DispatchDetailsPage, LocalReferenceNumberPage}
+import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent

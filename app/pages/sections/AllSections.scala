@@ -33,9 +33,10 @@ import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.libs.json.{JsObject, JsPath}
+import utils.Logging
 import viewmodels.taskList._
 
-case object AllSections extends Section[JsObject] {
+case object AllSections extends Section[JsObject] with Logging {
 
   override val path: JsPath = JsPath
 
@@ -55,7 +56,12 @@ case object AllSections extends Section[JsObject] {
     SadSection,
     TransportArrangerSection,
     TransportUnitsSection
-  ).filter(_.canBeCompletedForTraderAndDestinationType) match {
+  ).filter(_.canBeCompletedForTraderAndDestinationType).map { section =>
+    if(!section.isCompleted) {
+      logger.info(s"[status] ${section.getClass.getSimpleName.stripSuffix("$")} is not complete. Has status: '${section.status}'")
+    }
+    section
+  } match {
     case sections if sections.forall(_.isCompleted) => Completed
     case sections if sections.forall(_.status == NotStarted) => NotStarted
     case sections if sections.exists(_.status == UpdateNeeded) => UpdateNeeded

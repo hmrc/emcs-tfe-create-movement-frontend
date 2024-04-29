@@ -27,17 +27,17 @@ import viewmodels.taskList.UpdateNeeded
 class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
   "isCompleted" - {
     "must return true" - {
-      "when user starts on ConsigneeExportInformation, selects Vat and enters Vat number" in {
+      "when user starts on ConsigneeExportInformation and selects only VAT number (and provided it)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber))
-            .set(ConsigneeExportVatPage, testVatNumber)
+            .set(ConsigneeExportVatPage, testEori)
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
-      "when user starts on ConsigneeExportInformation and enters Eori number" in {
+      "when user starts on ConsigneeExportInformation and selects only EORI number (and provided it)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
@@ -47,10 +47,10 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         )
         ConsigneeSection.isCompleted mustBe true
       }
-      "when user starts on ConsigneeExportInformation, selects Vat and Eori and enters Vat number and Eori number" in {
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and provided then)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeExportInformationPage, Set(EoriNumber, VatNumber))
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVat)
             .set(ConsigneeExportEoriPage, testEori)
             .set(ConsigneeBusinessNamePage, "")
@@ -58,7 +58,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         )
         ConsigneeSection.isCompleted mustBe true
       }
-      "when user starts on ConsigneeExportInformation and selects No Information" in {
+      "when user starts on ConsigneeExportInformation and selects Not provided" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(NoInformation))
@@ -90,6 +90,53 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
     "must return false" - {
       "when user answers doesn't contain ConsigneeExportInformation, ConsigneeExcise or ConsigneeExemptOrganisation" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects only VAT number (and has NOT provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects only EORI number (and has NOT provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided VAT)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeExportEoriPage, testEori)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided EORI)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeExportVatPage, testVat)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided either)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
         ConsigneeSection.isCompleted mustBe false
       }
       "when user starts on ConsigneeExcise, answers that page and doesn't finish the flow" in {

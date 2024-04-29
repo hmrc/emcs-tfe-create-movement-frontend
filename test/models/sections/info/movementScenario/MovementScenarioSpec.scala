@@ -114,6 +114,48 @@ class MovementScenarioSpec extends SpecBase {
     }
   }
 
+  "NiTaxWarehouse" - {
+    ".originType" - {
+      "when user is a warehouse keeper" - {
+        "must return TaxWarehouse" in {
+          NiTaxWarehouse.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
+        }
+      }
+      "when user is a registered consignor" - {
+        "must return Imports" in {
+          NiTaxWarehouse.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
+        }
+      }
+      "when user is not a warehouse keeper or a registered consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](NiTaxWarehouse.originType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".destinationType" - {
+      "must return TaxWarehouse" in {
+        NiTaxWarehouse.destinationType mustBe DestinationType.TaxWarehouse
+      }
+    }
+    ".movementType" - {
+      "when user is a warehouse keeper" - {
+        "must return UkToUk" in {
+          NiTaxWarehouse.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToUk
+        }
+      }
+      "when user is a registered consignor" - {
+        "must return ImportUk" in {
+          NiTaxWarehouse.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUk
+        }
+      }
+      "when user is not a warehouse keeper or a registered consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](NiTaxWarehouse.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+  }
+
   "DirectDelivery" - {
     ".originType" - {
       "when user is a warehouse keeper" - {

@@ -56,6 +56,9 @@ class DraftMovementHelper @Inject()() extends Logging {
       case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
 
+      case (GreatBritainWarehouseKeeper, Some(NiTaxWarehouse)) =>
+        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$NiTaxWarehouse", s"destinationType.$NiTaxWarehouse")))
+
       case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(dispatchPlace) =>

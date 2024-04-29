@@ -85,6 +85,26 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   }
 
   /**
+   * emcs: tax_warehouse_uk_to_uk / import_for_taxwarehouse_uk
+   */
+  case object NiTaxWarehouse extends WithName("niTaxWarehouse") with MovementScenario {
+
+    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+
+    def destinationType: DestinationType = DestinationType.TaxWarehouse
+
+    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+      case (true, _) => MovementType.UkToUk
+      case (_, true) => MovementType.ImportUk
+      case _ =>
+        logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "tax warehouse in Northern Ireland"
+  }
+
+  /**
    * emcs: direct_delivery / import_for_direct_delivery
    */
   case object DirectDelivery extends WithName("directDelivery") with MovementScenario {
@@ -277,6 +297,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     RegisteredConsignee,
     EuTaxWarehouse,
     GbTaxWarehouse,
+    NiTaxWarehouse,
     TemporaryRegisteredConsignee,
     UnknownDestination
   )

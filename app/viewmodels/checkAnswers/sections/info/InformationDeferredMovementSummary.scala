@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.info
 
-import models.{CheckMode, ReviewMode}
+import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.info.DeferredMovementPage
 import play.api.i18n.Messages

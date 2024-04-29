@@ -21,7 +21,7 @@ import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentTypeMessages.English
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.documents.{DocumentDescriptionPage, DocumentTypePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentTypePage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -49,16 +49,15 @@ class DocumentTypeSummarySpec extends SpecBase with Matchers with DocumentTypeFi
       "must output the expected row WITH a change link when the document IS Completed" in {
 
         implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), false)
-          .set(DocumentDescriptionPage(0), "description")
+          .set(DocumentTypePage(0), documentTypeModel)
+          .set(DocumentReferencePage(0), "reference")
         )
 
         DocumentTypeSummary.row(0) mustBe
           Some(
             SummaryListRowViewModel(
               key = English.cyaLabel,
-              value = Value(Text(documentTypeOtherModel.description)),
+              value = Value(Text(documentTypeModel.description)),
               actions = Seq(
                 ActionItemViewModel(
                   content = English.change,

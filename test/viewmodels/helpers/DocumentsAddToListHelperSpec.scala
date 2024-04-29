@@ -22,14 +22,14 @@ import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentTypePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import viewmodels.checkAnswers.sections.documents.{DocumentDescriptionSummary, DocumentReferenceSummary, DocumentTypeSummary, ReferenceAvailableSummary}
+import viewmodels.checkAnswers.sections.documents.{DocumentReferenceSummary, DocumentTypeSummary}
 import views.html.components.{link, span, tag}
 
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
@@ -58,7 +58,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
     "return required rows when all answers filled out" - {
 
-      s"when the row is Complete and the DocumentType is NOT Other" in new Setup(emptyUserAnswers
+      s"when the row is Complete" in new Setup(emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference")
       ) {
@@ -86,71 +86,11 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
         )
       }
 
-      s"when the row is Complete with DocumentType is Other and ReferenceAvailable is true" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel)
-        .set(ReferenceAvailablePage(0), true)
-        .set(DocumentReferencePage(0), "reference")
-      ) {
-
-        implicit lazy val msgs: Messages = messages(Seq(English.lang))
-
-        helper.allDocumentsSummary() mustBe Seq(
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(0)),
-                  attributes = Map("id" -> "removeDocuments-1")
-                )
-              )))
-            )),
-            rows = Seq(
-              DocumentTypeSummary.row(0).get,
-              ReferenceAvailableSummary.row(0).get,
-              DocumentReferenceSummary.row(0).get
-            )
-          )
-        )
-      }
-
-      s"when the row is Complete with DocumentType is Other and ReferenceAvailable is false" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel)
-        .set(ReferenceAvailablePage(0), false)
-        .set(DocumentDescriptionPage(0), "description")
-      ) {
-
-        implicit lazy val msgs: Messages = messages(Seq(English.lang))
-
-        helper.allDocumentsSummary() mustBe Seq(
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(0)),
-                  attributes = Map("id" -> "removeDocuments-1")
-                )
-              )))
-            )),
-            rows = Seq(
-              DocumentTypeSummary.row(0).get,
-              ReferenceAvailableSummary.row(0).get,
-              DocumentDescriptionSummary.row(0).get
-            )
-          )
-        )
-      }
 
       s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel)
-        .set(ReferenceAvailablePage(0), false)
-        .set(DocumentDescriptionPage(0), "description")
-        .set(ReferenceAvailablePage(1), true)
+        .set(DocumentTypePage(0), documentTypeModel)
+        .set(DocumentReferencePage(0), "reference")
+        .set(DocumentTypePage(1), documentTypeModel)
       ) {
 
         implicit lazy val msgs: Messages = messages(Seq(English.lang))
@@ -170,8 +110,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
             )),
             rows = Seq(
               DocumentTypeSummary.row(0).get,
-              ReferenceAvailableSummary.row(0).get,
-              DocumentDescriptionSummary.row(0).get
+              DocumentReferenceSummary.row(0).get
             )
           ),
           SummaryList(
@@ -196,7 +135,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
               )))
             )),
             rows = Seq(
-              ReferenceAvailableSummary.row(1).get
+              DocumentTypeSummary.row(1).get
             )
           )
         )

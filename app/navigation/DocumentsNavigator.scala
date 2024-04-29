@@ -30,10 +30,8 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DocumentsCertificatesPage => documentsCertificatesRouting()
-    case DocumentTypePage(idx) => documentTypeRouting(idx)
-    case ReferenceAvailablePage(idx) => referenceAvailableRouting(idx)
-    case DocumentDescriptionPage(_) =>
-      (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case DocumentTypePage(idx) => (userAnswers: UserAnswers) =>
+      routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
     case DocumentReferencePage(_) =>
       (userAnswers: UserAnswers) => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case DocumentsAddToListPage => documentsAddToListRouting()
@@ -44,15 +42,11 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
 
   }
 
-  private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
+  private[navigation] val checkRouteMap: Page => UserAnswers => Call = _ =>
       (userAnswers: UserAnswers) => routes.DocumentsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-  }
 
-  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
-    case _ =>
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = _ =>
       (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-  }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
@@ -70,24 +64,6 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
         case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, mode)
         case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
-    }
-
-  private def documentTypeRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (answers: UserAnswers) =>
-    answers.get(DocumentTypePage(idx)) match {
-      case Some(doc) if doc.typeIsOther =>
-        routes.ReferenceAvailableController.onPageLoad(answers.ern, answers.draftId, idx, mode)
-      case _ =>
-        routes.DocumentReferenceController.onPageLoad(answers.ern, answers.draftId, idx, mode)
-    }
-
-  private def referenceAvailableRouting(idx: Index, mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
-    userAnswers.get(ReferenceAvailablePage(idx)) match {
-      case Some(true) =>
-        routes.DocumentReferenceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
-      case Some(false) =>
-        routes.DocumentDescriptionController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
-      case _ =>
-        controllers.routes.JourneyRecoveryController.onPageLoad()
     }
 
   private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {

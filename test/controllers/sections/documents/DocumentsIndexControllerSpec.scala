@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.{DocumentReferencePage, DocumentsCertificatesPage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentsCertificatesPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -57,7 +57,6 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
         "must redirect to the DocumentReference page" in new Fixture(Some(
           emptyUserAnswers
             .set(DocumentsCertificatesPage, true)
-            .set(ReferenceAvailablePage(0), true)
             .set(DocumentReferencePage(0), "reference"))) {
 
           val result = testController.onPageLoad(testErn, testDraftId)(request)

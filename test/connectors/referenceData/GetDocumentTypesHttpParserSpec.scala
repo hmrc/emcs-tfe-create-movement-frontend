@@ -36,12 +36,12 @@ class GetDocumentTypesHttpParserSpec extends SpecBase with GetDocumentTypesHttpP
 
         val expectedResult = Right(Seq(
           documentTypeModel,
-          documentTypeOtherModel
+          documentTypeModel.copy(code = "2")
         ))
 
         val jsonResponse = Json.arr(
           documentTypeJson,
-          documentTypeOtherJson
+          documentTypeJson.deepMerge(Json.obj("code" -> "2"))
         )
 
         val actualResult = new GetDocumentTypesReads().read("", "", HttpResponse(Status.OK, jsonResponse.toString()))

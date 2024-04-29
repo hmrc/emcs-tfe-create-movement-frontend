@@ -26,18 +26,8 @@ trait DocumentTypeFixtures {
     description = "description"
   )
 
-  val documentTypeOtherModel = DocumentType(
-    code = "0",
-    description = "other"
-  )
-
   val documentTypeJson = Json.obj(
     "code" -> "code",
     "description" -> "description"
-  )
-
-  val documentTypeOtherJson = Json.obj(
-    "code" -> "0",
-    "description" -> "other"
   )
 }

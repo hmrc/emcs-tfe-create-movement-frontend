@@ -23,7 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.sections.documents.DocumentsAddToList
 import models.{Index, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentsAddToListPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.documents.DocumentsRemoveFromListView
@@ -40,7 +40,6 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
   lazy val view: DocumentsRemoveFromListView = app.injector.instanceOf[DocumentsRemoveFromListView]
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers
-    .set(ReferenceAvailablePage(0), true)
     .set(DocumentReferencePage(0), "reference")
   )) {
 
@@ -88,15 +87,12 @@ class DocumentsRemoveFromListControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to the index controller when the user answers yes (removing the document and DocumentsAddToListPage)" in new Fixture(
       Some(emptyUserAnswers
-        .set(ReferenceAvailablePage(0), true)
         .set(DocumentReferencePage(0), "reference")
-        .set(ReferenceAvailablePage(1), false)
         .set(DocumentReferencePage(1), "description")
         .set(DocumentsAddToListPage, DocumentsAddToList.No)
       )
     ) {
       val answersAfterRemoval = emptyUserAnswers
-        .set(ReferenceAvailablePage(0), false)
         .set(DocumentReferencePage(0), "description")
 
       MockUserAnswersService.set(answersAfterRemoval).returns(Future.successful(answersAfterRemoval))

@@ -28,9 +28,9 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
 
     "return Complete" - {
 
-      "when DocumentType has been answered anything except Other" - {
+      "when DocumentType has been answered" - {
 
-        "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
+        "when DocumentReferencePage has been answered" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(DocumentTypePage(0), documentTypeModel)
@@ -40,42 +40,11 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
           DocumentSection(0).status mustBe Completed
         }
       }
-
-      "when DocumentType has been answered Other" - {
-
-        "when ReferenceAvailablePage has been answered true" - {
-
-          "when DocumentReferencePage has been answered and DocumentDescriptionPage has NOT been answered" in {
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DocumentTypePage(0), documentTypeOtherModel)
-              .set(ReferenceAvailablePage(0), true)
-              .set(DocumentReferencePage(0), "reference")
-            )
-
-            DocumentSection(0).status mustBe Completed
-          }
-        }
-
-        "when ReferenceAvailablePage has been answered false" - {
-
-          "when DocumentDescriptionPage has been answered and DocumentReferencePage has NOT been answered" in {
-
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DocumentTypePage(0), documentTypeOtherModel)
-              .set(ReferenceAvailablePage(0), false)
-              .set(DocumentDescriptionPage(0), "description")
-            )
-
-            DocumentSection(0).status mustBe Completed
-          }
-        }
-      }
     }
 
     "return NotStarted" - {
 
-      "when ReferenceAvailablePage, DocumentReferencePage and DocumentDescriptionPage have NOT been answered" in {
+      "when DocumentTypePage and DocumentReferencePage have NOT been answered" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
@@ -96,15 +65,6 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
           DocumentSection(0).status mustBe InProgress
         }
 
-        "for ReferenceAvailablePage" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ReferenceAvailablePage(0), false)
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-
         "for DocumentReferencePage" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
@@ -114,75 +74,6 @@ class DocumentSectionSpec extends SpecBase with DocumentTypeFixtures {
           DocumentSection(0).status mustBe InProgress
         }
 
-        "for DocumentDescriptionPage" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-      }
-
-      "when BOTH DocumentTypePage" - {
-
-        "and ReferenceAvailablePage have been answered" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel)
-            .set(ReferenceAvailablePage(0), true)
-            .set(DocumentReferencePage(0), "reference")
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-
-        "and DocumentDescription have been answered" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentTypePage(0), documentTypeModel)
-            .set(DocumentReferencePage(0), "reference")
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-      }
-
-      "when BOTH DocumentReferencePage and DocumentDescriptionPage have been answered" - {
-
-        "when ReferenceAvailablePage has been answered true" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ReferenceAvailablePage(0), true)
-            .set(DocumentReferencePage(0), "reference")
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-
-        "when ReferenceAvailablePage has been answered false" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ReferenceAvailablePage(0), false)
-            .set(DocumentReferencePage(0), "reference")
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
-
-        "when ReferenceAvailablePage has NOT been answered" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(DocumentReferencePage(0), "reference")
-            .set(DocumentDescriptionPage(0), "description")
-          )
-
-          DocumentSection(0).status mustBe InProgress
-        }
       }
     }
   }

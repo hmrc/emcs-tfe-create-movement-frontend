@@ -30,7 +30,7 @@ class DocumentTypeFormProvider @Inject() extends Mappings {
       "document-type" -> text("documentType.error.required")
         .transform[Option[DocumentType]](codeToDocumentType(documentTypes), documentToCode())
         .verifying(isValidCode())
-        .transform[DocumentType](_.getOrElse(throw new IllegalArgumentException("Invalid document type")), Some(_))
+        .transform[DocumentType](_.get, Some(_))
     )
 
   private def codeToDocumentType(documentTypes: Seq[DocumentType]): String => Option[DocumentType] =

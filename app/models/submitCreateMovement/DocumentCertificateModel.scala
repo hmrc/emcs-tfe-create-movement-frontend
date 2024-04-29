@@ -18,7 +18,6 @@ package models.submitCreateMovement
 
 import models.Index
 import models.requests.DataRequest
-import models.sections.documents.DocumentType
 import pages.sections.documents._
 import play.api.libs.json.{Json, OFormat}
 import queries.DocumentsCount
@@ -46,21 +45,12 @@ object DocumentCertificateModel extends ModelConstructorHelpers {
               idx =>
                 val documentType = mandatoryPage(DocumentTypePage(idx)).code
 
-                if (documentType == DocumentType.OtherCode) {
-                  DocumentCertificateModel(
-                    documentType = Some(mandatoryPage(DocumentTypePage(idx)).code),
-                    documentReference = request.userAnswers.get(DocumentReferencePage(idx)),
-                    documentDescription = request.userAnswers.get(DocumentDescriptionPage(idx)),
-                    referenceOfDocument = None
-                  )
-                } else {
-                  DocumentCertificateModel(
-                    documentType = Some(documentType),
-                    documentReference = Some(mandatoryPage(DocumentReferencePage(idx))),
-                    documentDescription = None,
-                    referenceOfDocument = None
-                  )
-                }
+                DocumentCertificateModel(
+                  documentType = Some(documentType),
+                  documentReference = Some(mandatoryPage(DocumentReferencePage(idx))),
+                  documentDescription = None,
+                  referenceOfDocument = None
+                )
             })
       }
     }

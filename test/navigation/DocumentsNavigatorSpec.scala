@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
-import models.sections.documents.{DocumentType, DocumentsAddToList}
+import models.sections.documents.DocumentsAddToList
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.documents._
@@ -67,7 +67,6 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
 
               val userAnswers = emptyUserAnswers
                 .set(DocumentsCertificatesPage, true)
-                .set(ReferenceAvailablePage(0), true)
                 .set(DocumentReferencePage(0), "reference")
 
               navigator.nextPage(DocumentsCertificatesPage, NormalMode, userAnswers) mustBe
@@ -79,52 +78,13 @@ class DocumentsNavigatorSpec extends SpecBase with DocumentTypeFixtures {
 
       "must go from DocumentsTypePage" - {
 
-        s"to CAM-DOC03 ReferenceAvailable if ${DocumentType.OtherCode} is selected" in {
-
-          val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeOtherModel)
-
-          navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
-            routes.ReferenceAvailableController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-
-        "to CAM-DOC05 DocumentReference page if yes is selected" in {
+        "to CAM-DOC05 DocumentReference page" in {
 
           val userAnswers = emptyUserAnswers.set(DocumentTypePage(0), documentTypeModel)
 
           navigator.nextPage(DocumentTypePage(0), NormalMode, userAnswers) mustBe
             routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
         }
-      }
-
-      "for the ReferenceAvailablePage" - {
-
-        "to DocumentReference when user selects yes" in {
-
-          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage(0), true)
-
-          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, userAnswers) mustBe
-            routes.DocumentReferenceController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-
-        "to DocumentDescription when user selects no" in {
-
-          val userAnswers = emptyUserAnswers.set(ReferenceAvailablePage(0), false)
-
-          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, userAnswers) mustBe
-            routes.DocumentDescriptionController.onPageLoad(testErn, testDraftId, 0, NormalMode)
-        }
-
-        "to Journey Recovery if no answer is present" in {
-
-          navigator.nextPage(ReferenceAvailablePage(0), NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.JourneyRecoveryController.onPageLoad()
-        }
-      }
-
-      "must go from DocumentDescriptionPage to DocumentReferencePage" in {
-
-        navigator.nextPage(DocumentDescriptionPage(0), NormalMode, emptyUserAnswers) mustBe
-          routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId)
       }
 
       "must go from DocumentReferencePage to DocumentsAddToList" in {

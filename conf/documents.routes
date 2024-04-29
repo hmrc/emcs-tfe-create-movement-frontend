@@ -10,16 +10,6 @@ POST       /trader/:ern/draft/:draftId/documents/:idx/document-type             
 GET        /trader/:ern/draft/:draftId/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/draft/:draftId/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:draftId/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/documents/:idx/reference-available/change                controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/documents/:idx/reference-available/change                controllers.sections.documents.ReferenceAvailableController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-
-GET        /trader/:ern/draft/:draftId/documents/:idx/document-description                      controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-POST       /trader/:ern/draft/:draftId/documents/:idx/document-description                      controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
-GET        /trader/:ern/draft/:draftId/documents/:idx/document-description/change               controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-POST       /trader/:ern/draft/:draftId/documents/:idx/document-description/change               controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
-
 GET        /trader/:ern/draft/:draftId/documents/:idx/document-reference                        controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/documents/:idx/document-reference                        controllers.sections.documents.DocumentReferenceController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET        /trader/:ern/draft/:draftId/documents/:idx/document-reference/change                 controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)

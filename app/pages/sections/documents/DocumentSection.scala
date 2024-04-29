@@ -26,20 +26,15 @@ case class DocumentSection(idx: Index) extends Section[JsObject] {
 
   override val path: JsPath = DocumentsSectionUnits.path \ idx.position
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
     (
       request.userAnswers.get(DocumentTypePage(idx)),
-      request.userAnswers.get(ReferenceAvailablePage(idx)),
-      request.userAnswers.get(DocumentReferencePage(idx)),
-      request.userAnswers.get(DocumentDescriptionPage(idx))
+      request.userAnswers.get(DocumentReferencePage(idx))
     ) match {
-      case (Some(docType), Some(true), Some(_), _) if docType.typeIsOther => Completed
-      case (Some(docType), Some(false), _, Some(_)) if docType.typeIsOther => Completed
-      case (Some(_), None, Some(_), None) => Completed
-      case (None, None, None, None) => NotStarted
+      case (Some(_), Some(_)) => Completed
+      case (None, None) => NotStarted
       case _ => InProgress
     }
-  }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     DocumentsSection.canBeCompletedForTraderAndDestinationType

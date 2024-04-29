@@ -29,36 +29,15 @@ class DocumentCertificateModelSpec extends SpecBase {
 
   "apply" - {
     "should return Some(Seq(_))" - {
-      "when Other" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-            .set(DocumentsCertificatesPage, true)
-            .set(DocumentTypePage(testIndex1), DocumentType("0", "0 type desc"))
-            .set(DocumentReferencePage(testIndex1), "0 reference")
-            .set(DocumentDescriptionPage(testIndex1), "0 description")
-        )
-
-        DocumentCertificateModel.apply mustBe Some(Seq(
-          DocumentCertificateModel(
-            documentType = Some("0"),
-            documentReference = Some("0 reference"),
-            documentDescription = Some("0 description"),
-            referenceOfDocument = None
-          )
-        ))
-      }
-      "when not Other" in {
+      "when all pages have been answered" in {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
           emptyUserAnswers
             .set(DocumentsCertificatesPage, true)
             .set(DocumentTypePage(testIndex1), DocumentType("1", "1 type desc"))
             .set(DocumentReferencePage(testIndex1), "1 reference")
-            .set(DocumentDescriptionPage(testIndex1), "1 description")
             .set(DocumentTypePage(testIndex2), DocumentType("2", "2 type desc"))
             .set(DocumentReferencePage(testIndex2), "2 reference")
-            .set(DocumentDescriptionPage(testIndex2), "12 description")
         )
 
         DocumentCertificateModel.apply mustBe Some(Seq(
@@ -72,43 +51,6 @@ class DocumentCertificateModelSpec extends SpecBase {
             documentType = Some("2"),
             documentReference = Some("2 reference"),
             documentDescription = None,
-            referenceOfDocument = None
-          )
-        ))
-      }
-      "when a mix of Other and not Other" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-            .set(DocumentsCertificatesPage, true)
-            .set(DocumentTypePage(testIndex1), DocumentType("1", "1 type desc"))
-            .set(DocumentReferencePage(testIndex1), "1 reference")
-            .set(DocumentDescriptionPage(testIndex1), "1 description")
-            .set(DocumentTypePage(testIndex2), DocumentType("2", "2 type desc"))
-            .set(DocumentReferencePage(testIndex2), "2 reference")
-            .set(DocumentDescriptionPage(testIndex2), "12 description")
-            .set(DocumentTypePage(testIndex3), DocumentType("0", "0 type desc"))
-            .set(DocumentReferencePage(testIndex3), "0 reference")
-            .set(DocumentDescriptionPage(testIndex3), "0 description")
-        )
-
-        DocumentCertificateModel.apply mustBe Some(Seq(
-          DocumentCertificateModel(
-            documentType = Some("1"),
-            documentReference = Some("1 reference"),
-            documentDescription = None,
-            referenceOfDocument = None
-          ),
-          DocumentCertificateModel(
-            documentType = Some("2"),
-            documentReference = Some("2 reference"),
-            documentDescription = None,
-            referenceOfDocument = None
-          ),
-          DocumentCertificateModel(
-            documentType = Some("0"),
-            documentReference = Some("0 reference"),
-            documentDescription = Some("0 description"),
             referenceOfDocument = None
           )
         ))

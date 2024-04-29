@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 
 class DocumentTypeFormProviderSpec extends SpecBase with OptionFieldBehaviours with DocumentTypeFixtures {
 
-  val documentTypes = Seq(documentTypeModel, documentTypeOtherModel)
+  val documentTypes = Seq(documentTypeModel, documentTypeModel)
   val form = new DocumentTypeFormProvider()(documentTypes)
 
   ".document-type" - {
@@ -64,8 +64,7 @@ class DocumentTypeFormProviderSpec extends SpecBase with OptionFieldBehaviours w
 
       "have the correct error message for required" in {
 
-        msgs(requiredKey) mustBe
-          English.errorRequired
+        msgs(requiredKey) mustBe English.errorRequired
       }
     }
   }

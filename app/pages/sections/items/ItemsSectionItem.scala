@@ -53,7 +53,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       maturationAgeAnswer(epc) ++
       wineCountryOfOriginAnswers ++
       wineMoreInformationAnswers ++
-      designationOfOriginAnswers ++
+      designationOfOriginAnswers(epc) ++
       alcoholStrengthAnswer ++
       itemDensityAnswer(epc) ++
       fiscalMarksAnswers
@@ -120,8 +120,8 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       }
     }
 
-  private[items] def designationOfOriginAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType.isAlcohol && goodsType != Beer) {
+  private[items] def designationOfOriginAnswers(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
+    mandatoryIf(goodsType.isAlcohol && (goodsType == Wine || goodsType == Intermediate || ExciseProductCodeHelper.isSpirituousBeverages(epc))) {
       //Whilst Statement of spirit marketing and labelling is required for S200 EPC's, the page (or specifically, the form) should
       //prevent the user from continuing if they hadn't selected an option
       Seq(request.userAnswers.get(ItemDesignationOfOriginPage(idx)))

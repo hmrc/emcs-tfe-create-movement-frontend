@@ -22,7 +22,7 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.LocalReferenceNumberFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
-import models.{NormalMode, UserAnswers}
+import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
 import play.api.data.Form
@@ -42,7 +42,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
   lazy val localReferenceNumberPreDraftSubmitRoute: Call =
     controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftSubmit(testErn, NormalMode)
   lazy val localReferenceNumberSubmitRoute: Call =
-    controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn, testDraftId)
+    controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(testErn, testDraftId, CheckMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -208,7 +208,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               .set(DeferredMovementPage(), false)
 
             "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(answersSoFar)) {
-              val result = controller.onPageLoad(testErn, testDraftId)(request)
+              val result = controller.onPageLoad(testErn, testDraftId, CheckMode)(request)
 
               status(result) mustEqual OK
               contentAsString(result) mustEqual
@@ -222,7 +222,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
               .set(DestinationTypePage, UnknownDestination)
 
             "must return SEE_OTHER and redirect to the Deferred Movement page" in new Fixture(userAnswers = Some(answersSoFar)) {
-              val result = controller.onPageLoad(testErn, testDraftId)(request)
+              val result = controller.onPageLoad(testErn, testDraftId, CheckMode)(request)
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result) mustBe Some(controllers.sections.info.routes.DeferredMovementController.onPageLoad(testErn, testDraftId).url)
@@ -247,7 +247,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
               MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(emptyUserAnswers))
 
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", testLrn)))
+              val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(("value", testLrn)))
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -259,7 +259,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
                 .set(DeferredMovementPage(), false)
             )) {
               val boundForm = form.bind(Map("value" -> ""))
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "")))
+              val result = controller.onSubmit(testErn, testDraftId, CheckMode)(request.withFormUrlEncodedBody(("value", "")))
 
               status(result) mustEqual BAD_REQUEST
               contentAsString(result) mustEqual

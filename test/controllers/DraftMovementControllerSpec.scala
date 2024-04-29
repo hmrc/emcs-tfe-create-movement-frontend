@@ -18,6 +18,8 @@ package controllers
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import fixtures.MovementSubmissionFailureFixtures
+import mocks.services.MockValidationService
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.info.DestinationTypePage
 import play.api.Play.materializer
@@ -25,7 +27,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.DraftMovementView
 
-class DraftMovementControllerSpec extends SpecBase {
+import scala.concurrent.Future
+
+class DraftMovementControllerSpec extends SpecBase with MockValidationService with MovementSubmissionFailureFixtures {
+
   "onPageLoad" - {
 
     val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
@@ -38,17 +43,38 @@ class DraftMovementControllerSpec extends SpecBase {
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,
+      mockValidationService,
       view
     )
 
     lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
 
-    "must render the page" in {
-      lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
+    "when no validation errors are detected" - {
 
+      "must render the page" in {
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(dataRequest(request, userAnswers), messages(request)).toString
+        MockValidationService.validate().returns(Future.successful(userAnswers))
+
+        lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(dataRequest(request, userAnswers), messages(request)).toString
+      }
+    }
+
+    "when validation errors are detected" - {
+
+      "must render the page including the generated submission failure for any submission failures" in {
+
+        val answersWithErrors = userAnswers.copy(submissionFailures = Seq(dispatchDateInPastValidationError()))
+
+        MockValidationService.validate().returns(Future.successful(answersWithErrors))
+
+        lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(dataRequest(request, answersWithErrors), messages(request)).toString
+      }
     }
   }
 }

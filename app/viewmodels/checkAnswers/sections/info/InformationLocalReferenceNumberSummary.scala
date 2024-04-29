@@ -51,7 +51,7 @@ class InformationLocalReferenceNumberSummary @Inject()(tagHelper: TagHelper) {
             if (isOnPreDraftFlow) {
               controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(ern = request.ern, CheckMode).url
             } else {
-              controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId).url
+              controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId, CheckMode).url
             },
             id = "changeLocalReferenceNumber")
             .withVisuallyHiddenText(messages(s"localReferenceNumber.$deferredType.change.hidden"))

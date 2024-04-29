@@ -37,6 +37,11 @@ object DispatchDetailsMessages {
     val cyaChangeDispatchDateHidden: String = "date of dispatch"
     val cyaDispatchTimeLabel: String = "Time of dispatch"
     val cyaChangeDispatchTimeHidden: String = "time of dispatch"
+
+    val deferredTooFarInPastError = "Date of dispatch must not be too far in the past"
+    val deferredTooFarFutureError = "The date of dispatch must be today’s date or in the past"
+    val tooFarInPastError = "The date of dispatch must be today’s date or in the future"
+    val tooFarFutureError: Int => String = x => s"The date of dispatch must be less than $x days in the future"
   }
 
   object English extends ViewMessages with BaseEnglish

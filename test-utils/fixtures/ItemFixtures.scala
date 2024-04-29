@@ -19,7 +19,7 @@ package fixtures
 import models.UnitOfMeasure.{Kilograms, Litres20}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging, WineOperations}
 import models.sections.consignee.ConsigneeExportInformation.NoInformation
-import models.sections.documents.DocumentType
+import models.sections.documents.{DocumentType, DocumentsAddToList}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario, MovementType, OriginType}
@@ -28,8 +28,9 @@ import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndic
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.sections.journeyType.HowMovementTransported
+import models.sections.sad.SadAddToListModel
 import models.sections.transportArranger._
-import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType, TransportUnitsAddToListModel}
 import models.submitCreateMovement._
 import models.{ExciseProductCode, ExemptOrganisationDetailsModel, GoodsType, UserAnswers, VatNumberModel}
 import pages.sections.consignee._
@@ -44,7 +45,7 @@ import pages.sections.importInformation._
 import pages.sections.info._
 import pages.sections.items._
 import pages.sections.journeyType._
-import pages.sections.sad.ImportNumberPage
+import pages.sections.sad.{ImportNumberPage, SadAddToListPage}
 import pages.sections.transportArranger._
 import pages.sections.transportUnit._
 import play.api.libs.json.{JsObject, Json}
@@ -371,8 +372,12 @@ trait ItemFixtures {
   val dispatchOfficeSuffix = "004098"
 
   val baseFullUserAnswers: UserAnswers = emptyUserAnswers
-    // movementType
+    // movementType (info)
     .set(DestinationTypePage, MovementScenario.DirectDelivery)
+    .set(DeferredMovementPage(), false)
+    .set(LocalReferenceNumberPage(), testLrn)
+    .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
+    .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
     // consignee
     .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
@@ -407,8 +412,10 @@ trait ItemFixtures {
     // documentCertificate
     .set(DocumentsCertificatesPage, true)
     .set(DocumentTypePage(testIndex1), DocumentType("0", "0 type desc"))
+    .set(ReferenceAvailablePage(testIndex1), true)
     .set(DocumentReferencePage(testIndex1), "0 reference")
     .set(DocumentDescriptionPage(testIndex1), "0 description")
+    .set(DocumentsAddToListPage, DocumentsAddToList.No)
     // headerEadEsad
     .set(JourneyTimeHoursPage, 2)
     // transportMode
@@ -420,7 +427,7 @@ trait ItemFixtures {
     .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
     .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("guarantor vat")))
     .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-    // bodyEadEsad
+    // bodyEadEsad (items)
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
     .set(ItemQuantityPage(testIndex1), BigDecimal(1))
@@ -437,29 +444,31 @@ trait ItemFixtures {
     .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("name")))
     .set(ItemMaturationPeriodAgePage(testIndex1), ItemMaturationPeriodAgeModel(hasMaturationPeriodAge = true, Some("really old")))
     .set(ItemBulkPackagingChoicePage(testIndex1), true)
+    .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
     .set(ItemBulkPackagingSelectPage(testIndex1), bulkPackagingTypes.head)
     .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("seal type", Some("seal info")))
     .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
     .set(ItemWineGrowingZonePage(testIndex1), ItemWineGrowingZone.CII)
     .set(ItemWineOriginPage(testIndex1), countryModelGB)
+    .set(ItemWineMoreInformationChoicePage(testIndex1), true)
     .set(ItemWineMoreInformationPage(testIndex1), Some("more wine info"))
     .set(ItemWineOperationsChoicePage(testIndex1), Seq(WineOperations("op code", "choice desc")))
-    // eadEsadDraft
-    .set(LocalReferenceNumberPage(), testLrn)
-    .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
-    .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
+    .set(ItemsAddToListPage, ItemsAddToList.No)
+    // sad
     .set(ImportNumberPage(testIndex1), "sad 1")
     .set(ImportNumberPage(testIndex2), "sad 2")
     .set(ImportNumberPage(testIndex3), "sad 3")
+    .set(SadAddToListPage, SadAddToListModel.NoMoreToCome)
     // transportDetails
     .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
     .set(TransportUnitIdentityPage(testIndex1), "identity")
     .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal type", Some("seal info")))
     .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more info"))
+    .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.NoMoreToCome)
 
   val xircSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -586,7 +595,7 @@ trait ItemFixtures {
 
   val xiwkSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.UkToEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -719,7 +728,7 @@ trait ItemFixtures {
 
   val gbrcSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -846,7 +855,7 @@ trait ItemFixtures {
 
   val gbwkSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.UkToEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),

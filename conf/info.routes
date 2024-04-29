@@ -26,24 +26,30 @@ GET         /trader/:ern/info/local-reference-number                            
 POST        /trader/:ern/info/local-reference-number                              controllers.sections.info.LocalReferenceNumberController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
 GET         /trader/:ern/info/local-reference-number/change                       controllers.sections.info.LocalReferenceNumberController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
 POST        /trader/:ern/info/local-reference-number/change                       controllers.sections.info.LocalReferenceNumberController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
-GET         /trader/:ern/draft/:draftId/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String, draftId: String)
-POST        /trader/:ern/draft/:draftId/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String, draftId: String)
+GET         /trader/:ern/draft/:draftId/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:draftId/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:draftId/info/local-reference-number/review        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String, draftId: String, mode: Mode = ReviewMode)
+POST        /trader/:ern/draft/:draftId/info/local-reference-number/review        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String, draftId: String, mode: Mode = ReviewMode)
 
 # INF004
 GET         /trader/:ern/info/invoice-details                                     controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
 POST        /trader/:ern/info/invoice-details                                     controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
 GET         /trader/:ern/info/invoice-details/change                              controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
 POST        /trader/:ern/info/invoice-details/change                              controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
-GET         /trader/:ern/draft/:draftId/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onPageLoad(ern: String, draftId: String)
-POST        /trader/:ern/draft/:draftId/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onSubmit(ern: String, draftId: String)
+GET         /trader/:ern/draft/:draftId/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:draftId/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:draftId/info/invoice-details/review               controllers.sections.info.InvoiceDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = ReviewMode)
+POST        /trader/:ern/draft/:draftId/info/invoice-details/review               controllers.sections.info.InvoiceDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = ReviewMode)
 
 # INFO06
 GET         /trader/:ern/info/dispatch-details                                    controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
 POST        /trader/:ern/info/dispatch-details                                    controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
 GET         /trader/:ern/info/dispatch-details/change                             controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
 POST        /trader/:ern/info/dispatch-details/change                             controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
-GET         /trader/:ern/draft/:draftId/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onPageLoad(ern: String, draftId: String)
-POST        /trader/:ern/draft/:draftId/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onSubmit(ern: String, draftId: String)
+GET         /trader/:ern/draft/:draftId/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
+POST        /trader/:ern/draft/:draftId/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:draftId/info/dispatch-details/review              controllers.sections.info.DispatchDetailsController.onPageLoad(ern: String, draftId: String, mode: Mode = ReviewMode)
+POST        /trader/:ern/draft/:draftId/info/dispatch-details/review              controllers.sections.info.DispatchDetailsController.onSubmit(ern: String, draftId: String, mode: Mode = ReviewMode)
 
 # INFO07
 GET         /trader/:ern/info/check-answers                                       controllers.sections.info.InformationCheckAnswersController.onPreDraftPageLoad(ern: String)

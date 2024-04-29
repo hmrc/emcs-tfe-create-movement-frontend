@@ -45,7 +45,7 @@ class DispatchDetailsViewSpec extends SpecBase with ViewBehaviours with DateTime
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
          lazy val view = app.injector.instanceOf[DispatchDetailsView]
-          val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply()
+          val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply(isDeferredMovement = false)
 
           val skipRoute: Call = Call("GET", "/skip-url")
 
@@ -80,7 +80,7 @@ class DispatchDetailsViewSpec extends SpecBase with ViewBehaviours with DateTime
           implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
          lazy val view = app.injector.instanceOf[DispatchDetailsView]
-          val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply()
+          val form = app.injector.instanceOf[DispatchDetailsFormProvider].apply(isDeferredMovement = false)
 
           val skipRoute: Call = Call("GET", "/skip-url")
 

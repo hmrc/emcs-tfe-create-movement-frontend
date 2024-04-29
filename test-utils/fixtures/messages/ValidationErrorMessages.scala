@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package fixtures.messages
 
-import models.sections.info.DispatchDetailsModel
-import pages.QuestionPage
-import play.api.libs.json.JsPath
-import utils.{DispatchDateInFutureValidationError, DispatchDateInPastValidationError, SubmissionError}
+object ValidationErrorMessages {
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val dispatchDateInPastValidationError: Int => String = x => s"The date of dispatch must be today’s date or up to $x days in the future because this is not a deferred movement using fallback procedures"
+    val dispatchDateInFutureValidationError: String = "The date of dispatch must be before or equal to today’s date because this a deferred movement using fallback procedures"
+  }
 
-case class DispatchDetailsPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[DispatchDetailsModel] {
+  object English extends ViewMessages with BaseEnglish
 
-  override val toString: String = "dispatchDetails"
-  override val path: JsPath = InfoSection.path \ toString
-
-  override val possibleErrors: Seq[SubmissionError] = Seq(
-    DispatchDateInPastValidationError,
-    DispatchDateInFutureValidationError
-  )
 
 }

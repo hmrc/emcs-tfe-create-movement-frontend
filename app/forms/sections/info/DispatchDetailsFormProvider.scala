@@ -21,16 +21,14 @@ import forms.mappings.Mappings
 import models.sections.info.DispatchDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
+import utils.TimeMachine
 
 import javax.inject.Inject
 
-class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappings {
+class DispatchDetailsFormProvider @Inject()(override val appConfig: AppConfig,
+                                            override val timeMachine: TimeMachine) extends Mappings with DispatchDateValidation {
 
-  // scalastyle:off magic.number
-  private val earliestDispatchDate = appConfig.earliestDispatchDate
-  // scalastyle:on magic.number
-
-  def apply(): Form[DispatchDetailsModel] =
+  def apply(isDeferredMovement: Boolean): Form[DispatchDetailsModel] =
     Form(
       mapping(
         "value" -> localDate(
@@ -42,7 +40,8 @@ class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappin
           .verifying(
             firstError(
               fourDigitYear("dispatchDetails.value.error.yearNotFourDigits"),
-              minDate(earliestDispatchDate, "dispatchDetails.value.error.earliestDate")
+              minDateCheck(isDeferredMovement),
+              maxDateCheck(isDeferredMovement)
             )
           ),
         "time" -> localTime(

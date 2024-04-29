@@ -21,13 +21,14 @@ import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DeferredMovementFormProvider
 import models.requests.DataRequest
-import models.{CheckMode, Mode}
+import models.{CheckMode, Mode, ReviewMode}
 import navigation.InformationNavigator
 import pages.sections.info.DeferredMovementPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{PreDraftService, UserAnswersService}
+import utils.{DispatchDateInFutureValidationError, DispatchDateInPastValidationError}
 import views.html.sections.info.DeferredMovementView
 
 import javax.inject.Inject
@@ -66,16 +67,32 @@ class DeferredMovementController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DeferredMovementPage(isOnPreDraftFlow = false), formProvider()), controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern, draftId))
+      renderView(
+        status = Ok,
+        form = fillForm(DeferredMovementPage(isOnPreDraftFlow = false), formProvider()),
+        onSubmitCall = controllers.sections.info.routes.DeferredMovementController.onSubmit(request.ern, draftId)
+      )
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      val page = DeferredMovementPage(isOnPreDraftFlow = false)
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, controllers.sections.info.routes.DeferredMovementController.onSubmit(ern, draftId)),
-        value =>
-          saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, CheckMode)
+        value => {
+          val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(page, value,
+            request.userAnswers.copy(submissionFailures =
+              //Remove Validation Error that might exist for Dispatch Date as changing the deferred movement answer invalidates the validation
+              request.userAnswers.submissionFailures.filterNot(failure =>
+                failure.errorType == DispatchDateInPastValidationError.code ||
+                failure.errorType == DispatchDateInFutureValidationError.code
+              )
+            )
+          )
+          val mode = if(request.userAnswers.get(page).contains(value)) CheckMode else ReviewMode
+          saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, cleansedAnswers, mode)
+        }
       )
     }
 

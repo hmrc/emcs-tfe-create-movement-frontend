@@ -149,8 +149,8 @@ trait BaseFixtures {
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2))
   )
 
-  val dispatchDetailsModel = DispatchDetailsModel(
-    date = LocalDate.of(2020, 2, 2),
+  def dispatchDetailsModel(dispatchDate: LocalDate) = DispatchDetailsModel(
+    date = dispatchDate,
     time = LocalTime.of(7, 25)
   )
 

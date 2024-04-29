@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import pages.sections.info.LocalReferenceNumberPage
+@import pages.sections.info.DispatchDetailsPage
 @import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
@@ -37,7 +38,10 @@
     @formHelper(action = submitAction) {
 
         @errorNotificationBannerHelper.content(
-          errors = LocalReferenceNumberPage(false).getMovementSubmissionErrors,
+          errors = Seq(
+              LocalReferenceNumberPage(false).getMovementSubmissionErrors,
+              DispatchDetailsPage(false).getMovementSubmissionErrors
+          ).flatten,
           withLinks = true
         ).map(notificationBanner(_))
 

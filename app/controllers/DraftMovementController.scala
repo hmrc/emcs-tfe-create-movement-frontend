@@ -17,10 +17,9 @@
 package controllers
 
 import controllers.actions._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.Logging
+import services.ValidationService
 import views.html.DraftMovementView
 
 import javax.inject.Inject
@@ -31,11 +30,14 @@ class DraftMovementController @Inject()(override val messagesApi: MessagesApi,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
+                                        val validationService: ValidationService,
                                         view: DraftMovementView
-                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
+                                       ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Ok(view())
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validationService.validate().map(updatedUserAnswers =>
+        Ok(view()(request.copy(userAnswers = updatedUserAnswers), implicitly))
+      )
     }
 }

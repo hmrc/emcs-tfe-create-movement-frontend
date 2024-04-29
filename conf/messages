@@ -920,7 +920,10 @@ dispatchDetails.value.error.required.all = Enter the date you received the movem
 dispatchDetails.value.error.required.two = The date of dispatch must include {0} and {1}
 dispatchDetails.value.error.required = The date of dispatch must include {0}
 dispatchDetails.value.error.invalid = The date of dispatch must be a real date
-dispatchDetails.value.error.earliestDate = Date of dispatch must not be too far in the past
+dispatchDetails.value.error.latestDate.deferred = The date of dispatch must be today’s date or in the past
+dispatchDetails.value.error.earliestDate.deferred = Date of dispatch must not be too far in the past
+dispatchDetails.value.error.earliestDate = The date of dispatch must be today’s date or in the future
+dispatchDetails.value.error.latestDate = The date of dispatch must be less than {0} days in the future
 dispatchDetails.value.error.yearNotFourDigits = Enter a valid year using four digits (for example, 2023)
 dispatchDetails.value.checkYourAnswersLabel = Date of dispatch
 dispatchDetails.value.change.hidden = date of dispatch
@@ -1497,7 +1500,7 @@ transportUnitCheckAnswers.heading.transportUnits = Transport units
 # Submission failures (704) messages
 # ==================================
 errors.704.notificationBanner.title = Update needed
-errors.704.notificationBanner.content = Some sections need updating before you can resubmit this movement
+errors.704.notificationBanner.content = Some sections need updating before you can submit this movement
 errors.704.notificationBanner.p = Some information needs updating
 
 
@@ -1582,4 +1585,7 @@ errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSe
 errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
 errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
+
+errors.ui.dispatchDate.inPast = The date of dispatch must be today’s date or up to 7 days in the future because this is not a deferred movement using fallback procedures
+errors.ui.dispatchDate.inFuture = The date of dispatch must be before or equal to today’s date because this a deferred movement using fallback procedures
 

@@ -17,14 +17,13 @@
 package utils
 
 import base.SpecBase
-
-import scala.collection.Seq
 import controllers.sections.consignee.routes._
-import controllers.sections.items.routes._
-import controllers.sections.importInformation.routes._
-import controllers.sections.exportInformation.routes._
 import controllers.sections.destination.routes._
+import controllers.sections.exportInformation.routes._
+import controllers.sections.importInformation.routes._
 import controllers.sections.info.routes._
+import controllers.sections.items.routes._
+import fixtures.messages.ValidationErrorMessages
 import models.CheckMode
 import models.requests.DataRequest
 import play.api.mvc.AnyContentAsEmpty
@@ -32,7 +31,7 @@ import play.api.test.FakeRequest
 
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
-  "ErrorCode.apply" - {
+  "ErrorCode" - {
 
     "for indexed errors" - {
       Seq(true, false).foreach { isForAddToList =>
@@ -93,7 +92,9 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> "4456",
         DispatchWarehouseInvalidOrMissingOnSeedError -> "4404",
         DispatchWarehouseInvalidError -> "4458",
-        DispatchWarehouseConsignorDoesNotManageWarehouseError -> "4461"
+        DispatchWarehouseConsignorDoesNotManageWarehouseError -> "4461",
+        DispatchDateInFutureValidationError -> "8085",
+        DispatchDateInPastValidationError -> "8084"
       ).foreach {
         case (submissionError, expectedErrorCode) =>
 
@@ -116,7 +117,7 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       val isForAddToList = true
 
       Seq(
-        LocalReferenceNumberError -> LocalReferenceNumberController.onPageLoad(testErn, testDraftId).url,
+        LocalReferenceNumberError -> LocalReferenceNumberController.onPageLoad(testErn, testDraftId, CheckMode).url,
         ImportCustomsOfficeCodeError -> ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
         ExportCustomsOfficeNumberError -> ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
         InvalidOrMissingConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
@@ -142,7 +143,9 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
           ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
         PlaceOfDestinationExciseIdInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
         PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        DispatchDateInFutureValidationError -> DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
+        DispatchDateInPastValidationError -> DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
       ).foreach {
         case (error, expectedUrl) =>
           error.route().url mustBe expectedUrl
@@ -169,6 +172,25 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       val expectedResult = "Invalid submission error code: invalid code"
 
       actualResult mustBe expectedResult
+    }
+  }
+
+  "Error Message content" - {
+
+    Seq(ValidationErrorMessages.English).foreach { messagesForLang =>
+
+      implicit val msgs = messages(candidates = Seq(messagesForLang.lang))
+
+      s"when output in language code of '${messagesForLang.lang.code}'" - {
+
+        s"must render correct content for $DispatchDateInFutureValidationError" in {
+          msgs(DispatchDateInFutureValidationError.messageKey) mustBe messagesForLang.dispatchDateInFutureValidationError
+        }
+
+        s"must render correct content for $DispatchDateInPastValidationError" in {
+          msgs(DispatchDateInPastValidationError.messageKey) mustBe messagesForLang.dispatchDateInPastValidationError(appConfig.maxDispatchDateFutureDays)
+        }
+      }
     }
   }
 }

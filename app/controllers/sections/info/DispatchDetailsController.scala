@@ -20,8 +20,8 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DispatchDetailsFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.{CheckMode, Mode}
 import navigation.InformationNavigator
 import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
 import play.api.data.Form
@@ -51,88 +51,81 @@ class DispatchDetailsController @Inject()(
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      renderViewPreDraft(
-        Ok,
-        fillForm(DispatchDetailsPage(), formProvider()),
-        controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
-        mode
-      )
+      withDeferredMovementAnswer(isOnPreDraftFlow = true) { isDeferred =>
+        renderView(
+          status = Ok,
+          form = fillForm(DispatchDetailsPage(), formProvider(isDeferred)),
+          onSubmitCall = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
+          mode = mode,
+          isDeferred = isDeferred,
+          isOnPreDraftFlow = true
+        )
+      }
     }
 
 
   def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderViewPreDraft(
-            BadRequest,
-            formWithErrors,
-            controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
-            mode
-          ),
-        value =>
-          savePreDraftAndRedirect(DispatchDetailsPage(), value, mode)
-      )
+      withDeferredMovementAnswer(isOnPreDraftFlow = true) { isDeferred =>
+        formProvider(isDeferred).bindFromRequest().fold(
+          formWithErrors =>
+            renderView(
+              status = BadRequest,
+              form = formWithErrors,
+              onSubmitCall = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
+              mode = mode,
+              isDeferred = isDeferred,
+              isOnPreDraftFlow = true
+            ),
+          value =>
+            savePreDraftAndRedirect(DispatchDetailsPage(), value, mode)
+        )
+      }
     }
 
-  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      renderView(
-        Ok,
-        fillForm(DispatchDetailsPage(isOnPreDraftFlow = false), formProvider()),
-        controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, draftId),
-        CheckMode
-      )
+      withAnswerAsync(page = DeferredMovementPage(false)) { isDeferred =>
+        renderView(
+          status = Ok,
+          form = fillForm(DispatchDetailsPage(isOnPreDraftFlow = false), formProvider(isDeferred)),
+          onSubmitCall = controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, draftId, mode),
+          mode = mode,
+          isDeferred = isDeferred,
+          isOnPreDraftFlow = false
+        )
+      }
     }
 
 
-  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(
-            BadRequest,
-            formWithErrors,
-            controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, draftId),
-            CheckMode
-          ),
-        value =>
-          saveAndRedirect(DispatchDetailsPage(isOnPreDraftFlow = false), value, CheckMode)
-      )
+      withAnswerAsync(page = DeferredMovementPage(false)) { isDeferred =>
+        formProvider(isDeferred).bindFromRequest().fold(
+          formWithErrors =>
+            renderView(
+              status = BadRequest,
+              form = formWithErrors,
+              onSubmitCall = controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, draftId, mode),
+              mode = mode,
+              isDeferred = isDeferred,
+              isOnPreDraftFlow = false
+            ),
+          value =>
+            saveAndRedirect(DispatchDetailsPage(isOnPreDraftFlow = false), value, mode)
+        )
+      }
     }
 
-  def renderViewPreDraft(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode)
-                        (implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = DeferredMovementPage(),
-      redirectRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, mode)
-    ) { deferredMovement =>
-      Future.successful(
-        status(view(
-          form = form,
-          deferredMovement = deferredMovement,
-          onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(), mode, request.userAnswers)
-        ))
-      )
-    }
-  }
-
-  def renderView(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode)
+  def renderView(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode, isDeferred: Boolean, isOnPreDraftFlow: Boolean)
                 (implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = DeferredMovementPage(false)
-    ) { deferredMovement =>
       Future.successful(
         status(view(
           form = form,
-          deferredMovement = deferredMovement,
+          deferredMovement = isDeferred,
           onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow = false), mode, request.userAnswers)
+          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow), mode, request.userAnswers)
         ))
       )
     }
-  }
-
-
 }

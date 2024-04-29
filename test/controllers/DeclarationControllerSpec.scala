@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import mocks.config.MockAppConfig
-import mocks.services.{MockSubmitCreateMovementService, MockUserAnswersService}
+import mocks.services.{MockSubmitCreateMovementService, MockUserAnswersService, MockValidationService}
 import models.UserAnswers
 import models.requests.DataRequest
 import models.response.SubmitCreateMovementException
@@ -41,14 +41,15 @@ class DeclarationControllerSpec extends SpecBase
   with MockSubmitCreateMovementService
   with MockAppConfig
   with ItemFixtures
-  with MovementSubmissionFailureFixtures {
+  with MovementSubmissionFailureFixtures
+  with MockValidationService {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
   val ern: String = "XIRC123"
   lazy val submitRoute = routes.DeclarationController.onSubmit(ern, testDraftId)
 
 
-  class Test(userAnswers: UserAnswers = baseFullUserAnswers) {
+  class Test(val userAnswers: UserAnswers = baseFullUserAnswers) {
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
       FakeRequest(),
       userAnswers,
@@ -66,6 +67,7 @@ class DeclarationControllerSpec extends SpecBase
       new FakeNavigator(testOnwardRoute),
       mockSubmitCreateMovementService,
       view,
+      mockValidationService,
       errorHandler
     )(mockAppConfig)
   }
@@ -73,26 +75,62 @@ class DeclarationControllerSpec extends SpecBase
 
   "DeclarationController" - {
     "for GET onPageLoad" - {
-      "must return the declaration page" in new Test() {
+      "must return the declaration page (no submission failure and journey complete)" in new Test() {
+
         MockAppConfig.destinationOfficeSuffix.returns("004098")
+        MockValidationService.validate().returns(Future.successful(userAnswers))
+
         val res = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitRoute).toString()
       }
-      //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-      //      "must return the declaration page (all submission failures have been fixed)" in new Test(
-      //        baseFullUserAnswers.copy(submissionFailures = Seq(
-      //          itemQuantityFailure(1).copy(hasBeenFixed = true),
-      //          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
-      //        ))
-      //      ) {
-      //        MockAppConfig.destinationOfficeSuffix.returns("004098")
-      //        val res = controller.onPageLoad(ern, testDraftId)(request)
-      //
-      //        status(res) mustBe OK
-      //        contentAsString(res) mustBe view(submitRoute).toString()
-      //      }
+
+      "must redirect to Task List when validation service triggers a validation error to be added to the UserAnswers" in new Test() {
+
+        MockAppConfig.destinationOfficeSuffix.returns("004098")
+        MockValidationService.validate().returns(Future.successful(userAnswers.copy(
+          submissionFailures = Seq(dispatchDateInPastValidationError())
+        )))
+
+        val res = controller.onPageLoad(ern, testDraftId)(request)
+
+        status(res) mustBe SEE_OTHER
+        redirectLocation(res).value mustBe routes.DraftMovementController.onPageLoad(ern, testDraftId).url
+      }
+
+      "must redirect to Task List when not all IR704 errors have been fixed" in new Test(
+        baseFullUserAnswers.copy(submissionFailures = Seq(
+          itemQuantityFailure(1),
+          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+        ))
+      ) {
+
+        MockAppConfig.destinationOfficeSuffix.returns("004098")
+        MockValidationService.validate().returns(Future.successful(userAnswers))
+
+        val res = controller.onPageLoad(ern, testDraftId)(request)
+
+        status(res) mustBe SEE_OTHER
+        redirectLocation(res).value mustBe routes.DraftMovementController.onPageLoad(ern, testDraftId).url
+      }
+
+      "must return the declaration page (all submission failures have been fixed (including any UIErrorModels))" in new Test(
+        baseFullUserAnswers.copy(submissionFailures = Seq(
+          itemQuantityFailure(1).copy(hasBeenFixed = true),
+          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true),
+          dispatchDateInPastValidationError().copy(hasBeenFixed = true)
+        ))
+      ) {
+
+        MockAppConfig.destinationOfficeSuffix.returns("004098")
+        MockValidationService.validate().returns(Future.successful(userAnswers))
+
+        val res = controller.onPageLoad(ern, testDraftId)(request)
+
+        status(res) mustBe OK
+        contentAsString(res) mustBe view(submitRoute).toString()
+      }
 
       "when creating a request model fails" - {
         "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
@@ -101,18 +139,6 @@ class DeclarationControllerSpec extends SpecBase
           status(res) mustBe SEE_OTHER
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
         }
-        //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-        //        "must return a BadRequest when UnfixedSubmissionFailuresException (submission failures remain unfixed)" in new Test(
-        //          baseFullUserAnswers.copy(submissionFailures = Seq(
-        //            itemQuantityFailure(1).copy(hasBeenFixed = true),
-        //            itemDegreesPlatoFailure(2).copy(hasBeenFixed = false)
-        //          ))
-        //        ) {
-        //          val res = controller.onPageLoad(ern, testDraftId)(request)
-        //
-        //          status(res) mustBe SEE_OTHER
-        //          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
-        //        }
 
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))

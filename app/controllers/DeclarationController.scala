@@ -25,9 +25,10 @@ import models.response.MissingMandatoryPage
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
+import pages.sections.AllSections
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{SubmitCreateMovementService, UserAnswersService}
+import services.{SubmitCreateMovementService, UserAnswersService, ValidationService}
 import utils.Logging
 import views.html.DeclarationView
 
@@ -47,13 +48,21 @@ class DeclarationController @Inject()(
                                        val navigator: Navigator,
                                        service: SubmitCreateMovementService,
                                        view: DeclarationView,
+                                       val validationService: ValidationService,
                                        errorHandler: ErrorHandler
                                      )(implicit appConfig: AppConfig) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { _ =>
-        Future.successful(Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId))))
+        validationService.validate().map { validatedAnswers =>
+          if (AllSections.isCompleted(request.copy(userAnswers =  validatedAnswers))) {
+            Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId)))
+          } else {
+            logger.info("[onPageLoad] Validation Error was triggered, redirect to task list for User to correct")
+            Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId))
+          }
+        }
       }
     }
 

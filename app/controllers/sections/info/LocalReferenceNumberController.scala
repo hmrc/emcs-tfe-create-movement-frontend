@@ -20,9 +20,9 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.LocalReferenceNumberFormProvider
+import models.Mode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.{CheckMode, Mode}
 import navigation.InformationNavigator
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
@@ -83,7 +83,7 @@ class LocalReferenceNumberController @Inject()(
     }
 
 
-  def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuard(isOnPreDraftFlow = false) {
         case (_, isDeferred) =>
@@ -91,12 +91,12 @@ class LocalReferenceNumberController @Inject()(
             Ok,
             fillForm(LocalReferenceNumberPage(isOnPreDraftFlow = false), formProvider(isDeferred)),
             isDeferred,
-            controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId)
+            controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId, mode)
           )
       }
     }
 
-  def onSubmit(ern: String, draftId: String): Action[AnyContent] =
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withGuard(isOnPreDraftFlow = false) {
         case (_, isDeferred) =>
@@ -106,10 +106,10 @@ class LocalReferenceNumberController @Inject()(
                 BadRequest,
                 formWithErrors,
                 isDeferred,
-                controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId)
+                controllers.sections.info.routes.LocalReferenceNumberController.onSubmit(request.ern, draftId, mode)
               ),
             value =>
-              saveAndRedirect(LocalReferenceNumberPage(isOnPreDraftFlow = false), value, CheckMode)
+              saveAndRedirect(LocalReferenceNumberPage(isOnPreDraftFlow = false), value, mode)
           )
       }
     }

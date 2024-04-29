@@ -29,7 +29,25 @@ class ExciseProductCodeHelperSpec extends SpecBase {
 
     "must return false" - {
       "when the epc is NOT S200" in {
-        ExciseProductCodeHelper.isSpirituousBeverages("S201") mustBe false
+        ExciseProductCodeHelper.isSpirituousBeverages("S300") mustBe false
+      }
+    }
+  }
+
+  ".isSpiritAndNotSpirituousBeverages" - {
+    "must return true" - {
+
+      Seq("S300", "S400", "S500", "S600").foreach { epc =>
+        s"when the epc is $epc" in {
+          ExciseProductCodeHelper.isSpiritAndNotSpirituousBeverages(epc) mustBe true
+        }
+      }
+      
+    }
+
+    "must return false" - {
+      "when the epc is NOT S300 / S400 / S500 / S600" in {
+        ExciseProductCodeHelper.isSpiritAndNotSpirituousBeverages("S200") mustBe false
       }
     }
   }

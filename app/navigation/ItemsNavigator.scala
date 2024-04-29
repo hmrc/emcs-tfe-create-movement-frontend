@@ -26,7 +26,8 @@ import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
 import queries.{ItemsCount, ItemsPackagingCount}
-import utils.{CommodityCodeHelper, ExciseProductCodeHelper}
+import utils.CommodityCodeHelper
+import utils.ExciseProductCodeHelper.{isSpiritAndNotSpirituousBeverages, isSpirituousBeverages}
 
 import javax.inject.Inject
 
@@ -391,10 +392,15 @@ class ItemsNavigator @Inject() extends BaseNavigator {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
 
-          case Spirits if Seq("S300", "S400", "S500", "S600").contains(epc) && abv < 8.5 =>
+          case Spirits if isSpirituousBeverages(epc) =>
+            itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+          case Spirits if isSpiritAndNotSpirituousBeverages(epc) && abv < 8.5 =>
             itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
-          case Spirits => itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Spirits if isSpiritAndNotSpirituousBeverages(epc) && abv >= 8.5 =>
+            itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
           case _ =>
             itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }

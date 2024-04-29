@@ -228,11 +228,24 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                   itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
               }
             }
+
+            s"and the EPC is ${spiritEPC.code} and the ABV is >= 8.5" - {
+
+              "go to the Item Quantity Page" in {
+
+                val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
+                  .set(ItemExciseProductCodePage(testIndex1), spiritEPC.code)
+                  .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
+
+                navigator.nextPage(ItemAlcoholStrengthPage(testIndex1), NormalMode, userAnswers) mustBe
+                  itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, testIndex1, NormalMode)
+              }
+            }
           }
 
           "go to the Item Maturation Period Age Page" - {
 
-            "when the EPC is Spirituous Beverages" in {
+            "when the EPC is S200" in {
               val userAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn)
                 .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeS200.code)
                 .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))

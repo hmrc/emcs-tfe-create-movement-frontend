@@ -25,6 +25,7 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, text => playText}
 import uk.gov.voa.play.form.Condition
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
+import utils.ExciseProductCodeHelper.isSpirituousBeverages
 
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
     )
 
   //Doesn't matter what is in the form (map needed for compatibility with conditional mapping lib)
-  private[items] def isS200(epc: String): Condition = _ => epc == "S200"
+  private[items] def isS200(epc: String): Condition = _ => isSpirituousBeverages(epc)
 
   private[items] def applyModel(geographicalIndication: ItemGeographicalIndicationType, pdoTextField: Option[String], pgiTextField: Option[String], isSpiritMarketedAndLabelled: Option[Boolean]) = {
     val geographicalIndicationIdentification = geographicalIndication match {

@@ -36,8 +36,7 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
       case Left(_) => throw MemberStatesException("No member states retrieved")
       case Right(value) =>
         value
-          .filterNot(_.countryCode == GB_PREFIX)
-          .filterNot(_.countryCode == NI_PREFIX)
+          .filterNot(country => country.countryCode == GB_PREFIX || country.countryCode == NI_PREFIX)
           .map { memberState =>
             SelectItem(
               value = Some(memberState.countryCode),

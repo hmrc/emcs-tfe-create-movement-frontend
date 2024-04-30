@@ -23,7 +23,8 @@ import models.Mode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import navigation.DestinationNavigator
-import pages.sections.destination.DestinationBusinessNamePage
+import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.destination.{DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -50,7 +51,11 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
     authorisedDataRequest(ern, draftId) { implicit request =>
       withAnswer(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, draftId)) {
         destinationType =>
-          renderView(Ok, fillForm(DestinationBusinessNamePage, formProvider()), mode, destinationType)
+          val prePopPage = (request.userAnswers.get(DestinationBusinessNamePage), request.userAnswers.get(DestinationConsigneeDetailsPage)) match {
+            case (None, Some(true)) => ConsigneeBusinessNamePage
+            case _ => DestinationBusinessNamePage
+          }
+          renderView(Ok, fillForm(prePopPage, formProvider()), mode, destinationType)
       }
     }
 

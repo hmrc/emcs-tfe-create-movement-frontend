@@ -18,11 +18,10 @@ package viewmodels.checkAnswers.sections.destination
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
+import pages.sections.destination.DestinationAddressPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

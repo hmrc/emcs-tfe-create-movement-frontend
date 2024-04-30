@@ -53,23 +53,8 @@ class DestinationConsigneeDetailsController @Inject()(
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(BadRequest, formWithErrors, mode),
-        value => if (request.userAnswers.get(DestinationConsigneeDetailsPage).contains(value)) {
-          Future(Redirect(navigator.nextPage(DestinationConsigneeDetailsPage, mode, request.userAnswers)))
-        } else {
-
-          val cleanedUserAnswers = if (!value) request.userAnswers else request.userAnswers
-            .remove(DestinationBusinessNamePage)
-            .remove(DestinationAddressPage)
-
-          saveAndRedirect(
-            page = DestinationConsigneeDetailsPage,
-            answer = value,
-            currentAnswers = cleanedUserAnswers,
-            mode = NormalMode
-          )
-        }
+        renderView(BadRequest, _, mode),
+        cleanseSaveAndRedirect
       )
     }
 
@@ -78,6 +63,15 @@ class DestinationConsigneeDetailsController @Inject()(
       form = form,
       mode = mode
     )))
+
+  private def cleanseSaveAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(DestinationConsigneeDetailsPage, value, {
+      request.userAnswers
+        .remove(DestinationBusinessNamePage)
+        .remove(DestinationAddressPage)
+    })
+    saveAndRedirect(DestinationConsigneeDetailsPage, value, cleansedAnswers, NormalMode)
+  }
 
 
 }

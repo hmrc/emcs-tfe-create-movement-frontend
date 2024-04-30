@@ -42,7 +42,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
   lazy val destinationConsigneeDetailsRouteCheckMode: String =
     routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
 
-  class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Test(val optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val testController = new DestinationConsigneeDetailsController(
       messagesApi,
       mockUserAnswersService,
@@ -80,7 +80,32 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
     }
 
     "must redirect to the next page when valid data is submitted" in new Test() {
+
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+      val req = FakeRequest(POST, destinationConsigneeDetailsRoute).withFormUrlEncodedBody(("value", "true"))
+
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted (removing exising data when answer is changed)" in new Test(
+      Some(emptyUserAnswers
+        .set(DestinationConsigneeDetailsPage, false)
+        .set(DestinationAddressPage, testUserAddress)
+        .set(DestinationBusinessNamePage, testBusinessName)
+      )
+    ) {
+
+      val expectedAnswers = optUserAnswers.get
+        .remove(DestinationAddressPage)
+        .remove(DestinationBusinessNamePage)
+        .set(DestinationConsigneeDetailsPage, true)
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
       val req = FakeRequest(POST, destinationConsigneeDetailsRoute).withFormUrlEncodedBody(("value", "true"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)

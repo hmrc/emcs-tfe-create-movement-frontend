@@ -30,37 +30,20 @@ object DestinationAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val useConsignee = request.userAnswers.get(DestinationConsigneeDetailsPage)
-
-    val businessNamePage = useConsignee match {
-      case Some(true) => ConsigneeAddressPage
-      case _ => DestinationAddressPage
-    }
-
-    val changeAddressLink = Seq(
-      ActionItemViewModel(
-        content = "site.change",
-        href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-        id = "changeDestinationAddress"
-      ).withVisuallyHiddenText(messages("address.destinationAddress.change.hidden"))
-    )
-
-    val (value, actions) = request.userAnswers.get(businessNamePage).fold[(HtmlContent, Seq[ActionItem])] {
-      useConsignee match {
-        case Some(true) => (HtmlContent(messages("destinationCheckAnswers.consignee.notProvided")), Seq.empty)
-        case _ => (HtmlContent(messages("destinationCheckAnswers.destination.notProvided")), Seq.empty)
-      }
-    } { answer =>
-      useConsignee match {
-        case Some(true) => (answer.toCheckYourAnswersFormat, Seq.empty)
-        case _ => (answer.toCheckYourAnswersFormat, changeAddressLink)
-      }
-    }
+    val value = request.userAnswers.get(DestinationAddressPage).fold[HtmlContent] {
+      HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
+    } { _.toCheckYourAnswersFormat }
 
     SummaryListRowViewModel(
       key = "address.destinationAddress.checkYourAnswers.label",
       value = Value(value),
-      actions = actions
+      actions = Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          id = "changeDestinationAddress"
+        ).withVisuallyHiddenText(messages("address.destinationAddress.change.hidden"))
+      )
     )
   }
 }

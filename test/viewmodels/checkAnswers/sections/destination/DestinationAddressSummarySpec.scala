@@ -21,120 +21,60 @@ import fixtures.UserAddressFixtures
 import fixtures.messages.sections.destination.DestinationAddressMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddressFixtures {
 
   "DestinationAddressSummary" - {
 
-    Seq(DestinationAddressMessages.English).foreach { messagesForLanguage =>
+    Seq(DestinationAddressMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when Destination Address has NOT been answered" - {
 
-          "must output no row" in {
+          "must output a Not Provided row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(HtmlContent(messagesForLanguage.cyaDestinationNotProvided)),
-              actions = Seq.empty
+            DestinationAddressSummary.row() mustBe expectedSummary(Value(HtmlContent(messagesForLanguage.cyaDestinationNotProvided)))
+          }
+        }
+
+        "when Destination Address has been answered" - {
+
+          "must output the expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(DestinationConsigneeDetailsPage, false)
+              .set(DestinationAddressPage, userAddressModelMax)
             )
 
-          }
-        }
-
-        "when the DestinationConsigneeDetailsPage has been answered no" - {
-
-          "when there is no Destination Address given" - {
-
-            s"must output ${messagesForLanguage.cyaDestinationNotProvided}" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false)
-              )
-
-              DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(messagesForLanguage.cyaDestinationNotProvided)),
-                actions = Seq.empty
-              )
-            }
-          }
-
-          "when Destination Address has been answered" - {
-
-            "must output the expected row" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationAddressPage, userAddressModelMax)
-              )
-
-              DestinationAddressSummary.row() mustBe
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(userAddressModelMax.toCheckYourAnswersFormat),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
-                      id = "changeDestinationAddress"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
-            }
-          }
-        }
-
-        "when the DestinationConsigneeDetailsPage has been answered yes" - {
-
-          "when there is no Consignee Address given" - {
-
-            s"must output ${messagesForLanguage.cyaConsigneeNotProvided}" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, true)
-              )
-
-              DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(HtmlContent(messagesForLanguage.cyaConsigneeNotProvided)),
-                actions = Seq.empty
-              )
-            }
-          }
-
-          "when Consignee Address has been answered" - {
-
-            "must output the expected row" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, true)
-                .set(ConsigneeAddressPage, userAddressModelMax)
-              )
-
-              DestinationAddressSummary.row() mustBe
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(userAddressModelMax.toCheckYourAnswersFormat),
-                  actions = Seq.empty
-                )
-            }
+            DestinationAddressSummary.row() mustBe expectedSummary(Value(userAddressModelMax.toCheckYourAnswersFormat))
           }
         }
       }
     }
   }
+
+  private def expectedSummary(value: Value)(implicit messagesForLanguage: DestinationAddressMessages.ViewMessages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = Key(Text(messagesForLanguage.cyaLabel)),
+      value = value,
+      actions = Seq(
+        ActionItemViewModel(
+          content = Text(messagesForLanguage.change),
+          href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+          id = "changeDestinationAddress"
+        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+      )
+    )
 }

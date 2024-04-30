@@ -22,6 +22,7 @@ import forms.mappings.Mappings
 import models.UserAddress
 import models.requests.DataRequest
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import pages.{Page, QuestionPage}
 import play.api.data.Form
@@ -73,6 +74,8 @@ class AddressFormProvider @Inject() extends Mappings {
       case ConsignorAddressPage => niPostcode(request.isNorthernIrelandErn)
       case DispatchAddressPage if request.userAnswers.get(DispatchWarehouseExcisePage).nonEmpty =>
         niPostcode(request.userAnswers.get(DispatchWarehouseExcisePage).exists(_.startsWith(Constants.NI_PREFIX)))
+      case DestinationAddressPage if request.userAnswers.get(DestinationWarehouseExcisePage).nonEmpty =>
+        niPostcode(request.userAnswers.get(DestinationWarehouseExcisePage).exists(_.startsWith(Constants.NI_PREFIX)))
       case _ => Seq.empty
     }
   }

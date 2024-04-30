@@ -20,6 +20,7 @@ import controllers.sections.destination.routes
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeSection}
 import pages.sections.destination._
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.Call
@@ -29,15 +30,14 @@ import javax.inject.Inject
 class DestinationNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-
     case DestinationWarehouseExcisePage =>
-      (userAnswers: UserAnswers) => routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      consigneeDetailsRoutingLogic(_)
     case DestinationWarehouseVatPage =>
       destinationWarehouseVatRouting()
     case DestinationDetailsChoicePage =>
       destinationDetailsChoiceRouting()
     case DestinationConsigneeDetailsPage =>
-      destinationConsigneeDetailsRouting()
+      (userAnswers: UserAnswers) => routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationBusinessNamePage =>
       (userAnswers: UserAnswers) => routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationAddressPage =>
@@ -67,10 +67,17 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       reviewRouteMap(page)(userAnswers)
   }
 
+  private def consigneeDetailsRoutingLogic(implicit userAnswers: UserAnswers): Call =
+    if(userAnswers.get(ConsigneeAddressPage).nonEmpty && userAnswers.get(ConsigneeBusinessNamePage).nonEmpty) {
+      routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+    } else {
+      routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+    }
+
   private def destinationWarehouseVatRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DestinationTypePage) match {
       case Some(CertifiedConsignee) | Some(TemporaryCertifiedConsignee) =>
-        routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        consigneeDetailsRoutingLogic(userAnswers)
       case _ =>
         routes.DestinationDetailsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     }
@@ -78,19 +85,9 @@ class DestinationNavigator @Inject() extends BaseNavigator {
   private def destinationDetailsChoiceRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DestinationDetailsChoicePage) match {
       case Some(true) =>
-        routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
+        consigneeDetailsRoutingLogic(userAnswers)
       case Some(_) =>
         routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-      case _ =>
-        controllers.routes.JourneyRecoveryController.onPageLoad()
-    }
-
-  private def destinationConsigneeDetailsRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
-    userAnswers.get(DestinationConsigneeDetailsPage) match {
-      case Some(true) =>
-        routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-      case Some(false) =>
-        routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, mode)
       case _ =>
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }

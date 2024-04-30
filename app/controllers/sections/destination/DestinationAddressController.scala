@@ -24,10 +24,11 @@ import models.requests.DataRequest
 import models.{Mode, UserAddress}
 import navigation.DestinationNavigator
 import pages.QuestionPage
-import pages.sections.destination.DestinationAddressPage
+import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Call, MessagesControllerComponents, Result}
+import play.api.mvc._
 import services.UserAnswersService
 import views.html.AddressView
 
@@ -49,6 +50,15 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, mode)
+
+  override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, draftId) { implicit request =>
+      val prePopPage = (request.userAnswers.get(addressPage), request.userAnswers.get(DestinationConsigneeDetailsPage)) match {
+        case (None, Some(true)) => ConsigneeAddressPage
+        case _ => addressPage
+      }
+      renderView(Ok, fillForm(prePopPage, formProvider(addressPage)), mode)
+    }
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
     status(view(

@@ -16,6 +16,7 @@
 
 package services
 
+import config.Constants.{GB_PREFIX, NI_PREFIX}
 import connectors.referenceData.GetMemberStatesConnector
 import models.CountryModel
 import models.response.MemberStatesException
@@ -33,12 +34,15 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
   def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] = {
     connector.getMemberStates().map {
       case Left(_) => throw MemberStatesException("No member states retrieved")
-      case Right(value) => value.map { memberState =>
-        SelectItem(
-          value = Some(memberState.countryCode),
-          text = s"${memberState.country} (${memberState.countryCode})"
-        )
-      }
+      case Right(value) =>
+        value
+          .filterNot(country => country.countryCode == GB_PREFIX || country.countryCode == NI_PREFIX)
+          .map { memberState =>
+            SelectItem(
+              value = Some(memberState.countryCode),
+              text = s"${memberState.country} (${memberState.countryCode})"
+            )
+          }
     }
   }
 

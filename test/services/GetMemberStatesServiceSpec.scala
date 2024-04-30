@@ -51,6 +51,19 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
       }
     }
 
+    "should filter out GB and XI" in {
+      val expectedResult = Seq(
+        SelectItem(Some(countryModelAT.countryCode), s"${countryModelAT.country} (${countryModelAT.countryCode})"),
+        SelectItem(Some(countryModelBE.countryCode), s"${countryModelBE.country} (${countryModelBE.countryCode})")
+      )
+
+      MockGetMemberStatesConnector.getMemberStates().returns(Future(Right(Seq(countryModelAT, countryModelGB, countryModelXI, countryModelBE))))
+
+      val actualResults = testService.getMemberStatesSelectItems().futureValue
+
+      actualResults mustBe expectedResult
+    }
+
     "should throw MemberStatesException" - {
 
       "when Connector returns failure from downstream" in {

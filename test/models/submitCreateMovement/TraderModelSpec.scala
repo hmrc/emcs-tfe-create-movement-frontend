@@ -267,28 +267,6 @@ class TraderModelSpec extends SpecBase {
   "applyDeliveryPlace" - {
     "must return a TraderModel" - {
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseExcise" - {
-        "when useConsigneeDetails = true" in {
-          Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse).foreach {
-            movementScenario =>
-              implicit val dr: DataRequest[_] = dataRequest(
-                fakeRequest,
-                emptyUserAnswers
-                  .set(DestinationTypePage, movementScenario)
-                  .set(DestinationWarehouseExcisePage, "destination ern")
-                  .set(DestinationConsigneeDetailsPage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
-                  .set(ConsigneeBusinessNamePage, "consignee name")
-                  .set(ConsigneeExcisePage, "consignee ern")
-                  .set(ConsigneeExportEoriPage, "consignee eori")
-                  .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
-              )
-
-              TraderModel.applyDeliveryPlace(movementScenario) mustBe
-                Some(consigneeTraderWithErn.copy(traderExciseNumber = Some("destination ern"), eoriNumber = None))
-          }
-        }
-        "when useConsigneeDetails = false" in {
           Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
@@ -304,29 +282,8 @@ class TraderModelSpec extends SpecBase {
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
           }
         }
-      }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
-        "when giveAddressAndBusinessName = true, and use consignee address = true" in {
-          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
-            movementScenario =>
-              implicit val dr: DataRequest[_] = dataRequest(
-                fakeRequest,
-                emptyUserAnswers
-                  .set(ConsigneeBusinessNamePage, "consignee name")
-                  .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
-                  .set(DestinationTypePage, movementScenario)
-                  .set(DestinationWarehouseVatPage, "destination ern")
-                  .set(DestinationDetailsChoicePage, true)
-                  .set(DestinationConsigneeDetailsPage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
-              )
-
-              TraderModel.applyDeliveryPlace(movementScenario) mustBe
-                Some(consigneeTraderWithNeitherErnNorVatNo.copy(traderExciseNumber = Some("destination ern")))
-          }
-        }
-        "when giveAddressAndBusinessName = true, and use consignee address = false" in {
+        "when giveAddressAndBusinessName = true" in {
           Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
@@ -360,8 +317,6 @@ class TraderModelSpec extends SpecBase {
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader.copy(traderName = None, address = None))
           }
         }
-      }
-      "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
         "and shouldSkipDestinationDetailsChoice" in {
           Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach {
             movementScenario =>

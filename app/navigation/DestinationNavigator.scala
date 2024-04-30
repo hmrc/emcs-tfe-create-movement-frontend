@@ -20,7 +20,7 @@ import controllers.sections.destination.routes
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeSection}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.destination._
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.Call

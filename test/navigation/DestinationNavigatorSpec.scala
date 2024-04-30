@@ -182,6 +182,29 @@ class DestinationNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
+      "for the DestinationWarehouseExcisePage" - {
+
+        "if there is no DispatchAddress (because value for ERN was changed from GB-->XI or XI-->GB" - {
+
+          "must go to the DestinationAddress page" in {
+
+            navigator.nextPage(DestinationWarehouseExcisePage, CheckMode, emptyUserAnswers) mustBe
+              routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode)
+          }
+        }
+
+        "if there is a DispatchAddress" - {
+
+          "must go to the DestinationCheckAnswers page" in {
+
+            val userAnswers = emptyUserAnswers.set(DestinationAddressPage, testUserAddress)
+
+            navigator.nextPage(DestinationWarehouseExcisePage, CheckMode, userAnswers) mustBe
+              routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
       "must go to CheckYourAnswersDestinationController" in {
 
         case object UnknownPage extends Page

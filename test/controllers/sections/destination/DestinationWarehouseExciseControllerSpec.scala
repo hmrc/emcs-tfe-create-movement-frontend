@@ -25,7 +25,7 @@ import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
-import pages.sections.destination.DestinationWarehouseExcisePage
+import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
 import play.api.mvc.Call
@@ -46,7 +46,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
   lazy val destinationWarehouseExciseOnSubmit: Call =
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(val optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val testController = new DestinationWarehouseExciseController(
       messagesApi,
       mockUserAnswersService,
@@ -85,6 +85,28 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       contentAsString(result) mustEqual view(form.fill("answer"),
         onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(testErn, testDraftId, NormalMode)
       )(dataRequest(request), messages(request)).toString
+    }
+
+    "must redirect to the next page when valid data is submitted (removing the address if ERN changes from GB-->XI or vice-versa)" in new Fixture(
+      Some(emptyUserAnswers
+        .set(DestinationTypePage, DirectDelivery)
+        .set(DestinationAddressPage, testUserAddress)
+        .set(DestinationWarehouseExcisePage, testGreatBritainErn)
+      )
+    ) {
+
+      val expectedUserAnswers = optUserAnswers.get
+        .remove(DestinationAddressPage)
+        .set(DestinationWarehouseExcisePage, testNorthernIrelandErn)
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", testNorthernIrelandErn))
+
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers

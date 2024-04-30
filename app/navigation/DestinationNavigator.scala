@@ -49,6 +49,12 @@ class DestinationNavigator @Inject() extends BaseNavigator {
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case DestinationWarehouseExcisePage => (userAnswers: UserAnswers) =>
+      if (userAnswers.get(DestinationAddressPage).isEmpty) {
+        routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, CheckMode)
+      } else {
+        routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
     case _ =>
       (userAnswers: UserAnswers) => routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }

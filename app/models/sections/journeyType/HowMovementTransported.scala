@@ -16,7 +16,10 @@
 
 package models.sections.journeyType
 
+import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.{Enumerable, WithName}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -52,13 +55,18 @@ object HowMovementTransported extends Enumerable.Implicits {
     Other
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, _) =>
-      RadioItem(
-        content = Text(messages(s"howMovementTransported.${value.toString}")),
-        value = Some(value.toString),
-        id = Some(s"value_${value.toString}")
-      )
+  def options(implicit dataRequest: DataRequest[_], messages: Messages): Seq[RadioItem] = {
+    (dataRequest.userAnswers.get(DestinationTypePage) match {
+      case Some(UnknownDestination) => Seq(InlandWaterwayTransport, SeaTransport).zipWithIndex
+      case _ => values.zipWithIndex
+    }).map {
+      case (value, _) =>
+        RadioItem(
+          content = Text(messages(s"howMovementTransported.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_${value.toString}")
+        )
+    }
   }
 
   implicit val enumerable: Enumerable[HowMovementTransported] =

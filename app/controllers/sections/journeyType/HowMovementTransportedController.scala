@@ -20,24 +20,25 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
+import models.sections.info.movementScenario.MovementType
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.sections.journeyType.{HowMovementTransportedView, HowMovementTransportedNoOptionView}
+import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 
 import javax.inject.Inject
 import scala.concurrent.Future
-import pages.sections.info.DestinationTypePage
-import pages.sections.guarantor.GuarantorRequiredPage
-import models.sections.info.movementScenario.MovementType
-import play.api.mvc.Result
 
 class HowMovementTransportedController @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -55,6 +56,7 @@ class HowMovementTransportedController @Inject()(
 
   private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
     (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
+      case (Some(UnknownDestination), _) => default
       case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
       case _ => default
     }
@@ -63,11 +65,11 @@ class HowMovementTransportedController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       guarantorNotRequiredEuGuard(
         onEuNotRequired = Ok(onlyFixedView(mode)),
-        default = Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
+        default = renderView(Ok, fillForm(HowMovementTransportedPage, formProvider()), mode)
       )
     }
 
-  private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = 
+  private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
     if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
       Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
     } else {
@@ -85,12 +87,17 @@ class HowMovementTransportedController @Inject()(
       guarantorNotRequiredEuGuard(
         onEuNotRequired = redirect(HowMovementTransported.FixedTransportInstallations, mode),
         default = formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, mode))),
-          answer => redirect(answer, mode) 
+          formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
+          redirect(_, mode)
         )
       )
     }
+
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+    withAnswer(DestinationTypePage) { movementScenario =>
+      status(view(form, mode, movementScenario))
+    }
+  }
 
   private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
     //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations

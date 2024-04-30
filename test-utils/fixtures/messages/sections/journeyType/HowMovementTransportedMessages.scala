@@ -24,6 +24,7 @@ object HowMovementTransportedMessages {
     val title: String = titleHelper(heading)
     val headingFixed: String = "How the goods will be transported"
     val titleFixed: String = titleHelper(headingFixed)
+    val unknownDestinationHint: String = "The transport for a movement of energy products to an unknown destination must be either by sea or by inland waterway."
     val radioOption1: String = "Air transport"
     val radioOption2: String = "Fixed transport installations"
     val radioOption3: String = "Inland waterway transport"

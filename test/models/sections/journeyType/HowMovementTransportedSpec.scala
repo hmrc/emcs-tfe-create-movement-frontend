@@ -16,12 +16,22 @@
 
 package models.sections.journeyType
 
+import base.SpecBase
+import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
+import models.sections.journeyType.HowMovementTransported._
 import org.scalatest.OptionValues
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsError, JsString, Json}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with OptionValues {
+class HowMovementTransportedSpec extends SpecBase with Matchers with OptionValues {
+
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "HowMovementTransported" - {
 
@@ -41,6 +51,49 @@ class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with OptionVa
       val howMovementTransported = HowMovementTransported.values.head
 
       Json.toJson(howMovementTransported) mustEqual JsString(howMovementTransported.toString)
+    }
+
+    "options" - {
+
+      val messagesForLanguage = HowMovementTransportedMessages.English
+
+      "must render the correct radio options when the destination type = Unknown Destination" in {
+
+        HowMovementTransported.options(dataRequest(request, emptyUserAnswers.set(DestinationTypePage, UnknownDestination)), messages(request)) mustBe Seq(
+          RadioItem(
+            content = Text(messagesForLanguage.radioOption3),
+            value = Some(InlandWaterwayTransport.toString),
+            id = Some(s"value_${InlandWaterwayTransport.toString}")
+          ),
+          RadioItem(
+            content = Text(messagesForLanguage.radioOption7),
+            value = Some(SeaTransport.toString),
+            id = Some(s"value_${SeaTransport.toString}")
+          )
+        )
+      }
+
+      "must render the correct radio options when the destination type != Unknown Destination" in {
+
+        val optionsAndMessages = Seq(
+          AirTransport -> messagesForLanguage.radioOption1,
+          FixedTransportInstallations -> messagesForLanguage.radioOption2,
+          InlandWaterwayTransport -> messagesForLanguage.radioOption3,
+          PostalConsignment -> messagesForLanguage.radioOption4,
+          RailTransport -> messagesForLanguage.radioOption5,
+          RoadTransport -> messagesForLanguage.radioOption6,
+          SeaTransport -> messagesForLanguage.radioOption7,
+          Other -> messagesForLanguage.radioOption8
+        )
+
+        HowMovementTransported.options(dataRequest(request), messages(request)) mustBe optionsAndMessages.map { journeyTypeAndMessage =>
+          RadioItem(
+            content = Text(journeyTypeAndMessage._2),
+            value = Some(journeyTypeAndMessage._1.toString),
+            id = Some(s"value_${journeyTypeAndMessage._1.toString}")
+          )
+        }
+      }
     }
   }
 }

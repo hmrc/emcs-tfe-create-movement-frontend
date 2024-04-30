@@ -21,8 +21,10 @@ import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -39,31 +41,58 @@ class HowMovementTransportedViewSpec extends SpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+        "and the destination type is Unknown Destination" - {
 
-       lazy val view = app.injector.instanceOf[HowMovementTransportedView]
-        val form = app.injector.instanceOf[HowMovementTransportedFormProvider].apply()
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, UnknownDestination))
 
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
+          lazy val view = app.injector.instanceOf[HowMovementTransportedView]
+          val form = app.injector.instanceOf[HowMovementTransportedFormProvider].apply()
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
-          Selectors.h1 -> messagesForLanguage.heading,
-          // scalastyle:off magic.number
-          Selectors.radioButton(1) -> messagesForLanguage.radioOption1,
-          Selectors.radioButton(2) -> messagesForLanguage.radioOption2,
-          Selectors.radioButton(3) -> messagesForLanguage.radioOption3,
-          Selectors.radioButton(4) -> messagesForLanguage.radioOption4,
-          Selectors.radioButton(5) -> messagesForLanguage.radioOption5,
-          Selectors.radioButton(6) -> messagesForLanguage.radioOption6,
-          Selectors.radioButton(7) -> messagesForLanguage.radioOption7,
-          Selectors.radioButton(8) -> messagesForLanguage.radioOption8,
-          // scalastyle:on magic.number
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
-        ))
+          implicit val doc: Document = Jsoup.parse(view(form, NormalMode, UnknownDestination).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.hint -> messagesForLanguage.unknownDestinationHint,
+            // scalastyle:off magic.number
+            Selectors.radioButton(1) -> messagesForLanguage.radioOption3,
+            Selectors.radioButton(2) -> messagesForLanguage.radioOption7,
+            // scalastyle:on magic.number
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "and the destination type is not Unknown Destination" - {
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse))
+
+          lazy val view = app.injector.instanceOf[HowMovementTransportedView]
+          val form = app.injector.instanceOf[HowMovementTransportedFormProvider].apply()
+
+          implicit val doc: Document = Jsoup.parse(view(form, NormalMode, GbTaxWarehouse).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
+            Selectors.h1 -> messagesForLanguage.heading,
+            // scalastyle:off magic.number
+            Selectors.radioButton(1) -> messagesForLanguage.radioOption1,
+            Selectors.radioButton(2) -> messagesForLanguage.radioOption2,
+            Selectors.radioButton(3) -> messagesForLanguage.radioOption3,
+            Selectors.radioButton(4) -> messagesForLanguage.radioOption4,
+            Selectors.radioButton(5) -> messagesForLanguage.radioOption5,
+            Selectors.radioButton(6) -> messagesForLanguage.radioOption6,
+            Selectors.radioButton(7) -> messagesForLanguage.radioOption7,
+            Selectors.radioButton(8) -> messagesForLanguage.radioOption8,
+            // scalastyle:on magic.number
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
+          ))
+        }
       }
     }
   }

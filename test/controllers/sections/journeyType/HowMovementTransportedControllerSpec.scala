@@ -21,10 +21,15 @@ import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
 import models.sections.journeyType.HowMovementTransported
+import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
@@ -32,14 +37,9 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import views.html.sections.journeyType.HowMovementTransportedView
+import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 
 import scala.concurrent.Future
-import views.html.sections.journeyType.HowMovementTransportedNoOptionView
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
-import models.sections.info.movementScenario.MovementScenario
-import models.sections.transportUnit.TransportUnitType
 
 class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswersService {
 
@@ -47,6 +47,8 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
   lazy val form: Form[HowMovementTransported] = formProvider()
   lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
   lazy val onlyFixedView: HowMovementTransportedNoOptionView = app.injector.instanceOf[HowMovementTransportedNoOptionView]
+
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse)
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -68,11 +70,22 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
 
   "HowMovementTransported Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
+    "must return OK and the correct view for a GET" in new Test(Some(baseUserAnswers)) {
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, NormalMode, GbTaxWarehouse)(dataRequest(request, baseUserAnswers), messages(request)).toString
+    }
+
+    "must return OK and the correct view for a GET (where the destination type is UnknownDestination)" in new Test(Some(
+      emptyUserAnswers.set(DestinationTypePage, UnknownDestination)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode, UnknownDestination)(dataRequest(request,
+        emptyUserAnswers.set(DestinationTypePage, UnknownDestination)
+      ), messages(request)).toString
     }
     
     Seq(
@@ -80,31 +93,36 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       MovementScenario.TemporaryRegisteredConsignee,
       MovementScenario.RegisteredConsignee,
       MovementScenario.DirectDelivery,
-      MovementScenario.UnknownDestination,
       MovementScenario.ExemptedOrganisation
     ).foreach { scenario =>
-      s"must return OK and the onlyFixeView for guarantorNotRequired and destination type is ${scenario}" in new Test(Some(
+      s"must return OK and the onlyFixedView for guarantorNotRequired and destination type is $scenario" in new Test(Some(
         emptyUserAnswers.copy(ern = testNorthernIrelandErn).set(GuarantorRequiredPage, false).set(DestinationTypePage, scenario)
       )) {
         val result = controller.onPageLoad(testNorthernIrelandErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandErn), messages(request)).toString
+        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandErn,
+          answers = emptyUserAnswers.copy(ern = testNorthernIrelandErn).set(GuarantorRequiredPage, false).set(DestinationTypePage, scenario)
+        ), messages(request)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.values.head)
+      baseUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.values.head)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(HowMovementTransported.values.head), NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form.fill(HowMovementTransported.values.head), NormalMode, GbTaxWarehouse
+      )(dataRequest(request, baseUserAnswers), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val expectedUserAnswers: UserAnswers = baseUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.values.head)
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", HowMovementTransported.values.head.toString)))
 
@@ -131,14 +149,30 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers)) {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, NormalMode, GbTaxWarehouse)(dataRequest(request, baseUserAnswers), messages(request)).toString
     }
+
+    "must redirect to Journey Recovery for a GET if no destination type is found" in new Test(Some(emptyUserAnswers)) {
+      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+    }
+
+    "must redirect to Journey Recovery for a POST if no destination type is found and an error exists" in new Test(Some(emptyUserAnswers)) {
+
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+    }
+
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
@@ -155,7 +189,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     }
 
     "must cleanse the journey section when changing the answer" in new Test(Some(
-      emptyUserAnswers
+      baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.Other)
         .set(GiveInformationOtherTransportPage, "blah")
         .set(JourneyTimeDaysPage, 1)
@@ -164,7 +198,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
         .set(TransportUnitTypePage(testIndex2), Tractor)
         .set(TransportUnitIdentityPage(testIndex2), "Tractor")
     )) {
-      val expectedAnswers = emptyUserAnswers
+      val expectedAnswers = baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportUnitIdentityPage(testIndex1), "Container1")
@@ -180,7 +214,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     }
 
     "must cleanse the journey and transport unit section when changing the answer (from fixed transport installations)" in new Test(Some(
-      emptyUserAnswers
+      baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations)
         .set(GiveInformationOtherTransportPage, "blah")
         .set(JourneyTimeDaysPage, 1)
@@ -189,7 +223,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
         .set(TransportUnitTypePage(testIndex2), Tractor)
         .set(TransportUnitIdentityPage(testIndex2), "Tractor")
     )) {
-      val expectedAnswers = emptyUserAnswers
+      val expectedAnswers = baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
         .set(TransportUnitsSection, Json.obj())
 
@@ -202,7 +236,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     }
 
     "must redirect to next page when answer unchanged" in new Test(Some(
-      emptyUserAnswers
+      baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.SeaTransport)
         .set(JourneyTimeDaysPage, 1)
     )) {

@@ -19,7 +19,7 @@ package pages.sections.consignee
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportInformation.NoInformation
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.{ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 import viewmodels.taskList.UpdateNeeded
@@ -27,21 +27,41 @@ import viewmodels.taskList.UpdateNeeded
 class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
   "isCompleted" - {
     "must return true" - {
-      "when user starts on ConsigneeExportUkEu and selects yes" in {
+      "when user starts on ConsigneeExportInformation, selects Vat and enters Vat number" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportInformationPage, Set(NoInformation))
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
-      "when user starts on ConsigneeExportUkEu and selects no" in {
+      "when user starts on ConsigneeExportInformation and enters Eori number" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeExportPage, false)
-            .set(ConsigneeExcisePage, "")
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportEoriPage, testEori)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
+      "when user starts on ConsigneeExportInformation, selects Vat and Eori and enters Vat number and Eori number" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(EoriNumber, VatNumber))
+            .set(ConsigneeExportVatPage, testVat)
+            .set(ConsigneeExportEoriPage, testEori)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
+      "when user starts on ConsigneeExportInformation and selects No Information" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(NoInformation))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
@@ -68,12 +88,8 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
     }
 
     "must return false" - {
-      "when user answers doesn't contain ConsigneeExportUkEu, ConsigneeExcise or ConsigneeExemptOrganisation" in {
+      "when user answers doesn't contain ConsigneeExportInformation, ConsigneeExcise or ConsigneeExemptOrganisation" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        ConsigneeSection.isCompleted mustBe false
-      }
-      "when user starts on ConsigneeExportUkEu, answers that page and doesn't finish the flow" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
         ConsigneeSection.isCompleted mustBe false
       }
       "when user starts on ConsigneeExcise, answers that page and doesn't finish the flow" in {
@@ -91,7 +107,6 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
     "when there is a Consignee Submission Error" in {
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
         emptyUserAnswers
-          .set(ConsigneeExportPage, false)
           .set(ConsigneeExcisePage, "")
           .set(ConsigneeBusinessNamePage, "")
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))

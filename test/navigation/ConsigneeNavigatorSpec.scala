@@ -67,47 +67,6 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       }
 
-      "for the ConsigneeExportPage" - {
-
-        "must go to CAM-NEE11" - {
-
-          "when 'YES' is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportPage, true)
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-          }
-        }
-
-        "must go to ConsigneeExcise page" - {
-
-          "when 'NO' is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportPage, false)
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode)
-          }
-        }
-
-        "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
-
-          navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
-
-        "must go to the journey recovery" - {
-
-          "when there is no answer'" in {
-            val userAnswers = emptyUserAnswers
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.routes.JourneyRecoveryController.onPageLoad()
-          }
-        }
-      }
-
       "for the ConsigneeExportInformationPage" - {
 
         "must go to CAM-NEE12 export-vat page" - {

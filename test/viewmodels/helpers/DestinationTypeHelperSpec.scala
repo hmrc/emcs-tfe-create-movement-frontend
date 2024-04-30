@@ -22,10 +22,14 @@ import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.{NorthernIrelandWarehouse, Unknown}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.govuk.all.HintViewModel
 
 class DestinationTypeHelperSpec extends SpecBase {
   lazy val helper = new DestinationTypeHelper()
@@ -106,15 +110,22 @@ class DestinationTypeHelperSpec extends SpecBase {
         "must return two options" - {
           "when ERN is a GBRC" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBRC123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
           }
           "when ERN is a XIWK and dispatchPlace=GB" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesXIWKWithGbDispatchPlace.map(helper.radioOption)
           }
           "when ERN is a GBWK" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesUk.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
+          }
+          "when ERN is NI DutyPaid" in {
+            Seq("XIPA123", "XIPC123").foreach {
+              ern =>
+                implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = ern)
+                helper.options(NorthernIreland) mustBe MovementScenario.valuesForDutyPaidTraders.map(helper.radioOption)
+            }
           }
         }
         "must return more than two options" - {
@@ -134,6 +145,29 @@ class DestinationTypeHelperSpec extends SpecBase {
               helper.options(NorthernIreland)
             }
             result.message mustBe s"[DestinationTypeHelper][options] invalid UserType for CAM journey: $NorthernIrelandWarehouse"
+          }
+        }
+      }
+
+      "radioOption" - {
+        "when a hint exists" - {
+          "must return a radio option with a hint" in {
+            helper.radioOption(UkTaxWarehouse.GB) mustBe RadioItem(
+              content = Text(messagesForLanguage.taxWarehouseInGb),
+              value = Some(UkTaxWarehouse.GB.toString),
+              id = Some(s"value_${UkTaxWarehouse.GB.toString}"),
+              hint = Some(HintViewModel(Text(messagesForLanguage.taxWarehouseInGbHint)))
+            )
+          }
+        }
+        "when a hint does not exist" - {
+          "must return a radio option with no hint" in {
+            helper.radioOption(UkTaxWarehouse.NI) mustBe RadioItem(
+              content = Text(messagesForLanguage.taxWarehouseInNi),
+              value = Some(UkTaxWarehouse.NI.toString),
+              id = Some(s"value_${UkTaxWarehouse.NI.toString}"),
+              hint = None
+            )
           }
         }
       }

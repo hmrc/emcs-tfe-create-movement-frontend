@@ -349,6 +349,7 @@ destinationType.title.import = What is the destination type for this import?
 
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
+destinationType.gbTaxWarehouse.hint = (England, Scotland and Wales)
 destinationType.niTaxWarehouse = Tax warehouse in Northern Ireland
 destinationType.directDelivery = Direct delivery
 destinationType.euTaxWarehouse = Tax warehouse in the European Union

@@ -61,8 +61,8 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
       }
 
       Seq(
-        testNorthernIrelandErn -> MovementScenario.GbTaxWarehouse,
-        testGreatBritainErn    -> MovementScenario.GbTaxWarehouse
+        testNorthernIrelandErn -> MovementScenario.UkTaxWarehouse.NI,
+        testGreatBritainErn    -> MovementScenario.UkTaxWarehouse.GB
       ).foreach { case (userErn, scenario) =>
         s"when Connector returns success from downstream, trader is an ${userErn.take(2)} trader, guarantor is not required and destinationType is ${scenario}" in {
 

@@ -67,13 +67,11 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   /**
    * emcs: tax_warehouse_uk_to_uk / import_for_taxwarehouse_uk
    */
-  case object GbTaxWarehouse extends WithName("gbTaxWarehouse") with MovementScenario {
+  object UkTaxWarehouse {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
-
-    def destinationType: DestinationType = DestinationType.TaxWarehouse
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    private def _originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    private def _destinationType: DestinationType = DestinationType.TaxWarehouse
+    private def _movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToUk
       case (_, true) => MovementType.ImportUk
       case _ =>
@@ -81,27 +79,30 @@ object MovementScenario extends Enumerable.Implicits with Logging {
         throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
     }
 
-    override val stringValue: String = "tax warehouse in Great Britain"
-  }
 
-  /**
-   * emcs: tax_warehouse_uk_to_uk / import_for_taxwarehouse_uk
-   */
-  case object NiTaxWarehouse extends WithName("niTaxWarehouse") with MovementScenario {
+    case object GB extends WithName("gbTaxWarehouse") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+      def originType(implicit request: DataRequest[_]): OriginType = _originType
 
-    def destinationType: DestinationType = DestinationType.TaxWarehouse
+      def destinationType: DestinationType = _destinationType
 
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
-      case (true, _) => MovementType.UkToUk
-      case (_, true) => MovementType.ImportUk
-      case _ =>
-        logger.error(s"[movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
-        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+      def movementType(implicit request: DataRequest[_]): MovementType = _movementType
+
+      override val stringValue: String = "tax warehouse in Great Britain"
     }
 
-    override val stringValue: String = "tax warehouse in Northern Ireland"
+    case object NI extends WithName("niTaxWarehouse") with MovementScenario {
+
+      def originType(implicit request: DataRequest[_]): OriginType = _originType
+
+      def destinationType: DestinationType = _destinationType
+
+      def movementType(implicit request: DataRequest[_]): MovementType = _movementType
+
+      override val stringValue: String = "tax warehouse in Northern Ireland"
+    }
+
+    val values: Seq[MovementScenario] = Seq(GB, NI)
   }
 
   /**
@@ -284,10 +285,14 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     override val stringValue: String = "unknown destination"
   }
 
-  def valuesUk: Seq[MovementScenario] = Seq(
+  def valuesGb: Seq[MovementScenario] = Seq(
     ExportWithCustomsDeclarationLodgedInTheUk,
-    GbTaxWarehouse
+    UkTaxWarehouse.GB
   )
+
+  def valuesXIWKWithGbDispatchPlace: Seq[MovementScenario] = Seq(
+    ExportWithCustomsDeclarationLodgedInTheUk
+  ) ++ UkTaxWarehouse.values
 
   def valuesEu: Seq[MovementScenario] = Seq(
     DirectDelivery,
@@ -296,8 +301,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     ExportWithCustomsDeclarationLodgedInTheUk,
     RegisteredConsignee,
     EuTaxWarehouse,
-    GbTaxWarehouse,
-    NiTaxWarehouse,
+    UkTaxWarehouse.GB,
+    UkTaxWarehouse.NI,
     TemporaryRegisteredConsignee,
     UnknownDestination
   )
@@ -307,7 +312,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     TemporaryCertifiedConsignee
   )
 
-  val values: Seq[MovementScenario] = (valuesUk ++ valuesEu ++ valuesForDutyPaidTraders).distinct
+  val values: Seq[MovementScenario] = (valuesGb ++ valuesXIWKWithGbDispatchPlace ++ valuesEu ++ valuesForDutyPaidTraders).distinct
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }

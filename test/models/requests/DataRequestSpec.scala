@@ -128,7 +128,7 @@ class DataRequestSpec extends SpecBase {
 
       implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers, testGreatBritainErn)
 
-      MovementScenario.valuesUk.foreach { scenario =>
+      MovementScenario.valuesGb.foreach { scenario =>
 
         val request = dr.copy(userAnswers = emptyUserAnswers.set(DestinationTypePage, scenario))
 

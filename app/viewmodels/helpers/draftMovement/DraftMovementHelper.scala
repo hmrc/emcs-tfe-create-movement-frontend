@@ -53,13 +53,13 @@ class DraftMovementHelper @Inject()() extends Logging {
       messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$dispatchPlace"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
 
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
-      case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
-        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
+      case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.GB)) =>
+        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.GB}", s"destinationType.${UkTaxWarehouse.GB}")))
 
-      case (GreatBritainWarehouseKeeper, Some(NiTaxWarehouse)) =>
-        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$NiTaxWarehouse", s"destinationType.$NiTaxWarehouse")))
+      case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.NI)) =>
+        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.NI}", s"destinationType.${UkTaxWarehouse.NI}")))
 
-      case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
+      case (NorthernIrelandWarehouseKeeper, Some(destinationType@(UkTaxWarehouse.GB | UkTaxWarehouse.NI | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(dispatchPlace) =>
             dispatchPlaceHeading(dispatchPlace, destinationType)

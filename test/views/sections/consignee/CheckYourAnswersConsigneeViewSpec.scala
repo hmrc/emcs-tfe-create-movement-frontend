@@ -61,7 +61,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeAddressPage, testUserAddress)
           .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
         )
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -109,7 +109,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
         )
         .set(ConsigneeExcisePage, testErn)
-        .set(DestinationTypePage, GbTaxWarehouse)
+        .set(DestinationTypePage, UkTaxWarehouse.GB)
       )
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -307,7 +307,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExcisePage, testErn)
           .set(ConsigneeExportInformationPage, Set(VatNumber))
           .set(ConsigneeExportVatPage, testVat)
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
         )
 
       lazy val list: list = app.injector.instanceOf[list]
@@ -366,7 +366,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           .set(ConsigneeExcisePage, testErn)
           .set(ConsigneeExportInformationPage, Set(EoriNumber))
           .set(ConsigneeExportEoriPage, testEori)
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
         )
 
       lazy val list: list = app.injector.instanceOf[list]

@@ -63,7 +63,8 @@ class DraftMovementHelperSpec extends SpecBase {
         "when user answers are valid" - {
           "must return the draftMovement.heading.gbTaxWarehouseTo message" in {
             Seq[(String, MovementScenario)](
-              ("GBWK123", GbTaxWarehouse)
+              ("GBWK123", UkTaxWarehouse.GB),
+              ("GBWK123", UkTaxWarehouse.NI)
             ).foreach {
               case (ern, movementScenario) =>
                 implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
@@ -76,14 +77,16 @@ class DraftMovementHelperSpec extends SpecBase {
           }
           "must return the draftMovement.heading.dispatchPlaceTo message" in {
             Seq[(String, DispatchPlace, MovementScenario)](
-              ("XIWK123", GreatBritain, GbTaxWarehouse),
+              ("XIWK123", GreatBritain, UkTaxWarehouse.GB),
+              ("XIWK123", GreatBritain, UkTaxWarehouse.NI),
               ("XIWK123", GreatBritain, EuTaxWarehouse),
               ("XIWK123", GreatBritain, RegisteredConsignee),
               ("XIWK123", GreatBritain, TemporaryRegisteredConsignee),
               ("XIWK123", GreatBritain, ExemptedOrganisation),
               ("XIWK123", GreatBritain, UnknownDestination),
               ("XIWK123", GreatBritain, DirectDelivery),
-              ("XIWK123", NorthernIreland, GbTaxWarehouse),
+              ("XIWK123", NorthernIreland, UkTaxWarehouse.GB),
+              ("XIWK123", NorthernIreland, UkTaxWarehouse.NI),
               ("XIWK123", NorthernIreland, EuTaxWarehouse),
               ("XIWK123", NorthernIreland, RegisteredConsignee),
               ("XIWK123", NorthernIreland, TemporaryRegisteredConsignee),
@@ -154,7 +157,7 @@ class DraftMovementHelperSpec extends SpecBase {
             response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouseKeeper | ${Some(UnknownDestination)}"
           }
           "must throw an error when the ERN is XIWK and DispatchPlace is missing" in {
-            implicit val request: DataRequest[_] = dataRequest(ern = "XIWK123", userAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse))
+            implicit val request: DataRequest[_] = dataRequest(ern = "XIWK123", userAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
 
             val response = intercept[MissingMandatoryPage](helper.heading)
 
@@ -297,7 +300,8 @@ class DraftMovementHelperSpec extends SpecBase {
         "should render the destination row" - {
           "when MovementScenario is valid" in {
             Seq(
-              GbTaxWarehouse,
+              UkTaxWarehouse.GB,
+              UkTaxWarehouse.NI,
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,
@@ -315,7 +319,8 @@ class DraftMovementHelperSpec extends SpecBase {
         "should not render the destination row" - {
           "when MovementScenario is invalid" in {
             MovementScenario.values.filterNot(Seq(
-              GbTaxWarehouse,
+              UkTaxWarehouse.GB,
+              UkTaxWarehouse.NI,
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,

@@ -97,7 +97,8 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
     }
     "must redirect to ConsigneeExciseController" - {
       Seq(
-        GbTaxWarehouse,
+        UkTaxWarehouse.GB,
+        UkTaxWarehouse.NI,
         EuTaxWarehouse,
         RegisteredConsignee,
         DirectDelivery,

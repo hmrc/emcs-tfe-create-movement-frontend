@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.DraftMovementMessages
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.info.DestinationTypePage
@@ -65,7 +65,7 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             ern = testGreatBritainErn,
-            answers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse)
+            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB)
           )
 
           implicit val doc: Document = Jsoup.parse(view().toString())

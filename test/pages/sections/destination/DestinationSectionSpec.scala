@@ -54,7 +54,8 @@ class DestinationSectionSpec extends SpecBase
       "must return Completed" - {
         "when mandatory pages have an answer and DestinationConsigneeDetailsPage = true" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -75,7 +76,8 @@ class DestinationSectionSpec extends SpecBase
 
         "when mandatory pages have an answer and DestinationConsigneeDetailsPage = false" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -100,7 +102,8 @@ class DestinationSectionSpec extends SpecBase
       "must return InProgress" - {
         "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = true" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -129,7 +132,8 @@ class DestinationSectionSpec extends SpecBase
 
         "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = false" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -164,7 +168,8 @@ class DestinationSectionSpec extends SpecBase
       "must return NotStarted" - {
         "when no mandatory pages have an answer" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -551,7 +556,8 @@ class DestinationSectionSpec extends SpecBase
         MovementScenario.values
           .filterNot(
             Seq(
-              GbTaxWarehouse,
+              UkTaxWarehouse.GB,
+              UkTaxWarehouse.NI,
               EuTaxWarehouse,
               RegisteredConsignee,
               TemporaryRegisteredConsignee,

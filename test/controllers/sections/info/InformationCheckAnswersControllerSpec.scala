@@ -22,7 +22,7 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import mocks.viewmodels.MockInformationCheckAnswersHelper
 import models.UserAnswers
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage}
 import play.api.mvc.AnyContentAsEmpty
@@ -66,7 +66,7 @@ class InformationCheckAnswersControllerSpec extends SpecBase
 
   "InformationCheckAnswers Controller" - {
 
-    val userAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse).set(DeferredMovementPage(), true)
+    val userAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).set(DeferredMovementPage(), true)
 
     "pre-draft" - {
       "must return OK and the correct view for a GET" in new Fixtures(Some(userAnswers)) {

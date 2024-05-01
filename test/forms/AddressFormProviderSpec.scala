@@ -21,6 +21,8 @@ import fixtures.UserAddressFixtures
 import forms.behaviours.FieldBehaviours
 import models.UserAddress
 import models.requests.DataRequest
+import pages.Page
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import play.api.data.FormError
@@ -42,8 +44,8 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
   val postcodeField = testPostcodeParameters.fieldName
 
-  val notBTPostcodeKey = "address.postcode.error.mustNotStartWithBT"
-  val mustBeBTPostcodeKey = "address.postcode.error.mustStartWithBT"
+  def notBTPostcodeKey(page: Page): String = s"address.postcode.error.$page.mustNotStartWithBT"
+  def mustBeBTPostcodeKey(page: Page): String = s"address.postcode.error.$page.mustStartWithBT"
 
   def formAnswersMap(updateField: Option[String] = None,
                      updateAnswer: Option[String] = None): Map[String, String] = {
@@ -101,7 +103,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       val requiredKey = s"address.$fieldName.error.required"
       val lengthKey = s"address.$fieldName.error.length"
       val invalidKey = s"address.$fieldName.error.invalid"
-      val charactersKey = s"address.$fieldName.error.characters"
+      val charactersKey = s"address.$fieldName.error.character"
 
       if (isMandatory) {
 
@@ -219,7 +221,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
     "must not bind for 'BT' postcodes when the user is a GB trader" in {
 
-      val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey, Seq()))
+      val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey(ConsignorAddressPage), Seq()))
 
       gbForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe expectedResult
     }
@@ -231,7 +233,37 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
     "must not bind for non-BT postcodes when the user is a XI trader" in {
 
-      val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey, Seq()))
+      val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(ConsignorAddressPage), Seq()))
+
+      xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
+    }
+
+    "must bind for postcodes beginning with 'BT' for a XI trader" in {
+
+      xiForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
+    }
+  }
+
+  "for the ConsigneeAddress Page" - {
+
+    lazy val gbForm = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage, testGreatBritainErn)))
+    lazy val xiForm = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage,testNorthernIrelandErn)))
+
+    "must not bind for 'BT' postcodes when the user is a GB trader" in {
+
+      val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey(ConsigneeAddressPage), Seq()))
+
+      gbForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe expectedResult
+    }
+
+    "must bind for postcodes not beginning with 'BT' for a GB trader" in {
+
+      gbForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
+    }
+
+    "must not bind for non-BT postcodes when the user is a XI trader" in {
+
+      val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(ConsigneeAddressPage), Seq()))
 
       xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
     }
@@ -251,7 +283,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       ))
 
       "must not bind for 'BT' postcode" in {
-        val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey, Seq()))
+        val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey(DispatchAddressPage), Seq()))
         gbForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe expectedResult
       }
 
@@ -267,7 +299,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       ))
 
       "must not bind for non-BT postcode" in {
-        val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey, Seq()))
+        val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(DispatchAddressPage), Seq()))
         xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
       }
 

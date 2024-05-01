@@ -22,7 +22,7 @@ import controllers.routes
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
+import models.sections.info.movementScenario.MovementScenario.{UkTaxWarehouse, UnknownDestination}
 import models.sections.journeyType.HowMovementTransported
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
@@ -48,7 +48,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
   lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
   lazy val onlyFixedView: HowMovementTransportedNoOptionView = app.injector.instanceOf[HowMovementTransportedNoOptionView]
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse)
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB)
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -74,7 +74,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode, GbTaxWarehouse)(dataRequest(request, baseUserAnswers), messages(request)).toString
+      contentAsString(result) mustEqual view(form, NormalMode, UkTaxWarehouse.GB)(dataRequest(request, baseUserAnswers), messages(request)).toString
     }
 
     "must return OK and the correct view for a GET (where the destination type is UnknownDestination)" in new Test(Some(
@@ -114,7 +114,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form.fill(HowMovementTransported.values.head), NormalMode, GbTaxWarehouse
+        form.fill(HowMovementTransported.values.head), NormalMode, UkTaxWarehouse.GB
       )(dataRequest(request, baseUserAnswers), messages(request)).toString
     }
 
@@ -155,7 +155,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, NormalMode, GbTaxWarehouse)(dataRequest(request, baseUserAnswers), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, NormalMode, UkTaxWarehouse.GB)(dataRequest(request, baseUserAnswers), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no destination type is found" in new Test(Some(emptyUserAnswers)) {

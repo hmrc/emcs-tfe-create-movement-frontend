@@ -21,7 +21,7 @@ import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
+import models.sections.info.movementScenario.MovementScenario.{UkTaxWarehouse, UnknownDestination}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.info.DestinationTypePage
@@ -68,12 +68,12 @@ class HowMovementTransportedViewSpec extends SpecBase with ViewBehaviours {
         "and the destination type is not Unknown Destination" - {
 
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
 
           lazy val view = app.injector.instanceOf[HowMovementTransportedView]
           val form = app.injector.instanceOf[HowMovementTransportedFormProvider].apply()
 
-          implicit val doc: Document = Jsoup.parse(view(form, NormalMode, GbTaxWarehouse).toString())
+          implicit val doc: Document = Jsoup.parse(view(form, NormalMode, UkTaxWarehouse.GB).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,

@@ -96,7 +96,7 @@ object ItemSmallIndependentProducerHelper {
       request.userAnswers.get(ItemExciseProductCodePage(itemIndex)),
       request.userAnswers.get(ItemCommodityCodePage(itemIndex))
     ) match {
-      case (Some(GbTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu), _, _) =>
+      case (Some(UkTaxWarehouse.GB | UkTaxWarehouse.NI | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu), _, _) =>
         messages("itemSmallIndependentProducer.certifiedStatement.smallProducer")
       case (Some(movementScenario), Some(epc), Some(cnCode)) if isNiToEUMovement(movementScenario) =>
         handleNiToEuMovementDeclaration(epc, cnCode)

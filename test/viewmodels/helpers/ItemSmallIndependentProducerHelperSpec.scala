@@ -96,7 +96,12 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
 
     "should return the correct string" - {
 
-      Seq(GbTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach { movementScenario =>
+      Seq(
+        UkTaxWarehouse.GB,
+        UkTaxWarehouse.NI,
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
+      ).foreach { movementScenario =>
 
         s"for movement scenario: $movementScenario" in {
 
@@ -121,7 +126,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
       }
 
       "when EPC is not defined " +
-        "(and movement scenario not GbTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
+        "(and movement scenario not UkTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
 
         implicit val request = dataRequest(FakeRequest(),
           emptyUserAnswers
@@ -133,7 +138,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
       }
 
       "when CN code is not defined " +
-        "(and movement scenario not GbTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
+        "(and movement scenario not UkTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
 
         implicit val request = dataRequest(FakeRequest(),
           emptyUserAnswers
@@ -221,7 +226,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
 
       "when the consignor is an XI trader but movement scenario is not EU-related" in {
 
-        ItemSmallIndependentProducerHelper.isNiToEUMovement(GbTaxWarehouse)(dataRequest(FakeRequest(), ern = testNorthernIrelandErn)) mustBe false
+        ItemSmallIndependentProducerHelper.isNiToEUMovement(UkTaxWarehouse.GB)(dataRequest(FakeRequest(), ern = testNorthernIrelandErn)) mustBe false
       }
     }
 

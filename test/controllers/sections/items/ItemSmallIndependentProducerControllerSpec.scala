@@ -22,7 +22,7 @@ import fixtures.ItemFixtures
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
 import forms.sections.items.ItemSmallIndependentProducerFormProvider.{producerField, producerIdField}
 import mocks.services.MockUserAnswersService
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.sections.items.ItemSmallIndependentProducerModel
 import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{Index, NormalMode, UserAnswers}
@@ -41,7 +41,7 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
 
   val defaultUserAnswers: UserAnswers = {
     emptyUserAnswers
-      .set(DestinationTypePage, GbTaxWarehouse)
+      .set(DestinationTypePage, UkTaxWarehouse.GB)
       .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
       .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
   }

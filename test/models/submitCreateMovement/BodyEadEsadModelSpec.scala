@@ -22,7 +22,7 @@ import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, GbTaxWarehouse, UnknownDestination}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse, UnknownDestination}
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
 import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
@@ -59,7 +59,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
             .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
             .set(ItemQuantityPage(testIndex1), BigDecimal(1))
@@ -208,7 +208,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             // index 1
             .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
             .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
@@ -435,7 +435,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
       BodyEadEsadModel.smallIndependentProducer(testIndex1)(dataRequest(FakeRequest(),
         emptyUserAnswers
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
@@ -462,7 +462,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
       implicit val dr = dataRequest(FakeRequest(),
         emptyUserAnswers
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
@@ -477,7 +477,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
       implicit val dr = dataRequest(FakeRequest(),
         emptyUserAnswers
-          .set(DestinationTypePage, GbTaxWarehouse)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotProvided, None))

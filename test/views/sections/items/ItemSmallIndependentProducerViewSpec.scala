@@ -21,7 +21,7 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.sections.items.ItemSmallIndependentProducerModel
 import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
 import org.jsoup.Jsoup
@@ -40,7 +40,7 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
 
   implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
     emptyUserAnswers
-      .set(DestinationTypePage, GbTaxWarehouse)
+      .set(DestinationTypePage, UkTaxWarehouse.GB)
       .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
       .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
       .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))

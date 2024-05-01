@@ -21,7 +21,7 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import models.GoodsType._
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, GbTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import models.sections.items.ItemSmallIndependentProducerModel
 import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{CheckMode, UserAnswers}
@@ -56,7 +56,12 @@ class ItemSmallIndependentProducerSummarySpec extends SpecBase with Matchers wit
 
         "return the correct row for" - {
 
-          Seq(GbTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach { movementScenario =>
+          Seq(
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
+            ExportWithCustomsDeclarationLodgedInTheUk,
+            ExportWithCustomsDeclarationLodgedInTheEu
+          ).foreach { movementScenario =>
 
             s"intra-UK / export movement: $movementScenario" in new Test(emptyUserAnswers
               .set(DestinationTypePage, movementScenario)

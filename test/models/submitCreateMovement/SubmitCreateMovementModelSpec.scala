@@ -22,7 +22,7 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import models.requests.DataRequest
 import models.sections.info._
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.destination.{DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.info._
 import play.api.i18n.Messages
@@ -133,7 +133,7 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
           answers = baseFullUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(DestinationWarehouseExcisePage, testErn)
             .set(DestinationConsigneeDetailsPage, false),
           ern = "GBRC123"
@@ -145,7 +145,7 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
           answers = baseFullUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(DestinationWarehouseExcisePage, testErn)
             .set(DestinationConsigneeDetailsPage, false),
           ern = "GBWK123"

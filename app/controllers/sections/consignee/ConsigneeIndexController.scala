@@ -21,7 +21,7 @@ import controllers.actions._
 import models._
 import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{UkTaxWarehouse, _}
+import models.sections.info.movementScenario.MovementScenario._
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.info.DestinationTypePage

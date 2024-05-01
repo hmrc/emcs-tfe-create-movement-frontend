@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
 import fixtures.messages.sections.info.DestinationTypeMessages.ViewMessages
 import models.CheckMode
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -61,9 +61,13 @@ class InformationDestinationTypeSummarySpec extends SpecBase {
 
       "and there is a DestinationTypePage answer " - {
         "then must return a row with the answer" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse))
+          lazy val requestGb = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
 
-          InformationDestinationTypeSummary.row mustBe expectedRow(value = messagesForLanguage.taxWarehouseInGb)
+          InformationDestinationTypeSummary.row()(requestGb, messages(Seq(messagesForLanguage.lang))) mustBe expectedRow(value = messagesForLanguage.taxWarehouseInGb)
+
+          lazy val requestNi = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.NI))
+
+          InformationDestinationTypeSummary.row()(requestNi, messages(Seq(messagesForLanguage.lang))) mustBe expectedRow(value = messagesForLanguage.taxWarehouseInNi)
         }
       }
 

@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, ExemptedOrganisation, GbTaxWarehouse, TemporaryCertifiedConsignee}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, ExemptedOrganisation, UkTaxWarehouse, TemporaryCertifiedConsignee}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
@@ -116,7 +116,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
         }
       }
 
-      Seq(GbTaxWarehouse, ExemptedOrganisation).foreach { destinationType =>
+      Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, ExemptedOrganisation).foreach { destinationType =>
 
         s"when $destinationType must redirect to the DispatchWarehouseExciseController" in new Fixture(Some(emptyUserAnswers
           .set(DestinationTypePage, destinationType)

@@ -24,7 +24,7 @@ import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, UkTaxWarehouse}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
@@ -119,7 +119,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(ernSummaryList)
@@ -196,7 +196,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
         )) {
 
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatSummaryList)

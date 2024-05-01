@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.LocalReferenceNumberFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
-import models.sections.info.movementScenario.MovementScenario.{GbTaxWarehouse, UnknownDestination}
+import models.sections.info.movementScenario.MovementScenario.{UkTaxWarehouse, UnknownDestination}
 import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage, LocalReferenceNumberPage}
@@ -76,7 +76,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
           "when the Deferred Movement answer exists in session" - {
 
             val answersSoFar = emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(DeferredMovementPage(), false)
 
             "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(answersSoFar)) {
@@ -123,7 +123,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val answersSoFar =
               emptyUserAnswers
-                .set(DestinationTypePage, GbTaxWarehouse)
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
                 .set(DeferredMovementPage(), false)
 
             "must redirect to the next page when valid data is submitted" in new Fixture(Some(answersSoFar)) {
@@ -204,7 +204,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
           "when the Deferred Movement answer exists in session" - {
 
             val answersSoFar = emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(DeferredMovementPage(), false)
 
             "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(answersSoFar)) {
@@ -239,7 +239,7 @@ class LocalReferenceNumberControllerSpec extends SpecBase with MockUserAnswersSe
 
             val answersSoFar =
               emptyUserAnswers
-                .set(DestinationTypePage, GbTaxWarehouse)
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
                 .set(DeferredMovementPage(), false)
 
             "must redirect to the next page when valid data is submitted" in new Fixture(Some(answersSoFar)) {

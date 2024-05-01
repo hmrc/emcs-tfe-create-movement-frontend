@@ -64,7 +64,7 @@ class ConsigneeExciseSummarySpec extends SpecBase with Matchers with MovementSub
       }
 
 
-      Seq(GbTaxWarehouse, EuTaxWarehouse, DirectDelivery, RegisteredConsignee, TemporaryRegisteredConsignee, TemporaryCertifiedConsignee).foreach {
+      Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse, DirectDelivery, RegisteredConsignee, TemporaryRegisteredConsignee, TemporaryCertifiedConsignee).foreach {
         movementScenario =>
           s"with a $movementScenario movement scenario" - {
 

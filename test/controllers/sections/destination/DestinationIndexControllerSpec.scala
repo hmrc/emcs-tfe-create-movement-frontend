@@ -75,7 +75,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to the destination warehouse excise controller" - {
-      Seq(GbTaxWarehouse, EuTaxWarehouse).foreach(
+      Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse).foreach(
         answer =>
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {

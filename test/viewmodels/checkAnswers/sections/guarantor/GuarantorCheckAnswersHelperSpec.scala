@@ -22,7 +22,7 @@ import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
 import org.scalamock.scalatest.MockFactory
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
@@ -133,7 +133,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
               implicit val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(DestinationTypePage, GbTaxWarehouse)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
@@ -149,7 +149,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
               implicit val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(DestinationTypePage, GbTaxWarehouse)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(ConsigneeBusinessNamePage, s"$value name")
@@ -165,7 +165,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
           implicit val request: DataRequest[_] = dataRequest(
             FakeRequest(),
             emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(GuarantorRequiredPage, false)
           )
           helper.summaryList()(request, msgs).rows.length mustBe 1

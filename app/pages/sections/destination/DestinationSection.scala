@@ -30,10 +30,9 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   override val path: JsPath = JsPath \ "destination"
 
   def shouldStartFlowAtDestinationWarehouseExcise(implicit destinationTypePageAnswer: MovementScenario): Boolean =
-    Seq(
-      GbTaxWarehouse,
+    (UkTaxWarehouse.values ++ Seq(
       EuTaxWarehouse
-    ).contains(destinationTypePageAnswer)
+    )).contains(destinationTypePageAnswer)
 
   def shouldStartFlowAtDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
@@ -125,8 +124,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage).exists {
       movementScenario =>
-        Seq(
-          GbTaxWarehouse,
+        (UkTaxWarehouse.values ++ Seq(
           EuTaxWarehouse,
           RegisteredConsignee,
           TemporaryRegisteredConsignee,
@@ -134,7 +132,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
           TemporaryCertifiedConsignee,
           ExemptedOrganisation,
           DirectDelivery
-        ).contains(movementScenario)
+        )).contains(movementScenario)
     }
 
 }

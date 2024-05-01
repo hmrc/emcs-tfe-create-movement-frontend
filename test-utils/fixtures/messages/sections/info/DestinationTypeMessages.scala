@@ -26,6 +26,8 @@ object DestinationTypeMessages {
     val headingImport = "What is the destination type for this import?"
     val titleImport = titleHelper(headingImport)
     val taxWarehouseInGb = "Tax warehouse in Great Britain"
+    val taxWarehouseInGbHint = "(England, Scotland and Wales)"
+    val taxWarehouseInNi = "Tax warehouse in Northern Ireland"
     val cyaLabel: String = "Destination type"
     val cyaChangeHidden: String = "destination type"
   }

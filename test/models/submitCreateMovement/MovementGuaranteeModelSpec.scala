@@ -46,7 +46,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
       }
 
       "with NoGuarantorRequred when no guarantor is required, and movement is uk to uk" in {
-        implicit val dr: DataRequest[_] = dataRequest(
+        val drGb: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
@@ -54,11 +54,25 @@ class MovementGuaranteeModelSpec extends SpecBase {
             .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
-            .set(DestinationTypePage, MovementScenario.GbTaxWarehouse),
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB),
           testNorthernIrelandErn
         )
 
-        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
+        MovementGuaranteeModel.apply(request = drGb) mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
+
+        val drNi: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
+            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+            .set(GuarantorNamePage, "name")
+            .set(GuarantorAddressPage, testUserAddress)
+            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.NI),
+          testNorthernIrelandErn
+        )
+
+        MovementGuaranteeModel.apply(request = drNi) mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
       }
 
       "when guarantor is required" in {
@@ -83,7 +97,7 @@ class MovementGuaranteeModelSpec extends SpecBase {
     }
     "must throw a mandatory page exception" - {
       "when guarantor is not required and no destination type has been answered" in {
-        
+
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers

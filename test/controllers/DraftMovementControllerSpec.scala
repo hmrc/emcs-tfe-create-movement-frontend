@@ -33,7 +33,7 @@ class DraftMovementControllerSpec extends SpecBase with MockValidationService wi
 
   "onPageLoad" - {
 
-    val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+    val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
     lazy val view = app.injector.instanceOf[DraftMovementView]
 
     lazy val testController = new DraftMovementController(

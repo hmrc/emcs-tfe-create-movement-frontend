@@ -21,9 +21,11 @@ import fixtures.DocumentTypeFixtures
 import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
 import forms.sections.documents.DocumentsAddToListFormProvider
 import models.requests.DataRequest
+import models.sections.documents.DocumentsAddToList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.documents.{DocumentDescriptionPage, DocumentReferencePage, DocumentTypePage, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentTypePage}
+import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -43,6 +45,10 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
     val editItemLink: Int => String = index => s"#editDocuments-$index"
   }
 
+  lazy val view: DocumentsAddToListView = app.injector.instanceOf[DocumentsAddToListView]
+  val form: Form[DocumentsAddToList] = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
+  val helper: DocumentsAddToListHelper = app.injector.instanceOf[DocumentsAddToListHelper]
+
   "DocumentsAddToListView" - {
 
     s"when being rendered for singular item" - {
@@ -50,20 +56,15 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
       implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeOtherModel)
-        .set(ReferenceAvailablePage(0), false)
-        .set(DocumentDescriptionPage(0), "description")
+        .set(DocumentTypePage(0), documentTypeModel)
+        .set(DocumentReferencePage(0), "reference")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-
-     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
-      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
-      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
         formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
-        documents = helper,
+        documents = helper.allDocumentsSummary(),
         showNoOption = true
       ).toString())
 
@@ -91,26 +92,20 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
         .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference1")
         .set(DocumentTypePage(1), documentTypeModel)
-        .set(ReferenceAvailablePage(1), true)
         .set(DocumentReferencePage(1), "reference1")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
-      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
-      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
-
       implicit val doc: Document = Jsoup.parse(view(
         formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
-        documents = helper,
+        documents = helper.allDocumentsSummary(),
         showNoOption = true
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title(2),
         Selectors.h1 -> English.heading(2),
-//        Selectors.cardTitle -> s"${English.documentCardTitle(0)} ${English.incomplete}",
         Selectors.cardTitle -> English.documentCardTitle(0),
         Selectors.removeItemLink(1) -> English.removeDocument(0),
         Selectors.legendQuestion -> English.h2,
@@ -129,19 +124,14 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
       val userAnswers = emptyUserAnswers
         .set(DocumentTypePage(0), documentTypeModel)
         .set(DocumentReferencePage(0), "reference1")
-        .set(DocumentTypePage(1), documentTypeOtherModel)
-        .set(ReferenceAvailablePage(1), false)
-        .set(DocumentDescriptionPage(1), "description2")
+        .set(DocumentTypePage(1), documentTypeModel)
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-
-     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
-      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
         formOpt = None,
         onSubmitCall = testOnwardRoute,
-        documents = helper,
+        documents = helper.allDocumentsSummary(),
         showNoOption = true
       ).toString())
 
@@ -167,18 +157,14 @@ class DocumentsAddToListViewSpec extends SpecBase with ViewBehaviours with Docum
       implicit val msgs: Messages = messages(Seq(English.lang))
 
       val userAnswers = emptyUserAnswers
-        .set(DocumentDescriptionPage(0), "description")
+        .set(DocumentReferencePage(0), "description")
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-
-     lazy val view = app.injector.instanceOf[DocumentsAddToListView]
-      val form = app.injector.instanceOf[DocumentsAddToListFormProvider].apply()
-      val helper = app.injector.instanceOf[DocumentsAddToListHelper].allDocumentsSummary()
 
       implicit val doc: Document = Jsoup.parse(view(
         formOpt = Some(form),
         onSubmitCall = testOnwardRoute,
-        documents = helper,
+        documents = helper.allDocumentsSummary(),
         showNoOption = false
       ).toString())
 

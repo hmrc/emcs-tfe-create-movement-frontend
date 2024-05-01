@@ -92,9 +92,7 @@ class DocumentTypeController @Inject()(
     } else {
 
       val updatedAnswers = request.userAnswers
-        .remove(ReferenceAvailablePage(idx))
         .remove(DocumentReferencePage(idx))
-        .remove(DocumentDescriptionPage(idx))
 
       saveAndRedirect(
         page = DocumentTypePage(idx),

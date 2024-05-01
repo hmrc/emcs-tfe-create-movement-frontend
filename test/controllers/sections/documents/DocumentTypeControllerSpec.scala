@@ -24,7 +24,7 @@ import mocks.services.{MockGetDocumentTypesService, MockUserAnswersService}
 import models.sections.documents.DocumentType
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDocumentsNavigator
-import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection, ReferenceAvailablePage}
+import pages.sections.documents.{DocumentReferencePage, DocumentTypePage, DocumentsSection}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -46,7 +46,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
   def onSubmitCall(idx: Index = 0): Call =
     routes.DocumentTypeController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
-  val documentTypes: Seq[DocumentType] = Seq(documentTypeModel, documentTypeOtherModel)
+  val documentTypes: Seq[DocumentType] = Seq(documentTypeModel, documentTypeModel.copy(code = "2", description = "description 2"))
 
   lazy val formProvider: DocumentTypeFormProvider = new DocumentTypeFormProvider()
   lazy val form: Form[DocumentType] = formProvider(documentTypes)
@@ -124,8 +124,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next document to valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
       )) {
         val req = FakeRequest(POST, documentTypeRoute(2)).withFormUrlEncodedBody(("document-type", documentTypeModel.code))
@@ -138,8 +137,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
       )) {
         val req = FakeRequest(POST, documentTypeRoute(-1)).withFormUrlEncodedBody(("document-type", documentTypeModel.code))
@@ -174,14 +172,13 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to the next page without changing the UserAnswers when the same answer is submitted" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
       )) {
 
         MockGetDocumentTypesService.getDocumentTypes().returns(Future.successful(documentTypes))
 
-        val req = FakeRequest(POST, documentTypeRoute()).withFormUrlEncodedBody(("document-type", documentTypeOtherModel.code))
+        val req = FakeRequest(POST, documentTypeRoute()).withFormUrlEncodedBody(("document-type", documentTypeModel.code))
 
         val result = testController.onSubmit(testErn, testDraftId, 0, NormalMode)(req)
 
@@ -189,10 +186,9 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "must redirect to the next page update the UserAnswers when the answer is changed" in new Setup(Some(
+      "must redirect to the next page update the UserAnswers when the answer has changed" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel.copy(code = "2"))
           .set(DocumentReferencePage(0), "reference")
       )) {
 
@@ -238,8 +234,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is greater than the next valid document idx" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
       )) {
 
@@ -273,8 +268,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
 
       "must redirect to DocumentsIndexController when the idx is less than 0" in new Setup(Some(
         emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
       )) {
         val req = FakeRequest(POST, documentTypeRoute(-1)).withFormUrlEncodedBody(("document-type", documentTypeModel.code))

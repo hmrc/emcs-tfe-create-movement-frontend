@@ -137,7 +137,6 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
     "POST onSubmit" - {
       "must redirect to the next page when Yes is submitted" in new Setup(
         Some(emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference"))) {
 
         MockUserAnswersService.set(startingUserAnswers.value).returns(Future.successful(startingUserAnswers.value))
@@ -152,13 +151,11 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to the next page and wipe data when Yes is submitted with this page already answered" in new Setup(Some(
         emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
           .set(DocumentsAddToListPage, DocumentsAddToList.No)
       )) {
 
         val updatedUserAnswers = emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
 
         MockUserAnswersService.set(updatedUserAnswers).returns(Future.successful(updatedUserAnswers))
@@ -173,7 +170,6 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to the next page when No is submitted" in new Setup(
         Some(emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference"))) {
 
         val updatedAnswers = startingUserAnswers.value.set(DocumentsAddToListPage, DocumentsAddToList.No)
@@ -190,7 +186,6 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
 
       "must redirect to the next page when MoreLater is submitted" in new Setup(
         Some(emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference"))) {
 
         val updatedAnswers = startingUserAnswers.value.set(DocumentsAddToListPage, DocumentsAddToList.MoreLater)

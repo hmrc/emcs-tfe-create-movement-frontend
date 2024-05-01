@@ -41,13 +41,13 @@ class GetDocumentTypesServiceSpec extends SpecBase with MockGetDocumentTypesConn
         val expectedResult = Seq(
           documentTypeModel,
           documentTypeModel,
-          documentTypeOtherModel
+          documentTypeModel
         )
 
         MockGetDocumentTypesConnector.getDocumentTypes().returns(Future(Right(
           Seq(
             documentTypeModel,
-            documentTypeOtherModel,
+            documentTypeModel,
             documentTypeModel
           )
         )))

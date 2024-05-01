@@ -112,10 +112,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       "must redirect to the next page and not update answers when the same answer submitted again" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentsCertificatesPage, true)
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
-          .set(ReferenceAvailablePage(1), false)
-          .set(DocumentDescriptionPage(1), "description")
           .set(DocumentsAddToListPage, DocumentsAddToList.No)
       )) {
         val req = FakeRequest(POST, documentsCertificatesRoute).withFormUrlEncodedBody(("value", "true"))
@@ -129,10 +126,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       "must redirect to the next page and wipe answers when a new answer is submitted" in new Setup(Some(
         emptyUserAnswers
           .set(DocumentsCertificatesPage, true)
-          .set(ReferenceAvailablePage(0), true)
           .set(DocumentReferencePage(0), "reference")
-          .set(ReferenceAvailablePage(1), false)
-          .set(DocumentDescriptionPage(1), "description")
           .set(DocumentsAddToListPage, DocumentsAddToList.No)
       )) {
 

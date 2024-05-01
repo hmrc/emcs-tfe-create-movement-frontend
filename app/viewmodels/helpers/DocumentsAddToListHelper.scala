@@ -47,9 +47,7 @@ class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.
     SummaryListViewModel(
       rows = Seq(
         DocumentTypeSummary.row(idx),
-        ReferenceAvailableSummary.row(idx),
-        DocumentReferenceSummary.row(idx),
-        DocumentDescriptionSummary.row(idx)
+        DocumentReferenceSummary.row(idx)
       ).flatten
     ).withCard(
       Card(

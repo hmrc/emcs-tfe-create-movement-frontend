@@ -43,9 +43,8 @@ class DocumentsSectionUnitsSpec extends SpecBase with DocumentTypeFixtures {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
-          .set(DocumentTypePage(1), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(1), false)
-          .set(DocumentDescriptionPage(1), "description")
+          .set(DocumentTypePage(1), documentTypeModel)
+          .set(DocumentReferencePage(1), "reference")
         )
 
         DocumentsSectionUnits.status mustBe Completed
@@ -54,10 +53,10 @@ class DocumentsSectionUnitsSpec extends SpecBase with DocumentTypeFixtures {
 
     "return InProgress" - {
 
-      "when there is ONE documents added but InProgress" in {
+      "when there is ONE document added but InProgress" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentReferencePage(0), "reference")
         )
 
         DocumentsSectionUnits.status mustBe InProgress
@@ -66,10 +65,9 @@ class DocumentsSectionUnitsSpec extends SpecBase with DocumentTypeFixtures {
       "when there are TWO documents added, one in Completed and one InProgress" in {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DocumentTypePage(0), documentTypeOtherModel)
-          .set(ReferenceAvailablePage(0), true)
+          .set(DocumentTypePage(0), documentTypeModel)
           .set(DocumentReferencePage(0), "reference")
-          .set(DocumentTypePage(1), documentTypeOtherModel)
+          .set(DocumentTypePage(1), documentTypeModel)
         )
 
         DocumentsSectionUnits.status mustBe InProgress

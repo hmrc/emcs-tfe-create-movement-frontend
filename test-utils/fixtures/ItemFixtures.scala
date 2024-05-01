@@ -412,9 +412,7 @@ trait ItemFixtures {
     // documentCertificate
     .set(DocumentsCertificatesPage, true)
     .set(DocumentTypePage(testIndex1), DocumentType("0", "0 type desc"))
-    .set(ReferenceAvailablePage(testIndex1), true)
     .set(DocumentReferencePage(testIndex1), "0 reference")
-    .set(DocumentDescriptionPage(testIndex1), "0 description")
     .set(DocumentsAddToListPage, DocumentsAddToList.No)
     // headerEadEsad
     .set(JourneyTimeHoursPage, 2)
@@ -513,7 +511,7 @@ trait ItemFixtures {
       DocumentCertificateModel(
         documentType = Some("0"),
         documentReference = Some("0 reference"),
-        documentDescription = Some("0 description"),
+        documentDescription = None,
         referenceOfDocument = None
       )
     )),
@@ -646,7 +644,7 @@ trait ItemFixtures {
       DocumentCertificateModel(
         documentType = Some("0"),
         documentReference = Some("0 reference"),
-        documentDescription = Some("0 description"),
+        documentDescription = None,
         referenceOfDocument = None
       )
     )),
@@ -773,7 +771,7 @@ trait ItemFixtures {
       DocumentCertificateModel(
         documentType = Some("0"),
         documentReference = Some("0 reference"),
-        documentDescription = Some("0 description"),
+        documentDescription = None,
         referenceOfDocument = None
       )
     )),
@@ -906,7 +904,7 @@ trait ItemFixtures {
       DocumentCertificateModel(
         documentType = Some("0"),
         documentReference = Some("0 reference"),
-        documentDescription = Some("0 description"),
+        documentDescription = None,
         referenceOfDocument = None
       )
     )),

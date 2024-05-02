@@ -56,10 +56,8 @@ class ConsignorPaidTemporaryAuthorisationCodeController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       authorisedForController {
         formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            renderView(BadRequest, formWithErrors, mode),
-          value =>
-            saveAndRedirect(ConsignorPaidTemporaryAuthorisationCodePage, value, mode)
+          renderView(BadRequest, _, mode),
+          saveAndRedirect(ConsignorPaidTemporaryAuthorisationCodePage, _, mode)
         )
       }
     }

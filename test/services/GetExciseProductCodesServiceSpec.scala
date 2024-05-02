@@ -53,7 +53,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
           energyExciseProductCode
         )
 
-        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode))))
 
         val actualResults = testService.getExciseProductCodes().futureValue
 
@@ -62,9 +62,9 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
 
       Seq(
         testNorthernIrelandErn -> MovementScenario.UkTaxWarehouse.NI,
-        testGreatBritainErn    -> MovementScenario.UkTaxWarehouse.GB
+        testGreatBritainErn -> MovementScenario.UkTaxWarehouse.GB
       ).foreach { case (userErn, scenario) =>
-        s"when Connector returns success from downstream, trader is an ${userErn.take(2)} trader, guarantor is not required and destinationType is ${scenario}" in {
+        s"when Connector returns success from downstream, trader is an ${userErn.take(2)} trader, guarantor is not required and destinationType is $scenario" in {
 
           implicit val request: DataRequest[_] = dataRequest(
             FakeRequest(),
@@ -80,7 +80,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
             wineExciseProductCode300
           )
 
-          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
+          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode))))
 
           val actualResults = testService.getExciseProductCodes().futureValue
 
@@ -93,10 +93,9 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
         MovementScenario.TemporaryRegisteredConsignee,
         MovementScenario.RegisteredConsignee,
         MovementScenario.DirectDelivery,
-        MovementScenario.UnknownDestination,
         MovementScenario.ExemptedOrganisation
       ).foreach { scenario =>
-        s"when Connector returns success from downstream, trader is an XI trader, guarantor is not required and destinaionType is ${scenario}" in {
+        s"when Connector returns success from downstream, trader is an XI trader, guarantor is not required and destinaionType is $scenario" in {
 
           implicit val request: DataRequest[_] = dataRequest(
             FakeRequest(),
@@ -110,28 +109,64 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
             energyExciseProductCode
           )
 
-          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, energyExciseProductCode))))
+          MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode))))
 
           val actualResults = testService.getExciseProductCodes().futureValue
 
           actualResults mustBe expectedResult
         }
       }
-    }
 
-    "should throw ExciseProductCodesException" - {
+      s"when Connector returns success from downstream, trader is an XI trader, and destinationType is ${MovementScenario.UnknownDestination}" in {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          ern = testNorthernIrelandErn,
+          answers = emptyUserAnswers
+            .set(DestinationTypePage, MovementScenario.UnknownDestination)
+        )
 
-      "when Connector returns failure from downstream" in {
+        val expectedResult = Seq(
+          energyExciseProductCode
+        )
 
-        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
-        val expectedResult = "No excise product codes retrieved"
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode))))
 
-        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Left(UnexpectedDownstreamResponseError)))
+        val actualResults = testService.getExciseProductCodes().futureValue
 
-        val actualResult = intercept[ExciseProductCodesException](await(testService.getExciseProductCodes())).getMessage
+        actualResults mustBe expectedResult
 
-        actualResult mustBe expectedResult
       }
+
+      "when Connector returns success from downstream, trader is XIPA - include S600 in results" in {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          ern = testNIDutyPaidErn
+        )
+
+        val expectedResult = Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode)
+
+        MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Right(expectedResult)))
+
+        val actualResults = testService.getExciseProductCodes().futureValue
+
+        actualResults mustBe expectedResult
+
+      }
+    }
+  }
+
+  "should throw ExciseProductCodesException" - {
+
+    "when Connector returns failure from downstream" in {
+
+      implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+      val expectedResult = "No excise product codes retrieved"
+
+      MockGetExciseProductCodesConnector.getExciseProductCodes().returns(Future(Left(UnexpectedDownstreamResponseError)))
+
+      val actualResult = intercept[ExciseProductCodesException](await(testService.getExciseProductCodes())).getMessage
+
+      actualResult mustBe expectedResult
     }
   }
 }

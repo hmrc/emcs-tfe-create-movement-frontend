@@ -17,32 +17,44 @@
 package services
 
 import connectors.referenceData.GetExciseProductCodesConnector
-import models.ExciseProductCode
+import models.requests.DataRequest
 import models.response.ExciseProductCodesException
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
+import models.sections.info.movementScenario.MovementType
+import models.{ExciseProductCode, NorthernIrelandCertifiedConsignor}
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import models.requests.DataRequest
-import pages.sections.info.DestinationTypePage
-import pages.sections.guarantor.GuarantorRequiredPage
-import models.sections.info.movementScenario.MovementType
 
 @Singleton
 class GetExciseProductCodesService @Inject()(connector: GetExciseProductCodesConnector)
                                             (implicit ec: ExecutionContext) {
 
 
-  private[services] def filterEPCCodes(epcs: Seq[ExciseProductCode])(implicit dataRequest: DataRequest[_]): Seq[ExciseProductCode] = (dataRequest.userAnswers.get(DestinationTypePage), dataRequest.userAnswers.get(GuarantorRequiredPage)) match {
-    case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToUk => epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
-    case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => epcs.filter(_.category.toUpperCase == "E")
-    case _ => epcs
-  }
+  private[services] def filterEPCCodes()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
+    epcs =>
+      (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
+        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToUk => epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
+        case (Some(UnknownDestination), _) => epcs.filter(_.category.toUpperCase == "E")
+        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => epcs.filter(_.category.toUpperCase == "E")
+        case _ => epcs
+      }
+
+  private[services] def removeS600IfDutySuspendedMovement()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
+    epcs =>
+      //Only include S600 in list if consignor ERN = XIPA/ XIPTA (user is/should be asked for an XIPTA as part of a XIPA flow)
+      request.userTypeFromErn match {
+        case NorthernIrelandCertifiedConsignor => epcs
+        case _ => epcs.filterNot(_.code == "S600")
+      }
 
   def getExciseProductCodes()(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Future[Seq[ExciseProductCode]] = {
     connector.getExciseProductCodes().map {
       case Left(_) => throw ExciseProductCodesException("No excise product codes retrieved")
-      case Right(exciseProductCodes) => filterEPCCodes(exciseProductCodes)
+      case Right(exciseProductCodes) => (filterEPCCodes andThen removeS600IfDutySuspendedMovement)(exciseProductCodes)
     }
   }
 }

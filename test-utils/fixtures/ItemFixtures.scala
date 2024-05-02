@@ -93,6 +93,13 @@ trait ItemFixtures {
     categoryDescription = "Spirit"
   )
 
+  val s600ExciseProductCode = ExciseProductCode(
+    code = "S600",
+    description = "Spirit",
+    category = "S",
+    categoryDescription = "Spirit"
+  )
+
   val beerExciseProductCodeJson = Json.obj(
     "code" -> "B000",
     "description" -> "Beer",

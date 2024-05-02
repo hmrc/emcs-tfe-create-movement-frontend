@@ -108,27 +108,41 @@ class DestinationTypeHelperSpec extends SpecBase {
 
       "options" - {
         "must return two options" - {
-          "when ERN is a GBRC" in {
-            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBRC123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
-          }
-          "when ERN is a XIWK and dispatchPlace=GB" in {
-            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesXIWKWithGbDispatchPlace.map(helper.radioOption)
-          }
-          "when ERN is a GBWK" in {
-            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
-          }
           "when ERN is NI DutyPaid" in {
             Seq("XIPA123", "XIPC123").foreach {
               ern =>
                 implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = ern)
-                helper.options(NorthernIreland) mustBe MovementScenario.valuesForDutyPaidTraders.map(helper.radioOption)
+                val result = helper.options(NorthernIreland)
+
+                result.length mustBe 2
+                result mustBe MovementScenario.valuesForDutyPaidTraders.map(helper.radioOption)
             }
           }
         }
-        "must return more than two options" - {
+        "must return three options" - {
+          "when ERN is a GBRC" in {
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBRC123")
+            val result = helper.options(GreatBritain)
+
+            result.length mustBe 3
+            result mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
+          }
+          "when ERN is a XIWK and dispatchPlace=GB" in {
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
+            val result = helper.options(GreatBritain)
+
+            result.length mustBe 3
+            result mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
+          }
+          "when ERN is a GBWK" in {
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBWK123")
+            val result = helper.options(GreatBritain)
+
+            result.length mustBe 3
+            result mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
+          }
+        }
+        "must return more than three options" - {
           "when ERN is XIWK and dispatchPlace=XI" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
             helper.options(NorthernIreland) mustBe MovementScenario.valuesEu.map(helper.radioOption)

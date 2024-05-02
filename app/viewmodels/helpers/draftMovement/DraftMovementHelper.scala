@@ -72,7 +72,10 @@ class DraftMovementHelper @Inject()() extends Logging {
         dispatchPlaceHeading(DispatchPlace.NorthernIreland, destinationType)
 
       case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
-        messages("draftMovement.heading.importFor", messages(s"destinationType.$destinationType"))
+        messages(
+          "draftMovement.heading.importFor",
+          if(messages.isDefinedAt(s"draftMovement.heading.$destinationType")) messages(s"draftMovement.heading.$destinationType") else messages(s"destinationType.$destinationType"))
+
 
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
         messages(s"destinationType.$destinationType")

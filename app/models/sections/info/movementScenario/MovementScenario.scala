@@ -285,12 +285,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     override val stringValue: String = "unknown destination"
   }
 
-  def valuesGb: Seq[MovementScenario] = Seq(
-    ExportWithCustomsDeclarationLodgedInTheUk,
-    UkTaxWarehouse.GB
-  )
-
-  def valuesXIWKWithGbDispatchPlace: Seq[MovementScenario] = Seq(
+  def valuesExportUkAndUkTaxWarehouse: Seq[MovementScenario] = Seq(
     ExportWithCustomsDeclarationLodgedInTheUk
   ) ++ UkTaxWarehouse.values
 
@@ -312,7 +307,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     TemporaryCertifiedConsignee
   )
 
-  val values: Seq[MovementScenario] = (valuesGb ++ valuesXIWKWithGbDispatchPlace ++ valuesEu ++ valuesForDutyPaidTraders).distinct
+  val values: Seq[MovementScenario] = (valuesExportUkAndUkTaxWarehouse ++ valuesEu ++ valuesForDutyPaidTraders).distinct
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }

@@ -368,6 +368,7 @@ destinationType.change.hidden = destination type
 
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
+howMovementTransported.unknownDestination.hint = The transport for a movement of energy products to an unknown destination must be either by sea or by inland waterway.
 howMovementTransported.4 = Air transport
 howMovementTransported.7 = Fixed transport installations
 howMovementTransported.8 = Inland waterway transport

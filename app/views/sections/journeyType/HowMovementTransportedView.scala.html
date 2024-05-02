@@ -15,8 +15,10 @@
  *@
 
 @import models.requests.DataRequest
+@import models.sections.info.movementScenario.MovementScenario
 @import models.sections.journeyType.HowMovementTransported
 @import viewmodels.LegendSize
+@import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 
 @this(
     layout: templates.Layout,
@@ -29,24 +31,31 @@
     continueOrExit: components.continueOrExit
 )
 
+@(form: Form[_], mode: Mode, movementScenario: MovementScenario)(implicit request: DataRequest[_], messages: Messages)
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@radios = @{
+  RadiosViewModel(
+    field  = form("value"),
+    legend = LegendViewModel(Text(messages("howMovementTransported.heading"))).asPageHeading(LegendSize.Large),
+    items  = HowMovementTransported.options
+  )
+}
 
 @layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> radios.items.head.id.get)))
         }
 
         @h2(messages("journeyType.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("howMovementTransported.heading"))).asPageHeading(LegendSize.Large),
-                items  = HowMovementTransported.options
-            )
+            if(movementScenario == UnknownDestination) {
+              radios.withHint(HintViewModel(messages("howMovementTransported.unknownDestination.hint")))
+            } else {
+              radios
+            }
         )
 
         @continueOrExit()

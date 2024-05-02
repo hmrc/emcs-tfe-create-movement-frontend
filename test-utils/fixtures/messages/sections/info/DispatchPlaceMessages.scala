@@ -25,6 +25,9 @@ object DispatchPlaceMessages {
     val heading = "Where is the place of dispatch for this movement?"
     val greatBritainRadioOption = "Great Britain"
     val northernIrelandRadioOption = "Northern Ireland"
+
+    val cyaLabel = "Place of dispatch"
+    val cyaChangeHidden = "where is the place of dispatch"
   }
 
   object English extends ViewMessages with BaseEnglish

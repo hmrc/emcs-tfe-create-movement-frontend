@@ -17,11 +17,12 @@
 package pages.sections.consignee
 
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath, Reads}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus, UpdateNeeded}
+import viewmodels.taskList._
 
 import scala.annotation.unused
 
@@ -32,33 +33,42 @@ case object ConsigneeSection extends Section[JsObject] {
     if(ConsigneeExcisePage.isMovementSubmissionError) {
       UpdateNeeded
     } else {
-      (
+      lazy val exportVatPageAnswer = request.userAnswers.get(ConsigneeExportVatPage)
+      lazy val exportEoriPageAnswer = request.userAnswers.get(ConsigneeExportEoriPage)
+      val pagesToCheck = (
         request.userAnswers.get(ConsigneeExportInformationPage),
         request.userAnswers.get(ConsigneeExcisePage),
         request.userAnswers.get(ConsigneeExemptOrganisationPage)
       ) match {
-        case (Some(value), _, _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-        case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-        case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-        case _ => NotStarted
+        case (Some(value), _, _) =>
+          value.toList match {
+            case NoInformation :: Nil => Seq(Some(NoInformation.toString))
+            case VatNumber :: Nil => Seq(exportVatPageAnswer)
+            case EoriNumber :: Nil => Seq(exportEoriPageAnswer)
+            //Both VAT and EORI selected - check both answers exist
+            case _ => Seq(exportVatPageAnswer, exportEoriPageAnswer)
+          }
+        case (_, Some(value), _) => Seq(Some(value))
+        case (_, _, Some(value)) => Seq(Some(value).map(_.certificateSerialNumber))
+        case _ => Seq(None)
       }
+      checkBusinessNameAndAddressBothExistWithPage(pagesToCheck)
     }
   }
 
   /**
-   * @param pageGetResult result from request.userAnswers.get(Whatever)
+   * @param pageGetResults result from page answer retrievals
    * @param request       DataRequest
    * @param rds           unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportInformationPage)
-   * @tparam A type used for pageGetResult and rds
+   * @tparam A            type used for pageGetResult and rds
    * @return
    */
-  private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResult: Option[A])
+  private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResults: Seq[Option[A]])
                                                              (implicit request: DataRequest[_], @unused rds: Reads[A]): TaskListStatus = {
     val pages: Seq[Option[_]] = Seq(
-      pageGetResult,
       request.userAnswers.get(ConsigneeBusinessNamePage),
       request.userAnswers.get(ConsigneeAddressPage)
-    )
+    ) ++ pageGetResults
 
     if (pages.forall(_.nonEmpty)) {
       Completed

@@ -434,12 +434,6 @@ consigneeBusinessName.error.length = Consignee business name must be {0} charact
 consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
 consigneeBusinessName.change.hidden = consignee business name
 
-consigneeExport.title = Are the goods being exported outside of the UK and EU?
-consigneeExport.heading = Are the goods being exported outside of the UK and EU?
-consigneeExport.checkYourAnswers.label = Export outside of the UK and EU
-consigneeExport.error.required = Select yes if the goods are being exported outside of the UK and EU
-consigneeExport.change.hidden = if the goods are being exported outside of the UK and EU
-
 consigneeExportInformation.title = What information do you have about the person representing the consignor at the office of export?
 consigneeExportInformation.heading = What information do you have about the person representing the consignor at the office of export?
 consigneeExportInformation.vatNumber = VAT registration number

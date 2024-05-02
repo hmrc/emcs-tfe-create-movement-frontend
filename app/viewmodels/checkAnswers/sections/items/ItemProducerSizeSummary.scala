@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{CheckMode, Index}
 import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
@@ -34,7 +35,7 @@ object ItemProducerSizeSummary {
     for {
       itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
       answer <- request.userAnswers.get(page)
-      if itemSmallIndependentProducer
+      if itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndConsignor || itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor
     } yield {
       SummaryListRowViewModel(
         key = s"$page.checkYourAnswersLabel",

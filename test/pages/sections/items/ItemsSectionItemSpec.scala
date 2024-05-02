@@ -18,11 +18,12 @@ package pages.sections.items
 
 import base.SpecBase
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
-import models.GoodsType.{Beer, Energy}
+import models.GoodsType.{Beer, Energy, Spirits}
 import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
+import models.sections.items.ItemSmallIndependentProducerType.{NotAIndependentSmallProducer, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineGrowingZone.CIII_A
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
@@ -654,7 +655,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
           .set(ItemCommercialDescriptionPage(testIndex1), "Beer from hops")
           .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.4))
-          .set(ItemSmallIndependentProducerPage(testIndex1), true)
+          .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
           .set(ItemProducerSizePage(testIndex1), BigInt("300"))
           .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
@@ -966,27 +967,24 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
     "must return one item" - {
       "when alcohol, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication" in {
-        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
+        GoodsType.values.filter(gt => gt.isAlcohol && gt != Beer && gt != Spirits).foreach {
           goodsType =>
             val userAnswers: UserAnswers = emptyUserAnswers
               .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.designationOfOriginAnswers(goodsType, dr).length mustBe 1
+            section.designationOfOriginAnswers(goodsType.code)(goodsType, dr).length mustBe 1
         }
       }
 
-      "when alcohol, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication (S200)" in {
-        GoodsType.values.filter(gt => gt.isAlcohol && (gt != Beer)).foreach {
-          goodsType =>
-            val userAnswers: UserAnswers = emptyUserAnswers
-              .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, isSpiritMarketedAndLabelled = Some(true)))
+      "when Spirits, not beer, ItemDesignationOfOriginPage is NoGeographicalIndication (S200)" in {
+          val userAnswers: UserAnswers = emptyUserAnswers
+            .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, isSpiritMarketedAndLabelled = Some(true)))
 
-            val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+          val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.designationOfOriginAnswers(goodsType, dr).length mustBe 1
-        }
+          section.designationOfOriginAnswers(testEpcSpirit)(Spirits, dr).length mustBe 1
       }
     }
 
@@ -999,7 +997,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.designationOfOriginAnswers(goodsType, dr) mustBe Nil
+            section.designationOfOriginAnswers(goodsType.code)(goodsType, dr) mustBe Nil
         }
       }
 
@@ -1009,7 +1007,16 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        section.designationOfOriginAnswers(Beer, dr) mustBe Nil
+        section.designationOfOriginAnswers(testEpcBeer)(Beer, dr) mustBe Nil
+      }
+
+      "when Spirits (non-S200)" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.designationOfOriginAnswers(testExciseProductCodeS300.code)(Spirits, dr) mustBe Nil
       }
     }
   }
@@ -1075,7 +1082,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1090,7 +1097,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), false)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1105,7 +1112,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1117,7 +1124,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.5))
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1128,7 +1135,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
             val userAnswers = emptyUserAnswers
-              .set(ItemSmallIndependentProducerPage(testIndex1), true)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

@@ -19,4 +19,6 @@ package utils
 object ExciseProductCodeHelper {
 
   def isSpirituousBeverages(epc: String): Boolean = epc == "S200"
+
+  def isSpiritAndNotSpirituousBeverages(epc: String): Boolean = Seq("S300", "S400", "S500", "S600").contains(epc)
 }

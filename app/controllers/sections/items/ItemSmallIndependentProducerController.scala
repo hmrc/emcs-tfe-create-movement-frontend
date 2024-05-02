@@ -69,11 +69,11 @@ class ItemSmallIndependentProducerController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    withGoodsTypeAsync(idx) { goodsType =>
+    withGoodsTypeAsync(idx) { _ =>
       Future.successful(status(view(
         form = form,
         action = routes.ItemSmallIndependentProducerController.onSubmit(request.ern, request.draftId, idx, mode),
-        goodsType = goodsType
+        index = idx
       )))
     }
 

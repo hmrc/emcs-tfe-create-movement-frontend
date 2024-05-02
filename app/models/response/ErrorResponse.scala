@@ -50,8 +50,6 @@ case class SubmitCreateMovementException(message: String) extends Exception(mess
 
 case class UserAnswersException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
-case class UnfixedSubmissionFailuresException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
-
 case class MissingMandatoryPage(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class TraderKnownFactsException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

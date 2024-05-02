@@ -19,7 +19,7 @@ package forms.mappings
 import models.Enumerable
 import play.api.data.{FieldMapping, Mapping}
 import play.api.data.Forms.of
-import uk.gov.voa.play.form.{ConditionalMapping, MandatoryOptionalMapping}
+import uk.gov.voa.play.form.{Condition, ConditionalMapping, MandatoryOptionalMapping}
 
 import java.time.{LocalDate, LocalTime}
 
@@ -93,7 +93,7 @@ trait Mappings extends Formatters with Constraints {
    * @tparam T the data type that this field is
    * @return The mapping that should be applied based on the arguments and their values within the form
    */
-  def mandatoryIfOptionSelectedAndInputNonEmpty[T](optionField: String,
+  protected def mandatoryIfOptionSelectedAndInputNonEmpty[T](optionField: String,
                                                    optionValue: String,
                                                    inputField: String,
                                                    mapping: Mapping[T]
@@ -104,4 +104,7 @@ trait Mappings extends Formatters with Constraints {
       None,
       Seq.empty
     )
+
+  protected def isOptionSelected(field: String, option: String): Condition =
+    _.get(field).contains(option)
 }

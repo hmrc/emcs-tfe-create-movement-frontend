@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
+@import forms.sections.items.ItemSmallIndependentProducerFormProvider.producerField
 @import models.GoodsType
 @import models.requests.DataRequest
+@import models.sections.items.ItemSmallIndependentProducerType.CertifiedIndependentSmallProducer
 @import viewmodels.helpers.ItemSmallIndependentProducerHelper
 
 @this(
@@ -23,26 +25,30 @@
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
+        helper: ItemSmallIndependentProducerHelper,
         continueOrExit: components.continueOrExit,
         h1: components.h1,
-        h2: components.h2
+        h2: components.h2,
+        p: components.p
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, index: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemSmallIndependentProducer.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemSmallIndependentProducer.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map(producerField -> form(s"$producerField-$CertifiedIndependentSmallProducer").id)))
         }
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @govukRadios(
-            ItemSmallIndependentProducerHelper.radios(form, goodsType)
-        )
+        @h1(messages("itemSmallIndependentProducer.heading"), classes = "govuk-heading-l")
+
+        @p() { @ItemSmallIndependentProducerHelper.constructDeclarationPrefix(index) }
+
+        @govukRadios(helper.radios(form))
 
         @continueOrExit()
     }

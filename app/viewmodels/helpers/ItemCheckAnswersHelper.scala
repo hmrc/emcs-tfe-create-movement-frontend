@@ -39,7 +39,8 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary,
                                         itemQuantitySummary: ItemQuantitySummary,
                                         itemDegreesPlatoSummary: ItemDegreesPlatoSummary,
-                                        itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary
+                                        itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary,
+                                        itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary
                                       ) {
 
   private val headingLevel = 3
@@ -60,7 +61,7 @@ class ItemCheckAnswersHelper @Inject()(
         ItemFiscalMarksChoiceSummary.row(idx),
         ItemFiscalMarksSummary.row(idx),
         itemDesignationOfOriginSummary.row(idx),
-        ItemSmallIndependentProducerSummary.row(idx),
+        itemSmallIndependentProducerSummary.row(idx),
         ItemProducerSizeSummary.row(idx)
       ).flatten
     )

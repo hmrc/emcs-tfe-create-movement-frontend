@@ -20,12 +20,17 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
+import forms.sections.items.ItemSmallIndependentProducerFormProvider.{producerField, producerIdField}
 import mocks.services.MockUserAnswersService
-import models.GoodsType.Wine
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
+import models.sections.items.ItemSmallIndependentProducerModel
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
-import play.api.mvc.AnyContentAsEmpty
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.items.ItemSmallIndependentProducerView
@@ -34,20 +39,31 @@ import scala.concurrent.Future
 
 class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
-  //Ensures a dummy item exists in the array for testing
-  val defaultUserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+  val defaultUserAnswers: UserAnswers = {
+    emptyUserAnswers
+      .set(DestinationTypePage, UkTaxWarehouse.GB)
+      .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+      .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+  }
 
-  def itemSmallIndependentProducerSubmitAction(idx: Index = testIndex1) =
+  def itemSmallIndependentProducerSubmitAction(idx: Index = testIndex1): Call =
     routes.ItemSmallIndependentProducerController.onSubmit(testErn, testDraftId, idx, NormalMode)
 
+  val model: ItemSmallIndependentProducerModel = ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testVatNumber))
+
+  val validFormBody: Seq[(String, String)] = Seq(
+    producerField -> SelfCertifiedIndependentSmallProducerAndNotConsignor.toString,
+    producerIdField -> testVatNumber
+  )
+
+  lazy val formProvider = new ItemSmallIndependentProducerFormProvider()
+  lazy val form: Form[ItemSmallIndependentProducerModel] = formProvider()
+
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+  lazy val view: ItemSmallIndependentProducerView = app.injector.instanceOf[ItemSmallIndependentProducerView]
+
   class Test(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
-
-    lazy val formProvider = new ItemSmallIndependentProducerFormProvider()
-    lazy val form = formProvider()
-
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-    lazy val view = app.injector.instanceOf[ItemSmallIndependentProducerView]
 
     lazy val controller = new ItemSmallIndependentProducerController(
       messagesApi,
@@ -83,41 +99,48 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, itemSmallIndependentProducerSubmitAction(), Wine)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual
+        view(
+          form,
+          itemSmallIndependentProducerSubmitAction(),
+          testIndex1
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      defaultUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)
+      defaultUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), model)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form.fill(true),
+        form.fill(model),
         itemSmallIndependentProducerSubmitAction(),
-        Wine
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" - {
       "when the answer has changed" in new Test(Some(
         defaultUserAnswers
-          .set(ItemSmallIndependentProducerPage(testIndex1), false)
+          .set(ItemSmallIndependentProducerPage(testIndex1), model.copy(SelfCertifiedIndependentSmallProducerAndConsignor, producerId = None))
           .set(ItemProducerSizePage(testIndex1), BigInt(1))
       )) {
-        MockUserAnswersService.set(defaultUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), true)).returns(Future.successful(emptyUserAnswers))
+        MockUserAnswersService
+          .set(defaultUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1), model.copy(SelfCertifiedIndependentSmallProducerAndNotConsignor, producerId = Some(testVatNumber))))
+          .returns(Future.successful(emptyUserAnswers))
 
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(validFormBody: _*))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
       "when the answer has not changed" in new Test(Some(
         defaultUserAnswers
-          .set(ItemSmallIndependentProducerPage(testIndex1), true)
+          .set(ItemSmallIndependentProducerPage(testIndex1), model)
           .set(ItemProducerSizePage(testIndex1), BigInt(1))
       )) {
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(validFormBody: _*))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -127,22 +150,34 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       )) {
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(validFormBody: _*))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
     }
 
-    "must render BadRequest when invalid data is submitted" in new Test() {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
-      val boundForm = form.bind(Map("value" -> ""))
+    s"must render BadRequest when $SelfCertifiedIndependentSmallProducerAndNotConsignor is selected but no identifier is entered" in new Test() {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(validFormBody.head))
+      val boundForm = form.bind(Map(validFormBody.head))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
         boundForm,
         itemSmallIndependentProducerSubmitAction(),
-        Wine
+        testIndex1
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
+    }
+
+    "must render BadRequest when no option is selected" in new Test() {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val boundForm = form.bind(Map(producerField -> ""))
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(
+        boundForm,
+        itemSmallIndependentProducerSubmitAction(),
+        testIndex1
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

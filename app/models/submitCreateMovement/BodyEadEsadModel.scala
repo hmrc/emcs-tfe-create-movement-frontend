@@ -16,16 +16,18 @@
 
 package models.submitCreateMovement
 
+import models.Index
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
-import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel}
-import models.{GoodsType, Index}
+import models.sections.items.ItemSmallIndependentProducerType.NotProvided
+import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemSmallIndependentProducerModel}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import queries.ItemsCount
 import utils.{Logging, ModelConstructorHelpers}
+import viewmodels.helpers.ItemSmallIndependentProducerHelper
 
 case class BodyEadEsadModel(
                              bodyRecordUniqueReference: Int,
@@ -51,22 +53,18 @@ case class BodyEadEsadModel(
 
 object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
 
-  private[submitCreateMovement] def smallIndependentProducerYesAnswer(goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): String = {
-    val key = {
-      if (request.isNorthernIrelandErn) {
-        goodsType match {
-          case GoodsType.Beer => "beer"
-          case GoodsType.Fermented(_) => "fermented"
-          case GoodsType.Wine => "wine"
-          case GoodsType.Spirits => "spirits"
-          case GoodsType.Intermediate => "intermediate"
-          case _ => "other"
-        }
-      } else {
-        "other"
-      }
+  private[submitCreateMovement] def smallIndependentProducerAnswer(idx: Index, smallIndependentProducer: ItemSmallIndependentProducerModel)
+                                                                  (implicit request: DataRequest[_], messages: Messages): String = {
+    val declaration = ItemSmallIndependentProducerHelper.constructDeclarationPrefix(idx).dropRight(1)
+
+    val answer = smallIndependentProducer.producerType match {
+      case NotProvided => messages(s"itemSmallIndependentProducer.$NotProvided.downstream")
+      case _ => messages(s"itemSmallIndependentProducer.${smallIndependentProducer.producerType}")
     }
-    messages(s"itemSmallIndependentProducer.yes.$key")
+
+    val optSeedNumber = smallIndependentProducer.producerId.map(messages("itemSmallIndependentProducer.cya.seedNumber", _))
+
+    Seq(Some(declaration), Some(answer), optSeedNumber).flatten.mkString(". ")
   }
 
   private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages): String = {
@@ -93,10 +91,9 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
       case _ => None
     }
 
-  private[submitCreateMovement] def smallIndependentProducer(idx: Index, exciseProductCode: String, commodityCode: String)
-                                                       (implicit request: DataRequest[_], messages: Messages): Option[String] =
+  private[submitCreateMovement] def smallIndependentProducer(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[String] =
     request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
-      case Some(true) => Some(smallIndependentProducerYesAnswer(GoodsType(exciseProductCode, Some(commodityCode))))
+      case Some(smallIndependentProducer) => Some(smallIndependentProducerAnswer(idx, smallIndependentProducer))
       case _ => None
     }
 
@@ -128,7 +125,7 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
                 fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
                 designationOfOrigin = designationOfOrigin(idx),
-                independentSmallProducersDeclaration = smallIndependentProducer(idx, exciseProductCode, commodityCode),
+                independentSmallProducersDeclaration = smallIndependentProducer(idx),
                 sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
                 density = request.userAnswers.get(ItemDensityPage(idx)),
                 commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),

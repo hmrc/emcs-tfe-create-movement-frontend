@@ -25,6 +25,7 @@ import models.sections.info._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario, MovementType, OriginType}
 import models.sections.items.ItemBulkPackagingCode._
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
+import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
 import models.sections.journeyType.HowMovementTransported
@@ -270,6 +271,13 @@ trait ItemFixtures {
       "S",
       "Ethyl alcohol and spirits"
     )
+  val testExciseProductCodeS300: ExciseProductCode =
+    ExciseProductCode(
+      "S300",
+      "Ethyl alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
   val testExciseProductCodeS400: ExciseProductCode =
     ExciseProductCode(
       "S400",
@@ -281,6 +289,13 @@ trait ItemFixtures {
     ExciseProductCode(
       "S500",
       "Other products containing ethyl alcohol",
+      "S",
+      "Ethyl alcohol and spirits"
+    )
+  val testExciseProductCodeS600: ExciseProductCode =
+    ExciseProductCode(
+      "S600",
+      "Completely denatured alcohol, falling within Article 20 of Directive 92/83/EEC, being alcohol which has been denatured and fulfils the conditions to benefit from the exemption provided for in Article 27(1)(a) of that Directive",
       "S",
       "Ethyl alcohol and spirits"
     )
@@ -435,7 +450,7 @@ trait ItemFixtures {
     .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
     .set(ItemFiscalMarksChoicePage(testIndex1), true)
     .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
-    .set(ItemSmallIndependentProducerPage(testIndex1), true)
+    .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
     .set(ItemProducerSizePage(testIndex1), BigInt(4))
     .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
     .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -546,7 +561,7 @@ trait ItemFixtures {
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
       designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-      independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Seed number: XIRC123456789"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -679,7 +694,7 @@ trait ItemFixtures {
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
       designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-      independentSmallProducersDeclaration = Some("It is hereby certified that the product described has been produced by an independent small wine producer"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Seed number: XIRC123456789"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -725,7 +740,7 @@ trait ItemFixtures {
   )
 
   val gbrcSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
-    movementType = MovementType.ImportEu,
+    movementType = MovementType.ImportUk,
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
@@ -745,7 +760,7 @@ trait ItemFixtures {
     dispatchImportOffice = Some(OfficeModel("dispatch import office")),
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
-      traderExciseNumber = None,
+      traderExciseNumber = Some(testErn),
       traderName = Some("destination name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
       vatNumber = None,
@@ -776,7 +791,7 @@ trait ItemFixtures {
       )
     )),
     headerEadEsad = HeaderEadEsadModel(
-      destinationType = DestinationType.DirectDelivery,
+      destinationType = DestinationType.TaxWarehouse,
       journeyTime = "2 hours",
       transportArrangement = TransportArranger.GoodsOwner
     ),
@@ -806,7 +821,7 @@ trait ItemFixtures {
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
       designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer"),
+      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Seed number: XIRC123456789"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),
@@ -852,7 +867,7 @@ trait ItemFixtures {
   )
 
   val gbwkSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
-    movementType = MovementType.UkToEu,
+    movementType = MovementType.UkToUk,
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
@@ -878,7 +893,7 @@ trait ItemFixtures {
     dispatchImportOffice = Some(OfficeModel("dispatch import office")),
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
-      traderExciseNumber = None,
+      traderExciseNumber = Some(testErn),
       traderName = Some("destination name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
       vatNumber = None,
@@ -909,7 +924,7 @@ trait ItemFixtures {
       )
     )),
     headerEadEsad = HeaderEadEsadModel(
-      destinationType = DestinationType.DirectDelivery,
+      destinationType = DestinationType.TaxWarehouse,
       journeyTime = "2 hours",
       transportArrangement = TransportArranger.GoodsOwner
     ),
@@ -939,7 +954,7 @@ trait ItemFixtures {
       fiscalMark = Some("fiscal marks"),
       fiscalMarkUsedFlag = Some(true),
       designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-      independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer"),
+      independentSmallProducersDeclaration = Some(s"It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Seed number: $testErn"),
       sizeOfProducer = Some(BigInt(4)),
       density = Some(BigDecimal(7.89)),
       commercialDescription = Some("beans"),

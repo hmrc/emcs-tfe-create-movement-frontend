@@ -50,6 +50,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
     lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
     lazy val itemDegreesPlatoSummary: ItemDegreesPlatoSummary = app.injector.instanceOf[ItemDegreesPlatoSummary]
     lazy val itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary = app.injector.instanceOf[ItemDesignationOfOriginSummary]
+    lazy val itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary = app.injector.instanceOf[ItemSmallIndependentProducerSummary]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
@@ -59,7 +60,8 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       itemBulkPackagingSealTypeSummary = itemBulkPackagingSealTypeSummary,
       itemQuantitySummary = itemQuantitySummary,
       itemDegreesPlatoSummary = itemDegreesPlatoSummary,
-      itemDesignationOfOriginSummary = itemDesignationOfOriginSummary
+      itemDesignationOfOriginSummary = itemDesignationOfOriginSummary,
+      itemSmallIndependentProducerSummary = itemSmallIndependentProducerSummary
     )
   }
 

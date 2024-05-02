@@ -20,81 +20,215 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import forms.sections.items.ItemSmallIndependentProducerFormProvider
+import forms.sections.items.ItemSmallIndependentProducerFormProvider.{producerField, producerIdField}
 import models.GoodsType._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import models.sections.info.movementScenario.MovementScenario._
+import models.sections.items.ItemSmallIndependentProducerType._
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.LegendSize
-import viewmodels.govuk.all._
+import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.Aliases._
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukInput
+import viewmodels.govuk.LabelFluency
 
-class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures with GuiceOneAppPerSuite {
+class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures with LabelFluency {
+
+  val input: GovukInput = app.injector.instanceOf[GovukInput]
+
+  val helper: ItemSmallIndependentProducerHelper = new ItemSmallIndependentProducerHelper(input)
 
   val form = new ItemSmallIndependentProducerFormProvider()()
 
-  ".radio" - {
+  val messagesForLanguage: ItemSmallIndependentProducerMessages.English.type = ItemSmallIndependentProducerMessages.English
 
-    Seq(ItemSmallIndependentProducerMessages.English).foreach { langMessages =>
+  implicit val messages: Messages = messages(FakeRequest())
 
-      implicit val msgs: Messages = messages(Seq(langMessages.lang))
+  ".radios" - {
 
-      s"when running for language code of '${langMessages.lang.code}'" - {
+    "must return the correct radios" in {
 
-        "should return the expected radio options with correct wording" - {
+      helper.radios(form) mustBe Radios(
+        name = producerField,
+        items = Seq(
+          RadioItem(
+            id = Some(s"${form(producerField).id}-$CertifiedIndependentSmallProducer"),
+            value = Some(CertifiedIndependentSmallProducer.toString),
+            content = Text(messagesForLanguage.certifiedIndependentSmallProducer),
+            hint = Some(Hint(content = Text(messagesForLanguage.certifiedIndependentSmallProducerHint)))
+          ),
+          RadioItem(
+            id = Some(s"${form(producerField).id}-$SelfCertifiedIndependentSmallProducerAndConsignor"),
+            value = Some(SelfCertifiedIndependentSmallProducerAndConsignor.toString),
+            content = Text(messagesForLanguage.selfCertifiedIndependentSmallProducerAndConsignor)
+          ),
+          RadioItem(
+            id = Some(s"${form(producerField).id}-$SelfCertifiedIndependentSmallProducerAndNotConsignor"),
+            value = Some(SelfCertifiedIndependentSmallProducerAndNotConsignor.toString),
+            content = Text(messagesForLanguage.selfCertifiedIndependentSmallProducerNotConsignor),
+            conditionalHtml = Some(
+              input(Input(
+                id = producerIdField,
+                name = producerIdField,
+                label = LabelViewModel(Text(messagesForLanguage.selfCertifiedIndependentSmallProducerNotConsignorInput)),
+                value = form(producerIdField).value
+              ))
+            )
+          ),
+          RadioItem(
+            divider = Some(messagesForLanguage.or)
+          ),
+          RadioItem(
+            id = Some(s"${form(producerField).id}-$NotAIndependentSmallProducer"),
+            value = Some(NotAIndependentSmallProducer.toString),
+            content = Text(messagesForLanguage.notAIndependentSmallProducer)
+          ),
+          RadioItem(
+            id = Some(s"${form(producerField).id}-$NotProvided"),
+            value = Some(NotProvided.toString),
+            content = Text(messagesForLanguage.smallProducerNotProvided)
+          )
+        ), fieldset = Some(Fieldset(legend = Some(Legend(Text(messagesForLanguage.legend), classes = " govuk-fieldset__legend--s")))))
+    }
+  }
 
-          Seq(Beer, Spirits, Wine, Energy, Tobacco, Intermediate).foreach { goodsType =>
+  ".constructDeclarationPrefix" - {
 
-            s"when GoodsType is $goodsType" in {
+    "should return the correct string" - {
 
-              val yesWording = goodsType match {
-                case Beer => langMessages.yesBeer
-                case Spirits => langMessages.yesSpirits
-                case _ => langMessages.yesOther
-              }
+      Seq(
+        UkTaxWarehouse.GB,
+        UkTaxWarehouse.NI,
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
+      ).foreach { movementScenario =>
 
-              ItemSmallIndependentProducerHelper.radios(form, goodsType) mustBe
-                RadiosViewModel.apply(
-                  form("value"),
-                  items = Seq(
-                    RadioItem(
-                      id = Some(form("value").id),
-                      value = Some("true"),
-                      content = Text(langMessages.yesCertified(yesWording))
-                    ),
-                    RadioItem(
-                      id = Some(s"${form("value").id}-no"),
-                      value = Some("false"),
-                      content = Text(langMessages.no)
-                    )
-                  ),
-                  LegendViewModel(Text(langMessages.heading(goodsType.toSingularOutput()))).asPageHeading(LegendSize.Large)
-                )
-            }
-          }
-          s"when GoodsType is ${Fermented(testEpcWine).getClass.getName.stripSuffix("$")}" in {
+        s"for movement scenario: $movementScenario" in {
 
-            val yesWording = langMessages.yesOther
+          implicit val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-            ItemSmallIndependentProducerHelper.radios(form, Fermented(testEpcWine)) mustBe
-              RadiosViewModel.apply(
-                form("value"),
-                items = Seq(
-                  RadioItem(
-                    id = Some(form("value").id),
-                    value = Some("true"),
-                    content = Text(langMessages.yesCertified(yesWording))
-                  ),
-                  RadioItem(
-                    id = Some(s"${form("value").id}-no"),
-                    value = Some("false"),
-                    content = Text(langMessages.no)
-                  )
-                ),
-                LegendViewModel(Text(langMessages.heading(Fermented(testEpcWine).toSingularOutput()))).asPageHeading(LegendSize.Large)
-              )
-          }
+          ItemSmallIndependentProducerHelper.constructDeclarationPrefix(testIndex1) mustBe messagesForLanguage.producedByIndependentSmallProducer
         }
       }
     }
+
+    "should throw an exception" - {
+
+      "when movement scenario is not defined" in {
+
+        implicit val request = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
+        )
+        intercept[IllegalStateException](ItemSmallIndependentProducerHelper.constructDeclarationPrefix(testIndex1
+        )).getMessage mustBe s"Invalid scenario for small independent producer. Destination type: None & EPC: Some($testEpcSpirit) & CN code: Some($testCnCodeSpirit)"
+      }
+
+      "when EPC is not defined " +
+        "(and movement scenario not UkTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
+
+        implicit val request = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, EuTaxWarehouse)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
+        )
+        intercept[IllegalStateException](ItemSmallIndependentProducerHelper.constructDeclarationPrefix(testIndex1
+        )).getMessage mustBe s"Invalid scenario for small independent producer. Destination type: Some($EuTaxWarehouse) & EPC: None & CN code: Some($testCnCodeSpirit)"
+      }
+
+      "when CN code is not defined " +
+        "(and movement scenario not UkTaxWarehouse | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu)" in {
+
+        implicit val request = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, EuTaxWarehouse)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+        )
+        intercept[IllegalStateException](ItemSmallIndependentProducerHelper.constructDeclarationPrefix(testIndex1
+        )).getMessage mustBe s"Invalid scenario for small independent producer. Destination type: Some($EuTaxWarehouse) & EPC: Some($testEpcSpirit) & CN code: None"
+      }
+
+      "when it's not an intra-UK movement or NI -> EU" in {
+
+        implicit val request = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, UnknownDestination)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
+        )
+        intercept[IllegalStateException](ItemSmallIndependentProducerHelper.constructDeclarationPrefix(testIndex1
+        )).getMessage mustBe s"Invalid scenario for small independent producer. Destination type: Some($UnknownDestination) & EPC: Some($testEpcSpirit) & CN code: Some($testCnCodeSpirit)"
+      }
+    }
+  }
+
+
+  ".handleNiToEuMovementDeclaration" - {
+
+    "should return the correct string" - {
+
+      Seq(
+        Beer -> messagesForLanguage.producedByIndependentSmallBrewery,
+        Spirits -> messagesForLanguage.producedByIndependentSmallDistillery,
+        Wine -> messagesForLanguage.producedByIndependentWineProducer,
+        Intermediate -> messagesForLanguage.producedByIndependentIntermediateProductsProducer
+      ).foreach { goodsTypeAndExpectedMessage =>
+
+        s"for goods type: ${goodsTypeAndExpectedMessage._1}" in {
+
+          ItemSmallIndependentProducerHelper.handleNiToEuMovementDeclaration(
+            goodsTypeAndExpectedMessage._1.code, testCnCodeWine
+          ) mustBe goodsTypeAndExpectedMessage._2
+        }
+
+      }
+
+      s"for goods type: $Fermented" in {
+
+        ItemSmallIndependentProducerHelper.handleNiToEuMovementDeclaration(
+          testEpcSpirit, testCnCodeSpirit
+        ) mustBe messagesForLanguage.producedByIndependentFermentedBeveragesProducer
+      }
+    }
+
+    "should throw an exception" - {
+
+      Seq(Energy, Tobacco).foreach { goodsType =>
+
+        s"for goods type: $goodsType" in {
+
+          intercept[IllegalStateException](ItemSmallIndependentProducerHelper.handleNiToEuMovementDeclaration(
+            goodsType.code, testCnCodeEnergy
+          )).getMessage mustBe s"Invalid goods type for small independent producer: $goodsType"
+        }
+      }
+    }
+
+  }
+
+  ".isNiToEUMovement" - {
+
+    "should return true" - {
+
+      "when the movement scenario is EU-related and the consignor is an XI trader" in {
+
+        ItemSmallIndependentProducerHelper.isNiToEUMovement(EuTaxWarehouse)(dataRequest(FakeRequest(), ern = testNorthernIrelandErn)) mustBe true
+      }
+    }
+
+    "should return false" - {
+
+      "when the movement scenario is EU-related but the consignor is not an XI trader" in {
+
+        ItemSmallIndependentProducerHelper.isNiToEUMovement(EuTaxWarehouse)(dataRequest(FakeRequest(), ern = testGreatBritainErn)) mustBe false
+      }
+
+      "when the consignor is an XI trader but movement scenario is not EU-related" in {
+
+        ItemSmallIndependentProducerHelper.isNiToEUMovement(UkTaxWarehouse.GB)(dataRequest(FakeRequest(), ern = testNorthernIrelandErn)) mustBe false
+      }
+    }
+
   }
 }

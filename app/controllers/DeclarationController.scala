@@ -56,7 +56,7 @@ class DeclarationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { _ =>
         validationService.validate().map { validatedAnswers =>
-          if (AllSections.isCompleted(request.copy(userAnswers =  validatedAnswers))) {
+          if (AllSections.isCompleted(request.copy(userAnswers = validatedAnswers))) {
             Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, draftId)))
           } else {
             logger.info("[onPageLoad] Validation Error was triggered, redirect to task list for User to correct")
@@ -87,10 +87,6 @@ class DeclarationController @Inject()(
       case Failure(exception: MissingMandatoryPage) =>
         logger.warn(s"[withSubmitCreateMovementModel] MissingMandatoryPage error thrown: ${exception.message}")
         Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
-
-      //TODO: add in when ETFE-3340 frontend has been merged (impossible to fix error as of: 13/03/24)
-      //      case Failure(_: UnfixedSubmissionFailuresException) =>
-      //        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.draftId)))
 
       case Failure(exception) =>
         logger.error(s"[withSubmitCreateMovementModel] Error thrown when creating request model to submit: ${exception.getMessage}")

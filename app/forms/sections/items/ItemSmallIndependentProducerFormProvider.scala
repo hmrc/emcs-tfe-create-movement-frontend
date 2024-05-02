@@ -16,15 +16,46 @@
 
 package forms.sections.items
 
-import javax.inject.Inject
-
+import forms.XSS_REGEX
 import forms.mappings.Mappings
+import forms.sections.items.ItemSmallIndependentProducerFormProvider._
+import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
+import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import play.api.data.Form
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
+
+import javax.inject.Inject
 
 class ItemSmallIndependentProducerFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[ItemSmallIndependentProducerModel] =
     Form(
-      "value" -> boolean("itemSmallIndependentProducer.error.required")
+      mapping(
+        producerField -> enumerable[ItemSmallIndependentProducerType](producerRequiredError),
+        producerIdField -> mandatoryIf(isOptionSelected(producerField, SelfCertifiedIndependentSmallProducerAndNotConsignor.toString),
+          text(producerIdRequiredError)
+            .verifying(maxLength(producerIdMaxLength, producerIdMaxLengthError))
+            .verifying(regexpUnlessEmpty(XSS_REGEX, producerIdInvalidError))
+        )
+      )(ItemSmallIndependentProducerModel.apply)(ItemSmallIndependentProducerModel.unapply)
     )
+
+}
+
+object ItemSmallIndependentProducerFormProvider {
+
+  val producerField = "producer"
+
+  val producerIdField = "producerId"
+
+  val producerIdMaxLength = 16
+
+  val producerRequiredError = "itemSmallIndependentProducer.error.producer.required"
+
+  val producerIdRequiredError = "itemSmallIndependentProducer.error.producerId.required"
+
+  val producerIdMaxLengthError = "itemSmallIndependentProducer.error.producerId.length"
+
+  val producerIdInvalidError = "itemSmallIndependentProducer.error.producerId.invalid"
 }

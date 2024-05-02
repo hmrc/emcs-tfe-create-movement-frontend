@@ -1143,19 +1143,33 @@ itemDegreesPlato.amount.error.nonNumeric = Amount must only include numbers
 itemDegreesPlato.amount.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemDegreesPlato.amount.error.decimalPlaces = Amount can have up to 2 decimal places
 
-itemSmallIndependentProducer.title = Can you confirm that the producer of the {0} is certified as an independent small producer?
-itemSmallIndependentProducer.heading = Can you confirm that the producer of the {0} is certified as an independent small producer?
-itemSmallIndependentProducer.p1 = Certification and details of eligibility should be provided by those intending to claim Small Producer Relief on alcohol.
-itemSmallIndependentProducer.yes = Yes - {0}
-itemSmallIndependentProducer.yes.beer = It is hereby certified that the product described has been produced by an independent small brewery
-itemSmallIndependentProducer.yes.wine = It is hereby certified that the product described has been produced by an independent small wine producer
-itemSmallIndependentProducer.yes.fermented = It is hereby certified that the product described has been produced by an independent small producer of fermented beverages other than wine and beer
-itemSmallIndependentProducer.yes.intermediate = It is hereby certified that the product described has been produced by an independent small intermediate products producer
-itemSmallIndependentProducer.yes.spirits = It is hereby certified that the product described has been produced by an independent small distillery
-itemSmallIndependentProducer.yes.other = It is hereby certified that the alcoholic product described has been produced by an independent small producer
-itemSmallIndependentProducer.error.required = Select ‘Yes’ if the product has been produced by a certified independent small producer
-itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer
-itemSmallIndependentProducer.change.hidden = if the producer is an independent small producer
+itemSmallIndependentProducer.title = Independent small producer declaration
+itemSmallIndependentProducer.heading = Independent small producer declaration
+itemSmallIndependentProducer.legend = Who is the independent small producer?
+
+itemSmallIndependentProducer.certifiedStatement.smallProducer = It is hereby certified that the alcoholic product described has been produced by an independent small producer.
+itemSmallIndependentProducer.certifiedStatement.smallBrewery = It is hereby certified that the alcoholic product described has been produced by an independent small brewery.
+itemSmallIndependentProducer.certifiedStatement.smallDistillery = It is hereby certified that the alcoholic product described has been produced by an independent small distillery.
+itemSmallIndependentProducer.certifiedStatement.wineProducer = It is hereby certified that the alcoholic product described has been produced by an independent wine producer.
+itemSmallIndependentProducer.certifiedStatement.fermentedBeveragesProducer = It is hereby certified that the alcoholic product described has been produced by an independent producer of fermented beverages other than wine and beer.
+itemSmallIndependentProducer.certifiedStatement.intermediateBeveragesProducer = It is hereby certified that the alcoholic product described has been produced by an independent intermediate products producer.
+
+itemSmallIndependentProducer.CertifiedProducer = The producer is a certified independent small producer
+itemSmallIndependentProducer.CertifiedProducer.hint = The certificate should be recorded in the Documents section of the eAD.
+itemSmallIndependentProducer.SelfCertifiedProducerAndConsignor = The producer is a self-certified independent small producer and the consignor
+itemSmallIndependentProducer.SelfCertifiedProducerAndNotConsignor = The producer is a self-certified independent small producer and not the consignor
+itemSmallIndependentProducer.SelfCertifiedProducerAndNotConsignor.input = Enter the self-certified producer’s excise ID or, if not available, the VAT registration number
+itemSmallIndependentProducer.None = The producer is not an independent small producer
+itemSmallIndependentProducer.NotProvided = I don’t want to provide information about the producer
+# Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
+itemSmallIndependentProducer.NotProvided.downstream = I don''t want to provide information about the producer
+itemSmallIndependentProducer.error.producer.required = Select the type of producer or select ‘I don’t want to provide information about the producer’
+itemSmallIndependentProducer.error.producerId.required = You must provide an excise ID or, if not available, the VAT registration number
+itemSmallIndependentProducer.error.producerId.length = The excise ID or VAT registration number should be 16 characters or less
+itemSmallIndependentProducer.error.producerId.invalid = The excise ID or VAT registration number should only contain letters and numbers
+itemSmallIndependentProducer.cya.seedNumber = Seed number: {0}
+itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer declaration
+itemSmallIndependentProducer.change.hidden = Independent small producer declaration
 
 itemFiscalMarksChoice.title = Does the {0} have any fiscal marks?
 itemFiscalMarksChoice.heading = Does the {0} have any fiscal marks?

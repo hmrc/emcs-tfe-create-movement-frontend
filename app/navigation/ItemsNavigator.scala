@@ -19,13 +19,15 @@ package navigation
 import controllers.sections.items.{routes => itemsRoutes}
 import models.GoodsType._
 import models._
+import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items.{ItemsAddToList, ItemsPackagingAddToList}
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
 import queries.{ItemsCount, ItemsPackagingCount}
-import utils.{CommodityCodeHelper, ExciseProductCodeHelper}
+import utils.CommodityCodeHelper
+import utils.ExciseProductCodeHelper.{isSpiritAndNotSpirituousBeverages, isSpirituousBeverages}
 
 import javax.inject.Inject
 
@@ -82,8 +84,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       }
 
     case ItemSmallIndependentProducerPage(idx) => (userAnswers: UserAnswers) =>
-      userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
-        case Some(true) =>
+      userAnswers.get(ItemSmallIndependentProducerPage(idx)).map(_.producerType) match {
+        case Some(SelfCertifiedIndependentSmallProducerAndConsignor | SelfCertifiedIndependentSmallProducerAndNotConsignor) =>
           itemsRoutes.ItemProducerSizeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
           itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -247,10 +249,11 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
 
     case page@ItemSmallIndependentProducerPage(idx) => (answers: UserAnswers) =>
-      if (answers.get(page).contains(true)) {
-        itemsRoutes.ItemProducerSizeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
-      } else {
-        itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
+      answers.get(page).map(_.producerType) match {
+        case Some(SelfCertifiedIndependentSmallProducerAndConsignor | SelfCertifiedIndependentSmallProducerAndNotConsignor) =>
+          itemsRoutes.ItemProducerSizeController.onPageLoad(answers.ern, answers.draftId, idx, CheckMode)
+        case _ =>
+          itemsRoutes.ItemCheckAnswersController.onPageLoad(answers.ern, answers.draftId, idx)
       }
 
     case ItemProducerSizePage(idx) => (answers: UserAnswers) =>
@@ -375,6 +378,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   }
 
 
+  //scalastyle:off
   private def alcoholStrengthRouting(idx: Index, userAnswers: UserAnswers): Call =
     (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemAlcoholStrengthPage(idx))) match {
       case (Some(epc), Some(abv)) =>
@@ -387,12 +391,16 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             } else {
               itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
             }
-          case Spirits =>
-            if (ExciseProductCodeHelper.isSpirituousBeverages(epc)) {
-              itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            } else {
-              itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            }
+
+          case Spirits if isSpirituousBeverages(epc) =>
+            itemsRoutes.ItemMaturationPeriodAgeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+          case Spirits if isSpiritAndNotSpirituousBeverages(epc) && abv < 8.5 =>
+            itemsRoutes.ItemSmallIndependentProducerController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
+          case Spirits if isSpiritAndNotSpirituousBeverages(epc) && abv >= 8.5 =>
+            itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+
           case _ =>
             itemsRoutes.ItemDesignationOfOriginController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }

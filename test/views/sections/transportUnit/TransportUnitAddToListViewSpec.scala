@@ -62,7 +62,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
+        lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
         val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
         val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
@@ -81,6 +81,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
           Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
+          Selectors.radioDividerButton(3) -> messagesForLanguage.or,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -155,6 +156,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.errorField -> messagesForLanguage.errorMessageHelper(messagesForLanguage.errorMessage),
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
           Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
+          Selectors.radioDividerButton(3) -> messagesForLanguage.or,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -201,6 +203,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
           Selectors.legendQuestion -> messagesForLanguage.question,
           Selectors.radioButton(1) -> messagesForLanguage.yesOption,
           Selectors.radioButton(2) -> messagesForLanguage.noOptionPlural,
+          Selectors.radioDividerButton(3) -> messagesForLanguage.or,
           Selectors.radioButton(4) -> messagesForLanguage.laterOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft

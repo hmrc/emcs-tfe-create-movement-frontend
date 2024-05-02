@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,18 @@
 package models.sections.items
 
 import base.SpecBase
-import models.sections.items.ItemGeographicalIndicationType._
+import models.sections.items.ItemSmallIndependentProducerType._
 
-class ItemGeographicalIndicationTypeSpec extends SpecBase {
+class ItemSmallIndependentProducerTypeSpec extends SpecBase {
 
   ".values" - {
     "should return all the geographical indication options" in {
-      ItemGeographicalIndicationType.values mustBe Seq(
-        ProtectedDesignationOfOrigin, ProtectedGeographicalIndication, NoGeographicalIndication
+      ItemSmallIndependentProducerType.values mustBe Seq(
+        CertifiedIndependentSmallProducer,
+        SelfCertifiedIndependentSmallProducerAndConsignor,
+        SelfCertifiedIndependentSmallProducerAndNotConsignor,
+        NotAIndependentSmallProducer,
+        NotProvided
       )
     }
   }

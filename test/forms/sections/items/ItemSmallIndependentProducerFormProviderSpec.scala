@@ -16,30 +16,75 @@
 
 package forms.sections.items
 
-import forms.behaviours.BooleanFieldBehaviours
+import fixtures.BaseFixtures
+import forms.XSS_REGEX
+import forms.behaviours.FieldBehaviours
+import forms.sections.items.ItemSmallIndependentProducerFormProvider._
+import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
+import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
 import play.api.data.FormError
 
-class ItemSmallIndependentProducerFormProviderSpec extends BooleanFieldBehaviours {
+class ItemSmallIndependentProducerFormProviderSpec extends FieldBehaviours with BaseFixtures {
 
   val requiredKey = "itemSmallIndependentProducer.error.required"
   val invalidKey = "error.boolean"
 
+  val maxLengthForInput = 16
+
   val form = new ItemSmallIndependentProducerFormProvider()()
 
-  ".value" - {
+  ".apply" - {
 
-    val fieldName = "value"
+    "should bind successfully" - {
 
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
+      ItemSmallIndependentProducerType.values.filterNot(_ == SelfCertifiedIndependentSmallProducerAndNotConsignor).foreach { producer =>
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+        s"when the producer is: $producer" in {
+
+          form.bind(Map(
+            producerField -> producer.toString
+          )).get mustBe ItemSmallIndependentProducerModel(producerType = producer, producerId = None)
+        }
+      }
+
+      s"when the producer is $SelfCertifiedIndependentSmallProducerAndNotConsignor and an input value has been provided" in {
+
+        form.bind(Map(
+          producerField -> SelfCertifiedIndependentSmallProducerAndNotConsignor.toString,
+          producerIdField -> testVatNumber
+        )).get mustBe ItemSmallIndependentProducerModel(producerType = SelfCertifiedIndependentSmallProducerAndNotConsignor, producerId = Some(testVatNumber))
+      }
+    }
+
+    "should not bind" - {
+
+      "when no producer has been selected" in {
+
+        form.bind(Map.empty[String, String]).errors mustBe Seq(FormError(producerField, List(producerRequiredError), List()))
+      }
+
+      s"when $SelfCertifiedIndependentSmallProducerAndNotConsignor has been selected but no input has been provided" in {
+
+        form.bind(Map(
+          producerField -> SelfCertifiedIndependentSmallProducerAndNotConsignor.toString
+        )).errors mustBe Seq(FormError(producerIdField, List(producerIdRequiredError), List()))
+      }
+
+      s"when $SelfCertifiedIndependentSmallProducerAndNotConsignor has been selected and the input is too long" in {
+
+        form.bind(Map(
+          producerField -> SelfCertifiedIndependentSmallProducerAndNotConsignor.toString,
+          producerIdField -> "a" * (maxLengthForInput + 1)
+        )).errors mustBe Seq(FormError(producerIdField, List(producerIdMaxLengthError), List(producerIdMaxLength)))
+      }
+
+      s"when $SelfCertifiedIndependentSmallProducerAndNotConsignor has been selected and the input is invalid" in {
+
+        form.bind(Map(
+          producerField -> SelfCertifiedIndependentSmallProducerAndNotConsignor.toString,
+          producerIdField -> ";"
+        )).errors mustBe Seq(FormError(producerIdField, List(producerIdInvalidError), List(XSS_REGEX)))
+      }
+    }
   }
 }

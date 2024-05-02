@@ -1420,6 +1420,7 @@ itemWineProductCategory.change.hidden = what is the product category of the wine
 
 itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
 itemPackagingRemovePackage.heading = Are you sure you want to remove this packaging?
+itemPackagingRemovePackage.inset = This packaging contains both item {0} and another item packed together. If this packaging is removed, it will also be removed from the other items packed inside this packaging and using the same shipping mark.
 itemPackagingRemovePackage.p1 = The packaging type is: {0}
 itemPackagingRemovePackage.error.required = Select yes if you would like to remove this packaging
 

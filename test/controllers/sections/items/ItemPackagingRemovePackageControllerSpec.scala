@@ -102,7 +102,7 @@ class ItemPackagingRemovePackageControllerSpec extends SpecBase with MockUserAns
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, testPackageAerosol.description)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form, action, testPackageAerosol.description, testIndex1, testPackagingIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the Index Controller when yes is selected (removing the section)" in new Test() {
@@ -131,7 +131,7 @@ class ItemPackagingRemovePackageControllerSpec extends SpecBase with MockUserAns
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, testPackageAerosol.description)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, action, testPackageAerosol.description, testIndex1, testPackagingIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

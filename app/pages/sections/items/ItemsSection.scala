@@ -89,4 +89,17 @@ case object ItemsSection extends Section[JsObject] {
       }
       .map(_.flatten.distinct)
       .getOrElse(Seq())
+
+  def shippingMarkForItemIsUsedOnOtherItems(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_]): Boolean =
+    (for {
+      quantity <- request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))
+      shippingMark <- request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+    } yield {
+      if (quantity == "0") false else {
+        //Check if any items have the same shipping mark and a package quantity of zero
+        ItemsSection.retrieveShippingMarkLocationsMatching(shippingMark).exists { case (linkedItemIdx, linkedPackageIdx) =>
+          request.userAnswers.get(ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx)).contains("0")
+        }
+      }
+    }).getOrElse(false)
 }

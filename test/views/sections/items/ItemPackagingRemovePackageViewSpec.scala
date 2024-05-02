@@ -22,6 +22,7 @@ import forms.sections.items.ItemPackagingRemovePackageFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -29,6 +30,9 @@ import views.html.sections.items.ItemPackagingRemovePackageView
 import views.{BaseSelectors, ViewBehaviours}
 
 class ItemPackagingRemovePackageViewSpec extends SpecBase with ViewBehaviours {
+
+  lazy val view = app.injector.instanceOf[ItemPackagingRemovePackageView]
+  lazy val form = app.injector.instanceOf[ItemPackagingRemovePackageFormProvider].apply()
 
   object Selectors extends BaseSelectors
 
@@ -39,23 +43,41 @@ class ItemPackagingRemovePackageViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemPackagingRemovePackageView]
-        val form = app.injector.instanceOf[ItemPackagingRemovePackageFormProvider].apply()
+        "when removing a package that has a shipping mark that is linked to another package" - {
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testPackageBag.description).toString())
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+          )
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.p(1) -> messagesForLanguage.p1(testPackageBag.description),
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testPackageBag.description, testIndex1, testPackagingIndex1).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.inset -> messagesForLanguage.inset(testIndex1.displayIndex),
+            Selectors.p(1) -> messagesForLanguage.p1(testPackageBag.description),
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "when removing a package that DOES NOT have a shipping mark that is linked to another package" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testPackageBag.description, testIndex1, testPackagingIndex1).toString())
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.inset
+          ))
+        }
       }
     }
   }

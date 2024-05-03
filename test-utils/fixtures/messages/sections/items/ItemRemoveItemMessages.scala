@@ -17,12 +17,14 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
 object ItemRemoveItemMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading: String = "Are you sure you want to remove this item?"
-    val title: String = titleHelper(heading)
+    val heading: Index => String = idx => s"Are you sure you want to remove item ${idx.displayIndex}?"
+    val title: Index => String = idx => titleHelper(heading(idx))
+    val inset: Index => String = idx => s"Item ${idx.displayIndex} has packaging that contains both item ${idx.displayIndex} and another item packed together. If item ${idx.displayIndex} is removed, the packaging will also be removed from any other items packed inside this package with the same shipping mark and a packaging quantity of 0."
   }
 
   object English extends ViewMessages with BaseEnglish

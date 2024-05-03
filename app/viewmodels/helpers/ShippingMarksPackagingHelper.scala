@@ -19,7 +19,7 @@ package viewmodels.helpers
 import com.google.inject.Inject
 import models.Index
 import models.requests.DataRequest
-import pages.sections.items.ItemsSection
+import pages.sections.items.{ItemsSection, ItemsSectionItem}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import views.html.components.inset
@@ -29,6 +29,11 @@ class ShippingMarksPackagingHelper @Inject()(inset: inset) {
   def packagingRemoveFromListContent(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[HtmlFormat.Appendable] =
     Option.when(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, packageIdx)) {
       inset(Html(messages("itemPackagingRemovePackage.inset", itemIdx.displayIndex)))
+    }
+
+  def itemRemoveFromListContent(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[HtmlFormat.Appendable] =
+    Option.when(ItemsSectionItem(itemIdx).packagingIndexes.exists(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, _))) {
+      inset(Html(messages("itemRemoveItem.inset", itemIdx.displayIndex)))
     }
 
 }

@@ -24,6 +24,7 @@ import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
+import queries.ItemsPackagingCount
 import utils.{CommodityCodeHelper, ExciseProductCodeHelper, JsonOptionFormatter, SubmissionError}
 import viewmodels.taskList._
 
@@ -193,5 +194,13 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     ItemsSection.canBeCompletedForTraderAndDestinationType
+
+  def packagingIndexes(implicit request: DataRequest[_]) =
+    request.userAnswers.get(ItemsPackagingCount(idx)) match {
+      case Some(count) =>
+        0 until count map Index.apply
+      case None =>
+        Seq()
+    }
 
 }

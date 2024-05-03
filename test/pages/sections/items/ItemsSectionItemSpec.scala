@@ -1441,4 +1441,25 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
       }
     }
   }
+
+  "packagingIndexes" - {
+
+    "must return all the packaging indexes that are linked to an item" in {
+
+      implicit val request = dataRequest(FakeRequest(), emptyUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "1")
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex3), "1")
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "1")
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex2), "1")
+        .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+      )
+
+      ItemsSectionItem(testIndex1).packagingIndexes mustBe Seq(
+        testPackagingIndex1,
+        testPackagingIndex2,
+        testPackagingIndex3
+      )
+    }
+  }
 }

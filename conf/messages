@@ -299,8 +299,12 @@ address.postcode.error.required = Enter a postcode
 address.postcode.error.length = Enter a postcode up to 10 characters
 address.postcode.error.character = Postcode must contain letters or numbers
 address.postcode.error.invalid = Postcode must not contain < and > and : and ;
-address.postcode.error.mustStartWithBT = Postcode must begin with BT
-address.postcode.error.mustNotStartWithBT = Postcode must not begin with BT
+address.postcode.error.consigneeAddress.mustStartWithBT = Postcode must begin with BT because the consignee ID begins with XI
+address.postcode.error.consigneeAddress.mustNotStartWithBT = Postcode must not begin with BT because the consignee ID begins with GB
+address.postcode.error.consignorAddress.mustStartWithBT = Postcode must begin with BT
+address.postcode.error.consignorAddress.mustNotStartWithBT = Postcode must not begin with BT
+address.postcode.error.dispatchAddress.mustStartWithBT = Postcode must begin with BT
+address.postcode.error.dispatchAddress.mustNotStartWithBT = Postcode must not begin with BT
 
 consignorPaidTemporaryAuthorisationCode.title = Enter the consignor’s Paid Temporary Authorisation (PTA) code
 consignorPaidTemporaryAuthorisationCode.heading = Enter the consignor’s Paid Temporary Authorisation (PTA) code

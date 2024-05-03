@@ -186,10 +186,10 @@ class DestinationNavigatorSpec extends SpecBase {
 
         "if there is no DispatchAddress (because value for ERN was changed from GB-->XI or XI-->GB" - {
 
-          "must go to the DestinationAddress page" in {
+          "must go to the DestinationBusinessName page in Normal mode to traverse back through and re-confirm" in {
 
             navigator.nextPage(DestinationWarehouseExcisePage, CheckMode, emptyUserAnswers) mustBe
-              routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode)
+              routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 

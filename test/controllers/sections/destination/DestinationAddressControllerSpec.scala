@@ -77,7 +77,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       )(dataRequest(request), messages(request)).toString
     }
 
-    "must fill the form with data from ConisgnorAddress when UseConsignee is true and no Destination address exists" in new Fixture(Some(
+    "must fill the form with data from ConsignorAddress when UseConsignee is true and no Destination address exists" in new Fixture(Some(
       emptyUserAnswers
         .set(DestinationConsigneeDetailsPage, true)
         .set(ConsigneeAddressPage, testUserAddress.copy(street = "Consignee"))

@@ -23,10 +23,11 @@ import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{Mode, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import navigation.ConsigneeNavigator
-import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.info.DestinationTypePage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.consignee.ConsigneeExciseView
 
@@ -46,32 +47,17 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                          ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) {
+    authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        Ok(view(
-          fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)),
-          routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
-          isNorthernIrishTemporaryRegisteredConsignee,
-          isNorthernIrishTemporaryCertifiedConsignee
-        ))
+        renderView(Ok, fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)), ern, draftId, mode)
     }
-
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         formProvider(isNorthernIrishTemporaryRegisteredConsignee).bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(
-              BadRequest(view(
-                formWithErrors,
-                routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
-                isNorthernIrishTemporaryRegisteredConsignee,
-                isNorthernIrishTemporaryCertifiedConsignee
-              ))
-            ),
-          exciseRegistrationNumber =>
-            saveAndRedirect(ConsigneeExcisePage, exciseRegistrationNumber, mode)
+          renderView(BadRequest, _, ern, draftId, mode),
+          cleanseSaveAndRedirect(_, mode)
         )
     }
 
@@ -96,4 +82,24 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
     isNorthernIrish && isTemporaryCertifiedConsignee
   }
 
+  private def renderView(status: Status, form: Form[_], ern: String, draftId: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    Future.successful(status(
+      view(
+        form,
+        routes.ConsigneeExciseController.onSubmit(ern, draftId, mode),
+        isNorthernIrishTemporaryRegisteredConsignee,
+        isNorthernIrishTemporaryCertifiedConsignee
+      )
+    ))
+  }
+
+  private def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = {
+      //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
+      if (request.userAnswers.get(ConsigneeExcisePage).exists(_.startsWith(value.take(2)))) request.userAnswers else {
+        request.userAnswers.remove(ConsigneeAddressPage)
+      }
+    }
+    saveAndRedirect(ConsigneeExcisePage, value, cleansedAnswers, mode)
+  }
 }

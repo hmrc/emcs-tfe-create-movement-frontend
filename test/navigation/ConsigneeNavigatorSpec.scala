@@ -147,6 +147,27 @@ class ConsigneeNavigatorSpec extends SpecBase {
     }
 
     "in Check mode" - {
+
+      "for the ConsigneeExcise page" - {
+
+        "when there is no consignee address" - {
+          "must go to the ConsigneeBusinessName page" in {
+            navigator.nextPage(ConsigneeExcisePage, CheckMode, emptyUserAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "when there is a consignee address" - {
+          "must go to the CheckYourAnswersConsigneeController" in {
+            val currentUserAnswers = emptyUserAnswers
+              .set(ConsigneeAddressPage, testUserAddress)
+
+            navigator.nextPage(ConsigneeExcisePage, CheckMode, currentUserAnswers) mustBe
+              controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
+
       "must go to CheckYourAnswersConsigneeController" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe

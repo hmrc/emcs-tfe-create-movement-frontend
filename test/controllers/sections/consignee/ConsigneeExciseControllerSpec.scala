@@ -25,13 +25,15 @@ import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
-import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.consignee.ConsigneeExciseView
+
+import scala.concurrent.Future
 
 class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
@@ -132,6 +134,47 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testErn))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted (page already answered, and should remove Dispatch Address as GB -> XI" in new Fixture(
+      Some(emptyUserAnswers
+        .set(ConsigneeExcisePage, testGreatBritainErn)
+        .set(ConsigneeAddressPage, testUserAddress)
+      )
+    ) {
+
+      val expectedSavedAnswers = emptyUserAnswers
+        .set(ConsigneeExcisePage, testNorthernIrelandErn)
+
+      MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
+
+      val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testNorthernIrelandErn))
+
+      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted (page already answered, and should not remove Dispatch Address as ERN prefix has not changed" in new Fixture(
+      Some(emptyUserAnswers
+        .set(ConsigneeExcisePage, "GB11111111111")
+        .set(ConsigneeAddressPage, testUserAddress)
+      )
+    ) {
+
+      val expectedSavedAnswers = emptyUserAnswers
+        .set(ConsigneeExcisePage, "GB22222222222")
+        .set(ConsigneeAddressPage, testUserAddress)
+
+      MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
+
+      val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", "GB22222222222"))
+
+      val result = testController.onSubmit("GB00000000000", testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

@@ -17,9 +17,11 @@
 package models.audit
 
 import models.response.{ErrorResponse, SubmitCreateMovementResponse}
+import models.sections.info.movementScenario.DestinationType
 import models.submitCreateMovement.SubmitCreateMovementModel
 import play.api.http.Status.OK
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json.JsValueWrapper
+import play.api.libs.json.{JsValue, Json, Writes}
 
 case class SubmitCreateMovementAudit(
                                       ern: String,

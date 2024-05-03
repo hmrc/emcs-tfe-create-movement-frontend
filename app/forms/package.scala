@@ -25,4 +25,11 @@ package object forms {
   private[forms] val XI_OR_GB_00_EXCISE_NUMBER_REGEX = "(GB00|XI00)[a-zA-Z0-9]{9}"
   private[forms] val EORI_NUMBER_REGEX = "[A-Z]{2}[A-Za-z0-9]{0,15}"
   private[forms] val PAID_TEMPORARY_AUTHORISATION_CODE = "XIPTA[a-zA-Z0-9]{8}"
+
+  private[forms] val STARTS_WITH_GB_OR_XI = "(GB|XI).*"
+  private[forms] val NOT_STARTS_WITH_GB_OR_XI = "(?!(GB|XI)).*"
+  private[forms] val STARTS_WITH_GBWK_OR_XIWK = "(GBWK|XIWK).*"
+  private[forms] val NOT_STARTS_WITH_GBWK_OR_XIWK = "(?!(GBWK|XIWK)).*"
+
+
 }

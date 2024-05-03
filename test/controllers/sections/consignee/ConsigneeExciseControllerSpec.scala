@@ -28,6 +28,7 @@ import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
+import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -47,6 +48,8 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     val request = FakeRequest(GET, consigneeExciseRoute)
 
     implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
+
+    implicit val msgs: Messages = messages(dr)
 
     lazy val form: Form[String] = formProvider(true)
 

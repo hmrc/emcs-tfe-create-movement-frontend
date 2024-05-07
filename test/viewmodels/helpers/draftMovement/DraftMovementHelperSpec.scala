@@ -117,7 +117,11 @@ class DraftMovementHelperSpec extends SpecBase {
                   movementScenario =>
                     implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                    val input1 = msgs(s"destinationType.$movementScenario")
+                    val input1 = if(Seq(EuTaxWarehouse, UkTaxWarehouse.GB, UkTaxWarehouse.NI).contains(movementScenario)) {
+                      msgs(s"draftMovement.heading.$movementScenario")
+                    } else {
+                      msgs(s"destinationType.$movementScenario")
+                    }
 
                     helper.heading mustBe messagesForLanguage.headingImportFor(input1)
                     titleNoForm(helper.heading) mustBe messagesForLanguage.titleImportFor(input1)

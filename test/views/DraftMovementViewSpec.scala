@@ -71,9 +71,9 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
           implicit val doc: Document = Jsoup.parse(view().toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.titleImportFor("Tax warehouse in Great Britain"),
+            Selectors.title -> messagesForLanguage.titleImportFor("Great Britain tax warehouse"),
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
-            Selectors.h1 -> messagesForLanguage.headingImportFor("Tax warehouse in Great Britain")
+            Selectors.h1 -> messagesForLanguage.headingImportFor("Great Britain tax warehouse")
           ))
         }
       }

@@ -28,9 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait GetCommodityCodesConnector {
   def baseUrl: String
 
-  def getCommodityCodes(exciseProductCode: String
-                       )(implicit headerCarrier: HeaderCarrier,
-                         executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]]
+  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]]
 }
 
 @Singleton
@@ -39,9 +37,7 @@ class GetCommodityCodesConnectorImpl @Inject()(val http: HttpClient,
 
   def baseUrl: String = config.referenceDataBaseUrl
 
-  def getCommodityCodes(exciseProductCode: String
-                       )(implicit headerCarrier: HeaderCarrier,
-                         executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] =
+  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] =
     http.GET[Either[ErrorResponse, Seq[CnCodeInformation]]](url = s"$baseUrl/oracle/cn-codes/$exciseProductCode")
       .recover {
         case JsResultException(errors) =>

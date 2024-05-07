@@ -33,13 +33,14 @@ import views.html.components.p
 
 class ItemCommodityCodeSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
+  lazy val p: p = app.injector.instanceOf[p]
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+
+  lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+  lazy val messagesForLang: ItemCommodityCodeMessages.English.type = ItemCommodityCodeMessages.English
 
   class Test(val userAnswers: UserAnswers) {
-    lazy val messagesForLang: ItemCommodityCodeMessages.English.type = ItemCommodityCodeMessages.English
     lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
-    lazy implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
-    lazy val p: p = app.injector.instanceOf[p]
-    lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
   }
 
   "ItemCommodityCodeSummary" - {

@@ -16,19 +16,39 @@
 
 package forms.sections.items
 
-import forms.{ALPHANUMERIC_REGEX, BaseTextareaFormProvider, XSS_REGEX}
+import forms.mappings.Mappings
+import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
+import models.Index
+import models.requests.DataRequest
+import pages.sections.items.ItemsSection
+import play.api.data.Form
+import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.i18n.Messages
 
 import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
 
-class ItemPackagingShippingMarksFormProvider @Inject() extends BaseTextareaFormProvider[String] with Mappings {
+class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(currentItemsIdx: Index, currentPackagingIdx: Index)(implicit dataRequest: DataRequest[_], messages: Messages): Form[String] =
     Form(
       "value" -> normalisedSpaceText("itemPackagingShippingMarks.error.required")
         .verifying(maxLength(999, "itemPackagingShippingMarks.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingShippingMarks.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingShippingMarks.error.invalid"))
+        .verifying(shippingMarkUnique(currentItemsIdx, currentPackagingIdx))
     )
+
+
+  private def shippingMarkUnique(currentItemsIdx: Index, currentPackagingIdx: Index)
+                                       (implicit request: DataRequest[_], messages: Messages): Constraint[String] = {
+    Constraint {
+      case shippingMarkEntered =>
+        ItemsSection.retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered) match {
+          case locations if locations.isEmpty => Valid
+          case locations if locations.contains((currentItemsIdx, currentPackagingIdx)) => Valid
+          case _ => Invalid(messages("itemPackagingShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
+        }
+    }
+  }
+
 }

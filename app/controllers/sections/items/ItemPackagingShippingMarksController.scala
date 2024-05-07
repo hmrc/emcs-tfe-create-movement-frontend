@@ -47,14 +47,14 @@ class ItemPackagingShippingMarksController @Inject()(
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        renderView(Ok, fillForm(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), formProvider()), itemsIdx, packagingIdx, mode)
+        renderView(Ok, fillForm(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx), formProvider(itemsIdx, packagingIdx)), itemsIdx, packagingIdx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIdx, packagingIdx) {
-        formProvider().bindFromRequest().fold(
+        formProvider(itemsIdx, packagingIdx).bindFromRequest().fold(
           renderView(BadRequest, _, itemsIdx, packagingIdx, mode),
           value => {
             val newUserAnswers = updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx, packagingIdx, value)

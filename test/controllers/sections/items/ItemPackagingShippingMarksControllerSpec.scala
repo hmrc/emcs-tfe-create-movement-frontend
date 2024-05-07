@@ -34,9 +34,12 @@ import scala.concurrent.Future
 
 class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
   lazy val formProvider = new ItemPackagingShippingMarksFormProvider()
-  lazy val form = formProvider()
+  lazy val form = formProvider(testIndex1, testPackagingIndex1)(dataRequest(request), messages(request))
   lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
+
   val action: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onSubmit(testErn, testDraftId, testIndex1,
     testPackagingIndex1, NormalMode)
   val skipLink: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onNoShippingMarks(testErn, testDraftId, testIndex1,

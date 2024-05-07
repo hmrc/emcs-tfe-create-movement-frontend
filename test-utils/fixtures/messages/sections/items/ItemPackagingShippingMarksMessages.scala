@@ -17,6 +17,7 @@
 package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
 object ItemPackagingShippingMarksMessages {
 
@@ -29,6 +30,8 @@ object ItemPackagingShippingMarksMessages {
     def p2(packagingType: String) = s"The packaging type is: $packagingType."
 
     val link = "This packaging has no shipping marks"
+
+    def errorShippingMarkNotUnique(itemIndex: Index) = s"Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item ${itemIndex.displayIndex} is packed together with another item then item ${itemIndex.displayIndex}’s packaging quantity must be changed to 0"
 
     val cyaLabel = "Shipping mark description"
     val cyaChangeHidden = "shipping mark description"

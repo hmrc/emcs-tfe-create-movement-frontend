@@ -1262,6 +1262,7 @@ itemPackagingShippingMarks.error.required = Enter details of the shipping marks
 itemPackagingShippingMarks.error.length = Shipping marks details must be 999 characters or less
 itemPackagingShippingMarks.error.character = Description must include letters and numbers
 itemPackagingShippingMarks.error.invalid = Description cannot contain < and > and : and ;
+itemPackagingShippingMarks.error.not.unique = Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item {0} is packed together with another item then item {0}’s packaging quantity must be changed to 0
 itemPackagingShippingMarks.change.hidden = shipping mark description
 
 itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?

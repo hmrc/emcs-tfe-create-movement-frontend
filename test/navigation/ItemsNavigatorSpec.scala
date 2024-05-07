@@ -1237,10 +1237,22 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingQuantity page" - {
-        "to Item Packaging CYA page" in {
-          navigator.nextPage(
-            ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
-          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+        "to Item Packaging CYA page" - {
+
+          "when the ItemPackagingProductType page has an answer" in {
+            navigator.nextPage(
+              ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+        }
+
+        "to ItemPackagingProductType page" - {
+
+          "when the ItemPackagingProductType page has no answer" in {
+            navigator.nextPage(
+              ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
+            ) mustBe itemsRoutes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+          }
         }
       }
 

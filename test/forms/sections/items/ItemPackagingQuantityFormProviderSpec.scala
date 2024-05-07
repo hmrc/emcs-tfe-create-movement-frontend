@@ -20,13 +20,15 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import forms.behaviours.FieldBehaviours
 import forms.sections.items.ItemPackagingQuantityFormProvider._
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage}
 import play.api.data.FormError
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class ItemPackagingQuantityFormProviderSpec extends SpecBase with FieldBehaviours with ItemFixtures{
 
-  val form = new ItemPackagingQuantityFormProvider()(testIndex1)(messages(FakeRequest()))
-
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  val form = new ItemPackagingQuantityFormProvider()(testIndex1, testPackagingIndex1)(messages(request), dataRequest(request, emptyUserAnswers))
 
   "when binding valid values" - {
     "must bind successfully" - {
@@ -40,6 +42,30 @@ class ItemPackagingQuantityFormProviderSpec extends SpecBase with FieldBehaviour
         val boundForm = form.bind(Map(fieldName -> "999999999999999"))
         boundForm.errors mustBe Seq()
         boundForm.value mustBe Some("999999999999999")
+      }
+
+      "when 0 is entered and there was no existing entry, but shipping marks exist" in {
+        val form = new ItemPackagingQuantityFormProvider()(testIndex1, testPackagingIndex1)(messages(request), dataRequest(request,
+          emptyUserAnswers.set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "xyz")
+        ))
+
+        val boundForm = form.bind(Map(fieldName -> "0"))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some("0")
+      }
+
+      "when 0 is entered and there was an existing entry, but no shipping marks exist for this item/packaging" in {
+        val form = new ItemPackagingQuantityFormProvider()(testIndex2, testPackagingIndex1)(messages(request), dataRequest(request,
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+            .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "2")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "xyz")
+        ))
+
+        val boundForm = form.bind(Map(fieldName -> "0"))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some("0")
       }
     }
   }
@@ -63,6 +89,34 @@ class ItemPackagingQuantityFormProviderSpec extends SpecBase with FieldBehaviour
       "must error when binding the form" in {
         val boundForm = form.bind(Map(fieldName -> "1.2"))
         boundForm.errors mustBe Seq(FormError(fieldName, decimalPlacesErrorKey, Seq()))
+      }
+    }
+
+    "when too long" - {
+      "must error when binding the form" in {
+        val boundForm = form.bind(Map(fieldName -> "1234567891234567"))
+        boundForm.errors mustBe Seq(FormError(fieldName, maxLengthErrorKey, Seq(maxDigits)))
+      }
+    }
+
+    "when 0 is entered but there are no shipping marks for the movement" - {
+
+      "must error when binding the form" in {
+        val boundForm = form.bind(Map(fieldName -> "0"))
+        boundForm.errors mustBe Seq(FormError(fieldName, cannotBeZeroNoShippingMarksExistErrorKey, Seq()))
+      }
+    }
+
+    "when 0 is entered, there is a shipping mark for the packaging and the user entered a quantity of > 0 before" - {
+
+      "must error when binding the form" in {
+        val form = new ItemPackagingQuantityFormProvider()(testIndex1, testPackagingIndex1)(messages(request), dataRequest(request,
+          emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "xyz")
+        ))
+        val boundForm = form.bind(Map(fieldName -> "0"))
+        boundForm.errors mustBe Seq(FormError(fieldName, cannotBeZeroMustBeMoreThanZeroErrorKey, Seq()))
       }
     }
   }

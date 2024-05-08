@@ -77,8 +77,16 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
 
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
+      userAnswers.get(ConsigneeAddressPage) match {
+        case Some(_) =>
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        case None =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      }
+
+    case _ => (userAnswers: UserAnswers) =>
+      controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.draftId)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

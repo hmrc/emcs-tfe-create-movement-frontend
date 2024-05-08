@@ -45,8 +45,8 @@ class ItemPackagingShippingMarksViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
-        val form = app.injector.instanceOf[ItemPackagingShippingMarksFormProvider].apply()
+        lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
+        val form = app.injector.instanceOf[ItemPackagingShippingMarksFormProvider].apply(testIndex1, testPackagingIndex1)
 
         val skipLink = routes.ItemPackagingSealChoiceController.onPageLoad(request.ern, request.draftId, testIndex1, testPackagingIndex1, NormalMode)
 

@@ -89,6 +89,20 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
         form.bind(Map(fieldName -> "mark 5555555555555555")).hasErrors mustBe false
       }
 
+      "not display an error when a shipping mark value is added and there are no other shipping marks present" in {
+        val noOtherShippingMarksDataRequest = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BO", "Box"))
+            .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+            .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), ItemPackaging("BO", "Box"))
+        )
+
+        new ItemPackagingShippingMarksFormProvider()(testIndex2, testPackagingIndex1)(noOtherShippingMarksDataRequest, msgs)
+          .bind(Map(fieldName -> "shipping mark 1")).hasErrors mustBe false
+      }
+
 
     }
 

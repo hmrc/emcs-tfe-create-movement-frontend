@@ -51,7 +51,7 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
       .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex3), "mark 6")
   )
 
-  val form = new ItemPackagingShippingMarksFormProvider()(testIndex2, testPackagingIndex2)(dr, msgs)
+  val form = new ItemPackagingShippingMarksFormProvider()(testIndex2, testPackagingIndex2)
 
   ".value" - {
 

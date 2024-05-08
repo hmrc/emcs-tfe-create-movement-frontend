@@ -78,15 +78,12 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
       request.userAnswers.get(DestinationWarehouseExcisePage),
-      request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(_), Some(true), _, _) => Completed
-      case (Some(_), Some(false), Some(_), Some(_)) => Completed
-      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) => InProgress
-      case _ => NotStarted
+      case (Some(_), Some(_), Some(_)) => Completed
+      case (None, None, None) => NotStarted
+      case _ => InProgress
     }
 
   private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_], destinationTypePageAnswer: MovementScenario): TaskListStatus = {
@@ -97,17 +94,14 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
     (
       destinationDetailsChoice,
-      request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(false), _, _, _) => Completed
-      case (Some(true), Some(true), _, _) => Completed
-      case (Some(true), Some(false), Some(_), Some(_)) => Completed
-      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) if !shouldSkipDestinationDetailsChoice => InProgress
+      case (Some(false), _, _) => Completed
+      case (Some(_), Some(_), Some(_)) => Completed
       case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
-      case _ => NotStarted
+      case (_, None, None) => NotStarted
+      case _ => InProgress
     }
   }
 
@@ -117,7 +111,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       request.userAnswers.get(DestinationAddressPage)
     ) match {
       case (Some(_), Some(_)) => Completed
-      case (bn, a) if bn.isEmpty && a.isEmpty => NotStarted
+      case (None, None) => NotStarted
       case _ => InProgress
     }
 

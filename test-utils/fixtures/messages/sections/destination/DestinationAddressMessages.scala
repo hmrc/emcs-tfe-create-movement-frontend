@@ -25,7 +25,6 @@ object DestinationAddressMessages {
     val cyaLabel: String = "Address"
     val cyaChangeHidden: String = "Address"
     val cyaDestinationNotProvided: String = "Not provided"
-    val cyaConsigneeNotProvided: String = "Consignee section not complete"
   }
 
   object English extends ViewMessages with BaseEnglish

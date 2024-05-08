@@ -24,6 +24,7 @@ import models.requests.DataRequest
 import pages.Page
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import play.api.data.FormError
 import play.api.mvc.AnyContentAsEmpty
@@ -311,6 +312,54 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
     "where the DispatchWarehouseERN is not known" - {
 
       lazy val unknownErnForm = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+
+      "must bind Non-BT postcode" in {
+        unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
+      }
+
+      "must bind BT postcode" in {
+        unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
+      }
+    }
+  }
+
+  "for the DestinationAddress Page" - {
+
+    "for a GB ERN" - {
+
+      lazy val gbForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(DestinationWarehouseExcisePage, testGreatBritainErn)
+      ))
+
+      "must not bind for 'BT' postcode" in {
+        val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey(DestinationAddressPage), Seq()))
+        gbForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe expectedResult
+      }
+
+      "must bind for postcode not beginning with 'BT'" in {
+        gbForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
+      }
+    }
+
+    "for an XI ERN" - {
+
+      lazy val xiForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(),
+        emptyUserAnswers.set(DestinationWarehouseExcisePage, testNorthernIrelandErn)
+      ))
+
+      "must not bind for non-BT postcode" in {
+        val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(DestinationAddressPage), Seq()))
+        xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
+      }
+
+      "must bind for postcode beginning with 'BT'" in {
+        xiForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
+      }
+    }
+
+    "where the DispatchWarehouseERN is not known" - {
+
+      lazy val unknownErnForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
 
       "must bind Non-BT postcode" in {
         unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty

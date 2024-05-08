@@ -22,7 +22,7 @@ import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import models.Mode
 import models.requests.DataRequest
 import navigation.DestinationNavigator
-import pages.sections.destination.DestinationWarehouseExcisePage
+import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -55,7 +55,7 @@ class DestinationWarehouseExciseController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
-        saveAndRedirect(DestinationWarehouseExcisePage, _, mode)
+        cleanseSaveAndRedirect(_, mode)
       )
     }
 
@@ -66,6 +66,16 @@ class DestinationWarehouseExciseController @Inject()(
         onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
       ))
     }
+  }
+
+  def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+    val cleansedAnswers = {
+      //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
+      if (request.userAnswers.get(DestinationWarehouseExcisePage).exists(_.startsWith(value.take(2)))) request.userAnswers else {
+        request.userAnswers.remove(DestinationAddressPage)
+      }
+    }
+    saveAndRedirect(DestinationWarehouseExcisePage, value, cleansedAnswers, mode)
   }
 
 }

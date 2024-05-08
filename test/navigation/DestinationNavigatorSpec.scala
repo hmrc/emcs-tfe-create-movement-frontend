@@ -21,6 +21,7 @@ import controllers.sections.destination.routes
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.destination._
 import pages.sections.info.DestinationTypePage
 
@@ -40,29 +41,57 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationWarehouseExcisePage" - {
 
-        "must go to Destination Consignee details page" in {
+        "when ConsigneeDetails exist" - {
 
-          navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+          "must go to Destination Consignee details page" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeAddressPage, testUserAddress)
+              .set(ConsigneeBusinessNamePage, testBusinessName)
+
+            navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, userAnswers) mustBe
+              routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "when ConsigneeDetails DO NOT exist" - {
+
+          "must go to Destination Business Name page" in {
+
+            navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
+              routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
         }
       }
 
       "for the DestinationWarehouseVatPage" - {
 
-        "must go to DestinationDetailsChoice page when DestinationType is CertifiedConsignee" in {
+        Seq(CertifiedConsignee, TemporaryCertifiedConsignee).foreach { destinationType =>
 
-          val userAnswers = emptyUserAnswers.set(DestinationTypePage, CertifiedConsignee)
+          "when Consignee Details exist" - {
 
-          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
+            s"must go to DestinationConsigneeDetails page when DestinationType is $destinationType" in {
 
-        "must go to DestinationDetailsChoice page when DestinationType is TemporaryCertifiedConsignee" in {
+              val userAnswers = emptyUserAnswers
+                .set(ConsigneeAddressPage, testUserAddress)
+                .set(ConsigneeBusinessNamePage, testBusinessName)
+                .set(DestinationTypePage, destinationType)
 
-          val userAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
+              navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
+                routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+          }
 
-          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+          "when Consignee Details DO NOT exist" - {
+
+            s"must go to DestinationBusinessName page when DestinationType is $destinationType" in {
+
+              val userAnswers = emptyUserAnswers.set(DestinationTypePage, destinationType)
+
+              navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
+                routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            }
+          }
         }
 
         "must go to DestinationDetailsChoice page when DestinationType is NOT CertifiedConsignee or TemporaryCertifiedConsignee" in {
@@ -74,12 +103,29 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationDetailsChoicePage" - {
 
-        "must go to CAM-DES03 when user selects yes" in {
+        "when ConsigneeDetails exist" - {
 
-          val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
+          "must go to DestinationConsigneeDetails (CAM-DES03) when user selects yes" in {
 
-          navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeBusinessNamePage, testBusinessName)
+              .set(ConsigneeAddressPage, testUserAddress)
+              .set(DestinationDetailsChoicePage, true)
+
+            navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+              routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "when ConsigneeDetails DO NOT exist" - {
+
+          "must go to DestinationBusinessName when user selects yes" in {
+
+            val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
+
+            navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
+              routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
         }
 
         "must go to DestinationCheckAnswersPage when user selects no" in {
@@ -99,27 +145,10 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationConsigneeDetailsPage" - {
 
-        "must go to Destination Business Name page (CAM-DES04) if answer is no" in {
-
-          val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
-
-          navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-
-        }
-
-        "must go to Destination Check Answers page (CAM-DES06) if answer is yes" in {
-
-          val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, true)
-
-          navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
-        }
-
-        "must go to Journey Recovery Controller if no answer is present" in {
+        "must go to Destination Business Name page (CAM-DES04)" in {
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.JourneyRecoveryController.onPageLoad()
+            routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
@@ -152,6 +181,29 @@ class DestinationNavigatorSpec extends SpecBase {
     }
 
     "in Check mode" - {
+
+      "for the DestinationWarehouseExcisePage" - {
+
+        "if there is no DispatchAddress (because value for ERN was changed from GB-->XI or XI-->GB" - {
+
+          "must go to the DestinationBusinessName page in Normal mode to traverse back through and re-confirm" in {
+
+            navigator.nextPage(DestinationWarehouseExcisePage, CheckMode, emptyUserAnswers) mustBe
+              routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+          }
+        }
+
+        "if there is a DispatchAddress" - {
+
+          "must go to the DestinationCheckAnswers page" in {
+
+            val userAnswers = emptyUserAnswers.set(DestinationAddressPage, testUserAddress)
+
+            navigator.nextPage(DestinationWarehouseExcisePage, CheckMode, userAnswers) mustBe
+              routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+          }
+        }
+      }
 
       "must go to CheckYourAnswersDestinationController" in {
 

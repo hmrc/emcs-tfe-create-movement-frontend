@@ -24,7 +24,8 @@ import forms.AddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
-import pages.sections.destination.DestinationAddressPage
+import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -76,6 +77,38 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       )(dataRequest(request), messages(request)).toString
     }
 
+    "must fill the form with data from ConsignorAddress when UseConsignee is true and no Destination address exists" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationConsigneeDetailsPage, true)
+        .set(ConsigneeAddressPage, testUserAddress.copy(street = "Consignee"))
+    )) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form.fill(testUserAddress.copy(street = "Consignee")),
+        addressPage = DestinationAddressPage,
+        call = destinationAddressOnSubmit,
+        headingKey = Some("destinationAddress")
+      )(dataRequest(request), messages(request)).toString
+    }
+
+    "must fill the form with data from DestinationAddress when UseConsignee is true and Destination address exists" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationConsigneeDetailsPage, true)
+        .set(ConsigneeAddressPage, testUserAddress.copy(street = "Consignee"))
+        .set(DestinationAddressPage, testUserAddress.copy(street = "Destination"))
+    )) {
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        form = form.fill(testUserAddress.copy(street = "Destination")),
+        addressPage = DestinationAddressPage,
+        call = destinationAddressOnSubmit,
+        headingKey = Some("destinationAddress")
+      )(dataRequest(request), messages(request)).toString
+    }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 

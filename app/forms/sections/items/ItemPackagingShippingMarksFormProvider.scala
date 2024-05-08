@@ -17,6 +17,7 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
+import forms.sections.items.ItemPackagingShippingMarksFormProvider.maxLengthOfField
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import models.Index
 import models.requests.DataRequest
@@ -32,7 +33,7 @@ class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
   def apply(currentItemsIdx: Index, currentPackagingIdx: Index)(implicit dataRequest: DataRequest[_], messages: Messages): Form[String] =
     Form(
       "value" -> normalisedSpaceText("itemPackagingShippingMarks.error.required")
-        .verifying(maxLength(999, "itemPackagingShippingMarks.error.length"))
+        .verifying(maxLength(maxLengthOfField, "itemPackagingShippingMarks.error.length"))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingShippingMarks.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingShippingMarks.error.invalid"))
         .verifying(shippingMarkUnique(currentItemsIdx, currentPackagingIdx))
@@ -40,14 +41,19 @@ class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
 
 
   private def shippingMarkUnique(currentItemsIdx: Index, currentPackagingIdx: Index)
-                                       (implicit request: DataRequest[_], messages: Messages): Constraint[String] = {
-        Constraint {
+                                (implicit request: DataRequest[_], messages: Messages): Constraint[String] = {
+    Constraint {
       shippingMarkEntered =>
-        ItemsSection.retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered).filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
+        ItemsSection
+          .retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered)
+          .filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
           case Nil => Valid
           case _ => Invalid(messages("itemPackagingShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
         }
     }
   }
+}
 
+object ItemPackagingShippingMarksFormProvider {
+  val maxLengthOfField: Int = 999
 }

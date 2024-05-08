@@ -24,7 +24,7 @@ import forms.sections.items.ItemPackagingSelectShippingMarkFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, ShippingMarkOption, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingProductTypePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage}
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -49,7 +49,7 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
   val action: Call = routes.ItemPackagingSelectShippingMarkController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
-    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -118,7 +118,7 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
 
     "must return OK and the correct view for a GET" in new Test(Some(
       baseUserAnswers
-        .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "beans")
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "eggs")
     )) {

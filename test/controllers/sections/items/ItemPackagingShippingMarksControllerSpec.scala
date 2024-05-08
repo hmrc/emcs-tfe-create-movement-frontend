@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingProductTypePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -143,14 +143,14 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     }
 
     "must clear down the shipping marks when onNoShippingMarks is called and redirect to the next page" +
-      "setting he Packaging Product Type to 'Yes'" in new Test(Some(
+      "setting the Shipping Marks Choice to 'No'" in new Test(Some(
       baseUserAnswers
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
     )) {
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+        baseUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
       ).returns(Future.successful(
-        baseUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+        baseUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
       ))
 
       val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)

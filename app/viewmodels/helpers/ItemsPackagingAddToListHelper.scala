@@ -49,7 +49,7 @@ class ItemsPackagingAddToListHelper @Inject()(tagHelper: TagHelper,
       rows = Seq(
         ItemSelectPackagingSummary.row(itemIdx, packageIdx),
         ItemPackagingQuantitySummary.row(itemIdx, packageIdx),
-        ItemPackagingProductTypeSummary.row(itemIdx, packageIdx),
+        ItemPackagingShippingMarksChoiceSummary.row(itemIdx, packageIdx),
         ItemPackagingShippingMarksSummary.row(itemIdx, packageIdx),
         ItemPackagingSealChoiceSummary.row(itemIdx, packageIdx),
         ItemPackagingSealTypeSummary.row(itemIdx, packageIdx),

@@ -133,7 +133,7 @@ class ItemsAddToListHelperSpec extends SpecBase
           s"when item is complete but packaging is missing (NOT BULK) (edit link to Add First Package)" in new Setup(singleCompletedWineItem
             .remove(ItemSelectPackagingPage(testIndex1, testPackagingIndex1))
             .remove(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1))
-            .remove(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1))
+            .remove(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1))
             .remove(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1))
           ) {
 
@@ -223,7 +223,7 @@ class ItemsAddToListHelperSpec extends SpecBase
           s"when item is complete but packaging is missing (BULK) (edit link to Bulk Packaging Choice page)" in new Setup(singleCompletedWineItem
             .remove(ItemSelectPackagingPage(testIndex1, testPackagingIndex1))
             .remove(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1))
-            .remove(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1))
+            .remove(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1))
             .remove(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1))
             .set(ItemBulkPackagingChoicePage(testIndex1), true)
             .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Tanker"))

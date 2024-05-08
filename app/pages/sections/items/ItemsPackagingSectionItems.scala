@@ -29,7 +29,7 @@ case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) 
     (
       request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIndex)),
       request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingProductTypePage(itemsIndex, packagingIndex)),
+      request.userAnswers.get(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIndex)),
       request.userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, packagingIndex)),
       request.userAnswers.get(ItemPackagingSealTypePage(itemsIndex, packagingIndex))
     ) match {

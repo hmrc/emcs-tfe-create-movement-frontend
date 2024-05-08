@@ -67,7 +67,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
           s"when the row is Complete" in new Setup(emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIP")
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", Some("INFO")))
@@ -89,7 +89,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
                 rows = Seq(
                   ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingQuantitySummary.row(testIndex1, testPackagingIndex1).get,
-                  ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1).get,
+                  ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealTypeSummary.row(testIndex1, testPackagingIndex1).get,
@@ -102,7 +102,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
           s"when the row is Complete no Shipping Mark, Seal with no additional Information for the seal" in new Setup(emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", None))
           ) {
@@ -123,7 +123,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
                 rows = Seq(
                   ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingQuantitySummary.row(testIndex1, testPackagingIndex1).get,
-                  ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1).get,
+                  ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealTypeSummary.row(testIndex1, testPackagingIndex1).get,
                   itemPackagingSealInformationSummary.row(testIndex1, testPackagingIndex1).get
@@ -135,7 +135,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
           s"when the row is Complete with No Seal" in new Setup(emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
           ) {
 
@@ -155,7 +155,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
                 rows = Seq(
                   ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingQuantitySummary.row(testIndex1, testPackagingIndex1).get,
-                  ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1).get,
+                  ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealChoiceSummary.row(testIndex1, testPackagingIndex1).get
                 )
               )
@@ -165,7 +165,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
           s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), testPackageAerosol)
           ) {
@@ -186,7 +186,7 @@ class ItemsPackagingAddToListHelperSpec extends SpecBase with DocumentTypeFixtur
                 rows = Seq(
                   ItemSelectPackagingSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingQuantitySummary.row(testIndex1, testPackagingIndex1).get,
-                  ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1).get,
+                  ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1).get,
                   ItemPackagingSealChoiceSummary.row(testIndex1, testPackagingIndex1).get
                 )
               ),

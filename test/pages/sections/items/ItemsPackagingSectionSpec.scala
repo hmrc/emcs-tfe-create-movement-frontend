@@ -27,7 +27,7 @@ class ItemsPackagingSectionSpec extends SpecBase {
   val completedPackage = emptyUserAnswers
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
     .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
     .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIP")
     .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
     .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", Some("INFO")))
@@ -88,9 +88,9 @@ class ItemsPackagingSectionSpec extends SpecBase {
         ItemsPackagingSection(testIndex1).isCompleted mustBe false
       }
 
-      "when packaging product type is missing" in {
+      "when packaging shipping marks choice is missing" in {
 
-        val userAnswers = completedPackage.remove(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1))
+        val userAnswers = completedPackage.remove(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1))
 
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

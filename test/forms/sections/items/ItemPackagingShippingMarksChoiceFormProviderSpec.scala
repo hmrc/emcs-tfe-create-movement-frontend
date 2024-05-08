@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,19 @@
 
 package forms.sections.items
 
-import base.SpecBase
-import fixtures.messages.sections.items.ItemPackagingProductTypeMessages.English
-import forms.behaviours.{BooleanFieldBehaviours, StringFieldBehaviours}
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
-import play.api.i18n.Messages
 
-class ItemPackagingProductTypeFormProviderSpec extends BooleanFieldBehaviours with SpecBase with StringFieldBehaviours {
+class ItemPackagingShippingMarksChoiceFormProviderSpec extends BooleanFieldBehaviours {
 
-  val form = new ItemPackagingProductTypeFormProvider()()
+  val requiredKey = "itemPackagingShippingMarksChoice.error.required"
+  val invalidKey = "error.boolean"
+
+  val form = new ItemPackagingShippingMarksChoiceFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "itemPackagingProductType.error.required"
-    val invalidKey = "error.boolean"
 
     behave like booleanField(
       form,
@@ -43,19 +41,5 @@ class ItemPackagingProductTypeFormProviderSpec extends BooleanFieldBehaviours wi
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
-
-    "Error Messages" - {
-
-      implicit val msgs: Messages = messages(Seq(English.lang))
-
-      s"when output for language code '${English.lang.code}'" - {
-
-        "have the correct error message for required" in {
-
-          msgs(requiredKey) mustBe
-            English.errorRequired
-        }
-      }
-    }
   }
 }

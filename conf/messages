@@ -1256,6 +1256,22 @@ itemPackagingSelectShippingMark.hint = Select a description of a mark or number 
 itemPackagingSelectShippingMark.error.required = Select a shipping mark
 itemPackagingSelectShippingMark.select.defaultValue = Select a shipping mark
 
+itemPackagingShippingMarksChoice.title = Shipping mark
+itemPackagingShippingMarksChoice.heading = Shipping mark
+itemPackagingShippingMarksChoice.p1 = Packaging {0} for item {1} is {2}
+itemPackagingShippingMarksChoice.p2 = Shipping marks are an optional way of identifying any packages that have more than one type of item packed inside.
+itemPackagingShippingMarksChoice.details.summary = Using shipping marks to show that this packaging contains mixed items
+itemPackagingShippingMarksChoice.details.p1 = For example, if you pack both wine and beer on a single pallet, you can choose to specify that pallet for both items. To make sure the total quantity of packages in your movement is correct:
+itemPackagingShippingMarksChoice.details.bullet.1 = enter the packaging details, packaging quantity and a shipping mark for the first item packed inside this packaging
+itemPackagingShippingMarksChoice.details.bullet.2 = enter the same packaging details but with a packaging quantity of 0 for any additional items packed together inside this packaging
+itemPackagingShippingMarksChoice.details.bullet.3 = select the same shipping mark for all items packed together inside
+itemPackagingShippingMarksChoice.legend = Do you want to enter a shipping mark for this packaging?
+itemPackagingShippingMarksChoice.checkYourAnswersLabel = Shipping mark choice
+itemPackagingShippingMarksChoice.choice.yes.existing = Yes - select an existing shipping mark
+itemPackagingShippingMarksChoice.choice.no.hint = Item {0} must have a quantity of more than 0 if you are not using shipping marks to identify this package
+itemPackagingShippingMarksChoice.error.required = Select yes if you want to enter a shipping mark, otherwise select no
+itemPackagingShippingMarksChoice.change.hidden = Shipping mark choice
+
 itemPackagingShippingMarks.title = What shipping marks are on this packaging?
 itemPackagingShippingMarks.heading = What shipping marks are on this packaging?
 itemPackagingShippingMarks.p = Enter any marks or numbers on the packaging that will help to identify it. Use the same shipping marks for any other product types contained within this package that are entered as a separate item.
@@ -1386,15 +1402,6 @@ itemWineOrigin.select.defaultValue = Choose country
 itemWineOrigin.checkYourAnswersLabel = Wine country of origin
 itemWineOrigin.error.required = Select the wine’s country of origin
 itemWineOrigin.change.hidden = wine country of origin
-
-itemPackagingProductType.title = Is this the only product type in the package?
-itemPackagingProductType.heading = Is this the only product type in the package?
-itemPackagingProductType.p = The packaging type is: {0}
-itemPackagingProductType.yes = Yes
-itemPackagingProductType.no = No - the packaging contains more than one product type, required to be entered as separate items in this movement
-itemPackagingProductType.error.required = Select yes if there is only one product type in the package
-itemPackagingProductType.checkYourAnswersLabel = More than one item in the package
-itemPackagingProductType.change.hidden = if the packaging contains one or more items
 
 itemRemoveItem.title = Are you sure you want to remove this item?
 itemRemoveItem.heading = Are you sure you want to remove this item?

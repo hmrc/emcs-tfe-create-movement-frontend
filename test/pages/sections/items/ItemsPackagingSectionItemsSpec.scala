@@ -28,7 +28,7 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
     emptyUserAnswers
       .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
       .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
-      .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+      .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
       .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
       .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test type", Some("test info")))
 
@@ -36,7 +36,7 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
     emptyUserAnswers
       .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
       .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
-      .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+      .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
       .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
   "isCompleted" - {
@@ -58,7 +58,7 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
         val userAnswers = emptyUserAnswers
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
-          .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -68,7 +68,7 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
 
       Seq[QuestionPage[Any]](ItemSelectPackagingPage(testIndex1, testPackagingIndex1),
         ItemPackagingQuantityPage(testIndex1, testPackagingIndex1),
-        ItemPackagingProductTypePage(testIndex1, testPackagingIndex1)).foreach(
+        ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1)).foreach(
         page =>
           s"if $page is missing" in {
             val userAnswers = completedPackagingWithSealChoiceTrue.remove(page)

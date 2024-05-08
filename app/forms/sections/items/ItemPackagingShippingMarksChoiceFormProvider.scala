@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.items
+package forms.sections.items
 
-import models.Index
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import javax.inject.Inject
 
-case class ItemPackagingProductTypePage(itemsIndex: Index, itemsPackagingIndex: Index) extends QuestionPage[Boolean] {
-  override val toString: String = "itemPackagingProductType"
-  override val path: JsPath = ItemsPackagingSectionItems(itemsIndex, itemsPackagingIndex).path \ toString
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class ItemPackagingShippingMarksChoiceFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("itemPackagingShippingMarksChoice.error.required")
+    )
 }

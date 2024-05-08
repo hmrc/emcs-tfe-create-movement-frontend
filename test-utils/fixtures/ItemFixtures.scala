@@ -388,7 +388,7 @@ trait ItemFixtures {
     .set(ItemWineMoreInformationChoicePage(testIndex1), false)
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
     .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
     .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
   val dispatchOfficeSuffix = "004098"

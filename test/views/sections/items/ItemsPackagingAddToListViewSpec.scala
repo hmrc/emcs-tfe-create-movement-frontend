@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.items.ItemPackagingSealTypeModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -61,7 +61,7 @@ class ItemsPackagingAddToListViewSpec extends SpecBase with ViewBehaviours with 
           val userAnswers = emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIP")
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", Some("INFO")))
@@ -97,7 +97,7 @@ class ItemsPackagingAddToListViewSpec extends SpecBase with ViewBehaviours with 
           val userAnswers = emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIP")
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", Some("INFO")))
@@ -136,7 +136,7 @@ class ItemsPackagingAddToListViewSpec extends SpecBase with ViewBehaviours with 
           val userAnswers = emptyUserAnswers
             .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-            .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "SHIP")
             .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("SEAL", Some("INFO")))

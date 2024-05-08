@@ -248,7 +248,7 @@ class ItemsAddToListViewSpec extends SpecBase
             .set(ItemWineMoreInformationChoicePage(testIndex2), false)
             .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
-            .set(ItemPackagingProductTypePage(testIndex2, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
 
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),

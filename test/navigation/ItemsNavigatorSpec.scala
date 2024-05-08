@@ -593,33 +593,59 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
 
       "must go from the ItemPackagingQuantityPage" - {
 
-        "to the Packaging Product Type page" in {
+        "to the ItemPackagingShippingMarksChoice page" in {
 
           navigator.nextPage(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemPackagingQuantityPage(0, 0), "1")
-          ) mustBe itemsRoutes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+          ) mustBe itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
         }
       }
 
-      "must go from the ItemPackagingProductTypePage" - {
+      "must go from the ItemPackagingShippingMarksChoicePage" - {
 
-        "to the Packaging Seal Choice (Item packaging) page when user answered Yes" in {
+        "to the Enter Shipping Mark (item packaging) page when user answered Yes and quantity > 0" in {
 
-          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
-            .set(ItemPackagingProductTypePage(0, 0), true)
-          ) mustBe itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+          ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
         }
 
-        "to the Shipping Marks page when user answered No" in {
+        "to the Select Shipping Mark (item packaging) page when user answered Yes and quantity == 0" in {
 
-          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers
-            .set(ItemPackagingProductTypePage(0, 0), false)
-          ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, 0, 0, NormalMode)
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+          ) mustBe itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
+        }
+
+        "to the Packaging Seal Choice page when user answered No and quantity > 0" in {
+
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+          ) mustBe itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
+        }
+
+        "to the Packaging Quantity page when user answered No and quantity == 0" in {
+
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+          ) mustBe itemsRoutes.ItemPackagingQuantityController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
         }
 
         "to the PackagingIndex route when neither answer has been selected" in {
 
-          navigator.nextPage(ItemPackagingProductTypePage(0, 0), NormalMode, emptyUserAnswers) mustBe
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode,
+            emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+          ) mustBe
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, 0)
+        }
+
+        "to the PackagingIndex route when packaging quantity has not been inputted" in {
+
+          navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers) mustBe
             itemsRoutes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, 0)
         }
       }
@@ -1256,22 +1282,45 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from the ItemPackagingProductType page" - {
-        "to Item Packaging CYA page" - {
-          "when answered 'Yes'" in {
+      "must go from the ItemPackagingShippingMarksChoice page" - {
+        "to Item Packaging Add to list page" - {
+          "when answered 'No'" in {
             navigator.nextPage(
-              page = ItemPackagingProductTypePage(testIndex1, testPackagingIndex1),
+              page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
               mode = CheckMode,
-              userAnswers = emptyUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+              userAnswers = emptyUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          }
+
+          "when answered 'Yes' but no quantity entered" in {
+            navigator.nextPage(
+              page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
-        "to Item Shipping Marks page" - {
-          "when answered 'No'" in {
+
+        "to Item Select Shipping Marks page" - {
+          "when answered 'Yes' and quantity == 0" in {
             navigator.nextPage(
-              page = ItemPackagingProductTypePage(testIndex1, testPackagingIndex1),
+              page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
               mode = CheckMode,
-              userAnswers = emptyUserAnswers.set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+              userAnswers = emptyUserAnswers
+                .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+            ) mustBe itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+          }
+        }
+
+        "to Item Enter Shipping Marks page" - {
+          "when answered 'Yes' and quantity > 0" in {
+            navigator.nextPage(
+              page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
+              mode = CheckMode,
+              userAnswers = emptyUserAnswers
+                .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
             ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
           }
         }

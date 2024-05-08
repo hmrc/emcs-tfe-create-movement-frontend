@@ -41,11 +41,10 @@ class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
 
   private def shippingMarkUnique(currentItemsIdx: Index, currentPackagingIdx: Index)
                                        (implicit request: DataRequest[_], messages: Messages): Constraint[String] = {
-    Constraint {
-      case shippingMarkEntered =>
-        ItemsSection.retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered) match {
-          case locations if locations.isEmpty => Valid
-          case locations if locations.contains((currentItemsIdx, currentPackagingIdx)) => Valid
+        Constraint {
+      shippingMarkEntered =>
+        ItemsSection.retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered).filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
+          case Nil => Valid
           case _ => Invalid(messages("itemPackagingShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
         }
     }

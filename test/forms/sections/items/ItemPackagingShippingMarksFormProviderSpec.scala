@@ -36,7 +36,7 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
   val notUniqueKey = "itemPackagingShippingMarks.error.not.unique"
   val maxLength = 999
 
-  val dr = dataRequest(
+  implicit val dr = dataRequest(
     FakeRequest(),
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), testEpcWine)

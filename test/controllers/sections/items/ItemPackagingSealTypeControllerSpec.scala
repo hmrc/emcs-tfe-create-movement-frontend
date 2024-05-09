@@ -21,11 +21,10 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemPackagingSealTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.response.referenceData.ItemPackaging
 import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemPackagingSealTypePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -40,7 +39,9 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
   lazy val view = app.injector.instanceOf[ItemPackagingSealTypeView]
   val action: Call = routes.ItemPackagingSealTypeController.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+  val baseUserAnswers: UserAnswers = emptyUserAnswers
+    .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
 
   class Test(val optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -60,6 +61,27 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
   }
 
   "ItemPackagingSealType Controller" - {
+
+    "must redirect to Index of section when the packaging quantity is missing for a GET" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when the packaging quantity is missing for a POST" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
     "must redirect to Index of section when the packaging idx is outside of bounds for a GET" in new Test(Some(baseUserAnswers)) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
 
@@ -99,7 +121,13 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form,
+        action,
+        itemIndex = Some(testIndex1),
+        packagingIndex = Some(testPackagingIndex1),
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = Some("2"))(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -108,7 +136,13 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(ItemPackagingSealTypeModel("answer", None)), action, "Aerosol")(
+      contentAsString(result) mustEqual view(
+        form.fill(ItemPackagingSealTypeModel("answer", None)),
+        action,
+        itemIndex = Some(testIndex1),
+        packagingIndex = Some(testPackagingIndex1),
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = Some("2"))(
         dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
@@ -147,7 +181,13 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging-seal-type", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        action,
+        itemIndex = Some(testIndex1),
+        packagingIndex = Some(testPackagingIndex1),
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = Some("2"))(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must return a Bad Request and errors when invalid data is submitted when both fields are entered" in new Test(Some(baseUserAnswers)) {
@@ -157,7 +197,13 @@ class ItemPackagingSealTypeControllerSpec extends SpecBase with MockUserAnswersS
         request.withFormUrlEncodedBody("packaging-seal-type" -> "", "packaging-seal-information" -> "<>"))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        action,
+        itemIndex = Some(testIndex1),
+        packagingIndex = Some(testPackagingIndex1),
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = Some("2"))(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

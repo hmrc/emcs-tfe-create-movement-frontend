@@ -88,6 +88,13 @@ trait BaseItemsNavigationController extends BaseNavigationController {
         Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemIdx)))
     }
 
+  def withItemPackagingQuantity(itemsIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+    request.userAnswers.get(ItemPackagingQuantityPage(itemsIdx, packagingIdx)) match {
+      case Some(quantity) => f(quantity)
+      case None => Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIdx)))
+    }
+  }
+
   def removingAnyItemsWithoutEPCandCnCode(request: DataRequest[_])(f: DataRequest[_] => Future[Result]): Future[Result] =
     request.userAnswers.get(ItemsCount).fold(f(request)) { count =>
 

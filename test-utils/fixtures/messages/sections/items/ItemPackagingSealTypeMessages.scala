@@ -18,6 +18,7 @@ package fixtures.messages.sections.items
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 import forms.sections.items.ItemPackagingSealTypeFormProvider
+import models.Index
 
 object ItemPackagingSealTypeMessages {
 
@@ -26,12 +27,13 @@ object ItemPackagingSealTypeMessages {
     val heading: String = "What type of commercial seal is on this packaging?"
     val title: String = titleHelper(heading)
 
-    def p(packagingDescription: String) = s"The packaging type is: $packagingDescription."
+    def p(packagingDescription: String, packagingQuantity: String, itemIndex: Index, packagingIndex: Index) = s"Packaging ${packagingIndex.displayIndex} for item ${itemIndex.displayIndex} is $packagingDescription: $packagingQuantity."
 
     val textAreaLabel = "Commercial seal type"
+    val sealTypeHint = "For example, a bolt seal"
 
     val p2 = "Give more information (optional)"
-    val hint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
+    val sealInformationHint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
 
     val errorSealTypeRequired = "Enter the type of commercial seal on the packaging"
     val errorSealTypeInvalid = "Commercial seal type cannot contain < and > and : and ;"

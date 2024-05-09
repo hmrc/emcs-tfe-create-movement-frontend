@@ -811,10 +811,10 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingSealTypePage" - {
-        "to the Item Packaging CYA page" in {
+        "to the Item CYA page" in {
           navigator.nextPage(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("test", Some("other")))
-          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
@@ -1307,19 +1307,18 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
       }
 
       "must go from the ItemPackagingSealType page" - {
-        "to Item Packaging CYA page" in {
+        "to Item CYA page" in {
           navigator.nextPage(
             ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
-          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
       "when page isn't explicitly specified" - {
         "must go to the ItemAddToList page" in {
-          // TODO: update when AddToList page is created
           case object UnknownPage extends Page
           navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            itemsRoutes.ItemsAddToListController.onPageLoad(testErn, testDraftId)
         }
       }
     }

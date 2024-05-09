@@ -35,7 +35,7 @@
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, packagingTypeDescription: String)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, itemIndex: Option[Index], packagingIndex: Option[Index], packagingTypeDescription: String, optPackagingQuantity: Option[String])(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingSealType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -49,17 +49,21 @@
 
         @h1(headingMsg = messages("itemPackagingSealType.heading"), classes = "govuk-heading-l")
 
-        @p() {
+        @optPackagingQuantity.map { packagingQuantity =>
+          @p() {
             @{
-                Html(messages("itemPackagingSealType.p", strong(Html(packagingTypeDescription.trim), withFullStop = true)))
+              Html(messages("itemPackagingSealType.p", packagingIndex.get.displayIndex, itemIndex.get.displayIndex, strong(Html(s"${packagingTypeDescription.trim}: $packagingQuantity"), withFullStop = true)))
             }
+          }
         }
 
         @govukInput(
             InputViewModel(
                 field = form("packaging-seal-type"),
-                label = LabelViewModel(Text(messages("itemPackagingSealType.textAreaLabel"))).withCssClass(LegendSize.Medium.toString)
-            ).withWidth(Fixed40)
+                label = LabelViewModel(Text(messages("itemPackagingSealType.textArea.label"))).withCssClass(LegendSize.Medium.toString)
+            )
+            .withWidth(Fixed40)
+            .withHint(HintViewModel(messages("itemPackagingSealType.textArea.hint")).withId("packaging-seal-type-hint"))
         )
 
         @{

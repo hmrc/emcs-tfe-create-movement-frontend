@@ -114,6 +114,43 @@ class BaseItemsNavigationControllerSpec extends SpecBase
     }
   }
 
+  "withItemPackagingQuantity" - {
+
+    "must return the item packaging quantity when both the item and packaging indexes are valid" in new Test(
+      emptyUserAnswers
+        .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+    ) {
+      val result: Future[Result] = controller.withItemPackagingQuantity(testIndex1, testPackagingIndex1)(itemPackagingSuccessFunction)
+
+      status(result) mustBe OK
+    }
+
+    "must redirect to the packaging index" - {
+      "when the item index is invalid" in new Test(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+      ) {
+        val result: Future[Result] = controller.withItemPackagingQuantity(testIndex2, testPackagingIndex1)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, testIndex2).url
+      }
+
+      "when the packaging index is invalid" in new Test(
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+      ) {
+        val result: Future[Result] = controller.withItemPackagingQuantity(testIndex1, testPackagingIndex2)(itemPackagingSuccessFunction)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, testIndex1).url
+      }
+    }
+  }
+
   //scalastyle:off
   ".updateItemSubmissionFailureIndexes" - {
 

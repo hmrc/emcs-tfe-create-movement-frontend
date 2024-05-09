@@ -30,7 +30,17 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class ItemPackagingSealTypeViewSpec extends SpecBase with ViewBehaviours {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+
+    val packagingSealTypeHint = "#packaging-seal-type-hint"
+
+    val packagingSealInformationHint = "#packaging-seal-information-hint"
+  }
+
+  lazy val view = app.injector.instanceOf[ItemPackagingSealTypeView]
+  val form = app.injector.instanceOf[ItemPackagingSealTypeFormProvider].apply()
+
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "ItemPackagingSealType view" - {
 
@@ -39,24 +49,59 @@ class ItemPackagingSealTypeViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemPackagingSealTypeView]
-        val form = app.injector.instanceOf[ItemPackagingSealTypeFormProvider].apply()
+        "for the individual packaging page variation" - {
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, "Aerosol").toString())
+          implicit val doc: Document = Jsoup.parse(view(
+            form,
+            testOnwardRoute,
+            itemIndex = Some(testIndex2),
+            packagingIndex = Some(testPackagingIndex1),
+            packagingTypeDescription = "Aerosol",
+            optPackagingQuantity = Some("2")
+          ).toString())
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.label("packaging-seal-type") -> messagesForLanguage.textAreaLabel,
-          Selectors.p(1) -> messagesForLanguage.p("Aerosol"),
-          Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
-          Selectors.hint -> messagesForLanguage.hint,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.p(1) -> messagesForLanguage.p("Aerosol", "2", testIndex2, testPackagingIndex1),
+            Selectors.label("packaging-seal-type") -> messagesForLanguage.textAreaLabel,
+            Selectors.packagingSealTypeHint -> messagesForLanguage.sealTypeHint,
+            Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
+            Selectors.packagingSealInformationHint -> messagesForLanguage.sealInformationHint,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "for the bulk packaging page variation" - {
+
+          implicit val doc: Document = Jsoup.parse(view(
+            form,
+            testOnwardRoute,
+            itemIndex = None,
+            packagingIndex = None,
+            packagingTypeDescription = "Aerosol",
+            optPackagingQuantity = None
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.label("packaging-seal-type") -> messagesForLanguage.textAreaLabel,
+            Selectors.packagingSealTypeHint -> messagesForLanguage.sealTypeHint,
+            Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
+            Selectors.packagingSealInformationHint -> messagesForLanguage.sealInformationHint,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.p(1)
+          ))
+        }
       }
     }
   }

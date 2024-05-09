@@ -50,7 +50,6 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
 
   class Test(val userAnswers: Option[UserAnswers]) {
-    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new ItemPackagingShippingMarksController(
       messagesApi,

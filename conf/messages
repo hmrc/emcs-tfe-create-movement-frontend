@@ -1425,8 +1425,9 @@ itemWineOperationsChoice.0 = No, I am not aware that the wine has undergone any 
 
 itemPackagingSealType.title = What type of commercial seal is on this packaging?
 itemPackagingSealType.heading = What type of commercial seal is on this packaging?
-itemPackagingSealType.p = The packaging type is: {0}
-itemPackagingSealType.textAreaLabel = Commercial seal type
+itemPackagingSealType.p = Packaging {0} for item {1} is {2}
+itemPackagingSealType.textArea.label = Commercial seal type
+itemPackagingSealType.textArea.hint = For example, a bolt seal
 itemPackagingSealType.p2 = Give more information (optional)
 itemPackagingSealType.hint = Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one.
 itemPackagingSealType.error.sealType.required = Enter the type of commercial seal on the packaging

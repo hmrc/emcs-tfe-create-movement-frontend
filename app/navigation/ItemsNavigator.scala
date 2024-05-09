@@ -186,7 +186,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemPackagingSealTypePage(idx, _) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemWineOperationsChoicePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -348,11 +348,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       }
 
     case ItemPackagingSealTypePage(itemIdx, _) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
-    case _ => _ =>
-      // TODO: update to Items AddToList when built
-      testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+    case _ => (userAnswers: UserAnswers) =>
+      itemsRoutes.ItemsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
   }
 

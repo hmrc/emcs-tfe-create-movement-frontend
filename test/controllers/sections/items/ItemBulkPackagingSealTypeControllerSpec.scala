@@ -86,7 +86,13 @@ class ItemBulkPackagingSealTypeControllerSpec extends SpecBase with MockUserAnsw
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form,
+        action,
+        itemIndex = None,
+        packagingIndex = None,
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = None)(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -95,8 +101,13 @@ class ItemBulkPackagingSealTypeControllerSpec extends SpecBase with MockUserAnsw
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(ItemPackagingSealTypeModel("answer", None)), action, "Aerosol")(
-        dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form.fill(ItemPackagingSealTypeModel("answer", None)),
+        action,
+        itemIndex = None,
+        packagingIndex = None,
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = None)(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
@@ -134,7 +145,13 @@ class ItemBulkPackagingSealTypeControllerSpec extends SpecBase with MockUserAnsw
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("packaging-seal-type", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        action,
+        itemIndex = None,
+        packagingIndex = None,
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = None)(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must return a Bad Request and errors when invalid data is submitted when both fields are entered" in new Test(Some(baseUserAnswers)) {
@@ -144,7 +161,13 @@ class ItemBulkPackagingSealTypeControllerSpec extends SpecBase with MockUserAnsw
         request.withFormUrlEncodedBody("packaging-seal-type" -> "", "packaging-seal-information" -> "<>"))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Aerosol")(dataRequest(request, optUserAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        action,
+        itemIndex = None,
+        packagingIndex = None,
+        packagingTypeDescription = testPackageAerosol.description,
+        optPackagingQuantity = None)(dataRequest(request, optUserAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

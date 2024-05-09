@@ -74,7 +74,10 @@ class ItemBulkPackagingSealTypeController @Inject()(override val messagesApi: Me
             view(
               form,
               routes.ItemBulkPackagingSealTypeController.onSubmit(request.ern, request.draftId, idx, mode),
-              packagingType.description
+              itemIndex = None,
+              packagingIndex = None,
+              packagingTypeDescription = packagingType.description,
+              optPackagingQuantity = None
             )
           )
         )

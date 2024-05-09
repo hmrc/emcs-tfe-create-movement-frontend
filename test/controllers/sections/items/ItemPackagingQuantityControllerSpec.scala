@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -127,7 +127,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       Some(emptyUserAnswers
         .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "xyz")
-        .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
       )
     ) {
       val expectedAnswers: UserAnswers = emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")

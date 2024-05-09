@@ -16,30 +16,55 @@
 
 package forms.sections.transportArranger
 
+import base.SpecBase
 import forms.behaviours.OptionFieldBehaviours
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.transportArranger.TransportArranger
+import models.sections.transportArranger.TransportArranger.Consignee
+import pages.sections.info.DestinationTypePage
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class TransportArrangerFormProviderSpec extends OptionFieldBehaviours {
-
-  val form = new TransportArrangerFormProvider()()
+class TransportArrangerFormProviderSpec extends OptionFieldBehaviours with SpecBase {
+  val fieldName = "value"
+  val requiredKey = "transportArranger.error.required"
+  val invalidKey = "error.invalid"
 
   ".value" - {
-
-    val fieldName = "value"
-    val requiredKey = "transportArranger.error.required"
-
-    behave like optionsField[TransportArranger](
-      form,
-      fieldName,
-      validValues  = TransportArranger.values,
-      invalidError = FormError(fieldName, "error.invalid")
-    )
+    val form = new TransportArrangerFormProvider()()(dataRequest(FakeRequest()))
 
     behave like mandatoryField(
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    behave like optionsField[TransportArranger](
+      form,
+      fieldName,
+      validValues = TransportArranger.values,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    "when the destinationType is an UnknownDestination" - {
+      val dr = dataRequest(
+        request = FakeRequest(),
+        answers = emptyUserAnswers.set(DestinationTypePage, UnknownDestination)
+      )
+
+      val form = new TransportArrangerFormProvider()()(dr)
+
+      TransportArranger.valuesForUnknownDestination.foreach { enumValue =>
+        s"must bind and validate the value $enumValue successfully" in {
+          val result = form.bind(Map(fieldName -> enumValue.toString))
+          result.hasErrors mustBe false
+        }
+      }
+
+      s"must return an error when trying to bind and validate the value $Consignee" in {
+        val result = form.bind(Map(fieldName -> Consignee.toString))
+        result.errors must contain only FormError(fieldName, invalidKey)
+      }
+    }
   }
 }

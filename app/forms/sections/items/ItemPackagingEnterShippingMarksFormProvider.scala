@@ -17,7 +17,7 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import forms.sections.items.ItemPackagingShippingMarksFormProvider.maxLengthOfField
+import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider.maxLengthOfField
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import models.Index
 import models.requests.DataRequest
@@ -28,14 +28,14 @@ import play.api.i18n.Messages
 
 import javax.inject.Inject
 
-class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
+class ItemPackagingEnterShippingMarksFormProvider @Inject() extends Mappings {
 
   def apply(currentItemsIdx: Index, currentPackagingIdx: Index)(implicit dataRequest: DataRequest[_], messages: Messages): Form[String] =
     Form(
-      "value" -> normalisedSpaceText("itemPackagingShippingMarks.error.required")
-        .verifying(maxLength(maxLengthOfField, "itemPackagingShippingMarks.error.length"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingShippingMarks.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingShippingMarks.error.invalid"))
+      "value" -> normalisedSpaceText("itemPackagingEnterShippingMarks.error.required")
+        .verifying(maxLength(maxLengthOfField, "itemPackagingEnterShippingMarks.error.length"))
+        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingEnterShippingMarks.error.character"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingEnterShippingMarks.error.invalid"))
         .verifying(shippingMarkUnique(currentItemsIdx, currentPackagingIdx))
     )
 
@@ -48,12 +48,12 @@ class ItemPackagingShippingMarksFormProvider @Inject() extends Mappings {
           .retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered)
           .filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
           case Nil => Valid
-          case _ => Invalid(messages("itemPackagingShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
+          case _ => Invalid(messages("itemPackagingEnterShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
         }
     }
   }
 }
 
-object ItemPackagingShippingMarksFormProvider {
+object ItemPackagingEnterShippingMarksFormProvider {
   val maxLengthOfField: Int = 999
 }

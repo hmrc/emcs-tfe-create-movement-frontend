@@ -38,7 +38,7 @@ object ItemPackagingShippingMarksSummary {
           actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemPackagingShippingMarksController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
+              href = controllers.sections.items.routes.ItemPackagingEnterShippingMarksController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
               id = s"changeItemPackagingShippingMarks${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
             )
               .withVisuallyHiddenText(messages("itemPackagingShippingMarks.change.hidden"))

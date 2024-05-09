@@ -24,7 +24,7 @@ import mocks.services.MockUserAnswersService
 import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -46,7 +46,7 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(defaultUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-    lazy val form: Form[String] = formProvider(testIndex1)(messages(request))
+    lazy val form: Form[String] = formProvider(testIndex1, testPackagingIndex2)(messages(request), dataRequest(request, userAnswers.getOrElse(defaultUserAnswers)))
 
     lazy val controller = new ItemPackagingQuantityController(
       messagesApi,
@@ -117,6 +117,23 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove the packaging shipping marks choice and answer page when the user goes from 0 (existing answer) to > 0 (new answer)" in new Fixture(
+      Some(emptyUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "xyz")
+        .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+      )
+    ) {
+      val expectedAnswers: UserAnswers = emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
       status(result) mustEqual SEE_OTHER

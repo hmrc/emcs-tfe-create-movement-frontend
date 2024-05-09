@@ -48,7 +48,7 @@ class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with It
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         lazy val view = app.injector.instanceOf[ItemPackagingQuantityView]
-        val form = app.injector.instanceOf[ItemPackagingQuantityFormProvider].apply(testIndex1)
+        val form = app.injector.instanceOf[ItemPackagingQuantityFormProvider].apply(testIndex1, testPackagingIndex2)
 
         implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testItemPackagingTypes.head, testPackagingIndex2, testIndex1).toString())
 

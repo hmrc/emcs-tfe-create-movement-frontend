@@ -21,10 +21,12 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
 import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages.English.errorShippingMarkNotUnique
 import forms.behaviours.StringFieldBehaviours
+import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging
 import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.data.FormError
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFieldBehaviours with ItemFixtures {
@@ -36,7 +38,7 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
   val notUniqueKey = "itemPackagingShippingMarks.error.not.unique"
   val maxLength = 999
 
-  implicit val dr = dataRequest(
+  implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(
     FakeRequest(),
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), testEpcWine)

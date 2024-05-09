@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingQuantityFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingQuantityPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -49,7 +49,7 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
           renderView(
             Ok,
-            fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(itemsIndex)),
+            fillForm(ItemPackagingQuantityPage(itemsIndex, packagingIdx), formProvider(itemsIndex, packagingIdx)),
             itemsIndex,
             packagingIdx,
             mode
@@ -61,9 +61,17 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-          formProvider(itemsIndex).bindFromRequest().fold(
+          formProvider(itemsIndex, packagingIdx).bindFromRequest().fold(
             renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
-            saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), _, mode)
+            answer => {
+              val newUserAnswers = request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIdx)) match {
+                case Some("0") if BigInt(answer) > 0 => request.userAnswers
+                  .remove(ItemPackagingProductTypePage(itemsIndex, packagingIdx)) //This will be known as shipping marks choice page (when ETFE-3563 is played)
+                  .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
+                case _ => request.userAnswers
+              }
+              saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), answer, newUserAnswers, mode)
+            }
           )
         }
     }

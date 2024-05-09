@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingShippingMarksChoiceFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -81,12 +81,5 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
       request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
     }
     saveAndRedirect(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark, cleansedAnswers, mode)
-  }
-
-  private def withItemPackagingQuantity(itemsIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(ItemPackagingQuantityPage(itemsIdx, packagingIdx)) match {
-      case Some(quantity) => f(quantity)
-      case None => Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIdx)))
-    }
   }
 }

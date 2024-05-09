@@ -24,8 +24,8 @@ object ItemPackagingSealChoiceMessages {
     _: i18n =>
     val heading: String = "Is there a commercial seal on this packaging?"
     val title: String = titleHelper(heading)
-    val p1 = "This is a seal that prevents items being removed or added. You will have the opportunity to give details of any seals on the transport later."
-    def p2(packagingDescription: String) = s"The packaging type is: $packagingDescription."
+    val p1 = "This is a seal that prevents items being removed from or added to this packaging. You will have the opportunity to give details of any seals on the transport later."
+    def p2(packagingIndex: String, itemIndex: String,packagingDescription: String, packagingQuantity: String) = s"Packaging $packagingIndex for item $itemIndex is $packagingDescription: $packagingQuantity."
     val cyaLabel: String = "Commercial seal"
     val cyaChangeHidden: String = "commercial seal"
   }

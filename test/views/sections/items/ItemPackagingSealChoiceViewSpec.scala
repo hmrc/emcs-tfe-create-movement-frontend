@@ -36,27 +36,47 @@ class ItemPackagingSealChoiceViewSpec extends SpecBase with ViewBehaviours {
 
     Seq(ItemPackagingSealChoiceMessages.English).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+      val view = app.injector.instanceOf[ItemPackagingSealChoiceView]
+      val form = app.injector.instanceOf[ItemPackagingSealChoiceFormProvider].apply()
 
-        val view = app.injector.instanceOf[ItemPackagingSealChoiceView]
-        val form = app.injector.instanceOf[ItemPackagingSealChoiceFormProvider].apply()
+      s"when the item packaging is not bulk and being rendered in '${messagesForLanguage.lang.code}'" - {
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, "Aerosol").toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, "Aerosol", testIndex1, testPackagingIndex1, packagingQuantity = Some("1"), false).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.p(1) -> messagesForLanguage.p1,
-          Selectors.p(2) -> messagesForLanguage.p2("Aerosol"),
-          Selectors.strong(1) -> "Aerosol",
+          Selectors.p(2) -> messagesForLanguage.p2(packagingIndex = "1",itemIndex = "1",packagingDescription = "Aerosol",packagingQuantity = "1"),
+          Selectors.strong(1) -> "Aerosol: 1",
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+      }
+
+      s"when the item packaging is bulk and being rendered in '${messagesForLanguage.lang.code}'" - {
+
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, "Bulk, solid, fine (powders)", testIndex1, testPackagingIndex1, packagingQuantity = None, true).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> messagesForLanguage.title,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.p(1) -> messagesForLanguage.p1,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.radioButton(2) -> messagesForLanguage.no,
+          Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.link(1) -> messagesForLanguage.returnToDraft
+        ))
+
+        behave like pageWithElementsNotPresent(Seq(
+          Selectors.p(2)
         ))
       }
     }

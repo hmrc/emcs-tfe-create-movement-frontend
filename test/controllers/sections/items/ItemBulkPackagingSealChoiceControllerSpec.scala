@@ -25,7 +25,7 @@ import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
 import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage, ItemBulkPackagingSelectPage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage, ItemBulkPackagingSelectPage, ItemExciseProductCodePage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -95,7 +95,7 @@ class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAn
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, "Bulk, solid, fine (powders)")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form, action, "Bulk, solid, fine (powders)", 1, 1, None, true)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -104,7 +104,7 @@ class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAn
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(true), action, "Bulk, solid, fine (powders)")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill(true), action, "Bulk, solid, fine (powders)", 1, 1, None, true)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
@@ -145,7 +145,7 @@ class ItemBulkPackagingSealChoiceControllerSpec extends SpecBase with MockUserAn
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Bulk, solid, fine (powders)")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, action, "Bulk, solid, fine (powders)", 1, 1, None, true)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

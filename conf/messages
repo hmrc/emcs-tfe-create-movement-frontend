@@ -305,6 +305,8 @@ address.postcode.error.consignorAddress.mustStartWithBT = Postcode must begin wi
 address.postcode.error.consignorAddress.mustNotStartWithBT = Postcode must not begin with BT
 address.postcode.error.dispatchAddress.mustStartWithBT = Postcode must begin with BT
 address.postcode.error.dispatchAddress.mustNotStartWithBT = Postcode must not begin with BT
+address.postcode.error.destinationAddress.mustStartWithBT = Postcode must begin BT because the tax warehouse of destination ID begins with XI
+address.postcode.error.destinationAddress.mustNotStartWithBT = Postcode must not begin BT because the tax warehouse of destination ID begins with GB
 
 consignorPaidTemporaryAuthorisationCode.title = Enter the consignor’s Paid Temporary Authorisation (PTA) code
 consignorPaidTemporaryAuthorisationCode.heading = Enter the consignor’s Paid Temporary Authorisation (PTA) code

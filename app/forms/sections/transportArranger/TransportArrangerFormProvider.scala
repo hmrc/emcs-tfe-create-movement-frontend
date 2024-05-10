@@ -21,7 +21,6 @@ import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.transportArranger.TransportArranger
-import models.sections.transportArranger.TransportArranger.{values, valuesForUnknownDestination}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 
@@ -33,9 +32,9 @@ class TransportArrangerFormProvider @Inject() extends Mappings {
 
     implicit val destinationEnumerable: Enumerable[TransportArranger] =
       if (request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) {
-        Enumerable(valuesForUnknownDestination.map(v => v.toString -> v): _*)
+        TransportArranger.enumerableForUnknownDestination
       } else {
-        Enumerable(values.map(v => v.toString -> v): _*)
+        TransportArranger.enumerable
       }
 
     Form(

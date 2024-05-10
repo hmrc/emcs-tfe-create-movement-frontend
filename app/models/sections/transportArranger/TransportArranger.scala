@@ -36,4 +36,7 @@ object TransportArranger extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[TransportArranger] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
+  val enumerableForUnknownDestination: Enumerable[TransportArranger] =
+    Enumerable(valuesForUnknownDestination.map(v => v.toString -> v): _*)
 }

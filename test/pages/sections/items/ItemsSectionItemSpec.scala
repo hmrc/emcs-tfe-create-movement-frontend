@@ -103,7 +103,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -125,7 +125,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -146,7 +146,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -166,7 +166,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -185,7 +185,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -206,7 +206,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -226,7 +226,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -249,7 +249,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -268,7 +268,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -287,7 +287,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -308,7 +308,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -331,7 +331,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), testPackageBag)
         )
@@ -530,7 +530,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -552,7 +552,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -574,7 +574,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -596,7 +596,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -618,7 +618,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -640,7 +640,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -663,7 +663,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -684,7 +684,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -705,7 +705,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "400")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
         )
 
@@ -750,7 +750,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -778,7 +778,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -791,7 +791,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
-          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
           .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)

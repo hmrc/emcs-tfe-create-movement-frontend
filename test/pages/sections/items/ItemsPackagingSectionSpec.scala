@@ -49,7 +49,9 @@ class ItemsPackagingSectionSpec extends SpecBase {
 
       "when no shipping mark exists but all other mandatory pages are present" in {
 
-        val userAnswers = completedPackage.remove(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1))
+        val userAnswers = completedPackage
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+          .remove(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1))
 
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -96,6 +98,16 @@ class ItemsPackagingSectionSpec extends SpecBase {
 
         ItemsPackagingSection(testIndex1).isCompleted mustBe false
       }
+
+      //TODO: uncomment in ETFE-3809
+//      "when packaging shipping marks choice is `true` but no shipping marks exist" in {
+//
+//        val userAnswers = completedPackage.remove(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1))
+//
+//        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+//
+//        ItemsPackagingSection(testIndex1).isCompleted mustBe false
+//      }
 
       "when seal choice is `true` but no seal type exists" in {
 

@@ -21,7 +21,7 @@ import fixtures.messages.sections.items.ItemPackagingShippingMarksChoiceMessages
 import models.CheckMode
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -81,6 +81,7 @@ class ItemPackagingShippingMarksChoiceSummarySpec extends SpecBase with Matchers
                 implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
                   dataRequest(FakeRequest(), userAnsers
                     .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+                    .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
                   )
 
                 ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe Some(

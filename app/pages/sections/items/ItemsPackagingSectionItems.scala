@@ -37,6 +37,21 @@ case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) 
       case (Some(_), Some(_), Some(_), Some(true), Some(_)) => Completed
       case _ => InProgress
     }
+    //TODO: uncomment in ETFE-3809
+//    (
+//      request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIndex)),
+//      request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIndex)),
+//      request.userAnswers.get(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIndex)),
+//      request.userAnswers.get(ItemPackagingShippingMarksPage(itemsIndex, packagingIndex)),
+//      request.userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, packagingIndex)),
+//      request.userAnswers.get(ItemPackagingSealTypePage(itemsIndex, packagingIndex))
+//    ) match {
+//      case (Some(_), Some(_), Some(false), _, Some(false), _) => Completed
+//      case (Some(_), Some(_), Some(false), _, Some(true), Some(_)) => Completed
+//      case (Some(_), Some(_), Some(true), Some(_), Some(true), Some(_)) => Completed
+//      case (Some(_), Some(_), Some(true), Some(_), Some(false), _) => Completed
+//      case _ => InProgress
+//    }
   }
 
   // $COVERAGE-OFF$

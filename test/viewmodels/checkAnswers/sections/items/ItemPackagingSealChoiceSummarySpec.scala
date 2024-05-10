@@ -73,7 +73,7 @@ class ItemPackagingSealChoiceSummarySpec extends SpecBase with Matchers {
             val userAnswers = emptyUserAnswers
               .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
               .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-              .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+              .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
 
             "must output the expected row" - {
 

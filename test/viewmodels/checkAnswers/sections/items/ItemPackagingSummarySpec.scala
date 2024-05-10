@@ -120,7 +120,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
       val userAnswers = emptyUserAnswers
         .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), package1)
         .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
-        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
         .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)

@@ -15,11 +15,9 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.LegendSize
-@import models.response.referenceData.ItemPackaging
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.InputWidth.Fixed40
-
+@import viewmodels.LabelSize
 
 @this(
         layout: templates.Layout,
@@ -60,7 +58,7 @@
         @govukInput(
             InputViewModel(
                 field = form("packaging-seal-type"),
-                label = LabelViewModel(Text(messages("itemPackagingSealType.textArea.label"))).withCssClass(LegendSize.Medium.toString)
+                label = LabelViewModel(Text(messages("itemPackagingSealType.textArea.label"))).withCssClass(LabelSize.Small.toString)
             )
             .withWidth(Fixed40)
             .withHint(HintViewModel(messages("itemPackagingSealType.textArea.hint")).withId("packaging-seal-type-hint"))
@@ -73,7 +71,7 @@
                     name = "packaging-seal-information",
                     maxLength = Some(350),
                     hint = Some(Hint(content = Text(messages("itemPackagingSealType.hint")))),
-                    label = LabelViewModel(Text(messages("itemPackagingSealType.p2"))),
+                    label = LabelViewModel(Text(messages("itemPackagingSealType.p2"))).withCssClass(LabelSize.Small.toString),
                     value = form("packaging-seal-information").value,
                     errorMessage = form.errors("packaging-seal-information") match {
                         case Nil => None

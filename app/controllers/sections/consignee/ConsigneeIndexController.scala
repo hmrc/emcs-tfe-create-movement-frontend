@@ -78,11 +78,11 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
   private def shouldStartFlowFromConsigneeExcise(destinationTypePageAnswer: MovementScenario): Boolean = {
     (UkTaxWarehouse.values ++ Seq(
       EuTaxWarehouse,
-      RegisteredConsignee,
       DirectDelivery,
+      RegisteredConsignee,
       TemporaryRegisteredConsignee,
-      CertifiedConsignee,
-      TemporaryCertifiedConsignee
+      TemporaryCertifiedConsignee,
+      CertifiedConsignee
     )).contains(destinationTypePageAnswer)
   }
 

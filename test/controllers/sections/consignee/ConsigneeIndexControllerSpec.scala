@@ -100,11 +100,11 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         UkTaxWarehouse.GB,
         UkTaxWarehouse.NI,
         EuTaxWarehouse,
-        RegisteredConsignee,
         DirectDelivery,
+        RegisteredConsignee,
         TemporaryRegisteredConsignee,
-        CertifiedConsignee,
-        TemporaryCertifiedConsignee
+        TemporaryCertifiedConsignee,
+        CertifiedConsignee
       ).foreach(
         movementScenario =>
           s"when destination is $movementScenario" in new Fixture(

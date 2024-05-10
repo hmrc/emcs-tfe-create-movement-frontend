@@ -30,27 +30,27 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
   def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_]): Form[String] = {
 
     val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.noInput"
+      "consigneeExcise.temporaryRegisteredConsignee.error.noInput"
     } else {
       "consigneeExcise.error.noInput"
     }
 
     val not13CharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.length"
+      "consigneeExcise.temporaryRegisteredConsignee.error.length"
     }
     else {
       "consigneeExcise.error.length"
     }
 
     val invalidCharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.invalidCharacters"
+      "consigneeExcise.temporaryRegisteredConsignee.error.invalidCharacters"
     }
     else {
       "consigneeExcise.error.invalidCharacters"
     }
 
     val formatErrorKey = if(isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.format"
+      "consigneeExcise.temporaryRegisteredConsignee.error.format"
     } else {
       "consigneeExcise.error.format"
     }

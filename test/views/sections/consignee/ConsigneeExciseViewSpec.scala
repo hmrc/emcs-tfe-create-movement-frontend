@@ -153,10 +153,10 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       )
 
       behave like pageWithExpectedElementsAndMessages(Seq(
-        Selectors.title -> English.temporaryConsigneeTitle,
-        Selectors.h1 -> English.temporaryConsigneeHeading,
+        Selectors.title -> English.temporaryRegisteredConsigneeTitle,
+        Selectors.h1 -> English.temporaryRegisteredConsigneeHeading,
         Selectors.h2(1) -> English.consigneeInformationSection,
-        Selectors.hint -> English.temporaryConsigneeHint,
+        Selectors.hint -> English.temporaryRegisteredConsigneeHint,
         Selectors.button -> English.saveAndContinue
       ))
 

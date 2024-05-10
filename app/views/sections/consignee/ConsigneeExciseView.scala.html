@@ -15,9 +15,9 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.consignee.ConsigneeExcisePage
 @import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
-@import pages.sections.consignee.ConsigneeExcisePage
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -35,7 +35,7 @@
 @layout(pageTitle = title(
     form = form,
     title = if(isNorthernIrishTemporaryRegisteredConsignee) {
-        messages("consigneeExcise.temporaryConsignee.title")
+        messages("consigneeExcise.temporaryRegisteredConsignee.title")
     } else if(isNorthernIrishTemporaryCertifiedConsignee){
         messages("consigneeExcise.temporaryCertifiedConsignee.title")
     } else {
@@ -44,7 +44,6 @@
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
-
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -61,7 +60,7 @@
                 field = form("value"),
                 label = LabelViewModel(HtmlContent(
                     if(isNorthernIrishTemporaryRegisteredConsignee) {
-                        messages("consigneeExcise.temporaryConsignee.heading")
+                        messages("consigneeExcise.temporaryRegisteredConsignee.heading")
                     } else if(isNorthernIrishTemporaryCertifiedConsignee) {
                         messages("consigneeExcise.temporaryCertifiedConsignee.heading")
                     } else {
@@ -74,7 +73,7 @@
                     classes = "govuk-hint",
                     content = Text(
                         if(isNorthernIrishTemporaryRegisteredConsignee) {
-                            messages("consigneeExcise.temporaryConsignee.hint")
+                            messages("consigneeExcise.temporaryRegisteredConsignee.hint")
                         } else if(isNorthernIrishTemporaryCertifiedConsignee){
                             messages("consigneeExcise.temporaryCertifiedConsignee.hint")
                         } else {

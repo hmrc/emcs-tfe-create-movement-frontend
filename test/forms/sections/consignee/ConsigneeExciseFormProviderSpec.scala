@@ -41,7 +41,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "must error with the expected msg key for the dynamic form" in {
         val boundForm = dynamicForm.bind(Map(fieldName -> ""))
-        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.noInput", Seq()))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.noInput", Seq()))
       }
     }
 
@@ -52,7 +52,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "must error with the expected msg key for the dynamic form" in {
         val boundForm = dynamicForm.bind(Map(fieldName -> "!@£$%^&*()_+!"))
-        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.invalidCharacters", Seq(ALPHANUMERIC_REGEX)))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.invalidCharacters", Seq(ALPHANUMERIC_REGEX)))
       }
     }
 
@@ -75,13 +75,13 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       behave like fieldWithERN(
         form = dynamicForm,
         fieldName = fieldName,
-        formatError = FormError(fieldName, "consigneeExcise.temporaryConsignee.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
+        formatError = FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}"))
       )
 
       behave like fieldWithFixedLength(
         dynamicForm,
         fieldName,
-        lengthError = FormError(fieldName, "consigneeExcise.temporaryConsignee.error.length", Seq(fixedLength)),
+        lengthError = FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.length", Seq(fixedLength)),
         fixedLength
       )
     }

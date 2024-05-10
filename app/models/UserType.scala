@@ -51,4 +51,12 @@ object UserType {
     case "GB00" => GreatBritainWarehouse
     case _ => Unknown
   }
+
+  val northernIrelandUserTypes: Seq[UserType] = Seq(
+    NorthernIrelandRegisteredConsignor,
+    NorthernIrelandCertifiedConsignor,
+    NorthernIrelandTemporaryCertifiedConsignor,
+    NorthernIrelandWarehouseKeeper,
+    NorthernIrelandWarehouse
+  )
 }

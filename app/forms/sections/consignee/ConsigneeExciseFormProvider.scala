@@ -19,48 +19,29 @@ package forms.sections.consignee
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
+  def apply()(implicit request: DataRequest[_]): Form[String] = {
 
-  def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_]): Form[String] = {
-
-    val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.noInput"
-    } else {
-      "consigneeExcise.error.noInput"
-    }
-
-    val not13CharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.length"
-    }
-    else {
-      "consigneeExcise.error.length"
-    }
-
-    val invalidCharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.invalidCharacters"
-    }
-    else {
-      "consigneeExcise.error.invalidCharacters"
-    }
-
-    val formatErrorKey = if(isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.format"
-    } else {
-      "consigneeExcise.error.format"
+    val keyPrefix = request.isNorthernIrelandErn -> request.userAnswers.get(DestinationTypePage) match {
+      case true -> Some(TemporaryRegisteredConsignee) => "consigneeExcise.temporaryRegisteredConsignee"
+      case true -> Some(TemporaryCertifiedConsignee) => "consigneeExcise.temporaryCertifiedConsignee"
+      case _ => "consigneeExcise"
     }
 
     Form(
-      "value" -> text(noInputErrorKey)
+      "value" -> text(s"$keyPrefix.error.noInput")
         .verifying(firstError(
-          fixedLength(13, not13CharactersErrorKey),
-          regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey),
-          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, formatErrorKey)
+          fixedLength(13, s"$keyPrefix.error.length"),
+          regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format")
         ))
         .verifying(isNotEqualToOptExistingAnswer(
           existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,

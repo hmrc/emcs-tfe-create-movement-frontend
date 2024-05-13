@@ -17,9 +17,6 @@
 package models.sections.transportArranger
 
 import models.{Enumerable, WithName}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait TransportArranger
 
@@ -33,19 +30,13 @@ object TransportArranger extends Enumerable.Implicits {
 
   case object Other extends WithName("4") with TransportArranger
 
-  val values: Seq[TransportArranger] = Seq(
-    Consignor, Consignee, GoodsOwner, Other
-  )
+  val values: Seq[TransportArranger] = Seq(Consignor, Consignee, GoodsOwner, Other)
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"transportArranger.${value.toString}")),
-        value = Some(value.toString),
-        id = Some(s"value_$index")
-      )
-  }
+  val valuesForUnknownDestination: Seq[TransportArranger] = values.filterNot(_ == Consignee)
 
   implicit val enumerable: Enumerable[TransportArranger] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
+  val enumerableForUnknownDestination: Enumerable[TransportArranger] =
+    Enumerable(valuesForUnknownDestination.map(v => v.toString -> v): _*)
 }

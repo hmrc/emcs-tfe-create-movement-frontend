@@ -22,11 +22,12 @@ import controllers.routes
 import forms.sections.transportArranger.TransportArrangerFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger
-import models.{NormalMode, UserAnswers}
+import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
+import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
-import pages.sections.transportArranger.TransportArrangerPage
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.transportArranger.TransportArrangerView
@@ -36,13 +37,13 @@ import scala.concurrent.Future
 class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: TransportArrangerFormProvider = new TransportArrangerFormProvider()
-  lazy val form: Form[TransportArranger] = formProvider()
+  lazy val form: Form[TransportArranger] = formProvider()(dataRequest(FakeRequest()))
   lazy val view: TransportArrangerView = app.injector.instanceOf[TransportArrangerView]
 
   class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val controller = new TransportArrangerController(
+    lazy val controller: TransportArrangerController = new TransportArrangerController(
       messagesApi,
       mockUserAnswersService,
       new FakeTransportArrangerNavigator(testOnwardRoute),
@@ -56,10 +57,11 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     )
   }
 
+
   "TransportArranger Controller" - {
 
     "must return OK and the correct view for a GET" in new Test() {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
@@ -68,7 +70,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers.set(TransportArrangerPage, TransportArranger.values.head)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -79,7 +81,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -87,27 +89,77 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test() {
 
-      val boundForm = form.bind(Map("value" -> ""))
+      val boundForm: Form[TransportArranger] = form.bind(Map("value" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
+
+    Seq(Consignor, Consignee).foreach { arranger =>
+      s"must cleanse the transport arranger data when a ${simpleName(arranger)} is selected" in new Test(
+        Some(
+          emptyUserAnswers
+            .set(TransportArrangerPage, Other)
+            .set(TransportArrangerNamePage, "Mr Other Transporter")
+            .set(TransportArrangerAddressPage, testUserAddress)
+            .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
+        )
+      ) {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers
+          .set(TransportArrangerPage, arranger)
+
+        MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+        val result: Future[Result] = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", arranger.toString)))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+    }
+
+    Seq(GoodsOwner -> Other, Other -> GoodsOwner).foreach { case (arrangerFrom, arrangerTo) =>
+      s"must not cleanse the transport arranger data when toggling between ${simpleName(arrangerFrom)} and ${simpleName(arrangerTo)}" in new Test(
+        Some(
+          emptyUserAnswers
+            .set(TransportArrangerPage, arrangerFrom)
+            .set(TransportArrangerNamePage, "Mr Other Transporter")
+            .set(TransportArrangerAddressPage, testUserAddress)
+            .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
+        )
+      ) {
+
+        val expectedUserAnswers: UserAnswers = emptyUserAnswers
+          .set(TransportArrangerPage, arrangerTo)
+          .set(TransportArrangerNamePage, "Mr Other Transporter")
+          .set(TransportArrangerAddressPage, testUserAddress)
+          .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
+
+        MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+        val result: Future[Result] = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", arrangerTo.toString)))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+    }
+
   }
 }

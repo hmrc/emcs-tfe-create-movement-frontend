@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.LegendSize
 @import models.requests.DataRequest
-@import models.sections.transportArranger.TransportArranger
+@import viewmodels.LegendSize
+@import viewmodels.helpers.TransportArrangerHelper
 
 @this(
     layout: templates.Layout,
@@ -26,7 +26,8 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
-    continueOrExit: components.continueOrExit
+    continueOrExit: components.continueOrExit,
+    helper: TransportArrangerHelper
 )
 
 
@@ -34,7 +35,7 @@
 
 @layout(pageTitle = title(form, messages("transportArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerController.onSubmit(request.ern, request.draftId, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -46,7 +47,7 @@
             RadiosViewModel(
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("transportArranger.heading"))).asPageHeading(LegendSize.Large),
-                items  = TransportArranger.options
+                items  = helper.radioItems
             )
         )
 

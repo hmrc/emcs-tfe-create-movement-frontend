@@ -14,31 +14,35 @@
  * limitations under the License.
  */
 
-package forms.sections.transportArranger
+package viewmodels.helpers
 
-import forms.mappings.Mappings
-import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.transportArranger.TransportArranger
 import pages.sections.info.DestinationTypePage
-import play.api.data.Form
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 import javax.inject.Inject
 
-class TransportArrangerFormProvider @Inject() extends Mappings {
+class TransportArrangerHelper @Inject() {
 
-  def apply()(implicit request: DataRequest[_]): Form[TransportArranger] = {
+  def radioItems()(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
+    val values: Seq[TransportArranger] = if (request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) {
+      TransportArranger.valuesForUnknownDestination
+    } else {
+      TransportArranger.values
+    }
 
-    implicit val destinationEnumerable: Enumerable[TransportArranger] =
-      if (request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) {
-        TransportArranger.enumerableForUnknownDestination
-      } else {
-        TransportArranger.enumerable
-      }
+    values.zipWithIndex.map {
+      case (value: TransportArranger, index: Int) =>
+        RadioItem(
+          content = Text(messages(key = s"transportArranger.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_$index")
+        )
+    }
 
-    Form(
-      "value" -> enumerable[TransportArranger]("transportArranger.error.required")(destinationEnumerable)
-    )
   }
 }

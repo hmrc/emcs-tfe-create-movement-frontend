@@ -62,7 +62,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ItemWineMoreInformationChoicePage(idx), false)
           .set(ItemSelectPackagingPage(idx, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(idx, testPackagingIndex1), "400")
-          .set(ItemPackagingProductTypePage(idx, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksChoicePage(idx, testPackagingIndex1), true)
           .set(ItemPackagingSealChoicePage(idx, testPackagingIndex1), false)
     }
 

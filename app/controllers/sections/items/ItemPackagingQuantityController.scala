@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingQuantityFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -66,7 +66,7 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
             answer => {
               val newUserAnswers = request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIdx)) match {
                 case Some("0") if BigInt(answer) > 0 => request.userAnswers
-                  .remove(ItemPackagingProductTypePage(itemsIndex, packagingIdx)) //This will be known as shipping marks choice page (when ETFE-3563 is played)
+                  .remove(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx))
                   .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
                 case _ => request.userAnswers
               }

@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingShippingMarksFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingShippingMarksPage, ItemsSection}
+import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -68,7 +68,7 @@ class ItemPackagingShippingMarksController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validatePackagingIndexAsync(itemsIndex, packagingIdx) {
         val cleansedAnswers = request.userAnswers
-          .set(ItemPackagingProductTypePage(itemsIndex, packagingIdx), true)
+          .set(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx), true)
           .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
         userAnswersService.set(cleansedAnswers).map { savedAnswers =>
           Redirect(navigator.nextPage(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx), mode, savedAnswers))

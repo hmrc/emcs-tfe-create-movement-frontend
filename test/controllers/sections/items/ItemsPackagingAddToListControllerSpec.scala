@@ -45,7 +45,7 @@ class ItemsPackagingAddToListControllerSpec extends SpecBase with MockUserAnswer
   val singlePackageUserAnswers = emptyUserAnswers
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
     .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
     .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
   val userAnswersWithMaxPackages: UserAnswers =
@@ -54,7 +54,7 @@ class ItemsPackagingAddToListControllerSpec extends SpecBase with MockUserAnswer
         userAnswers
           .set(ItemSelectPackagingPage(testIndex1, packageIdx), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, packageIdx), "5")
-          .set(ItemPackagingProductTypePage(testIndex1, packageIdx), true)
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, packageIdx), false)
           .set(ItemPackagingSealChoicePage(testIndex1, packageIdx), false)
     }
 

@@ -22,7 +22,7 @@ import models.CheckMode
 import models.requests.DataRequest
 import models.sections.items.ItemPackagingSealTypeModel
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -73,7 +73,7 @@ class ItemPackagingSealChoiceSummarySpec extends SpecBase with Matchers {
             val userAnswers = emptyUserAnswers
               .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
               .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
-              .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+              .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
 
             "must output the expected row" - {
 

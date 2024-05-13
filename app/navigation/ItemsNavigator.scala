@@ -124,19 +124,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
     case ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
-      //TODO: this will go to CAM-ITM26: shipping-mark-choice in ETFE-3562
-      itemsRoutes.ItemPackagingProductTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+      itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
 
-    case ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex) =>
-      (userAnswers: UserAnswers) =>
-        userAnswers.get(ItemPackagingProductTypePage(itemsIndex, itemsPackagingIndex)) match {
-          case Some(true) =>
-            itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
-          case Some(false) =>
-            itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
-          case _ =>
-            itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
-        }
+    case ItemPackagingShippingMarksChoicePage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      itemPackagingShippingMarksChoiceRouting(itemsIndex, itemsPackagingIndex, userAnswers)
 
     case ItemWineGrowingZonePage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
@@ -329,16 +320,19 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
-    case page@ItemPackagingProductTypePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
-      userAnswers.get(page) match {
-        case Some(false) => itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+    case page@ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
+      (userAnswers.get(page), userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))) match {
+        case (Some(true), Some("0")) =>
+          itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+        case (Some(true), Some(_)) =>
+          itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
         case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
       }
 
     case ItemPackagingQuantityPage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
-      userAnswers.get(ItemPackagingProductTypePage(itemIdx, packageIdx)) match {
+      userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx)) match {
         case Some(_) => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
-        case None => itemsRoutes.ItemPackagingProductTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+        case None => itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
       }
 
     case ItemPackagingShippingMarksPage(itemIdx, _) => (userAnswers: UserAnswers) =>
@@ -484,4 +478,19 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
   }
+
+  private def itemPackagingShippingMarksChoiceRouting(itemsIndex: Index, itemsPackagingIndex: Index, userAnswers: UserAnswers): Call =
+    (userAnswers.get(ItemPackagingShippingMarksChoicePage(itemsIndex, itemsPackagingIndex)), userAnswers.get(ItemPackagingQuantityPage(itemsIndex, itemsPackagingIndex))) match {
+      case (Some(true), Some("0")) =>
+        itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+      case (Some(true), Some(_)) =>
+        itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+      case (Some(false), Some("0")) =>
+        //Despite the user coming from this page previously in the flow, if they enter 0 and say no shipping marks then they must have made a mistake which should be corrected
+        itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+      case (Some(false), Some(_)) =>
+        itemsRoutes.ItemPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+      case _ =>
+        itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
+    }
 }

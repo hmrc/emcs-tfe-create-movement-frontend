@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
-import fixtures.messages.sections.items.ItemPackagingProductTypeMessages
+import fixtures.messages.sections.items.ItemPackagingShippingMarksChoiceMessages
 import models.CheckMode
 import models.requests.DataRequest
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemPackagingProductTypePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -30,11 +30,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryL
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
+class ItemPackagingShippingMarksChoiceSummarySpec extends SpecBase with Matchers {
 
-  "ItemPackagingProductTypeSummary" - {
+  "ItemPackagingShippingMarksChoiceSummary" - {
 
-    Seq(ItemPackagingProductTypeMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemPackagingShippingMarksChoiceMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -45,7 +45,7 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
           "must output None" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe None
+            ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe None
           }
         }
 
@@ -60,9 +60,9 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
             Seq(
               ActionItemViewModel(
                 content = messagesForLanguage.change,
-                href = controllers.sections.items.routes.ItemPackagingProductTypeController.onPageLoad(testErn, testDraftId, testIndex1,
+                href = controllers.sections.items.routes.ItemPackagingShippingMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1,
                   testPackagingIndex1, CheckMode).url,
-                id = "changePackagingProductType1ForItem1"
+                id = "changeItemPackagingShippingMarksChoice1ForItem1"
               ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
             ))
           ))
@@ -80,10 +80,11 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
 
                 implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
                   dataRequest(FakeRequest(), userAnsers
-                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+                    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+                    .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
                   )
 
-                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
                   rowWithChangeLink.copy(value = Value(Text(messagesForLanguage.yes)))
                 )
               }
@@ -92,10 +93,10 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
 
                 implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
                   dataRequest(FakeRequest(), userAnsers
-                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+                    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
                   )
 
-                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
                   rowWithChangeLink.copy(value = Value(Text(messagesForLanguage.no)))
                 )
               }
@@ -113,10 +114,10 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
 
                 implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
                   dataRequest(FakeRequest(), userAnsers
-                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), true)
+                    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
                   )
 
-                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
                   rowNoChangeLink.copy(value = Value(Text(messagesForLanguage.yes)))
                 )
               }
@@ -125,10 +126,10 @@ class ItemPackagingProductTypeSummarySpec extends SpecBase with Matchers {
 
                 implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
                   dataRequest(FakeRequest(), userAnsers
-                    .set(ItemPackagingProductTypePage(testIndex1, testPackagingIndex1), false)
+                    .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
                   )
 
-                ItemPackagingProductTypeSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
+                ItemPackagingShippingMarksChoiceSummary.row(testIndex1, testPackagingIndex1) mustBe Some(
                   rowNoChangeLink.copy(value = Value(Text(messagesForLanguage.no)))
                 )
               }

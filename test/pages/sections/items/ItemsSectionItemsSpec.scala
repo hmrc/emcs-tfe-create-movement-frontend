@@ -108,7 +108,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
             .set(ItemWineMoreInformationChoicePage(index), false)
             .set(ItemSelectPackagingPage(index, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(index, testPackagingIndex1), "400")
-            .set(ItemPackagingProductTypePage(index, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(index, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(index, testPackagingIndex1), false)
         }
         ItemsSectionItems.isMovementSubmissionError(dataRequest(FakeRequest(), answers)) mustBe false
@@ -134,7 +134,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
             .set(ItemWineMoreInformationChoicePage(index), false)
             .set(ItemSelectPackagingPage(index, testPackagingIndex1), testPackageBag)
             .set(ItemPackagingQuantityPage(index, testPackagingIndex1), "400")
-            .set(ItemPackagingProductTypePage(index, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksChoicePage(index, testPackagingIndex1), true)
             .set(ItemPackagingSealChoicePage(index, testPackagingIndex1), false)
         }.copy(
           submissionFailures = Seq(itemQuantityFailure(2))
@@ -223,7 +223,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
       .set(ItemWineMoreInformationChoicePage(testIndex2), false)
       .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
       .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
-      .set(ItemPackagingProductTypePage(testIndex2, testPackagingIndex1), true)
+      .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
       .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
 
     "return an empty list" - {

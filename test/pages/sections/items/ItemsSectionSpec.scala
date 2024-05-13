@@ -241,7 +241,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
     }
   }
 
-  "retrieveAllShippingMarks" - {
+  "shippingMarkForItemIsUsedOnOtherItems" - {
     "must return true" - {
       "when items shipping mark is used on an item with package quantity == 0" in {
         val userAnswers =
@@ -255,7 +255,7 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
       }
     }
 
-    "must return true" - {
+    "must return false" - {
       "when items shipping mark is used on an item with package quantity > 0" in {
         val userAnswers =
           emptyUserAnswers
@@ -273,6 +273,26 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
             .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
             .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark2")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+
+        ItemsSection.shippingMarkForItemIsUsedOnOtherItems(testIndex1, testPackagingIndex1)(dataRequest(FakeRequest(), userAnswers)) mustBe false
+      }
+
+      "when item packaging quantity is zero" in {
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+
+        ItemsSection.shippingMarkForItemIsUsedOnOtherItems(testIndex2, testPackagingIndex1)(dataRequest(FakeRequest(), userAnswers)) mustBe false
+      }
+
+      "when shipping mark answer doesn't exist" in {
+        val userAnswers =
+          emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
             .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
 
         ItemsSection.shippingMarkForItemIsUsedOnOtherItems(testIndex1, testPackagingIndex1)(dataRequest(FakeRequest(), userAnswers)) mustBe false

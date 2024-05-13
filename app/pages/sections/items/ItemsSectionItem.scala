@@ -195,7 +195,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     ItemsSection.canBeCompletedForTraderAndDestinationType
 
-  def packagingIndexes(implicit request: DataRequest[_]) =
+  def packagingIndexes(implicit request: DataRequest[_]): Seq[Index] =
     request.userAnswers.get(ItemsPackagingCount(idx)) match {
       case Some(count) =>
         0 until count map Index.apply

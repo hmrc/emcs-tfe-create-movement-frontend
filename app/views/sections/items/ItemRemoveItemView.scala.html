@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
+@import viewmodels.helpers.ShippingMarksPackagingHelper
 
 @this(
     layout: templates.Layout,
@@ -25,12 +26,13 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
-    continueOrExit: components.continueOrExit
+    continueOrExit: components.continueOrExit,
+    helper: ShippingMarksPackagingHelper
 )
 
-@(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, itemIdx: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemRemoveItem.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemRemoveItem.title", itemIdx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = action, 'autoComplete -> "off") {
 
@@ -39,10 +41,14 @@
         }
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("itemRemoveItem.heading", itemIdx.displayIndex), classes = "govuk-heading-l")
+
+        @helper.itemRemoveFromListContent(itemIdx)
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("itemRemoveItem.heading"))).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(Text(messages("itemRemoveItem.heading", itemIdx.displayIndex))).hidden
             )
         )
 

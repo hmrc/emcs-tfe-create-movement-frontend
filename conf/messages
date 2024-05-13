@@ -1403,8 +1403,9 @@ itemWineOrigin.checkYourAnswersLabel = Wine country of origin
 itemWineOrigin.error.required = Select the wine’s country of origin
 itemWineOrigin.change.hidden = wine country of origin
 
-itemRemoveItem.title = Are you sure you want to remove this item?
-itemRemoveItem.heading = Are you sure you want to remove this item?
+itemRemoveItem.title = Are you sure you want to remove item {0}?
+itemRemoveItem.heading = Are you sure you want to remove item {0}?
+itemRemoveItem.inset = Item {0} has packaging that contains both item {0} and another item packed together. If item {0} is removed, the packaging will also be removed from any other items packed inside this package with the same shipping mark and a packaging quantity of 0.
 itemRemoveItem.error.required = Select yes if you would like to remove the item
 
 itemWineProductCategory.title = What is the product category of the wine?
@@ -1420,6 +1421,7 @@ itemWineProductCategory.change.hidden = what is the product category of the wine
 
 itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
 itemPackagingRemovePackage.heading = Are you sure you want to remove this packaging?
+itemPackagingRemovePackage.inset = This packaging contains both item {0} and another item packed together. If this packaging is removed, it will also be removed from the other items packed inside this packaging and using the same shipping mark.
 itemPackagingRemovePackage.p1 = The packaging type is: {0}
 itemPackagingRemovePackage.error.required = Select yes if you would like to remove this packaging
 

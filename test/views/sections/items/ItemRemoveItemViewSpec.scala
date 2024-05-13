@@ -22,6 +22,7 @@ import forms.sections.items.ItemRemoveItemFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -29,6 +30,9 @@ import views.html.sections.items.ItemRemoveItemView
 import views.{BaseSelectors, ViewBehaviours}
 
 class ItemRemoveItemViewSpec extends SpecBase with ViewBehaviours {
+
+  lazy val view = app.injector.instanceOf[ItemRemoveItemView]
+  lazy val form = app.injector.instanceOf[ItemRemoveItemFormProvider].apply()
 
   object Selectors extends BaseSelectors
 
@@ -39,22 +43,41 @@ class ItemRemoveItemViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemRemoveItemView]
-        val form = app.injector.instanceOf[ItemRemoveItemFormProvider].apply()
+        "when this item has packaging and shipping marks which are used by another item" - {
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "5")
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "MARK1")
+            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "MARK1")
+          )
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.legend -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testIndex1).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(testIndex1),
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.h1 -> messagesForLanguage.heading(testIndex1),
+            Selectors.inset -> messagesForLanguage.inset(testIndex1),
+            Selectors.legend -> messagesForLanguage.heading(testIndex1),
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "when this item DOES NOT have packaging and shipping marks which are used by another item" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, testIndex1).toString())
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.inset
+          ))
+        }
       }
     }
   }

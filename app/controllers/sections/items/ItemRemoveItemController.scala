@@ -66,7 +66,8 @@ class ItemRemoveItemController @Inject()(
     Future.successful(
       status(view(
         form = form,
-        action = routes.ItemRemoveItemController.onSubmit(ern, draftId, idx)
+        action = routes.ItemRemoveItemController.onSubmit(ern, draftId, idx),
+        idx
       ))
     )
   }

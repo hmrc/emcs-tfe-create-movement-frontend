@@ -68,7 +68,9 @@ class ItemPackagingRemovePackageController @Inject()(
         status(view(
           form = form,
           action = routes.ItemPackagingRemovePackageController.onSubmit(ern, draftId, itemsIdx, packagingIdx),
-          packaging
+          packaging,
+          itemsIdx,
+          packagingIdx
         ))
       )
     }

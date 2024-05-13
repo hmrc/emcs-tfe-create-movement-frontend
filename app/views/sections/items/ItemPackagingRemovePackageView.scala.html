@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
+@import viewmodels.helpers.ShippingMarksPackagingHelper
 
 @this(
         layout: templates.Layout,
@@ -27,10 +28,17 @@
         h2: components.h2,
         strong: components.strong,
         p: components.p,
-        continueOrExit: components.continueOrExit
+        continueOrExit: components.continueOrExit,
+        helper: ShippingMarksPackagingHelper
 )
 
-@(form: Form[_], action: Call, packagingDescription: String)(implicit request: DataRequest[_], messages: Messages)
+@(
+        form: Form[_],
+        action: Call,
+        packagingDescription: String,
+        itemIdx: Index,
+        packageIdx: Index
+)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingRemovePackage.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -43,6 +51,8 @@
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @h1(messages("itemPackagingRemovePackage.heading"), classes = "govuk-heading-l")
+
+        @helper.packagingRemoveFromListContent(itemIdx, packageIdx)
 
         @p() {
             @Html(messages("itemPackagingRemovePackage.p1", strong(Html(packagingDescription), withFullStop = true)))

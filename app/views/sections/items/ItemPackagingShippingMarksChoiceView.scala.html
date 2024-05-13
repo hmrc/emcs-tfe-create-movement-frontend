@@ -28,10 +28,11 @@
     strong: components.strong,
     details: components.details,
     bullets: components.bullets,
-    continueOrExit: components.continueOrExit
+    continueOrExit: components.continueOrExit,
+    helper: viewmodels.helpers.ShippingMarksPackagingHelper
 )
 
-@(form: Form[_], itemIndex: Index, packagingIndex: Index, packagingDescription: String, packagingQuantity: String, action: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], itemIndex: Index, packagingIndex: Index, packagingDescription: String, packagingQuantity: String, action: Call, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingShippingMarksChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -59,6 +60,10 @@
         }
 
         @govukRadios(ItemPackagingShippingMarksChoiceHelper.options(form, itemIndex, packagingIndex))
+
+        @if(mode != NormalMode) {
+            @helper.shippingMarkChoiceContent(itemIndex, packagingIndex)
+        }
 
         @continueOrExit()
     }

@@ -19,14 +19,13 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
-import forms.sections.transportArranger.TransportArrangerVatFormProvider.{vatNumberField, vatNumberRequired}
-import models.{Mode, VatNumberModel}
+import models.Mode
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.transportArranger.TransportArrangerVatView
@@ -65,7 +64,7 @@ class TransportArrangerVatController @Inject()(
       ) { arranger =>
         formProvider(arranger).bindFromRequest().fold(
           renderView(BadRequest, _, arranger, mode),
-          handleSubmittedForm(_, arranger, mode)
+          saveAndRedirect(TransportArrangerVatPage, _, mode)
         )
       }
     }
@@ -76,22 +75,4 @@ class TransportArrangerVatController @Inject()(
         routes.TransportArrangerVatController.onSubmit(request.ern, request.draftId, mode),
         arranger
       )))
-
-  private def handleSubmittedForm(transportArrangerVatModel: VatNumberModel, arranger: TransportArranger, mode: Mode)
-                                 (implicit request: DataRequest[_], messages: Messages): Future[Result] = {
-
-    if (transportArrangerVatModel.hasVatNumber && transportArrangerVatModel.vatNumber.isEmpty) {
-      renderView(
-        status = BadRequest,
-        form =
-          formProvider(arranger)
-            .fill(transportArrangerVatModel)
-            .withError(vatNumberField, messages(vatNumberRequired)),
-        arranger = arranger,
-        mode = mode
-      )
-    } else {
-      saveAndRedirect(TransportArrangerVatPage, transportArrangerVatModel, mode)
-    }
-  }
 }

@@ -18,9 +18,8 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemFiscalMarksChoiceFormProvider
-import models.GoodsType
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.{ItemFiscalMarksChoicePage, ItemFiscalMarksPage}
 import play.api.data.Form

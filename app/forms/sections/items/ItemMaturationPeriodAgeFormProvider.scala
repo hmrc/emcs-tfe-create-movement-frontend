@@ -17,14 +17,15 @@
 package forms.sections.items
 
 import forms.XSS_REGEX
-
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.GoodsType
 import models.sections.items.ItemMaturationPeriodAgeModel
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text => playText}
+import play.api.data.Forms.mapping
 import play.api.i18n.Messages
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfTrue
+
+import javax.inject.Inject
 
 class ItemMaturationPeriodAgeFormProvider @Inject() extends Mappings {
 
@@ -34,15 +35,12 @@ class ItemMaturationPeriodAgeFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         hasMaturationPeriodAgeField -> boolean(radioRequired, args = Seq(messages(goodsType.toSingularOutput()))),
-        maturationPeriodAgeField -> optional(
-          playText()
+        maturationPeriodAgeField -> mandatoryIfTrue(hasMaturationPeriodAgeField,
+          text(maturationPeriodAgeRequired)
             .verifying(maxLength(maturationPeriodAgeMaxLength, maturationPeriodAgeLength))
             .verifying(regexp(XSS_REGEX, maturationPeriodAgeInvalid))
         )
       )(ItemMaturationPeriodAgeModel.apply)(ItemMaturationPeriodAgeModel.unapply)
-        .transform[ItemMaturationPeriodAgeModel](
-          model => if(!model.hasMaturationPeriodAge) model.copy(maturationPeriodAge = None) else model, identity
-        )
     )
 }
 

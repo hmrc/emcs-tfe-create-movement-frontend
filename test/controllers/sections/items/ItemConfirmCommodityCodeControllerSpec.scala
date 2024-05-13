@@ -21,9 +21,9 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
 import mocks.viewmodels.MockItemConfirmCommodityCodeHelper
-import models.{ReviewMode, UserAnswers}
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
+import models.{ReviewMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.Messages

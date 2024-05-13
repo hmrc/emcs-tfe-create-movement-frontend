@@ -18,15 +18,12 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
-import forms.sections.items.ItemMaturationPeriodAgeFormProvider._
-import models.GoodsType
 import models.requests.DataRequest
-import models.sections.items.ItemMaturationPeriodAgeModel
-import models.{Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemMaturationPeriodAgePage
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.items.ItemMaturationPeriodAgeView
@@ -62,7 +59,7 @@ class ItemMaturationPeriodAgeController @Inject()(
         withGoodsTypeAsync(idx) { goodsType =>
           formProvider(goodsType).bindFromRequest().fold(
             renderView(BadRequest, _, idx, mode, goodsType),
-            handleSubmittedForm(_, idx, mode, goodsType)
+            saveAndRedirect(ItemMaturationPeriodAgePage(idx), _, mode)
           )
         }
       }
@@ -75,20 +72,4 @@ class ItemMaturationPeriodAgeController @Inject()(
         goodsType = goodsType
       )))
 
-  private def handleSubmittedForm(maturationPeriodAgeModel: ItemMaturationPeriodAgeModel, idx: Index, mode: Mode, goodsType: GoodsType)
-                                 (implicit request: DataRequest[_], messages: Messages): Future[Result] =
-    if(maturationPeriodAgeModel.hasMaturationPeriodAge && maturationPeriodAgeModel.maturationPeriodAge.isEmpty) {
-      renderView(
-        status = BadRequest,
-        form =
-          formProvider(goodsType)(messages)
-            .fill(maturationPeriodAgeModel)
-            .withError(maturationPeriodAgeField, messages(maturationPeriodAgeRequired)),
-        idx = idx,
-        mode = mode,
-        goodsType
-      )
-    } else {
-      saveAndRedirect(ItemMaturationPeriodAgePage(idx), maturationPeriodAgeModel, mode)
-    }
 }

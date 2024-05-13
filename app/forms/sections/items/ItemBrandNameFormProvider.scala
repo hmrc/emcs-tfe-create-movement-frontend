@@ -17,12 +17,13 @@
 package forms.sections.items
 
 import forms.XSS_REGEX
-
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.sections.items.ItemBrandNameModel
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text => playText}
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfTrue
+
+import javax.inject.Inject
 
 class ItemBrandNameFormProvider @Inject() extends Mappings {
 
@@ -32,15 +33,12 @@ class ItemBrandNameFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         hasBrandNameField -> boolean(radioRequired),
-        brandNameField -> optional(
-          playText()
+        brandNameField -> mandatoryIfTrue(hasBrandNameField,
+          text(brandNameRequired, Seq(brandNameMaxLength.toString))
             .verifying(maxLength(brandNameMaxLength, brandNameLength))
             .verifying(regexp(XSS_REGEX, brandNameInvalid))
         )
       )(ItemBrandNameModel.apply)(ItemBrandNameModel.unapply)
-        .transform[ItemBrandNameModel](
-          model => if(!model.hasBrandName) model.copy(brandName = None) else model, identity
-        )
     )
 }
 

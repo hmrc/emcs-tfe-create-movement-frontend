@@ -18,9 +18,8 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemBulkPackagingChoiceFormProvider
-import models.GoodsType
 import models.requests.DataRequest
-import models.{Index, Mode, UserAnswers}
+import models.{GoodsType, Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
 import pages.sections.items._
 import play.api.data.Form

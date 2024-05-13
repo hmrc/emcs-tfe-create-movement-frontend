@@ -22,7 +22,8 @@ import models.requests.DataRequest
 import models.sections.items.ItemDegreesPlatoModel
 import pages.sections.items.ItemDegreesPlatoPage
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text => playText}
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfTrue
 
 import javax.inject.Inject
 
@@ -34,8 +35,8 @@ class ItemDegreesPlatoFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         hasDegreesPlatoField -> boolean(radioRequired),
-        degreesPlatoField -> optional(
-          playText()
+        degreesPlatoField -> mandatoryIfTrue(hasDegreesPlatoField,
+          text(requiredErrorKey)
             .verifying(isDecimal(nonNumericErrorKey))
             .transform[BigDecimal](BigDecimal(_), _.toString())
             .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
@@ -46,9 +47,6 @@ class ItemDegreesPlatoFormProvider @Inject() extends Mappings {
             ))
         )
       )(ItemDegreesPlatoModel.apply)(ItemDegreesPlatoModel.unapply)
-        .transform[ItemDegreesPlatoModel](
-          model => if (!model.hasDegreesPlato) model.copy(degreesPlato = None) else model, identity
-        )
     )
 }
 

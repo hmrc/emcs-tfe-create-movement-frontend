@@ -18,11 +18,12 @@ package forms.sections.transportArranger
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
-import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, vatNumberField}
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, vatNumberField, vatNumberRequired}
 import models.VatNumberModel
 import models.sections.transportArranger.TransportArranger
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text => playText}
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfTrue
 
 import javax.inject.Inject
 
@@ -32,16 +33,13 @@ class TransportArrangerVatFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         hasVatNumberField -> boolean(s"transportArrangerVat.error.radio.$transportArranger.required"),
-        vatNumberField -> optional(
-          playText()
+        vatNumberField -> mandatoryIfTrue(hasVatNumberField,
+          text(vatNumberRequired)
             .verifying(maxLength(14, "transportArrangerVat.error.length"))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
             .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
         )
       )(VatNumberModel.apply)(VatNumberModel.unapply)
-        .transform[VatNumberModel](
-          model => if(!model.hasVatNumber) model.copy(vatNumber = None) else model, identity
-        )
     )
 }
 

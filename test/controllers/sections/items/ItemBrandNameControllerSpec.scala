@@ -19,9 +19,8 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ItemBrandNameMessages
 import forms.sections.items.ItemBrandNameFormProvider
-import forms.sections.items.ItemBrandNameFormProvider.{brandNameField, hasBrandNameField}
+import forms.sections.items.ItemBrandNameFormProvider.hasBrandNameField
 import mocks.services.MockUserAnswersService
 import models.GoodsType.Wine
 import models.sections.items.ItemBrandNameModel
@@ -110,10 +109,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService w
     }
 
     "must return a Bad Request and errors when invalid data is submitted (no brand name supplied)" in new Fixture() {
-      val boundForm =
-        form
-          .bind(Map(hasBrandNameField -> "true"))
-          .withError(brandNameField, ItemBrandNameMessages.English.errorBrandNameRequired)
+      val boundForm = form.bind(Map(hasBrandNameField -> "true"))
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasBrandNameField, "true")))
 
       status(result) mustEqual BAD_REQUEST

@@ -18,11 +18,10 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemBulkPackagingSelectFormProvider
-import models.GoodsType
 import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
-import models.{Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemBulkPackagingSelectPage
 import play.api.data.Form

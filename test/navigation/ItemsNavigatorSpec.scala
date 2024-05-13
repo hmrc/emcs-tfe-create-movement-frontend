@@ -608,7 +608,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           navigator.nextPage(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
             .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
             .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-          ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
+          ) mustBe itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
         }
 
         "to the Select Shipping Mark (item packaging) page when user answered Yes and quantity == 0" in {
@@ -1321,7 +1321,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               userAnswers = emptyUserAnswers
                 .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
                 .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-            ) mustBe itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+            ) mustBe itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
           }
         }
       }

@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection}
+import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

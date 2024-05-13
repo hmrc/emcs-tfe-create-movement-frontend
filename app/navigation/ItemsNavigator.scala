@@ -325,7 +325,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case (Some(true), Some("0")) =>
           itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
         case (Some(true), Some(_)) =>
-          itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
+          itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
         case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
       }
 
@@ -484,7 +484,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case (Some(true), Some("0")) =>
         itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
       case (Some(true), Some(_)) =>
-        itemsRoutes.ItemPackagingShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
+        itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
       case (Some(false), Some("0")) =>
         //Despite the user coming from this page previously in the flow, if they enter 0 and say no shipping marks then they must have made a mistake which should be corrected
         itemsRoutes.ItemPackagingQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)

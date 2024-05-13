@@ -49,13 +49,13 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        renderView(Ok, fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)), ern, draftId, mode)
+        renderView(Ok, fillForm(ConsigneeExcisePage, formProvider()), ern, draftId, mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
-        formProvider(isNorthernIrishTemporaryRegisteredConsignee).bindFromRequest().fold(
+        formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, ern, draftId, mode),
           cleanseSaveAndRedirect(_, mode)
         )

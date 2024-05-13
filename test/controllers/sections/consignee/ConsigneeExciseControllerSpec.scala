@@ -50,7 +50,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
     implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
 
-    lazy val form: Form[String] = formProvider(true)
+    lazy val form: Form[String] = formProvider()
 
     lazy val testController = new ConsigneeExciseController(
       messagesApi,
@@ -103,7 +103,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+        override lazy val form = formProvider()
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -118,7 +118,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+        override lazy val form = formProvider()
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -183,7 +183,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
-      override lazy val form = formProvider(isNorthernIrishTemporaryRegisteredConsignee = false)
+      override lazy val form = formProvider()
 
       val boundForm = form.bind(Map("value" -> ""))
 

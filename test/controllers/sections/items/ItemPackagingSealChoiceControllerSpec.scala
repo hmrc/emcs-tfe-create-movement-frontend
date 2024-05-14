@@ -24,7 +24,7 @@ import models.response.referenceData.ItemPackaging
 import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -43,6 +43,7 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), "W300")
     .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+    .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -104,11 +105,21 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
     }
 
+    "must redirect to Index of section when Packaging Quantity is missing" in new Test(
+      Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300").set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol")))
+    ) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
     "must return OK and the correct view for a GET" in new Test(Some(baseUserAnswers)) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
+
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form, action, "Aerosol", testIndex1, testPackagingIndex1, packagingQuantity = Some("1"), isBulk = false)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -117,7 +128,7 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(true), action, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill(true), action, "Aerosol", testIndex1, testPackagingIndex1, packagingQuantity = Some("1"), isBulk = false)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted (true)" in new Test(Some(baseUserAnswers)) {
@@ -158,7 +169,7 @@ class ItemPackagingSealChoiceControllerSpec extends SpecBase with MockUserAnswer
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, action, "Aerosol", testIndex1, testPackagingIndex1, packagingQuantity = Some("1"), isBulk = false)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

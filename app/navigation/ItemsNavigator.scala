@@ -168,7 +168,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex, itemsPackagingIndex, NormalMode)
         case _ =>
-          itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
+          itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemsIndex)
       }
 
     case ItemWineProductCategoryPage(idx) => itemWineProductCategoryRouting(idx, NormalMode)

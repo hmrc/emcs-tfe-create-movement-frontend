@@ -47,35 +47,37 @@ class ItemBulkPackagingSealChoiceController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        withItemBulkPackaging(idx) { description =>
-          renderView(Ok, fillForm(ItemBulkPackagingSealChoicePage(idx), formProvider()), idx, mode, description)
-        }
+        renderView(Ok, fillForm(ItemBulkPackagingSealChoicePage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        withItemBulkPackaging(idx) { description =>
-          formProvider().bindFromRequest().fold(
-            renderView(BadRequest, _, idx, mode, description),
-            value => {
-              val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
-                ItemBulkPackagingSealChoicePage(idx),
-                value,
-                request.userAnswers.remove(ItemBulkPackagingSealTypePage(idx))
-              )
-              saveAndRedirect(ItemBulkPackagingSealChoicePage(idx), value, newUserAnswers, mode)
-            }
-          )
-        }
+        formProvider().bindFromRequest().fold(
+          renderView(BadRequest, _, idx, mode),
+          value => {
+            val newUserAnswers = cleanseUserAnswersIfValueHasChanged(
+              ItemBulkPackagingSealChoicePage(idx),
+              value,
+              request.userAnswers.remove(ItemBulkPackagingSealTypePage(idx))
+            )
+            saveAndRedirect(ItemBulkPackagingSealChoicePage(idx), value, newUserAnswers, mode)
+          }
+        )
       }
     }
 
-  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode, description: String)(implicit request: DataRequest[_]): Future[Result] =
-    Future.successful(status(view(
-      form = form,
-      action = controllers.sections.items.routes.ItemBulkPackagingSealChoiceController.onSubmit(request.ern, request.draftId, idx, mode),
-      packagingDescription = description
-    )))
+  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    withItemBulkPackaging(idx) { description =>
+      Future.successful(status(view(
+        form = form,
+        action = controllers.sections.items.routes.ItemBulkPackagingSealChoiceController.onSubmit(request.ern, request.draftId, idx, mode),
+        packagingDescription = description,
+        itemIndex = idx,
+        packagingIndex = idx,
+        packagingQuantity = None,
+        isBulk = true
+      )))
+    }
 }

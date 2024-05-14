@@ -771,11 +771,11 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to the Item Packaging CYA page" - {
+        "to the Item CYA page" - {
           "when the user answers 'no'" in {
             navigator.nextPage(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), NormalMode, emptyUserAnswers
               .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
       }

@@ -30,7 +30,7 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call, packagingDescription: String)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, packagingDescription: String,  packagingIndex: Index, itemIndex: Index, packagingQuantity: Option[String], isBulk: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemPackagingSealChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -48,8 +48,10 @@
         @messages("itemPackagingSealChoice.p1")
       }
 
-      @p() {
-        @Html(messages("itemPackagingSealChoice.p2", strong(Html(packagingDescription), withFullStop = true)))
+      @if(!isBulk) {
+        @p() {
+            @Html(messages("itemPackagingSealChoice.p2", packagingIndex.displayIndex, itemIndex.displayIndex) + strong(Html(s"$packagingDescription: ${packagingQuantity.get}"), withFullStop = true))
+        }
       }
 
       @govukRadios(

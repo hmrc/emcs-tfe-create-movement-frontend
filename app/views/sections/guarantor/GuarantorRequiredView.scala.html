@@ -15,39 +15,97 @@
  *@
 
 @import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import viewmodels.LegendSize
+@import config.AppConfig
+
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukRadios: GovukRadios,
-        govukButton: GovukButton,
-        h1: components.h1,
-        h2: components.h2,
-        continueOrExit: components.continueOrExit
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInsetText : GovukInsetText,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    h1: components.h1,
+    h2: components.h2,
+    p: components.p,
+    link: components.link,
+    continueOrExit: components.continueOrExit,
+    bullets: components.bullets,
+    insetText: components.InsetText,
+    appConfig: AppConfig
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onwardRoute: Call, requiredGuarantee: Boolean = false, requiredGuaranteeNIToEU: Boolean = false)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("guarantorRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, if(requiredGuarantee || requiredGuaranteeNIToEU) messages("guarantorRequired.isRequired.title") else messages("guarantorRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorRequiredController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @if(requiredGuarantee || requiredGuaranteeNIToEU) {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+        @h1("guarantorRequired.isRequired.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @if(requiredGuaranteeNIToEU) {
+            @p(){@messages("guarantorRequired.isRequired.NIToEU.p1")}
+        } else {
+            @p(){@messages("guarantorRequired.isRequired.p1")}
         }
 
-        @h2(messages("guarantor.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(Text(messages("guarantorRequired.heading"))).asPageHeading(LegendSize.Large)
-            )
+        @defaultContent()
+
+        @link(
+            link = onwardRoute.url,
+            messageKey = "guarantorRequired.isRequired.enterDetails",
+            button = true,
+            id = Some("enter-details")
         )
 
-        @continueOrExit()
+    } else {
+
+        @formHelper(action = onwardRoute, 'autoComplete -> "off") {
+
+            @h1("guarantorRequired.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+            @if(form.errors.nonEmpty) {
+                @govukErrorSummary(ErrorSummaryViewModel(form))
+            }
+
+            @p(){@messages("guarantorRequired.p1")}
+
+            @defaultContent()
+
+            @h2(messages("guarantorRequired.h2"))
+
+            @p(){@messages("guarantorRequired.p4")}
+            @bullets(Seq(
+                p()(Html(messages("guarantorRequired.bullet.1"))),
+                p()(Html(messages("guarantorRequired.bullet.2")))
+            ))
+
+            @h2(messages("guarantorRequired.question"))
+
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(Text(messages("guarantorRequired.question"))).hidden
+                )
+            )
+
+            @continueOrExit()
+        }
+
     }
+}
+
+@defaultContent() = {
+    @p(){@messages("guarantorRequired.p2")}
+    @p(){@link(
+        link = appConfig.exciseWarehouseGuidanceUrl,
+        messageKey = "guarantorRequired.p3.link",
+        opensInNewTab = true,
+        withFullStop = true
+    )}
+    @insetText(Text(messages("guarantorRequired.inset")))
 }
 
 @{

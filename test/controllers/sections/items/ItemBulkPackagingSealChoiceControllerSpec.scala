@@ -25,7 +25,7 @@ import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
 import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingSealChoicePage, ItemBulkPackagingSealTypePage, ItemBulkPackagingSelectPage, ItemExciseProductCodePage}
+import pages.sections.items._
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}

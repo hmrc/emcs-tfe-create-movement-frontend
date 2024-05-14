@@ -27,32 +27,33 @@ import scala.concurrent.Future
 
 trait GuarantorBaseController extends BaseNavigationController {
 
-  def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result = {
-    withAnswer(
-      page = GuarantorRequiredPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
-    ) {
-      case true => f
-      case false =>
-        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
-        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId))
+  def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result =
+    if(GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()) f else {
+      withAnswer(
+        page = GuarantorRequiredPage,
+          redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
+      ) {
+        case true => f
+        case false =>
+          logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
+          Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId))
+      }
     }
-  }
 
-  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = GuarantorRequiredPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
-    ) {
-      case true => f
-      case false =>
-        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
-        Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId)))
+  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+    if (GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()) f else {
+      withAnswerAsync(
+        page = GuarantorRequiredPage,
+        redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
+      ) {
+        case true => f
+        case false =>
+          logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
+          Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId)))
+      }
     }
-  }
 
-
-  def withGuarantorArrangerAnswer(f: GuarantorArranger => Result)(implicit request: DataRequest[_]): Result = {
+  def withGuarantorArrangerAnswer(f: GuarantorArranger => Result)(implicit request: DataRequest[_]): Result =
     withAnswer(
       page = GuarantorArrangerPage,
       redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
@@ -63,10 +64,9 @@ trait GuarantorBaseController extends BaseNavigationController {
         logger.warn(s"[withGuarantorArrangerAnswer] Invalid answer of $guarantorArranger for this controller/page")
         Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId))
     }
-  }
 
 
-  def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
+  def withGuarantorArrangerAnswer(f: GuarantorArranger => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     withAnswerAsync(
       page = GuarantorArrangerPage,
       redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
@@ -77,6 +77,4 @@ trait GuarantorBaseController extends BaseNavigationController {
         logger.warn(s"[withGuarantorArrangerAnswer] Invalid answer of $guarantorArranger for this controller/page")
         Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.draftId)))
     }
-  }
-
 }

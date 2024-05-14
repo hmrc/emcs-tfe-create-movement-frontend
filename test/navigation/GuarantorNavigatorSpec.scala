@@ -49,13 +49,24 @@ class GuarantorNavigatorSpec extends SpecBase {
               controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
+
         "when false" - {
+
           "must go to CAM-G06" in {
 
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
               controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+          }
+        }
+
+        "when NOT answered" - {
+
+          "must go to CAM-G02" in {
+
+            navigator.nextPage(GuarantorRequiredPage, NormalMode, emptyUserAnswers) mustBe
+              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
       }

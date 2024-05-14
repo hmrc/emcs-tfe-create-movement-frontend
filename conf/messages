@@ -661,8 +661,23 @@ dispatchBusinessName.error.invalidCharacters = Business name must not contain < 
 dispatchBusinessName.checkYourAnswersLabel = Trader name
 dispatchBusinessName.change.hidden = Trader name
 
-guarantorRequired.title = Is a guarantor required for this movement?
-guarantorRequired.heading = Is a guarantor required for this movement?
+
+guarantorRequired.isRequired.title = Your movement requires a guarantee
+guarantorRequired.isRequired.heading = Your movement requires a guarantee
+guarantorRequired.isRequired.p1 = This movement must be covered by financial security in the form of a movement guarantee.
+guarantorRequired.isRequired.NIToEU.p1 = This movement must be covered by financial security in the form of a movement guarantee. The only type of movement that is allowed to take place without a guarantee from Northern Ireland to the EU is the duty-suspended movement of energy products using fixed transport installations.
+guarantorRequired.isRequired.enterDetails = Enter guarantor details
+guarantorRequired.title = Movement guarantee
+guarantorRequired.heading = Movement guarantee
+guarantorRequired.p1 = Generally, duty-suspended excise goods moving within the UK (between UK warehouses or before export), or from Northern Ireland to the EU, must be covered by financial security in the form of a movement guarantee.
+guarantorRequired.p2 = It is the consignor’s responsibility to make sure that a valid movement guarantee is in place before the goods are dispatched in duty suspension. Movement guarantees are valid if lodged with HMRC and one of the businesses named on the guarantee has a suitable connection to that movement. For example, they are the consignor or the owner of the goods.
+guarantorRequired.p3.link = Read more about financial security for duty-suspended movements here
+guarantorRequired.inset = The guarantor cannot be changed once the movement has started. The guarantor is liable for the whole of the movement until the movement has correctly ended. This means the goods reaching their stated destination or, for exports, leaving the UK.
+guarantorRequired.h2 = Movements that do not require a guarantee
+guarantorRequired.p4 = The following movement types do not usually require a guarantee:
+guarantorRequired.bullet.1 = duty-suspended movements of energy products from Northern Ireland to the EU using fixed transport installations
+guarantorRequired.bullet.2 = duty-suspended movements from UK alcohol production premises (that are not approved excise warehouses) to other UK tax or excise warehouses. However, if a change of destination is submitted and the new destination is outside of the UK, a guarantor is required
+guarantorRequired.question = Is a guarantee required for this movement?
 guarantorRequired.checkYourAnswersLabel = Guarantor required
 guarantorRequired.error.required = Select yes if a guarantor is required for this movement
 guarantorRequired.change.hidden = if a guarantor is required for this movement

@@ -1263,6 +1263,7 @@ itemPackagingSelectShippingMark.select.defaultValue = Select a shipping mark
 
 itemPackagingShippingMarksChoice.title = Shipping mark
 itemPackagingShippingMarksChoice.heading = Shipping mark
+itemPackagingShippingMarksChoice.warning = If you select that you don’t want a shipping mark, the shipping mark currently assigned to this packaging will be removed. Any other packages in this movement using the same shipping mark with a packaging quantity of 0 will therefore be invalid, and will also be removed.
 itemPackagingShippingMarksChoice.p1 = Packaging {0} for item {1} is {2}
 itemPackagingShippingMarksChoice.p2 = Shipping marks are an optional way of identifying any packages that have more than one type of item packed inside.
 itemPackagingShippingMarksChoice.details.summary = Using shipping marks to show that this packaging contains mixed items

@@ -20,10 +20,11 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemPackagingShippingMarksChoiceMessages
 import forms.sections.items.ItemPackagingShippingMarksChoiceFormProvider
+import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.items.ItemPackagingQuantityPage
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -61,7 +62,8 @@ class ItemPackagingShippingMarksChoiceViewSpec extends SpecBase with ViewBehavio
             testPackagingIndex1,
             testPackageBag.description,
             packagingQuantity = "0",
-            testOnwardRoute
+            testOnwardRoute,
+            NormalMode
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -87,41 +89,103 @@ class ItemPackagingShippingMarksChoiceViewSpec extends SpecBase with ViewBehavio
 
         "when the quantity is > 0" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
-            emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1"))
+          "when the package has a shipping mark that is used on another item/package of zero quantity AND viewed in Change mode" - {
 
-          implicit val doc: Document = Jsoup.parse(view(
-            form,
-            testIndex1,
-            testPackagingIndex1,
-            testPackageBag.description,
-            packagingQuantity = "1",
-            testOnwardRoute
-          ).toString())
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+                .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+                .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+            )
 
-          behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.h2(1) -> messagesForLanguage.itemSection,
-            Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-            Selectors.title -> messagesForLanguage.title,
-            Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.p(1) -> messagesForLanguage.p1(quantity = "1"),
-            Selectors.p(2) -> messagesForLanguage.p2,
-            Selectors.summary(1) -> messagesForLanguage.detailsSummary,
-            Selectors.detailsP(1) -> messagesForLanguage.detailsP1,
-            Selectors.detailsBullet(1) -> messagesForLanguage.detailsBullet1,
-            Selectors.detailsBullet(2) -> messagesForLanguage.detailsBullet2,
-            Selectors.detailsBullet(3) -> messagesForLanguage.detailsBullet3,
-            Selectors.legend -> messagesForLanguage.legend,
-            Selectors.radioButton(1) -> messagesForLanguage.yes,
-            Selectors.radioButton(2) -> messagesForLanguage.no,
-            Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
-          ))
+            implicit val doc: Document = Jsoup.parse(view(
+              form,
+              testIndex1,
+              testPackagingIndex1,
+              testPackageBag.description,
+              packagingQuantity = "1",
+              testOnwardRoute,
+              CheckMode
+            ).toString())
 
-          "must not have a hint on the 'No' radio button" - {
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.h2(1) -> messagesForLanguage.itemSection,
+              Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+              Selectors.title -> messagesForLanguage.title,
+              Selectors.h1 -> messagesForLanguage.heading,
+              Selectors.p(1) -> messagesForLanguage.p1(quantity = "1"),
+              Selectors.p(2) -> messagesForLanguage.p2,
+              Selectors.summary(1) -> messagesForLanguage.detailsSummary,
+              Selectors.detailsP(1) -> messagesForLanguage.detailsP1,
+              Selectors.detailsBullet(1) -> messagesForLanguage.detailsBullet1,
+              Selectors.detailsBullet(2) -> messagesForLanguage.detailsBullet2,
+              Selectors.detailsBullet(3) -> messagesForLanguage.detailsBullet3,
+              Selectors.legend -> messagesForLanguage.legend,
+              Selectors.radioButton(1) -> messagesForLanguage.yes,
+              Selectors.radioButton(2) -> messagesForLanguage.no,
+              Selectors.warningText -> messagesForLanguage.warningText,
+              Selectors.button -> messagesForLanguage.saveAndContinue,
+              Selectors.link(1) -> messagesForLanguage.returnToDraft
+            ))
 
-            behave like pageWithElementsNotPresent(Seq(Selectors.radioButtonHint(2)))
+            "must not have a hint on the 'No' radio button" - {
+
+              behave like pageWithElementsNotPresent(Seq(Selectors.radioButtonHint(2)))
+            }
+          }
+
+          "when the package has a shipping mark that is used on another item/package of zero quantity AND viewed in NormalMode" - {
+
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+                .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+                .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+            )
+
+            implicit val doc: Document = Jsoup.parse(view(
+              form,
+              testIndex1,
+              testPackagingIndex1,
+              testPackageBag.description,
+              packagingQuantity = "1",
+              testOnwardRoute,
+              NormalMode
+            ).toString())
+
+            "must not have the warning message" - {
+              behave like pageWithElementsNotPresent(Seq(Selectors.warningText))
+            }
+          }
+
+          "when the package does not have a shipping mark linked to another item AND viewed in CheckMode" - {
+
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+                .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+                .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark2")
+            )
+
+            implicit val doc: Document = Jsoup.parse(view(
+              form,
+              testIndex1,
+              testPackagingIndex1,
+              testPackageBag.description,
+              packagingQuantity = "1",
+              testOnwardRoute,
+              CheckMode
+            ).toString())
+
+            "must not have the warning message" - {
+              behave like pageWithElementsNotPresent(Seq(Selectors.warningText))
+            }
           }
         }
       }

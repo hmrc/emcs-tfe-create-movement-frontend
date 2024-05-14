@@ -70,7 +70,8 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
         packagingIdx,
         description,
         quantity,
-        routes.ItemPackagingShippingMarksChoiceController.onSubmit(request.ern, request.draftId, itemsIdx, packagingIdx, mode)
+        routes.ItemPackagingShippingMarksChoiceController.onSubmit(request.ern, request.draftId, itemsIdx, packagingIdx, mode),
+        mode
       )))
     }
   }

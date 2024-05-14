@@ -129,7 +129,8 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
         testPackagingIndex1,
         testPackageBag.description,
         packagingQuantity = "2",
-        submitCall
+        submitCall,
+        NormalMode
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -145,7 +146,8 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
         testPackagingIndex1,
         testPackageBag.description,
         packagingQuantity = "2",
-        submitCall
+        submitCall,
+        NormalMode
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -173,7 +175,8 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
         testPackagingIndex1,
         testPackageBag.description,
         packagingQuantity = "2",
-        submitCall
+        submitCall,
+        NormalMode
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

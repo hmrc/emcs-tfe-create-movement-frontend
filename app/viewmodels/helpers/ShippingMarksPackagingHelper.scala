@@ -22,9 +22,10 @@ import models.requests.DataRequest
 import pages.sections.items.{ItemsSection, ItemsSectionItem}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
-import views.html.components.inset
+import views.html.components.{inset, warningText}
 
-class ShippingMarksPackagingHelper @Inject()(inset: inset) {
+class ShippingMarksPackagingHelper @Inject()(inset: inset,
+                                             warning: warningText) {
 
   def packagingRemoveFromListContent(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[HtmlFormat.Appendable] =
     Option.when(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, packageIdx)) {
@@ -34,6 +35,11 @@ class ShippingMarksPackagingHelper @Inject()(inset: inset) {
   def itemRemoveFromListContent(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[HtmlFormat.Appendable] =
     Option.when(ItemsSectionItem(itemIdx).packagingIndexes.exists(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, _))) {
       inset(Html(messages("itemRemoveItem.inset", itemIdx.displayIndex)))
+    }
+
+  def shippingMarkChoiceContent(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[HtmlFormat.Appendable] =
+    Option.when(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, packageIdx)) {
+      warning(Html(messages("itemPackagingShippingMarksChoice.warning")))
     }
 
 }

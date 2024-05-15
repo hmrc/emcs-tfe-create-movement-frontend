@@ -18,8 +18,8 @@ package forms.sections.items
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
-import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages.English.errorShippingMarkNotUnique
+import fixtures.messages.sections.items.ItemPackagingEnterShippingMarksMessages
+import fixtures.messages.sections.items.ItemPackagingEnterShippingMarksMessages.English.errorShippingMarkNotUnique
 import forms.behaviours.StringFieldBehaviours
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging
@@ -29,13 +29,13 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
-class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFieldBehaviours with ItemFixtures {
+class ItemPackagingEnterShippingMarksFormProviderSpec extends SpecBase with StringFieldBehaviours with ItemFixtures {
 
-  implicit val msgs: Messages = messages(Seq(ItemPackagingShippingMarksMessages.English.lang))
+  implicit val msgs: Messages = messages(Seq(ItemPackagingEnterShippingMarksMessages.English.lang))
 
-  val requiredKey = "itemPackagingShippingMarks.error.required"
-  val lengthKey = "itemPackagingShippingMarks.error.length"
-  val notUniqueKey = "itemPackagingShippingMarks.error.not.unique"
+  val requiredKey = "itemPackagingEnterShippingMarks.error.required"
+  val lengthKey = "itemPackagingEnterShippingMarks.error.length"
+  val notUniqueKey = "itemPackagingEnterShippingMarks.error.not.unique"
   val maxLength = 999
 
   implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(
@@ -53,7 +53,7 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
       .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex3), "mark 6")
   )
 
-  val form = new ItemPackagingShippingMarksFormProvider()(testIndex2, testPackagingIndex2)
+  val form = new ItemPackagingEnterShippingMarksFormProvider()(testIndex2, testPackagingIndex2)
 
   ".value" - {
 
@@ -78,34 +78,30 @@ class ItemPackagingShippingMarksFormProviderSpec extends SpecBase with StringFie
       requiredError = FormError(fieldName, requiredKey)
     )
 
-    Seq(ItemPackagingShippingMarksMessages.English) foreach { messagesForLanguage =>
-      "display an error when the shipping mark value has been used elsewhere" in {
-        form.bind(Map(fieldName -> "mark 2")).errors must contain(FormError(fieldName, errorShippingMarkNotUnique(testPackagingIndex2)))
-      }
+    "display an error when the shipping mark value has been used elsewhere" in {
+      form.bind(Map(fieldName -> "mark 2")).errors must contain(FormError(fieldName, errorShippingMarkNotUnique(testPackagingIndex2)))
+    }
 
-      "not display an error when the shipping mark value is the same as the one we are modifying" in {
-        form.bind(Map(fieldName -> "mark 5")).hasErrors mustBe false
-      }
+    "not display an error when the shipping mark value is the same as the one we are modifying" in {
+      form.bind(Map(fieldName -> "mark 5")).hasErrors mustBe false
+    }
 
-      "not display an error when the shipping mark value is changed to something not used before" in {
-        form.bind(Map(fieldName -> "mark 5555555555555555")).hasErrors mustBe false
-      }
+    "not display an error when the shipping mark value is changed to something not used before" in {
+      form.bind(Map(fieldName -> "mark 5555555555555555")).hasErrors mustBe false
+    }
 
-      "not display an error when a shipping mark value is added and there are no other shipping marks present" in {
-        val noOtherShippingMarksDataRequest = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BO", "Box"))
-            .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
-            .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), ItemPackaging("BO", "Box"))
-        )
+    "not display an error when a shipping mark value is added and there are no other shipping marks present" in {
+      val noOtherShippingMarksDataRequest = dataRequest(
+        FakeRequest(),
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BO", "Box"))
+          .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+          .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), ItemPackaging("BO", "Box"))
+      )
 
-        new ItemPackagingShippingMarksFormProvider()(testIndex2, testPackagingIndex1)(noOtherShippingMarksDataRequest, msgs)
-          .bind(Map(fieldName -> "shipping mark 1")).hasErrors mustBe false
-      }
-
-
+      new ItemPackagingEnterShippingMarksFormProvider()(testIndex2, testPackagingIndex1)(noOtherShippingMarksDataRequest, msgs)
+        .bind(Map(fieldName -> "shipping mark 1")).hasErrors mustBe false
     }
 
   }

@@ -55,54 +55,53 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
 
         ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
       }
-//TODO: uncomment in ETFE-3809
-//      "if shipping marks choice is true, shipping mark has been entered, seal choice is false" in {
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-//          baseUserAnswers
-//            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-//            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
-//            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-//        )
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
-//      }
-//
-//      "if shipping marks choice is false, seal choice is false" in {
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-//          baseUserAnswers
-//            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
-//            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-//        )
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
-//      }
-//
-//      "if shipping marks choice is true, shipping mark has been entered, seal choice is true, seal choice entered" in {
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-//          baseUserAnswers
-//            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-//            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
-//            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
-//            .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), sealTypeModel)
-//        )
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
-//      }
-//
-//      "if shipping marks choice is false, seal choice is true, seal choice entered" in {
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-//          baseUserAnswers
-//            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
-//            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
-//            .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), sealTypeModel)
-//        )
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
-//      }
+      "if shipping marks choice is true, shipping mark has been entered, seal choice is false" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          baseUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
+            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+        )
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
+      }
+
+      "if shipping marks choice is false, seal choice is false" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          baseUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+        )
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
+      }
+
+      "if shipping marks choice is true, shipping mark has been entered, seal choice is true, seal choice entered" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          baseUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "blah")
+            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), sealTypeModel)
+        )
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
+      }
+
+      "if shipping marks choice is false, seal choice is true, seal choice entered" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          baseUserAnswers
+            .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+            .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), sealTypeModel)
+        )
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe true
+      }
 
     }
 
@@ -117,28 +116,28 @@ class ItemsPackagingSectionItemsSpec extends SpecBase {
 
         ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
       }
-//TODO: uncomment in ETFE-3809
-//      "if shipping marks choice is true and shipping marks has no answer" in {
-//
-//        val userAnswers = baseUserAnswers
-//          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-//          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
-//      }
-//
-//      "if shipping marks choice is true, shipping marks has no answer and seal choice is true but seal type has no answer" in {
-//
-//        val userAnswers = baseUserAnswers
-//          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-//          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
-//
-//        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
-//
-//        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
-//      }
+
+      "if shipping marks choice is true and shipping marks has no answer" in {
+
+        val userAnswers = baseUserAnswers
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
+      }
+
+      "if shipping marks choice is true, shipping marks has no answer and seal choice is true but seal type has no answer" in {
+
+        val userAnswers = baseUserAnswers
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        ItemsPackagingSectionItems(testIndex1, testPackagingIndex1).isCompleted mustBe false
+      }
 
       Seq[QuestionPage[Any]](ItemSelectPackagingPage(testIndex1, testPackagingIndex1),
         ItemPackagingQuantityPage(testIndex1, testPackagingIndex1),

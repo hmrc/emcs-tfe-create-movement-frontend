@@ -19,39 +19,37 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
-import forms.sections.items.ItemPackagingShippingMarksFormProvider
+import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
 import mocks.services.MockUserAnswersService
-import models.response.referenceData.ItemPackaging
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import views.html.sections.items.ItemPackagingShippingMarksView
+import views.html.sections.items.ItemPackagingEnterShippingMarksView
 
 import scala.concurrent.Future
 
-class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
+class ItemPackagingEnterShippingMarksControllerSpec extends SpecBase with MockUserAnswersService with ItemFixtures {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val formProvider = new ItemPackagingShippingMarksFormProvider()
+  lazy val formProvider = new ItemPackagingEnterShippingMarksFormProvider()
   lazy val form = formProvider(testIndex1, testPackagingIndex1)(dataRequest(request), messages(request))
-  lazy val view = app.injector.instanceOf[ItemPackagingShippingMarksView]
+  lazy val view = app.injector.instanceOf[ItemPackagingEnterShippingMarksView]
 
-  val action: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onSubmit(testErn, testDraftId, testIndex1,
-    testPackagingIndex1, NormalMode)
-  val skipLink: Call = controllers.sections.items.routes.ItemPackagingShippingMarksController.onNoShippingMarks(testErn, testDraftId, testIndex1,
+  val action: Call = controllers.sections.items.routes.ItemPackagingEnterShippingMarksController.onSubmit(testErn, testDraftId, testIndex1,
     testPackagingIndex1, NormalMode)
 
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-    .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("AE", "Aerosol"))
+    .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
 
   class Test(val userAnswers: Option[UserAnswers]) {
 
-    lazy val controller = new ItemPackagingShippingMarksController(
+    lazy val controller = new ItemPackagingEnterShippingMarksController(
       messagesApi,
       mockUserAnswersService,
       fakeBetaAllowListAction,
@@ -65,21 +63,12 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
     )
   }
 
-  "ItemPackagingShippingMarks Controller" - {
+  "ItemPackagingEnterShippingMarks Controller" - {
 
     "must redirect to Index of section when the packaging idx is outside of bounds for a GET" in new Test(Some(
       emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
     )) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
-    }
-
-    "must redirect to Index of section when the packaging idx is outside of bounds for a GET (no shipping marks)" in new Test(Some(
-      emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), "W300")
-    )) {
-      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
@@ -94,12 +83,25 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
     }
 
-    "must redirect to Index of section when the item idx is outside of bounds for a GET (no shipping marks - " +
-      "which redirects to Items index)" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex2, testPackagingIndex1, NormalMode)(request)
+
+    "must redirect to Index of section when the packaging quantity is missing for a GET" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    )) {
+      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex2).url
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
+    }
+
+    "must redirect to Index of section when the packaging quantity is missing for a POST" in new Test(Some(
+      emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+    )) {
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url
     }
 
     "must redirect to Index of section when the item idx is outside of bounds for a GET (which redirects to Items index)" in new Test(Some(emptyUserAnswers)) {
@@ -129,7 +131,13 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action, skipLink, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        form,
+        action,
+        testPackagingIndex1,
+        testIndex1,
+        testPackageAerosol.description,
+        "2")(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
@@ -138,25 +146,13 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), action, skipLink, "Aerosol")(
-        dataRequest(request, userAnswers.get), messages(request)).toString
-    }
-
-    "must clear down the shipping marks when onNoShippingMarks is called and redirect to the next page" +
-      "setting the Shipping Marks Choice to 'No'" in new Test(Some(
-      baseUserAnswers
-        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
-    )) {
-      MockUserAnswersService.set(
-        baseUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-      ).returns(Future.successful(
-        baseUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-      ))
-
-      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+      contentAsString(result) mustEqual view(
+        form.fill("answer"),
+        action,
+        testPackagingIndex1,
+        testIndex1,
+        testPackageAerosol.description,
+        "2")(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(baseUserAnswers)) {
@@ -179,7 +175,14 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action, skipLink, "Aerosol")(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(
+        boundForm,
+        action,
+        testPackagingIndex1,
+        testIndex1,
+        testPackageAerosol.description,
+        "2"
+      )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
@@ -191,13 +194,6 @@ class ItemPackagingShippingMarksControllerSpec extends SpecBase with MockUserAns
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-    }
-
-    "must redirect to Journey Recovery for a GET (no shipping marks) if no existing data is found" in new Test(None) {
-      val result = controller.onNoShippingMarks(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

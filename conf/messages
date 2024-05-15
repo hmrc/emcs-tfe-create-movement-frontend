@@ -1065,7 +1065,7 @@ itemQuantity.error.nonNumeric = Amount must be in numbers
 itemQuantity.error.range = Amount can be up to 15 digits long, with up to 3 decimal places
 itemQuantity.error.decimalPlaces = Amount can have up to 3 decimal places
 itemQuantity.error.mustNotBeZero.noShippingMarksExist = The packaging quantity cannot be 0 because there are no shipping marks for any of the packages in this movement
-itemQuantity.error.mustNotBeZero.atLeastOnePackageWithQuantityMoreThanZero = The packaging quantity cannot be 0 as there must be at least one package with this shipping mark that has a quantity greater than 0.
+itemQuantity.error.mustNotBeZero.atLeastOnePackageWithQuantityMoreThanZero = The packaging quantity cannot be 0 as there must be at least one package with this shipping mark that has a quantity greater than 0
 itemQuantity.checkYourAnswersLabel = Quantity
 itemQuantity.checkYourAnswersValue = {0} {1}
 itemQuantity.change.hidden = item quantity
@@ -1278,17 +1278,18 @@ itemPackagingShippingMarksChoice.choice.no.hint = Item {0} must have a quantity 
 itemPackagingShippingMarksChoice.error.required = Select yes if you want to enter a shipping mark, otherwise select no
 itemPackagingShippingMarksChoice.change.hidden = Shipping mark choice
 
-itemPackagingShippingMarks.title = What shipping marks are on this packaging?
-itemPackagingShippingMarks.heading = What shipping marks are on this packaging?
-itemPackagingShippingMarks.p = Enter any marks or numbers on the packaging that will help to identify it. Use the same shipping marks for any other product types contained within this package that are entered as a separate item.
-itemPackagingShippingMarks.p2 = The packaging type is: {0}
-itemPackagingShippingMarks.link = This packaging has no shipping marks
+itemPackagingEnterShippingMarks.title = Enter a shipping mark for packaging {0}
+itemPackagingEnterShippingMarks.heading = Enter a shipping mark for packaging {0}
+itemPackagingEnterShippingMarks.p = Packaging {0} for item {1} is {2}
+itemPackagingEnterShippingMarks.hint = Enter a description of a mark or number that can be seen on the outside of the packaging.
+itemPackagingEnterShippingMarks.p2 = The packaging type is: {0}
+itemPackagingEnterShippingMarks.error.required = Enter details of the shipping marks
+itemPackagingEnterShippingMarks.error.length = Shipping marks details must be 999 characters or less
+itemPackagingEnterShippingMarks.error.character = Description must include letters and numbers
+itemPackagingEnterShippingMarks.error.invalid = Description cannot contain < and > and : and ;
+itemPackagingEnterShippingMarks.error.not.unique = Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item {0} is packed together with another item then item {0}’s packaging quantity must be changed to 0
+
 itemPackagingShippingMarks.checkYourAnswersLabel = Shipping mark description
-itemPackagingShippingMarks.error.required = Enter details of the shipping marks
-itemPackagingShippingMarks.error.length = Shipping marks details must be 999 characters or less
-itemPackagingShippingMarks.error.character = Description must include letters and numbers
-itemPackagingShippingMarks.error.invalid = Description cannot contain < and > and : and ;
-itemPackagingShippingMarks.error.not.unique = Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item {0} is packed together with another item then item {0}’s packaging quantity must be changed to 0
 itemPackagingShippingMarks.change.hidden = shipping mark description
 
 itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?

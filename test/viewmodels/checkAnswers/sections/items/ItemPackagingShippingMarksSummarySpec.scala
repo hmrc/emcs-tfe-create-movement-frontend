@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ItemPackagingShippingMarksMessages
+import fixtures.messages.sections.items.ItemPackagingEnterShippingMarksMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.items._
@@ -32,7 +32,7 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with 
 
   "ItemPackagingShippingMarksSummary" - {
 
-    Seq(ItemPackagingShippingMarksMessages.English).foreach { messagesForLanguage =>
+    Seq(ItemPackagingEnterShippingMarksMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -70,7 +70,7 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with 
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.items.routes.ItemPackagingShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1,
+                    href = controllers.sections.items.routes.ItemPackagingEnterShippingMarksController.onPageLoad(testErn, testDraftId, testIndex1,
                       testPackagingIndex1, CheckMode).url,
                     id = "changeItemPackagingShippingMarks1ForItem1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)

@@ -19,15 +19,16 @@ package fixtures.messages.sections.items
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 import models.Index
 
-object ItemPackagingShippingMarksMessages {
+object ItemPackagingEnterShippingMarksMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading: String = "What shipping marks are on this packaging?"
-    val title: String = titleHelper(heading)
+    def heading(packagingIndex: Index): String = s"Enter a shipping mark for packaging ${packagingIndex.displayIndex}"
+    def title(packagingIndex: Index): String = titleHelper(heading(packagingIndex))
 
-    val p1 = "Enter any marks or numbers on the packaging that will help to identify it. " +
-      "Use the same shipping marks for any other product types contained within this package that are entered as a separate item."
-    def p2(packagingType: String) = s"The packaging type is: $packagingType."
+    def p1(packagingIndex: Index, itemIndex: Index, packagingDescription: String, packagingQuantity: String) =
+      s"Packaging ${packagingIndex.displayIndex} for item ${itemIndex.displayIndex} is $packagingDescription: $packagingQuantity."
+
+    val hint = "Enter a description of a mark or number that can be seen on the outside of the packaging."
 
     val link = "This packaging has no shipping marks"
 

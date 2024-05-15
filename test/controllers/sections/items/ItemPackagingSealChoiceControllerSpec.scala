@@ -24,7 +24,7 @@ import models.response.referenceData.ItemPackaging
 import models.sections.items.ItemPackagingSealTypeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingSealTypePage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}

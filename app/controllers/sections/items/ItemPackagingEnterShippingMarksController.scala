@@ -17,21 +17,21 @@
 package controllers.sections.items
 
 import controllers.actions._
-import forms.sections.items.ItemPackagingShippingMarksFormProvider
+import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection}
+import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.sections.items.ItemPackagingShippingMarksView
+import views.html.sections.items.ItemPackagingEnterShippingMarksView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class ItemPackagingShippingMarksController @Inject()(
+class ItemPackagingEnterShippingMarksController @Inject()(
                                                       override val messagesApi: MessagesApi,
                                                       override val userAnswersService: UserAnswersService,
                                                       override val betaAllowList: BetaAllowListAction,
@@ -39,9 +39,9 @@ class ItemPackagingShippingMarksController @Inject()(
                                                       override val auth: AuthAction,
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
-                                                      formProvider: ItemPackagingShippingMarksFormProvider,
+                                                      formProvider: ItemPackagingEnterShippingMarksFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
-                                                      view: ItemPackagingShippingMarksView
+                                                      view: ItemPackagingEnterShippingMarksView
                                                     ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
@@ -64,28 +64,19 @@ class ItemPackagingShippingMarksController @Inject()(
       }
     }
 
-  def onNoShippingMarks(ern: String, draftId: String, itemsIndex: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      validatePackagingIndexAsync(itemsIndex, packagingIdx) {
-        val cleansedAnswers = request.userAnswers
-          .set(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx), true)
-          .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
-        userAnswersService.set(cleansedAnswers).map { savedAnswers =>
-          Redirect(navigator.nextPage(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx), mode, savedAnswers))
-        }
-      }
-    }
-
-
   private def renderView(status: Status, form: Form[_], itemsIndex: Index, packagingIdx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] =
     withItemPackaging(itemsIndex, packagingIdx) { packagingDescription =>
-      Future.successful(status(view(
-        form = form,
-        action = routes.ItemPackagingShippingMarksController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
-        packagingDescription = packagingDescription,
-        skipLink = routes.ItemPackagingShippingMarksController.onNoShippingMarks(request.ern, request.draftId, itemsIndex, packagingIdx, mode)
-      )))
+      withItemPackagingQuantity(itemsIndex, packagingIdx) { packagingQuantity =>
+        Future.successful(status(view(
+          form = form,
+          action = routes.ItemPackagingEnterShippingMarksController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
+          packagingDescription = packagingDescription,
+          packagingQuantity = packagingQuantity,
+          packagingIndex = packagingIdx,
+          itemIndex = itemsIndex
+        )))
+      }
     }
 
   private[items] def updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx: Index, packagingIdx: Index, newValue: String)

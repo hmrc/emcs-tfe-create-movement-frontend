@@ -22,11 +22,13 @@ import models.Index
 object ItemPackagingEnterShippingMarksMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(packagingIndex: Index): String = s"Enter a shipping mark for packaging ${packagingIndex.displayIndex}"
+    def heading(packagingIndex: Index): String = s"Shipping mark for packaging ${packagingIndex.displayIndex}"
     def title(packagingIndex: Index): String = titleHelper(heading(packagingIndex))
 
     def p1(packagingIndex: Index, itemIndex: Index, packagingDescription: String, packagingQuantity: String) =
       s"Packaging ${packagingIndex.displayIndex} for item ${itemIndex.displayIndex} is $packagingDescription: $packagingQuantity."
+
+    def label(packagingIndex: Index) = s"Enter a shipping mark for packaging ${packagingIndex.displayIndex}"
 
     val hint = "Enter a description of a mark or number that can be seen on the outside of the packaging."
 

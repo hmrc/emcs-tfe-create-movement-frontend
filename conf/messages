@@ -1278,9 +1278,10 @@ itemPackagingShippingMarksChoice.choice.no.hint = Item {0} must have a quantity 
 itemPackagingShippingMarksChoice.error.required = Select yes if you want to enter a shipping mark, otherwise select no
 itemPackagingShippingMarksChoice.change.hidden = Shipping mark choice
 
-itemPackagingEnterShippingMarks.title = Enter a shipping mark for packaging {0}
-itemPackagingEnterShippingMarks.heading = Enter a shipping mark for packaging {0}
+itemPackagingEnterShippingMarks.title = Shipping mark for packaging {0}
+itemPackagingEnterShippingMarks.heading = Shipping mark for packaging {0}
 itemPackagingEnterShippingMarks.p = Packaging {0} for item {1} is {2}
+itemPackagingEnterShippingMarks.label = Enter a shipping mark for packaging {0}
 itemPackagingEnterShippingMarks.hint = Enter a description of a mark or number that can be seen on the outside of the packaging.
 itemPackagingEnterShippingMarks.p2 = The packaging type is: {0}
 itemPackagingEnterShippingMarks.error.required = Enter details of the shipping marks

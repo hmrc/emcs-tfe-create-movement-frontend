@@ -51,6 +51,7 @@ class ItemPackagingEnterShippingMarksViewSpec extends SpecBase with ViewBehaviou
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h1 -> messagesForLanguage.heading(testPackagingIndex1),
           Selectors.p(1) -> messagesForLanguage.p1(testPackagingIndex1, testIndex2, testPackageAerosol.description, "2"),
+          Selectors.label("value") -> messagesForLanguage.label(testPackagingIndex1),
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft

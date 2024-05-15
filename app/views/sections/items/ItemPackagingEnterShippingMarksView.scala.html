@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
+@import viewmodels.LabelSize
 
 @this(
         layout: templates.Layout,
@@ -57,7 +58,7 @@
             id = "value",
             name = "value",
             maxLength = Some(ItemPackagingEnterShippingMarksFormProvider.maxLengthOfField),
-            label = LabelViewModel(Text(messages("itemPackagingEnterShippingMarks.heading", packagingIndex.displayIndex))).hidden,
+            label = LabelViewModel(Text(messages("itemPackagingEnterShippingMarks.label", packagingIndex.displayIndex))).withCssClass(LabelSize.Small.toString),
             value = form("value").value,
             hint = Some(HintViewModel(messages("itemPackagingEnterShippingMarks.hint"))),
             errorMessage = form.errors("value") match {

@@ -21,10 +21,14 @@ import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
+import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations}
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -56,10 +60,63 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the GuarantorRequiredPage" - {
-          "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GuarantorNameSummary.row mustBe None
+          "when guarantorAlwaysRequired is true" - {
+
+            "GuarantorArranger is answered" - {
+
+              "when guarantorAlwaysRequired is true" - {
+
+                "then must return expected row" in {
+
+                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                    .set(GuarantorArrangerPage, Consignee)
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  )
+
+                  GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+                }
+              }
+
+              "when guarantorAlwaysRequiredNIToEU is true" - {
+
+                "then must return expected row" in {
+
+                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                    .set(GuarantorArrangerPage, Consignee)
+                    .set(DestinationTypePage, EuTaxWarehouse)
+                    .set(HowMovementTransportedPage, AirTransport)
+                  )
+
+                  GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+                }
+              }
+
+              "when guarantorAlwaysRequired and guarantorAlwaysRequiredNIToEU are false" - {
+
+                "then must return expected row" in {
+
+                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                    .set(GuarantorArrangerPage, Consignee)
+                  )
+
+                  GuarantorNameSummary.row mustBe None
+                }
+              }
+            }
+
+            "GuarantorArranger is NOT answered" - {
+
+              "then must return expected row" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                )
+
+                GuarantorNameSummary.row mustBe None
+              }
+            }
           }
         }
 

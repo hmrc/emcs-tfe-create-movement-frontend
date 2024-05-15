@@ -18,10 +18,8 @@ package controllers.sections.guarantor
 
 import controllers.actions._
 import models.NormalMode
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
-import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.guarantor.GuarantorSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -43,16 +41,7 @@ class GuarantorIndexController @Inject()(
       if (GuarantorSection.isCompleted) {
         Future(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, draftId)))
       } else {
-        if(request.isUkToEuMovement) {
-          request.userAnswers.get(HowMovementTransportedPage) match {
-            case Some(FixedTransportInstallations) | None =>
-              Future(Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode)))
-            case Some(_) =>
-              saveAndRedirect(GuarantorRequiredPage, true, NormalMode)
-          }
-        } else {
-          Future(Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode)))
-        }
+        Future(Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, draftId, NormalMode)))
       }
     }
 }

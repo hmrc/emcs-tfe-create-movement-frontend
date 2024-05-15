@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
 import models.sections.info.movementScenario.MovementScenario._
 import models.{CheckMode, VatNumberModel}
@@ -31,35 +32,44 @@ import viewmodels.implicits._
 
 object GuarantorErnVatSummary {
 
-  def rows()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
-      request.userAnswers.get(GuarantorArrangerPage)
-        .map { arranger =>
+  def rows()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
 
-          val rows = arranger match {
-            case Consignor => Seq(getConsignorSummary())
-            case Consignee => Seq(getConsigneeSummary())
-            case _ => getGuarantorVatSummary()
-          }
+    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
+    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val isAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
-          val changeAction = arranger match {
-            case GoodsOwner | Transporter =>
-              Seq(
-                ActionItemViewModel(
-                  "site.change",
-                  controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.draftId, CheckMode).url,
-                  "changeGuarantorVat"
-                ).withVisuallyHiddenText(messages("guarantorVat.checkYourAnswers.change.hidden"))
-              )
-            case _ =>
-              Seq().empty
-          }
+    (guarantorArrangerAnswer, showSummaryRow) match {
+      case (Some(arranger), true) => renderRows(arranger)
+      case _ => Seq.empty
+    }
+  }
 
-          rows.map { case (key, value) =>
-            SummaryListRowViewModel(key, ValueViewModel(value), changeAction)
-          }
-        }
-    }.getOrElse(Seq())
+  def renderRows(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
+
+    val rows = arranger match {
+      case Consignor => Seq(getConsignorSummary())
+      case Consignee => Seq(getConsigneeSummary())
+      case _ => getGuarantorVatSummary()
+    }
+
+    val changeAction = arranger match {
+      case GoodsOwner | Transporter =>
+        Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+            "changeGuarantorVat"
+          ).withVisuallyHiddenText(messages("guarantorVat.checkYourAnswers.change.hidden"))
+        )
+      case _ =>
+        Seq().empty
+    }
+
+    rows.map { case (key, value) =>
+      SummaryListRowViewModel(key, ValueViewModel(value), changeAction)
+    }
+  }
 
   private def getConsignorSummary()(implicit request: DataRequest[_]): (String, String) =
     "guarantorErn.checkYourAnswers.label" -> request.ern

@@ -23,12 +23,14 @@ import fixtures.messages.sections.guarantor.GuarantorErnVatMessages.ViewMessages
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.{NoInformation, VatNumber}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import models.{CheckMode, VatNumberModel}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.{ConsigneeExcisePage, ConsigneeExportInformationPage, ConsigneeExportVatPage}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -44,7 +46,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
       SummaryListRowViewModel(
         key = Key(Text(key)),
         value = Value(Text(value)),
-        actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
+        actions = if (!showChangeLink) Seq.empty else Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
           href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
           id = "changeGuarantorVat"
@@ -54,13 +56,71 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
     Seq(GuarantorErnVatMessages.English).foreach { implicit messagesForLanguage =>
 
       s"when language is set to ${messagesForLanguage.lang.code}" - {
+
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is no answer for the GuarantorRequiredPage" - {
-          "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GuarantorErnVatSummary.rows mustBe Seq()
+          "GuarantorArranger is answered" - {
+
+            "when guarantorAlwaysRequired is true" - {
+
+              "then must return expected row" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(ConsigneeExportInformationPage, Set(VatNumber))
+                  .set(ConsigneeExportVatPage, "VAT123")
+                  .set(GuarantorArrangerPage, Consignee)
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                )
+
+                GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatNumberForExports, "VAT123"))
+              }
+            }
+
+            "when guarantorAlwaysRequiredNIToEU is true" - {
+
+              "then must return expected row" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(ConsigneeExportInformationPage, Set(VatNumber))
+                  .set(ConsigneeExportVatPage, "VAT123")
+                  .set(GuarantorArrangerPage, Consignee)
+                  .set(DestinationTypePage, EuTaxWarehouse)
+                  .set(HowMovementTransportedPage, AirTransport)
+                )
+
+                GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatInputLabel, "VAT123"))
+              }
+            }
+
+            "when guarantorAlwaysRequired and guarantorAlwaysRequiredNIToEU are false" - {
+
+              "then must not return a row" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(ConsigneeExportInformationPage, Set(VatNumber))
+                  .set(ConsigneeExportVatPage, "VAT123")
+                  .set(GuarantorArrangerPage, Consignee)
+                )
+
+                GuarantorErnVatSummary.rows mustBe Seq.empty
+              }
+            }
+          }
+
+          "GuarantorArranger is NOT answered" - {
+
+            "then must return expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(ConsigneeExportInformationPage, Set(VatNumber))
+                .set(ConsigneeExportVatPage, "VAT123")
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+              )
+
+              GuarantorErnVatSummary.rows mustBe Seq.empty
+            }
           }
         }
 
@@ -68,7 +128,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
           "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
-            GuarantorErnVatSummary.rows mustBe Seq()
+            GuarantorErnVatSummary.rows mustBe Seq.empty
           }
         }
 

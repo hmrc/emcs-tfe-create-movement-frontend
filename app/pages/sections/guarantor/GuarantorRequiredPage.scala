@@ -16,20 +16,18 @@
 
 package pages.sections.guarantor
 
-import config.Constants.{GB_PREFIX, NI_PREFIX}
 import models.GoodsType
 import models.requests.DataRequest
 import models.sections.info.movementScenario.DestinationType.Export
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse, UnknownDestination}
+import models.sections.info.movementScenario.MovementScenario._
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
-import pages.sections.items.ItemExciseProductCodePage
+import pages.sections.items.ItemsSectionItems
 import pages.sections.journeyType.HowMovementTransportedPage
-import pages.sections.transportUnit.TransportUnitTypePage
+import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.JsPath
-import queries.{ItemsCount, TransportUnitsCount}
 
 case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
@@ -37,40 +35,33 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
   override val path: JsPath = GuarantorSection.path \ toString
 
   def guarantorAlwaysRequired()(implicit request: DataRequest[_]): Boolean =
-    destinationTypeUkTaxWarehouse || destinationTypeExport || ernNotIsGBorXI
+    destinationTypeUkTaxWarehouseCondition || destinationTypeExportCondition || notGBOrXICondition
 
   def guarantorAlwaysRequiredNIToEU()(implicit request: DataRequest[_]): Boolean =
-    destinationTypeToEU && (goodsTypeAlcoholOrTobacco || isNotFixedMovementTransportType || isNotFixedTransportUnitType)
+    destinationTypeToEUCondition && (isAlcoholOrTobaccoCondition || nonFixedMovementTransportTypeCondition || nonFixedTransportUnitTypeCondition)
 
-  private def destinationTypeExport(implicit request: DataRequest[_]): Boolean =
+  private def destinationTypeExportCondition(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage).exists(_.destinationType == Export)
 
-  private def ernNotIsGBorXI(implicit request: DataRequest[_]): Boolean =
-    !(request.ern.startsWith(GB_PREFIX) || request.ern.startsWith(NI_PREFIX))
+  private def notGBOrXICondition(implicit request: DataRequest[_]): Boolean =
+    !request.isGreatBritainErn && !request.isNorthernIrelandErn
 
-  private def destinationTypeUkTaxWarehouse(implicit request: DataRequest[_]): Boolean = {
+  private def destinationTypeUkTaxWarehouseCondition(implicit request: DataRequest[_]): Boolean = {
 
     val isUkTaxWarehouse = request.userAnswers.get(DestinationTypePage)
       .exists(UkTaxWarehouse.toList.contains(_))
 
-    val releventGoodsTypes: Seq[GoodsType] = Seq(
+    val hasReleventGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
       GoodsType.Spirits,
       GoodsType.Intermediate,
       GoodsType.Energy,
       GoodsType.Tobacco
-    )
-
-    val itemCount = request.userAnswers.get(ItemsCount).getOrElse(0)
-
-    val hasReleventGoodsTypes = (for (idx <- 0 until itemCount) yield request.userAnswers
-      .get(ItemExciseProductCodePage(idx))
-      .exists(x => releventGoodsTypes.contains(GoodsType.apply(x)))
-    ).contains(true)
+    ))
 
     isUkTaxWarehouse && hasReleventGoodsTypes
   }
 
-  private def destinationTypeToEU(implicit request: DataRequest[_]): Boolean = {
+  private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {
 
     val releventDestinationTypes = Seq(
       EuTaxWarehouse,
@@ -78,43 +69,26 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
       UnknownDestination,
       TemporaryRegisteredConsignee,
       RegisteredConsignee,
+      TemporaryCertifiedConsignee,
+      CertifiedConsignee,
       DirectDelivery
     )
 
-    request.userAnswers.get(DestinationTypePage)
-      .exists(releventDestinationTypes.contains(_))
+    request.userAnswers.get(DestinationTypePage).exists(releventDestinationTypes.contains(_))
   }
 
-  private def goodsTypeAlcoholOrTobacco(implicit request: DataRequest[_]): Boolean = {
-
-    val releventGoodsTypes: Seq[GoodsType] = Seq(
+  private def isAlcoholOrTobaccoCondition(implicit request: DataRequest[_]): Boolean =
+    ItemsSectionItems.checkGoodsType(Seq(
       GoodsType.Wine,
       GoodsType.Beer,
       GoodsType.Spirits,
       GoodsType.Intermediate,
       GoodsType.Tobacco
-    )
+    ))
 
-    val itemCount = request.userAnswers.get(ItemsCount).getOrElse(0)
+  private def nonFixedMovementTransportTypeCondition(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(HowMovementTransportedPage).exists(_ != FixedTransportInstallations)
 
-    (for (idx <- 0 until itemCount) yield request.userAnswers
-      .get(ItemExciseProductCodePage(idx))
-      .exists(x => releventGoodsTypes.contains(GoodsType.apply(x)))
-    ).contains(true)
-
-  }
-
-  private def isNotFixedMovementTransportType(implicit request: DataRequest[_]): Boolean =
-    !request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)
-
-  private def isNotFixedTransportUnitType(implicit request: DataRequest[_]): Boolean = {
-
-    val transportUnitsCount = request.userAnswers.get(TransportUnitsCount).getOrElse(0)
-
-    val transportUnitIsFixedList = for (idx <- 0 until transportUnitsCount) yield request.userAnswers
-      .get(TransportUnitTypePage(idx))
-      .contains(FixedTransport)
-
-    !transportUnitIsFixedList.contains(true)
-  }
+  private def nonFixedTransportUnitTypeCondition(implicit request: DataRequest[_]): Boolean =
+    !TransportUnitsSectionUnits.containsTransportUnitType(FixedTransport).getOrElse(true)
 }

@@ -22,9 +22,13 @@ import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessage
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -54,14 +58,60 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
     Seq(GuarantorAddressMessages.English).foreach { implicit messagesForLanguage =>
 
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+        "when GuarantorRequired is true" - {
 
-        Seq(GoodsOwner, Transporter).foreach { arranger =>
-          s"when the Guarantor is ${arranger.getClass.getSimpleName.stripSuffix("$")}" - {
+          Seq(GoodsOwner, Transporter).foreach { arranger =>
 
-            "when there's no answer" - {
+            s"when the Guarantor is ${arranger.getClass.getSimpleName.stripSuffix("$")}" - {
+
+              "when there's no answer" - {
+
+                "must output the expected data" in {
+
+                  implicit lazy val request: DataRequest[_] = dataRequest(
+                    FakeRequest(),
+                    emptyUserAnswers
+                      .set(GuarantorRequiredPage, true)
+                      .set(GuarantorArrangerPage, arranger)
+                  )
+
+                  GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+                }
+              }
+
+              "when there's an answer" - {
+
+                "must output the expected row" in {
+
+                  implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, arranger)
+                    .set(GuarantorAddressPage, testUserAddress)
+                  )
+
+                  val expectedValue = HtmlContent(
+                    HtmlFormat.fill(
+                      Seq(
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                        Html(testUserAddress.town + "<br>"),
+                        Html(testUserAddress.postcode),
+                      )
+                    )
+                  )
+
+                  GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, true)
+                }
+              }
+            }
+          }
+
+          "when the Guarantor is Consignor" - {
+
+            "when there's no answer for the ConsignorAddressPage" - {
 
               "must output the expected data" in {
 
@@ -69,21 +119,21 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, arranger)
+                    .set(GuarantorArrangerPage, Consignor)
                 )
 
-                GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+                GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
               }
             }
 
-            "when there's an answer" - {
+            "when there's an answer for the ConsignorAddressPage" - {
 
               "must output the expected row" in {
 
                 implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, arranger)
-                  .set(GuarantorAddressPage, testUserAddress)
+                  .set(GuarantorArrangerPage, Consignor)
+                  .set(ConsignorAddressPage, testUserAddress)
                 )
 
                 val expectedValue = HtmlContent(
@@ -92,92 +142,113 @@ class GuarantorAddressSummarySpec extends SpecBase {
                       Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
                       Html(testUserAddress.town + "<br>"),
                       Html(testUserAddress.postcode),
-                    )
-                  )
+                    )))
+
+                GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
+              }
+            }
+          }
+
+          "when the Guarantor is Consignee" - {
+
+            "when there's no answer for the ConsigneeAddressPage" - {
+
+              "must output the expected data" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
                 )
 
-                GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, true)
+                GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignee")), false)
+              }
+            }
+
+            "when there's an answer for the ConsigneeAddressPage" - {
+
+              "must output the expected row" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(GuarantorRequiredPage, true)
+                  .set(GuarantorArrangerPage, Consignee)
+                  .set(ConsigneeAddressPage, testUserAddress)
+                )
+
+                val expectedValue = HtmlContent(
+                  HtmlFormat.fill(
+                    Seq(
+                      Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                      Html(testUserAddress.town + "<br>"),
+                      Html(testUserAddress.postcode),
+                    )))
+
+                GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
               }
             }
           }
         }
 
-        "when the Guarantor is Consignor" - {
+        "when GuarantorRequired is false" - {
 
-          "when there's no answer for the ConsignorAddressPage" - {
+          "must output the expected data" in {
 
-            "must output the expected data" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorRequiredPage, false)
+                .set(GuarantorArrangerPage, Consignor)
+            )
+
+            GuarantorAddressSummary.row() mustBe None
+          }
+        }
+
+        "when GuarantorRequired is unanswered" - {
+
+          "when guarantorAlwaysRequired is true" - {
+
+            "must output None" in {
 
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignor)
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
               )
 
               GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
             }
           }
 
-          "when there's an answer for the ConsignorAddressPage" - {
+          "when guarantorAlwaysRequiredNIToEU is true" - {
 
-            "must output the expected row" in {
-
-              implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
-                .set(GuarantorArrangerPage, Consignor)
-                .set(ConsignorAddressPage, testUserAddress)
-              )
-
-              val expectedValue = HtmlContent(
-                HtmlFormat.fill(
-                  Seq(
-                    Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                    Html(testUserAddress.town + "<br>"),
-                    Html(testUserAddress.postcode),
-                  )))
-
-              GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
-            }
-          }
-        }
-
-        "when the Guarantor is Consignee" - {
-
-          "when there's no answer for the ConsigneeAddressPage" - {
-
-            "must output the expected data" in {
+            "must output None" in {
 
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
+                  .set(GuarantorArrangerPage, Consignor)
+                  .set(DestinationTypePage, EuTaxWarehouse)
+                  .set(HowMovementTransportedPage, AirTransport)
               )
 
-              GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignee")), false)
+              GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
             }
           }
 
-          "when there's an answer for the ConsigneeAddressPage" - {
+          "when guarantorAlwaysRequired and guarantorAlwaysRequiredNIToEU are false" - {
 
-            "must output the expected row" in {
+            "must output None" in {
 
-              implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
-                .set(GuarantorArrangerPage, Consignee)
-                .set(ConsigneeAddressPage, testUserAddress)
+              implicit lazy val request: DataRequest[_] = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorArrangerPage, Consignor)
               )
 
-              val expectedValue = HtmlContent(
-                HtmlFormat.fill(
-                  Seq(
-                    Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                    Html(testUserAddress.town + "<br>"),
-                    Html(testUserAddress.postcode),
-                  )))
-
-              GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
+              GuarantorAddressSummary.row() mustBe None
             }
           }
         }

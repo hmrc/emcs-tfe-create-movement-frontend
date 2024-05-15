@@ -20,7 +20,13 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages.ViewMessages
 import models.CheckMode
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee}
+import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations, InlandWaterwayTransport}
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.transportUnit.TransportUnitTypePage
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -30,14 +36,14 @@ import viewmodels.govuk.summarylist._
 
 class GuarantorRequiredSummarySpec extends SpecBase {
 
-  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  private def expectedRow(value: String, ern: String = testErn)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
         key = Key(Text(messagesForLanguage.cyaLabel)),
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, testDraftId, CheckMode).url,
           id = "changeGuarantorRequired"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )
@@ -51,7 +57,9 @@ class GuarantorRequiredSummarySpec extends SpecBase {
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the GuarantorRequiredPage" - {
+
         "then must return a not provided row" in {
+
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
@@ -59,21 +67,87 @@ class GuarantorRequiredSummarySpec extends SpecBase {
       }
 
       "and there is a GuarantorRequiredPage answer of yes" - {
+
         "then must return a row with the answer of yes " in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(GuarantorRequiredPage, true)
+          )
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.yes)
         }
       }
 
       "and there is a GuarantorRequiredPage answer of no" - {
+
         "then must return a row with the answer " in {
+
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.no)
         }
       }
+
+      "and guarantorAlwaysRequired is true" - {
+
+        "then must return a row with the answer of yes " in {
+
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+            .set(GuarantorRequiredPage, true)
+          )
+
+          GuarantorRequiredSummary.row mustBe None
+        }
+      }
+
+      "and guarantorAlwaysRequiredNIToEU is true" - {
+
+        "then must return a row with the answer of yes " in {
+
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(DestinationTypePage, EuTaxWarehouse)
+            .set(HowMovementTransportedPage, AirTransport)
+          )
+
+          GuarantorRequiredSummary.row mustBe None
+        }
+      }
+
+      "and HowMovementTransportedPage is FixedTransportInstallations" - {
+
+        "then must return a row with the answer of yes " in {
+
+          implicit lazy val request = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, true)
+              .set(HowMovementTransportedPage, FixedTransportInstallations)
+              .set(DestinationTypePage, RegisteredConsignee)
+              .set(TransportUnitTypePage(0), FixedTransport),
+            ern = testGreatBritainWarehouseKeeperErn
+          )
+
+          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.yes, ern = testGreatBritainWarehouseKeeperErn)
+        }
+      }
+
+      "and nonUkToEuMovement is true and HowMovementTransportedPage is NOT FixedTransportInstallations" - {
+
+        "then must return a row with the answer of yes" in {
+
+          implicit lazy val request = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, true)
+              .set(HowMovementTransportedPage, InlandWaterwayTransport)
+              .set(DestinationTypePage, RegisteredConsignee),
+            ern = testGreatBritainWarehouseKeeperErn
+          )
+
+          GuarantorRequiredSummary.row mustBe None
+        }
+      }
     }
   }
-
 }

@@ -29,7 +29,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemExciseProductCodePage
-import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest

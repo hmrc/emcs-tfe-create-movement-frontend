@@ -29,15 +29,14 @@ import viewmodels.implicits._
 object GuarantorRequiredSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    if(request.isUkToEuMovement) {
-      request.userAnswers.get(HowMovementTransportedPage) match {
-        case Some(FixedTransportInstallations) | None =>
-          Some(renderSummary)
-        case _ =>
-          None
-      }
-    } else {
-      Some(renderSummary)
+
+    val guarantorAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val movementTransportFixedOrNone = request.userAnswers.get(HowMovementTransportedPage).forall(_ == FixedTransportInstallations)
+
+    (guarantorAlwaysRequired, movementTransportFixedOrNone) match {
+      case (true, _) => None
+      case (_, false) => None
+      case _ => Some(renderSummary)
     }
   }
 

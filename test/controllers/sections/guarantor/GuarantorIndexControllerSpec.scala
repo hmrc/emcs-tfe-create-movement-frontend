@@ -20,19 +20,13 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger.Consignor
-import models.sections.info.movementScenario.MovementScenario.DirectDelivery
-import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
-import pages.sections.info.DestinationTypePage
-import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import scala.concurrent.Future
 
 class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
@@ -49,12 +43,12 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       fakeBetaAllowListAction,
       messagesControllerComponents
     )
-
   }
 
-
   "GuarantorIndexController" - {
+
     "when GuarantorSection.isCompleted" - {
+
       "must redirect to the CYA controller" in new Fixture(
         Some(emptyUserAnswers
           .set(GuarantorRequiredPage, true)
@@ -69,57 +63,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
     }
 
     "when GuarantorSection is not complete" - {
-      "when the movement is UKtoEU" - {
-        "when the Journey Type has not been answered" - {
-          "must redirect to the guarantor required controller" in new Fixture(
-            Some(emptyUserAnswers.set(DestinationTypePage, DirectDelivery)),
-            testNorthernIrelandErn
-          ) {
 
-            val result = testController.onPageLoad(testNorthernIrelandErn, testDraftId)(request)
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testNorthernIrelandErn, testDraftId, NormalMode).url)
-          }
-        }
-
-        "when the Journey Type has been answered as FixedTransportInstallations" - {
-          "must redirect to the guarantor required controller" in new Fixture(
-            Some(emptyUserAnswers
-              .set(DestinationTypePage, DirectDelivery)
-              .set(HowMovementTransportedPage, FixedTransportInstallations)
-            ),
-            testNorthernIrelandErn
-          ) {
-
-            val result = testController.onPageLoad(testNorthernIrelandErn, testDraftId)(request)
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testNorthernIrelandErn, testDraftId, NormalMode).url)
-          }
-        }
-
-        "when the Journey Type has been answered as anything other than FixedTransportInstallations" - {
-          "must save the GurantorRequired page as True and redirect to the onward route of that page" in new Fixture(
-            Some(emptyUserAnswers
-              .set(DestinationTypePage, DirectDelivery)
-              .set(HowMovementTransportedPage, RoadTransport)
-            ),
-            testNorthernIrelandErn
-          ) {
-
-            val updatedAnswers = optUserAnswers.get.set(GuarantorRequiredPage, true)
-
-            MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
-
-            val result = testController.onPageLoad(testNorthernIrelandErn, testDraftId)(request)
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(testOnwardRoute.url)
-          }
-        }
-      }
-      "when the movement is NOT UKtoEU" - {
         "must redirect to the guarantor required controller" in new Fixture() {
 
           val result = testController.onPageLoad(testErn, testDraftId)(request)
@@ -128,6 +72,5 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url)
         }
       }
-    }
   }
 }

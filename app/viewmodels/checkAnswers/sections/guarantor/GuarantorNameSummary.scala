@@ -32,30 +32,34 @@ object GuarantorNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
+    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
+    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val isAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
-      request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
+    (guarantorArrangerAnswer, showSummaryRow) match {
+      case (Some(arranger), true) => Some(renderRow(arranger))
+      case _ => None
+    }
+  }
 
-        SummaryListRowViewModel(
-          key = "guarantorName.checkYourAnswersLabel",
-          value = ValueViewModel(businessName(arranger)),
-          actions = if (!showChangeLink(arranger)) {
-            Seq()
-          } else {
-            val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
-            Seq(
-              ActionItemViewModel(
-                "site.change",
-                controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, mode).url,
-                "changeGuarantorName"
-              ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
-            )
-          }
+  def renderRow(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "guarantorName.checkYourAnswersLabel",
+      value = ValueViewModel(businessName(arranger)),
+      actions = if (!showChangeLink(arranger)) {
+        Seq()
+      } else {
+        val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
+        Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, mode).url,
+            "changeGuarantorName"
+          ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
         )
       }
-    }
-
-  }
+    )
 
   private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
 

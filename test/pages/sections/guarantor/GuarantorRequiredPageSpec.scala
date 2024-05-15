@@ -21,7 +21,7 @@ import models.GoodsType
 import models.GoodsType._
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario._
-import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations, InlandWaterwayTransport, Other, PostalConsignment, RailTransport, RoadTransport, SeaTransport}
+import models.sections.journeyType.HowMovementTransported._
 import models.sections.transportUnit.TransportUnitType._
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemExciseProductCodePage
@@ -204,7 +204,16 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
   "guarantorAlwaysRequiredNIToEU" - {
 
-    Seq(EuTaxWarehouse, ExemptedOrganisation, UnknownDestination, TemporaryRegisteredConsignee, RegisteredConsignee, DirectDelivery).foreach{ destinationType =>
+    Seq(
+      EuTaxWarehouse,
+      ExemptedOrganisation,
+      UnknownDestination,
+      TemporaryRegisteredConsignee,
+      RegisteredConsignee,
+      DirectDelivery,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
+    ).foreach { destinationType =>
 
       s"when Destination Type is to EU: ${destinationType.toString}" - {
 
@@ -229,21 +238,6 @@ class GuarantorRequiredPageSpec extends SpecBase {
               }
             }
 
-            s"when neither MovementTransportType or TransportUnitType are Fixed" - {
-
-              "return true" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), goodsType.code)
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
-              }
-            }
-
             s"when TransportUnitType is ${FixedTransport.toString}" - {
 
               "return true" in {
@@ -254,6 +248,24 @@ class GuarantorRequiredPageSpec extends SpecBase {
                     .set(DestinationTypePage, destinationType)
                     .set(ItemExciseProductCodePage(0), goodsType.code)
                     .set(TransportUnitTypePage(0), FixedTransport)
+                )
+
+                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+              }
+            }
+
+            s"when neither MovementTransportType or TransportUnitType are Fixed" - {
+
+              "return true" in {
+
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, destinationType)
+                    .set(ItemExciseProductCodePage(0), goodsType.code)
+                    .set(HowMovementTransportedPage, InlandWaterwayTransport)
+                    .set(TransportUnitTypePage(0), Tractor)
+
                 )
 
                 GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
@@ -309,7 +321,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             Seq(Container, Tractor, Trailer, Vehicle).foreach{ transportUnitType =>
 
-              s"when ANY TransportUnitType is selected: ${transportUnitType.toString}" - {
+              s"when a NON fixed TransportUnitType is selected: ${transportUnitType.toString}" - {
 
                 "return true" in {
 
@@ -356,7 +368,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                     .set(HowMovementTransportedPage, FixedTransportInstallations)
                 )
 
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
               }
             }
           }
@@ -374,7 +386,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                     .set(ItemExciseProductCodePage(0), Energy.code)
                 )
 
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
               }
             }
 
@@ -391,7 +403,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                       .set(ItemExciseProductCodePage(0), Energy.code)
                   )
 
-                  GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                  GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
                 }
               }
             }

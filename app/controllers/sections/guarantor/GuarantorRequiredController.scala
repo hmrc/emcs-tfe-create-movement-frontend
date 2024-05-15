@@ -44,10 +44,11 @@ class GuarantorRequiredController @Inject()(
                                              view: GuarantorRequiredView
                                            ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] = {
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       renderView(Ok, fillForm(GuarantorRequiredPage, formProvider()), mode)
     }
+  }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

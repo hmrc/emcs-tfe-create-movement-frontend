@@ -18,14 +18,12 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemBrandNameFormProvider
-import forms.sections.items.ItemBrandNameFormProvider._
 import models.requests.DataRequest
-import models.sections.items.ItemBrandNameModel
 import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemBrandNamePage
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.items.ItemBrandNameView
@@ -58,7 +56,7 @@ class ItemBrandNameController @Inject()(
       validateIndexAsync(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          handleSubmittedForm(_, idx, mode)
+          saveAndRedirect(ItemBrandNamePage(idx), _, mode)
         )
       }
     }
@@ -71,21 +69,4 @@ class ItemBrandNameController @Inject()(
         goodsType = goodsType
       )))
     }
-
-  private def handleSubmittedForm(brandNameModel: ItemBrandNameModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
-
-    if (brandNameModel.hasBrandName && brandNameModel.brandName.isEmpty) {
-      renderView(
-        status = BadRequest,
-        form =
-          formProvider()
-            .fill(brandNameModel)
-            .withError(brandNameField, messages(brandNameRequired, brandNameMaxLength)),
-        idx = idx,
-        mode = mode
-      )
-    } else {
-      saveAndRedirect(ItemBrandNamePage(idx), brandNameModel, mode)
-    }
-  }
 }

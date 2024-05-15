@@ -19,10 +19,10 @@ package controllers.sections.items
 import base.SpecBase
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
-import models.{Index, UserAnswers}
 import models.requests.DataRequest
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation, ItemPackaging}
 import models.sections.items.ItemBulkPackagingCode.BulkSolidPowders
+import models.{Index, UserAnswers}
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import pages.sections.items._

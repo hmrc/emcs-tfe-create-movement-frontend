@@ -18,14 +18,12 @@ package controllers.sections.items
 
 import controllers.actions._
 import forms.sections.items.ItemDegreesPlatoFormProvider
-import forms.sections.items.ItemDegreesPlatoFormProvider._
 import models.requests.DataRequest
-import models.sections.items.ItemDegreesPlatoModel
 import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemDegreesPlatoPage
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.items.ItemDegreesPlatoView
@@ -58,7 +56,7 @@ class ItemDegreesPlatoController @Inject()(
       validateIndexAsync(idx) {
         formProvider(idx).bindFromRequest().fold(
           renderView(BadRequest, _, idx, mode),
-          handleSubmittedForm(_, idx, mode)
+          saveAndRedirect(ItemDegreesPlatoPage(idx), _, mode)
         )
       }
     }
@@ -72,21 +70,4 @@ class ItemDegreesPlatoController @Inject()(
         idx = idx
       )))
     }
-
-  private def handleSubmittedForm(degreesPlatoModel: ItemDegreesPlatoModel, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages) = {
-
-    if (degreesPlatoModel.hasDegreesPlato && degreesPlatoModel.degreesPlato.isEmpty) {
-      renderView(
-        status = BadRequest,
-        form =
-          formProvider(idx)
-            .fill(degreesPlatoModel)
-            .withError(degreesPlatoField, messages(requiredErrorKey)),
-        idx = idx,
-        mode = mode
-      )
-    } else {
-      saveAndRedirect(ItemDegreesPlatoPage(idx), degreesPlatoModel, mode)
-    }
-  }
 }

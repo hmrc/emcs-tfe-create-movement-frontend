@@ -19,9 +19,8 @@ package controllers.sections.items
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ItemDegreesPlatoMessages
 import forms.sections.items.ItemDegreesPlatoFormProvider
-import forms.sections.items.ItemDegreesPlatoFormProvider.{degreesPlatoField, hasDegreesPlatoField}
+import forms.sections.items.ItemDegreesPlatoFormProvider.hasDegreesPlatoField
 import mocks.services.MockUserAnswersService
 import models.GoodsType.Wine
 import models.sections.items.ItemDegreesPlatoModel
@@ -120,10 +119,7 @@ class ItemDegreesPlatoControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must return a Bad Request and errors when invalid data is submitted (no brand name supplied)" in new Fixture() {
-      val boundForm =
-        form
-          .bind(Map(hasDegreesPlatoField -> "true"))
-          .withError(degreesPlatoField, ItemDegreesPlatoMessages.English.errorDegreesPlatoRequired)
+      val boundForm = form.bind(Map(hasDegreesPlatoField -> "true"))
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody((hasDegreesPlatoField, "true")))
 
       status(result) mustEqual BAD_REQUEST

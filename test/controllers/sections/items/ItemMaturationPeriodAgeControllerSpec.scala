@@ -17,11 +17,11 @@
 package controllers.sections.items
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeBetaAllowListAction}
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeBetaAllowListAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
-import forms.sections.items.ItemMaturationPeriodAgeFormProvider.{hasMaturationPeriodAgeField, maturationPeriodAgeField}
+import forms.sections.items.ItemMaturationPeriodAgeFormProvider.hasMaturationPeriodAgeField
 import mocks.services.MockUserAnswersService
 import models.GoodsType.Wine
 import models.sections.items.ItemMaturationPeriodAgeModel
@@ -125,10 +125,7 @@ class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswer
     "must return a Bad Request and errors when invalid data is submitted (no maturation period supplied)" in new Fixture() {
 
       val request = FakeRequest(POST, itemMaturationPeriodAgeRoute()).withFormUrlEncodedBody((hasMaturationPeriodAgeField, "true"))
-      val boundForm =
-        form
-          .bind(Map(hasMaturationPeriodAgeField -> "true"))
-          .withError(maturationPeriodAgeField, ItemMaturationPeriodAgeMessages.English.errorMaturationPeriodAgeRequired)
+      val boundForm = form.bind(Map(hasMaturationPeriodAgeField -> "true"))
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual BAD_REQUEST

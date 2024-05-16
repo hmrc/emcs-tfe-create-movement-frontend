@@ -41,7 +41,7 @@ object ItemSmallIndependentProducerMessages {
     val notAIndependentSmallProducer = "The producer is not an independent small producer"
     val smallProducerNotProvided = "I don’t want to provide information about the producer"
 
-    def seedNumber(value: String) = s"Seed number: $value"
+    def seedNumber(value: String) = s"Identification: $value"
 
     val cyaLabel = "Independent small producer declaration"
     val cyaChangeHidden = "Independent small producer declaration"

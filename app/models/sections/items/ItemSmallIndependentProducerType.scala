@@ -40,6 +40,11 @@ case object ItemSmallIndependentProducerType extends Enumerable.Implicits {
     NotProvided
   )
 
+  val notProvidedValues: Seq[ItemSmallIndependentProducerType] = Seq(
+    NotAIndependentSmallProducer,
+    NotProvided
+  )
+
   implicit val enumerable: Enumerable[ItemSmallIndependentProducerType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

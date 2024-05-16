@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.sections.items.ItemSmallIndependentProducerType
 import models.{CheckMode, Index}
 import pages.sections.items.ItemSmallIndependentProducerPage
 import play.api.i18n.Messages
@@ -42,10 +43,10 @@ class ItemSmallIndependentProducerSummary @Inject()(p: p) {
 
         val answer = messages(s"itemSmallIndependentProducer.${answerModel.producerType}")
 
-        val optSeedNumber = answerModel.producerId.map(messages("itemSmallIndependentProducer.cya.seedNumber", _))
+        val optSeedNumber = answerModel.producerId.map(messages("itemSmallIndependentProducer.cya.identification", _))
 
         val content = Seq(
-          Some(p()(Text(declaration).asHtml)),
+          Option.when(!ItemSmallIndependentProducerType.notProvidedValues.contains(answerModel.producerType))(p()(Text(declaration).asHtml)),
           Some(p()(Text(answer).asHtml)),
           optSeedNumber.map(seedNumber => p()(Text(seedNumber).asHtml))
         ).flatten.mkString

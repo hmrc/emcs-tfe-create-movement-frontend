@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
 import models.sections.items.ItemSmallIndependentProducerType.NotProvided
-import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemSmallIndependentProducerModel}
+import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
@@ -62,9 +62,13 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
       case _ => messages(s"itemSmallIndependentProducer.${smallIndependentProducer.producerType}")
     }
 
-    val optSeedNumber = smallIndependentProducer.producerId.map(messages("itemSmallIndependentProducer.cya.seedNumber", _))
+    val optSeedNumber = smallIndependentProducer.producerId.map(messages("itemSmallIndependentProducer.cya.identification", _))
 
-    Seq(Some(declaration), Some(answer), optSeedNumber).flatten.mkString(". ")
+    Seq(
+      Option.when(!ItemSmallIndependentProducerType.notProvidedValues.contains(smallIndependentProducer.producerType))(declaration),
+      Some(answer),
+      optSeedNumber
+    ).flatten.mkString(". ")
   }
 
   private[submitCreateMovement] def designationOfOriginAnswer(answer: ItemDesignationOfOriginModel)(implicit messages: Messages): String = {

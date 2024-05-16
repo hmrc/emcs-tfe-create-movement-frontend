@@ -17,14 +17,16 @@
 package views.sections.items
 
 import base.SpecBase
+import controllers.sections.items.routes
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemCheckAnswersMessages
-import models.CheckMode
+import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage, ItemsPackagingSection}
 import play.api.i18n.Messages
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
@@ -35,15 +37,21 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
     val fixQuantityErrorAtIndex: Int => String = index => s"#fix-item-$index-quantity"
     val notificationBannerList = "#list-of-submission-failures"
     val notificationBannerListElement: Int => String = index => s"#list-of-submission-failures > li:nth-of-type($index)"
+
+    val addMorePackagingButton: String = "#add-more-packaging"
+
+    override val button: String = ".govuk-button-group > .govuk-button"
   }
 
   val view: ItemCheckAnswersView = app.injector.instanceOf[ItemCheckAnswersView]
   implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+  val addMorePackagingCall: Call = routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
 
   val itemDetailsIndex = 1
   val quantityIndex = 2
   val wineDetailsIndex = 3
-  val packagingIndex = 4
+  val packagingTypeIndex = 4
+  val packagingIndex = 5
 
   "Item Check Answers view" - {
     Seq(ItemCheckAnswersMessages.English).foreach { messagesForLanguage =>
@@ -52,19 +60,71 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
+        "for the non-bulk view" - {
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.h2(2) -> messagesForLanguage.subheading(testIndex1),
-          Selectors.summaryCardHeading(itemDetailsIndex) -> messagesForLanguage.cardTitleItemDetails,
-          Selectors.summaryCardHeading(quantityIndex) -> messagesForLanguage.cardTitleQuantity,
-          Selectors.summaryCardHeading(wineDetailsIndex) -> messagesForLanguage.cardTitleWineDetails,
-          Selectors.summaryCardHeading(packagingIndex) -> messagesForLanguage.cardTitlePackaging,
-          Selectors.button -> messagesForLanguage.confirmAnswers
-        ))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemBulkPackagingChoicePage(testIndex1), false)
+              .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+              .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+              .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+          )
+
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.summaryCardHeading(itemDetailsIndex) -> messagesForLanguage.cardTitleItemDetails(testIndex1),
+            Selectors.summaryCardHeading(quantityIndex) -> messagesForLanguage.cardTitleQuantity(testIndex1),
+            Selectors.summaryCardHeading(wineDetailsIndex) -> messagesForLanguage.cardTitleWineDetails(testIndex1),
+            Selectors.summaryCardHeading(packagingTypeIndex) -> messagesForLanguage.cardTitlePackagingType(testIndex1),
+            Selectors.summaryCardHeading(packagingIndex) -> messagesForLanguage.cardTitleIndividualPackaging(testIndex1, testPackagingIndex1),
+            Selectors.addMorePackagingButton -> messagesForLanguage.addMorePackaging,
+            Selectors.button -> messagesForLanguage.confirmAnswers
+          ))
+
+          "not show the add another packaging button when the max packages have been entered" - {
+
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+              emptyUserAnswers
+                .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+                .set(ItemBulkPackagingChoicePage(testIndex1), false)
+                .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
+                .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+                .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+            )
+
+            implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(ItemsPackagingSection(testIndex1).MAX)).toString())
+
+            behave like pageWithElementsNotPresent(Seq(
+              Selectors.addMorePackagingButton
+            ))
+          }
+        }
+
+        "for the bulk view" - {
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = true, packagingCount = None).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+            Selectors.summaryCardHeading(itemDetailsIndex) -> messagesForLanguage.cardTitleItemDetails(testIndex1),
+            Selectors.summaryCardHeading(quantityIndex) -> messagesForLanguage.cardTitleQuantity(testIndex1),
+            Selectors.summaryCardHeading(wineDetailsIndex) -> messagesForLanguage.cardTitleWineDetails(testIndex1),
+            Selectors.summaryCardHeading(packagingTypeIndex) -> messagesForLanguage.cardTitlePackagingType(testIndex1),
+            Selectors.button -> messagesForLanguage.confirmAnswers
+          ))
+
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.addMorePackagingButton
+          ))
+        }
       }
 
       "must not render the Wine card" - {
@@ -72,11 +132,9 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-          val view = app.injector.instanceOf[ItemCheckAnswersView]
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(cnCode = testCnCodeSpirit), testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
 
-          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(cnCode = testCnCodeSpirit), testOnwardRoute).toString())
-
-          doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails
+          doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails(testIndex1)
         }
       }
 
@@ -85,7 +143,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
           .copy(submissionFailures = Seq(itemQuantityFailure(1))))
 
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
@@ -93,6 +151,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
           Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerContentForQuantity,
+          Selectors.addMorePackagingButton -> messagesForLanguage.addMorePackaging,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
 
@@ -106,7 +165,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
           .copy(submissionFailures = Seq(itemQuantityFailure(1), itemDegreesPlatoFailure(1))))
 
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
 
         "have the correct banner content - rendering a list of errors" in {
           doc.select(Selectors.notificationBannerList).isEmpty mustBe false
@@ -123,7 +182,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
             .copy(submissionFailures = Seq(itemQuantityFailure(2))))
 
-          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute).toString())
+          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
 
           behave like pageWithElementsNotPresent(Seq(
             Selectors.notificationBannerList,

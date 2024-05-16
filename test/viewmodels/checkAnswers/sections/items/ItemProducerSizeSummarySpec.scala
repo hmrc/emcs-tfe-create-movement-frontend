@@ -17,20 +17,23 @@
 package viewmodels.checkAnswers.sections.items
 
 import base.SpecBase
+import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemProducerSizeMessages
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.DirectDelivery
 import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
+class ItemProducerSizeSummarySpec extends SpecBase with Matchers with ItemFixtures {
 
   class Test(val userAnswers: UserAnswers) {
     implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
@@ -56,16 +59,39 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers {
               idx = testIndex1
             ) mustBe
               Some(summaryListRowBuilder(
-                key = messagesForLanguage.cyaLabel,
+                key = messagesForLanguage.cyaLabelForPureAlcohol,
                 value = s"3 ${messagesForLanguage.inputSuffix}",
                 changeLink = Some(ActionItemViewModel(
                   href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                   content = messagesForLanguage.change,
                   id = s"changeItemProducerSize${testIndex1.displayIndex}"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForPureAlcohol))
               ))
           }
         }
+      }
+
+      "if the consignor is XI and the destination type is NI -> EU (e.g. not GB tax warehouse) and " +
+        "EPC is not 'S300' or 'S500' - return 'finished product'" in new Test(
+        emptyUserAnswers
+          .set(DestinationTypePage, DirectDelivery)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+          .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
+          .set(ItemProducerSizePage(testIndex1), BigInt(3))
+      ) {
+
+        ItemProducerSizeSummary.row(
+          idx = testIndex1
+        ) mustBe
+          Some(summaryListRowBuilder(
+            key = messagesForLanguage.cyaLabelForFinishedProduct,
+            value = s"3 ${messagesForLanguage.inputSuffix}",
+            changeLink = Some(ActionItemViewModel(
+              href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+              content = messagesForLanguage.change,
+              id = s"changeItemProducerSize${testIndex1.displayIndex}"
+            ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForFinishedProduct))
+          ))
       }
 
       ItemSmallIndependentProducerType.values.diff(

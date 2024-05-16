@@ -31,7 +31,7 @@ object ItemWineProductCategoryMessages {
     val radioOptionImportedWine = "Wine imported from outside the European Union"
     val radioOptionOther = "Other"
 
-    val cyaLabel = "Product Category"
+    val cyaLabel = "Wine product category"
     val cyaChangeHidden = "what is the product category of the wine"
 
     val errorRequired = "Select the product category of the wine"

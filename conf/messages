@@ -1094,7 +1094,7 @@ itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a stat
 itemDesignationOfOrigin.s200.radio.unprovided.downstream = I don''t want to provide a statement about the marketing and labelling of the spirit
 
 itemDesignationOfOrigin.checkYourAnswersLabel = Statement of designation of origin
-itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about the designation of origin and labelling of the product
+itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about designation of origin and labelling of the product
 itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘I don’t want to provide a statement about the designation of origin’
 itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
 itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less
@@ -1176,7 +1176,7 @@ itemSmallIndependentProducer.error.producer.required = Select the type of produc
 itemSmallIndependentProducer.error.producerId.required = You must provide an excise ID or, if not available, the VAT registration number
 itemSmallIndependentProducer.error.producerId.length = The excise ID or VAT registration number should be 16 characters or less
 itemSmallIndependentProducer.error.producerId.invalid = The excise ID or VAT registration number should only contain letters and numbers
-itemSmallIndependentProducer.cya.seedNumber = Seed number: {0}
+itemSmallIndependentProducer.cya.identification = Identification: {0}
 itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer declaration
 itemSmallIndependentProducer.change.hidden = Independent small producer declaration
 
@@ -1278,6 +1278,7 @@ itemPackagingShippingMarksChoice.checkYourAnswersLabel = Shipping mark choice
 itemPackagingShippingMarksChoice.choice.yes.existing = Yes - select an existing shipping mark
 itemPackagingShippingMarksChoice.choice.no.hint = Item {0} must have a quantity of more than 0 if you are not using shipping marks to identify this package
 itemPackagingShippingMarksChoice.error.required = Select yes if you want to enter a shipping mark, otherwise select no
+itemPackagingShippingMarksChoice.checkYourAnswersLabel.yes.existing = Yes - existing shipping mark selected
 itemPackagingShippingMarksChoice.change.hidden = Shipping mark choice
 
 itemPackagingEnterShippingMarks.title = Shipping mark for packaging {0}
@@ -1292,8 +1293,8 @@ itemPackagingEnterShippingMarks.error.character = Description must include lette
 itemPackagingEnterShippingMarks.error.invalid = Description cannot contain < and > and : and ;
 itemPackagingEnterShippingMarks.error.not.unique = Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item {0} is packed together with another item then item {0}’s packaging quantity must be changed to 0
 
-itemPackagingShippingMarks.checkYourAnswersLabel = Shipping mark description
-itemPackagingShippingMarks.change.hidden = shipping mark description
+itemPackagingShippingMarks.checkYourAnswersLabel = Shipping mark
+itemPackagingShippingMarks.change.hidden = shipping mark
 
 itemWineMoreInformationChoice.title = Do you want to give any more information about the wine?
 itemWineMoreInformationChoice.heading = Do you want to give any more information about the wine?
@@ -1348,7 +1349,7 @@ itemPackagingQuantity.error.required = Enter the amount of this type of package 
 itemPackagingQuantity.error.invalidCharacters = The amount must only contain numbers
 itemPackagingQuantity.error.decimalPlaces = The amount must not contain decimal places
 itemPackagingQuantity.error.tooLong = The amount can be up to 15 digits long
-itemPackagingQuantity.checkYourAnswersLabel = Quantity
+itemPackagingQuantity.checkYourAnswersLabel = Packaging quantity
 itemPackagingQuantity.change.hidden = packaging quantity
 
 itemConfirmCommodityCode.heading = Review and confirm Excise Product Code and commodity code
@@ -1369,9 +1370,11 @@ itemProducerSize.error.required = Enter the producer’s total production
 itemProducerSize.error.wholeNumber = Amount must only contain numbers
 itemProducerSize.error.nonNumeric = Amount must only contain numbers
 itemProducerSize.error.outOfRange = Enter an amount between 1 and 15 digits
-itemProducerSize.checkYourAnswersLabel = Producer’s production of pure alcohol
+itemProducerSize.checkYourAnswersLabel.pure = Producer’s production of pure alcohol
+itemProducerSize.checkYourAnswersLabel.finished = Producer’s production of finished product
 itemProducerSize.checkYourAnswersValue = {0} hl
-itemProducerSize.change.hidden = size of producer
+itemProducerSize.change.pure.hidden = producer’s production of pure alcohol
+itemProducerSize.change.finished.hidden = producer’s production of finished product
 
 itemWineMoreInformation.title = Give more information about the wine (optional)
 itemWineMoreInformation.heading = Give more information about the wine (optional)
@@ -1426,7 +1429,7 @@ itemWineProductCategory.3 = Wine with a Protected Designation of Origin (PDO) or
 itemWineProductCategory.4 = Wine imported from outside the European Union
 itemWineProductCategory.5 = Other
 itemWineProductCategory.error.required = Select the product category of the wine
-itemWineProductCategory.checkYourAnswersLabel = Product Category
+itemWineProductCategory.checkYourAnswersLabel = Wine product category
 itemWineProductCategory.change.hidden = what is the product category of the wine
 
 itemPackagingRemovePackage.title = Are you sure you want to remove this packaging?
@@ -1480,12 +1483,14 @@ itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per cub
 itemCheckAnswers.title = Check your answers
 itemCheckAnswers.heading = Check your answers
 itemCheckAnswers.itemSubheading = Item {0}
-itemCheckAnswers.itemDetailsCardTitle = Item details
-itemCheckAnswers.quantityCardTitle = Quantity
-itemCheckAnswers.wineDetailsCardTitle = Wine details
-itemCheckAnswers.packagingCardTitle = Packaging
+itemCheckAnswers.itemDetailsCardTitle = Details for item {0}
+itemCheckAnswers.quantityCardTitle = Quantity for item {0}
+itemCheckAnswers.wineDetailsCardTitle = Wine details for item {0}
+itemCheckAnswers.bulkPackagingCardTitle = Package type for item {0}
+itemCheckAnswers.packagingCardTitle = Packaging {0} for item {1}
 itemCheckAnswers.packageTypeKey = Packaging type {0}
 itemCheckAnswers.packageTypeValue = {0}x {1}
+itemCheckAnswers.addMorePackaging.button = Add more packaging
 
 itemsAddToList.title.singular = You have given information for 1 item
 itemsAddToList.title.plural = You have given information for {0} items

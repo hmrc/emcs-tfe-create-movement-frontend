@@ -19,19 +19,18 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.messages.sections.items._
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
+import models.UserAnswers
 import models.requests.DataRequest
-import models.response.referenceData.{BulkPackagingType, ItemPackaging}
+import models.response.referenceData.BulkPackagingType
 import models.sections.items._
-import models.{CheckMode, UserAnswers}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, SummaryList, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
   val messagesForLanguage: ItemCheckAnswersMessages.English.type = ItemCheckAnswersMessages.English
@@ -39,18 +38,22 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
   val baseUserAnswers: UserAnswers = emptyUserAnswers
     .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
 
+  val headingLevelForCard = 2
+
+  lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
+  lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
+  lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
+  lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
+  lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
+  lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
+  lazy val itemDegreesPlatoSummary: ItemDegreesPlatoSummary = app.injector.instanceOf[ItemDegreesPlatoSummary]
+  lazy val itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary = app.injector.instanceOf[ItemDesignationOfOriginSummary]
+  lazy val itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary = app.injector.instanceOf[ItemSmallIndependentProducerSummary]
+  lazy val itemCheckAnswersPackagingHelper: ItemCheckAnswersPackagingHelper = app.injector.instanceOf[ItemCheckAnswersPackagingHelper]
+
   class Test(val userAnswers: UserAnswers) {
     lazy implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, testErn)
     lazy implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-    lazy val itemExciseProductCodeSummary: ItemExciseProductCodeSummary = app.injector.instanceOf[ItemExciseProductCodeSummary]
-    lazy val itemCommodityCodeSummary: ItemCommodityCodeSummary = app.injector.instanceOf[ItemCommodityCodeSummary]
-    lazy val itemWineOperationsChoiceSummary: ItemWineOperationsChoiceSummary = app.injector.instanceOf[ItemWineOperationsChoiceSummary]
-    lazy val itemWineMoreInformationSummary: ItemWineMoreInformationSummary = app.injector.instanceOf[ItemWineMoreInformationSummary]
-    lazy val itemBulkPackagingSealTypeSummary: ItemBulkPackagingSealTypeSummary = app.injector.instanceOf[ItemBulkPackagingSealTypeSummary]
-    lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
-    lazy val itemDegreesPlatoSummary: ItemDegreesPlatoSummary = app.injector.instanceOf[ItemDegreesPlatoSummary]
-    lazy val itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary = app.injector.instanceOf[ItemDesignationOfOriginSummary]
-    lazy val itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary = app.injector.instanceOf[ItemSmallIndependentProducerSummary]
 
     lazy val helper = new ItemCheckAnswersHelper(
       itemExciseProductCodeSummary = itemExciseProductCodeSummary,
@@ -61,7 +64,8 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       itemQuantitySummary = itemQuantitySummary,
       itemDegreesPlatoSummary = itemDegreesPlatoSummary,
       itemDesignationOfOriginSummary = itemDesignationOfOriginSummary,
-      itemSmallIndependentProducerSummary = itemSmallIndependentProducerSummary
+      itemSmallIndependentProducerSummary = itemSmallIndependentProducerSummary,
+      itemCheckAnswersPackagingHelper = itemCheckAnswersPackagingHelper
     )
   }
 
@@ -70,7 +74,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       "must return rows" in new Test(baseUserAnswers) {
         val card: SummaryList = helper.constructItemDetailsCard(testIndex1, testCommodityCodeWine)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleItemDetails, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleItemDetails(testIndex1), headingLevelForCard, None))
         card.rows must not be empty
       }
     }
@@ -83,7 +87,7 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       ) {
         val card: SummaryList = helper.constructQuantityCard(testIndex1, testCommodityCodeWine)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleQuantity, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleQuantity(testIndex1), headingLevelForCard, None))
         card.rows.length mustBe 3
       }
     }
@@ -95,34 +99,29 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
       ) {
         val card: SummaryList = helper.constructWineDetailsCard(testIndex1)
 
-        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails, 3, None))
+        card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitleWineDetails(testIndex1), headingLevelForCard, None))
         card.rows must not be empty
       }
     }
 
-    "constructPackagingCard" - {
+    "constructBulkPackagingCard" - {
       "must return rows" - {
         "when bulk" in new Test(
           baseUserAnswers
             .set(ItemBulkPackagingChoicePage(testIndex1), true)
         ) {
-          val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
+          val card: SummaryList = helper.constructBulkPackagingCard(testIndex1, testCommodityCodeTobacco)
 
-          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, None))
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackagingType(testIndex1), headingLevelForCard, None))
           card.rows must not be empty
         }
         "when not bulk" in new Test(
           baseUserAnswers
             .set(ItemBulkPackagingChoicePage(testIndex1), false)
         ) {
-          val card: SummaryList = helper.constructPackagingCard(testIndex1, testCommodityCodeTobacco)
+          val card: SummaryList = helper.constructBulkPackagingCard(testIndex1, testCommodityCodeTobacco)
 
-          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackaging, 3, Some(Actions(items = Seq(ActionItemViewModel(
-            messagesForLanguage.change,
-            href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
-            s"changeItemPackaging${testIndex1.displayIndex}"
-          )//.withVisuallyHiddenText(ItemsPackagingAddToListMessages.English.cyaChangeHidden)
-          )))))
+          card.card mustBe Some(CardViewModel(messagesForLanguage.cardTitlePackagingType(testIndex1), headingLevelForCard, None))
           card.rows must not be empty
         }
       }
@@ -149,79 +148,6 @@ class ItemCheckAnswersHelperSpec extends SpecBase with ItemFixtures with Movemen
             Text(ItemPackagingSealChoiceMessages.English.cyaLabel),
             Text(ItemPackagingSealTypeMessages.English.cyaLabelSealType),
             Text(ItemPackagingSealTypeMessages.English.cyaLabelSealInformation)
-          )
-        }
-      }
-    }
-
-    "notBulkPackagingSummaryListRows" - {
-      "must return a Bulk Package row, and one row per packaging type" - {
-        "when packaging types are filled in" in new Test(
-          emptyUserAnswers
-            .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("type 1", "description 1"))
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
-            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), ItemPackaging("type 2", "description 2"))
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "15")
-            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex3), ItemPackaging("type 3", "description 3"))
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex3), "7")
-        ) {
-          val result: Seq[SummaryListRow] = helper.notBulkPackagingSummaryListRows(testIndex1, testCommodityCodeTobacco)
-
-          result.length mustBe 4
-
-          result mustBe Seq(
-            SummaryListRowViewModel(
-              key = ItemBulkPackagingChoiceMessages.English.cyaLabel,
-              value = Value(Text(ItemBulkPackagingChoiceMessages.English.no)),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.items.routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  id = "changeItemBulkPackagingChoice1"
-                ).withVisuallyHiddenText(ItemBulkPackagingChoiceMessages.English.cyaChangeHidden("tobacco"))
-              )
-            ),
-            SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey(testPackagingIndex1),
-              value = ValueViewModel(messagesForLanguage.packagingValue("4", "description 1"))
-            ),
-            SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey(testPackagingIndex2),
-              value = ValueViewModel(messagesForLanguage.packagingValue("15", "description 2"))
-            ),
-            SummaryListRowViewModel(
-              key = messagesForLanguage.packagingKey(testPackagingIndex3),
-              value = ValueViewModel(messagesForLanguage.packagingValue("7", "description 3"))
-            )
-          )
-        }
-      }
-
-      "must not return any packaging type rows" - {
-        "if both ItemSelectPackagingPage and ItemPackagingQuantityPage are not present" in new Test(
-          emptyUserAnswers
-            .set(ItemBulkPackagingChoicePage(testIndex1), false)
-            .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("type 1", "description 1"))
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "15")
-            .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex3), true)
-        ) {
-          val result: Seq[SummaryListRow] = helper.notBulkPackagingSummaryListRows(testIndex1, testCommodityCodeTobacco)
-
-          result.length mustBe 1
-
-          result mustBe Seq(
-            SummaryListRowViewModel(
-              key = ItemBulkPackagingChoiceMessages.English.cyaLabel,
-              value = Value(Text(ItemBulkPackagingChoiceMessages.English.no)),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.items.routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-                  id = "changeItemBulkPackagingChoice1"
-                ).withVisuallyHiddenText(ItemBulkPackagingChoiceMessages.English.cyaChangeHidden("tobacco"))
-              )
-            )
           )
         }
       }

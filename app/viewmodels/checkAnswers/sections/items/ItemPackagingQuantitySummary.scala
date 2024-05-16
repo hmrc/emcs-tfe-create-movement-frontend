@@ -35,15 +35,13 @@ object ItemPackagingQuantitySummary {
         SummaryListRowViewModel(
           key = "itemPackagingQuantity.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(value).toString()),
-          actions = {
-            if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
+          actions = if (!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
               ActionItemViewModel(
                 content = "site.change",
                 routes.ItemPackagingQuantityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, itemIdx, packagingIdx, CheckMode).url,
                 id = s"changeItemPackagingQuantity${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
               ).withVisuallyHiddenText(messages("itemPackagingQuantity.change.hidden"))
             )
-          }
         )
     }
   }

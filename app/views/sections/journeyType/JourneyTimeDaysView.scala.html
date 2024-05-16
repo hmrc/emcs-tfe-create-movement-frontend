@@ -48,6 +48,7 @@
                 label = LabelViewModel(Text(messages("journeyTimeDays.heading"))).asPageHeading(LabelSize.Large)
             )
             .asNumeric()
+            .withHint(HintViewModel(messages("journeyTimeDays.hint")))
             .withWidth(Fixed2)
             .withSuffix(PrefixOrSuffix(classes = "days-suffix", content = Text(messages("journeyTimeDays.input.suffix"))))
         )

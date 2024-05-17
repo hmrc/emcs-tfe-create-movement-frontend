@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.SubmitCreateMovementConnector
 import fixtures.BaseFixtures
 import models.requests.{DataRequest, UserRequest}
-import models.response.UnexpectedDownstreamDraftSubmissionResponseError
+import models.response.{UnexpectedDownstreamDraftSubmissionResponseError, UnexpectedDownstreamResponseError}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -94,7 +94,7 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
 
       withCaptureOfLoggingFrom(connector.logger) { logs =>
 
-        connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+        connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
 
         logs.exists(_.getMessage == "[SubmitCreateMovementConnector][post] Unexpected exception of type RemotelyClosedException was thrown") mustBe true
       }

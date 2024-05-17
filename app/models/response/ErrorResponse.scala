@@ -73,3 +73,5 @@ case class ReferenceDataException(message: String) extends Exception(message) wi
 case class InvalidRegexException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 
 case class InvalidCustomsOfficeValidationException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+
+case class DeleteDraftMovementException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

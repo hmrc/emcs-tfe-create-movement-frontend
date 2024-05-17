@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import play.api.libs.json.JsPath
+import javax.inject.Inject
 
-import java.time.LocalDateTime
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object DeclarationPage extends QuestionPage[LocalDateTime] {
-  override val toString: String = "declaration"
-  override val path: JsPath = JsPath \ toString
+class DeleteDraftMovementFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("deleteDraft.error.required")
+    )
 }

@@ -1616,3 +1616,9 @@ errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed 
 errors.ui.dispatchDate.inPast = The date of dispatch must be today’s date or up to 7 days in the future because this is not a deferred movement using fallback procedures
 errors.ui.dispatchDate.inFuture = The date of dispatch must be before or equal to today’s date because this a deferred movement using fallback procedures
 
+
+deleteDraft.title = Are you sure you want to delete this draft?
+deleteDraft.heading = Are you sure you want to delete this draft?
+deleteDraft.hint = Any information you have entered will be deleted. If you still want to move the goods, you will need to create a new draft movement.
+deleteDraft.no = No, return to the draft
+deleteDraft.error.required = Select yes if you would like to delete the draft

@@ -747,7 +747,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           .set(ItemExciseProductCodePage(testIndex1), testEpcBeer)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
           .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
@@ -775,7 +774,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
       "when EPC is not defined" - {
         val userAnswers = emptyUserAnswers
           .set(ItemBulkPackagingChoicePage(testIndex1), false)
-          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
           .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
@@ -788,7 +786,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
       "when ItemBulkPackagingChoicePage is not defined" - {
         val userAnswers = emptyUserAnswers
           .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
-          .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "")
           .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)

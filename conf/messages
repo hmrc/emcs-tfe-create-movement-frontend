@@ -1477,23 +1477,6 @@ itemDensity.change.hidden = density
 itemDensity.suffix = kg/m<sup>3</sup>
 itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per cubic metre.
 
-# Because of how the message args are built in ViewUtils.pluralSingular, {0} is the count and {1} is the item number.
-# Therefore, although it looks odd, we need to access message parameter {1} even though we're not using {0}.
-itemsPackagingAddToList.title.singular = You have added 1 packaging type for item {1}
-itemsPackagingAddToList.title.plural = You have added {0} packaging types for item {1}
-itemsPackagingAddToList.heading.singular = You have added 1 packaging type for item {1}
-itemsPackagingAddToList.heading.plural = You have added {0} packaging types for item {1}
-itemsPackagingAddToList.packageCardTitle = Package type {0}
-itemsPackagingAddToList.h2 = Do you need to add another packaging type for item {0}?
-itemsPackagingAddToList.hint = You will have the chance to add more items later.
-itemsPackagingAddToList.yes = Yes
-itemsPackagingAddToList.no.singular = No, this is the only packaging type for this item
-itemsPackagingAddToList.no.plural = No, these are the only packaging types for this item
-itemsPackagingAddToList.divider = or
-itemsPackagingAddToList.moreLater = I will complete the packaging types later
-itemsPackagingAddToList.error.required = Select yes if you need to add another packaging type
-itemsPackagingAddToList.change.hidden = packaging information
-
 itemCheckAnswers.title = Check your answers
 itemCheckAnswers.heading = Check your answers
 itemCheckAnswers.itemSubheading = Item {0}

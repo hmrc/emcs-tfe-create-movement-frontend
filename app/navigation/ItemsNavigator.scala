@@ -21,11 +21,11 @@ import models.GoodsType._
 import models._
 import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
-import models.sections.items.{ItemsAddToList, ItemsPackagingAddToList}
+import models.sections.items.ItemsAddToList
 import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
-import queries.{ItemsCount, ItemsPackagingCount}
+import queries.ItemsCount
 import utils.CommodityCodeHelper
 import utils.ExciseProductCodeHelper.{isSpiritAndNotSpirituousBeverages, isSpirituousBeverages}
 
@@ -185,9 +185,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemWineOriginPage(idx) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemWineMoreInformationChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
 
-    case ItemsPackagingAddToListPage(itemsIdx) =>
-      itemPackagingAddToListRouting(itemsIdx)(NormalMode)
-
     case ItemCheckAnswersPage(_) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
 
@@ -318,7 +315,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
 
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
     case page@ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
       (userAnswers.get(page), userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))) match {
@@ -326,22 +323,22 @@ class ItemsNavigator @Inject() extends BaseNavigator {
           itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
         case (Some(true), Some(_)) =>
           itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
-        case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+        case _ => itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
       }
 
     case ItemPackagingQuantityPage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx)) match {
-        case Some(_) => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+        case Some(_) => itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
         case None => itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
       }
 
     case ItemPackagingShippingMarksPage(itemIdx, _) => (userAnswers: UserAnswers) =>
-      itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+      itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
     case page@ItemPackagingSealChoicePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
       userAnswers.get(page) match {
         case Some(true) => itemsRoutes.ItemPackagingSealTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
-        case _ => itemsRoutes.ItemsPackagingAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
+        case _ => itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
       }
 
     case ItemPackagingSealTypePage(itemIdx, _) => (userAnswers: UserAnswers) =>
@@ -447,16 +444,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
-
-  private def itemPackagingAddToListRouting(itemIdx: Index)(mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
-    userAnswers.get(ItemsPackagingAddToListPage(itemIdx)) match {
-      case Some(ItemsPackagingAddToList.Yes) =>
-        val nextPackageIdx: Index = userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
-        itemsRoutes.ItemSelectPackagingController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, nextPackageIdx, mode)
-      case _ =>
-        itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
-    }
-  }
 
   private def itemWineProductCategoryRouting(idx: Index, mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     (userAnswers.get(ItemWineProductCategoryPage(idx)), userAnswers.get(ItemBulkPackagingChoicePage(idx)), userAnswers.get(ItemQuantityPage(idx))) match {

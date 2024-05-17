@@ -56,7 +56,7 @@ class ItemsPackagingIndexControllerSpec extends SpecBase
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustBe
-          controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1).url
+          controllers.sections.items.routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url
       }
     }
 

@@ -19,7 +19,6 @@ package pages.sections.items
 import base.SpecBase
 import models.requests.DataRequest
 import models.sections.items.ItemPackagingSealTypeModel
-import models.sections.items.ItemsPackagingAddToList.MoreLater
 import play.api.test.FakeRequest
 
 class ItemsPackagingSectionSpec extends SpecBase {
@@ -120,15 +119,6 @@ class ItemsPackagingSectionSpec extends SpecBase {
       "when there's no packages" in {
 
         implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        ItemsPackagingSection(testIndex1).isCompleted mustBe false
-      }
-
-      "when there's packages but the user has indicated that they are going to add more" in {
-
-        val userAnswers = completedPackage.set(ItemsPackagingAddToListPage(testIndex1), MoreLater)
-
-        implicit val request: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         ItemsPackagingSection(testIndex1).isCompleted mustBe false
       }

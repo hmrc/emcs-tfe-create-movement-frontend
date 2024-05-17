@@ -859,37 +859,6 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
       }
 
-      "must go from the ItemsPackagingAddToList page" - {
-
-        "to Item CYA page" - {
-
-          "when answer is `No` (not adding more packages)" in {
-            navigator.nextPage(
-              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
-                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.No)
-            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
-          }
-
-          "when answer is `More later`" in {
-            navigator.nextPage(
-              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
-                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.MoreLater)
-            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
-          }
-        }
-
-        "to the Select Packaging type page at the next idx" - {
-
-          "when answer is `Yes` (adding another package)" in {
-            navigator.nextPage(
-              ItemsPackagingAddToListPage(testIndex1), NormalMode, emptyUserAnswers
-                .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
-                .set(ItemsPackagingAddToListPage(testIndex1), ItemsPackagingAddToList.Yes)
-            ) mustBe itemsRoutes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)
-          }
-        }
-      }
-
       "must go from the ItemCheckAnswers page" - {
 
         "to Item AddToList page" in {
@@ -1258,7 +1227,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to Item Packaging CYA page" in {
           navigator.nextPage(
             ItemSelectPackagingPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
-          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
@@ -1268,7 +1237,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           "when the ItemPackagingShippingMarksChoice page has an answer" in {
             navigator.nextPage(
               ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
-            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
 
@@ -1289,7 +1258,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
               mode = CheckMode,
               userAnswers = emptyUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
-            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
 
           "when answered 'Yes' but no quantity entered" in {
@@ -1297,7 +1266,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               page = ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1),
               mode = CheckMode,
               userAnswers = emptyUserAnswers.set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
-            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
 
@@ -1330,7 +1299,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         "to Item Packaging CYA page" in {
           navigator.nextPage(
             ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
-          ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+          ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
         }
       }
 
@@ -1341,7 +1310,7 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
               page = ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1),
               mode = CheckMode,
               userAnswers = emptyUserAnswers.set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
-            ) mustBe itemsRoutes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1)
+            ) mustBe itemsRoutes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1)
           }
         }
         "to ItemPackagingSealType page" - {

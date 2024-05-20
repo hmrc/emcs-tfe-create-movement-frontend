@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,9 @@
  */
 
 package pages
-
 import play.api.libs.json.JsPath
 
-import java.time.LocalDateTime
-
-object DeclarationPage extends QuestionPage[LocalDateTime] {
-  override val toString: String = "declaration"
+case object DeleteDraftMovementPage extends QuestionPage[Boolean] {
+  override val toString: String = "deleteDraft"
   override val path: JsPath = JsPath \ toString
 }

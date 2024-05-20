@@ -22,7 +22,9 @@ import models.UserAnswers
 import models.response.{BadRequestError, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes with HeaderNames with MockHttpClient {
 
@@ -31,6 +33,9 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
 
     override def http: HttpClient = mockHttpClient
   }
+
+  implicit val ec: ExecutionContext = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "GetUserAnswersReads.read(method: String, url: String, response: HttpResponse)" - {
 
@@ -148,6 +153,32 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.obj(), Map())
 
         httpParser.DeleteUserAnswersReads.read("", "", httpResponse) mustBe Left(UnexpectedDownstreamResponseError)
+      }
+    }
+  }
+
+  ".delete" - {
+
+    val fakeUrl: String = "/user-answers/create-movement/ern/draftId"
+
+    "should return the result of the call (if no exception thrown)" in {
+
+      val response = HttpResponse(Status.NO_CONTENT, "", Map())
+
+      MockHttpClient.delete(fakeUrl)
+        .returns(Future.successful(Right(response)))
+
+      httpParser.delete(fakeUrl).futureValue mustBe Right(response)
+    }
+
+    "should return UnexpectedDownstreamResponseError" - {
+
+      "when an exception is thrown" in {
+
+        MockHttpClient.delete(fakeUrl)
+          .returns(Future.failed(new Exception("Canned")))
+
+        httpParser.delete(fakeUrl).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

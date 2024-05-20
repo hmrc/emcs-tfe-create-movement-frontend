@@ -110,7 +110,7 @@ trait RadiosFluency {
         field = field,
         fieldset = FieldsetViewModel(legend),
         items = items
-      ).inline()
+      )
     }
   }
 

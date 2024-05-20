@@ -18,7 +18,7 @@ package connectors.emcsTfe
 
 import base.SpecBase
 import mocks.connectors.MockHttpClient
-import models.response.{JsonValidationError, SubmitCreateMovementResponse, UnexpectedDownstreamDraftSubmissionResponseError}
+import models.response.{JsonValidationError, SubmitCreateMovementResponse, UnexpectedDownstreamDraftSubmissionResponseError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -93,27 +93,14 @@ class EmcsTfeHttpParserSpec extends SpecBase
       httpParser.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS).futureValue mustBe Right(response)
     }
 
-    "should return UnexpectedDownstreamDraftSubmissionResponseError(ISE) when an exception is thrown" in {
+    "should return UnexpectedDownstreamResponseError" - {
 
-      MockHttpClient.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS)
-        .returns(Future.failed(new Exception("Canned")))
+      "when an exception is thrown" in {
 
-      httpParser.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
-    }
-  }
+        MockHttpClient.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS)
+          .returns(Future.failed(new Exception("Canned")))
 
-  "withExceptionRecovery" - {
-
-    "should return UnexpectedDownstreamDraftSubmissionResponseError" - {
-
-      "when the provided function throws an exception" in {
-
-        withCaptureOfLoggingFrom(httpParser.logger) { logs =>
-
-          httpParser.withExceptionRecovery("test")(Future.failed(new Exception("Canned"))).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
-
-          logs.exists(_.getMessage.contains("[test] Unexpected exception of type Exception was thrown")) mustBe true
-        }
+        httpParser.post("/create-movement/ern/draftId", submitCreateMovementResponseEIS).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

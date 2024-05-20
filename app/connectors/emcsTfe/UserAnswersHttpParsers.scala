@@ -20,7 +20,9 @@ import connectors.BaseConnectorUtils
 import models.UserAnswers
 import models.response.{BadRequestError, ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
-import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait UserAnswersHttpParsers extends BaseConnectorUtils[UserAnswers] {
 
@@ -69,4 +71,9 @@ trait UserAnswersHttpParsers extends BaseConnectorUtils[UserAnswers] {
           Left(UnexpectedDownstreamResponseError)
       }
   }
+
+  def delete(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
+    withExceptionRecovery("delete") {
+      http.DELETE(url)(DeleteUserAnswersReads, implicitly, implicitly)
+    }(implicitly, logger)
 }

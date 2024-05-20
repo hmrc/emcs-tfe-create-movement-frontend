@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package pages
+package fixtures.messages
 
-import play.api.libs.json.JsPath
+object DeleteDraftMovementMessages {
 
-import java.time.LocalDateTime
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Are you sure you want to delete this draft?"
+    val title: String = titleHelper(heading)
+    val hint: String = "Any information you have entered will be deleted. If you still want to move the goods, you will need to create a new draft movement."
+    override val no: String = "No, return to the draft"
+  }
 
-object DeclarationPage extends QuestionPage[LocalDateTime] {
-  override val toString: String = "declaration"
-  override val path: JsPath = JsPath \ toString
+  object English extends ViewMessages with BaseEnglish
 }

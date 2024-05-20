@@ -30,7 +30,7 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "ConfirmationView" - {
+  "DeclarationView" - {
 
     Seq(DeclarationMessages.English).foreach { messagesForLanguage =>
 

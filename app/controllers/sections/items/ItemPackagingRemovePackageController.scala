@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingRemovePackageFormProvider
 import models.Index
 import models.requests.DataRequest
 import navigation.ItemsNavigator
-import pages.sections.items.ItemsPackagingSectionItems
+import pages.sections.items.{ItemsPackagingSectionItems, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -79,7 +79,12 @@ class ItemPackagingRemovePackageController @Inject()(
   private def handleAnswerRemovalAndRedirect(shouldRemoveItem: Boolean, itemIdx: Index, packageIdx: Index)(ern: String, draftId: String)
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if (shouldRemoveItem) {
-      val cleansedAnswers = request.userAnswers.remove(ItemsPackagingSectionItems(itemIdx, packageIdx))
+
+      val cleansedAnswers =
+        ItemsSection
+          .removeAnyPackagingThatMatchesTheShippingMark(itemIdx, packageIdx)
+          .remove(ItemsPackagingSectionItems(itemIdx, packageIdx))
+
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(routes.ItemsPackagingIndexController.onPageLoad(ern, draftId, itemIdx))
       }

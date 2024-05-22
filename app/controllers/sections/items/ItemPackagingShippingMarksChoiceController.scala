@@ -19,9 +19,9 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemPackagingShippingMarksChoiceFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, UserAnswers}
+import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection, ItemsSectionItem, ItemsSectionItems}
+import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

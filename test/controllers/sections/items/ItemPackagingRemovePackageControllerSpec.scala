@@ -23,7 +23,7 @@ import forms.sections.items.ItemPackagingRemovePackageFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemSelectPackagingPage, ItemsPackagingSectionItems}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage, ItemsPackagingSectionItems}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -105,13 +105,30 @@ class ItemPackagingRemovePackageControllerSpec extends SpecBase with MockUserAns
       contentAsString(result) mustEqual view(form, action, testPackageAerosol.description, testIndex1, testPackagingIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the Index Controller when yes is selected (removing the section)" in new Test() {
+    "must redirect to the Index Controller when yes is selected (removing the section)" +
+      "AND remove any packages which reference this package where the shipping mark is used on other items" in new Test(
+      Some(baseUserAnswers
+        //Lead item, with shipping mark
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "MarkA")
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+        //Second item, has same shipping mark as lead item. That package 1 should be removed, package 2 should re-index and become package 1
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "MarkA")
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex2), "MarkB")
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex2), "1")
+        //Third item, doesn't reference the shipping mark, so should be unchanged
+        .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "MarkB")
+        .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+      )
+    ) {
 
-      val updatedAnswers = baseUserAnswers.remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex2))
+      val updatedAnswers = userAnswers.get
+        .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex1))
+        .remove(ItemsPackagingSectionItems(testIndex2, testPackagingIndex1))
 
       MockUserAnswersService.set(updatedAnswers).returns(Future.successful(updatedAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex2)(request.withFormUrlEncodedBody(("value", "true")))
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsPackagingIndexController.onPageLoad(testErn, testDraftId, testIndex1).url

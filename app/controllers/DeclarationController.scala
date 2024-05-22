@@ -75,10 +75,13 @@ class DeclarationController @Inject()(
             val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(response.submittedDraftId))
             saveAndRedirect(DeclarationPage, LocalDateTime.now(), updatedAnswers, NormalMode)
           case Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY)) =>
-            logger.warn(s"Received UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY) from SubmitCreateMovementConnector")
+            // emcs-tfe returns an UNPROCESSABLE_ENTITY when downstream responds with RIM validation errors,
+            // so we redirect to DraftMovementController to display these errors
+            logger.warn(s"Received UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY) from SubmitCreateMovementService, " +
+              s"redirecting to DraftMovementController")
             Future.successful(Redirect(routes.DraftMovementController.onPageLoad(ern, draftId)))
           case Left(value) =>
-            logger.warn(s"Received Left from SubmitCreateMovementConnector: $value")
+            logger.warn(s"Received Left from SubmitCreateMovementService: $value")
             throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
         }.recover {
           case exception =>

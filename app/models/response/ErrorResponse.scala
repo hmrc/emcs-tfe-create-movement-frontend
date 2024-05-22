@@ -34,10 +34,6 @@ case class UnexpectedDownstreamDraftSubmissionResponseError(status: Int) extends
   override val statusCode: Option[Int] = Some(status)
 }
 
-case object RIMRuleValidationError extends ErrorResponse {
-  val message = "RIM rule validation error"
-}
-
 case object JsonValidationError extends ErrorResponse {
   val message = "JSON validation error"
 }

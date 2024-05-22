@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.items
 
 import models.Index
 import models.requests.DataRequest
-import models.response.referenceData.ItemPackaging
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
@@ -33,6 +32,7 @@ import javax.inject.Inject
 
 class ItemPackagingSummary @Inject()(
                                       tag: views.html.components.tag,
+                                      details: views.html.components.details,
                                       list: list
                                     ) {
 
@@ -51,31 +51,34 @@ class ItemPackagingSummary @Inject()(
         }
     }
 
-  private[items] def getPackagesForItem(itemIdx: Index)(implicit request: DataRequest[_]): Seq[(ItemPackaging, Option[String])] =
-    request.userAnswers.get(ItemsPackagingCount(itemIdx)).fold[Seq[(ItemPackaging, Option[String])]](Seq.empty) { count =>
+  private[items] def getPackagesForItem(itemIdx: Index)(implicit request: DataRequest[_]): Seq[ItemPackagingModel] =
+    request.userAnswers.get(ItemsPackagingCount(itemIdx)).fold[Seq[ItemPackagingModel]](Seq.empty) { count =>
       (0 until count).map(Index(_)).map { packageIdx =>
-        request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packageIdx)) ->
-          request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))
+        (request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packageIdx)),
+          request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx)),
+          request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
       }.collect {
-        case (Some(packaging), quantity) => packaging -> quantity
+        case (Some(packaging), quantity, shippingMark) => ItemPackagingModel(packaging, quantity, shippingMark)
       }
     }
 
-  private[items] def constructPackagingValues(itemIdx: Index, packages: Seq[(ItemPackaging, Option[String])])
+  private[items] def constructPackagingValues(itemIdx: Index, packages: Seq[ItemPackagingModel])
                                              (implicit request: DataRequest[_], messages: Messages): Seq[Html] = {
-    if (packages.exists(_._2.isEmpty)) {
-      // if any quantities are missing, show incomplete tag
+    if (packages.exists(_.quantity.isEmpty)) {
+      // if any quantities are missing, show a single incomplete tag for the whole packages section
       Seq(HtmlFormat.fill(
         Seq(incompleteTag(setMarginLeft = false))
       ))
     } else {
-      // otherwise, turn Some(quantity) into quantity and render list of packaging types
-      packages
-        .collect {
-          case (itemPackaging, Some(quantity)) => (itemPackaging, quantity)
-        }
-        .zipWithIndex.map {
-        case ((itemPackaging, quantity), packageIdx) =>
+      //Note: `None` on quantity is guarded by the above if statement check - so pattern match is exhaustive
+      packages.zipWithIndex.map {
+        case (ItemPackagingModel(itemPackaging, Some(quantity), Some(shippingMarks)), packageIdx) =>
+          HtmlFormat.fill(
+            Seq(Html(messages("itemsAddToList.packagesCyaValueShippingMark", quantity, itemPackaging.description, truncateShippingMark(shippingMarks)))) ++
+              (if (shippingMarks.length <= 30) Seq() else Seq(details("itemsAddToList.packagesCyaValueShippingMarkDetails", "govuk-!-margin-top-2 govuk-!-margin-bottom-2")(Html(shippingMarks)))) ++
+              (if (ItemsPackagingSectionItems(itemIdx, Index(packageIdx)).isCompleted) Seq() else Seq(incompleteTag()))
+          )
+        case (ItemPackagingModel(itemPackaging, Some(quantity), None), packageIdx) =>
           HtmlFormat.fill(
             Html(messages("itemsAddToList.packagesCyaValue", quantity, itemPackaging.description)) +:
               (if (ItemsPackagingSectionItems(itemIdx, Index(packageIdx)).isCompleted) Seq() else Seq(incompleteTag()))
@@ -103,4 +106,9 @@ class ItemPackagingSummary @Inject()(
     colour = "red",
     extraClasses = ("float-none" +: (if (setMarginLeft) Seq("govuk-!-margin-left-2") else Seq())).mkString(" ")
   )
+
+  private[items] val truncateShippingMark: String => String = {
+    case mark if mark.length <= 30 => mark
+    case mark => mark.take(30) + "..."
+  }
 }

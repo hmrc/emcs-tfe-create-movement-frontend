@@ -47,7 +47,12 @@ object ItemsAddToListMessages {
     val errorRequired = "Select yes if you need to add another item"
 
     val packagesCyaLabel: String = "Packaging"
+    val packagesCyaValueShippingMarkSummary: String = "View full shipping mark"
     def packagesCyaValue(quantity: String, description: String): String = s"${quantity}x $description"
+    def packagesCyaValueShippingMark(quantity: String, description: String, shippingMark: String): String =
+      s"${quantity}x $description (shipping mark: $shippingMark)"
+    def packagesCyaValueShippingMarkTruncated(quantity: String, description: String, shippingMark: String): String =
+      s"${quantity}x $description (shipping mark: ${shippingMark.take(30)}...)"
 
     val notificationBannerContentForQuantity: Int => String = index => s"Item $index quantity"
   }

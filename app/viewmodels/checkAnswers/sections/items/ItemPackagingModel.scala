@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
+package viewmodels.checkAnswers.sections.items
 
-@this(govukDetails: GovukDetails)
+import models.response.referenceData.ItemPackaging
 
-@(summary: String, classes: String = "")(content: Html)(implicit messages: Messages)
-
-@govukDetails(Details(
-  summary = Text(messages(summary)),
-  content = HtmlContent(content),
-  classes = classes
-))
-
-@{
-//$COVERAGE-OFF$
-}
+case class ItemPackagingModel(packaging: ItemPackaging, quantity: Option[String], shippingMarks: Option[String])

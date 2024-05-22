@@ -29,16 +29,18 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.html.components.{list, tag}
+import views.html.components.{details, list, tag}
 
 class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
   lazy val tag: tag = app.injector.instanceOf[tag]
   lazy val list: list = app.injector.instanceOf[list]
+  lazy val details: details = app.injector.instanceOf[details]
 
-  lazy val summary = new ItemPackagingSummary(tag, list)
+  lazy val summary = new ItemPackagingSummary(tag, details, list)
 
   val package1: ItemPackaging = testPackageBag
   val package2: ItemPackaging = testPackageAerosol
+  val package3: ItemPackaging = testPackageBag
   val testBulkPackagingType: BulkPackagingType = BulkPackagingType(ItemBulkPackagingCode.BulkGas, "desc")
 
   val messagesForLanguage: ItemsAddToListMessages.English.type = ItemsAddToListMessages.English
@@ -60,10 +62,16 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), package1)
           .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "3")
           .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), package2)
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex3), package3)
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "MarkA")
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        summary.getPackagesForItem(testIndex1) mustBe Seq(package1 -> Some("3"), package2 -> None)
+        summary.getPackagesForItem(testIndex1) mustBe Seq(
+          ItemPackagingModel(package1, Some("3"), None),
+          ItemPackagingModel(package2, None, None),
+          ItemPackagingModel(package3, None, Some("MarkA"))
+        )
       }
     }
     "must filter out packaging without an answer to ItemSelectPackagingPage" in {
@@ -74,7 +82,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
 
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-      summary.getPackagesForItem(testIndex1) mustBe Seq(package2 -> None)
+      summary.getPackagesForItem(testIndex1) mustBe Seq(ItemPackagingModel(package2, None, None))
     }
   }
 
@@ -85,7 +93,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        summary.constructPackagingValues(testIndex1, Seq(package1 -> None)) mustBe Seq(
+        summary.constructPackagingValues(testIndex1, Seq(ItemPackagingModel(package1, None, None))) mustBe Seq(
           HtmlFormat.fill(
             Seq(
               tag(
@@ -102,7 +110,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-        summary.constructPackagingValues(testIndex1, Seq(package1 -> Some("5"))) mustBe Seq(
+        summary.constructPackagingValues(testIndex1, Seq(ItemPackagingModel(package1, Some("5"), None))) mustBe Seq(
           HtmlFormat.fill(
             Seq(
               Html(messagesForLanguage.packagesCyaValue("5", package1.description)),
@@ -116,7 +124,7 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
         )
       }
     }
-    "must return no incomplete tag when an item is complete" in {
+    "must return no incomplete tag when an item is complete (no shipping Mark)" in {
       val userAnswers = emptyUserAnswers
         .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), package1)
         .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
@@ -125,9 +133,51 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
 
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-      summary.constructPackagingValues(testIndex1, Seq(package1 -> Some("4"))) mustBe Seq(
+      summary.constructPackagingValues(testIndex1, Seq(ItemPackagingModel(package1, Some("4"), None))) mustBe Seq(
         HtmlFormat.fill(
           Seq(Html(messagesForLanguage.packagesCyaValue("4", package1.description)))
+        )
+      )
+    }
+    "must return no incomplete tag when an item is complete (with shipping Mark <= 30 chars)" in {
+
+      val shippingMark = "A" * 30
+
+      val userAnswers = emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), package1)
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), shippingMark)
+        .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+      summary.constructPackagingValues(testIndex1, Seq(ItemPackagingModel(package1, Some("4"), Some(shippingMark)))) mustBe Seq(
+        HtmlFormat.fill(
+          Seq(Html(messagesForLanguage.packagesCyaValueShippingMark("4", package1.description, shippingMark)))
+        )
+      )
+    }
+
+    "must return no incomplete tag when an item is complete (with shipping Mark > 30 chars - truncated)" in {
+
+      val shippingMark = "A" * 31
+
+      val userAnswers = emptyUserAnswers
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), package1)
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "4")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), shippingMark)
+        .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
+
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+      summary.constructPackagingValues(testIndex1, Seq(ItemPackagingModel(package1, Some("4"), Some(shippingMark)))) mustBe Seq(
+        HtmlFormat.fill(
+          Seq(
+            Html(messagesForLanguage.packagesCyaValueShippingMarkTruncated("4", package1.description, shippingMark)),
+            details(messagesForLanguage.packagesCyaValueShippingMarkSummary, "govuk-!-margin-top-2 govuk-!-margin-bottom-2")(Html(shippingMark))
+          )
         )
       )
     }
@@ -187,6 +237,15 @@ class ItemPackagingSummarySpec extends SpecBase with ItemFixtures {
 
         summary.constructBulkPackagingSummary(testIndex1) mustBe None
       }
+    }
+  }
+
+  "truncateShippingMark" - {
+    "must return the same string when the length is <= 30" in {
+      summary.truncateShippingMark("A" * 30) mustBe "A" * 30
+    }
+    "must return the first 30 characters followed by '...' when the length is > 30" in {
+      summary.truncateShippingMark("A" * 31) mustBe "A" * 30 + "..."
     }
   }
 }

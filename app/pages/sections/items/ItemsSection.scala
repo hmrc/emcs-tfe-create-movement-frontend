@@ -16,9 +16,9 @@
 
 package pages.sections.items
 
-import models.Index
 import models.requests.DataRequest
 import models.sections.items.ItemsAddToList
+import models.{Index, UserAnswers}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.{ItemsCount, ItemsPackagingCount}
@@ -97,9 +97,18 @@ case object ItemsSection extends Section[JsObject] {
     } yield {
       if (quantity == "0") false else {
         //Check if any items have the same shipping mark and a package quantity of zero
-        ItemsSection.retrieveShippingMarkLocationsMatching(shippingMark).exists { case (linkedItemIdx, linkedPackageIdx) =>
+        retrieveShippingMarkLocationsMatching(shippingMark).exists { case (linkedItemIdx, linkedPackageIdx) =>
           request.userAnswers.get(ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx)).contains("0")
         }
       }
     }).getOrElse(false)
+
+  def removeAnyPackagingThatMatchesTheShippingMark(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_]): UserAnswers =
+    request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx: Index, packageIdx: Index)).fold(request.userAnswers) { shippingMark =>
+      retrieveShippingMarkLocationsMatching(shippingMark)
+        .filterNot(_ == (itemIdx, packageIdx))
+        .foldLeft(request.userAnswers) { case (answers, (iIdx, pIdx)) =>
+          answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
+        }
+    }
 }

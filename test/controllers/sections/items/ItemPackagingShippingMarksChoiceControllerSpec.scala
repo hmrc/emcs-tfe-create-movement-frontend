@@ -23,7 +23,7 @@ import forms.sections.items.ItemPackagingShippingMarksChoiceFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -158,6 +158,33 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must delete the shipping Mark and any packaging that contains that shipping mark (when answer is `No`)" in new Test(
+      Some(baseUserAnswers
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "MarkA")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex2), true)
+        .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "MarkA")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "MarkA")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex2), true)
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex2), "MarkB")
+      )
+    ) {
+
+      //All Mark A are removed. MarkB be on item 2 moved to Packaging Index1
+      val expectedUserAnswers = baseUserAnswers
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+        .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "MarkB")
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

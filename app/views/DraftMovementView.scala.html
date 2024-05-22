@@ -36,25 +36,32 @@
 @()(implicit request: DataRequest[_], messages: Messages)
 
 @headerAndTitle = @{
-  if(request.userAnswers.submissionFailures.nonEmpty) {
-    "draftMovement.subHeading.error.704"
-  } else {
-    helper.heading
-  }
+    if(request.userAnswers.submissionFailures.nonEmpty) {
+        "draftMovement.subHeading.error.704"
+    } else {
+        helper.heading
+    }
 }
 
 @layout(
-  pageTitle = titleNoForm(headerAndTitle),
-  maybeShowActiveTrader = maybeShowActiveTrader(request),
-  showBackLink = false
+    pageTitle = titleNoForm(headerAndTitle),
+    maybeShowActiveTrader = maybeShowActiveTrader(request),
+    showBackLink = false
 ) {
 
-  @if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
-    @notificationBanner(NotificationBanner(
-      title = Text(messages("errors.704.notificationBanner.title")),
-      content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content"))))
-    ))
-  }
+    @if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+        @notificationBanner(NotificationBanner(
+            title = Text(messages("errors.704.notificationBanner.title")),
+            content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content"))))
+        ))
+    }
+
+    @if(request.userAnswers.validationFailures.nonEmpty) {
+        @notificationBanner(NotificationBanner(
+            title = Text(messages("errors.validation.notificationBanner.title")),
+            content = helper.validationFailureContent(request.userAnswers.validationFailures)
+        ))
+    }
 
     @h1(headerAndTitle, Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 

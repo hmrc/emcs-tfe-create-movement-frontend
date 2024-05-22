@@ -38,12 +38,15 @@ import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import utils.Logging
 import viewmodels.taskList._
+import views.html.components.{list, p}
 
 import javax.inject.Inject
 
-class DraftMovementHelper @Inject()() extends Logging {
+class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
 
   // disable for "line too long" warnings
   // noinspection ScalaStyle
@@ -74,7 +77,7 @@ class DraftMovementHelper @Inject()() extends Logging {
       case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
         messages(
           "draftMovement.heading.importFor",
-          if(messages.isDefinedAt(s"draftMovement.heading.$destinationType")) messages(s"draftMovement.heading.$destinationType") else messages(s"destinationType.$destinationType"))
+          if (messages.isDefinedAt(s"draftMovement.heading.$destinationType")) messages(s"draftMovement.heading.$destinationType") else messages(s"destinationType.$destinationType"))
 
 
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
@@ -236,7 +239,6 @@ class DraftMovementHelper @Inject()() extends Logging {
     )
   }
 
-
   private[draftMovement] def documentsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
       sectionHeading = messages("draftMovement.section.documents"),
@@ -294,4 +296,21 @@ class DraftMovementHelper @Inject()() extends Logging {
   def sections(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] =
     sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)
 
+  def validationFailureContent(validationFailures: Seq[MovementValidationFailure])(implicit messages: Messages): HtmlContent = {
+    val formattedErrorList = list(
+      validationFailures.map {
+        failure =>
+          val pContent = failure.errorType match {
+            case 12 | 13 => removeAmendEntryMessageFromErrorReason(failure)
+            case _ => messages(s"errors.validation.notificationBanner.${failure.errorType}.content")
+          }
+          p("govuk-notification-banner__heading")(Html(pContent))
+      }
+    )
+    HtmlContent(formattedErrorList)
+  }
+
+  private[draftMovement] def removeAmendEntryMessageFromErrorReason(failure: MovementValidationFailure): String = {
+    failure.errorReason.replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
+  }
 }

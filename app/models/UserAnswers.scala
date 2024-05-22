@@ -29,6 +29,7 @@ final case class UserAnswers(ern: String,
                              draftId: String,
                              data: JsObject = Json.obj(),
                              submissionFailures: Seq[MovementSubmissionFailure],
+                             validationFailures: Seq[MovementValidationFailure],
                              lastUpdated: Instant = Instant.now,
                              hasBeenSubmitted: Boolean,
                              submittedDraftId: Option[String]) {
@@ -99,6 +100,7 @@ object UserAnswers {
   val lastUpdated = "lastUpdated"
   val hasBeenSubmitted = "hasBeenSubmitted"
   val submissionFailures = "submissionFailures"
+  val validationErrors = "submissionFailures"
   val submittedDraftId = "submittedDraftId"
 
   val reads: Reads[UserAnswers] =
@@ -107,6 +109,7 @@ object UserAnswers {
         (__ \ draftId).read[String] and
         (__ \ data).read[JsObject] and
         (__ \ submissionFailures).readNullable[Seq[MovementSubmissionFailure]].map(_.getOrElse(Seq.empty)) and
+        (__ \ validationErrors).readNullable[Seq[MovementValidationFailure]].map(_.getOrElse(Seq.empty)) and
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).read[Boolean] and
         (__ \ submittedDraftId).readNullable[String]
@@ -118,6 +121,7 @@ object UserAnswers {
         (__ \ draftId).write[String] and
         (__ \ data).write[JsObject] and
         (__ \ submissionFailures).write[Seq[MovementSubmissionFailure]] and
+        (__ \ validationErrors).write[Seq[MovementValidationFailure]] and
         (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).write[Boolean] and
         (__ \ submittedDraftId).writeNullable[String]

@@ -318,6 +318,10 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
   }
 
   private[draftMovement] def removeAmendEntryMessageFromErrorReason(failure: MovementValidationFailure): String = {
-    failure.errorReason.replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
+    failure
+      .errorReason
+      .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
+      .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
+      .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")
   }
 }

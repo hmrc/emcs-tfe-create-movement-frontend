@@ -19,6 +19,7 @@ package views
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.DraftMovementMessages
+import models.MovementValidationFailure
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import org.jsoup.Jsoup
@@ -57,6 +58,38 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
             Selectors.notificationBannerContent -> messagesForLanguage.notificationBanner704Content,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.headingWhen704ErrorsPresent
+          ))
+        }
+
+        "for a validation failure scenario" - {
+
+          val validationFailures: Seq[MovementValidationFailure] = Seq(
+            //scalastyle:off magic.number
+            MovementValidationFailure(12, "This is an error."),
+            MovementValidationFailure(13, "This is an error."),
+            MovementValidationFailure(14, "This is an error.")
+            //scalastyle:on magic.number
+          )
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            ern = testGreatBritainErn,
+            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).copy(validationFailures = validationFailures)
+          )
+
+          implicit val doc: Document = Jsoup.parse(view().toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.titleImportFor("Great Britain tax warehouse"),
+            Selectors.notificationBannerTitle -> messagesForLanguage.important,
+            Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerValidationFailuresContent,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
+            // errorType: 12
+            Selectors.notificationBannerError(1) -> "This is an error.",
+            // errorType: 13
+            Selectors.notificationBannerError(2) -> "This is an error.",
+            // errorType: 14
+            Selectors.notificationBannerError(3) -> "errors.validation.notificationBanner.14.content",
           ))
         }
 

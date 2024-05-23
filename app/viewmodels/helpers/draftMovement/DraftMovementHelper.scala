@@ -38,7 +38,7 @@ import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import utils.Logging
 import viewmodels.taskList._
@@ -297,17 +297,24 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
     sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)
 
   def validationFailureContent(validationFailures: Seq[MovementValidationFailure])(implicit messages: Messages): HtmlContent = {
+    //scalastyle:off magic.number
+    val errorTypesWhichAreDuplicatedSoWeReturnTheirOwnContent: Seq[Int] = Seq(12, 13)
+    //scalastyle:on magic.number
+
     val formattedErrorList = list(
       validationFailures.map {
         failure =>
           val pContent = failure.errorType match {
-            case 12 | 13 => removeAmendEntryMessageFromErrorReason(failure)
+            case errorType if errorTypesWhichAreDuplicatedSoWeReturnTheirOwnContent.contains(errorType) => removeAmendEntryMessageFromErrorReason(failure)
             case _ => messages(s"errors.validation.notificationBanner.${failure.errorType}.content")
           }
-          p("govuk-notification-banner__heading")(Html(pContent))
+          p()(Html(pContent))
       }
     )
-    HtmlContent(formattedErrorList)
+    HtmlContent(HtmlFormat.fill(Seq(
+      p("govuk-notification-banner__heading")(Html(messages("errors.validation.notificationBanner.heading"))),
+      formattedErrorList
+    )))
   }
 
   private[draftMovement] def removeAmendEntryMessageFromErrorReason(failure: MovementValidationFailure): String = {

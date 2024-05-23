@@ -37,8 +37,14 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
         messagesControllerComponents
       )
 
-      MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId, hasBeenSubmitted = false, submissionFailures = Seq.empty, submittedDraftId = None))
-        .returns(Future.successful(true))
+      MockPreDraftService.set(UserAnswers(
+          testNorthernIrelandErn,
+          testSessionId,
+          hasBeenSubmitted = false,
+          submissionFailures = Seq.empty,
+          validationFailures = Seq.empty,
+          submittedDraftId = None
+        )).returns(Future.successful(true))
 
       val request = FakeRequest()
       val result = testController.onPageLoad(testNorthernIrelandErn)(request)

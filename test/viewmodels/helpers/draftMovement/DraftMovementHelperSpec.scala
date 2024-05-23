@@ -44,12 +44,18 @@ import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
+import views.html.components.{list, p}
 
+//scalastyle:off magic.number
 class DraftMovementHelperSpec extends SpecBase {
 
-  lazy val helper = new DraftMovementHelper()
+  lazy val list: list = app.injector.instanceOf[list]
+  lazy val p: p = app.injector.instanceOf[p]
+  lazy val helper: DraftMovementHelper = new DraftMovementHelper(list, p)
 
   Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
@@ -117,7 +123,7 @@ class DraftMovementHelperSpec extends SpecBase {
                   movementScenario =>
                     implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                    val input1 = if(Seq(EuTaxWarehouse, UkTaxWarehouse.GB, UkTaxWarehouse.NI).contains(movementScenario)) {
+                    val input1 = if (Seq(EuTaxWarehouse, UkTaxWarehouse.GB, UkTaxWarehouse.NI).contains(movementScenario)) {
                       msgs(s"draftMovement.heading.$movementScenario")
                     } else {
                       msgs(s"destinationType.$movementScenario")
@@ -778,6 +784,59 @@ class DraftMovementHelperSpec extends SpecBase {
             )
         }
       }
+
+      "validationFailureContent" - {
+        "when errorType is 12 or 13" - {
+          "must return the correct content for a validation failure" in {
+            Seq(12, 13).foreach {
+              errorType =>
+                val failure = MovementValidationFailure(errorType, "This is an error. Please amend your entry and resubmit.")
+                val result = helper.validationFailureContent(Seq(failure))
+                result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                  p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                  list(Seq(p()(Html("This is an error."))))
+                )))
+            }
+          }
+        }
+        "when errorType is not 12 or 13" - {
+          "must return the correct content for a validation failure" in {
+            Seq(14, 9999, 123456).foreach {
+              errorType =>
+                val failure = MovementValidationFailure(errorType, "This is an error. Please amend your entry and resubmit.")
+                val result = helper.validationFailureContent(Seq(failure))
+                result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                  p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                  list(Seq(p()(Html(s"errors.validation.notificationBanner.$errorType.content"))))
+                )))
+            }
+          }
+        }
+      }
+
+      "removeAmendEntryMessageFromErrorReason" - {
+        "must remove 'Please amend your entry and resubmit.' from the error reason" in {
+          Seq(
+            "This is an error. Please amend your entry and resubmit.",
+            "This is an error.       Please amend your entry and resubmit.",
+            "This is an error.Please amend your entry and resubmit.",
+            "This is an error. Please amend your entry and resubmit",
+            "This is an error.        Please amend your entry and resubmit",
+            "This is an error.Please amend your entry and resubmit"
+          ).foreach { errorMessage =>
+            val failure = MovementValidationFailure(12, errorMessage)
+            val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+            result mustBe "This is an error."
+          }
+        }
+
+        "must not modify the error reason if 'Please amend your entry and resubmit.' is not present" in {
+          val failure = MovementValidationFailure(12, "This is an error.")
+          val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+          result mustBe "This is an error."
+        }
+      }
     }
   }
 }
+//scalastyle:on magic.number

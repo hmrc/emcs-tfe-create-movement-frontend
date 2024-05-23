@@ -1096,7 +1096,7 @@ itemDesignationOfOrigin.PGI = The product has a Protected Geographical Indicatio
 itemDesignationOfOrigin.PGI.input = Enter the name and register number of the PGI (optional)
 itemDesignationOfOrigin.None = I don’t want to provide a statement about the designation of origin
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
-itemDesignationOfOrigin.None.downstream = I don’t want to provide a statement about the designation of origin
+itemDesignationOfOrigin.None.downstream = I don''t want to provide a statement about the designation of origin
 
 itemDesignationOfOrigin.s200.title = Select statements about the designation of origin and labelling of item {0}
 itemDesignationOfOrigin.s200.heading = Select statements about the designation of origin and labelling of item {0}
@@ -1106,12 +1106,12 @@ itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to 
 itemDesignationOfOrigin.s200.radio.yes = It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787
 itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a statement about the marketing and labelling of the spirit
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
-itemDesignationOfOrigin.s200.radio.unprovided.downstream = I don’t want to provide a statement about the marketing and labelling of the spirit
+itemDesignationOfOrigin.s200.radio.unprovided.downstream = I don''t want to provide a statement about the marketing and labelling of the spirit
 
 itemDesignationOfOrigin.checkYourAnswersLabel = Statement of designation of origin
 itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about designation of origin and labelling of the product
 itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘I don’t want to provide a statement about the designation of origin’
-itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
+itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don't want to provide a statement about the marketing and labelling of the spirit’
 itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less
 itemDesignationOfOrigin.error.geographicalIndication.input.invalid = Information must not include < and > and : and ;
 itemDesignationOfOrigin.change.hidden = Statement of designation of origin
@@ -1186,7 +1186,7 @@ itemSmallIndependentProducer.SelfCertifiedProducerAndNotConsignor.input = Enter 
 itemSmallIndependentProducer.None = The producer is not an independent small producer
 itemSmallIndependentProducer.NotProvided = I don’t want to provide information about the producer
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
-itemSmallIndependentProducer.NotProvided.downstream = I don’t want to provide information about the producer
+itemSmallIndependentProducer.NotProvided.downstream = I don''t want to provide information about the producer
 itemSmallIndependentProducer.error.producer.required = Select the type of producer or select ‘I don’t want to provide information about the producer’
 itemSmallIndependentProducer.error.producerId.required = You must provide an excise ID or, if not available, the VAT registration number
 itemSmallIndependentProducer.error.producerId.length = The excise ID or VAT registration number should be 16 characters or less

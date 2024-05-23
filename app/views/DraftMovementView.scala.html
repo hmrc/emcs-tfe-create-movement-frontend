@@ -56,10 +56,10 @@
         ))
     }
 
-    @if(request.userAnswers.validationFailures.nonEmpty) {
+    @if(request.userAnswers.validationErrors.nonEmpty) {
         @notificationBanner(NotificationBanner(
             title = Text(messages("errors.validation.notificationBanner.title")),
-            content = helper.validationFailureContent(request.userAnswers.validationFailures)
+            content = helper.validationFailureContent(request.userAnswers.validationErrors)
         ))
     }
 

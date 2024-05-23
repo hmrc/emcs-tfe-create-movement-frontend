@@ -74,7 +74,7 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             ern = testGreatBritainErn,
-            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).copy(validationFailures = validationFailures)
+            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).copy(validationErrors = validationFailures)
           )
 
           implicit val doc: Document = Jsoup.parse(view().toString())

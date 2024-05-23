@@ -29,7 +29,7 @@ final case class UserAnswers(ern: String,
                              draftId: String,
                              data: JsObject = Json.obj(),
                              submissionFailures: Seq[MovementSubmissionFailure],
-                             validationFailures: Seq[MovementValidationFailure],
+                             validationErrors: Seq[MovementValidationFailure],
                              lastUpdated: Instant = Instant.now,
                              hasBeenSubmitted: Boolean,
                              submittedDraftId: Option[String]) {
@@ -100,7 +100,7 @@ object UserAnswers {
   val lastUpdated = "lastUpdated"
   val hasBeenSubmitted = "hasBeenSubmitted"
   val submissionFailures = "submissionFailures"
-  val validationErrors = "submissionFailures"
+  val validationErrors = "validationErrors"
   val submittedDraftId = "submittedDraftId"
 
   val reads: Reads[UserAnswers] =

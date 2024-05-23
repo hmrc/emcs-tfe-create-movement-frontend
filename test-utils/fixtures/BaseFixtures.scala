@@ -78,7 +78,7 @@ trait BaseFixtures {
     draftId = testDraftId,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS),
     submissionFailures = Seq.empty,
-    validationFailures = Seq.empty,
+    validationErrors = Seq.empty,
     submittedDraftId = None,
     hasBeenSubmitted = false
   )

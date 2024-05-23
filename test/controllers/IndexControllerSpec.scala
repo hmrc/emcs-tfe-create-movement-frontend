@@ -42,7 +42,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
           testSessionId,
           hasBeenSubmitted = false,
           submissionFailures = Seq.empty,
-          validationFailures = Seq.empty,
+          validationErrors = Seq.empty,
           submittedDraftId = None
         )).returns(Future.successful(true))
 

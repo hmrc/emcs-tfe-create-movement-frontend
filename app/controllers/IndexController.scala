@@ -40,7 +40,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
           ern = ern,
           draftId = request.sessionId,
           submissionFailures = Seq.empty,
-          validationFailures = Seq.empty,
+          validationErrors = Seq.empty,
           submittedDraftId = None,
           hasBeenSubmitted = false
         )

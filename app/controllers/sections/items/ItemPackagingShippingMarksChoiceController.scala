@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingShippingMarksChoiceFormProvider
 import models.requests.DataRequest
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -79,7 +79,9 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
   private def cleanseSaveAndRedirect(hasShippingMark: Boolean, itemIdx: Index, packageIdx: Index, mode: Mode)
                                     (implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = if (hasShippingMark) request.userAnswers else {
-      request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+      ItemsSection
+        .removeAnyPackagingThatMatchesTheShippingMark(itemIdx, packageIdx)
+        .remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
     }
     saveAndRedirect(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark, cleansedAnswers, mode)
   }

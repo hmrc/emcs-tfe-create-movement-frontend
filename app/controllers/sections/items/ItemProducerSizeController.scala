@@ -19,9 +19,12 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemProducerSizeFormProvider
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse.GB
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemProducerSizePage
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -60,14 +63,26 @@ class ItemProducerSizeController @Inject()(
       )
     }
 
+  def unableToProvideInformation(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      val updated = request.userAnswers.remove(ItemProducerSizePage(idx))
+      saveAndRedirect(ItemProducerSizePage(idx), updated, mode)
+    }
+
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Result = withGoodsType(idx) { goodsType =>
+    val epc = request.userAnswers.get(ItemExciseProductCodePage(idx))
+    val isGbTaxWarehouse = request.userAnswers.get(DestinationTypePage).getOrElse(None).equals(GB)
     status(view(
       form = form,
       onSubmitAction = routes.ItemProducerSizeController.onSubmit(request.ern, request.draftId, idx, mode),
       goodsType = goodsType,
       startYear = yearStart().toString,
-      endYear = yearEnd().toString
+      endYear = yearEnd().toString,
+      index = idx,
+      epc = epc,
+      isGbTaxWarehouse = isGbTaxWarehouse,
+      mode = mode
     ))
   }
 

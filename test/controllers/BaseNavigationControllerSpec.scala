@@ -74,6 +74,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
   }
 
   "saveAndRedirect" - {
+    //TODO: ETFE-3166 Add new test
     "with currentAnswers" - {
       "must save the answer and redirect" - {
         "when current UserAnswers doesn't contain the input answer (and remove any 704 validation error)" in new Test {

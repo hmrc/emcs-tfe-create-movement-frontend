@@ -35,3 +35,5 @@ class ItemProducerSizeFormProvider @Inject() extends Mappings {
       ).verifying(inRange(BigInt(1), BigInt("999999999999999"), "itemProducerSize.error.outOfRange"))
     )
 }
+
+object ItemProducerSizeFormProvider

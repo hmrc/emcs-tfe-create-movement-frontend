@@ -86,7 +86,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           onSubmitAction = onSubmitAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          epc = Some(testEpcWine),
+          isGbTaxWarehouse = false,
+          mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -105,7 +109,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           onSubmitAction = onSubmitAction(0),
           goodsType = Wine,
           startYear = "2021",
-          endYear = "2022"
+          endYear = "2022",
+          index = testIndex1,
+          epc = Some(testEpcWine),
+          isGbTaxWarehouse = false,
+          mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -125,7 +133,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           onSubmitAction = onSubmitAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          epc = Some(testEpcWine),
+          isGbTaxWarehouse = false,
+          mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -194,7 +206,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           onSubmitAction = onSubmitAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          epc = Some(testEpcWine),
+          isGbTaxWarehouse = false,
+          mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
 

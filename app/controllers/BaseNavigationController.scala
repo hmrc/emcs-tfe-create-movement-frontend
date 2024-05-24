@@ -49,6 +49,15 @@ trait BaseNavigationController extends BaseController with Logging {
                         (implicit request: DataRequest[_], format: Format[A]): Future[Result] =
     saveAndRedirect(page, answer, request.userAnswers, mode)
 
+  def saveAndRedirect(page: QuestionPage[_], updatedAnswers: UserAnswers, mode: Mode)
+                        (implicit request: DataRequest[_]): Future[Result] =
+    save(updatedAnswers).map{ updatedAnswers =>
+      Redirect(navigator.nextPage(page, mode, updatedAnswers))
+
+    }
+
+
+
   private def save[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {
       Future.successful(currentAnswers)
@@ -58,6 +67,9 @@ trait BaseNavigationController extends BaseController with Logging {
         _ <- userAnswersService.set(updatedAnswers)
       } yield updatedAnswers
     }
+
+  private def save(updatedAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[UserAnswers] =
+    userAnswersService.set(updatedAnswers)
 
   private[controllers] def markErrorAsFixedIfPresent(page: QuestionPage[_], currentAnswers: UserAnswers)
                                                     (implicit request: DataRequest[_]): UserAnswers = {

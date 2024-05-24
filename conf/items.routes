@@ -142,6 +142,8 @@ GET         /trader/:ern/draft/:draftId/items/:idx/producer-size                
 POST        /trader/:ern/draft/:draftId/items/:idx/producer-size                                                   controllers.sections.items.ItemProducerSizeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/items/:idx/producer-size/change                                            controllers.sections.items.ItemProducerSizeController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/producer-size/change                                            controllers.sections.items.ItemProducerSizeController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = CheckMode)
+GET         /trader/:ern/draft/:draftId/items/:idx/producer-size/unable-to-provide-information                     controllers.sections.items.ItemProducerSizeController.unableToProvideInformation(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
+
 
 GET         /trader/:ern/draft/:draftId/items/:idx/wine-product-category                                           controllers.sections.items.ItemWineProductCategoryController.onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/items/:idx/wine-product-category                                           controllers.sections.items.ItemWineProductCategoryController.onSubmit(ern: String, draftId: String, idx: Index, mode: Mode = NormalMode)

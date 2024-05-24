@@ -28,14 +28,15 @@
     h1: components.h1,
     h2: components.h2,
     p: components.p,
+    link: components.link,
     continueOrExit: components.continueOrExit
 
 )
 
-@(form: Form[_], onSubmitAction: Call, goodsType: GoodsType, startYear: String, endYear: String)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, epc: Option[String], isGbTaxWarehouse: Boolean, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)),
+    pageTitle = title(form, if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){messages("itemProducerSize.title.2", startYear, endYear)}else{messages("itemProducerSize.title.1", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)}),
     maybeShowActiveTrader = maybeShowActiveTrader(request)
 ) {
 
@@ -47,18 +48,38 @@
 
         @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @h1(messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
 
-        @p(){@messages("itemProducerSize.p")}
+        @if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
+            @h1(messages("itemProducerSize.title.2", startYear, endYear))
+
+        }else{
+            @h1(messages("itemProducerSize.title.1", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
+        }
+
+        @p(){@messages("itemProducerSize.p1")}
+
+        @if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
+            @p(){@messages("itemProducerSize.p2.1")}
+        }else{
+            @p(){@messages("itemProducerSize.p2.1")}
+        }
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("itemProducerSize.title", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))).hidden
+                label = if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
+                            LabelViewModel(Text(messages("itemProducerSize.label.1"))).withCssClass("govuk-!-font-weight-bold")
+                        }else{
+                            LabelViewModel(Text(messages("itemProducerSize.label.2"))).withCssClass("govuk-!-font-weight-bold")
+                        },
             )
             .withWidth(OneThird)
             .withSuffix(PrefixOrSuffix(content = Text(messages("itemProducerSize.input.suffix"))))
         )
+
+        @p() {
+            @link(controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(request.ern, request.draftId, index).url, "itemProducerSize.link", id = Some("unable-to-provide-information"))
+        }
 
         @continueOrExit()
     }

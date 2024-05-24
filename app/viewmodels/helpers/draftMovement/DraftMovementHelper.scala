@@ -302,13 +302,18 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
     //scalastyle:on magic.number
 
     val formattedErrorList = list(
-      validationFailures.map {
+      validationFailures.flatMap {
         failure =>
-          val pContent = failure.errorType match {
-            case errorType if errorTypesWhichAreDuplicatedSoWeReturnTheirOwnContent.contains(errorType) => removeAmendEntryMessageFromErrorReason(failure)
-            case _ => messages(s"errors.validation.notificationBanner.${failure.errorType}.content")
+          failure.errorType.flatMap {
+            errorType =>
+              (errorType match {
+                case et if errorTypesWhichAreDuplicatedSoWeReturnTheirOwnContent.contains(et) => failure.errorReason.map(removeAmendEntryMessageFromErrorReason)
+                case _ => Some(messages(s"errors.validation.notificationBanner.$errorType.content"))
+              }).map {
+                pContent =>
+                  p()(Html(pContent))
+              }
           }
-          p()(Html(pContent))
       }
     )
     HtmlContent(HtmlFormat.fill(Seq(
@@ -317,11 +322,9 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
     )))
   }
 
-  private[draftMovement] def removeAmendEntryMessageFromErrorReason(failure: MovementValidationFailure): String = {
-    failure
-      .errorReason
+  private[draftMovement] def removeAmendEntryMessageFromErrorReason(errorReason: String): String =
+    errorReason
       .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
       .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
       .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")
-  }
 }

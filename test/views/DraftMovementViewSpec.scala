@@ -41,11 +41,12 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
     Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
 
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         "for a 704 scenario" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false)))
           )
@@ -65,13 +66,12 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
           val validationFailures: Seq[MovementValidationFailure] = Seq(
             //scalastyle:off magic.number
-            MovementValidationFailure(12, "This is an error."),
-            MovementValidationFailure(13, "This is an error."),
-            MovementValidationFailure(14, "This is an error.")
+            MovementValidationFailure(Some(12), Some("This is an error.")),
+            MovementValidationFailure(Some(13), Some("This is an error.")),
+            MovementValidationFailure(Some(14), Some("This is an error."))
             //scalastyle:on magic.number
           )
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             ern = testGreatBritainErn,
             answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).copy(validationErrors = validationFailures)
@@ -95,7 +95,6 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
         "for a draft movement (not in error)" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             ern = testGreatBritainErn,
             answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB)

@@ -790,7 +790,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "must return the correct content for a validation failure" in {
             Seq(12, 13).foreach {
               errorType =>
-                val failure = MovementValidationFailure(errorType, "This is an error. Please amend your entry and resubmit.")
+                val failure = MovementValidationFailure(Some(errorType), Some("This is an error. Please amend your entry and resubmit."))
                 val result = helper.validationFailureContent(Seq(failure))
                 result mustBe HtmlContent(HtmlFormat.fill(Seq(
                   p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
@@ -804,7 +804,7 @@ class DraftMovementHelperSpec extends SpecBase {
           "must return the correct content for a validation failure" in {
             Seq(14, 9999, 123456).foreach {
               errorType =>
-                val failure = MovementValidationFailure(errorType, "This is an error. Please amend your entry and resubmit.")
+                val failure = MovementValidationFailure(Some(errorType), Some("This is an error. Please amend your entry and resubmit."))
                 val result = helper.validationFailureContent(Seq(failure))
                 result mustBe HtmlContent(HtmlFormat.fill(Seq(
                   p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
@@ -814,141 +814,182 @@ class DraftMovementHelperSpec extends SpecBase {
           }
         }
 
+        "when errorType is missing" - {
+          "must return an empty list" in {
+            val failure = MovementValidationFailure(None, Some("This is an error. Please amend your entry and resubmit."))
+            val result = helper.validationFailureContent(Seq(failure))
+            result mustBe HtmlContent(HtmlFormat.fill(Seq(
+              p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+              list(Seq())
+            )))
+          }
+        }
+
+        "when errorReason is missing" - {
+          "for errorType 12 or 13" - {
+            "must return an empty list" in {
+              Seq(12, 13).foreach {
+                errorType =>
+                  val failure = MovementValidationFailure(Some(errorType), None)
+                  val result = helper.validationFailureContent(Seq(failure))
+                  result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                    p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                    list(Seq())
+                  )))
+              }
+            }
+          }
+
+          "for other errorTypes" - {
+            "must return a non-empty list" in {
+              Seq(14, 9999, 123456).foreach {
+                errorType =>
+                  val failure = MovementValidationFailure(Some(errorType), None)
+                  val result = helper.validationFailureContent(Seq(failure))
+                  result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                    p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                    list(Seq(p()(Html(s"errors.validation.notificationBanner.$errorType.content"))))
+                  )))
+              }
+            }
+          }
+        }
+
         "for all valid errors" - {
           "must return the correct content" in {
             val validationFailures = Seq(
-              MovementValidationFailure(8033, "beans"),
-              MovementValidationFailure(8034, "beans"),
-              MovementValidationFailure(8035, "beans"),
-              MovementValidationFailure(8036, "beans"),
-              MovementValidationFailure(8037, "beans"),
-              MovementValidationFailure(8038, "beans"),
-              MovementValidationFailure(8039, "beans"),
-              MovementValidationFailure(8040, "beans"),
-              MovementValidationFailure(8041, "beans"),
-              MovementValidationFailure(8042, "beans"),
-              MovementValidationFailure(8043, "beans"),
-              MovementValidationFailure(8130, "beans"),
-              MovementValidationFailure(8712, "beans"),
-              MovementValidationFailure(8044, "beans"),
-              MovementValidationFailure(8714, "beans"),
-              MovementValidationFailure(8715, "beans"),
-              MovementValidationFailure(8045, "beans"),
-              MovementValidationFailure(12, "The consignee trader information must not be present where the destination is unknown. Please amend your entry and resubmit."),
-              MovementValidationFailure(8046, "beans"),
-              MovementValidationFailure(8047, "beans"),
-              MovementValidationFailure(8048, "beans"),
-              MovementValidationFailure(8550, "beans"),
-              MovementValidationFailure(8602, "beans"),
-              MovementValidationFailure(8551, "beans"),
-              MovementValidationFailure(8610, "beans"),
-              MovementValidationFailure(8611, "beans"),
-              MovementValidationFailure(8612, "beans"),
-              MovementValidationFailure(8613, "beans"),
-              MovementValidationFailure(8163, "beans"),
-              MovementValidationFailure(8552, "beans"),
-              MovementValidationFailure(8553, "beans"),
-              MovementValidationFailure(8716, "beans"),
-              MovementValidationFailure(8717, "beans"),
-              MovementValidationFailure(8614, "beans"),
-              MovementValidationFailure(8615, "beans"),
-              MovementValidationFailure(8131, "beans"),
-              MovementValidationFailure(12, "The place of dispatch trader information must not be present where the origin type code is 'Import'. Please amend your entry and resubmit."),
-              MovementValidationFailure(8616, "beans"),
-              MovementValidationFailure(8617, "beans"),
-              MovementValidationFailure(8718, "beans"),
-              MovementValidationFailure(8618, "beans"),
-              MovementValidationFailure(8619, "beans"),
-              MovementValidationFailure(8719, "beans"),
-              MovementValidationFailure(8720, "beans"),
-              MovementValidationFailure(8721, "beans"),
-              MovementValidationFailure(8722, "beans"),
-              MovementValidationFailure(12, "The dispatch import office must not be present where the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit."),
-              MovementValidationFailure(8700, "beans"),
-              MovementValidationFailure(8701, "beans"),
-              MovementValidationFailure(8132, "beans"),
-              MovementValidationFailure(12, "The complement consignee trader information must be present if the destination is an Exempted Consignee. Please amend your entry and resubmit."),
-              MovementValidationFailure(8133, "beans"),
-              MovementValidationFailure(8134, "beans"),
-              MovementValidationFailure(8052, "beans"),
-              MovementValidationFailure(8053, "beans"),
-              MovementValidationFailure(8054, "beans"),
-              MovementValidationFailure(8055, "beans"),
-              MovementValidationFailure(8149, "beans"),
-              MovementValidationFailure(8150, "beans"),
-              MovementValidationFailure(8151, "beans"),
-              MovementValidationFailure(8056, "beans"),
-              MovementValidationFailure(12, "You must provide a valid Trader ID if the destination is 'Tax Warehouse'. Please amend your entry and resubmit."),
-              MovementValidationFailure(8555, "beans"),
-              MovementValidationFailure(8556, "beans"),
-              MovementValidationFailure(8605, "beans"),
-              MovementValidationFailure(8606, "beans"),
-              MovementValidationFailure(8607, "beans"),
-              MovementValidationFailure(12, "The delivery place customs office must be present if the destination is 'Export'."),
-              MovementValidationFailure(8620, "beans"),
-              MovementValidationFailure(8621, "beans"),
-              MovementValidationFailure(8622, "beans"),
-              MovementValidationFailure(8623, "beans"),
-              MovementValidationFailure(8702, "beans"),
-              MovementValidationFailure(8709, "beans"),
-              MovementValidationFailure(8710, "beans"),
-              MovementValidationFailure(8711, "beans"),
-              MovementValidationFailure(12, "The transport arranger information is required if they are not the consignee or the consignor. Please amend your entry and resubmit."),
-              MovementValidationFailure(8500, "beans"),
-              MovementValidationFailure(8501, "beans"),
-              MovementValidationFailure(8502, "beans"),
-              MovementValidationFailure(8503, "beans"),
-              MovementValidationFailure(8140, "beans"),
-              MovementValidationFailure(8059, "beans"),
-              MovementValidationFailure(8624, "beans"),
-              MovementValidationFailure(8723, "beans"),
-              MovementValidationFailure(8152, "beans"),
-              MovementValidationFailure(8061, "beans"),
-              MovementValidationFailure(8135, "beans"),
-              MovementValidationFailure(8216, "beans"),
-              MovementValidationFailure(8062, "beans"),
-              MovementValidationFailure(8063, "beans"),
-              MovementValidationFailure(8088, "beans"),
-              MovementValidationFailure(8064, "beans"),
-              MovementValidationFailure(8158, "beans"),
-              MovementValidationFailure(8159, "beans"),
-              MovementValidationFailure(13, "You must provide the trader name or the Trader ID. Please amend your entry and resubmit."),
-              MovementValidationFailure(13, "You must provide the street name or the Trader ID. Please amend your entry and resubmit."),
-              MovementValidationFailure(13, "You must provide the city or the Trader ID. Please amend your entry and resubmit."),
-              MovementValidationFailure(13, "You must provide the postcode or the Trader ID. Please amend your entry and resubmit."),
-              MovementValidationFailure(8136, "beans"),
-              MovementValidationFailure(8065, "beans"),
-              MovementValidationFailure(8097, "beans"),
-              MovementValidationFailure(8087, "beans"),
-              MovementValidationFailure(8067, "beans"),
-              MovementValidationFailure(8068, "beans"),
-              MovementValidationFailure(8153, "beans"),
-              MovementValidationFailure(8724, "beans"),
-              MovementValidationFailure(8725, "beans"),
-              MovementValidationFailure(8086, "beans"),
-              MovementValidationFailure(8504, "beans"),
-              MovementValidationFailure(8217, "beans"),
-              MovementValidationFailure(8169, "beans"),
-              MovementValidationFailure(8218, "beans"),
-              MovementValidationFailure(8505, "beans"),
-              MovementValidationFailure(8506, "beans"),
-              MovementValidationFailure(8073, "beans"),
-              MovementValidationFailure(8074, "beans"),
-              MovementValidationFailure(8072, "beans"),
-              MovementValidationFailure(8704, "beans"),
-              MovementValidationFailure(8076, "beans"),
-              MovementValidationFailure(8077, "beans"),
-              MovementValidationFailure(13, "The import Single Administrative Document (SAD) must be present if the origin type code is 'Import'. Please amend your entry and resubmit."),
-              MovementValidationFailure(8137, "beans"),
-              MovementValidationFailure(8713, "beans"),
-              MovementValidationFailure(8726, "beans"),
-              MovementValidationFailure(8083, "beans"),
-              MovementValidationFailure(8084, "beans"),
-              MovementValidationFailure(8085, "beans"),
-              MovementValidationFailure(8219, "beans"),
-              MovementValidationFailure(12, "The import Single Administrative Document (SAD) must not be present if the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit."),
-              MovementValidationFailure(8081, "beans"),
-              MovementValidationFailure(8082, "beans")
+              MovementValidationFailure(Some(8033), Some("beans")),
+              MovementValidationFailure(Some(8034), Some("beans")),
+              MovementValidationFailure(Some(8035), Some("beans")),
+              MovementValidationFailure(Some(8036), Some("beans")),
+              MovementValidationFailure(Some(8037), Some("beans")),
+              MovementValidationFailure(Some(8038), Some("beans")),
+              MovementValidationFailure(Some(8039), Some("beans")),
+              MovementValidationFailure(Some(8040), Some("beans")),
+              MovementValidationFailure(Some(8041), Some("beans")),
+              MovementValidationFailure(Some(8042), Some("beans")),
+              MovementValidationFailure(Some(8043), Some("beans")),
+              MovementValidationFailure(Some(8130), Some("beans")),
+              MovementValidationFailure(Some(8712), Some("beans")),
+              MovementValidationFailure(Some(8044), Some("beans")),
+              MovementValidationFailure(Some(8714), Some("beans")),
+              MovementValidationFailure(Some(8715), Some("beans")),
+              MovementValidationFailure(Some(8045), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The consignee trader information must not be present where the destination is unknown. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8046), Some("beans")),
+              MovementValidationFailure(Some(8047), Some("beans")),
+              MovementValidationFailure(Some(8048), Some("beans")),
+              MovementValidationFailure(Some(8550), Some("beans")),
+              MovementValidationFailure(Some(8602), Some("beans")),
+              MovementValidationFailure(Some(8551), Some("beans")),
+              MovementValidationFailure(Some(8610), Some("beans")),
+              MovementValidationFailure(Some(8611), Some("beans")),
+              MovementValidationFailure(Some(8612), Some("beans")),
+              MovementValidationFailure(Some(8613), Some("beans")),
+              MovementValidationFailure(Some(8163), Some("beans")),
+              MovementValidationFailure(Some(8552), Some("beans")),
+              MovementValidationFailure(Some(8553), Some("beans")),
+              MovementValidationFailure(Some(8716), Some("beans")),
+              MovementValidationFailure(Some(8717), Some("beans")),
+              MovementValidationFailure(Some(8614), Some("beans")),
+              MovementValidationFailure(Some(8615), Some("beans")),
+              MovementValidationFailure(Some(8131), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The place of dispatch trader information must not be present where the origin type code is 'Import'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8616), Some("beans")),
+              MovementValidationFailure(Some(8617), Some("beans")),
+              MovementValidationFailure(Some(8718), Some("beans")),
+              MovementValidationFailure(Some(8618), Some("beans")),
+              MovementValidationFailure(Some(8619), Some("beans")),
+              MovementValidationFailure(Some(8719), Some("beans")),
+              MovementValidationFailure(Some(8720), Some("beans")),
+              MovementValidationFailure(Some(8721), Some("beans")),
+              MovementValidationFailure(Some(8722), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The dispatch import office must not be present where the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8700), Some("beans")),
+              MovementValidationFailure(Some(8701), Some("beans")),
+              MovementValidationFailure(Some(8132), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The complement consignee trader information must be present if the destination is an Exempted Consignee. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8133), Some("beans")),
+              MovementValidationFailure(Some(8134), Some("beans")),
+              MovementValidationFailure(Some(8052), Some("beans")),
+              MovementValidationFailure(Some(8053), Some("beans")),
+              MovementValidationFailure(Some(8054), Some("beans")),
+              MovementValidationFailure(Some(8055), Some("beans")),
+              MovementValidationFailure(Some(8149), Some("beans")),
+              MovementValidationFailure(Some(8150), Some("beans")),
+              MovementValidationFailure(Some(8151), Some("beans")),
+              MovementValidationFailure(Some(8056), Some("beans")),
+              MovementValidationFailure(Some(12), Some("You must provide a valid Trader ID if the destination is 'Tax Warehouse'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8555), Some("beans")),
+              MovementValidationFailure(Some(8556), Some("beans")),
+              MovementValidationFailure(Some(8605), Some("beans")),
+              MovementValidationFailure(Some(8606), Some("beans")),
+              MovementValidationFailure(Some(8607), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The delivery place customs office must be present if the destination is 'Export'.")),
+              MovementValidationFailure(Some(8620), Some("beans")),
+              MovementValidationFailure(Some(8621), Some("beans")),
+              MovementValidationFailure(Some(8622), Some("beans")),
+              MovementValidationFailure(Some(8623), Some("beans")),
+              MovementValidationFailure(Some(8702), Some("beans")),
+              MovementValidationFailure(Some(8709), Some("beans")),
+              MovementValidationFailure(Some(8710), Some("beans")),
+              MovementValidationFailure(Some(8711), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The transport arranger information is required if they are not the consignee or the consignor. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8500), Some("beans")),
+              MovementValidationFailure(Some(8501), Some("beans")),
+              MovementValidationFailure(Some(8502), Some("beans")),
+              MovementValidationFailure(Some(8503), Some("beans")),
+              MovementValidationFailure(Some(8140), Some("beans")),
+              MovementValidationFailure(Some(8059), Some("beans")),
+              MovementValidationFailure(Some(8624), Some("beans")),
+              MovementValidationFailure(Some(8723), Some("beans")),
+              MovementValidationFailure(Some(8152), Some("beans")),
+              MovementValidationFailure(Some(8061), Some("beans")),
+              MovementValidationFailure(Some(8135), Some("beans")),
+              MovementValidationFailure(Some(8216), Some("beans")),
+              MovementValidationFailure(Some(8062), Some("beans")),
+              MovementValidationFailure(Some(8063), Some("beans")),
+              MovementValidationFailure(Some(8088), Some("beans")),
+              MovementValidationFailure(Some(8064), Some("beans")),
+              MovementValidationFailure(Some(8158), Some("beans")),
+              MovementValidationFailure(Some(8159), Some("beans")),
+              MovementValidationFailure(Some(13), Some("You must provide the trader name or the Trader ID. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(13), Some("You must provide the street name or the Trader ID. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(13), Some("You must provide the city or the Trader ID. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(13), Some("You must provide the postcode or the Trader ID. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8136), Some("beans")),
+              MovementValidationFailure(Some(8065), Some("beans")),
+              MovementValidationFailure(Some(8097), Some("beans")),
+              MovementValidationFailure(Some(8087), Some("beans")),
+              MovementValidationFailure(Some(8067), Some("beans")),
+              MovementValidationFailure(Some(8068), Some("beans")),
+              MovementValidationFailure(Some(8153), Some("beans")),
+              MovementValidationFailure(Some(8724), Some("beans")),
+              MovementValidationFailure(Some(8725), Some("beans")),
+              MovementValidationFailure(Some(8086), Some("beans")),
+              MovementValidationFailure(Some(8504), Some("beans")),
+              MovementValidationFailure(Some(8217), Some("beans")),
+              MovementValidationFailure(Some(8169), Some("beans")),
+              MovementValidationFailure(Some(8218), Some("beans")),
+              MovementValidationFailure(Some(8505), Some("beans")),
+              MovementValidationFailure(Some(8506), Some("beans")),
+              MovementValidationFailure(Some(8073), Some("beans")),
+              MovementValidationFailure(Some(8074), Some("beans")),
+              MovementValidationFailure(Some(8072), Some("beans")),
+              MovementValidationFailure(Some(8704), Some("beans")),
+              MovementValidationFailure(Some(8076), Some("beans")),
+              MovementValidationFailure(Some(8077), Some("beans")),
+              MovementValidationFailure(Some(13), Some("The import Single Administrative Document (SAD) must be present if the origin type code is 'Import'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8137), Some("beans")),
+              MovementValidationFailure(Some(8713), Some("beans")),
+              MovementValidationFailure(Some(8726), Some("beans")),
+              MovementValidationFailure(Some(8083), Some("beans")),
+              MovementValidationFailure(Some(8084), Some("beans")),
+              MovementValidationFailure(Some(8085), Some("beans")),
+              MovementValidationFailure(Some(8219), Some("beans")),
+              MovementValidationFailure(Some(12), Some("The import Single Administrative Document (SAD) must not be present if the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(8081), Some("beans")),
+              MovementValidationFailure(Some(8082), Some("beans"))
             )
 
             val result = helper.validationFailureContent(validationFailures)
@@ -1104,8 +1145,7 @@ class DraftMovementHelperSpec extends SpecBase {
             "This is an error.        Please amend your entry and resubmit",
             "This is an error.Please amend your entry and resubmit"
           ).foreach { errorMessage =>
-            val failure = MovementValidationFailure(12, errorMessage)
-            val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+            val result = helper.removeAmendEntryMessageFromErrorReason(errorMessage)
             result mustBe "This is an error."
           }
         }
@@ -1113,21 +1153,18 @@ class DraftMovementHelperSpec extends SpecBase {
         "must replace single quotes around 'Import', 'Tax Warehouse', 'Duty Paid', and 'Export', with smart quotes" in {
           Seq("Import", "Tax Warehouse", "Duty Paid", "Export").foreach {
             text =>
-              val failure = MovementValidationFailure(12, s"This is an error. '$text'.")
-              val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+              val result = helper.removeAmendEntryMessageFromErrorReason(s"This is an error. '$text'.")
               result mustBe s"This is an error. ‘$text’."
           }
         }
 
         "must replace 'origin type code is 'Tax Warehouse'.' with 'origin type code is 'Tax Warehouse' or 'Duty Paid'.'" in {
-          val failure = MovementValidationFailure(12, "This is an error. origin type code is 'Tax Warehouse'.")
-          val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+          val result = helper.removeAmendEntryMessageFromErrorReason("This is an error. origin type code is 'Tax Warehouse'.")
           result mustBe "This is an error. origin type code is ‘Tax Warehouse’ or ‘Duty Paid’."
         }
 
         "must not modify the error reason if 'Please amend your entry and resubmit.' is not present, 'origin type code is 'Tax Warehouse'.' is not present, and there are no quotes to be replaced with smart quotes" in {
-          val failure = MovementValidationFailure(12, "This is an error.")
-          val result = helper.removeAmendEntryMessageFromErrorReason(failure)
+          val result = helper.removeAmendEntryMessageFromErrorReason("This is an error.")
           result mustBe "This is an error."
         }
       }

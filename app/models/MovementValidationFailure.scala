@@ -19,8 +19,8 @@ package models
 import play.api.libs.json.{Format, Json}
 
 case class MovementValidationFailure(
-                                      errorType: Int,
-                                      errorReason: String
+                                      errorType: Option[Int],
+                                      errorReason: Option[String]
                                     )
 
 object MovementValidationFailure {

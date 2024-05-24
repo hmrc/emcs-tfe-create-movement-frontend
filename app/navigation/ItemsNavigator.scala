@@ -317,14 +317,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
-    case page@ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
-      (userAnswers.get(page), userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))) match {
-        case (Some(true), Some("0")) =>
-          itemsRoutes.ItemPackagingSelectShippingMarkController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
-        case (Some(true), Some(_)) =>
-          itemsRoutes.ItemPackagingEnterShippingMarksController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx, packageIdx, CheckMode)
-        case _ => itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
-      }
+    case page@ItemPackagingShippingMarksChoicePage(_, _) => (userAnswers: UserAnswers) =>
+      normalRoutes(page)(userAnswers)
 
     case ItemPackagingQuantityPage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx)) match {

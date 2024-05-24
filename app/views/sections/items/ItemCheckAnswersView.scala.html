@@ -20,23 +20,23 @@
 @import utils.CommodityCodeHelper
 @import pages.sections.items.ItemsSectionItem
 @import viewmodels.helpers.ErrorNotificationBannerHelper
+@import pages.sections.items.ItemsPackagingSection
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton,
         h1: components.h1,
-        h2: components.h2,
         govukSummaryList: GovukSummaryList,
         notificationBanner: GovukNotificationBanner,
         p: components.p,
         list: components.list,
         link: components.link,
         helper: ItemCheckAnswersHelper,
-        notificationBannerHelper: ErrorNotificationBannerHelper
+        notificationBannerHelper: ErrorNotificationBannerHelper,
+        saveAndContinue: components.saveAndContinue
 )
 
-@(idx: Index, cnCodeInformation: CnCodeInformation, action: Call)(implicit request: DataRequest[_], messages: Messages)
+@(idx: Index, cnCodeInformation: CnCodeInformation, action: Call, addMorePackagingCall: Call, isBulk: Boolean, packagingCount: Option[Int])(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -46,8 +46,6 @@
 
       @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 
-      @h2(messages("itemCheckAnswers.itemSubheading", idx.displayIndex))
-
       @govukSummaryList(helper.constructItemDetailsCard(idx, cnCodeInformation))
 
       @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
@@ -56,9 +54,19 @@
           @govukSummaryList(helper.constructWineDetailsCard(idx))
       }
 
-      @govukSummaryList(helper.constructPackagingCard(idx, cnCodeInformation))
+      @govukSummaryList(helper.constructBulkPackagingCard(idx, cnCodeInformation))
 
-      @govukButton(ButtonViewModel(messages("site.confirmAnswers")))
+      @if(!isBulk) {
+        @helper.individualPackagingCards(idx).map { `package` =>
+          @govukSummaryList(`package`)
+        }
+
+        @if(packagingCount.exists(_ < ItemsPackagingSection(idx).MAX)) {
+          @link(addMorePackagingCall.url, "itemCheckAnswers.addMorePackaging.button", button = true, buttonSecondary = true, id = Some("add-more-packaging"))
+        }
+      }
+
+      @saveAndContinue("site.confirmAnswers")
     }
 }
 

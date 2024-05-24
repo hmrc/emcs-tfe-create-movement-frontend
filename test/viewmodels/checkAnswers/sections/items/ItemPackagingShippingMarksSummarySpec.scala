@@ -58,10 +58,32 @@ class ItemPackagingShippingMarksSummarySpec extends SpecBase with Matchers with 
               .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
               .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), false)
 
-            "must output the expected row" in {
+            "must output the expected row - routing to select shipping mark if quantity is 0" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), userAnswers
                 .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+              )
+
+              ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("answer")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.items.routes.ItemPackagingSelectShippingMarkController.onPageLoad(testErn, testDraftId, testIndex1,
+                      testPackagingIndex1, CheckMode).url,
+                    id = "changeItemPackagingShippingMarks1ForItem1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              ))
+            }
+
+            "must output the expected row - routing to enter shipping mark if quantity is > 0" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), userAnswers
+                .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "answer")
+                .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
               )
 
               ItemPackagingShippingMarksSummary.row(testIndex1, testPackagingIndex1) mustBe Some(SummaryListRowViewModel(

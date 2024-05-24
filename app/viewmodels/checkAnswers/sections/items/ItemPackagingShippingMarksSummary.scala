@@ -16,9 +16,10 @@
 
 package viewmodels.checkAnswers.sections.items
 
+import controllers.sections.items.routes
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsPackagingSectionItems}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -32,16 +33,23 @@ object ItemPackagingShippingMarksSummary {
     answers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)).map {
       answer =>
 
+        val isPackagingQuantityEqualToZero = request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).exists(BigInt(_) == 0)
+
+        val changeLinkUrl = if(isPackagingQuantityEqualToZero) {
+          routes.ItemPackagingSelectShippingMarkController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url
+        } else {
+          routes.ItemPackagingEnterShippingMarksController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url
+        }
+
         SummaryListRowViewModel(
           key = "itemPackagingShippingMarks.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = if(!ItemsPackagingSectionItems(itemIdx, packagingIdx).isCompleted) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.items.routes.ItemPackagingEnterShippingMarksController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url,
+              href = changeLinkUrl,
               id = s"changeItemPackagingShippingMarks${packagingIdx.displayIndex}ForItem${itemIdx.displayIndex}"
-            )
-              .withVisuallyHiddenText(messages("itemPackagingShippingMarks.change.hidden"))
+            ).withVisuallyHiddenText(messages("itemPackagingShippingMarks.change.hidden"))
           )
         )
     }

@@ -21,9 +21,10 @@ import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
 import models.{Index, NormalMode}
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemCheckAnswersPage, ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCheckAnswersPage, ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.ItemsPackagingCount
 import services.{GetCnCodeInformationService, UserAnswersService}
 import views.html.sections.items.ItemCheckAnswersView
 
@@ -80,10 +81,16 @@ class ItemCheckAnswersController @Inject()(
     Future.successful(None)
   })
 
-  private def renderView(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_]): Result = Ok(view(
-    idx,
-    cnCodeInformation,
-    routes.ItemCheckAnswersController.onSubmit(request.ern, request.draftId, idx)
-  ))
+  private def renderView(itemIdx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_]): Result = {
+    val nextPackagingIdx: Index = request.userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
+    Ok(view(
+      idx = itemIdx,
+      cnCodeInformation = cnCodeInformation,
+      action = routes.ItemCheckAnswersController.onSubmit(request.ern, request.draftId, itemIdx),
+      addMorePackagingCall = routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId, itemIdx, nextPackagingIdx, NormalMode),
+      isBulk = request.userAnswers.get(ItemBulkPackagingChoicePage(itemIdx)).contains(true),
+      packagingCount = request.userAnswers.get(ItemsPackagingCount(itemIdx))
+    ))
+  }
 
 }

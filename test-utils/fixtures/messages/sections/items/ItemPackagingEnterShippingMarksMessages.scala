@@ -36,8 +36,8 @@ object ItemPackagingEnterShippingMarksMessages {
 
     def errorShippingMarkNotUnique(itemIndex: Index) = s"Enter a shipping mark value that has not been used before, or if you wish to select an existing shipping mark to show that item ${itemIndex.displayIndex} is packed together with another item then item ${itemIndex.displayIndex}’s packaging quantity must be changed to 0"
 
-    val cyaLabel = "Shipping mark description"
-    val cyaChangeHidden = "shipping mark description"
+    val cyaLabel = "Shipping mark"
+    val cyaChangeHidden = "shipping mark"
   }
 
   object English extends ViewMessages with BaseEnglish

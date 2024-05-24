@@ -20,10 +20,10 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import mocks.services.{MockGetCnCodeInformationService, MockUserAnswersService}
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import models.requests.CnCodeInformationItem
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemSelectPackagingPage}
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -44,8 +44,11 @@ class ItemCheckAnswersControllerSpec extends SpecBase
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
       .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+      .set(ItemBulkPackagingChoicePage(testIndex1), false)
+      .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
 
   val submitCall: Call = routes.ItemCheckAnswersController.onSubmit(testErn, testDraftId, testIndex1)
+  val addMorePackagingCall: Call = routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex2, NormalMode)
 
   class Test(val userAnswers: Option[UserAnswers] = Some(baseUserAnswers)) {
     val controller: ItemCheckAnswersController = new ItemCheckAnswersController(
@@ -65,7 +68,7 @@ class ItemCheckAnswersControllerSpec extends SpecBase
   "ItemCheckAnswers Controller" - {
     "onPageLoad" - {
       "must render the page" - {
-        "when EPC and CN Code are in UserAnswers service calls are successful" in new Test() {
+        "when EPC and CN Code are in UserAnswers service calls are successful (non-bulk)" in new Test() {
           MockGetCnCodeInformationService
             .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine)))
             .returns(Future.successful(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine) -> testCommodityCodeWine)))
@@ -74,7 +77,21 @@ class ItemCheckAnswersControllerSpec extends SpecBase
 
           status(result) mustEqual OK
           contentAsString(result) mustBe
-            view(testIndex1, testCommodityCodeWine, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
+            view(testIndex1, testCommodityCodeWine, submitCall, addMorePackagingCall, isBulk = false, packagingCount = Some(1))(dataRequest(request, userAnswers.get), messages(request)).toString
+        }
+
+        "when EPC and CN Code are in UserAnswers service calls are successful (bulk)" in new Test(
+          Some(baseUserAnswers.set(ItemBulkPackagingChoicePage(testIndex1), true))
+        ) {
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine)))
+            .returns(Future.successful(Seq(CnCodeInformationItem(testEpcWine, testCnCodeWine) -> testCommodityCodeWine)))
+
+          val result: Future[Result] = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustBe
+            view(testIndex1, testCommodityCodeWine, submitCall, addMorePackagingCall, isBulk = true, packagingCount = None)(dataRequest(request, userAnswers.get), messages(request)).toString
         }
       }
       "must redirect to Index of section" - {

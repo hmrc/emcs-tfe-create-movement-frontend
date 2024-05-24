@@ -33,4 +33,15 @@ class ItemSmallIndependentProducerTypeSpec extends SpecBase {
     }
   }
 
+  ".notProvidedValues" - {
+
+    "should return Not provided and None" in {
+
+      ItemSmallIndependentProducerType.notProvidedValues mustBe Seq(
+        NotAIndependentSmallProducer,
+        NotProvided
+      )
+    }
+  }
+
 }

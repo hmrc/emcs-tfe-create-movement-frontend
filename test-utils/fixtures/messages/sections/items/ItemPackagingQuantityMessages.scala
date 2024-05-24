@@ -38,7 +38,7 @@ object ItemPackagingQuantityMessages {
 
     val detailsP2 = "However, you don’t need to record the shared packaging in EMCS if each item already has countable packaging entered, such as bottles, cans or cases."
 
-    val cyaLabel = "Quantity"
+    val cyaLabel = "Packaging quantity"
     val cyaVisuallyHidden = "packaging quantity"
   }
 

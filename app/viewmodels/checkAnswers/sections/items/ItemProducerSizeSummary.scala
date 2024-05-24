@@ -18,9 +18,11 @@ package viewmodels.checkAnswers.sections.items
 
 import controllers.sections.items.routes
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{CheckMode, Index}
-import pages.sections.items.{ItemProducerSizePage, ItemSmallIndependentProducerPage}
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -32,20 +34,32 @@ object ItemProducerSizeSummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemProducerSizePage(idx)
 
+    val productType = getProductType(idx)
+
     for {
       itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
       answer <- request.userAnswers.get(page)
       if itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndConsignor || itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor
     } yield {
       SummaryListRowViewModel(
-        key = s"$page.checkYourAnswersLabel",
+        key = s"$page.checkYourAnswersLabel.$productType",
         value = ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString)),
         actions = Seq(ActionItemViewModel(
           href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "site.change",
           id = s"changeItemProducerSize${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
+        ).withVisuallyHiddenText(messages(s"$page.change.$productType.hidden")))
       )
+    }
+  }
+
+  private def getProductType(idx: Index)(implicit request: DataRequest[_]): String = {
+    val destinationType = request.userAnswers.get(DestinationTypePage)
+    val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
+    if(request.isNorthernIrelandErn && destinationType.exists(_ != UkTaxWarehouse.GB) && itemExciseProductCode.exists(!Seq("S300", "S500").contains(_))) {
+      "finished"
+    } else {
+      "pure"
     }
   }
 }

@@ -24,7 +24,7 @@ import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse, UnknownDestination}
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
-import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotAIndependentSmallProducer, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.info.DestinationTypePage
@@ -171,7 +171,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           fiscalMark = Some("fiscal marks"),
           fiscalMarkUsedFlag = Some(true),
           designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-          independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Seed number: XIRC123456789"),
+          independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789"),
           sizeOfProducer = Some(BigInt(4)),
           density = Some(BigDecimal(7.89)),
           commercialDescription = Some("beans"),
@@ -272,7 +272,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             fiscalMark = Some("fiscal marks"),
             fiscalMarkUsedFlag = Some(true),
             designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-            independentSmallProducersDeclaration = Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer. I don't want to provide information about the producer"),
+            independentSmallProducersDeclaration = Some("I don't want to provide information about the producer"),
             sizeOfProducer = Some(BigInt(4)),
             density = Some(BigDecimal(7.89)),
             commercialDescription = Some("beans"),
@@ -439,7 +439,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
           .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn)))
-      ), implicitly) mustBe Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Seed number: XIRC123456789")
+      ), implicitly) mustBe Some("It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789")
     }
 
     s"when the $ItemSmallIndependentProducerPage has no answer at the specified index, return None" in {
@@ -470,23 +470,29 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
       BodyEadEsadModel.smallIndependentProducerAnswer(
         testIndex1, ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn))
-      ) mustBe s"It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Seed number: $testErn"
+      ) mustBe s"It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Identification: $testErn"
     }
 
-    "generate the correct answer when the user doesn't want to provide a small independent producer" in {
+    Seq(
+      NotAIndependentSmallProducer -> "The producer is not an independent small producer",
+      NotProvided -> "I don't want to provide information about the producer"
+    ).foreach { optionAndAnswer =>
+      s"generate the correct answer when the user selects: ${optionAndAnswer._1}" in {
 
-      implicit val dr = dataRequest(FakeRequest(),
-        emptyUserAnswers
-          .set(DestinationTypePage, UkTaxWarehouse.GB)
-          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
-          .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotProvided, None))
-      )
+        implicit val dr = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(optionAndAnswer._1, None))
+        )
 
-      BodyEadEsadModel.smallIndependentProducerAnswer(
-        testIndex1, ItemSmallIndependentProducerModel(NotProvided, None)
-      ) mustBe s"It is hereby certified that the alcoholic product described has been produced by an independent small producer. I don't want to provide information about the producer"
+        BodyEadEsadModel.smallIndependentProducerAnswer(
+          testIndex1, ItemSmallIndependentProducerModel(optionAndAnswer._1, None)
+        ) mustBe optionAndAnswer._2
+      }
     }
+
 
     "generate the correct answer for NI -> EU" in {
 
@@ -501,7 +507,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
 
       BodyEadEsadModel.smallIndependentProducerAnswer(
         testIndex1, ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndNotConsignor, Some(testErn))
-      ) mustBe s"It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Seed number: $testErn"
+      ) mustBe s"It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Identification: $testErn"
     }
 
     "throw an exception on an invalid scenario" in {

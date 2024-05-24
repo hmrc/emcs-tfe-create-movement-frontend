@@ -46,6 +46,7 @@ object ItemPackagingShippingMarksChoiceMessages {
 
     val warningText = s"$warning If you select that you don’t want a shipping mark, the shipping mark currently assigned to this packaging will be removed. Any other packages in this movement using the same shipping mark with a packaging quantity of 0 will therefore be invalid, and will also be removed."
 
+    val cyaYesExistingShippingMarkSelected = "Yes - existing shipping mark selected"
     val cyaLabel = "Shipping mark choice"
     val cyaChangeHidden = "Shipping mark choice"
   }

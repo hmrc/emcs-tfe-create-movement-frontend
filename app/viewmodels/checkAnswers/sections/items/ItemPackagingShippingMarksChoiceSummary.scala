@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.items
 
 import models.requests.DataRequest
 import models.{CheckMode, Index}
-import pages.sections.items.{ItemPackagingShippingMarksChoicePage, ItemsPackagingSectionItems}
+import pages.sections.items.{ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemsPackagingSectionItems}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -30,7 +30,13 @@ object ItemPackagingShippingMarksChoiceSummary {
     request.userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packagingIdx)).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
+        val isPackagingQuantityEqualToZero = request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).exists(BigInt(_) == 0)
+
+        val value = (answer, isPackagingQuantityEqualToZero) match {
+          case (true, true) => "itemPackagingShippingMarksChoice.checkYourAnswersLabel.yes.existing"
+          case (true, _) => "site.yes"
+          case (false, _) => "site.no"
+        }
 
         SummaryListRowViewModel(
           key     = "itemPackagingShippingMarksChoice.checkYourAnswersLabel",

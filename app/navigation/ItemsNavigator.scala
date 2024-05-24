@@ -370,7 +370,6 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       reviewRouteMap(page)(userAnswers)
   }
 
-
   //scalastyle:off
   private def alcoholStrengthRouting(idx: Index, userAnswers: UserAnswers): Call =
     (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemAlcoholStrengthPage(idx))) match {

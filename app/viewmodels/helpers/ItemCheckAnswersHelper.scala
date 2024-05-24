@@ -19,14 +19,10 @@ package viewmodels.helpers
 import models.requests.DataRequest
 import models.response.referenceData.CnCodeInformation
 import models.{CheckMode, GoodsType, Index}
-import pages.sections.items._
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import queries.ItemsPackagingCount
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.items._
 import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 import javax.inject.{Inject, Singleton}
 
@@ -40,15 +36,16 @@ class ItemCheckAnswersHelper @Inject()(
                                         itemQuantitySummary: ItemQuantitySummary,
                                         itemDegreesPlatoSummary: ItemDegreesPlatoSummary,
                                         itemDesignationOfOriginSummary: ItemDesignationOfOriginSummary,
-                                        itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary
+                                        itemSmallIndependentProducerSummary: ItemSmallIndependentProducerSummary,
+                                        itemCheckAnswersPackagingHelper: ItemCheckAnswersPackagingHelper
                                       ) {
 
-  private val headingLevel = 3
+  private val headingLevel = 2
 
   def constructItemDetailsCard(idx: Index, cnCodeInformation: CnCodeInformation)
                               (implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
-      card = Some(CardViewModel(messages("itemCheckAnswers.itemDetailsCardTitle"), headingLevel = headingLevel, actions = None)),
+      card = Some(CardViewModel(messages("itemCheckAnswers.itemDetailsCardTitle", idx.displayIndex), headingLevel = headingLevel, actions = None)),
       rows = Seq(
         Some(itemExciseProductCodeSummary.row(idx, cnCodeInformation, CheckMode)),
         itemCommodityCodeSummary.row(idx, cnCodeInformation, CheckMode),
@@ -70,7 +67,7 @@ class ItemCheckAnswersHelper @Inject()(
   def constructQuantityCard(idx: Index, cnCodeInformation: CnCodeInformation)
                            (implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
-      card = Some(CardViewModel(messages("itemCheckAnswers.quantityCardTitle"), headingLevel = headingLevel, actions = None)),
+      card = Some(CardViewModel(messages("itemCheckAnswers.quantityCardTitle", idx.displayIndex), headingLevel = headingLevel, actions = None)),
       rows = Seq(
         itemQuantitySummary.row(idx, cnCodeInformation.unitOfMeasure),
         ItemNetMassSummary.row(idx),
@@ -81,7 +78,7 @@ class ItemCheckAnswersHelper @Inject()(
   def constructWineDetailsCard(idx: Index)
                               (implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
-      card = Some(CardViewModel(messages("itemCheckAnswers.wineDetailsCardTitle"), headingLevel = headingLevel, actions = None)),
+      card = Some(CardViewModel(messages("itemCheckAnswers.wineDetailsCardTitle", idx.displayIndex), headingLevel = headingLevel, actions = None)),
       rows = Seq(
         itemWineOperationsChoiceSummary.row(idx),
         ItemWineProductCategorySummary.row(idx),
@@ -91,31 +88,13 @@ class ItemCheckAnswersHelper @Inject()(
       ).flatten
     )
 
-  def constructPackagingCard(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    val (rows, cardActions): (Seq[SummaryListRow], Option[Actions]) = if (request.userAnswers.get(ItemBulkPackagingChoicePage(idx)).contains(true)) {
-      // bulk
-      (
-        bulkPackagingSummaryListRows(idx, cnCodeInformation),
-        None
-      )
-    } else {
-      // not bulk
-      (
-        // TODO: Update href in CYA alignment
-        notBulkPackagingSummaryListRows(idx, cnCodeInformation),
-        Some(Actions(items = Seq(ActionItemViewModel(
-          "site.change",
-          href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
-          s"changeItemPackaging${idx.displayIndex}"
-        ))))
-      )
-    }
-
+  def constructBulkPackagingCard(idx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
-      card = Some(CardViewModel(messages("itemCheckAnswers.packagingCardTitle"), headingLevel = headingLevel, actions = cardActions)),
-      rows = rows
+      card = Some(CardViewModel(messages("itemCheckAnswers.bulkPackagingCardTitle", idx.displayIndex), headingLevel = headingLevel, actions = None)),
+      rows = bulkPackagingSummaryListRows(idx, cnCodeInformation)
     )
-  }
+
+  def individualPackagingCards(idx: Index)(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = itemCheckAnswersPackagingHelper.allPackagesSummary(idx)
 
   private[helpers] def bulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
                                                    (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] =
@@ -124,24 +103,4 @@ class ItemCheckAnswersHelper @Inject()(
       ItemBulkPackagingSelectSummary.row(idx),
       ItemBulkPackagingSealChoiceSummary.row(idx)
     ).flatten ++ itemBulkPackagingSealTypeSummary.rows(idx)
-
-  private[helpers] def notBulkPackagingSummaryListRows(idx: Index, cnCodeInformation: CnCodeInformation)
-                                                      (implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
-    def packageTypeRow(packageIndex: Index): Option[SummaryListRow] = {
-      (request.userAnswers.get(ItemSelectPackagingPage(idx, packageIndex)), request.userAnswers.get(ItemPackagingQuantityPage(idx, packageIndex))) match {
-        case (Some(packaging), Some(quantity)) => Some(SummaryListRowViewModel(
-          key = KeyViewModel(messages(s"${ItemCheckAnswersPage(idx)}.packageTypeKey", packageIndex.displayIndex)),
-          value = ValueViewModel(HtmlFormat.escape(messages(s"${ItemCheckAnswersPage(idx)}.packageTypeValue", quantity, packaging.description)).toString())
-        ))
-        case _ => None
-      }
-    }
-
-    Seq(
-      ItemBulkPackagingChoiceSummary.row(idx, GoodsType.apply(cnCodeInformation.exciseProductCode))
-    ).flatten ++ (request.userAnswers.get(ItemsPackagingCount(idx)) match {
-      case Some(value) => (0 until value).map(packageIdx => packageTypeRow(Index(packageIdx)))
-      case None => Nil
-    }).flatten
-  }
 }

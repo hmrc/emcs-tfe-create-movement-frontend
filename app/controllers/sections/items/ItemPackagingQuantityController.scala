@@ -65,9 +65,10 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
             renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
             answer => {
               val newUserAnswers = request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIdx)) match {
-                case Some("0") if BigInt(answer) > 0 => request.userAnswers
-                  .remove(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx))
-                  .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
+                case Some(current) if (BigInt(answer) > 0 && current == "0") || (BigInt(current) > 0 && answer == "0") =>
+                  request.userAnswers
+                    .remove(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx))
+                    .remove(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
                 case _ => request.userAnswers
               }
               saveAndRedirect(ItemPackagingQuantityPage(itemsIndex, packagingIdx), answer, newUserAnswers, mode)

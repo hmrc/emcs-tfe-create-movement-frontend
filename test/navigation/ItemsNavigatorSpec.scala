@@ -1241,12 +1241,12 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
-        "to ItemPackagingShippingMarksChoice page" - {
+        "to ItemPackagingShippingMarksChoice page (in NormalMode to force reflow)" - {
 
           "when the ItemPackagingShippingMarksChoice page has no answer" in {
             navigator.nextPage(
               ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), CheckMode, emptyUserAnswers
-            ) mustBe itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, CheckMode)
+            ) mustBe itemsRoutes.ItemPackagingShippingMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)
           }
         }
       }

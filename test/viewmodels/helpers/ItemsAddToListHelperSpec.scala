@@ -197,7 +197,7 @@ class ItemsAddToListHelperSpec extends SpecBase
                   )),
                   actions = Some(Actions(items = Seq(
                     ActionItem(
-                      href = routes.ItemsPackagingAddToListController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                      href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
                       content = Text(messagesForLanguage.continueEditing),
                       visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
                       attributes = Map("id" -> "editItem-1")

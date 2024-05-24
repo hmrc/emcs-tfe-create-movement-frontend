@@ -39,7 +39,7 @@ class ItemsPackagingIndexController @Inject()(
     authorisedDataRequest(ern, draftId) { implicit request =>
       validateIndex(itemsIndex) {
         if (ItemsPackagingSection(itemsIndex).isCompleted) {
-          Redirect(routes.ItemsPackagingAddToListController.onPageLoad(ern, draftId, itemsIndex))
+          Redirect(routes.ItemCheckAnswersController.onPageLoad(ern, draftId, itemsIndex))
         } else {
           Redirect(controllers.sections.items.routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId,
             itemsIndex, Index(0), NormalMode))

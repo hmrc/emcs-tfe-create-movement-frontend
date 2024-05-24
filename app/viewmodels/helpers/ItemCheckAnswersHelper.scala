@@ -101,12 +101,13 @@ class ItemCheckAnswersHelper @Inject()(
     } else {
       // not bulk
       (
+        // TODO: Update href in CYA alignment
         notBulkPackagingSummaryListRows(idx, cnCodeInformation),
         Some(Actions(items = Seq(ActionItemViewModel(
           "site.change",
-          href = controllers.sections.items.routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, idx).url,
+          href = testOnly.controllers.routes.UnderConstructionController.onPageLoad().url,
           s"changeItemPackaging${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages(s"${ItemsPackagingAddToListPage(idx)}.change.hidden")))))
+        ))))
       )
     }
 

@@ -147,7 +147,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
               routes.ItemBulkPackagingChoiceController.onPageLoad(request.ern, request.draftId, item.idx, NormalMode)
             } else {
               if (request.userAnswers.get(ItemsPackagingCount(item.idx)).exists(_ > 1)) {
-                routes.ItemsPackagingAddToListController.onPageLoad(request.ern, request.draftId, item.idx)
+                routes.ItemCheckAnswersController.onPageLoad(request.ern, request.draftId, item.idx)
               } else {
                 routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId, item.idx, Index(0), NormalMode)
               }

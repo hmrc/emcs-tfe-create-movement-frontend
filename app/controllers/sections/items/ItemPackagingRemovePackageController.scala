@@ -89,7 +89,7 @@ class ItemPackagingRemovePackageController @Inject()(
         _ => Redirect(routes.ItemsPackagingIndexController.onPageLoad(ern, draftId, itemIdx))
       }
     } else {
-      Future(Redirect(routes.ItemsPackagingAddToListController.onPageLoad(ern, draftId, itemIdx)))
+      Future(Redirect(routes.ItemCheckAnswersController.onPageLoad(ern, draftId, itemIdx)))
     }
   }
 }

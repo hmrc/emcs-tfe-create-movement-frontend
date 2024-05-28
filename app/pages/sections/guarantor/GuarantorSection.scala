@@ -28,7 +28,11 @@ case object GuarantorSection extends Section[JsObject] {
   //noinspection ScalaStyle
   override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(GuarantorRequiredPage) match {
     case None if GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() =>
-      guarantorRequired
+      if(request.userAnswers.get(GuarantorArrangerPage).nonEmpty) {
+        guarantorRequired
+      } else {
+        NotStarted
+      }
     case None =>
       NotStarted
     case Some(true) =>

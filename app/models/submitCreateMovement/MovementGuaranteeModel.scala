@@ -33,7 +33,10 @@ case class MovementGuaranteeModel(
 object MovementGuaranteeModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): MovementGuaranteeModel = {
-    val guarantorRequired: Boolean = mandatoryPage(GuarantorRequiredPage)
+    val guarantorRequired: Boolean = request.userAnswers.get(GuarantorRequiredPage) match {
+      case Some(value) => value
+      case None => GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    }
 
     if (!guarantorRequired) {
       val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)

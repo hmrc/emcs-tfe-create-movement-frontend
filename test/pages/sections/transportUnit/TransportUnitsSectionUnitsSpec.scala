@@ -17,10 +17,8 @@
 package pages.sections.transportUnit
 
 import base.SpecBase
-import models.Index
 import models.requests.DataRequest
-import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
-import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport}
+import models.sections.transportUnit.TransportUnitType
 import play.api.test.FakeRequest
 
 class TransportUnitsSectionUnitsSpec extends SpecBase {

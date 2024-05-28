@@ -43,6 +43,7 @@ trait BaseFixtures {
   val testNIRegisteredConsignorErn = "XIRC123456789"
   val testPaidTemporaryAuthorisationCode = "XIPTA12345678"
   val testGreatBritainErn = "GBRC123456789"
+  val testGreatBritainWarehouseKeeperErn = "GBWK123456789"
   val testLrn: String = "1234567890"
   val testDraftId: String = "draftId"
   val testVatNumber: String = "123456789"

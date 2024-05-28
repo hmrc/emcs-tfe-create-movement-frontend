@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.{CheckMode, UserAddress}
 import pages.QuestionPage
@@ -34,53 +35,58 @@ object GuarantorAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
-      request.userAnswers.get(GuarantorArrangerPage).map {
+    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
+    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val isAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
-        guarantorArranger => {
-
-          val addressPage: QuestionPage[UserAddress] = guarantorArranger match {
-            case Consignor => ConsignorAddressPage
-            case Consignee => ConsigneeAddressPage
-            case _ => GuarantorAddressPage
-          }
-
-          val showChangeLink: Boolean = guarantorArranger == GoodsOwner || guarantorArranger == Transporter
-
-          val value: Content = request.userAnswers.get(addressPage).fold[Content] {
-            guarantorArranger match {
-              case Consignor => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignor")))
-              case Consignee => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
-              case _ => Text(messages("site.notProvided"))
-            }
-          } { address =>
-            HtmlContent(
-              HtmlFormat.fill(Seq(
-                Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
-                Html(address.town + "<br>"),
-                Html(address.postcode)
-              ))
-            )
-          }
-
-          SummaryListRowViewModel(
-            key = "address.guarantorAddress.checkYourAnswers.label",
-            value = ValueViewModel(value),
-            actions = if (!showChangeLink) Seq() else Seq(
-              ActionItemViewModel(
-                content = "site.change",
-                href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(
-                  ern = request.userAnswers.ern,
-                  draftId = request.userAnswers.draftId,
-                  mode = CheckMode
-                ).url,
-                id = "changeGuarantorAddress"
-              )
-                .withVisuallyHiddenText(messages("address.guarantorAddress.3.change.hidden"))
-            )
-          )
-        }
-      }
+    (guarantorArrangerAnswer, showSummaryRow) match {
+      case (Some(arranger), true) => Some(renderRow(arranger))
+      case _ => None
     }
+  }
+
+  def renderRow(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+
+    val addressPage: QuestionPage[UserAddress] = guarantorArranger match {
+      case Consignor => ConsignorAddressPage
+      case Consignee => ConsigneeAddressPage
+      case _ => GuarantorAddressPage
+    }
+
+    val showChangeLink: Boolean = guarantorArranger == GoodsOwner || guarantorArranger == Transporter
+
+    val value: Content = request.userAnswers.get(addressPage).fold[Content] {
+      guarantorArranger match {
+        case Consignor => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignor")))
+        case Consignee => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
+        case _ => Text(messages("site.notProvided"))
+      }
+    } { address =>
+      HtmlContent(
+        HtmlFormat.fill(Seq(
+          Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
+          Html(address.town + "<br>"),
+          Html(address.postcode)
+        ))
+      )
+    }
+
+    SummaryListRowViewModel(
+      key = "address.guarantorAddress.checkYourAnswers.label",
+      value = ValueViewModel(value),
+      actions = if (!showChangeLink) Seq() else Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(
+            ern = request.userAnswers.ern,
+            draftId = request.userAnswers.draftId,
+            mode = CheckMode
+          ).url,
+          id = "changeGuarantorAddress"
+        )
+          .withVisuallyHiddenText(messages("address.guarantorAddress.3.change.hidden"))
+      )
+    )
   }
 }

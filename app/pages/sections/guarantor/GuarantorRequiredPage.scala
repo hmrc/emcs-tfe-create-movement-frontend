@@ -16,10 +16,79 @@
 
 package pages.sections.guarantor
 
+import models.GoodsType
+import models.requests.DataRequest
+import models.sections.info.movementScenario.DestinationType.Export
+import models.sections.info.movementScenario.MovementScenario._
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.QuestionPage
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.ItemsSectionItems
+import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.JsPath
 
 case object GuarantorRequiredPage extends QuestionPage[Boolean] {
+
   override val toString: String = "guarantorRequired"
   override val path: JsPath = GuarantorSection.path \ toString
+
+  def guarantorAlwaysRequired()(implicit request: DataRequest[_]): Boolean =
+    destinationTypeUkTaxWarehouseCondition || destinationTypeExportCondition || notGBOrXICondition
+
+  def guarantorAlwaysRequiredNIToEU()(implicit request: DataRequest[_]): Boolean =
+    destinationTypeToEUCondition && (isAlcoholOrTobaccoCondition || nonFixedMovementTransportTypeCondition || nonFixedTransportUnitTypeCondition)
+
+  private def destinationTypeExportCondition(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(DestinationTypePage).exists(_.destinationType == Export)
+
+  private def notGBOrXICondition(implicit request: DataRequest[_]): Boolean =
+    !request.isGreatBritainErn && !request.isNorthernIrelandErn
+
+  private def destinationTypeUkTaxWarehouseCondition(implicit request: DataRequest[_]): Boolean = {
+
+    val isUkTaxWarehouse = request.userAnswers.get(DestinationTypePage)
+      .exists(UkTaxWarehouse.toList.contains(_))
+
+    val hasReleventGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
+      GoodsType.Spirits,
+      GoodsType.Intermediate,
+      GoodsType.Energy,
+      GoodsType.Tobacco
+    ))
+
+    isUkTaxWarehouse && hasReleventGoodsTypes
+  }
+
+  private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {
+
+    val releventDestinationTypes = Seq(
+      EuTaxWarehouse,
+      ExemptedOrganisation,
+      UnknownDestination,
+      TemporaryRegisteredConsignee,
+      RegisteredConsignee,
+      TemporaryCertifiedConsignee,
+      CertifiedConsignee,
+      DirectDelivery
+    )
+
+    request.userAnswers.get(DestinationTypePage).exists(releventDestinationTypes.contains(_))
+  }
+
+  private def isAlcoholOrTobaccoCondition(implicit request: DataRequest[_]): Boolean =
+    ItemsSectionItems.checkGoodsType(Seq(
+      GoodsType.Wine,
+      GoodsType.Beer,
+      GoodsType.Spirits,
+      GoodsType.Intermediate,
+      GoodsType.Tobacco
+    ))
+
+  private def nonFixedMovementTransportTypeCondition(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(HowMovementTransportedPage).exists(_ != FixedTransportInstallations)
+
+  private def nonFixedTransportUnitTypeCondition(implicit request: DataRequest[_]): Boolean =
+    !TransportUnitsSectionUnits.containsTransportUnitType(FixedTransport).getOrElse(true)
 }

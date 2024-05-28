@@ -17,7 +17,8 @@
 package models.submitCreateMovement
 
 import base.SpecBase
-import models.VatNumberModel
+import fixtures.ItemFixtures
+import models.{GoodsType, VatNumberModel}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import pages.sections.guarantor._
@@ -25,8 +26,10 @@ import play.api.test.FakeRequest
 import pages.sections.info.DestinationTypePage
 import models.sections.info.movementScenario.MovementScenario
 import models.response.MissingMandatoryPage
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse}
+import pages.sections.items.ItemExciseProductCodePage
 
-class MovementGuaranteeModelSpec extends SpecBase {
+class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
   "apply" - {
     "must return a MovementGuaranteeModel" - {
       "with NoGuarantorRequredUkoEu when no guarantor is required, and movement is uk to ue" in {
@@ -75,24 +78,68 @@ class MovementGuaranteeModelSpec extends SpecBase {
         MovementGuaranteeModel.apply(request = drNi) mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
       }
 
-      "when guarantor is required" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
-            .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
-        )
+      "when guarantor is required" - {
+        "because the user has answered that they want to provide one" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(GuarantorRequiredPage, true)
+              .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+              .set(GuarantorNamePage, "name")
+              .set(GuarantorAddressPage, testUserAddress)
+              .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
+          )
 
-        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
-          None,
-          Some("name"),
-          Some(AddressModel.fromUserAddress(testUserAddress)),
-          Some("vat"),
-          None
-        ))))
+          MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
+            None,
+            Some("name"),
+            Some(AddressModel.fromUserAddress(testUserAddress)),
+            Some("vat"),
+            None
+          ))))
+        }
+
+        "because the destination type and goods type requires one" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
+              .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+              .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+              .set(GuarantorNamePage, "name")
+              .set(GuarantorAddressPage, testUserAddress)
+              .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
+          )
+
+          MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
+            None,
+            Some("name"),
+            Some(AddressModel.fromUserAddress(testUserAddress)),
+            Some("vat"),
+            None
+          ))))
+        }
+
+        "because the destination is EU and goods type requires it" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+              .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+              .set(GuarantorNamePage, "name")
+              .set(GuarantorAddressPage, testUserAddress)
+              .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
+          )
+
+          MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
+            None,
+            Some("name"),
+            Some(AddressModel.fromUserAddress(testUserAddress)),
+            Some("vat"),
+            None
+          ))))
+        }
       }
     }
     "must throw a mandatory page exception" - {

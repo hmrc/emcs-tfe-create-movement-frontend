@@ -17,7 +17,7 @@
 package pages.sections.items
 
 import config.Constants.BODYEADESAD
-import models.UserAnswers
+import models.{GoodsType, UserAnswers}
 import models.requests.DataRequest
 import models.response.InvalidRegexException
 import pages.sections.Section
@@ -72,12 +72,19 @@ case object ItemsSectionItems extends Section[JsObject] {
       }
       .distinct
 
-  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = {
+  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] =
     request.userAnswers.get(ItemsCount) match {
       case Some(0) | None => Seq.empty
       case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
-  }
+
+  def checkGoodsType(goodsTypes: Seq[GoodsType])(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.get(ItemsCount).getOrElse(0)).exists { idx =>
+      request.userAnswers
+        .get(ItemExciseProductCodePage(idx))
+        .exists(code => goodsTypes.contains(GoodsType.apply(code))
+      )
+    }
 
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 

@@ -28,9 +28,13 @@ import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
 class TransportUnitsSectionSpec extends SpecBase {
+
   "isCompleted" - {
+
     "must return true" - {
+
       "when all items are finished" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -48,6 +52,7 @@ class TransportUnitsSectionSpec extends SpecBase {
       }
 
       "when the journey type is Fixed Transport Installations and the number of transport units is 1" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -61,15 +66,20 @@ class TransportUnitsSectionSpec extends SpecBase {
     "must return false" - {
 
       "when empty user answers" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         TransportUnitsSection.isCompleted mustBe false
       }
+
       "when there is somehow a transport unit with nothing in it" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(), emptyUserAnswers.copy(data = Json.obj(TransportUnitsSection.toString -> JsArray(Seq(Json.obj())))))
         TransportUnitsSection.isCompleted mustBe false
       }
+
       "when at least one section is unfinished" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -85,6 +95,7 @@ class TransportUnitsSectionSpec extends SpecBase {
       }
 
       "when the journey type is Fixed Transport Installations and the number of transport units is > 1" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -98,8 +109,11 @@ class TransportUnitsSectionSpec extends SpecBase {
   }
 
   "status" - {
+
     "must return completed" - {
+
       "when all sections are completed and add to list si no more" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -118,6 +132,7 @@ class TransportUnitsSectionSpec extends SpecBase {
       }
 
       "when max units added and all complete" in {
+
         val fullUserAnswers = (0 until 99).foldLeft(emptyUserAnswers)((answers, int) => answers
           .set(TransportUnitTypePage(Index(int)), Tractor)
           .set(TransportUnitIdentityPage(Index(int)), "")
@@ -130,8 +145,11 @@ class TransportUnitsSectionSpec extends SpecBase {
         TransportUnitsSection.status mustBe Completed
       }
     }
+
     "must return in progress" - {
+
       "when all completed and add to list is more to come" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -148,7 +166,9 @@ class TransportUnitsSectionSpec extends SpecBase {
 
         TransportUnitsSection.status mustBe InProgress
       }
+
       "when at least one section is in progress" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -162,7 +182,9 @@ class TransportUnitsSectionSpec extends SpecBase {
 
         TransportUnitsSection.status mustBe InProgress
       }
+
       "when at least one section is in progress and add to list is No more to come" in {
+
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers
@@ -180,7 +202,9 @@ class TransportUnitsSectionSpec extends SpecBase {
     }
 
     "must return not started" - {
+
       "when empty user answers" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
         TransportUnitsSection.status mustBe NotStarted

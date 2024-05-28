@@ -28,13 +28,13 @@ import javax.inject.Inject
 class GuarantorNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
 
+    case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
       userAnswers.get(GuarantorRequiredPage) match {
-        case Some(true) =>
-          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case _ =>
+        case Some(false) =>
           controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        case _ =>
+          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>

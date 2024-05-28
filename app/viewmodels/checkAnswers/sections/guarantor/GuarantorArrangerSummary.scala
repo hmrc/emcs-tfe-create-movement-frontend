@@ -28,30 +28,34 @@ object GuarantorArrangerSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).map { _ =>
+    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val isAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
-      val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
-        case Some(answer) => messages(s"guarantorArranger.$answer")
-        case None => messages("site.notProvided")
-      }
-
-      SummaryListRowViewModel(
-        key = "guarantorArranger.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
-              ern = request.ern,
-              draftId = request.draftId,
-              mode = CheckMode
-            ).url,
-            id = "changeGuarantorArranger")
-            .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))
-        )
-      )
-    }
-
+    Option.when(showSummaryRow)(renderRow())
   }
 
+  private def renderRow()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+
+    val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
+      case Some(answer) => messages(s"guarantorArranger.$answer")
+      case None => messages("site.notProvided")
+    }
+
+    SummaryListRowViewModel(
+      key = "guarantorArranger.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(
+            ern = request.ern,
+            draftId = request.draftId,
+            mode = CheckMode
+          ).url,
+          id = "changeGuarantorArranger")
+          .withVisuallyHiddenText(messages("guarantorArranger.change.hidden"))
+      )
+    )
+  }
 }

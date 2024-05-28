@@ -69,6 +69,8 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   object UkTaxWarehouse {
 
+    val toList = Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI)
+
     private def _originType(implicit request: DataRequest[_]): OriginType = getOriginType()
     private def _destinationType: DestinationType = DestinationType.TaxWarehouse
     private def _movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {

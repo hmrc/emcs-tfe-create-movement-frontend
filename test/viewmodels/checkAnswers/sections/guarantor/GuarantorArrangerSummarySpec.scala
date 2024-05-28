@@ -21,7 +21,11 @@ import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -45,20 +49,57 @@ class GuarantorArrangerSummarySpec extends SpecBase {
   }
 
   Seq(GuarantorArrangerMessages.English).foreach { implicit messagesForLanguage =>
+
     s"when language is set to ${messagesForLanguage.lang.code}" - {
 
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the GuarantorRequiredPage" - {
-        "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          GuarantorArrangerSummary.row mustBe None
+        "when guarantorAlwaysRequired is true" - {
+
+          "then must return expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(GuarantorArrangerPage, Consignee)
+              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+            )
+
+            GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
+          }
+        }
+
+        "when guarantorAlwaysRequiredNIToEU is true" - {
+
+          "then must return expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(GuarantorArrangerPage, Consignee)
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(HowMovementTransportedPage, AirTransport)
+            )
+
+            GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
+          }
+        }
+
+        "when guarantorAlwaysRequired and guarantorAlwaysRequiredNIToEU are false" - {
+
+          "then must return expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(GuarantorArrangerPage, Consignee)
+            )
+
+            GuarantorArrangerSummary.row mustBe None
+          }
         }
       }
 
       "and there is a GuarantorRequiredPage answer of `no`" - {
+
         "then must not return a row" in {
+
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
 
           GuarantorArrangerSummary.row mustBe None
@@ -66,7 +107,9 @@ class GuarantorArrangerSummarySpec extends SpecBase {
       }
 
       "and there is a GuarantorRequiredPage answer of `yes`" - {
+
         "and there is no answer for the GuarantorArrangerPage" in {
+
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
 
           GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
@@ -77,23 +120,21 @@ class GuarantorArrangerSummarySpec extends SpecBase {
           (Consignor, messagesForLanguage.consignorRadioOption),
           (GoodsOwner, messagesForLanguage.goodsOwnerRadioOption),
           (Transporter, messagesForLanguage.transporterRadioOption)
-        ).foreach {
-          case (arranger, expectedMessage) =>
-            s"and there is a GuarantorArrangerPage answer of `${arranger.getClass.getSimpleName.stripSuffix("$")}`" in {
-              implicit lazy val request = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, arranger)
-              )
+        ).foreach { case (arranger, expectedMessage) =>
 
-              GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)
-            }
+          s"and there is a GuarantorArrangerPage answer of `${arranger.getClass.getSimpleName.stripSuffix("$")}`" in {
+
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorRequiredPage, true)
+                .set(GuarantorArrangerPage, arranger)
+            )
+
+            GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)
+          }
         }
-
       }
-
     }
   }
-
 }

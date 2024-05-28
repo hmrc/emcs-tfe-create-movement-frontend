@@ -27,29 +27,35 @@ case object GuarantorSection extends Section[JsObject] {
 
   //noinspection ScalaStyle
   override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(GuarantorRequiredPage) match {
-    case Some(true) =>
-      // guarantor required
-      request.userAnswers.get(GuarantorArrangerPage) match {
-        case Some(Consignee) | Some(Consignor) => Completed
-        case Some(_) =>
-          if (
-            request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-              request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-              request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
-            Completed
-          } else {
-            InProgress
-          }
-        case None =>
-          // answer not present yet
-          InProgress
+    case None if GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() =>
+      if(request.userAnswers.get(GuarantorArrangerPage).nonEmpty) {
+        guarantorRequired
+      } else {
+        NotStarted
       }
-    case Some(false) =>
-      // guarantor not required
-      Completed
     case None =>
-      // answer not present yet
       NotStarted
+    case Some(true) =>
+      guarantorRequired
+    case Some(false) =>
+      Completed
+  }
+
+  private def guarantorRequired(implicit request: DataRequest[_]): TaskListStatus = {
+    request.userAnswers.get(GuarantorArrangerPage) match {
+      case Some(Consignee) | Some(Consignor) => Completed
+      case Some(_) =>
+        if (
+          request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+            request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+            request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+          Completed
+        } else {
+          InProgress
+        }
+      case None =>
+        InProgress
+    }
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

@@ -19,6 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import config.Constants.BODYEADESAD
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
+import models.GoodsType
 import models.requests.DataRequest
 import models.response.InvalidRegexException
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
@@ -295,6 +296,302 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
           ItemQuantityError(testIndex2, isForAddToList = true),
           ItemDegreesPlatoError(testIndex2, isForAddToList = true)
         )
+      }
+    }
+  }
+
+  "checkGoodsType" - {
+
+    "when give an empty list" - {
+
+      "when there are NO GoodsTypes" - {
+
+        "return false" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          val expectedResult = false
+
+          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
+
+          actualResult mustBe expectedResult
+        }
+      }
+
+      "when there is one GoodsType" - {
+
+        "return false" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+          )
+
+          val expectedResult = false
+
+          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
+
+          actualResult mustBe expectedResult
+        }
+      }
+
+      "when there are multiple GoodsTypes" - {
+
+        "return false" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+            .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+            .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+            .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+          )
+
+          val expectedResult = false
+
+          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
+
+          actualResult mustBe expectedResult
+        }
+      }
+    }
+
+    "when give a list of one" - {
+
+      "when there are NO GoodsTypes" - {
+
+        "return false" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          val expectedResult = false
+
+          val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+            GoodsType.Energy
+          ))
+
+          actualResult mustBe expectedResult
+        }
+      }
+
+      "when there is one GoodsType" - {
+
+        "when the the goods type matches" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Energy
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when the the goods type does NOT match" - {
+
+          "return false" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+            )
+
+            val expectedResult = false
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Beer
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+      }
+
+      "when there are multiple GoodsTypes" - {
+
+        "when none match" - {
+
+          "return false" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+            )
+
+            val expectedResult = false
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Wine))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when one matches" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Energy))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when multiple match" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Energy.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Energy))
+
+            actualResult mustBe expectedResult
+          }
+        }
+      }
+    }
+
+    "when give a list of multiple goods types" - {
+
+      "when there are NO GoodsTypes" - {
+
+        "return false" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          val expectedResult = false
+
+          val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+            GoodsType.Energy,
+            GoodsType.Beer
+          ))
+
+          actualResult mustBe expectedResult
+        }
+      }
+
+      "when there is one GoodsType" - {
+
+        "when the the goods type matches" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Energy,
+              GoodsType.Beer
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when the the goods type does NOT match" - {
+
+          "return false" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+            )
+
+            val expectedResult = false
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Wine,
+              GoodsType.Beer
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+      }
+
+      "when there are multiple GoodsTypes" - {
+
+        "when none match" - {
+
+          "return false" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+            )
+
+            val expectedResult = false
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Spirits,
+              GoodsType.Wine
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when one matches" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Energy,
+              GoodsType.Wine
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
+
+        "when multiple match" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
+              .set(ItemExciseProductCodePage(2), GoodsType.Energy.code)
+            )
+
+            val expectedResult = true
+
+            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
+              GoodsType.Energy,
+              GoodsType.Beer
+            ))
+
+            actualResult mustBe expectedResult
+          }
+        }
       }
     }
   }

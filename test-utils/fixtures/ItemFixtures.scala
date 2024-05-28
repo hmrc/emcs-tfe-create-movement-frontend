@@ -486,6 +486,172 @@ trait ItemFixtures {
     .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more info"))
     .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.NoMoreToCome)
 
+  val xircSubmitCreateMovementJson = Json.parse(
+    """{
+      |  "movementType": "4",
+      |  "attributes": {
+      |    "submissionMessageType": "1",
+      |    "deferredSubmissionFlag": false
+      |  },
+      |  "consigneeTrader": {
+      |    "traderExciseNumber": "consignee ern",
+      |    "traderName": "consignee name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignee street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "consignorTrader": {
+      |    "traderExciseNumber": "XIRC123",
+      |    "traderName": "testTraderName",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignor street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "dispatchImportOffice": {
+      |    "referenceNumber": "dispatch import office"
+      |  },
+      |  "complementConsigneeTrader": {
+      |    "memberStateCode": "state",
+      |    "serialNumberOfCertificateOfExemption": "number"
+      |  },
+      |  "deliveryPlaceTrader": {
+      |    "traderName": "destination name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "destination street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "deliveryPlaceCustomsOffice": {
+      |    "referenceNumber": "delivery place customs office"
+      |  },
+      |  "competentAuthorityDispatchOffice": {
+      |    "referenceNumber": "XI004098"
+      |  },
+      |  "transportArrangerTrader": {
+      |    "traderName": "arranger name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "arranger street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "arranger vat"
+      |  },
+      |  "firstTransporterTrader": {
+      |    "traderName": "first name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "first street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "first vat"
+      |  },
+      |  "documentCertificate": [
+      |    {
+      |      "documentType": "0",
+      |      "documentReference": "0 reference"
+      |    }
+      |  ],
+      |  "headerEadEsad": {
+      |    "destinationType": "4",
+      |    "journeyTime": "2 hours",
+      |    "transportArrangement": "3"
+      |  },
+      |  "transportMode": {
+      |    "transportModeCode": "4",
+      |    "complementaryInformation": "info"
+      |  },
+      |  "movementGuarantee": {
+      |    "guarantorTypeCode": "3",
+      |    "guarantorTrader": [
+      |      {
+      |        "traderName": "guarantor name",
+      |        "address": {
+      |          "streetNumber": "10",
+      |          "street": "guarantor street",
+      |          "postcode": "ZZ1 1ZZ",
+      |          "city": "Testown"
+      |        },
+      |        "vatNumber": "guarantor vat"
+      |      }
+      |    ]
+      |  },
+      |  "bodyEadEsad": [
+      |    {
+      |      "bodyRecordUniqueReference": 1,
+      |      "exciseProductCode": "W200",
+      |      "cnCode": "22060010",
+      |      "quantity": 1,
+      |      "grossMass": 3,
+      |      "netMass": 2,
+      |      "alcoholicStrengthByVolumeInPercentage": 1.23,
+      |      "degreePlato": 4.56,
+      |      "fiscalMark": "fiscal marks",
+      |      "fiscalMarkUsedFlag": true,
+      |      "designationOfOrigin": "The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation",
+      |      "sizeOfProducer": 4,
+      |      "density": 7.89,
+      |      "commercialDescription": "beans",
+      |      "brandNameOfProducts": "name",
+      |      "maturationPeriodOrAgeOfProducts": "really old",
+      |      "independentSmallProducersDeclaration": "It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789",
+      |      "packages": [
+      |        {
+      |          "kindOfPackages": "VG",
+      |          "commercialSealIdentification": "seal type",
+      |          "sealInformation": "seal info"
+      |        }
+      |      ],
+      |      "wineProduct": {
+      |        "wineProductCategory": "4",
+      |        "wineGrowingZoneCode": "4",
+      |        "thirdCountryOfOrigin": "GB",
+      |        "otherInformation": "more wine info",
+      |        "wineOperations": [
+      |          "op code"
+      |        ]
+      |      }
+      |    }
+      |  ],
+      |  "eadEsadDraft": {
+      |    "localReferenceNumber": "1234567890",
+      |    "invoiceNumber": "inv ref",
+      |    "invoiceDate": "2020-12-25",
+      |    "originTypeCode": "2",
+      |    "dateOfDispatch": "2020-10-31",
+      |    "timeOfDispatch": "23:59:59",
+      |    "importSad": [
+      |      {
+      |        "importSadNumber": "sad 1"
+      |      },
+      |      {
+      |        "importSadNumber": "sad 2"
+      |      },
+      |      {
+      |        "importSadNumber": "sad 3"
+      |      }
+      |    ]
+      |  },
+      |  "transportDetails": [
+      |    {
+      |      "transportUnitCode": "5",
+      |      "identityOfTransportUnits": "identity",
+      |      "commercialSealIdentification": "seal type",
+      |      "complementaryInformation": "more info",
+      |      "sealInformation": "seal info"
+      |    }
+      |  ]
+      |}""".stripMargin)
+
   val xircSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.ImportEu,
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
@@ -543,7 +709,7 @@ trait ItemFixtures {
       transportArrangement = TransportArranger.GoodsOwner
     ),
     transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
+      transportModeCode = HowMovementTransported.AirTransport,
       complementaryInformation = Some("info")
     ),
     movementGuarantee = MovementGuaranteeModel(
@@ -585,11 +751,11 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine.toString,
-          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
-          wineOperations = Some(Seq("op code"))
+          wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
         )
       )
     )),
@@ -604,7 +770,7 @@ trait ItemFixtures {
     ),
     transportDetails = Seq(
       TransportDetailsModel(
-        transportUnitCode = TransportUnitType.FixedTransport.toString,
+        transportUnitCode = TransportUnitType.FixedTransport,
         identityOfTransportUnits = Some("identity"),
         commercialSealIdentification = Some("seal type"),
         complementaryInformation = Some("more info"),
@@ -612,6 +778,172 @@ trait ItemFixtures {
       )
     )
   )
+
+  val xiwkSubmitCreateMovementJson = Json.parse(
+    """
+      |{
+      |  "movementType": "2",
+      |  "attributes": {
+      |    "submissionMessageType": "1",
+      |    "deferredSubmissionFlag": false
+      |  },
+      |  "consigneeTrader": {
+      |    "traderExciseNumber": "consignee ern",
+      |    "traderName": "consignee name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignee street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "consignorTrader": {
+      |    "traderExciseNumber": "XIWK123",
+      |    "traderName": "testTraderName",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignor street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "placeOfDispatchTrader": {
+      |    "traderExciseNumber": "dispatch ern",
+      |    "traderName": "dispatch name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "dispatch street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "dispatchImportOffice": {
+      |    "referenceNumber": "dispatch import office"
+      |  },
+      |  "complementConsigneeTrader": {
+      |    "memberStateCode": "state",
+      |    "serialNumberOfCertificateOfExemption": "number"
+      |  },
+      |  "deliveryPlaceTrader": {
+      |    "traderName": "destination name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "destination street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "deliveryPlaceCustomsOffice": {
+      |    "referenceNumber": "delivery place customs office"
+      |  },
+      |  "competentAuthorityDispatchOffice": {
+      |    "referenceNumber": "XI004098"
+      |  },
+      |  "transportArrangerTrader": {
+      |    "traderName": "arranger name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "arranger street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "arranger vat"
+      |  },
+      |  "firstTransporterTrader": {
+      |    "traderName": "first name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "first street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "first vat"
+      |  },
+      |  "documentCertificate": [
+      |    {
+      |      "documentType": "0",
+      |      "documentReference": "0 reference"
+      |    }
+      |  ],
+      |  "headerEadEsad": {
+      |    "destinationType": "4",
+      |    "journeyTime": "2 hours",
+      |    "transportArrangement": "3"
+      |  },
+      |  "transportMode": {
+      |    "transportModeCode": "4",
+      |    "complementaryInformation": "info"
+      |  },
+      |  "movementGuarantee": {
+      |    "guarantorTypeCode": "3",
+      |    "guarantorTrader": [
+      |      {
+      |        "traderName": "guarantor name",
+      |        "address": {
+      |          "streetNumber": "10",
+      |          "street": "guarantor street",
+      |          "postcode": "ZZ1 1ZZ",
+      |          "city": "Testown"
+      |        },
+      |        "vatNumber": "guarantor vat"
+      |      }
+      |    ]
+      |  },
+      |  "bodyEadEsad": [
+      |    {
+      |      "bodyRecordUniqueReference": 1,
+      |      "exciseProductCode": "W200",
+      |      "cnCode": "22060010",
+      |      "quantity": 1,
+      |      "grossMass": 3,
+      |      "netMass": 2,
+      |      "alcoholicStrengthByVolumeInPercentage": 1.23,
+      |      "degreePlato": 4.56,
+      |      "fiscalMark": "fiscal marks",
+      |      "fiscalMarkUsedFlag": true,
+      |      "designationOfOrigin": "The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation",
+      |      "sizeOfProducer": 4,
+      |      "density": 7.89,
+      |      "commercialDescription": "beans",
+      |      "brandNameOfProducts": "name",
+      |      "maturationPeriodOrAgeOfProducts": "really old",
+      |      "independentSmallProducersDeclaration": "It is hereby certified that the alcoholic product described has been produced by an independent wine producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789",
+      |      "packages": [
+      |        {
+      |          "kindOfPackages": "VG",
+      |          "commercialSealIdentification": "seal type",
+      |          "sealInformation": "seal info"
+      |        }
+      |      ],
+      |      "wineProduct": {
+      |        "wineProductCategory": "4",
+      |        "wineGrowingZoneCode": "4",
+      |        "thirdCountryOfOrigin": "GB",
+      |        "otherInformation": "more wine info",
+      |        "wineOperations": [
+      |          "op code"
+      |        ]
+      |      }
+      |    }
+      |  ],
+      |  "eadEsadDraft": {
+      |    "localReferenceNumber": "1234567890",
+      |    "invoiceNumber": "inv ref",
+      |    "invoiceDate": "2020-12-25",
+      |    "originTypeCode": "1",
+      |    "dateOfDispatch": "2020-10-31",
+      |    "timeOfDispatch": "23:59:59"
+      |  },
+      |  "transportDetails": [
+      |    {
+      |      "transportUnitCode": "5",
+      |      "identityOfTransportUnits": "identity",
+      |      "commercialSealIdentification": "seal type",
+      |      "complementaryInformation": "more info",
+      |      "sealInformation": "seal info"
+      |    }
+      |  ]
+      |}""".stripMargin)
 
   val xiwkSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.UkToEu,
@@ -676,7 +1008,7 @@ trait ItemFixtures {
       transportArrangement = TransportArranger.GoodsOwner
     ),
     transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
+      transportModeCode = HowMovementTransported.AirTransport,
       complementaryInformation = Some("info")
     ),
     movementGuarantee = MovementGuaranteeModel(
@@ -718,11 +1050,11 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine.toString,
-          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
-          wineOperations = Some(Seq("op code"))
+          wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
         )
       )
     )),
@@ -737,7 +1069,7 @@ trait ItemFixtures {
     ),
     transportDetails = Seq(
       TransportDetailsModel(
-        transportUnitCode = TransportUnitType.FixedTransport.toString,
+        transportUnitCode = TransportUnitType.FixedTransport,
         identityOfTransportUnits = Some("identity"),
         commercialSealIdentification = Some("seal type"),
         complementaryInformation = Some("more info"),
@@ -745,6 +1077,175 @@ trait ItemFixtures {
       )
     )
   )
+
+
+  val gbrcSubmitCreateMovementJson = Json.parse(
+    """
+      |{
+      |  "movementType": "5",
+      |  "attributes": {
+      |    "submissionMessageType": "1",
+      |    "deferredSubmissionFlag": false
+      |  },
+      |  "consigneeTrader": {
+      |    "traderExciseNumber": "consignee ern",
+      |    "traderName": "consignee name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignee street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "consignorTrader": {
+      |    "traderExciseNumber": "GBRC123",
+      |    "traderName": "testTraderName",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignor street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "dispatchImportOffice": {
+      |    "referenceNumber": "dispatch import office"
+      |  },
+      |  "complementConsigneeTrader": {
+      |    "memberStateCode": "state",
+      |    "serialNumberOfCertificateOfExemption": "number"
+      |  },
+      |  "deliveryPlaceTrader": {
+      |    "traderExciseNumber": "XIRC123456789",
+      |    "traderName": "destination name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "destination street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "deliveryPlaceCustomsOffice": {
+      |    "referenceNumber": "delivery place customs office"
+      |  },
+      |  "competentAuthorityDispatchOffice": {
+      |    "referenceNumber": "GB004098"
+      |  },
+      |  "transportArrangerTrader": {
+      |    "traderName": "arranger name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "arranger street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "arranger vat"
+      |  },
+      |  "firstTransporterTrader": {
+      |    "traderName": "first name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "first street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "first vat"
+      |  },
+      |  "documentCertificate": [
+      |    {
+      |      "documentType": "0",
+      |      "documentReference": "0 reference"
+      |    }
+      |  ],
+      |  "headerEadEsad": {
+      |    "destinationType": "1",
+      |    "journeyTime": "2 hours",
+      |    "transportArrangement": "3"
+      |  },
+      |  "transportMode": {
+      |    "transportModeCode": "4",
+      |    "complementaryInformation": "info"
+      |  },
+      |  "movementGuarantee": {
+      |    "guarantorTypeCode": "3",
+      |    "guarantorTrader": [
+      |      {
+      |        "traderName": "guarantor name",
+      |        "address": {
+      |          "streetNumber": "10",
+      |          "street": "guarantor street",
+      |          "postcode": "ZZ1 1ZZ",
+      |          "city": "Testown"
+      |        },
+      |        "vatNumber": "guarantor vat"
+      |      }
+      |    ]
+      |  },
+      |  "bodyEadEsad": [
+      |    {
+      |      "bodyRecordUniqueReference": 1,
+      |      "exciseProductCode": "W200",
+      |      "cnCode": "22060010",
+      |      "quantity": 1,
+      |      "grossMass": 3,
+      |      "netMass": 2,
+      |      "alcoholicStrengthByVolumeInPercentage": 1.23,
+      |      "degreePlato": 4.56,
+      |      "fiscalMark": "fiscal marks",
+      |      "fiscalMarkUsedFlag": true,
+      |      "designationOfOrigin": "The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation",
+      |      "sizeOfProducer": 4,
+      |      "density": 7.89,
+      |      "commercialDescription": "beans",
+      |      "brandNameOfProducts": "name",
+      |      "maturationPeriodOrAgeOfProducts": "really old",
+      |      "independentSmallProducersDeclaration": "It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789",
+      |      "packages": [
+      |        {
+      |          "kindOfPackages": "VG",
+      |          "commercialSealIdentification": "seal type",
+      |          "sealInformation": "seal info"
+      |        }
+      |      ],
+      |      "wineProduct": {
+      |        "wineProductCategory": "4",
+      |        "wineGrowingZoneCode": "4",
+      |        "thirdCountryOfOrigin": "GB",
+      |        "otherInformation": "more wine info",
+      |        "wineOperations": [
+      |          "op code"
+      |        ]
+      |      }
+      |    }
+      |  ],
+      |  "eadEsadDraft": {
+      |    "localReferenceNumber": "1234567890",
+      |    "invoiceNumber": "inv ref",
+      |    "invoiceDate": "2020-12-25",
+      |    "originTypeCode": "2",
+      |    "dateOfDispatch": "2020-10-31",
+      |    "timeOfDispatch": "23:59:59",
+      |    "importSad": [
+      |      {
+      |        "importSadNumber": "sad 1"
+      |      },
+      |      {
+      |        "importSadNumber": "sad 2"
+      |      },
+      |      {
+      |        "importSadNumber": "sad 3"
+      |      }
+      |    ]
+      |  },
+      |  "transportDetails": [
+      |    {
+      |      "transportUnitCode": "5",
+      |      "identityOfTransportUnits": "identity",
+      |      "commercialSealIdentification": "seal type",
+      |      "complementaryInformation": "more info",
+      |      "sealInformation": "seal info"
+      |    }
+      |  ]
+      |}""".stripMargin)
 
   val gbrcSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.ImportUk,
@@ -803,7 +1304,7 @@ trait ItemFixtures {
       transportArrangement = TransportArranger.GoodsOwner
     ),
     transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
+      transportModeCode = HowMovementTransported.AirTransport,
       complementaryInformation = Some("info")
     ),
     movementGuarantee = MovementGuaranteeModel(
@@ -845,11 +1346,11 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine.toString,
-          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
-          wineOperations = Some(Seq("op code"))
+          wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
         )
       )
     )),
@@ -864,7 +1365,7 @@ trait ItemFixtures {
     ),
     transportDetails = Seq(
       TransportDetailsModel(
-        transportUnitCode = TransportUnitType.FixedTransport.toString,
+        transportUnitCode = TransportUnitType.FixedTransport,
         identityOfTransportUnits = Some("identity"),
         commercialSealIdentification = Some("seal type"),
         complementaryInformation = Some("more info"),
@@ -872,6 +1373,172 @@ trait ItemFixtures {
       )
     )
   )
+
+  val gbwkSubmitCreateMovementJson = Json.parse(
+    """{
+      |  "movementType": "1",
+      |  "attributes": {
+      |    "submissionMessageType": "1",
+      |    "deferredSubmissionFlag": false
+      |  },
+      |  "consigneeTrader": {
+      |    "traderExciseNumber": "consignee ern",
+      |    "traderName": "consignee name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignee street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "consignorTrader": {
+      |    "traderExciseNumber": "GBWK123",
+      |    "traderName": "testTraderName",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "consignor street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "placeOfDispatchTrader": {
+      |    "traderExciseNumber": "dispatch ern",
+      |    "traderName": "dispatch name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "dispatch street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "dispatchImportOffice": {
+      |    "referenceNumber": "dispatch import office"
+      |  },
+      |  "complementConsigneeTrader": {
+      |    "memberStateCode": "state",
+      |    "serialNumberOfCertificateOfExemption": "number"
+      |  },
+      |  "deliveryPlaceTrader": {
+      |    "traderExciseNumber": "XIRC123456789",
+      |    "traderName": "destination name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "destination street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    }
+      |  },
+      |  "deliveryPlaceCustomsOffice": {
+      |    "referenceNumber": "delivery place customs office"
+      |  },
+      |  "competentAuthorityDispatchOffice": {
+      |    "referenceNumber": "GB004098"
+      |  },
+      |  "transportArrangerTrader": {
+      |    "traderName": "arranger name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "arranger street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "arranger vat"
+      |  },
+      |  "firstTransporterTrader": {
+      |    "traderName": "first name",
+      |    "address": {
+      |      "streetNumber": "10",
+      |      "street": "first street",
+      |      "postcode": "ZZ1 1ZZ",
+      |      "city": "Testown"
+      |    },
+      |    "vatNumber": "first vat"
+      |  },
+      |  "documentCertificate": [
+      |    {
+      |      "documentType": "0",
+      |      "documentReference": "0 reference"
+      |    }
+      |  ],
+      |  "headerEadEsad": {
+      |    "destinationType": "1",
+      |    "journeyTime": "2 hours",
+      |    "transportArrangement": "3"
+      |  },
+      |  "transportMode": {
+      |    "transportModeCode": "4",
+      |    "complementaryInformation": "info"
+      |  },
+      |  "movementGuarantee": {
+      |    "guarantorTypeCode": "3",
+      |    "guarantorTrader": [
+      |      {
+      |        "traderName": "guarantor name",
+      |        "address": {
+      |          "streetNumber": "10",
+      |          "street": "guarantor street",
+      |          "postcode": "ZZ1 1ZZ",
+      |          "city": "Testown"
+      |        },
+      |        "vatNumber": "guarantor vat"
+      |      }
+      |    ]
+      |  },
+      |  "bodyEadEsad": [
+      |    {
+      |      "bodyRecordUniqueReference": 1,
+      |      "exciseProductCode": "W200",
+      |      "cnCode": "22060010",
+      |      "quantity": 1,
+      |      "grossMass": 3,
+      |      "netMass": 2,
+      |      "alcoholicStrengthByVolumeInPercentage": 1.23,
+      |      "degreePlato": 4.56,
+      |      "fiscalMark": "fiscal marks",
+      |      "fiscalMarkUsedFlag": true,
+      |      "designationOfOrigin": "The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation",
+      |      "sizeOfProducer": 4,
+      |      "density": 7.89,
+      |      "commercialDescription": "beans",
+      |      "brandNameOfProducts": "name",
+      |      "maturationPeriodOrAgeOfProducts": "really old",
+      |      "independentSmallProducersDeclaration": "It is hereby certified that the alcoholic product described has been produced by an independent small producer. The producer is a self-certified independent small producer and not the consignor. Identification: XIRC123456789",
+      |      "packages": [
+      |        {
+      |          "kindOfPackages": "VG",
+      |          "commercialSealIdentification": "seal type",
+      |          "sealInformation": "seal info"
+      |        }
+      |      ],
+      |      "wineProduct": {
+      |        "wineProductCategory": "4",
+      |        "wineGrowingZoneCode": "4",
+      |        "thirdCountryOfOrigin": "GB",
+      |        "otherInformation": "more wine info",
+      |        "wineOperations": [
+      |          "op code"
+      |        ]
+      |      }
+      |    }
+      |  ],
+      |  "eadEsadDraft": {
+      |    "localReferenceNumber": "1234567890",
+      |    "invoiceNumber": "inv ref",
+      |    "invoiceDate": "2020-12-25",
+      |    "originTypeCode": "1",
+      |    "dateOfDispatch": "2020-10-31",
+      |    "timeOfDispatch": "23:59:59"
+      |  },
+      |  "transportDetails": [
+      |    {
+      |      "transportUnitCode": "5",
+      |      "identityOfTransportUnits": "identity",
+      |      "commercialSealIdentification": "seal type",
+      |      "complementaryInformation": "more info",
+      |      "sealInformation": "seal info"
+      |    }
+      |  ]
+      |}""".stripMargin)
 
   val gbwkSubmitCreateMovementModel: SubmitCreateMovementModel = SubmitCreateMovementModel(
     movementType = MovementType.UkToUk,
@@ -936,7 +1603,7 @@ trait ItemFixtures {
       transportArrangement = TransportArranger.GoodsOwner
     ),
     transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
+      transportModeCode = HowMovementTransported.AirTransport,
       complementaryInformation = Some("info")
     ),
     movementGuarantee = MovementGuaranteeModel(
@@ -978,11 +1645,11 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine.toString,
-          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
-          wineOperations = Some(Seq("op code"))
+          wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
         )
       )
     )),
@@ -997,7 +1664,7 @@ trait ItemFixtures {
     ),
     transportDetails = Seq(
       TransportDetailsModel(
-        transportUnitCode = TransportUnitType.FixedTransport.toString,
+        transportUnitCode = TransportUnitType.FixedTransport,
         identityOfTransportUnits = Some("identity"),
         commercialSealIdentification = Some("seal type"),
         complementaryInformation = Some("more info"),

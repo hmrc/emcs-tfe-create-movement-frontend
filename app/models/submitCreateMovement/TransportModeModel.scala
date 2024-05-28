@@ -16,22 +16,30 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.ModelConstructorHelpers
 
 case class TransportModeModel(
-                               transportModeCode: String,
+                               transportModeCode: HowMovementTransported,
                                complementaryInformation: Option[String]
                              )
 
 object TransportModeModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): TransportModeModel = TransportModeModel(
-    transportModeCode = mandatoryPage(HowMovementTransportedPage).toString,
+    transportModeCode = mandatoryPage(HowMovementTransportedPage),
     complementaryInformation = request.userAnswers.get(GiveInformationOtherTransportPage)
   )
 
   implicit val fmt: OFormat[TransportModeModel] = Json.format
+
+  val auditWrites: OWrites[TransportModeModel] = (
+    (__ \ "transportModeCode").write[HowMovementTransported](Auditable.writes[HowMovementTransported]) and
+      (__ \ "complementaryInformation").writeNullable[String]
+    )(unlift(TransportModeModel.unapply))
 }

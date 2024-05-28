@@ -16,10 +16,12 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.OriginType
 import pages.sections.info._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, Writes, __}
 import utils.ModelConstructorHelpers
 
 import java.time.format.DateTimeFormatter
@@ -50,4 +52,14 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
   )
 
   implicit val fmt: OFormat[EadEsadDraftModel] = Json.format
+
+  val auditWrites: Writes[EadEsadDraftModel] = (
+    (__ \ "localReferenceNumber").write[String] and
+    (__ \ "invoiceNumber").write[String] and
+    (__ \ "invoiceDate").writeNullable[String] and
+    (__ \ "originTypeCode").write[OriginType](Auditable.writes[OriginType]) and
+    (__ \ "dateOfDispatch").write[String] and
+    (__ \ "timeOfDispatch").writeNullable[String] and
+    (__ \ "importSad").writeNullable[Seq[ImportSadModel]]
+  )(unlift(EadEsadDraftModel.unapply))
 }

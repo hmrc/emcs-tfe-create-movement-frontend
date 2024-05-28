@@ -16,9 +16,11 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import pages.sections.info.DeferredMovementPage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.ModelConstructorHelpers
 
 case class AttributesModel(
@@ -27,6 +29,11 @@ case class AttributesModel(
                           )
 object AttributesModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[AttributesModel] = Json.format
+
+  val auditWrites: OWrites[AttributesModel] = (
+    (__ \ "submissionMessageType").write[SubmissionMessageType](Auditable.writes[SubmissionMessageType]) and
+      (__ \ "deferredSubmissionFlag").writeNullable[Boolean]
+  )(unlift(AttributesModel.unapply))
 
   private def deriveSubmissionMessageType(ern: String): SubmissionMessageType =
     if(ern.startsWith("XIP")) SubmissionMessageType.DutyPaidB2B else SubmissionMessageType.Standard

@@ -17,19 +17,22 @@
 package models.submitCreateMovement
 
 import models.Index
+import models.audit.Auditable
 import models.requests.DataRequest
-import models.sections.items.ItemGeographicalIndicationType
+import models.response.referenceData.WineOperations
 import models.sections.items.ItemWineProductCategory.ImportedWine
+import models.sections.items.{ItemGeographicalIndicationType, ItemWineGrowingZone}
 import pages.sections.items._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, Reads, Writes, __}
 import utils.{CommodityCodeHelper, JsonOptionFormatter, ModelConstructorHelpers}
 
 case class WineProductModel(
-                             wineProductCategory: String,
-                             wineGrowingZoneCode: Option[String],
+                             wineProductCategory: ItemWineCategory,
+                             wineGrowingZoneCode: Option[ItemWineGrowingZone],
                              thirdCountryOfOrigin: Option[String],
                              otherInformation: Option[String],
-                             wineOperations: Option[Seq[String]]
+                             wineOperations: Option[Seq[WineOperations]]
                            )
 
 object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter {
@@ -60,16 +63,16 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
     }
   }
 
-  def apply(idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
+  def applyAtIdx(idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
 
     if (request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)) {
       Some(
         WineProductModel(
-          wineProductCategory = wineProductCategory(idx).toString,
-          wineGrowingZoneCode = request.userAnswers.get(ItemWineGrowingZonePage(idx)).map(_.toString),
+          wineProductCategory = wineProductCategory(idx),
+          wineGrowingZoneCode = request.userAnswers.get(ItemWineGrowingZonePage(idx)),
           thirdCountryOfOrigin = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode),
           otherInformation = request.userAnswers.get(ItemWineMoreInformationPage(idx)).flatten,
-          wineOperations = request.userAnswers.get(ItemWineOperationsChoicePage(idx)).map(_.toSeq.map(_.code))
+          wineOperations = request.userAnswers.get(ItemWineOperationsChoicePage(idx)).map(_.toSeq)
         )
       )
     } else {
@@ -77,5 +80,22 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
     }
   }
 
-  implicit val fmt: OFormat[WineProductModel] = Json.format
+  implicit val reads: Reads[WineProductModel] = Json.reads
+  implicit val writes: Writes[WineProductModel] = (
+    (__ \ "wineProductCategory").write[ItemWineCategory] and
+      (__ \ "wineGrowingZoneCode").writeNullable[ItemWineGrowingZone] and
+      (__ \ "thirdCountryOfOrigin").writeNullable[String] and
+      (__ \ "otherInformation").writeNullable[String] and
+      (__ \ "wineOperations").writeNullable[Seq[WineOperations]](Writes.seq(WineOperations.submissionWrites))
+    )(unlift(WineProductModel.unapply)
+  )
+
+  val auditWrites: Writes[WineProductModel] = (
+    (__ \ "wineProductCategory").write[ItemWineCategory](Auditable.writes[ItemWineCategory]) and
+      (__ \ "wineGrowingZoneCode").writeNullable[ItemWineGrowingZone](Auditable.writes[ItemWineGrowingZone]) and
+      (__ \ "thirdCountryOfOrigin").writeNullable[String] and
+      (__ \ "otherInformation").writeNullable[String] and
+      (__ \ "wineOperations").writeNullable[Seq[WineOperations]](Writes.seq(WineOperations.auditWrites))
+    )(unlift(WineProductModel.unapply)
+  )
 }

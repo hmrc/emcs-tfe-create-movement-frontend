@@ -32,7 +32,7 @@ case class SubmitCreateMovementAudit(
 
   override val detail: JsValue = Json.obj(fields =
     "exciseRegistrationNumber" -> ern
-  ).deepMerge(Json.toJsObject(submissionRequest)) ++ {
+  ).deepMerge(Json.toJsObject(submissionRequest)(SubmitCreateMovementModel.auditWrites)) ++ {
     submissionResponse match {
       case Right(success) =>
         Json.obj(fields =

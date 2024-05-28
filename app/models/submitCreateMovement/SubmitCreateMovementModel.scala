@@ -17,6 +17,7 @@
 package models.submitCreateMovement
 
 import config.AppConfig
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
@@ -25,7 +26,8 @@ import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.i18n.Messages
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, Writes, __}
 import utils.ModelConstructorHelpers
 
 case class SubmitCreateMovementModel(
@@ -52,6 +54,28 @@ case class SubmitCreateMovementModel(
 
 object SubmitCreateMovementModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[SubmitCreateMovementModel] = Json.format
+
+  val auditWrites: OWrites[SubmitCreateMovementModel] = (
+    (__ \ "movementType").write[MovementType](Auditable.writes[MovementType]) and
+    (__ \ "attributes").write[AttributesModel](AttributesModel.auditWrites) and
+    (__ \ "consigneeTrader").writeNullable[TraderModel] and
+    (__ \ "consignorTrader").write[TraderModel] and
+    (__ \ "placeOfDispatchTrader").writeNullable[TraderModel] and
+    (__ \ "dispatchImportOffice").writeNullable[OfficeModel] and
+    (__ \ "complementConsigneeTrader").writeNullable[ComplementConsigneeTraderModel] and
+    (__ \ "deliveryPlaceTrader").writeNullable[TraderModel] and
+    (__ \ "deliveryPlaceCustomsOffice").writeNullable[OfficeModel] and
+    (__ \ "competentAuthorityDispatchOffice").write[OfficeModel] and
+    (__ \ "transportArrangerTrader").writeNullable[TraderModel] and
+    (__ \ "firstTransporterTrader").writeNullable[TraderModel] and
+    (__ \ "documentCertificate").writeNullable[Seq[DocumentCertificateModel]] and
+    (__ \ "headerEadEsad").write[HeaderEadEsadModel](HeaderEadEsadModel.auditWrites) and
+    (__ \ "transportMode").write[TransportModeModel](TransportModeModel.auditWrites) and
+    (__ \ "movementGuarantee").write[MovementGuaranteeModel](MovementGuaranteeModel.auditWrites) and
+    (__ \ "bodyEadEsad").write[Seq[BodyEadEsadModel]](Writes.seq(BodyEadEsadModel.auditWrites)) and
+    (__ \ "eadEsadDraft").write[EadEsadDraftModel](EadEsadDraftModel.auditWrites) and
+    (__ \ "transportDetails").write[Seq[TransportDetailsModel]](Writes.seq(TransportDetailsModel.auditWrites))
+    )(unlift(SubmitCreateMovementModel.unapply))
 
   private[submitCreateMovement] def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
 

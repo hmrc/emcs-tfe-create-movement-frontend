@@ -26,6 +26,7 @@ import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.destination.{DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.info._
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -110,7 +111,7 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
   }
 
   "apply" - {
-    "must return a model" - {
+    "must return a model and output the correct JSON" - {
       "when XIRC" in {
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
@@ -118,7 +119,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
           ern = "XIRC123"
         )
 
-        SubmitCreateMovementModel.apply mustBe xircSubmitCreateMovementModel
+        val submission = SubmitCreateMovementModel.apply
+
+        submission mustBe xircSubmitCreateMovementModel
+        Json.toJson(submission) mustBe xircSubmitCreateMovementJson
       }
       "when XIWK" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -127,7 +131,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
           ern = "XIWK123"
         )
 
-        SubmitCreateMovementModel.apply mustBe xiwkSubmitCreateMovementModel
+        val submission = SubmitCreateMovementModel.apply
+
+        submission mustBe  xiwkSubmitCreateMovementModel
+        Json.toJson(submission) mustBe xiwkSubmitCreateMovementJson
       }
       "when GBRC" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -139,7 +146,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
           ern = "GBRC123"
         )
 
-        SubmitCreateMovementModel.apply mustBe gbrcSubmitCreateMovementModel
+        val submission = SubmitCreateMovementModel.apply
+
+        submission mustBe gbrcSubmitCreateMovementModel
+        Json.toJson(submission) mustBe gbrcSubmitCreateMovementJson
       }
       "when GBWK" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -151,7 +161,10 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
           ern = "GBWK123"
         )
 
-        SubmitCreateMovementModel.apply mustBe gbwkSubmitCreateMovementModel
+        val submission = SubmitCreateMovementModel.apply
+
+        submission mustBe gbwkSubmitCreateMovementModel
+        Json.toJson(submission) mustBe gbwkSubmitCreateMovementJson
       }
     }
   }

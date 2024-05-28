@@ -16,21 +16,32 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 
 sealed trait ItemWineCategory
 
 object ItemWineCategory extends Enumerable.Implicits {
 
-  case object EuWineWithoutPdoOrPgi extends WithName("1") with ItemWineCategory
+  case object EuWineWithoutPdoOrPgi extends WithName("1") with ItemWineCategory with Auditable {
+    override val auditDescription: String = "EuWineWithoutPdoOrPgi"
+  }
 
-  case object EuVarietalWineWithoutPdoOrPgi extends WithName("2") with ItemWineCategory
+  case object EuVarietalWineWithoutPdoOrPgi extends WithName("2") with ItemWineCategory with Auditable {
+    override val auditDescription: String = "EuVarietalWineWithoutPdoOrPgi"
+  }
 
-  case object EuWineWithPdoOrPgiOrGi extends WithName("3") with ItemWineCategory
+  case object EuWineWithPdoOrPgiOrGi extends WithName("3") with ItemWineCategory with Auditable {
+    override val auditDescription: String = "EuWineWithPdoOrPgiOrGi"
+  }
 
-  case object ImportedWine extends WithName("4") with ItemWineCategory
+  case object ImportedWine extends WithName("4") with ItemWineCategory with Auditable {
+    override val auditDescription: String = "ImportedWine"
+  }
 
-  case object Other extends WithName("5") with ItemWineCategory
+  case object Other extends WithName("5") with ItemWineCategory with Auditable {
+    override val auditDescription: String = "Other"
+  }
 
   val values: Seq[ItemWineCategory] = Seq(
     EuWineWithoutPdoOrPgi,

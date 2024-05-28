@@ -192,7 +192,7 @@ trait BaseFixtures {
       transportArrangement = TransportArranger.GoodsOwner
     ),
     transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
+      transportModeCode = HowMovementTransported.AirTransport,
       complementaryInformation = None
     ),
     movementGuarantee = MovementGuaranteeModel(

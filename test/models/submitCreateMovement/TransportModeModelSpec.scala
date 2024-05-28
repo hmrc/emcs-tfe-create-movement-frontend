@@ -33,7 +33,7 @@ class TransportModeModelSpec extends SpecBase {
       )
 
       TransportModeModel.apply mustBe
-        TransportModeModel(transportModeCode = HowMovementTransported.AirTransport.toString, complementaryInformation = Some("info"))
+        TransportModeModel(transportModeCode = HowMovementTransported.AirTransport, complementaryInformation = Some("info"))
     }
   }
 }

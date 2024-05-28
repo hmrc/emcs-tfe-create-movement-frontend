@@ -16,28 +16,47 @@
 
 package models.sections.info.movementScenario
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 
 sealed trait MovementType
 
 object MovementType extends Enumerable.Implicits {
-  case object UkToUk extends WithName("1") with MovementType
+  case object UkToUk extends WithName("1") with MovementType with Auditable {
+    override val auditDescription: String = "UkToUk"
+  }
 
-  case object UkToEu extends WithName("2") with MovementType
+  case object UkToEu extends WithName("2") with MovementType with Auditable {
+    override val auditDescription: String = "UkToEu"
+  }
 
-  case object DirectExport extends WithName("3") with MovementType
+  case object DirectExport extends WithName("3") with MovementType with Auditable {
+    override val auditDescription: String = "DirectExport"
+  }
 
-  case object ImportEu extends WithName("4") with MovementType
+  case object ImportEu extends WithName("4") with MovementType with Auditable {
+    override val auditDescription: String = "ImportEu"
+  }
 
-  case object ImportUk extends WithName("5") with MovementType
+  case object ImportUk extends WithName("5") with MovementType with Auditable {
+    override val auditDescription: String = "ImportUk"
+  }
 
-  case object IndirectExport extends WithName("6") with MovementType
+  case object IndirectExport extends WithName("6") with MovementType with Auditable {
+    override val auditDescription: String = "IndirectExport"
+  }
 
-  case object ImportDirectExport extends WithName("7") with MovementType
+  case object ImportDirectExport extends WithName("7") with MovementType with Auditable {
+    override val auditDescription: String = "ImportDirectExport"
+  }
 
-  case object ImportIndirectExport extends WithName("8") with MovementType
+  case object ImportIndirectExport extends WithName("8") with MovementType with Auditable {
+    override val auditDescription: String = "ImportIndirectExport"
+  }
 
-  case object ImportUnknownDestination extends WithName("9") with MovementType
+  case object ImportUnknownDestination extends WithName("9") with MovementType with Auditable {
+    override val auditDescription: String = "ImportUnknownDestination"
+  }
 
   val values: Seq[MovementType] = Seq(
     UkToUk,

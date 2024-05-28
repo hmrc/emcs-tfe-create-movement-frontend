@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemProducerSizeMessages
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.DirectDelivery
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import models.{CheckMode, UserAnswers}
@@ -52,6 +52,7 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers with ItemFixtur
         s"if ItemSmallIndependentProducerPage is $producer" - {
           "must return a row when there is an answer" in new Test(
             emptyUserAnswers
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(producer, Some(testErn)))
               .set(ItemProducerSizePage(testIndex1), BigInt(3))
           ) {
@@ -71,28 +72,81 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers with ItemFixtur
         }
       }
 
-      "if the consignor is XI and the destination type is NI -> EU (e.g. not GB tax warehouse) and " +
-        "EPC is not 'S300' or 'S500' - return 'finished product'" in new Test(
-        emptyUserAnswers
-          .set(DestinationTypePage, DirectDelivery)
-          .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
-          .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
-          .set(ItemProducerSizePage(testIndex1), BigInt(3))
-      ) {
+      "return 'pure product' key" - {
 
-        ItemProducerSizeSummary.row(
-          idx = testIndex1
-        ) mustBe
-          Some(summaryListRowBuilder(
-            key = messagesForLanguage.cyaLabelForFinishedProduct,
-            value = s"3 ${messagesForLanguage.inputSuffix}",
-            changeLink = Some(ActionItemViewModel(
-              href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
-              content = messagesForLanguage.change,
-              id = s"changeItemProducerSize${testIndex1.displayIndex}"
-            ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForFinishedProduct))
-          ))
+        "when the destination type is GB tax warehouse" in new Test(
+          emptyUserAnswers
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
+            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
+            .set(ItemProducerSizePage(testIndex1), BigInt(3))
+        ) {
+
+          ItemProducerSizeSummary.row(
+            idx = testIndex1
+          ) mustBe
+            Some(summaryListRowBuilder(
+              key = messagesForLanguage.cyaLabelForPureAlcohol,
+              value = s"3 ${messagesForLanguage.inputSuffix}",
+              changeLink = Some(ActionItemViewModel(
+                href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                content = messagesForLanguage.change,
+                id = s"changeItemProducerSize${testIndex1.displayIndex}"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForPureAlcohol))
+            ))
+
+        }
+
+        Seq("S300", "S500").foreach { epc =>
+
+          s"when the EPC is $epc" in new Test(
+            emptyUserAnswers
+              .set(DestinationTypePage, DirectDelivery)
+              .set(ItemExciseProductCodePage(testIndex1), epc)
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
+              .set(ItemProducerSizePage(testIndex1), BigInt(3))
+          ) {
+
+            ItemProducerSizeSummary.row(
+              idx = testIndex1
+            ) mustBe
+              Some(summaryListRowBuilder(
+                key = messagesForLanguage.cyaLabelForPureAlcohol,
+                value = s"3 ${messagesForLanguage.inputSuffix}",
+                changeLink = Some(ActionItemViewModel(
+                  href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                  content = messagesForLanguage.change,
+                  id = s"changeItemProducerSize${testIndex1.displayIndex}"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForPureAlcohol))
+              ))
+          }
+        }
       }
+
+      "return 'finished product'" - {
+
+        "when the EPC is not S300 / S500 nor is the destination type a GB tax warehouse" in new Test(
+          emptyUserAnswers
+            .set(DestinationTypePage, DirectDelivery)
+            .set(ItemExciseProductCodePage(testIndex1), "S200")
+            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
+            .set(ItemProducerSizePage(testIndex1), BigInt(3))
+        ) {
+
+          ItemProducerSizeSummary.row(
+            idx = testIndex1
+          ) mustBe
+            Some(summaryListRowBuilder(
+              key = messagesForLanguage.cyaLabelForFinishedProduct,
+              value = s"3 ${messagesForLanguage.inputSuffix}",
+              changeLink = Some(ActionItemViewModel(
+                href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                content = messagesForLanguage.change,
+                id = s"changeItemProducerSize${testIndex1.displayIndex}"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForFinishedProduct))
+            ))
+        }
+      }
+
 
       ItemSmallIndependentProducerType.values.diff(
         Seq(SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor)

@@ -56,10 +56,10 @@ object ItemProducerSizeSummary {
   private def getProductType(idx: Index)(implicit request: DataRequest[_]): String = {
     val destinationType = request.userAnswers.get(DestinationTypePage)
     val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
-    if(request.isNorthernIrelandErn && destinationType.exists(_ != UkTaxWarehouse.GB) && itemExciseProductCode.exists(!Seq("S300", "S500").contains(_))) {
-      "finished"
-    } else {
+    if(destinationType.contains(UkTaxWarehouse.GB) || itemExciseProductCode.exists(Seq("S300", "S500").contains(_))) {
       "pure"
+    } else {
+      "finished"
     }
   }
 }

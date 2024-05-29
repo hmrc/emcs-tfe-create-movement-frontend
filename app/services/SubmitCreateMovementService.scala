@@ -19,7 +19,7 @@ package services
 import connectors.emcsTfe.SubmitCreateMovementConnector
 import models.audit.SubmitCreateMovementAudit
 import models.requests.DataRequest
-import models.response.{ErrorResponse, SubmitCreateMovementException, SubmitCreateMovementResponse}
+import models.response.{ErrorResponse, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{Logging, TimeMachine}
@@ -34,16 +34,11 @@ class SubmitCreateMovementService @Inject()(
                                            )(implicit ec: ExecutionContext) extends Logging {
 
   def submit(submitCreateMovementModel: SubmitCreateMovementModel)
-            (implicit request: DataRequest[_], hc: HeaderCarrier): Future[SubmitCreateMovementResponse] = {
+            (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, SubmitCreateMovementResponse]] = {
 
     connector.submit(submitCreateMovementModel).map { response =>
       writeAudit(submitCreateMovementModel, response)
-      response match {
-        case Right(success) => success
-        case Left(value) =>
-          logger.warn(s"Received Left from SubmitCreateMovementConnector: $value")
-          throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
-      }
+      response
     }
   }
 

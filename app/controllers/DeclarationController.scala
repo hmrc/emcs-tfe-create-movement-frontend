@@ -21,7 +21,7 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
 import models.requests.DataRequest
-import models.response.MissingMandatoryPage
+import models.response.{MissingMandatoryPage, SubmitCreateMovementException, UnexpectedDownstreamDraftSubmissionResponseError}
 import models.submitCreateMovement.SubmitCreateMovementModel
 import navigation.Navigator
 import pages.DeclarationPage
@@ -70,10 +70,19 @@ class DeclarationController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { submitCreateMovementModel =>
         service.submit(submitCreateMovementModel).flatMap {
-          response =>
+          case Right(response) =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
             val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(response.submittedDraftId))
             saveAndRedirect(DeclarationPage, LocalDateTime.now(), updatedAnswers, NormalMode)
+          case Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY)) =>
+            // emcs-tfe returns an UNPROCESSABLE_ENTITY when downstream responds with RIM validation errors,
+            // so we redirect to DraftMovementController to display these errors
+            logger.warn(s"Received UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY) from SubmitCreateMovementService, " +
+              s"redirecting to DraftMovementController")
+            Future.successful(Redirect(routes.DraftMovementController.onPageLoad(ern, draftId)))
+          case Left(value) =>
+            logger.warn(s"Received Left from SubmitCreateMovementService: $value")
+            throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
         }.recover {
           case exception =>
             logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")

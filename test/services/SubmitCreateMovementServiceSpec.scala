@@ -20,10 +20,9 @@ import base.SpecBase
 import mocks.connectors.MockSubmitCreateMovementConnector
 import mocks.services.MockAuditingService
 import models.audit.SubmitCreateMovementAudit
-import models.response.{SubmitCreateMovementException, UnexpectedDownstreamDraftSubmissionResponseError}
+import models.response.UnexpectedDownstreamDraftSubmissionResponseError
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 
@@ -53,7 +52,7 @@ class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMove
           .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Right(submitCreateMovementResponseEIS)))
           .once()
 
-        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe submitCreateMovementResponseEIS
+        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe Right(submitCreateMovementResponseEIS)
       }
     }
 
@@ -69,8 +68,7 @@ class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMove
           .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
           .once()
 
-        intercept[SubmitCreateMovementException](await(testService.submit(minimumSubmitCreateMovementModel)(request, hc))).getMessage mustBe
-          s"Failed to submit Create Movement to emcs-tfe for ern: '$testErn' & draftId: '$testDraftId'"
+        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
       }
     }
   }

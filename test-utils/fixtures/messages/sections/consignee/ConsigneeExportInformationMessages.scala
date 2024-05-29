@@ -26,7 +26,7 @@ object ConsigneeExportInformationMessages {
 
     val checkboxItemForVat = "VAT registration number"
     val checkboxItemForEori = "EORI number"
-    val checkboxItemForNoInfo = "I don't have any information about this person"
+    val checkboxItemForNoInfo = "I don’t have any information about this person"
 
     val cyaLabel: String = "Identification provided"
     val cyaValueVatNumber: String = "VAT registration number"

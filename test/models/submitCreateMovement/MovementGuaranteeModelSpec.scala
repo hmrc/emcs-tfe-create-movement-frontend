@@ -18,16 +18,16 @@ package models.submitCreateMovement
 
 import base.SpecBase
 import fixtures.ItemFixtures
-import models.{GoodsType, VatNumberModel}
+import models.VatNumberModel
 import models.requests.DataRequest
-import models.sections.guarantor.GuarantorArranger
-import pages.sections.guarantor._
-import play.api.test.FakeRequest
-import pages.sections.info.DestinationTypePage
-import models.sections.info.movementScenario.MovementScenario
 import models.response.MissingMandatoryPage
+import models.sections.guarantor.GuarantorArranger
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse}
+import pages.sections.guarantor._
+import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemExciseProductCodePage
+import play.api.test.FakeRequest
 
 class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
   "apply" - {

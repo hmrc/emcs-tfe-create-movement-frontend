@@ -19,6 +19,7 @@ package views
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.DraftMovementMessages
+import models.MovementValidationFailure
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import org.jsoup.Jsoup
@@ -40,11 +41,12 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
 
     Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
 
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         "for a 704 scenario" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false)))
           )
@@ -60,9 +62,39 @@ class DraftMovementViewSpec extends SpecBase with ViewBehaviours with MovementSu
           ))
         }
 
+        "for a validation failure scenario" - {
+
+          val validationFailures: Seq[MovementValidationFailure] = Seq(
+            //scalastyle:off magic.number
+            MovementValidationFailure(Some(12), Some("This is an error.")),
+            MovementValidationFailure(Some(13), Some("This is an error.")),
+            MovementValidationFailure(Some(14), Some("This is an error."))
+            //scalastyle:on magic.number
+          )
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            ern = testGreatBritainErn,
+            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).copy(validationErrors = validationFailures)
+          )
+
+          implicit val doc: Document = Jsoup.parse(view().toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.titleImportFor("Great Britain tax warehouse"),
+            Selectors.notificationBannerTitle -> messagesForLanguage.important,
+            Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerValidationFailuresContent,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
+            // errorType: 12
+            Selectors.notificationBannerError(1) -> "This is an error.",
+            // errorType: 13
+            Selectors.notificationBannerError(2) -> "This is an error.",
+            // errorType: 14
+            Selectors.notificationBannerError(3) -> "errors.validation.notificationBanner.14.content",
+          ))
+        }
+
         "for a draft movement (not in error)" - {
 
-          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             ern = testGreatBritainErn,
             answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB)

@@ -35,6 +35,33 @@ class HowMovementTransportedSpec extends SpecBase with Matchers with OptionValue
 
   "HowMovementTransported" - {
 
+    "should have the correct enum mappings and audit descriptions" in {
+
+      AirTransport.toString mustBe "4"
+      AirTransport.auditDescription mustBe "AirTransport"
+
+      FixedTransportInstallations.toString mustBe "7"
+      FixedTransportInstallations.auditDescription mustBe "FixedTransportInstallations"
+
+      InlandWaterwayTransport.toString mustBe "8"
+      InlandWaterwayTransport.auditDescription mustBe "InlandWaterwayTransport"
+
+      PostalConsignment.toString mustBe "5"
+      PostalConsignment.auditDescription mustBe "PostalConsignment"
+
+      RailTransport.toString mustBe "2"
+      RailTransport.auditDescription mustBe "RailTransport"
+
+      RoadTransport.toString mustBe "3"
+      RoadTransport.auditDescription mustBe "RoadTransport"
+
+      SeaTransport.toString mustBe "1"
+      SeaTransport.auditDescription mustBe "SeaTransport"
+
+      Other.toString mustBe "0"
+      Other.auditDescription mustBe "Other"
+    }
+
     "must deserialise valid values" in {
       val howMovementTransported = HowMovementTransported.values.head
 

@@ -19,7 +19,6 @@ package pages.sections.transportUnit
 import models.Index
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType
-import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.sections.Section
 import play.api.libs.json.{JsArray, JsPath}
 import queries.TransportUnitsCount

@@ -17,14 +17,17 @@
 package models.submitCreateMovement
 
 import models.Index
+import models.audit.Auditable
 import models.requests.DataRequest
+import models.sections.documents.DocumentType
 import pages.sections.documents._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, Reads, Writes, __}
 import queries.DocumentsCount
 import utils.ModelConstructorHelpers
 
 case class DocumentCertificateModel(
-                                     documentType: Option[String],
+                                     documentType: Option[DocumentType],
                                      documentReference: Option[String],
                                      documentDescription: Option[String],
                                      referenceOfDocument: Option[String]
@@ -32,7 +35,7 @@ case class DocumentCertificateModel(
 
 object DocumentCertificateModel extends ModelConstructorHelpers {
 
-  def apply(implicit request: DataRequest[_]): Option[Seq[DocumentCertificateModel]] = {
+  def applyFromRequest(implicit request: DataRequest[_]): Option[Seq[DocumentCertificateModel]] = {
     val thereAnyDocumentCertificates = mandatoryPage(DocumentsCertificatesPage)
 
     if (!thereAnyDocumentCertificates) None else {
@@ -43,10 +46,8 @@ object DocumentCertificateModel extends ModelConstructorHelpers {
             .map(Index(_))
             .map {
               idx =>
-                val documentType = mandatoryPage(DocumentTypePage(idx)).code
-
                 DocumentCertificateModel(
-                  documentType = Some(documentType),
+                  documentType = Some(mandatoryPage(DocumentTypePage(idx))),
                   documentReference = Some(mandatoryPage(DocumentReferencePage(idx))),
                   documentDescription = None,
                   referenceOfDocument = None
@@ -56,5 +57,21 @@ object DocumentCertificateModel extends ModelConstructorHelpers {
     }
   }
 
-  implicit val fmt: OFormat[DocumentCertificateModel] = Json.format
+  implicit val reads: Reads[DocumentCertificateModel] = Json.reads
+  implicit val writes: Writes[DocumentCertificateModel] = (
+    (__ \ "documentType").writeNullable[DocumentType](DocumentType.submissionWrites) and
+      (__ \ "documentReference").writeNullable[String] and
+      (__ \ "documentDescription").writeNullable[String] and
+      (__ \ "referenceOfDocument").writeNullable[String]
+    )(unlift(DocumentCertificateModel.unapply)
+  )
+
+  val auditWrites: Writes[DocumentCertificateModel] = (
+    (__ \ "documentType").writeNullable[DocumentType](DocumentType.auditWrites) and
+      (__ \ "documentReference").writeNullable[String] and
+      (__ \ "documentDescription").writeNullable[String] and
+      (__ \ "referenceOfDocument").writeNullable[String]
+    )(unlift(DocumentCertificateModel.unapply)
+  )
+
 }

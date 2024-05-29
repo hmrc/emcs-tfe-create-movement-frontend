@@ -40,15 +40,15 @@ class DocumentCertificateModelSpec extends SpecBase {
             .set(DocumentReferencePage(testIndex2), "2 reference")
         )
 
-        DocumentCertificateModel.apply mustBe Some(Seq(
+        DocumentCertificateModel.applyFromRequest mustBe Some(Seq(
           DocumentCertificateModel(
-            documentType = Some("1"),
+            documentType = Some(DocumentType("1", "1 type desc")),
             documentReference = Some("1 reference"),
             documentDescription = None,
             referenceOfDocument = None
           ),
           DocumentCertificateModel(
-            documentType = Some("2"),
+            documentType = Some(DocumentType("2", "2 type desc")),
             documentReference = Some("2 reference"),
             documentDescription = None,
             referenceOfDocument = None
@@ -64,7 +64,7 @@ class DocumentCertificateModelSpec extends SpecBase {
             .set(DocumentsCertificatesPage, false)
         )
 
-        DocumentCertificateModel.apply mustBe None
+        DocumentCertificateModel.applyFromRequest mustBe None
       }
       "when DocumentsCertificatesPage is true but DocumentsCount is < 1" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -73,7 +73,7 @@ class DocumentCertificateModelSpec extends SpecBase {
             .set(DocumentsCertificatesPage, true)
         )
 
-        DocumentCertificateModel.apply mustBe None
+        DocumentCertificateModel.applyFromRequest mustBe None
       }
     }
   }

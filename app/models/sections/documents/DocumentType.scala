@@ -17,7 +17,7 @@
 package models.sections.documents
 
 import models.SelectOptionModel
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsString, Json, OFormat, Writes}
 
 
 case class DocumentType(code: String, description: String) extends SelectOptionModel {
@@ -26,6 +26,14 @@ case class DocumentType(code: String, description: String) extends SelectOptionM
 
 object DocumentType {
   implicit val format: OFormat[DocumentType] = Json.format[DocumentType]
+
+  val submissionWrites: Writes[DocumentType] = Writes(model => JsString(model.code))
+  val auditWrites: Writes[DocumentType] = Writes { model =>
+    Json.obj(
+      "code" -> model.code,
+      "description" -> model.description
+    )
+  }
 
   final val OtherCode: String = "0"
 }

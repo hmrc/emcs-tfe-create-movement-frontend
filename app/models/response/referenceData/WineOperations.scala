@@ -30,7 +30,7 @@ object WineOperations extends DynamicEnumerableType[WineOperations] {
 
   implicit val format: Format[WineOperations] = Json.format[WineOperations]
 
-  val submissionWrites: Writes[WineOperations] = Writes { model => JsString(model.code) }
+  val submissionWrites: Writes[WineOperations] = Writes(model => JsString(model.code))
   val auditWrites: Writes[WineOperations] = Writes { model =>
     Json.obj(
       "code" -> model.code,

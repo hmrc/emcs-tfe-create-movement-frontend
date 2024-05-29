@@ -697,7 +697,7 @@ trait ItemFixtures {
     )),
     documentCertificate = Some(Seq(
       DocumentCertificateModel(
-        documentType = Some("0"),
+        documentType = Some(DocumentType("0", "0 type desc")),
         documentReference = Some("0 reference"),
         documentDescription = None,
         referenceOfDocument = None
@@ -996,7 +996,7 @@ trait ItemFixtures {
     )),
     documentCertificate = Some(Seq(
       DocumentCertificateModel(
-        documentType = Some("0"),
+        documentType = Some(DocumentType("0", "0 type desc")),
         documentReference = Some("0 reference"),
         documentDescription = None,
         referenceOfDocument = None
@@ -1292,7 +1292,7 @@ trait ItemFixtures {
     )),
     documentCertificate = Some(Seq(
       DocumentCertificateModel(
-        documentType = Some("0"),
+        documentType = Some(DocumentType("0", "0 type desc")),
         documentReference = Some("0 reference"),
         documentDescription = None,
         referenceOfDocument = None
@@ -1591,7 +1591,7 @@ trait ItemFixtures {
     )),
     documentCertificate = Some(Seq(
       DocumentCertificateModel(
-        documentType = Some("0"),
+        documentType = Some(DocumentType("0", "0 type desc")),
         documentReference = Some("0 reference"),
         documentDescription = None,
         referenceOfDocument = None

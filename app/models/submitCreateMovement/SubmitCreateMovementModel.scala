@@ -68,7 +68,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
     (__ \ "competentAuthorityDispatchOffice").write[OfficeModel] and
     (__ \ "transportArrangerTrader").writeNullable[TraderModel] and
     (__ \ "firstTransporterTrader").writeNullable[TraderModel] and
-    (__ \ "documentCertificate").writeNullable[Seq[DocumentCertificateModel]] and
+    (__ \ "documentCertificate").writeNullable[Seq[DocumentCertificateModel]](Writes.seq(DocumentCertificateModel.auditWrites)) and
     (__ \ "headerEadEsad").write[HeaderEadEsadModel](HeaderEadEsadModel.auditWrites) and
     (__ \ "transportMode").write[TransportModeModel](TransportModeModel.auditWrites) and
     (__ \ "movementGuarantee").write[MovementGuaranteeModel](MovementGuaranteeModel.auditWrites) and
@@ -108,7 +108,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       competentAuthorityDispatchOffice = dispatchOffice,
       transportArrangerTrader = TraderModel.applyTransportArranger,
       firstTransporterTrader = TraderModel.applyFirstTransporter,
-      documentCertificate = DocumentCertificateModel.apply,
+      documentCertificate = DocumentCertificateModel.applyFromRequest,
       headerEadEsad = HeaderEadEsadModel.apply(movementScenario.destinationType),
       transportMode = TransportModeModel.apply,
       movementGuarantee = MovementGuaranteeModel.apply,

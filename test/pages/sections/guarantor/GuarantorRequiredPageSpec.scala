@@ -32,6 +32,50 @@ import play.api.test.FakeRequest
 
 class GuarantorRequiredPageSpec extends SpecBase {
 
+  "guarantorRequired()" - {
+
+    "when guarantorAlwaysRequiredUk() returns true" - {
+
+      "must return true" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
+            .set(ItemExciseProductCodePage(0), Tobacco.code)
+        )
+
+        GuarantorRequiredPage.isRequired() mustBe true
+      }
+    }
+
+    "when guarantorAlwaysRequiredNIToEU() returns true" - {
+
+      "must return true" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers
+            .set(DestinationTypePage, EuTaxWarehouse)
+            .set(ItemExciseProductCodePage(0), Tobacco.code)
+            .set(HowMovementTransportedPage, FixedTransportInstallations)
+        )
+
+        GuarantorRequiredPage.isRequired() mustBe true
+      }
+    }
+
+    "when neither guarantorAlwaysRequiredNIToEU() or guarantorAlwaysRequiredUk() return true" - {
+
+      "must return false" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+        GuarantorRequiredPage.isRequired() mustBe false
+      }
+    }
+  }
+
   "guarantorAlwaysRequiredUk()" - {
 
     Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI).foreach{ destinationType =>
@@ -207,7 +251,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
     }
   }
 
-  "guarantorAlwaysRequiredNIToEU" - {
+  "guarantorAlwaysRequiredNIToEU()" - {
 
     Seq(
       EuTaxWarehouse,

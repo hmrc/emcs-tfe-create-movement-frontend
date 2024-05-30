@@ -22,4 +22,5 @@ object Constants {
   val XI_POSTCODE = "BT"
   val NI_PREFIX = "XI"
   val GB_PREFIX = "GB"
+  val TFE_DELETED_DRAFT_LRN = "tfeDeletedDraftLrn"
 }

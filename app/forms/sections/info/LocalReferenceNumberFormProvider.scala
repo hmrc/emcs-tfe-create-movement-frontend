@@ -33,7 +33,7 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
     )
   }
 
-  private def errMsgForKey(key: String)(isDeferred: Boolean) = {
+  private def errMsgForKey(key: String)(isDeferred: Boolean): String = {
     val infix = if (isDeferred) "deferred" else "new"
     s"localReferenceNumber.$infix.error.$key"
   }

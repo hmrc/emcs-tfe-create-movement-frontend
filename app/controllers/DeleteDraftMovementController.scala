@@ -17,10 +17,13 @@
 package controllers
 
 import config.AppConfig
+import config.Constants.TFE_DELETED_DRAFT_LRN
 import controllers.actions._
 import forms.DeleteDraftMovementFormProvider
+import handlers.ErrorHandler
 import models.requests.DataRequest
 import navigation.Navigator
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,7 +45,8 @@ class DeleteDraftMovementController @Inject()(
                                        service: DeleteDraftMovementService,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DeleteDraftMovementView,
-                                       appConfig: AppConfig
+                                       appConfig: AppConfig,
+                                       errorHandler: ErrorHandler
                                      ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
@@ -55,7 +59,12 @@ class DeleteDraftMovementController @Inject()(
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _),
         deleteDraft => if(deleteDraft) {
-          service.deleteDraft().map(_ => Redirect(appConfig.emcsTfeHomeUrl))
+          request.userAnswers.get(LocalReferenceNumberPage(isOnPreDraftFlow = false)).fold({
+            logger.error("Error trying to delete draft, LRN is missing - rendering ISE")
+            Future(InternalServerError(errorHandler.internalServerErrorTemplate))
+          })(
+            lrn => service.deleteDraft().map(_ => Redirect(appConfig.emcsTfeDraftsUrl(ern)).flashing(TFE_DELETED_DRAFT_LRN -> lrn))
+          )
         } else {
           Future(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, draftId)))
         }

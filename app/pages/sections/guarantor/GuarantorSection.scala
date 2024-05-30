@@ -26,22 +26,22 @@ case object GuarantorSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "guarantor"
 
   //noinspection ScalaStyle
-  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(GuarantorRequiredPage) match {
-    case None if GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() =>
-      if(request.userAnswers.get(GuarantorArrangerPage).nonEmpty) {
-        guarantorRequired
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    if(GuarantorRequiredPage.isRequired()) {
+      if (request.userAnswers.get(GuarantorArrangerPage).nonEmpty) {
+        guarantorStatus
       } else {
         NotStarted
       }
-    case None =>
-      NotStarted
-    case Some(true) =>
-      guarantorRequired
-    case Some(false) =>
-      Completed
-  }
+    } else {
+      request.userAnswers.get(GuarantorRequiredPage) match {
+        case Some(true) => guarantorStatus
+        case Some(false) => Completed
+        case None => NotStarted
+      }
+    }
 
-  private def guarantorRequired(implicit request: DataRequest[_]): TaskListStatus = {
+  private def guarantorStatus(implicit request: DataRequest[_]): TaskListStatus = {
     request.userAnswers.get(GuarantorArrangerPage) match {
       case Some(Consignee) | Some(Consignor) => Completed
       case Some(_) =>

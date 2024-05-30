@@ -34,7 +34,7 @@ object GuarantorNameSummary {
 
     val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
     val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
-    val isAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+    val isAlwaysRequired = GuarantorRequiredPage.isRequired()
     val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
     (guarantorArrangerAnswer, showSummaryRow) match {

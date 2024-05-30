@@ -18,9 +18,7 @@ package viewmodels.checkAnswers.sections.guarantor
 
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -29,15 +27,8 @@ import viewmodels.implicits._
 object GuarantorRequiredSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-
-    val guarantorAlwaysRequired = GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
-    val movementTransportFixedOrNone = request.userAnswers.get(HowMovementTransportedPage).forall(_ == FixedTransportInstallations)
-
-    (guarantorAlwaysRequired, movementTransportFixedOrNone) match {
-      case (true, _) => None
-      case (_, false) => None
-      case _ => Some(renderSummary)
-    }
+    val guarantorAlwaysRequired = GuarantorRequiredPage.isRequired()
+    if(guarantorAlwaysRequired) None else Some(renderSummary)
   }
 
   private def renderSummary(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {

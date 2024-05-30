@@ -73,7 +73,7 @@ class GuarantorRequiredController @Inject()(
   private def renderView(status: Status, form: Form[_], mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
 
-    if(GuarantorRequiredPage.guarantorAlwaysRequired()) {
+    if(GuarantorRequiredPage.guarantorAlwaysRequiredUk()) {
       Future(status(view(
         form = form,
         onwardRoute = routes.GuarantorRequiredController.enterGuarantorDetails(request.ern, request.draftId),

@@ -23,6 +23,7 @@ import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.journeyType.HowMovementTransported._
 import models.sections.transportUnit.TransportUnitType._
+import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemExciseProductCodePage
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -31,7 +32,7 @@ import play.api.test.FakeRequest
 
 class GuarantorRequiredPageSpec extends SpecBase {
 
-  "guarantorAlwaysRequired" - {
+  "guarantorAlwaysRequiredUk()" - {
 
     Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI).foreach{ destinationType =>
 
@@ -50,7 +51,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                   .set(ItemExciseProductCodePage(0), goodsType.code)
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequired() mustBe true
+              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
             }
           }
         }
@@ -68,7 +69,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                   .set(ItemExciseProductCodePage(0), goodsType.code)
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequired() mustBe false
+              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
             }
           }
         }
@@ -88,7 +89,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                 .set(ItemExciseProductCodePage(3), GoodsType.Tobacco.code)
             )
 
-            GuarantorRequiredPage.guarantorAlwaysRequired() mustBe true
+            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
           }
         }
 
@@ -106,7 +107,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                 .set(ItemExciseProductCodePage(3), GoodsType.Intermediate.code)
             )
 
-            GuarantorRequiredPage.guarantorAlwaysRequired() mustBe true
+            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
           }
         }
 
@@ -122,7 +123,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                 .set(ItemExciseProductCodePage(1), GoodsType.Wine.code)
             )
 
-            GuarantorRequiredPage.guarantorAlwaysRequired() mustBe false
+            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
           }
         }
       }
@@ -139,7 +140,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
             answers = emptyUserAnswers.set(DestinationTypePage, destinationType)
           )
 
-          GuarantorRequiredPage.guarantorAlwaysRequired() mustBe true
+          GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
         }
       }
     }
@@ -148,7 +149,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
       s"when the Destination Type is NOT UKTaxWarehouse or Export: ${destinationType.toString}" - {
 
-        "when the ERN is NOT GB or XI" - {
+        "when the Consignee ERN is NOT GB or XI" - {
 
           "return true" in {
 
@@ -156,27 +157,31 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
-              answers = emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
-              ern = nonGBorXIErn
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, DirectDelivery)
+                .set(ConsigneeExcisePage, nonGBorXIErn),
+              ern = testErn
             )
 
-            GuarantorRequiredPage.guarantorAlwaysRequired() mustBe true
+            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
           }
         }
 
         Seq(testGreatBritainErn, testNorthernIrelandErn).foreach { ern =>
 
-          s"when the ERN is GB or XI: $ern" - {
+          s"when the Consignee ERN is GB or XI: $ern" - {
 
             "return true" in {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
-                answers = emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
-                ern = ern
+                answers = emptyUserAnswers
+                  .set(DestinationTypePage, DirectDelivery)
+                  .set(ConsigneeExcisePage, ern),
+                ern = testErn
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequired() mustBe false
+              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
             }
           }
         }
@@ -194,7 +199,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
                   .set(ItemExciseProductCodePage(0), goodsType.code)
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequired() mustBe false
+              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
             }
           }
         }

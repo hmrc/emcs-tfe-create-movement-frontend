@@ -25,6 +25,7 @@ import models.sections.info.movementScenario.MovementScenario.EuTaxWarehouse
 import models.sections.journeyType.HowMovementTransported.AirTransport
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
+import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -74,14 +75,14 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       contentAsString(result) mustEqual view(form, onSubmitRoute)(dataRequest(request), messages(request)).toString
     }
 
-    "must return OK and the correct view when the guarantor will always be required" in new Fixture() {
+    "must return OK and the correct view when the guarantor will always be required" in new Fixture(Some(emptyUserAnswers
+      .set(ConsigneeExcisePage, "AARC123456789")
+    )) {
 
-      val nonGBOrXIErn = "AARC123456789"
-
-      val result = testController.onPageLoad(nonGBOrXIErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(nonGBOrXIErn), requiredGuarantee = true)(dataRequest(request, ern = nonGBOrXIErn), messages(request)).toString
+      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(testErn), requiredGuarantee = true)(dataRequest(request, ern = testErn), messages(request)).toString
     }
 
     "must return OK and the correct view when the guarantor will always be required for NI to EU" in new Fixture(Some(emptyUserAnswers

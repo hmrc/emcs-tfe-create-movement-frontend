@@ -28,7 +28,7 @@ import scala.concurrent.Future
 trait GuarantorBaseController extends BaseNavigationController {
 
   def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result =
-    if(GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()) f else {
+    if(GuarantorRequiredPage.isRequired()) f else {
       withAnswer(
         page = GuarantorRequiredPage,
           redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
@@ -41,7 +41,7 @@ trait GuarantorBaseController extends BaseNavigationController {
     }
 
   def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    if (GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()) f else {
+    if (GuarantorRequiredPage.isRequired()) f else {
       withAnswerAsync(
         page = GuarantorRequiredPage,
         redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)

@@ -35,7 +35,7 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
   def apply(implicit request: DataRequest[_]): MovementGuaranteeModel = {
     val guarantorRequired: Boolean = request.userAnswers.get(GuarantorRequiredPage) match {
       case Some(value) => value
-      case None => GuarantorRequiredPage.guarantorAlwaysRequired() || GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()
+      case None => GuarantorRequiredPage.isRequired()
     }
 
     if (!guarantorRequired) {

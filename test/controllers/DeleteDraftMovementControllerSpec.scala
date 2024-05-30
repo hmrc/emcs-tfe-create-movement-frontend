@@ -17,11 +17,13 @@
 package controllers
 
 import base.SpecBase
+import config.Constants.TFE_DELETED_DRAFT_LRN
 import controllers.actions.FakeDataRetrievalAction
 import forms.DeleteDraftMovementFormProvider
 import mocks.services.{MockDeleteDraftMovementService, MockUserAnswersService}
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
+import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -38,6 +40,8 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
 
   val submitCall: Call = controllers.routes.DeleteDraftMovementController.onSubmit(testErn, testDraftId)
 
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(LocalReferenceNumberPage(isOnPreDraftFlow = false), testLrn)
+
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -53,30 +57,32 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
       mockDeleteDraftMovementService,
       Helpers.stubMessagesControllerComponents(),
       view,
-      appConfig
+      appConfig,
+      errorHandler
     )
   }
 
   "DeleteDraftMovement Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
+    "must return OK and the correct view for a GET" in new Test(Some(baseUserAnswers)) {
       val result = controller.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to account home when yes is selected (and the deletion is successful)" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to drafts when yes is selected (and the deletion is successful)" in new Test(Some(baseUserAnswers)) {
 
       MockDeleteDraftMovementService.deleteDraft().returns(Future.successful(true))
 
       val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual appConfig.emcsTfeHomeUrl
+      redirectLocation(result).value mustEqual appConfig.emcsTfeDraftsUrl(testErn)
+      flash(result).get(TFE_DELETED_DRAFT_LRN).get mustBe testLrn
     }
 
-    "must redirect to task list when no is selected" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to task list when no is selected" in new Test(Some(baseUserAnswers)) {
 
       val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "false"))
 
@@ -84,7 +90,14 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
       redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must throw an exception when the local reference number of the draft is missing" in new Test(Some(emptyUserAnswers)) {
+
+      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers)) {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> ""))

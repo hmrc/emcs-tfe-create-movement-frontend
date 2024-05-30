@@ -73,6 +73,13 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
       configuration.get[String]("urls.emcsTfeHome")
     }
 
+  def emcsTfeDraftsUrl(ern: String): String =
+    if (isEnabled(ReturnToLegacy)) {
+      configuration.get[String]("urls.legacy.atAGlance")
+    } else {
+      configuration.get[String]("urls.emcsTfeDrafts").replace("{ern}", ern)
+    }
+
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
   private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)

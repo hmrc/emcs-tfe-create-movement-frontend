@@ -53,10 +53,7 @@ trait BaseNavigationController extends BaseController with Logging {
                         (implicit request: DataRequest[_]): Future[Result] =
     save(updatedAnswers).map{ updatedAnswers =>
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
-
     }
-
-
 
   private def save[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {

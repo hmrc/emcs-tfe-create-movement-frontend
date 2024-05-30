@@ -19,8 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemProducerSizeFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse.GB
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.{Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.info.DestinationTypePage
@@ -71,8 +70,12 @@ class ItemProducerSizeController @Inject()(
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Result = withGoodsType(idx) { goodsType =>
-    val epc = request.userAnswers.get(ItemExciseProductCodePage(idx))
-    val isGbTaxWarehouse = request.userAnswers.get(DestinationTypePage).getOrElse(None).equals(GB)
+
+    val destinationType = request.userAnswers.get(DestinationTypePage)
+    val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
+
+    val showAlcoholProductionContent = destinationType.contains(UkTaxWarehouse.GB) || itemExciseProductCode.exists(Seq("S300", "S500").contains(_))
+
     status(view(
       form = form,
       onSubmitAction = routes.ItemProducerSizeController.onSubmit(request.ern, request.draftId, idx, mode),
@@ -80,8 +83,7 @@ class ItemProducerSizeController @Inject()(
       startYear = yearStart().toString,
       endYear = yearEnd().toString,
       index = idx,
-      epc = epc,
-      isGbTaxWarehouse = isGbTaxWarehouse,
+      showAlcoholProductionContent = showAlcoholProductionContent,
       mode = mode
     ))
   }

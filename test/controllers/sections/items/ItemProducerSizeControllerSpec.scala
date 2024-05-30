@@ -88,8 +88,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          epc = Some(testEpcWine),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
@@ -111,8 +110,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           startYear = "2021",
           endYear = "2022",
           index = testIndex1,
-          epc = Some(testEpcWine),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
@@ -135,8 +133,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          epc = Some(testEpcWine),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }
@@ -171,7 +168,59 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
+    }
 
+    "for a GET unableToProvideInformation" - {
+
+      "must redirect to the next page" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
+      )) {
+
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "must redirect to Index of section when the idx is outside of bounds" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
+      )) {
+
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(1))
+
+        val result = TestController.unableToProvideInformation(testErn, testDraftId, 1, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "must redirect to ItemsIndexController for a GET there is no GoodsType in UserAnswers" in new Setup() {
+
+        MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
     }
 
     "for a POST onSubmit" - {
@@ -208,8 +257,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          epc = Some(testEpcWine),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         )(dataRequest(request), messages(request)).toString
       }

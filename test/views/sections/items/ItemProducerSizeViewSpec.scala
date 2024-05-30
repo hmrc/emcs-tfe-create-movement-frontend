@@ -42,50 +42,6 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      Seq(testExciseProductCodeS500.code, testExciseProductCodeS300.code).foreach { epc =>
-
-       s"when the epc is $epc and the years are 2022 to 2023" - {
-
-          implicit val msgs: Messages = messages(Seq(English.lang))
-
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-          val view = app.injector.instanceOf[ItemProducerSizeView]
-          val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
-
-          implicit val doc: Document = Jsoup.parse(view(
-            form = form,
-            onSubmitAction = testOnwardRoute,
-            goodsType = Beer,
-            startYear = "2022",
-            endYear = "2023",
-            index = testIndex1,
-            epc = Some(epc),
-            isGbTaxWarehouse = false,
-            mode = NormalMode
-          ).toString())
-
-          behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> English.title2("2022", "2023"),
-            Selectors.h1 -> English.heading2("2022", "2023"),
-            Selectors.subHeadingCaptionSelector -> English.itemSection,
-            Selectors.p(1) -> English.p,
-            Selectors.p(2) -> English.p2b,
-            Selectors.label("value") -> English.label2,
-            Selectors.inputSuffix -> English.inputSuffix,
-            Selectors.button -> English.saveAndContinue,
-            Selectors.link(1) -> English.link,
-            Selectors.returnToDraftLink -> English.returnToDraft
-          ))
-
-         "link to the item Quantity page" in {
-           doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
-         }
-        }
-
-
-      }
-
       "when the goodsType is beer and the years are 2022 to 2023" - {
 
         implicit val msgs: Messages = messages(Seq(English.lang))
@@ -102,18 +58,17 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          epc = Some(testEpcBeer),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> English.title("beer", "2022", "2023"),
-          Selectors.h1 -> English.heading("beer", "2022", "2023"),
+          Selectors.title -> English.titleGoodsType("beer", "2022", "2023"),
+          Selectors.h1 -> English.headingGoodsType("beer", "2022", "2023"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
           Selectors.p(1) -> English.p,
-          Selectors.p(2) -> English.p2b,
-          Selectors.label("value") -> English.label1,
+          Selectors.p(2) -> English.p2GoodsType,
+          Selectors.label("value") -> English.labelGoodsType,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.link,
@@ -121,7 +76,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
         }
       }
 
@@ -141,18 +96,17 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           startYear = "2023",
           endYear = "2024",
           index = testIndex1,
-          epc = Some(testEpcBeer),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> English.title("pure alcohol", "2023", "2024"),
-          Selectors.h1 -> English.heading("pure alcohol", "2023", "2024"),
+          Selectors.title -> English.titleGoodsType("pure alcohol", "2023", "2024"),
+          Selectors.h1 -> English.headingGoodsType("pure alcohol", "2023", "2024"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
           Selectors.p(1) -> English.p,
-          Selectors.p(2) -> English.p2b,
-          Selectors.label("value") -> English.label1,
+          Selectors.p(2) -> English.p2GoodsType,
+          Selectors.label("value") -> English.labelGoodsType,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.link,
@@ -160,7 +114,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
         }
       }
 
@@ -180,18 +134,17 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           startYear = "2024",
           endYear = "2025",
           index = testIndex1,
-          epc = Some(testEpcBeer),
-          isGbTaxWarehouse = false,
+          showAlcoholProductionContent = false,
           mode = NormalMode
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> English.title("this product type", "2024", "2025"),
-          Selectors.h1 -> English.heading("this product type", "2024", "2025"),
+          Selectors.title -> English.titleGoodsType("this product type", "2024", "2025"),
+          Selectors.h1 -> English.headingGoodsType("this product type", "2024", "2025"),
           Selectors.subHeadingCaptionSelector -> English.itemSection,
           Selectors.p(1) -> English.p,
-          Selectors.p(2) -> English.p2b,
-          Selectors.label("value") -> English.label1,
+          Selectors.p(2) -> English.p2GoodsType,
+          Selectors.label("value") -> English.labelGoodsType,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.link(1) -> English.link,
           Selectors.button -> English.saveAndContinue,
@@ -199,7 +152,45 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
+        }
+      }
+
+      "when the showAlcoholProductionContent is true" - {
+
+        implicit val msgs: Messages = messages(Seq(English.lang))
+
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+        val view = app.injector.instanceOf[ItemProducerSizeView]
+        val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
+
+        implicit val doc: Document = Jsoup.parse(view(
+          form = form,
+          onSubmitAction = testOnwardRoute,
+          goodsType = Wine,
+          startYear = "2024",
+          endYear = "2025",
+          index = testIndex1,
+          showAlcoholProductionContent = true,
+          mode = NormalMode
+        ).toString())
+
+        behave like pageWithExpectedElementsAndMessages(Seq(
+          Selectors.title -> English.titlePureAlcohol("2024", "2025"),
+          Selectors.h1 -> English.headingPureAlcohol("2024", "2025"),
+          Selectors.subHeadingCaptionSelector -> English.itemSection,
+          Selectors.p(1) -> English.p,
+          Selectors.p(2) -> English.p2PureAlcohol,
+          Selectors.label("value") -> English.labelPureAlcohol,
+          Selectors.inputSuffix -> English.inputSuffix,
+          Selectors.link(1) -> English.link,
+          Selectors.button -> English.saveAndContinue,
+          Selectors.returnToDraftLink -> English.returnToDraft
+        ))
+
+        "link to the item Quantity page" in {
+          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
         }
       }
     }

@@ -140,7 +140,8 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
         case smallProducer@Some(ItemSmallIndependentProducerModel(producerType, _))
           if producerType == SelfCertifiedIndependentSmallProducerAndConsignor | producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor =>
           // TODO: ETFE-3166 double check this please
-          Seq(smallProducer)
+//          Seq(smallProducer)
+          Seq(smallProducer, request.userAnswers.get(ItemProducerSizePage(idx)))
         case smallProducer => Seq(smallProducer)
       }
     }

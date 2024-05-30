@@ -33,10 +33,10 @@
 
 )
 
-@(form: Form[_], onSubmitAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, epc: Option[String], isGbTaxWarehouse: Boolean, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, showAlcoholProductionContent: Boolean, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = title(form, if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){messages("itemProducerSize.title.2", startYear, endYear)}else{messages("itemProducerSize.title.1", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)}),
+    pageTitle = title(form, if(showAlcoholProductionContent){messages("itemProducerSize.title.pureAlcohol", startYear, endYear)}else{messages("itemProducerSize.title.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)}),
     maybeShowActiveTrader = maybeShowActiveTrader(request)
 ) {
 
@@ -49,29 +49,29 @@
         @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
 
-        @if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
-            @h1(messages("itemProducerSize.title.2", startYear, endYear))
+        @if(showAlcoholProductionContent){
+            @h1(messages("itemProducerSize.heading.pureAlcohol", startYear, endYear))
 
         }else{
-            @h1(messages("itemProducerSize.title.1", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
+            @h1(messages("itemProducerSize.heading.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
         }
 
         @p(){@messages("itemProducerSize.p1")}
 
-        @if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
-            @p(){@messages("itemProducerSize.p2.1")}
+        @if(showAlcoholProductionContent){
+            @p(){@messages("itemProducerSize.p2.pureAlcohol")}
         }else{
-            @p(){@messages("itemProducerSize.p2.1")}
+            @p(){@messages("itemProducerSize.p2.goodsType")}
         }
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = if(epc.get == "S500" || epc.get == "S300" || isGbTaxWarehouse == true){
-                            LabelViewModel(Text(messages("itemProducerSize.label.1"))).withCssClass("govuk-!-font-weight-bold")
-                        }else{
-                            LabelViewModel(Text(messages("itemProducerSize.label.2"))).withCssClass("govuk-!-font-weight-bold")
-                        },
+                label = if(showAlcoholProductionContent){
+                    LabelViewModel(Text(messages("itemProducerSize.label.pureAlcohol"))).withCssClass("govuk-!-font-weight-bold")
+                } else {
+                    LabelViewModel(Text(messages("itemProducerSize.label.goodsType"))).withCssClass("govuk-!-font-weight-bold")
+                },
             )
             .withWidth(OneThird)
             .withSuffix(PrefixOrSuffix(content = Text(messages("itemProducerSize.input.suffix"))))

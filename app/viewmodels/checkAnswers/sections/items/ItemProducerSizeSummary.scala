@@ -25,7 +25,7 @@ import pages.sections.info.DestinationTypePage
 import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage, ItemSmallIndependentProducerPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -38,12 +38,17 @@ object ItemProducerSizeSummary {
 
     for {
       itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
-      answer <- request.userAnswers.get(page)
       if itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndConsignor || itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor
     } yield {
+
+      val value: Value = request.userAnswers.get(page) match {
+        case Some(answer) => ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString))
+        case None => ValueViewModel(messages("site.notProvided"))
+      }
+
       SummaryListRowViewModel(
         key = s"$page.checkYourAnswersLabel.$productType",
-        value = ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString)),
+        value = value,
         actions = Seq(ActionItemViewModel(
           href = routes.ItemProducerSizeController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
           content = "site.change",

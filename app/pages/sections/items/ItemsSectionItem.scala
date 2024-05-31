@@ -135,16 +135,9 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     mandatoryIf(goodsType.isAlcohol)(Seq(request.userAnswers.get(ItemAlcoholStrengthPage(idx))))
 
   private[items] def independentProducerAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType.isAlcohol && request.userAnswers.get(ItemAlcoholStrengthPage(idx)).exists(_ < 8.5)) {
-      request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
-        case smallProducer@Some(ItemSmallIndependentProducerModel(producerType, _))
-          if producerType == SelfCertifiedIndependentSmallProducerAndConsignor | producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor =>
-          // TODO: ETFE-3166 double check this please
-//          Seq(smallProducer)
-          Seq(smallProducer, request.userAnswers.get(ItemProducerSizePage(idx)))
-        case smallProducer => Seq(smallProducer)
-      }
-    }
+    mandatoryIf(goodsType.isAlcohol && request.userAnswers.get(ItemAlcoholStrengthPage(idx)).exists(_ < 8.5))(
+      Seq(request.userAnswers.get(ItemSmallIndependentProducerPage(idx)))
+    )
 
   private[items] def degreesPlatoAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(request.isNorthernIrelandErn && goodsType == Beer)(Seq(request.userAnswers.get(ItemDegreesPlatoPage(idx))))

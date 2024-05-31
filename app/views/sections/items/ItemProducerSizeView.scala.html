@@ -33,7 +33,7 @@
 
 )
 
-@(form: Form[_], onSubmitAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, showAlcoholProductionContent: Boolean, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], onSubmitAction: Call, skipQuestionAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, showAlcoholProductionContent: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
     pageTitle = title(form, if(showAlcoholProductionContent){messages("itemProducerSize.title.pureAlcohol", startYear, endYear)}else{messages("itemProducerSize.title.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)}),
@@ -78,7 +78,11 @@
         )
 
         @p() {
-            @link(controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(request.ern, request.draftId, index).url, "itemProducerSize.link", id = Some("unable-to-provide-information"))
+            @link(
+                skipQuestionAction.url,
+                "itemProducerSize.link",
+                id = Some("unable-to-provide-information")
+            )
         }
 
         @continueOrExit()

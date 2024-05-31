@@ -1073,7 +1073,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
   }
 
   "independentProducerAnswers" - {
-    "must return two items" - {
+    "must return one items" - {
       "when alcohol, strength < 8.5, and small producer" in {
         GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>
@@ -1083,7 +1083,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
-            section.independentProducerAnswers(goodsType, dr).length mustBe 2
+            section.independentProducerAnswers(goodsType, dr).length mustBe 1
         }
       }
     }

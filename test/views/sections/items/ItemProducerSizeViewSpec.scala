@@ -54,12 +54,12 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           onSubmitAction = testOnwardRoute,
+          skipQuestionAction = testOnwardRouteTwo,
           goodsType = Beer,
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -76,7 +76,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
+          doc.select(Selectors.link(1)).attr("href") mustBe testOnwardRouteTwo.url
         }
       }
 
@@ -92,12 +92,12 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           onSubmitAction = testOnwardRoute,
+          skipQuestionAction = testOnwardRouteTwo,
           goodsType = Spirits,
           startYear = "2023",
           endYear = "2024",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -114,7 +114,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
+          doc.select(Selectors.link(1)).attr("href") mustBe testOnwardRouteTwo.url
         }
       }
 
@@ -130,12 +130,12 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           onSubmitAction = testOnwardRoute,
+          skipQuestionAction = testOnwardRouteTwo,
           goodsType = Wine,
           startYear = "2024",
           endYear = "2025",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -152,7 +152,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
+          doc.select(Selectors.link(1)).attr("href") mustBe testOnwardRouteTwo.url
         }
       }
 
@@ -168,12 +168,12 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           onSubmitAction = testOnwardRoute,
+          skipQuestionAction = testOnwardRouteTwo,
           goodsType = Wine,
           startYear = "2024",
           endYear = "2025",
           index = testIndex1,
-          showAlcoholProductionContent = true,
-          mode = NormalMode
+          showAlcoholProductionContent = true
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -190,7 +190,7 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         ))
 
         "link to the item Quantity page" in {
-          doc.select(Selectors.link(1)).attr("href") mustBe controllers.sections.items.routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, testIndex1).url
+          doc.select(Selectors.link(1)).attr("href") mustBe testOnwardRouteTwo.url
         }
       }
     }

@@ -65,6 +65,8 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
     def itemProducerSizeRoute(idx: Index): String = routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
 
     def onSubmitAction(idx: Index): Call = routes.ItemProducerSizeController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
+    def unableToProvideInformationAction(idx: Index): Call = routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, idx, NormalMode)
   }
 
 
@@ -84,12 +86,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -106,12 +108,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2021",
           endYear = "2022",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -129,12 +131,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form.fill(1),
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -253,12 +255,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = boundForm,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
           endYear = "2023",
           index = testIndex1,
-          showAlcoholProductionContent = false,
-          mode = NormalMode
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 

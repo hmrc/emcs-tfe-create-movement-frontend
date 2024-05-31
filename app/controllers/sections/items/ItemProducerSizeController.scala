@@ -79,12 +79,12 @@ class ItemProducerSizeController @Inject()(
     status(view(
       form = form,
       onSubmitAction = routes.ItemProducerSizeController.onSubmit(request.ern, request.draftId, idx, mode),
+      skipQuestionAction = routes.ItemProducerSizeController.unableToProvideInformation(request.ern, request.draftId, idx, mode),
       goodsType = goodsType,
       startYear = yearStart().toString,
       endYear = yearEnd().toString,
       index = idx,
-      showAlcoholProductionContent = showAlcoholProductionContent,
-      mode = mode
+      showAlcoholProductionContent = showAlcoholProductionContent
     ))
   }
 

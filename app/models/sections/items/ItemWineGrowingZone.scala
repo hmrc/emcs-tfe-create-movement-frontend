@@ -16,6 +16,7 @@
 
 package models.sections.items
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -25,12 +26,24 @@ sealed trait ItemWineGrowingZone
 
 object ItemWineGrowingZone extends Enumerable.Implicits {
 
-  case object A      extends WithName("1") with ItemWineGrowingZone
-  case object B      extends WithName("2") with ItemWineGrowingZone
-  case object CI     extends WithName("3") with ItemWineGrowingZone
-  case object CII    extends WithName("4") with ItemWineGrowingZone
-  case object CIII_A extends WithName("5") with ItemWineGrowingZone
-  case object CIII_B extends WithName("6") with ItemWineGrowingZone
+  case object A      extends WithName("1") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneA"
+  }
+  case object B      extends WithName("2") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneB"
+  }
+  case object CI     extends WithName("3") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneCI"
+  }
+  case object CII    extends WithName("4") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneCII"
+  }
+  case object CIII_A extends WithName("5") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneCIII_A"
+  }
+  case object CIII_B extends WithName("6") with ItemWineGrowingZone with Auditable {
+    override val auditDescription: String = "ZoneCIII_B"
+  }
 
   val values: Seq[ItemWineGrowingZone] = Seq(A, B, CI, CII, CIII_A, CIII_B)
 

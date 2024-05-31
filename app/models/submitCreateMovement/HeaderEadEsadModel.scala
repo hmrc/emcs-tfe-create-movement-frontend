@@ -16,13 +16,15 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.info.movementScenario.DestinationType
 import models.sections.transportArranger.TransportArranger
 import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
 import pages.sections.transportArranger.TransportArrangerPage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.ModelConstructorHelpers
 
 case class HeaderEadEsadModel(
@@ -50,4 +52,10 @@ object HeaderEadEsadModel extends ModelConstructorHelpers {
   }
 
   implicit val fmt: OFormat[HeaderEadEsadModel] = Json.format
+
+  val auditWrites: OWrites[HeaderEadEsadModel] = (
+    (__ \ "destinationType").write[DestinationType](Auditable.writes[DestinationType]) and
+    (__ \ "journeyTime").write[String] and
+      (__ \ "transportArrangement").write[TransportArranger](Auditable.writes[TransportArranger])
+    )(unlift(HeaderEadEsadModel.unapply))
 }

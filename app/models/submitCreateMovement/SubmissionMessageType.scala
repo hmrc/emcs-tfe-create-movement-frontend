@@ -16,15 +16,20 @@
 
 package models.submitCreateMovement
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 
 sealed trait SubmissionMessageType
 
 object SubmissionMessageType extends Enumerable.Implicits {
 
-  case object Standard extends WithName("1") with SubmissionMessageType
+  case object Standard extends WithName("1") with SubmissionMessageType with Auditable {
+    override val auditDescription: String = "Standard"
+  }
 
-  case object DutyPaidB2B extends WithName("3") with SubmissionMessageType
+  case object DutyPaidB2B extends WithName("3") with SubmissionMessageType with Auditable {
+    override val auditDescription: String = "DutyPaid"
+  }
 
   val values: Seq[SubmissionMessageType] = Seq(Standard, DutyPaidB2B)
 

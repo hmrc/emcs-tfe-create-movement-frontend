@@ -24,7 +24,8 @@ import models.sections.items.ItemSmallIndependentProducerType.NotProvided
 import models.sections.items.{ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
 import pages.sections.items._
 import play.api.i18n.Messages
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import queries.ItemsCount
 import utils.{Logging, ModelConstructorHelpers}
 import viewmodels.helpers.ItemSmallIndependentProducerHelper
@@ -136,11 +137,33 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
                 maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
                 packages = if (packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
-                wineProduct = WineProductModel.apply(idx)
+                wineProduct = WineProductModel.applyAtIdx(idx)
               )
           }
     }
   }
 
   implicit val fmt: OFormat[BodyEadEsadModel] = Json.format
+
+  val auditWrites: OWrites[BodyEadEsadModel] = (
+    (__ \ "bodyRecordUniqueReference").write[Int] and
+    (__ \ "exciseProductCode").write[String] and
+    (__ \ "cnCode").write[String] and
+    (__ \ "quantity").write[BigDecimal] and
+    (__ \ "grossMass").write[BigDecimal] and
+    (__ \ "netMass").write[BigDecimal] and
+    (__ \ "alcoholicStrengthByVolumeInPercentage").writeNullable[BigDecimal] and
+    (__ \ "degreePlato").writeNullable[BigDecimal] and
+    (__ \ "fiscalMark").writeNullable[String] and
+    (__ \ "fiscalMarkUsedFlag").writeNullable[Boolean] and
+    (__ \ "designationOfOrigin").writeNullable[String] and
+    (__ \ "sizeOfProducer").writeNullable[BigInt] and
+    (__ \ "density").writeNullable[BigDecimal] and
+    (__ \ "commercialDescription").writeNullable[String] and
+    (__ \ "brandNameOfProducts").writeNullable[String] and
+    (__ \ "maturationPeriodOrAgeOfProducts").writeNullable[String] and
+    (__ \ "independentSmallProducersDeclaration").writeNullable[String] and
+    (__ \ "packages").write[Seq[PackageModel]] and
+    (__ \ "wineProduct").writeNullable[WineProductModel](WineProductModel.auditWrites)
+  )(unlift(BodyEadEsadModel.unapply))
 }

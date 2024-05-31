@@ -16,16 +16,23 @@
 
 package models.sections.info.movementScenario
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 
 sealed trait OriginType
 
 object OriginType extends Enumerable.Implicits {
-  case object TaxWarehouse extends WithName("1") with OriginType
+  case object TaxWarehouse extends WithName("1") with OriginType with Auditable {
+    override val auditDescription: String = "TaxWarehouse"
+  }
 
-  case object Imports extends WithName("2") with OriginType
+  case object Imports extends WithName("2") with OriginType with Auditable {
+    override val auditDescription: String = "Imports"
+  }
 
-  case object DutyPaid extends WithName("3") with OriginType
+  case object DutyPaid extends WithName("3") with OriginType with Auditable {
+    override val auditDescription: String = "DutyPaid"
+  }
 
   val values: Seq[OriginType] = Seq(TaxWarehouse, Imports, DutyPaid)
 

@@ -114,11 +114,11 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           ),
           wineProduct = Some(
             WineProductModel(
-              wineProductCategory = ItemWineCategory.ImportedWine.toString,
-              wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+              wineProductCategory = ItemWineCategory.ImportedWine,
+              wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
               thirdCountryOfOrigin = Some(countryModelGB.code),
               otherInformation = Some("more wine info"),
-              wineOperations = Some(Seq("op code"))
+              wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
             )
           )
         ))
@@ -195,11 +195,11 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           ),
           wineProduct = Some(
             WineProductModel(
-              wineProductCategory = ItemWineCategory.ImportedWine.toString,
-              wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+              wineProductCategory = ItemWineCategory.ImportedWine,
+              wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
               thirdCountryOfOrigin = Some(countryModelGB.code),
               otherInformation = Some("more wine info"),
-              wineOperations = Some(Seq("op code"))
+              wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
             )
           )
         ))
@@ -289,11 +289,11 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             ),
             wineProduct = Some(
               WineProductModel(
-                wineProductCategory = ItemWineCategory.ImportedWine.toString,
-                wineGrowingZoneCode = Some(ItemWineGrowingZone.CII.toString),
+                wineProductCategory = ItemWineCategory.ImportedWine,
+                wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
                 thirdCountryOfOrigin = Some(countryModelGB.code),
                 otherInformation = Some("more wine info"),
-                wineOperations = Some(Seq("op code"))
+                wineOperations = Some(Seq(WineOperations("op code", "choice desc")))
               )
             )
           ),

@@ -50,7 +50,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
           epc =>
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers(epc = epc, cnCode = testCnCodeBeer))
 
-            WineProductModel.apply(testIndex1) mustBe None
+            WineProductModel.applyAtIdx(testIndex1) mustBe None
         }
       }
     }
@@ -59,15 +59,15 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
       "if commodity code is wine" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers())
 
-        val result = WineProductModel.apply(testIndex1)
+        val result = WineProductModel.applyAtIdx(testIndex1)
 
         // bodge the wine operations to be sorted so the comparison works
-        WineProductModel.apply(testIndex1).map(_.copy(wineOperations = result.flatMap(_.wineOperations.map(_.sorted)))) mustBe Some(WineProductModel(
-          wineProductCategory = ItemWineCategory.EuWineWithPdoOrPgiOrGi.toString,
-          wineGrowingZoneCode = Some(ItemWineGrowingZone.CI.toString),
+        WineProductModel.applyAtIdx(testIndex1).map(_.copy(wineOperations = result.flatMap(_.wineOperations.map(_.sortBy(_.code))))) mustBe Some(WineProductModel(
+          wineProductCategory = ItemWineCategory.EuWineWithPdoOrPgiOrGi,
+          wineGrowingZoneCode = Some(ItemWineGrowingZone.CI),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more info"),
-          wineOperations = Some(testWineOperations.map(_.code).sorted)
+          wineOperations = Some(testWineOperations.sortBy(_.code))
         ))
       }
     }

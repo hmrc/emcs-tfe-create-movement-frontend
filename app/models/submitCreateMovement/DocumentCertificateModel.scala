@@ -17,7 +17,6 @@
 package models.submitCreateMovement
 
 import models.Index
-import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.documents.DocumentType
 import pages.sections.documents._

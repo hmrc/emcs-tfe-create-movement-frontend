@@ -19,7 +19,7 @@ package forms.sections.sad
 import base.SpecBase
 import fixtures.messages.sections.sad.ImportNumberMessages
 import forms.behaviours.StringFieldBehaviours
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 
 class ImportNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
@@ -32,9 +32,9 @@ class ImportNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val form = new ImportNumberFormProvider()()
 
-  ".value" - {
+  val fieldName = "value"
 
-    val fieldName = "value"
+  ".value" - {
 
     behave like fieldThatBindsValidData(
       form,
@@ -55,6 +55,16 @@ class ImportNumberFormProviderSpec extends SpecBase with StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  "must bind the form successfully when spaces exist but trim them out" in {
+
+    val boundForm: Form[String] = form.bind(Map(
+      fieldName -> "555      A12345B 14092016"
+    ))
+
+    boundForm.value mustBe Some("555A12345B14092016")
+  }
+
   "Error Messages" - {
 
     Seq(ImportNumberMessages.English) foreach { messagesForLanguage =>

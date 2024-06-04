@@ -98,17 +98,23 @@ case object ItemsSection extends Section[JsObject] {
       if (quantity == "0") false else {
         //Check if any items have the same shipping mark and a package quantity of zero
         retrieveShippingMarkLocationsMatching(shippingMark).exists { case (linkedItemIdx, linkedPackageIdx) =>
-          request.userAnswers.get(ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx)).contains("0")
+          request.userAnswers.get(ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx)).getOrElse("0") == "0"
         }
       }
     }).getOrElse(false)
 
-  def removeAnyPackagingThatMatchesTheShippingMark(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_]): UserAnswers =
-    request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx: Index, packageIdx: Index)).fold(request.userAnswers) { shippingMark =>
-      retrieveShippingMarkLocationsMatching(shippingMark)
-        .filterNot(_ == (itemIdx, packageIdx))
-        .foldLeft(request.userAnswers) { case (answers, (iIdx, pIdx)) =>
-          answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
-        }
+  def removeAnyPackagingThatMatchesTheShippingMark(shippingMark: String, excludingIndex: Option[(Index, Index)] = None)
+                                                  (implicit request: DataRequest[_]): UserAnswers = {
+
+    val indexesToRemove = excludingIndex match {
+      case Some((itemIdx, packageIdx)) => retrieveShippingMarkLocationsMatching(shippingMark).filterNot(_ == (itemIdx, packageIdx))
+      case None => retrieveShippingMarkLocationsMatching(shippingMark)
     }
+
+    //Reversing here is important to ensure the indexes are deleted backwards, otherwise indexes before this index would be removed first
+    //which would lead to the subsequence indexes being out of sync and an array out of bounds error being thrown
+    indexesToRemove.reverse.foldLeft(request.userAnswers) { case (answers, (iIdx, pIdx)) =>
+      answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
+    }
+  }
 }

@@ -21,7 +21,7 @@ import forms.sections.items.ItemRemoveItemFormProvider
 import models.Index
 import models.requests.DataRequest
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemsSection, ItemsSectionItem}
+import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsSection, ItemsSectionItem}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -76,8 +76,14 @@ class ItemRemoveItemController @Inject()(
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if (shouldRemoveItem) {
 
-      val reqWithOrphanedShippingMarkPackagesRemoved = ItemsSectionItem(index).packagingIndexes.foldLeft(request) { (req, packagingIndex) =>
-        val updatedAnswers = ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(index, packagingIndex)(req)
+      val shippingMarksToRemove = ItemsSectionItem(index).packagingIndexes.flatMap { packagingIndex =>
+        Option.when(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(index, packagingIndex)) {
+          request.userAnswers.get(ItemPackagingShippingMarksPage(index, packagingIndex))
+        }
+      }.flatten
+
+      val reqWithOrphanedShippingMarkPackagesRemoved = shippingMarksToRemove.foldLeft(request) { (req, shippingMark) =>
+        val updatedAnswers = ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(shippingMark)(req)
         req.copy(userAnswers = updatedAnswers)
       }
 

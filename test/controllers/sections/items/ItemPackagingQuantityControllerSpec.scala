@@ -140,6 +140,29 @@ class ItemPackagingQuantityControllerSpec extends SpecBase with MockUserAnswersS
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
+    "must remove the packaging shipping marks choice and answer page when the user goes from > 0 (existing answer) to 0 (new answer)" in new Fixture(
+      Some(emptyUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), false)
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "1")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "xyz")
+      )
+    ) {
+      val expectedAnswers: UserAnswers = emptyUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+        .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "1")
+        .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), true)
+        .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "xyz")
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "0")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
     "must render BadRequest when invalid data is submitted" in new Fixture() {
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))

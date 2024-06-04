@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingRemovePackageFormProvider
 import models.Index
 import models.requests.DataRequest
 import navigation.ItemsNavigator
-import pages.sections.items.{ItemsPackagingSectionItems, ItemsSection}
+import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsPackagingSectionItems, ItemsSection}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -80,10 +80,16 @@ class ItemPackagingRemovePackageController @Inject()(
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if (shouldRemoveItem) {
 
+      val existingShippingMark = request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+      val updatedAnswers = request.userAnswers.remove(ItemsPackagingSectionItems(itemIdx, packageIdx))
+
       val cleansedAnswers =
-        ItemsSection
-          .removeAnyPackagingThatMatchesTheShippingMark(itemIdx, packageIdx)
-          .remove(ItemsPackagingSectionItems(itemIdx, packageIdx))
+        (existingShippingMark, ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, packageIdx)) match {
+          case (Some(mark), true) =>
+            ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(mark)(request.copy(userAnswers = updatedAnswers))
+          case _ =>
+            updatedAnswers
+        }
 
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(routes.ItemsPackagingIndexController.onPageLoad(ern, draftId, itemIdx))

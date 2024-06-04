@@ -78,11 +78,22 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
 
   private def cleanseSaveAndRedirect(hasShippingMark: Boolean, itemIdx: Index, packageIdx: Index, mode: Mode)
                                     (implicit request: DataRequest[_]): Future[Result] = {
-    val cleansedAnswers = if (hasShippingMark) request.userAnswers else {
-      ItemsSection
-        .removeAnyPackagingThatMatchesTheShippingMark(itemIdx, packageIdx)
-        .remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
-    }
-    saveAndRedirect(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark, cleansedAnswers, mode)
+
+    val existingShippingMark = request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+    val updatedAnswers =
+      (if(hasShippingMark) request.userAnswers else request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
+        .set(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark)
+
+    val cleansedAnswers =
+      (hasShippingMark, existingShippingMark, ItemsSection.shippingMarkForItemIsUsedOnOtherItems(itemIdx, packageIdx)) match {
+        case (false, Some(mark), true) =>
+          ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(mark, Some(itemIdx -> packageIdx))(request.copy(userAnswers = updatedAnswers))
+        case _ =>
+          updatedAnswers
+      }
+
+    userAnswersService.set(cleansedAnswers).map(updatedAnswers =>
+      Redirect(navigator.nextPage(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), mode, updatedAnswers))
+    )
   }
 }

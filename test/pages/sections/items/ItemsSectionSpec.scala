@@ -301,66 +301,91 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
   }
 
   "removeAnyPackagingThatMatchesTheShippingMark" - {
-    "when there are shipping marks linked to other packages" - {
-      "must return a UserAnswers with the packaging removed" in {
+    "when a specific indexes is told to be excluded from deletion" - {
+      "when there are shipping marks linked to other packages" - {
+        "must return a UserAnswers with the packaging removed" in {
 
-        val userAnswers =
-          emptyUserAnswers
-            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
-            .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+          val userAnswers =
+            emptyUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
+              .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
 
-        implicit val req = dataRequest(FakeRequest(), userAnswers)
+          implicit val req = dataRequest(FakeRequest(), userAnswers)
 
-        ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(testIndex1, testPackagingIndex1) mustBe userAnswers
-          .remove(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2))
-          .remove(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2))
-          .remove(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1))
-          .remove(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1))
+          ItemsSection.removeAnyPackagingThatMatchesTheShippingMark("Mark1", Some(testIndex1 -> testPackagingIndex1)) mustBe userAnswers
+            .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex2))
+            .remove(ItemsPackagingSectionItems(testIndex2, testPackagingIndex1))
+        }
+      }
+
+      "when shipping mark exists, but only against the package which is excluded from being removed" - {
+        "must return a UserAnswers unchanged" in {
+
+          val userAnswers =
+            emptyUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
+              .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+
+          implicit val req = dataRequest(FakeRequest(), userAnswers)
+
+          ItemsSection.removeAnyPackagingThatMatchesTheShippingMark("Mark2", Some(testIndex3 -> testPackagingIndex1)) mustBe userAnswers
+        }
+      }
+
+      "when no shipping marks exist with the supplied shipping mark" - {
+        "must return a UserAnswers unchanged" in {
+
+          val userAnswers =
+            emptyUserAnswers
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
+              .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+
+          implicit val req = dataRequest(FakeRequest(), userAnswers)
+
+          ItemsSection.removeAnyPackagingThatMatchesTheShippingMark("NotExist") mustBe userAnswers
+        }
       }
     }
 
-    "when there are no shipping marks linked to other packages" - {
-      "must return a UserAnswers unchanged" in {
+    "when a NO indexes are told to be excluded from deletion" - {
+      "when there are shipping marks linked to other packages" - {
+        "must return a UserAnswers with any packaging removed which match the Mark" in {
 
-        val userAnswers =
-          emptyUserAnswers
-            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
-            .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
+          val userAnswers =
+            emptyUserAnswers
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
+              .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
+              .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
+              .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
+              .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
 
-        implicit val req = dataRequest(FakeRequest(), userAnswers)
+          implicit val req = dataRequest(FakeRequest(), userAnswers)
 
-        ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(testIndex3, testPackagingIndex1) mustBe userAnswers
-      }
-    }
-
-    "when no shipping marks linked to the package being removed" - {
-      "must return a UserAnswers unchanged" in {
-
-        val userAnswers =
-          emptyUserAnswers
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1")
-            .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex2, testPackagingIndex1), "Mark1")
-            .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "0")
-            .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex1), "Mark2")
-            .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "1")
-
-        implicit val req = dataRequest(FakeRequest(), userAnswers)
-
-        ItemsSection.removeAnyPackagingThatMatchesTheShippingMark(testIndex1, testPackagingIndex1) mustBe userAnswers
+          ItemsSection.removeAnyPackagingThatMatchesTheShippingMark("Mark1") mustBe userAnswers
+            .remove(ItemsPackagingSectionItems(testIndex2, testPackagingIndex1))
+            .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex2))
+            .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex1))
+        }
       }
     }
   }

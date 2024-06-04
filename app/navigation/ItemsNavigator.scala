@@ -317,8 +317,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     case ItemSelectPackagingPage(itemIdx, _) => (userAnswers: UserAnswers) =>
       itemsRoutes.ItemCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId, itemIdx)
 
-    case page@ItemPackagingShippingMarksChoicePage(_, _) => (userAnswers: UserAnswers) =>
-      normalRoutes(page)(userAnswers)
+    case ItemPackagingShippingMarksChoicePage(itemsIndex, itemsPackagingIndex) => (userAnswers: UserAnswers) =>
+      itemPackagingShippingMarksChoiceRouting(itemsIndex, itemsPackagingIndex, userAnswers)
 
     case ItemPackagingQuantityPage(itemIdx, packageIdx) => (userAnswers: UserAnswers) =>
       userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx)) match {

@@ -164,7 +164,7 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers with ItemFixtur
       }
 
       "if not provided" - {
-        "must not return a row" in new Test(
+        "must return a 'Not provided' row" in new Test(
           emptyUserAnswers
             .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
         ) {

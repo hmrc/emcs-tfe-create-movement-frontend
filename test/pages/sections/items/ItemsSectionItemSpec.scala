@@ -1073,7 +1073,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
   }
 
   "independentProducerAnswers" - {
-    "must return one items" - {
+    "must return one item" - {
       "when alcohol, strength < 8.5, and small producer" in {
         GoodsType.values.filter(_.isAlcohol).foreach {
           goodsType =>

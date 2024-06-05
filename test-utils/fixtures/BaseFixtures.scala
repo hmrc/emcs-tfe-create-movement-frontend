@@ -54,7 +54,6 @@ trait BaseFixtures {
   val testSubmissionDate: LocalDateTime = LocalDateTime.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
   val testOnwardRoute: Call = Call("GET", "/foo")
-  val testOnwardRouteTwo: Call = Call("GET", "/bar")
   val testId: String = "123"
   val testUrl: String = "testUrl"
   val testBusinessName: String = "testName"

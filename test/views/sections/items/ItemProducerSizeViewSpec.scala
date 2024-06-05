@@ -21,22 +21,22 @@ import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemProducerSizeMessages.English
 import forms.sections.items.ItemProducerSizeFormProvider
 import models.GoodsType.{Beer, Spirits, Wine}
-import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemProducerSizeView
 import views.{BaseSelectors, ViewBehaviours}
 
 class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFixtures {
 
-  object Selectors extends BaseSelectors{
-    val returnToDraftLink: String = "#save-and-exit"
+  object Selectors extends BaseSelectors
 
-  }
+  val testOnwardRouteTwo: Call = Call("GET", "/bar")
+  val view = app.injector.instanceOf[ItemProducerSizeView]
+  val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
 
   "Item Producer Size view" - {
 
@@ -47,9 +47,6 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val msgs: Messages = messages(Seq(English.lang))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-        val view = app.injector.instanceOf[ItemProducerSizeView]
-        val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -69,10 +66,11 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.p(1) -> English.p,
           Selectors.p(2) -> English.p2GoodsType,
           Selectors.label("value") -> English.labelGoodsType,
+          Selectors.hint -> English.hint,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.link,
-          Selectors.returnToDraftLink -> English.returnToDraft
+          Selectors.saveAndExitLink -> English.returnToDraft
         ))
 
         "link to the item Quantity page" in {
@@ -85,9 +83,6 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val msgs: Messages = messages(Seq(English.lang))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-        val view = app.injector.instanceOf[ItemProducerSizeView]
-        val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -107,10 +102,11 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.p(1) -> English.p,
           Selectors.p(2) -> English.p2GoodsType,
           Selectors.label("value") -> English.labelGoodsType,
+          Selectors.hint -> English.hint,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.button -> English.saveAndContinue,
           Selectors.link(1) -> English.link,
-          Selectors.returnToDraftLink -> English.returnToDraft
+          Selectors.saveAndExitLink -> English.returnToDraft
         ))
 
         "link to the item Quantity page" in {
@@ -123,9 +119,6 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val msgs: Messages = messages(Seq(English.lang))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-        val view = app.injector.instanceOf[ItemProducerSizeView]
-        val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -145,10 +138,11 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.p(1) -> English.p,
           Selectors.p(2) -> English.p2GoodsType,
           Selectors.label("value") -> English.labelGoodsType,
+          Selectors.hint -> English.hint,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.link(1) -> English.link,
           Selectors.button -> English.saveAndContinue,
-          Selectors.returnToDraftLink -> English.returnToDraft
+          Selectors.saveAndExitLink -> English.returnToDraft
         ))
 
         "link to the item Quantity page" in {
@@ -161,9 +155,6 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
         implicit val msgs: Messages = messages(Seq(English.lang))
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-        val view = app.injector.instanceOf[ItemProducerSizeView]
-        val form = app.injector.instanceOf[ItemProducerSizeFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
@@ -183,10 +174,11 @@ class ItemProducerSizeViewSpec extends SpecBase with ViewBehaviours with ItemFix
           Selectors.p(1) -> English.p,
           Selectors.p(2) -> English.p2PureAlcohol,
           Selectors.label("value") -> English.labelPureAlcohol,
+          Selectors.hint -> English.hint,
           Selectors.inputSuffix -> English.inputSuffix,
           Selectors.link(1) -> English.link,
           Selectors.button -> English.saveAndContinue,
-          Selectors.returnToDraftLink -> English.returnToDraft
+          Selectors.saveAndExitLink -> English.returnToDraft
         ))
 
         "link to the item Quantity page" in {

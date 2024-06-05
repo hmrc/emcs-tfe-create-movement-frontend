@@ -104,7 +104,7 @@ class ItemProducerSizeFormProviderSpec extends SpecBase with BigIntFieldBehaviou
 
       "have the correct error message for non numeric key" in {
 
-        msgs(wholeNumberKey) mustBe
+        msgs(nonNumericKey) mustBe
           English.errorNonNumeric
       }
     }

@@ -36,7 +36,7 @@
 @(form: Form[_], onSubmitAction: Call, skipQuestionAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, showAlcoholProductionContent: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = title(form, if(showAlcoholProductionContent){messages("itemProducerSize.title.pureAlcohol", startYear, endYear)}else{messages("itemProducerSize.title.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)}),
+    pageTitle = title(form, pageTitle),
     maybeShowActiveTrader = maybeShowActiveTrader(request)
 ) {
 
@@ -52,7 +52,7 @@
         @if(showAlcoholProductionContent){
             @h1(messages("itemProducerSize.heading.pureAlcohol", startYear, endYear))
 
-        }else{
+        } else {
             @h1(messages("itemProducerSize.heading.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear))
         }
 
@@ -60,32 +60,45 @@
 
         @if(showAlcoholProductionContent){
             @p(){@messages("itemProducerSize.p2.pureAlcohol")}
-        }else{
+        } else {
             @p(){@messages("itemProducerSize.p2.goodsType")}
         }
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = if(showAlcoholProductionContent){
-                    LabelViewModel(Text(messages("itemProducerSize.label.pureAlcohol"))).withCssClass("govuk-!-font-weight-bold")
-                } else {
-                    LabelViewModel(Text(messages("itemProducerSize.label.goodsType"))).withCssClass("govuk-!-font-weight-bold")
-                },
+                label = LabelViewModel(Text(messages(labelMessageKey))).withCssClass("govuk-!-font-weight-bold"),
             )
-            .withWidth(OneThird)
+            .withHint(HintViewModel(messages("itemProducerSize.hint")))
+            .withWidth(Fixed5)
             .withSuffix(PrefixOrSuffix(content = Text(messages("itemProducerSize.input.suffix"))))
         )
 
         @p() {
             @link(
-                skipQuestionAction.url,
-                "itemProducerSize.link",
+                link = skipQuestionAction.url,
+                messageKey = "itemProducerSize.link",
                 id = Some("unable-to-provide-information")
             )
         }
 
         @continueOrExit()
+    }
+}
+
+@pageTitle = @{
+    if(showAlcoholProductionContent){
+        messages("itemProducerSize.title.pureAlcohol", startYear, endYear)
+    } else {
+        messages("itemProducerSize.title.goodsType", messages(s"itemProducerSize.${goodsType.code}"), startYear, endYear)
+    }
+}
+
+@labelMessageKey = @{
+    if(showAlcoholProductionContent) {
+        "itemProducerSize.label.pureAlcohol"
+    } else {
+        "itemProducerSize.label.goodsType"
     }
 }
 

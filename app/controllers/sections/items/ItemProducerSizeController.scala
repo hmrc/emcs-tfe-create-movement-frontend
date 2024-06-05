@@ -50,22 +50,26 @@ class ItemProducerSizeController @Inject()(
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+        Future(renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode))
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors, idx, mode)),
-        saveAndRedirect(ItemProducerSizePage(idx), _, mode)
-      )
+      validateIndexAsync(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors => Future(renderView(BadRequest, formWithErrors, idx, mode)),
+          saveAndRedirect(ItemProducerSizePage(idx), _, mode)
+        )
+      }
     }
 
   def unableToProvideInformation(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      val updated = request.userAnswers.remove(ItemProducerSizePage(idx))
-      saveAndRedirect(ItemProducerSizePage(idx), updated, mode)
+      validateIndexAsync(idx) {
+        val answersWithProducerSizeRemoved = request.userAnswers.remove(ItemProducerSizePage(idx))
+        saveAndRedirect(ItemProducerSizePage(idx), answersWithProducerSizeRemoved, mode)
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)

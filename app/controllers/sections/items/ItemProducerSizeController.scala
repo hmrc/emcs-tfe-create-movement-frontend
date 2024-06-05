@@ -19,9 +19,11 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemProducerSizeFormProvider
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.{Index, Mode}
 import navigation.ItemsNavigator
-import pages.sections.items.ItemProducerSizePage
+import pages.sections.info.DestinationTypePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemProducerSizePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -48,26 +50,45 @@ class ItemProducerSizeController @Inject()(
                                      ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+        Future(renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode))
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future(renderView(BadRequest, formWithErrors, idx, mode)),
-        saveAndRedirect(ItemProducerSizePage(idx), _, mode)
-      )
+      validateIndexAsync(idx) {
+        formProvider().bindFromRequest().fold(
+          formWithErrors => Future(renderView(BadRequest, formWithErrors, idx, mode)),
+          saveAndRedirect(ItemProducerSizePage(idx), _, mode)
+        )
+      }
+    }
+
+  def unableToProvideInformation(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      validateIndexAsync(idx) {
+        val answersWithProducerSizeRemoved = request.userAnswers.remove(ItemProducerSizePage(idx))
+        saveAndRedirect(ItemProducerSizePage(idx), answersWithProducerSizeRemoved, mode)
+      }
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Result = withGoodsType(idx) { goodsType =>
+
+    val destinationType = request.userAnswers.get(DestinationTypePage)
+    val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
+
+    val showAlcoholProductionContent = destinationType.contains(UkTaxWarehouse.GB) || itemExciseProductCode.exists(Seq("S300", "S500").contains(_))
+
     status(view(
       form = form,
       onSubmitAction = routes.ItemProducerSizeController.onSubmit(request.ern, request.draftId, idx, mode),
+      skipQuestionAction = routes.ItemProducerSizeController.unableToProvideInformation(request.ern, request.draftId, idx, mode),
       goodsType = goodsType,
       startYear = yearStart().toString,
-      endYear = yearEnd().toString
+      endYear = yearEnd().toString,
+      index = idx,
+      showAlcoholProductionContent = showAlcoholProductionContent
     ))
   }
 

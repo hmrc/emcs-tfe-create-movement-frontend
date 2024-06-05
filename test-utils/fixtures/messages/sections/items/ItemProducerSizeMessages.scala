@@ -22,14 +22,23 @@ object ItemProducerSizeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    def heading(goodsType: String, start: String, end: String) =
+    def headingGoodsType(goodsType: String, start: String, end: String) =
       s"What was the producer’s total production of $goodsType from 1 February $start to 31 January $end?"
-    def title(goodsType: String, start: String, end: String): String = titleHelper(heading(goodsType, start: String, end: String))
+    def headingPureAlcohol(start: String, end: String) =
+      s"What was the producer’s total pure alcohol production from 1 February $start to 31 January $end?"
+    def titleGoodsType(goodsType: String, start: String, end: String): String = titleHelper(headingGoodsType(goodsType, start: String, end: String))
+    def titlePureAlcohol(start: String, end: String): String = titleHelper(headingPureAlcohol(start: String, end: String))
 
     val p = "This information should be provided when claiming Small Producer Relief on Alcohol Duty."
+    val p2GoodsType = "You should enter the total production in hectolitres of finished product."
+    val p2PureAlcohol = "You should enter the total production in hectolitres of pure alcohol."
     val inputSuffix = "hl"
+    val labelGoodsType = "Annual production of finished product"
+    val labelPureAlcohol = "Annual production of pure alcohol"
+    val hint = "Amount in hectolitres should be a whole number."
+    val link = "I am unable to provide this information"
     val errorRequired = "Enter the producer’s total production"
-    val errorWholeNumber = "Amount must only contain numbers"
+    val errorWholeNumber = "Amount must not include a decimal place"
     val errorNonNumeric = "Amount must only contain numbers"
     val errorOutOfRange = "Enter an amount between 1 and 15 digits"
     val cyaLabelForPureAlcohol = "Producer’s production of pure alcohol"

@@ -164,11 +164,22 @@ class ItemProducerSizeSummarySpec extends SpecBase with Matchers with ItemFixtur
       }
 
       "if not provided" - {
-        "must not return a row" in new Test(emptyUserAnswers.set(ItemSmallIndependentProducerPage(testIndex1),
-          ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))) {
+        "must return a 'Not provided' row" in new Test(
+          emptyUserAnswers
+            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(SelfCertifiedIndependentSmallProducerAndConsignor, Some(testErn)))
+        ) {
           ItemProducerSizeSummary.row(
             idx = testIndex1
-          ) mustBe None
+          ) mustBe
+            Some(summaryListRowBuilder(
+              key = messagesForLanguage.cyaLabelForFinishedProduct,
+              value = messagesForLanguage.notProvided,
+              changeLink = Some(ActionItemViewModel(
+                href = controllers.sections.items.routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                content = messagesForLanguage.change,
+                id = s"changeItemProducerSize${testIndex1.displayIndex}"
+              ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHiddenForFinishedProduct))
+            ))
         }
       }
     }

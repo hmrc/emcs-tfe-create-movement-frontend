@@ -62,9 +62,11 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       timeMachine = FakeTimeMachine
     )
 
-    def itemProducerSizeRoute(idx: Index): String = routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
+    def itemProducerSizeRoute(idx: Index = testIndex1): String = routes.ItemProducerSizeController.onPageLoad(testErn, testDraftId, idx, NormalMode).url
 
-    def onSubmitAction(idx: Index): Call = routes.ItemProducerSizeController.onSubmit(testErn, testDraftId, idx, NormalMode)
+    def onSubmitAction(idx: Index = testIndex1): Call = routes.ItemProducerSizeController.onSubmit(testErn, testDraftId, idx, NormalMode)
+
+    def unableToProvideInformationAction(idx: Index): Call = routes.ItemProducerSizeController.unableToProvideInformation(testErn, testDraftId, idx, NormalMode)
   }
 
 
@@ -84,9 +86,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -103,9 +108,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2021",
-          endYear = "2022"
+          endYear = "2022",
+          index = testIndex1,
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -123,9 +131,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = form.fill(1),
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 
@@ -159,19 +170,68 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
+    }
 
+    "for a GET unableToProvideInformation" - {
+
+      "must redirect to the next page" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine).set(ItemProducerSizePage(0), BigInt(1))
+      )) {
+
+        MockUserAnswersService.set(emptyUserAnswers
+          .set(ItemExciseProductCodePage(0), testEpcWine)).returns(Future.successful(emptyUserAnswers
+          .set(ItemExciseProductCodePage(0), testEpcWine)))
+
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "must redirect to Index of section when the idx is outside of bounds for 'unableToProvideInformation'" in new Setup(Some(
+        emptyUserAnswers.set(ItemExciseProductCodePage(0), testEpcWine)
+      )) {
+
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, itemProducerSizeRoute(1))
+
+        val result = TestController.unableToProvideInformation(testErn, testDraftId, 1, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+
+      "must redirect to ItemsIndexController for a GET there is no GoodsType in UserAnswers" in new Setup() {
+
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.items.routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
+      }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
+
+        val request = FakeRequest(GET, itemProducerSizeRoute(0))
+
+        val result: Future[Result] = TestController.unableToProvideInformation(testErn, testDraftId, 0, NormalMode)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
     }
 
     "for a POST onSubmit" - {
 
-      "must redirect to the next page when valid data is submitted" in new Setup() {
+      "must redirect to the next page when valid data is submitted" in new Setup(Some(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))) {
 
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        val request = FakeRequest(POST, itemProducerSizeRoute(0))
-          .withFormUrlEncodedBody(("value", "1"))
+        val request = FakeRequest(POST, onSubmitAction(testIndex1).url)
 
-        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, 0, NormalMode)(request)
+        val result: Future[Result] = TestController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "1")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -192,9 +252,12 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
         contentAsString(result) mustEqual view(
           form = boundForm,
           onSubmitAction = onSubmitAction(0),
+          skipQuestionAction = unableToProvideInformationAction(0),
           goodsType = Wine,
           startYear = "2022",
-          endYear = "2023"
+          endYear = "2023",
+          index = testIndex1,
+          showAlcoholProductionContent = false
         )(dataRequest(request), messages(request)).toString
       }
 

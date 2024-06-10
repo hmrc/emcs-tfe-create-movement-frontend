@@ -18,8 +18,6 @@ package pages.sections.items
 
 import models.GoodsType._
 import models.requests.DataRequest
-import models.sections.items.ItemSmallIndependentProducerModel
-import models.sections.items.ItemSmallIndependentProducerType.{SelfCertifiedIndependentSmallProducerAndConsignor, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.{GoodsType, Index}
 import pages.sections.Section

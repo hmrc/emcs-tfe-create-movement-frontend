@@ -54,13 +54,13 @@ class GuarantorArrangerSpec extends AnyFreeSpec with Matchers {
   "options" - {
     implicit val msgs: Messages = stubMessages()
 
-    val scenariosWithoutConsignee: Seq[MovementScenario] =
+    val scenariosWithConsignee: Seq[MovementScenario] =
       UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
 
-    scenariosWithoutConsignee.foreach {
+    scenariosWithConsignee.foreach {
       scenario =>
-        s"should return all options, excluding Consignee, when the movement scenario is $scenario" in {
-          GuarantorArranger.options(scenario) mustBe Seq(Consignor, GoodsOwner, Transporter).map {
+        s"should return all options, including Consignee, when the movement scenario is $scenario" in {
+          GuarantorArranger.options(scenario) mustBe Seq(Consignor, Consignee, GoodsOwner, Transporter).map {
             value =>
               RadioItem(
                 content = Text(msgs(s"guarantorArranger.${value.toString}")),
@@ -71,10 +71,10 @@ class GuarantorArrangerSpec extends AnyFreeSpec with Matchers {
         }
     }
 
-    MovementScenario.values.filterNot(scenariosWithoutConsignee.contains).foreach {
+    MovementScenario.values.filterNot(scenariosWithConsignee.contains).foreach {
       scenario =>
-        s"should return all options when the movement scenario is $scenario" in {
-          GuarantorArranger.options(scenario) mustBe Seq(Consignor, Consignee, GoodsOwner, Transporter).map {
+        s"should return all options, excluding Consignee, when the movement scenario is $scenario" in {
+          GuarantorArranger.options(scenario) mustBe Seq(Consignor, GoodsOwner, Transporter).map {
             value =>
               RadioItem(
                 content = Text(msgs(s"guarantorArranger.${value.toString}")),

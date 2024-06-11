@@ -47,7 +47,7 @@ class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(
           view(
-            movementScenario = MovementScenario.EuTaxWarehouse,
+            movementScenario = MovementScenario.UkTaxWarehouse.GB,
             form = form,
             mode = NormalMode
           ).toString())

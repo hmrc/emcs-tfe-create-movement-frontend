@@ -59,10 +59,12 @@ object GuarantorArranger extends Enumerable.Implicits {
   val values: Seq[GuarantorArranger] = displayValues ++ Seq(NoGuarantorRequiredUkToEu, NoGuarantorRequired)
 
   def options(movementScenario: MovementScenario)(implicit messages: Messages): Seq[RadioItem] = {
-    val scenariosWithoutConsignee: Seq[MovementScenario] =
+    val scenariosWithConsignee: Seq[MovementScenario] = {
+      // Consignee is only available for the following movement scenarios
       UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
+    }
 
-    val radioItems = if (scenariosWithoutConsignee.contains(movementScenario)) {
+    val radioItems = if (!scenariosWithConsignee.contains(movementScenario)) {
       displayValues.filterNot(_ == Consignee)
     } else {
       displayValues

@@ -64,10 +64,10 @@ object GuarantorArranger extends Enumerable.Implicits {
       UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
     }
 
-    val radioItems = if (!scenariosWithConsignee.contains(movementScenario)) {
-      displayValues.filterNot(_ == Consignee)
-    } else {
+    val radioItems = if (scenariosWithConsignee.contains(movementScenario)) {
       displayValues
+    } else {
+      displayValues.filterNot(_ == Consignee)
     }
 
     radioItems.map {
